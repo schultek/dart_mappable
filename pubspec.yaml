@@ -1,0 +1,13 @@
+name: dart_mappable
+description: Generate typesafe code to serialize / deserialize dart objects without any extra boilerplate code.
+version: 0.1.0
+repository: https://github.com/schultek/dart_mappable
+issue_tracker: https://github.com/schultek/dart_mappable/issues
+
+dependencies:
+  analyzer: ^1.0.0
+  build: ^2.0.0
+  indent: ^1.1.0
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'

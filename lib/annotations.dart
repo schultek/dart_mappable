@@ -1,0 +1,5 @@
+
+
+class Mappable {
+  const Mappable();
+}

@@ -1,0 +1,9 @@
+targets:
+  $default:
+    builders:
+      dart_mappable:
+        generate_for:
+          - lib/main.dart
+        options:
+          mode: library
+          exclude: ["Dog", "Animal"]
