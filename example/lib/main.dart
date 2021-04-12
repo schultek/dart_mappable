@@ -1,6 +1,4 @@
-
-import 'main.g.dart';
-
+import 'main.mapper.g.dart';
 
 class Person {
   dynamic age;
@@ -10,7 +8,9 @@ class Person {
   List<int> nums;
   List<Car> cars;
 
-  Person(this.name, this.age, {this.car, this.isAdmin = false, this.nums = const [], required this.cars});
+  Person(String nameabc, this.age, {this.car, this.isAdmin = false, this.nums = const [], required this.cars})
+      : name = nameabc;
+  String get nameabc => name;
 }
 
 class Animal {
@@ -23,9 +23,7 @@ class Dog extends Animal {
   Dog(this.breed, int age) : super(age);
 }
 
-enum Brand {
-  Toyota, Audi, BMW
-}
+enum Brand { Toyota, Audi, BMW }
 
 class Car {
   final Brand brand;
@@ -35,13 +33,7 @@ class Car {
 }
 
 void main() {
+  var c = Car(2, Brand.Audi);
 
-
-  Car(2, BrandMapper.fromString("asd"));
-
-
-  Dog d = ObjectMapper.fromMap({"age": 10, "breed": "Shiba"});
-
-  print(d.toMap());
-
+  c.toMap();
 }
