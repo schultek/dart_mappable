@@ -9,7 +9,11 @@ class ClassOptions {
   bool? ignoreNull;
   Map<String, String> fields;
 
-  ClassOptions({this.constructor, this.caseStyle, this.ignoreNull, this.fields = const {}});
+  ClassOptions(
+      {this.constructor,
+      this.caseStyle,
+      this.ignoreNull,
+      this.fields = const {}});
 
   ClassOptions.parse(Map options)
       : constructor = options['constructor'] as String?,
@@ -54,7 +58,8 @@ class LibraryOptions {
         classes = toMap(options['classes'], (v) => ClassOptions.parse(v)),
         enums = toMap(options['enums'], (v) => EnumOptions.parse(v)),
         caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
-        enumCaseStyle = CaseStyle.fromString(options['enumCaseStyle'] as String?),
+        enumCaseStyle =
+            CaseStyle.fromString(options['enumCaseStyle'] as String?),
         ignoreNull = options['ignoreNull'] as bool?;
 
   bool shouldGenerateFor(ClassElement element) {
@@ -123,11 +128,13 @@ class GlobalOptions {
         exclude = options['exclude'] as List<String>,
         libraries = toMap(options['libraries'], (v) => LibraryOptions.parse(v)),
         caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
-        enumCaseStyle = CaseStyle.fromString(options['enumCaseStyle'] as String?),
+        enumCaseStyle =
+            CaseStyle.fromString(options['enumCaseStyle'] as String?),
         ignoreNull = options['ignoreNull'] as bool?;
 
   LibraryOptions forLibrary(LibraryElement library) {
-    var libFilePath = 'lib${library.identifier.substring(library.identifier.indexOf('/'))}';
+    var libFilePath =
+        'lib${library.identifier.substring(library.identifier.indexOf('/'))}';
     var options = libraries[library.name] ?? libraries[libFilePath];
 
     if (options == null) {
@@ -157,5 +164,7 @@ class GlobalOptions {
 }
 
 Map<String, T> toMap<T>(dynamic value, T Function(Map m) fn) {
-  return (value as Map?)?.map((k, dynamic v) => MapEntry(k as String, fn(v as Map))) ?? {};
+  return (value as Map?)
+          ?.map((k, dynamic v) => MapEntry(k as String, fn(v as Map))) ??
+      {};
 }

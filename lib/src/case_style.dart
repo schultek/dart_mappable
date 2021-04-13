@@ -6,7 +6,10 @@ String toCaseStyle(String text, CaseStyle? style) {
   if (style == null) return text;
   var words = text.split(splitter);
   if (style.head != null) {
-    words = [words[0].transform(style.head), ...words.skip(1).map((w) => w.transform(style.tail))];
+    words = [
+      words[0].transform(style.head),
+      ...words.skip(1).map((w) => w.transform(style.tail))
+    ];
   } else if (style.tail != null) {
     words = words.map((w) => w.transform(style.tail)).toList();
   }
@@ -34,7 +37,8 @@ class CaseStyle {
     } else {
       switch (value) {
         case 'camelCase':
-          return const CaseStyle(TextTransform.lowerCase, TextTransform.capitalCase, '');
+          return const CaseStyle(
+              TextTransform.lowerCase, TextTransform.capitalCase, '');
         case 'pascalCase':
           return const CaseStyle(null, TextTransform.capitalCase, '');
         case 'snakeCase':
@@ -49,7 +53,8 @@ class CaseStyle {
       if (value.startsWith('custom')) {
         var match = customCase.firstMatch(value);
         if (match == null || match.groupCount != 2) {
-          throw FormatException("Cannot parse custom caseStyle expression '$value'");
+          throw FormatException(
+              "Cannot parse custom caseStyle expression '$value'");
         }
 
         TextTransform? head, tail;

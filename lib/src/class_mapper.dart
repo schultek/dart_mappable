@@ -4,7 +4,6 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:indent/indent.dart';
 
 import 'case_style.dart';
-import 'enum_mapper.dart';
 import 'generator_options.dart';
 
 /// Generates code for a specific class
@@ -18,12 +17,12 @@ class ClassMapper {
 
   ClassMapper(this.element, this.options);
 
-  String generateExtensionCode(
-      Map<String, ClassMapper> classMappers, Map<String, EnumMapper> enumMappers) {
+  String generateExtensionCode(Set<String> classes, Set<String> enums) {
     ConstructorElement? constructor;
 
     if (options.constructor != null) {
-      constructor = element.constructors.firstWhere((c) => c.name == options.constructor);
+      constructor =
+          element.constructors.firstWhere((c) => c.name == options.constructor);
     } else {
       constructor = element.constructors.firstWhere((c) => !c.isPrivate);
     }
@@ -31,7 +30,7 @@ class ClassMapper {
     return '''
       extension $mapperName on $className {
         static $className fromMap(Map<String, dynamic> map) => ${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateConstructorParams(constructor)});
-        Map<String, dynamic> toMap() => {${_generateMappingEntries(constructor, classMappers, enumMappers)}};
+        Map<String, dynamic> toMap() => {${_generateMappingEntries(constructor, classes, enums)}};
         $className copy${constructor.parameters.isNotEmpty ? 'With' : ''}(${_generateCopyWithParams(constructor)}) => ${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateCopyWithConstructorParams(constructor)});
       }
     '''
@@ -77,15 +76,19 @@ class ClassMapper {
     }
   }
 
-  String _generateMappingEntries(ConstructorElement constructor,
-      Map<String, ClassMapper> classMappers, Map<String, EnumMapper> enumMappers) {
+  String _generateMappingEntries(
+    ConstructorElement constructor,
+    Set<String> classes,
+    Set<String> enums,
+  ) {
     List<String> params = [];
 
     var supertype = constructor.enclosingElement.supertype;
     if (supertype != null &&
         !supertype.isPrimitive &&
-        classMappers.containsKey(supertype.element.name)) {
-      params.add('...(this as ${supertype.getDisplayString(withNullability: false)}).toMap()');
+        classes.contains(supertype.element.name)) {
+      var superName = supertype.getDisplayString(withNullability: false);
+      params.add('...(this as $superName).toMap()');
     }
 
     for (var param in constructor.parameters) {
@@ -108,16 +111,17 @@ class ClassMapper {
         if (type.isPrimitive) {
           return key;
         } else {
-          var nullSuffix = type.nullabilitySuffix == NullabilitySuffix.question ? '?' : '';
+          var nullSuffix =
+              type.nullabilitySuffix == NullabilitySuffix.question ? '?' : '';
           if (type.isDartCoreList) {
             var tag = key[0].toLowerCase();
             return '$key$nullSuffix.map(($tag) => ${toMappedType(tag, (type as InterfaceType).typeArguments[0])}).toList()';
           } else if (type.isDartCoreMap) {
             var types = (type as InterfaceType).typeArguments;
             return '$key$nullSuffix.map((key, value) => MapEntry(${toMappedType('key', types[0])}, ${toMappedType('value', types[1])}))';
-          } else if (classMappers.containsKey(type.element?.name)) {
+          } else if (classes.contains(type.element?.name)) {
             return '$key$nullSuffix.toMap()';
-          } else if (enumMappers.containsKey(type.element?.name)) {
+          } else if (enums.contains(type.element?.name)) {
             return '$key$nullSuffix.toStringValue()';
           } else {
             return 'Mapper.encode($key)';

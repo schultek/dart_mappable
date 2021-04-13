@@ -12,7 +12,8 @@ import 'generator_options.dart';
 class MappableBuilder implements Builder {
   late GlobalOptions options;
 
-  MappableBuilder(BuilderOptions options) : options = GlobalOptions.parse(options.config);
+  MappableBuilder(BuilderOptions options)
+      : options = GlobalOptions.parse(options.config);
 
   @override
   FutureOr<void> build(BuildStep buildStep) async {
@@ -41,7 +42,8 @@ class MappableBuilder implements Builder {
 
     for (var library in libraries) {
       if (library.isInSdk ||
-          !library.identifier.startsWith('package:${buildStep.inputId.package}/')) {
+          !library.identifier
+              .startsWith('package:${buildStep.inputId.package}/')) {
         continue;
       }
 
@@ -56,15 +58,18 @@ class MappableBuilder implements Builder {
             return;
           }
 
-          enumMappers[element.name] = EnumMapper(element, libraryOptions.forEnum(element));
+          enumMappers[element.name] =
+              EnumMapper(element, libraryOptions.forEnum(element));
         } else {
           if (classMappers.containsKey(element.name)) {
             return;
           }
 
-          classMappers[element.name] = ClassMapper(element, libraryOptions.forClass(element));
+          classMappers[element.name] =
+              ClassMapper(element, libraryOptions.forClass(element));
 
-          if (element.supertype != null && !element.supertype!.isDartCoreObject) {
+          if (element.supertype != null &&
+              !element.supertype!.isDartCoreObject) {
             addRecursive(element.supertype!.element);
           }
         }
@@ -89,7 +94,10 @@ class MappableBuilder implements Builder {
       '',
       '// ignore_for_file: unnecessary_cast',
       '',
-      classMappers.values.map((om) => om.generateExtensionCode(classMappers, enumMappers)).join(),
+      classMappers.values
+          .map((om) => om.generateExtensionCode(
+              classMappers.keys.toSet(), enumMappers.keys.toSet()))
+          .join(),
       enumMappers.values.map((em) => em.generateExtensionCode()).join(),
       declarationsCode,
       '',

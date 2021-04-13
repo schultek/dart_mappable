@@ -17,8 +17,8 @@ class EnumMapper {
 
   String generateExtensionCode() {
     var values = element.fields
-        .where((field) => field.isEnumConstant)
-        .map((field) => MapEntry(field.name, toCaseStyle(field.name, options.caseStyle)));
+        .where((f) => f.isEnumConstant)
+        .map((f) => MapEntry(f.name, toCaseStyle(f.name, options.caseStyle)));
 
     return '''
       extension $mapperName on $className {

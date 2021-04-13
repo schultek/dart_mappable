@@ -1,3 +1,7 @@
+# 0.2.0+1
+
+- Change builder signature
+
 # 0.2.0
 
 - Support null-safety
