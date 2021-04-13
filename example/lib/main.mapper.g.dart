@@ -4,44 +4,44 @@ import 'package:dart_mappable_example/main.dart';
 // ignore_for_file: unnecessary_cast
 
 extension PersonMapper on Person {
-  static Person fromMap(Map<String, dynamic> map) => Person(map.get('nameabc'), map.get('age'), car: map.getOpt('car'), isAdmin: map.getOpt('isAdmin') ?? false, nums: map.getListOpt('nums') ?? const [], cars: map.getList('cars'));
-  Map<String, dynamic> toMap() => {'nameabc': nameabc, 'age': age, 'car': car?.toMap(), 'isAdmin': isAdmin, 'nums': nums, 'cars': cars.map((c) => c.toMap()).toList()};
-  Person copyWith({String? nameabc, dynamic? age, Car? car, bool? isAdmin, List<int>? nums, List<Car>? cars}) => Person(nameabc ?? this.nameabc, age ?? this.age, car: car ?? this.car, isAdmin: isAdmin ?? this.isAdmin, nums: nums ?? this.nums, cars: cars ?? this.cars);
+  static Person fromMap(Map<String, dynamic> map) => Person(map.get('name'), age: map.getOpt('age') ?? 18, car: map.getOpt('car'));
+  Map<String, dynamic> toMap() => {'name': name, 'age': age, 'car': car?.toMap()};
+  Person copyWith({String? name, int? age, Car? car}) => Person(name ?? this.name, age: age ?? this.age, car: car ?? this.car);
+}
+
+extension CarMapper on Car {
+  static Car fromMap(Map<String, dynamic> map) => Car(map.get('driven_km'), map.get('brand'));
+  Map<String, dynamic> toMap() => {'driven_km': drivenKm, 'brand': brand.toStringValue()};
+  Car copyWith({int? drivenKm, Brand? brand}) => Car(drivenKm ?? this.drivenKm, brand ?? this.brand);
 }
 
 extension AnimalMapper on Animal {
-  static Animal fromMap(Map<String, dynamic> map) => Animal(map.get('age'));
+  static Animal fromMap(Map<String, dynamic> map) => Animal(map.getOpt('age'));
   Map<String, dynamic> toMap() => {'age': age};
   Animal copyWith({int? age}) => Animal(age ?? this.age);
 }
 
 extension DogMapper on Dog {
-  static Dog fromMap(Map<String, dynamic> map) => Dog(map.get('breed'), map.get('age'));
+  static Dog fromMap(Map<String, dynamic> map) => Dog(map.get('breed'), map.getOpt('age'));
   Map<String, dynamic> toMap() => {...(this as Animal).toMap(), 'breed': breed};
   Dog copyWith({String? breed, int? age}) => Dog(breed ?? this.breed, age ?? this.age);
-}
-
-extension CarMapper on Car {
-  static Car fromMap(Map<String, dynamic> map) => Car(map.get('miles'), map.get('brand'));
-  Map<String, dynamic> toMap() => {'miles': miles, 'brand': brand.toStringValue()};
-  Car copyWith({int? miles, Brand? brand}) => Car(miles ?? this.miles, brand ?? this.brand);
 }
 
 
 extension BrandMapper on Brand {
   static Brand fromString(String value) {
     switch (value) {
-      case 'Toyota': return Brand.Toyota;
-      case 'Audi': return Brand.Audi;
-      case 'BMW': return Brand.BMW;
+      case 'toyota': return Brand.Toyota;
+      case 'audi': return Brand.Audi;
+      case 'bmw': return Brand.BMW;
       default: throw MapperException('Cannot parse String $value to enum Brand');
     }
   }
   String toStringValue() {
     switch (this) {
-      case Brand.Toyota: return 'Toyota';
-      case Brand.Audi: return 'Audi';
-      case Brand.BMW: return 'BMW';
+      case Brand.Toyota: return 'toyota';
+      case Brand.Audi: return 'audi';
+      case Brand.BMW: return 'bmw';
     }
   }
 }
@@ -98,9 +98,9 @@ var _typeConverters = <Type, TypeConverter>{
   // generated type converters
 
   typeOf<Person>(): _CheckedTypeConverter<Person, Map<String, dynamic>>(decoder: PersonMapper.fromMap, encoder: (Person p) => p.toMap()),
+  typeOf<Car>(): _CheckedTypeConverter<Car, Map<String, dynamic>>(decoder: CarMapper.fromMap, encoder: (Car c) => c.toMap()),
   typeOf<Animal>(): _CheckedTypeConverter<Animal, Map<String, dynamic>>(decoder: AnimalMapper.fromMap, encoder: (Animal a) => a.toMap()),
   typeOf<Dog>(): _CheckedTypeConverter<Dog, Map<String, dynamic>>(decoder: DogMapper.fromMap, encoder: (Dog d) => d.toMap()),
-  typeOf<Car>(): _CheckedTypeConverter<Car, Map<String, dynamic>>(decoder: CarMapper.fromMap, encoder: (Car c) => c.toMap()),
 
   typeOf<Brand>(): _CheckedTypeConverter<Brand, String>(decoder: BrandMapper.fromString, encoder: (Brand b) => b.toStringValue()),
 

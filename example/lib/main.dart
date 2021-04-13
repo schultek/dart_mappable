@@ -1,39 +1,51 @@
 import 'main.mapper.g.dart';
 
 class Person {
-  dynamic age;
   String name;
-  bool isAdmin;
-  Car? car;
-  List<int> nums;
-  List<Car> cars;
-
-  Person(String nameabc, this.age, {this.car, this.isAdmin = false, this.nums = const [], required this.cars})
-      : name = nameabc;
-  String get nameabc => name;
-}
-
-class Animal {
   int age;
-  Animal(this.age);
-}
+  Car? car;
 
-class Dog extends Animal {
-  String breed;
-  Dog(this.breed, int age) : super(age);
+  Person(this.name, {this.age = 18, this.car});
 }
 
 enum Brand { Toyota, Audi, BMW }
 
 class Car {
   final Brand brand;
-  final int miles;
+  final double miles;
 
-  const Car(this.miles, this.brand);
+  const Car(int drivenKm, this.brand) : miles = drivenKm * 0.62;
+
+  int get drivenKm => (miles / 0.62).round();
+}
+
+class Animal {
+  int? age;
+  Animal([this.age]);
+}
+
+class Dog extends Animal {
+  String breed;
+  Dog(this.breed, [int? age]) : super(age);
 }
 
 void main() {
-  var c = Car(2, Brand.Audi);
+  // decode from json string
+  String personJson = '{"name": "Max", "age": 20, "car": {"driven_km": 1000, "brand": "audi"}}';
+  Person person = Mapper.fromJson(personJson);
+  print('Person(name: ${person.name}, age: ${person.age})'); // Person(name: Max, age: 20)
+  print('Car(miles: ${person.car!.miles}, brand: ${person.car!.brand})'); // Car(miles: 620.0, brand: Brand.Audi)
 
-  c.toMap();
+  // make a copy
+  Person person2 = person.copyWith(name: 'Anna');
+  print('Person(name: ${person2.name})'); // Person(name: Anna)
+
+  // encode to map
+  Dog dog = Dog('Shiba', 4);
+  Map<String, dynamic> map = dog.toMap();
+  print(map); // {breed: Shiba, age: 4}
+
+  // decode from map
+  Dog dog2 = DogMapper.fromMap(map);
+  print('Dog(breed: ${dog2.breed}, age: ${dog2.age})'); // Dog(breed: Shiba, age: 4)
 }

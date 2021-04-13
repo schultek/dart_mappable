@@ -58,9 +58,9 @@ Last step is to `import` the generated files wherever you want / need them.
 
 ## TODOs
 
-- [] Improve documentation
-- [] Add examples
-- [] Support for generic classes
+- Improve documentation
+- Add examples
+- Support for generic classes
 
 ## Builder Config
 
@@ -114,5 +114,22 @@ targets:
 
 ## Case Styles
 
+You can specify the case style for the json keys and your stringified enum values. Choose one of the existing styles or spefify a custom one.
+
 TODO
 
+## Utilize Constructors
+
+By utilizing constructor arguments and initializer lists, you have fine control over how to parse your json objects. Possibilities include, while not limited to:
+
+- renaming fields
+- computing values
+- custom date formats
+
+TODO
+
+## Custom Types
+
+You can create custom type converters to serialize / deserialize custom types that are not part of the generated code.
+
+TODO
