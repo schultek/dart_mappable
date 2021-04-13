@@ -2,6 +2,7 @@ import 'package:analyzer/dart/element/element.dart';
 
 import 'case_style.dart';
 
+/// The builder options for a specific class
 class ClassOptions {
   String? constructor;
   CaseStyle? caseStyle;
@@ -17,13 +18,16 @@ class ClassOptions {
         fields = (options['fields'] as Map?)?.cast<String, String>() ?? {};
 }
 
+/// The builder options for a specific enum
 class EnumOptions {
   CaseStyle? caseStyle;
   EnumOptions({this.caseStyle});
 
-  EnumOptions.parse(Map options) : caseStyle = CaseStyle.fromString(options['caseStyle'] as String?);
+  EnumOptions.parse(Map options)
+      : caseStyle = CaseStyle.fromString(options['caseStyle'] as String?);
 }
 
+/// The builder options for a specific library
 class LibraryOptions {
   List<String>? include;
   List<String>? exclude;
@@ -95,6 +99,7 @@ class LibraryOptions {
   }
 }
 
+/// The global builder options from the build.yaml file
 class GlobalOptions {
   List<String>? include;
   List<String>? exclude;
@@ -106,7 +111,12 @@ class GlobalOptions {
   Map<String, LibraryOptions> libraries;
 
   GlobalOptions(
-      {this.include, this.exclude, this.libraries = const {}, this.caseStyle, this.enumCaseStyle, this.ignoreNull});
+      {this.include,
+      this.exclude,
+      this.libraries = const {},
+      this.caseStyle,
+      this.enumCaseStyle,
+      this.ignoreNull});
 
   GlobalOptions.parse(Map<String, dynamic> options)
       : include = options['include'] as List<String>?,
@@ -130,8 +140,12 @@ class GlobalOptions {
       );
     } else {
       return LibraryOptions(
-        include: (options.include ?? include) != null ? [...options.include ?? [], ...include ?? []] : null,
-        exclude: (options.exclude ?? exclude) != null ? [...options.exclude ?? [], ...exclude ?? []] : null,
+        include: (options.include ?? include) != null
+            ? [...options.include ?? [], ...include ?? []]
+            : null,
+        exclude: (options.exclude ?? exclude) != null
+            ? [...options.exclude ?? [], ...exclude ?? []]
+            : null,
         classes: options.classes,
         enums: options.enums,
         caseStyle: options.caseStyle ?? caseStyle,

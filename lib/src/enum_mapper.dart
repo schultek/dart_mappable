@@ -1,10 +1,10 @@
 import 'package:analyzer/dart/element/element.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:indent/indent.dart';
 
 import 'case_style.dart';
 import 'generator_options.dart';
 
+/// Generates code for a specific enum
 class EnumMapper {
   String get className => element.name;
   String get mapperName => '${className}Mapper';

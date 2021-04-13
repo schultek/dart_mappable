@@ -1,5 +1,6 @@
 import 'package:build/build.dart';
 
-import 'src/mappable_generator.dart';
+import 'src/mappable_builder.dart';
 
+/// Entry point for the builder
 Builder buildMappable(BuilderOptions options) => MappableBuilder(options);

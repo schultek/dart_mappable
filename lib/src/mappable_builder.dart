@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:indent/indent.dart';
 
 import 'class_mapper.dart';
@@ -13,9 +12,7 @@ import 'generator_options.dart';
 class MappableBuilder implements Builder {
   late GlobalOptions options;
 
-  MappableBuilder(BuilderOptions options) {
-    this.options = GlobalOptions.parse(options.config);
-  }
+  MappableBuilder(BuilderOptions options) : options = GlobalOptions.parse(options.config);
 
   @override
   FutureOr<void> build(BuildStep buildStep) async {
@@ -34,6 +31,8 @@ class MappableBuilder implements Builder {
         '.dart': ['.mapper.g.dart']
       };
 
+  /// Main generation handler
+  /// Searches for mappable classes and enums recursively
   String generate(List<LibraryElement> libraries, BuildStep buildStep) {
     Set<Uri> imports = {};
 
@@ -41,7 +40,8 @@ class MappableBuilder implements Builder {
     Map<String, EnumMapper> enumMappers = {};
 
     for (var library in libraries) {
-      if (library.isInSdk || !library.identifier.startsWith('package:${buildStep.inputId.package}/')) {
+      if (library.isInSdk ||
+          !library.identifier.startsWith('package:${buildStep.inputId.package}/')) {
         continue;
       }
 
@@ -111,7 +111,7 @@ class MappableBuilder implements Builder {
     ].join('\n');
   }
 
-  /// All of the declarations in this library.
+  /// All of the declared classes and enums in this library.
   Iterable<ClassElement> elementsOf(LibraryElement element) sync* {
     for (var cu in element.units) {
       yield* cu.enums;

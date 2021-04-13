@@ -1,3 +1,4 @@
+/// Declarations for the TypeConverter
 const declarationsCode = r'''
 typedef TypeDecoder<T, U> = T Function(U value);
 typedef TypeEncoder<T, U> = U Function(T value);
@@ -40,6 +41,7 @@ class _PrimitiveTypeConverter<T> implements TypeConverter<T> {
 }
 ''';
 
+/// A set of TypeConverters for primitive types
 const defaultTypeConverters = '''
   // primitive type converters
   typeOf<String>(): _PrimitiveTypeConverter<String>((dynamic v) => v.toString()),
@@ -50,6 +52,7 @@ const defaultTypeConverters = '''
   // generated type converters
 ''';
 
+/// Declarations for the Mapper class
 const mapperCode = r'''
 class Mapper {
   Mapper._();

@@ -1,6 +1,7 @@
 final splitter = RegExp(r'[ ./_\-\\]+|(?<=[a-z])(?=[A-Z])');
 final customCase = RegExp(r'^custom\(([luc][luc]?)?,(.?)\)$');
 
+/// Transforms a [String] to the given [CaseStyle]
 String toCaseStyle(String text, CaseStyle? style) {
   if (style == null) return text;
   var words = text.split(splitter);
@@ -12,12 +13,21 @@ String toCaseStyle(String text, CaseStyle? style) {
   return words.join(style.separator);
 }
 
+/// Used to transform fields to a specific case style
 class CaseStyle {
-  final TextTransform? head;
-  final TextTransform? tail;
-  final String separator;
   const CaseStyle(this.head, this.tail, this.separator);
 
+  /// Transforms the first word of a field name
+  final TextTransform? head;
+
+  /// Transforms all words but the first - or all words if [head] is null - of a field name
+  final TextTransform? tail;
+
+  /// The separator used between each word of a field name
+  /// Can be an empty [String]
+  final String separator;
+
+  /// Transforms a [String] to a [CaseStyle]
   static CaseStyle? fromString(String? value) {
     if (value == null || value == 'none' || value == 'unmodified') {
       return null;
@@ -61,6 +71,7 @@ class CaseStyle {
   }
 }
 
+/// Text transformation applied to a single word
 enum TextTransform { upperCase, lowerCase, capitalCase }
 
 TextTransform? parseTransform(String value) {

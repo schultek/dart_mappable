@@ -1,13 +1,13 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:indent/indent.dart';
 
 import 'case_style.dart';
 import 'enum_mapper.dart';
 import 'generator_options.dart';
 
+/// Generates code for a specific class
 class ClassMapper {
   String get className => element.name;
   String get mapperName => '${className}Mapper';
@@ -18,7 +18,8 @@ class ClassMapper {
 
   ClassMapper(this.element, this.options);
 
-  String generateExtensionCode(Map<String, ClassMapper> classMappers, Map<String, EnumMapper> enumMappers) {
+  String generateExtensionCode(
+      Map<String, ClassMapper> classMappers, Map<String, EnumMapper> enumMappers) {
     ConstructorElement? constructor;
 
     if (options.constructor != null) {
@@ -76,12 +77,14 @@ class ClassMapper {
     }
   }
 
-  String _generateMappingEntries(
-      ConstructorElement constructor, Map<String, ClassMapper> classMappers, Map<String, EnumMapper> enumMappers) {
+  String _generateMappingEntries(ConstructorElement constructor,
+      Map<String, ClassMapper> classMappers, Map<String, EnumMapper> enumMappers) {
     List<String> params = [];
 
     var supertype = constructor.enclosingElement.supertype;
-    if (supertype != null && !supertype.isPrimitive && classMappers.containsKey(supertype.element.name)) {
+    if (supertype != null &&
+        !supertype.isPrimitive &&
+        classMappers.containsKey(supertype.element.name)) {
       params.add('...(this as ${supertype.getDisplayString(withNullability: false)}).toMap()');
     }
 

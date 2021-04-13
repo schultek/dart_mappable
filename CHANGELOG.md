@@ -1,3 +1,8 @@
+# 0.2.0
+
+- Support null-safety
+- Add code documentation
+
 # 0.1.1+1
 
 - Improve example
