@@ -4,10 +4,10 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:indent/indent.dart';
 
+import 'builder_options.dart';
+import 'builder_snippets.dart';
 import 'class_mapper.dart';
 import 'enum_mapper.dart';
-import 'generation_snippets.dart';
-import 'generator_options.dart';
 
 class MappableBuilder implements Builder {
   late GlobalOptions options;
@@ -94,26 +94,32 @@ class MappableBuilder implements Builder {
       '',
       '// ignore_for_file: unnecessary_cast',
       '',
+      '// === GENERATED MAPPER CLASSES AND EXTENSIONS ===',
+      '',
       classMappers.values
           .map((om) => om.generateExtensionCode(
               classMappers.keys.toSet(), enumMappers.keys.toSet()))
           .join(),
       enumMappers.values.map((em) => em.generateExtensionCode()).join(),
-      declarationsCode,
       '',
-      'var _typeConverters = <Type, TypeConverter>{',
-      defaultTypeConverters,
+      '// === ALL STATICALLY REGISTERED MAPPERS ===',
+      '',
+      'var _mappers = <Type, Mapper>{',
+      defaultMappers,
       classMappers.values
           .map((om) =>
-              'typeOf<${om.className}>(): _CheckedTypeConverter<${om.className}, Map<String, dynamic>>(decoder: ${om.mapperName}.fromMap, encoder: (${om.className} ${om.paramName}) => ${om.paramName}.toMap()),')
+              'typeOf<${om.className}>(): ${om.mapperName}._(),')
           .join('\n')
           .indent(2),
       enumMappers.values
           .map((em) =>
-              'typeOf<${em.className}>(): _CheckedTypeConverter<${em.className}, String>(decoder: ${em.mapperName}.fromString, encoder: (${em.className} ${em.paramName}) => ${em.paramName}.toStringValue()),')
+              'typeOf<${em.className}>(): _EnumMapper<${em.className}>(${em.mapperName}.fromString, (${em.className} ${em.paramName}) => ${em.paramName}.toStringValue()),')
           .join('\n')
           .indent(2),
       '};',
+      '',
+      '',
+      '// === GENERATED UTILITY CLASSES ===',
       '',
       mapperCode,
     ].join('\n');

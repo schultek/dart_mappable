@@ -1,16 +1,19 @@
 import 'main.mapper.g.dart';
 
-class Person {
-  String name;
-  int age;
-  Car? car;
+class Person with Mappable<Person> {
+  final String name;
+  final int age;
+  final Car? car;
 
   Person(this.name, {this.age = 18, this.car});
+
+  // optional factory wrapper
+  factory Person.fromMap(Map<String, dynamic> map) => Mapper.fromMap(map);
 }
 
 enum Brand { Toyota, Audi, BMW }
 
-class Car {
+class Car with Mappable<Car> {
   final Brand brand;
   final double miles;
 
@@ -19,33 +22,30 @@ class Car {
   int get drivenKm => (miles / 0.62).round();
 }
 
-class Animal {
-  int? age;
-  Animal([this.age]);
-}
-
-class Dog extends Animal {
-  String breed;
-  Dog(this.breed, [int? age]) : super(age);
-}
 
 void main() {
+
   // decode from json string
-  String personJson = '{"name": "Max", "age": 20, "car": {"driven_km": 1000, "brand": "audi"}}';
+  String personJson = '{"name": "Max", "car": {"driven_km": 1000, "brand": "audi"}}';
   Person person = Mapper.fromJson(personJson);
-  print('Person(name: ${person.name}, age: ${person.age})'); // Person(name: Max, age: 20)
-  print('Car(miles: ${person.car!.miles}, brand: ${person.car!.brand})'); // Car(miles: 620.0, brand: Brand.Audi)
+  print(person); // Person(Max, age: 18, car: Car(1000, Brand.Audi))
+  print(person.car); // Car(miles: 620.0, brand: Brand.Audi)
 
   // make a copy
-  Person person2 = person.copyWith(name: 'Anna');
-  print('Person(name: ${person2.name})'); // Person(name: Anna)
+  Person person2 = person.copyWith(name: 'Anna', age: 20);
+  print(person2); // Person(Anna, age: 20, car: Car(1000, Brand.Audi))
 
   // encode to map
-  Dog dog = Dog('Shiba', 4);
-  Map<String, dynamic> map = dog.toMap();
-  print(map); // {breed: Shiba, age: 4}
+  Map<String, dynamic> map = person.toMap();
+  print(map); // {name: Max, age: 18, car: {driven_km: 1000, brand: audi}}
 
   // decode from map
-  Dog dog2 = DogMapper.fromMap(map);
-  print('Dog(breed: ${dog2.breed}, age: ${dog2.age})'); // Dog(breed: Shiba, age: 4)
+  Person person4 = Person.fromMap(map);
+  print(person4); // Person(Max, age: 18, car: Car(1000, Brand.Audi))
+  print(person4 == person); // true
+  print(person4.toJson()); // {"name":"Max","age":18,"car":{"driven_km":1000,"brand":"audi"}}
+
+  // optionally use Mapper functions
+  print(Mapper.isEqual(person, person4)); // true
+  print(Mapper.asString(person)); // Person(Max, age: 18, car: Car(1000, Brand.Audi))
 }

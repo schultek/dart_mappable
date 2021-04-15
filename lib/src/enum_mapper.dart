@@ -1,8 +1,8 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:indent/indent.dart';
 
+import 'builder_options.dart';
 import 'case_style.dart';
-import 'generator_options.dart';
 
 /// Generates code for a specific enum
 class EnumMapper {

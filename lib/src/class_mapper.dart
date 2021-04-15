@@ -3,13 +3,14 @@ import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:indent/indent.dart';
 
+import 'builder_options.dart';
 import 'case_style.dart';
-import 'generator_options.dart';
 
 /// Generates code for a specific class
 class ClassMapper {
   String get className => element.name;
   String get mapperName => '${className}Mapper';
+  String get extensionName => '${className}Extension';
   String get paramName => className[0].toLowerCase();
 
   ClassElement element;
@@ -17,8 +18,16 @@ class ClassMapper {
 
   ClassMapper(this.element, this.options);
 
+  String jsonKey(String fieldName) {
+    if (options.fields[fieldName] != null) {
+      return options.fields[fieldName]!;
+    } else {
+      return toCaseStyle(fieldName, options.caseStyle);
+    }
+  }
+
   String generateExtensionCode(Set<String> classes, Set<String> enums) {
-    ConstructorElement? constructor;
+    ConstructorElement constructor;
 
     if (options.constructor != null) {
       constructor =
@@ -28,10 +37,21 @@ class ClassMapper {
     }
 
     return '''
-      extension $mapperName on $className {
+      class $mapperName extends StrictMapper<$className, Map<String, dynamic>> {
+        $mapperName._();
         static $className fromMap(Map<String, dynamic> map) => ${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateConstructorParams(constructor)});
-        Map<String, dynamic> toMap() => {${_generateMappingEntries(constructor, classes, enums)}};
-        $className copy${constructor.parameters.isNotEmpty ? 'With' : ''}(${_generateCopyWithParams(constructor)}) => ${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateCopyWithConstructorParams(constructor)});
+        
+        @override $className strictDecode(Map<String, dynamic> map) => fromMap(map);
+        @override Map<String, dynamic> strictEncode($className $paramName) => {${_generateMappingEntries(constructor, classes, enums)}};
+        @override String stringify($className self) => '$className(${_generateStringParams(constructor, classes)})';
+        @override int hash($className self) => ${_generateHashParams(constructor, classes)};
+        @override bool strictEquals($className self, $className other) => ${_generateEqualsParams(constructor, classes)};
+      }
+    
+      extension $extensionName on $className {
+        String toJson() => Mapper.toJson(this);
+        Map<String, dynamic> toMap() => Mapper.toMap(this);
+        $className copy${constructor.parameters.isNotEmpty ? 'With' : ''}(${_generateCopyWithParams(constructor, classes)}) => ${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateCopyWithConstructorParams(constructor, classes)});
       }
     '''
         .unindent();
@@ -53,7 +73,7 @@ class ClassMapper {
       } else if (param.type.isDartCoreMap) {
         str += 'Map';
       }
-      if (param.isOptional) {
+      if (param.isOptional || param.type.nullabilitySuffix == NullabilitySuffix.question) {
         str += 'Opt';
       }
 
@@ -66,14 +86,6 @@ class ClassMapper {
       params.add(str);
     }
     return params.join(', ');
-  }
-
-  String jsonKey(String fieldName) {
-    if (options.fields[fieldName] != null) {
-      return options.fields[fieldName]!;
-    } else {
-      return toCaseStyle(fieldName, options.caseStyle);
-    }
   }
 
   String _generateMappingEntries(
@@ -100,11 +112,9 @@ class ClassMapper {
         type = param.field!.type;
       } else {
         var getter = constructor.enclosingElement.getGetter(name);
-
         if (getter != null) {
           type = getter.type.returnType;
         }
-        // TODO warn if no getter exists
       }
 
       String toMappedType(String key, DartType type) {
@@ -124,19 +134,20 @@ class ClassMapper {
           } else if (enums.contains(type.element?.name)) {
             return '$key$nullSuffix.toStringValue()';
           } else {
-            return 'Mapper.encode($key)';
+            return 'Mapper.toValue($key)';
           }
         }
       }
 
       if (type != null) {
         var key = jsonKey(name);
+        var param = '$paramName.$name';
 
         if (options.ignoreNull == true) {
-          var exp = toMappedType(name, type);
+          var exp = toMappedType(param, type);
           params.add("if ($exp != null) '$key': $exp");
         } else {
-          params.add("'$key': ${toMappedType(name, type)}");
+          params.add("'$key': ${toMappedType(param, type)}");
         }
       }
     }
@@ -144,17 +155,72 @@ class ClassMapper {
     return params.join(', ');
   }
 
-  String _generateCopyWithParams(ConstructorElement constructor) {
+  String _generateStringParams(ConstructorElement constructor, Set<String> classes) {
+    List<String> params = [];
+    for (var param in constructor.parameters) {
+      if (param is FieldFormalParameterElement || hasField(param.name, classes)) {
+        var str = '';
+        if (param.isNamed) {
+          str = '${param.name}: ';
+        }
+        str += '\${self.${param.name}}';
+        params.add(str);
+      }
+    }
+    return params.join(', ');
+  }
+
+  bool hasField(String field, Set<String> classes) {
+    bool elemHasField(ClassElement elem) {
+      if (elem.getGetter(field) != null) {
+        return true;
+      } else {
+        if (elem.supertype != null &&
+            !elem.supertype!.isPrimitive &&
+            classes.contains(elem.supertype!.element.name)) {
+          return elemHasField(elem.supertype!.element);
+        } else {
+          return false;
+        }
+      }
+    }
+    return elemHasField(element);
+
+  }
+
+  String _generateHashParams(ConstructorElement constructor, Set<String> classes) {
+    List<String> params = [];
+    for (var param in constructor.parameters) {
+      if (param is FieldFormalParameterElement || hasField(param.name, classes)) {
+        params.add('self.${param.name}.hashCode');
+      }
+    }
+    return params.join(' ^ ');
+  }
+
+  String _generateEqualsParams(ConstructorElement constructor, Set<String> classes) {
+    List<String> params = [];
+    for (var param in constructor.parameters) {
+      if (param is FieldFormalParameterElement || hasField(param.name, classes)) {
+        params.add('self.${param.name} == other.${param.name}');
+      }
+    }
+    return params.join(' && ');
+  }
+
+  String _generateCopyWithParams(ConstructorElement constructor, Set<String> classes) {
     if (constructor.parameters.isEmpty) return '';
     List<String> params = [];
     for (var param in constructor.parameters) {
-      var type = param.type.getDisplayString(withNullability: false);
-      params.add('$type? ${param.name}');
+      if (param is FieldFormalParameterElement || hasField(param.name, classes)) {
+        var type = param.type.getDisplayString(withNullability: false);
+        params.add('$type? ${param.name}');
+      }
     }
     return '{${params.join(', ')}}';
   }
 
-  String _generateCopyWithConstructorParams(ConstructorElement constructor) {
+  String _generateCopyWithConstructorParams(ConstructorElement constructor, Set<String> classes) {
     List<String> params = [];
     for (var param in constructor.parameters) {
       var str = '';
@@ -163,7 +229,11 @@ class ClassMapper {
         str = '${param.name}: ';
       }
 
-      str += '${param.name} ?? this.${param.name}';
+      if (param is FieldFormalParameterElement || hasField(param.name, classes)) {
+        str += '${param.name} ?? this.${param.name}';
+      } else {
+        str += param.name;
+      }
       params.add(str);
     }
     return params.join(', ');

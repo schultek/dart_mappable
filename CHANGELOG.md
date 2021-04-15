@@ -1,3 +1,7 @@
+# 0.2.1
+
+- Add support for `.toString()`, `==` and `hashCode` using the `Mappable` mixin
+
 # 0.2.0+1
 
 - Change builder signature

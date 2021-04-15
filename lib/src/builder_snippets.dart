@@ -1,85 +1,15 @@
-import 'dart:convert';
-import 'package:dart_mappable_example/main.dart';
-
-// ignore_for_file: unnecessary_cast
-
-// === GENERATED MAPPER CLASSES AND EXTENSIONS ===
-
-class PersonMapper extends StrictMapper<Person, Map<String, dynamic>> {
-  PersonMapper._();
-  static Person fromMap(Map<String, dynamic> map) => Person(map.get('name'), age: map.getOpt('age') ?? 18, car: map.getOpt('car'));
-
-  @override Person strictDecode(Map<String, dynamic> map) => fromMap(map);
-  @override Map<String, dynamic> strictEncode(Person p) => {'name': p.name, 'age': p.age, 'car': p.car?.toMap()};
-  @override String stringify(Person self) => 'Person(${self.name}, age: ${self.age}, car: ${self.car})';
-  @override int hash(Person self) => self.name.hashCode ^ self.age.hashCode ^ self.car.hashCode;
-  @override bool strictEquals(Person self, Person other) => self.name == other.name && self.age == other.age && self.car == other.car;
-}
-
-extension PersonExtension on Person {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  Person copyWith({String? name, int? age, Car? car}) => Person(name ?? this.name, age: age ?? this.age, car: car ?? this.car);
-}
-
-class CarMapper extends StrictMapper<Car, Map<String, dynamic>> {
-  CarMapper._();
-  static Car fromMap(Map<String, dynamic> map) => Car(map.get('driven_km'), map.get('brand'));
-
-  @override Car strictDecode(Map<String, dynamic> map) => fromMap(map);
-  @override Map<String, dynamic> strictEncode(Car c) => {'driven_km': c.drivenKm, 'brand': c.brand.toStringValue()};
-  @override String stringify(Car self) => 'Car(${self.drivenKm}, ${self.brand})';
-  @override int hash(Car self) => self.drivenKm.hashCode ^ self.brand.hashCode;
-  @override bool strictEquals(Car self, Car other) => self.drivenKm == other.drivenKm && self.brand == other.brand;
-}
-
-extension CarExtension on Car {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  Car copyWith({int? drivenKm, Brand? brand}) => Car(drivenKm ?? this.drivenKm, brand ?? this.brand);
-}
-
-
-extension BrandMapper on Brand {
-  static Brand fromString(String value) {
-    switch (value) {
-      case 'toyota': return Brand.Toyota;
-      case 'audi': return Brand.Audi;
-      case 'bmw': return Brand.BMW;
-      default: throw MapperException('Cannot parse String $value to enum Brand');
-    }
-  }
-  String toStringValue() {
-    switch (this) {
-      case Brand.Toyota: return 'toyota';
-      case Brand.Audi: return 'audi';
-      case Brand.BMW: return 'bmw';
-    }
-  }
-}
-
-
-
-// === ALL STATICALLY REGISTERED MAPPERS ===
-
-var _mappers = <Type, Mapper>{
+/// A set of Mappers for primitive types
+const defaultMappers = '''
   // primitive mappers
   typeOf<String>(): _PrimitiveMapper<String>((dynamic v) => v.toString()),
   typeOf<int>(): _PrimitiveMapper<int>((dynamic v) => num.parse(v.toString()).round()),
   typeOf<double>(): _PrimitiveMapper<double>((dynamic v) => double.parse(v.toString())),
   typeOf<num>(): _PrimitiveMapper<num>((dynamic v) => num.parse(v.toString())),
   typeOf<bool>(): _PrimitiveMapper<bool>((dynamic v) => v is num ? v != 0 : v.toString() == 'true'),
-  // generated mappers
-  typeOf<Person>(): PersonMapper._(),
-  typeOf<Car>(): CarMapper._(),
+  // generated mappers''';
 
-  typeOf<Brand>(): _EnumMapper<Brand>(BrandMapper.fromString, (Brand b) => b.toStringValue()),
-
-};
-
-
-// === GENERATED UTILITY CLASSES ===
-
+/// Declarations for the Mapper class
+const mapperCode = r'''
 abstract class Mapper<T> {
 
   T decode(dynamic value);
@@ -274,3 +204,4 @@ class MapperException implements Exception {
   @override
   String toString() => 'MapperException: $message';
 }
+''';

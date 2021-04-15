@@ -54,7 +54,7 @@ class LibraryOptions {
 
   LibraryOptions.parse(Map options)
       : include = options['include'] as List<String>?,
-        exclude = options['exclude'] as List<String>,
+        exclude = options['exclude'] as List<String>?,
         classes = toMap(options['classes'], (v) => ClassOptions.parse(v)),
         enums = toMap(options['enums'], (v) => EnumOptions.parse(v)),
         caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
@@ -63,7 +63,9 @@ class LibraryOptions {
         ignoreNull = options['ignoreNull'] as bool?;
 
   bool shouldGenerateFor(ClassElement element) {
-    if (include != null) {
+    if (classes.containsKey(element.name)) {
+      return true;
+    } else if (include != null) {
       return include!.contains(element.name);
     } else if (exclude != null) {
       return !exclude!.contains(element.name) && !element.isDartCoreObject;
@@ -125,7 +127,7 @@ class GlobalOptions {
 
   GlobalOptions.parse(Map<String, dynamic> options)
       : include = options['include'] as List<String>?,
-        exclude = options['exclude'] as List<String>,
+        exclude = options['exclude'] as List<String>?,
         libraries = toMap(options['libraries'], (v) => LibraryOptions.parse(v)),
         caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
         enumCaseStyle =
