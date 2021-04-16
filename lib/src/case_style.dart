@@ -32,22 +32,22 @@ class CaseStyle {
 
   /// Transforms a [String] to a [CaseStyle]
   static CaseStyle? fromString(String? value) {
-    if (value == null || value == 'none' || value == 'unmodified') {
+    if (value == null || value == none || value == unmodified) {
       return null;
     } else {
       switch (value) {
-        case 'camelCase':
+        case camelCase:
           return const CaseStyle(
               TextTransform.lowerCase, TextTransform.capitalCase, '');
-        case 'pascalCase':
+        case pascalCase:
           return const CaseStyle(null, TextTransform.capitalCase, '');
-        case 'snakeCase':
+        case snakeCase:
           return const CaseStyle(null, TextTransform.lowerCase, '_');
-        case 'paramCase':
+        case paramCase:
           return const CaseStyle(null, TextTransform.lowerCase, '-');
-        case 'lowerCase':
+        case lowerCase:
           return const CaseStyle(null, TextTransform.lowerCase, '');
-        case 'upperCase':
+        case upperCase:
           return const CaseStyle(null, TextTransform.upperCase, '');
       }
       if (value.startsWith('custom')) {
@@ -74,6 +74,30 @@ class CaseStyle {
       }
     }
   }
+
+  /// No [CaseStyle] will be applied
+  static const none = 'none';
+
+  /// Alias of [CaseStyle.none]
+  static const unmodified = 'unmodified';
+
+  /// Transforms to 'fieldName'
+  static const camelCase = 'camelCase';
+
+  /// Transforms to 'FieldName'
+  static const pascalCase = 'pascalCase';
+
+  /// Transforms to 'field_name'
+  static const snakeCase = 'snakeCase';
+
+  /// Transforms to 'field-name'
+  static const paramCase = 'paramCase';
+
+  /// Transforms to 'fieldname'
+  static const lowerCase = 'lowerCase';
+
+  /// Transforms to 'FIELDNAME'
+  static const upperCase = 'upperCase';
 }
 
 /// Text transformation applied to a single word

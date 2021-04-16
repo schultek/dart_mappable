@@ -1,3 +1,8 @@
+# 0.2.1+1
+
+- Fix formatting
+- Export BuildOptions and CaseStyle classes
+
 # 0.2.1
 
 - Add support for `.toString()`, `==` and `hashCode` using the `Mappable` mixin

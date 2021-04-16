@@ -9,7 +9,9 @@ import 'builder_snippets.dart';
 import 'class_mapper.dart';
 import 'enum_mapper.dart';
 
+/// The main builder used for code generation
 class MappableBuilder implements Builder {
+  /// The global options defined in the 'build.yaml' file
   late GlobalOptions options;
 
   MappableBuilder(BuilderOptions options)
@@ -107,8 +109,7 @@ class MappableBuilder implements Builder {
       'var _mappers = <Type, Mapper>{',
       defaultMappers,
       classMappers.values
-          .map((om) =>
-              'typeOf<${om.className}>(): ${om.mapperName}._(),')
+          .map((om) => 'typeOf<${om.className}>(): ${om.mapperName}._(),')
           .join('\n')
           .indent(2),
       enumMappers.values

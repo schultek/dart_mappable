@@ -73,7 +73,8 @@ class ClassMapper {
       } else if (param.type.isDartCoreMap) {
         str += 'Map';
       }
-      if (param.isOptional || param.type.nullabilitySuffix == NullabilitySuffix.question) {
+      if (param.isOptional ||
+          param.type.nullabilitySuffix == NullabilitySuffix.question) {
         str += 'Opt';
       }
 
@@ -155,10 +156,12 @@ class ClassMapper {
     return params.join(', ');
   }
 
-  String _generateStringParams(ConstructorElement constructor, Set<String> classes) {
+  String _generateStringParams(
+      ConstructorElement constructor, Set<String> classes) {
     List<String> params = [];
     for (var param in constructor.parameters) {
-      if (param is FieldFormalParameterElement || hasField(param.name, classes)) {
+      if (param is FieldFormalParameterElement ||
+          hasField(param.name, classes)) {
         var str = '';
         if (param.isNamed) {
           str = '${param.name}: ';
@@ -184,35 +187,41 @@ class ClassMapper {
         }
       }
     }
-    return elemHasField(element);
 
+    return elemHasField(element);
   }
 
-  String _generateHashParams(ConstructorElement constructor, Set<String> classes) {
+  String _generateHashParams(
+      ConstructorElement constructor, Set<String> classes) {
     List<String> params = [];
     for (var param in constructor.parameters) {
-      if (param is FieldFormalParameterElement || hasField(param.name, classes)) {
+      if (param is FieldFormalParameterElement ||
+          hasField(param.name, classes)) {
         params.add('self.${param.name}.hashCode');
       }
     }
     return params.join(' ^ ');
   }
 
-  String _generateEqualsParams(ConstructorElement constructor, Set<String> classes) {
+  String _generateEqualsParams(
+      ConstructorElement constructor, Set<String> classes) {
     List<String> params = [];
     for (var param in constructor.parameters) {
-      if (param is FieldFormalParameterElement || hasField(param.name, classes)) {
+      if (param is FieldFormalParameterElement ||
+          hasField(param.name, classes)) {
         params.add('self.${param.name} == other.${param.name}');
       }
     }
     return params.join(' && ');
   }
 
-  String _generateCopyWithParams(ConstructorElement constructor, Set<String> classes) {
+  String _generateCopyWithParams(
+      ConstructorElement constructor, Set<String> classes) {
     if (constructor.parameters.isEmpty) return '';
     List<String> params = [];
     for (var param in constructor.parameters) {
-      if (param is FieldFormalParameterElement || hasField(param.name, classes)) {
+      if (param is FieldFormalParameterElement ||
+          hasField(param.name, classes)) {
         var type = param.type.getDisplayString(withNullability: false);
         params.add('$type? ${param.name}');
       }
@@ -220,7 +229,8 @@ class ClassMapper {
     return '{${params.join(', ')}}';
   }
 
-  String _generateCopyWithConstructorParams(ConstructorElement constructor, Set<String> classes) {
+  String _generateCopyWithConstructorParams(
+      ConstructorElement constructor, Set<String> classes) {
     List<String> params = [];
     for (var param in constructor.parameters) {
       var str = '';
@@ -229,7 +239,8 @@ class ClassMapper {
         str = '${param.name}: ';
       }
 
-      if (param is FieldFormalParameterElement || hasField(param.name, classes)) {
+      if (param is FieldFormalParameterElement ||
+          hasField(param.name, classes)) {
         str += '${param.name} ?? this.${param.name}';
       } else {
         str += param.name;
