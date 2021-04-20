@@ -1,3 +1,8 @@
+# 0.3.0
+
+- Generic type support
+- Improved documentation
+
 # 0.2.1+1
 
 - Fix formatting

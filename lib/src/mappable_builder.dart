@@ -91,10 +91,9 @@ class MappableBuilder implements Builder {
     }
 
     return <String>[
+      '// ignore_for_file: unnecessary_cast, prefer_relative_imports, unused_element',
       "import 'dart:convert';",
       imports.map((i) => "import '$i';").join('\n'),
-      '',
-      '// ignore_for_file: unnecessary_cast',
       '',
       '// === GENERATED MAPPER CLASSES AND EXTENSIONS ===',
       '',
@@ -106,19 +105,18 @@ class MappableBuilder implements Builder {
       '',
       '// === ALL STATICALLY REGISTERED MAPPERS ===',
       '',
-      'var _mappers = <Type, Mapper>{',
+      'var _mappers = <String, Mapper>{',
       defaultMappers,
       classMappers.values
-          .map((om) => 'typeOf<${om.className}>(): ${om.mapperName}._(),')
+          .map((om) => "'${om.className}': ${om.mapperName}._(),")
           .join('\n')
           .indent(2),
       enumMappers.values
           .map((em) =>
-              'typeOf<${em.className}>(): _EnumMapper<${em.className}>(${em.mapperName}.fromString, (${em.className} ${em.paramName}) => ${em.paramName}.toStringValue()),')
+              "'${em.className}': _EnumMapper<${em.className}>(${em.mapperName}.fromString, (${em.className} ${em.paramName}) => ${em.paramName}.toStringValue()),")
           .join('\n')
           .indent(2),
       '};',
-      '',
       '',
       '// === GENERATED UTILITY CLASSES ===',
       '',

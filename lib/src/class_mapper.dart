@@ -26,32 +26,43 @@ class ClassMapper {
     }
   }
 
-  String generateExtensionCode(Set<String> classes, Set<String> enums) {
-    ConstructorElement constructor;
-
+  ConstructorElement _chooseConstructor() {
     if (options.constructor != null) {
-      constructor =
-          element.constructors.firstWhere((c) => c.name == options.constructor);
+      return element.constructors
+          .firstWhere((c) => c.name == options.constructor);
     } else {
-      constructor = element.constructors.firstWhere((c) => !c.isPrivate);
+      return element.constructors.firstWhere((c) => !c.isPrivate);
+    }
+  }
+
+  String generateExtensionCode(Set<String> classes, Set<String> enums) {
+    ConstructorElement constructor = _chooseConstructor();
+
+    var typeParams = '';
+    if (element.typeParameters.isNotEmpty) {
+      typeParams = '<${element.typeParameters.map((p) => p.name).join(', ')}>';
     }
 
     return '''
-      class $mapperName extends StrictMapper<$className, Map<String, dynamic>> {
+      class $mapperName implements Mapper<$className> {
         $mapperName._();
-        static $className fromMap(Map<String, dynamic> map) => ${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateConstructorParams(constructor)});
         
-        @override $className strictDecode(Map<String, dynamic> map) => fromMap(map);
-        @override Map<String, dynamic> strictEncode($className $paramName) => {${_generateMappingEntries(constructor, classes, enums)}};
+        $className$typeParams fromValue$typeParams(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap$typeParams(map));
+        $className$typeParams fromMap$typeParams(Map<String, dynamic> map) => ${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateConstructorParams(constructor)});
+        
+        @override Map<String, dynamic> encode($className $paramName) => {${_generateMappingEntries(constructor, classes, enums)}};
         @override String stringify($className self) => '$className(${_generateStringParams(constructor, classes)})';
         @override int hash($className self) => ${_generateHashParams(constructor, classes)};
-        @override bool strictEquals($className self, $className other) => ${_generateEqualsParams(constructor, classes)};
+        @override bool equals($className self, $className other) => ${_generateEqualsParams(constructor, classes)};
+        
+        @override Function get decoder => fromValue;
+        @override Function get typeFactory => $typeParams(f) => f<$className$typeParams>();
       }
     
-      extension $extensionName on $className {
+      extension $extensionName$typeParams on $className$typeParams {
         String toJson() => Mapper.toJson(this);
         Map<String, dynamic> toMap() => Mapper.toMap(this);
-        $className copy${constructor.parameters.isNotEmpty ? 'With' : ''}(${_generateCopyWithParams(constructor, classes)}) => ${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateCopyWithConstructorParams(constructor, classes)});
+        $className$typeParams copy${constructor.parameters.isNotEmpty ? 'With' : ''}(${_generateCopyWithParams(constructor, classes)}) => ${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateCopyWithConstructorParams(constructor, classes)});
       }
     '''
         .unindent();
@@ -159,14 +170,12 @@ class ClassMapper {
   String _generateStringParams(
       ConstructorElement constructor, Set<String> classes) {
     List<String> params = [];
-    for (var param in constructor.parameters) {
-      if (param is FieldFormalParameterElement ||
-          hasField(param.name, classes)) {
+
+    for (var field in element.fields) {
+      if (field.getter?.isSynthetic ?? false) {
         var str = '';
-        if (param.isNamed) {
-          str = '${param.name}: ';
-        }
-        str += '\${self.${param.name}}';
+        str = '${field.name}: ';
+        str += '\${self.${field.name}}';
         params.add(str);
       }
     }
