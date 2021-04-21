@@ -153,13 +153,14 @@ class ClassMapper {
 
       if (type != null) {
         var key = jsonKey(name);
-        var param = '$paramName.$name';
 
-        if (options.ignoreNull == true) {
-          var exp = toMappedType(param, type);
+        var exp = toMappedType('$paramName.$name', type);
+
+        if (options.ignoreNull == true &&
+            param.type.nullabilitySuffix != NullabilitySuffix.none) {
           params.add("if ($exp != null) '$key': $exp");
         } else {
-          params.add("'$key': ${toMappedType(param, type)}");
+          params.add("'$key': $exp");
         }
       }
     }

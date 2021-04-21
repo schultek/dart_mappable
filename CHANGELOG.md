@@ -1,3 +1,7 @@
+# 0.3.1
+
+- Conditionally apply ignoreNull
+
 # 0.3.0
 
 - Generic type support

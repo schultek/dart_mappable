@@ -25,7 +25,7 @@ To get started, add the following lines to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  dart_mappable: ^0.3.0
+  dart_mappable: ^0.3.1
   build_runner: ^1.12.2
 ```
 
