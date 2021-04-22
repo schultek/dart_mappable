@@ -112,7 +112,7 @@ class ClassMapper {
         !supertype.isPrimitive &&
         classes.contains(supertype.element.name)) {
       var superName = supertype.getDisplayString(withNullability: false);
-      params.add('...(this as $superName).toMap()');
+      params.add('...($paramName as $superName).toMap()');
     }
 
     for (var param in constructor.parameters) {
