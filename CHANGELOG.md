@@ -1,3 +1,7 @@
+# 0.3.2
+
+- Add support for DateTime
+
 # 0.3.1
 
 - Conditionally apply ignoreNull

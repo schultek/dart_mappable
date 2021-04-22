@@ -1,6 +1,6 @@
 name: dart_mappable
 description: Serialize / deserialize dart objects effortlessly, without any boilerplate code or annotations.
-version: 0.3.1
+version: 0.3.2
 repository: https://github.com/schultek/dart_mappable
 issue_tracker: https://github.com/schultek/dart_mappable/issues
 

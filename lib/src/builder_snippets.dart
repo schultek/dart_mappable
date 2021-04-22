@@ -7,6 +7,7 @@ const defaultMappers = '''
   'double':  _PrimitiveMapper<double>((dynamic v) => double.parse(v.toString())),
   'num':     _PrimitiveMapper<num>((dynamic v) => num.parse(v.toString())),
   'bool':    _PrimitiveMapper<bool>((dynamic v) => v is num ? v != 0 : v.toString() == 'true'),
+  'DateTime':_DateTimeMapper(),
   'List':    _ListMapper(),
   'Map':     _MapMapper(),
   // generated mappers''';
@@ -44,6 +45,7 @@ abstract class Mapper<T> {
   }
 
   static dynamic toValue(dynamic value) {
+    if (value == null) return null;
     var typeInfo = getTypeInfo(value.runtimeType.toString());
     if (_mappers[typeInfo.type] != null) {
       var encoded = _mappers[typeInfo.type]!.encode(value);
@@ -96,7 +98,7 @@ abstract class Mapper<T> {
   static void use<T>(Mapper<T> mapper) => _mappers[baseType<T>()] = mapper;
  
   static String baseType<T>([Type? t]) {
-    String input = (t ?? T).toString();
+    var input = (t ?? T).toString();
     return input.split('<')[0];
   }
 }
@@ -114,8 +116,8 @@ abstract class Mappable<T> {
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 
   @override String toString() => _mapper?.stringify(this) ?? super.toString();
-  @override bool operator ==(Object other) => _mapper != null ? identical(this, other) || runtimeType == other.runtimeType && _mapper!.equals(this, other) : this == other;
-  @override int get hashCode => _mapper?.hash(this) ?? this.hashCode;
+  @override bool operator ==(Object other) => _mapper != null ? identical(this, other) || runtimeType == other.runtimeType && _mapper!.equals(this, other) : super == other;
+  @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
 }
 
 T checked<T, U>(dynamic v, T Function(U) fn) {
@@ -124,6 +126,22 @@ T checked<T, U>(dynamic v, T Function(U) fn) {
   } else {
     throw MapperException('Cannot decode value of type ${v.runtimeType} to type $T, because a value of type $U is expected.');
   }
+}
+
+class _DateTimeMapper extends BaseMapper<DateTime> {
+  @override Function get decoder => decode;
+
+  DateTime decode(dynamic d) {
+    if (d is String) {
+      return DateTime.parse(d);
+    } else if (d is num) {
+      return DateTime.fromMillisecondsSinceEpoch(d.round());
+    } else {
+      throw MapperException('Cannot decode value of type ${d.runtimeType} to type DateTime, because a value of type String or num is expected.');
+    }
+  }
+  
+  @override String encode(DateTime self) => self.toUtc().toIso8601String();
 }
 
 class _ListMapper extends BaseMapper<List> {
