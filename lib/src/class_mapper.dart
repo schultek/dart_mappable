@@ -107,12 +107,17 @@ class ClassMapper {
   ) {
     List<String> params = [];
 
-    var supertype = constructor.enclosingElement.supertype;
-    if (supertype != null &&
-        !supertype.isPrimitive &&
-        classes.contains(supertype.element.name)) {
-      var superName = supertype.getDisplayString(withNullability: false);
-      params.add('...($paramName as $superName).toMap()');
+    PropertyAccessorElement? findGetter(String name, ClassElement element) {
+      var g = element.getGetter(name);
+      if (g != null) {
+        return g;
+      }
+      var supertype = element.supertype;
+      if (supertype != null &&
+          !supertype.isPrimitive &&
+          classes.contains(supertype.element.name)) {
+        return findGetter(name, supertype.element);
+      }
     }
 
     for (var param in constructor.parameters) {
@@ -123,7 +128,7 @@ class ClassMapper {
       if (param is FieldFormalParameterElement) {
         type = param.field!.type;
       } else {
-        var getter = constructor.enclosingElement.getGetter(name);
+        var getter = findGetter(name, constructor.enclosingElement);
         if (getter != null) {
           type = getter.type.returnType;
         }
