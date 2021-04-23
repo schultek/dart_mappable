@@ -166,7 +166,7 @@ abstract class Mapper<T> {
 
   static dynamic toValue(dynamic value) {
     if (value == null) return null;
-    var typeInfo = getTypeInfo(value.runtimeType.toString());
+    var typeInfo = getTypeInfoFor(value);
     if (_mappers[typeInfo.type] != null) {
       var encoded = _mappers[typeInfo.type]!.encode(value);
       if (encoded is Map<String, dynamic>) {
@@ -375,6 +375,17 @@ class TypeInfo {
 
   @override
   String toString() => '$type${params.isNotEmpty ? '<${params.join(', ')}>' : ''}';
+}
+
+TypeInfo getTypeInfoFor(dynamic value) {
+  var info = getTypeInfo(value.runtimeType.toString());
+  if (value is List) {
+    return info..type = 'List';
+  } else if (value is Map) {
+    return info..type = 'Map';
+  } else {
+    return info;
+  }
 }
 
 TypeInfo getTypeInfo<T>([String? type]) {
