@@ -31,15 +31,17 @@ class ClassMapper {
       return element.constructors
           .firstWhere((c) => c.name == options.constructor);
     } else {
-      return element.constructors.firstWhere((c) => !c.isPrivate);
+      return element.constructors
+          .firstWhere((c) => !c.isPrivate && c.parameters.isNotEmpty);
     }
   }
 
   bool hasValidConstructor() {
-    if (options.constructor != null) {
-      return element.constructors.any((c) => c.name == options.constructor);
-    } else {
-      return element.constructors.any((c) => !c.isPrivate);
+    try {
+      var _ = _chooseConstructor();
+      return true;
+    } catch (_) {
+      return false;
     }
   }
 
