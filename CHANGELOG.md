@@ -1,3 +1,7 @@
+# 0.3.4
+
+- Ignore classes with only private constructors
+
 # 0.3.3
 
 - Change auto_apply to none

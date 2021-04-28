@@ -67,8 +67,13 @@ class MappableBuilder implements Builder {
             return;
           }
 
-          classMappers[element.name] =
+          var classMapper =
               ClassMapper(element, libraryOptions.forClass(element));
+          if (!classMapper.hasValidConstructor()) {
+            return;
+          }
+
+          classMappers[element.name] = classMapper;
 
           if (element.supertype != null &&
               !element.supertype!.isDartCoreObject) {
