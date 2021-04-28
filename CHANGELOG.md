@@ -1,3 +1,7 @@
+# 0.3.3
+
+- Change auto_apply to none
+
 # 0.3.2
 
 - Add support for DateTime

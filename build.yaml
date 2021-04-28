@@ -3,5 +3,5 @@ builders:
     import: "package:dart_mappable/builder.dart"
     builder_factories: [ "buildMappable" ]
     build_extensions: { ".dart": [ ".mapper.g.dart" ] }
-    auto_apply: root_package
+    auto_apply: none
     build_to: source
