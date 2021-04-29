@@ -69,7 +69,8 @@ class MappableBuilder implements Builder {
 
           var classMapper =
               ClassMapper(element, libraryOptions.forClass(element));
-          if (!classMapper.hasValidConstructor()) {
+
+          if (element.isPrivate || !classMapper.hasValidConstructor()) {
             return;
           }
 
