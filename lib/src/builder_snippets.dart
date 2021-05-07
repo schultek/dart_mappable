@@ -26,7 +26,7 @@ abstract class Mapper<T> {
   Mapper._();
 
   static T fromValue<T>(dynamic value) {
-    if (value.runtimeType == T) {
+    if (value.runtimeType == T || value == null) {
       return value as T;
     } else {
       TypeInfo typeInfo;
