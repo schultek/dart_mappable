@@ -114,12 +114,12 @@ class MappableBuilder implements Builder {
       'var _mappers = <String, Mapper>{',
       defaultMappers,
       classMappers.values
-          .map((om) => "'${om.className}': ${om.mapperName}._(),")
+          .map((om) => 'typeOf<${om.className}>(): ${om.mapperName}._(),')
           .join('\n')
           .indent(2),
       enumMappers.values
           .map((em) =>
-              "'${em.className}': _EnumMapper<${em.className}>(${em.mapperName}.fromString, (${em.className} ${em.paramName}) => ${em.paramName}.toStringValue()),")
+              'typeOf<${em.className}>(): _EnumMapper<${em.className}>(${em.mapperName}.fromString, (${em.className} ${em.paramName}) => ${em.paramName}.toStringValue()),')
           .join('\n')
           .indent(2),
       '};',

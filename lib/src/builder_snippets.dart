@@ -1,15 +1,15 @@
 /// A set of Mappers for primitive types
 const defaultMappers = '''
   // primitive mappers
-  'dynamic': _PrimitiveMapper((dynamic v) => v),
-  'String':  _PrimitiveMapper<String>((dynamic v) => v.toString()),
-  'int':     _PrimitiveMapper<int>((dynamic v) => num.parse(v.toString()).round()),
-  'double':  _PrimitiveMapper<double>((dynamic v) => double.parse(v.toString())),
-  'num':     _PrimitiveMapper<num>((dynamic v) => num.parse(v.toString())),
-  'bool':    _PrimitiveMapper<bool>((dynamic v) => v is num ? v != 0 : v.toString() == 'true'),
-  'DateTime':_DateTimeMapper(),
-  'List':    _ListMapper(),
-  'Map':     _MapMapper(),
+  typeOf<dynamic>():  _PrimitiveMapper((dynamic v) => v),
+  typeOf<String>():   _PrimitiveMapper<String>((dynamic v) => v.toString()),
+  typeOf<int>():      _PrimitiveMapper<int>((dynamic v) => num.parse(v.toString()).round()),
+  typeOf<double>():   _PrimitiveMapper<double>((dynamic v) => double.parse(v.toString())),
+  typeOf<num>():      _PrimitiveMapper<num>((dynamic v) => num.parse(v.toString())),
+  typeOf<bool>():     _PrimitiveMapper<bool>((dynamic v) => v is num ? v != 0 : v.toString() == 'true'),
+  typeOf<DateTime>(): _DateTimeMapper(),
+  typeOf<List>():     _ListMapper(),
+  typeOf<Map>():      _MapMapper(),
   // generated mappers''';
 
 /// Declarations for the Mapper class
@@ -76,7 +76,7 @@ abstract class Mapper<T> {
   static String toJson(dynamic object) => jsonEncode(toValue(object));
 
   static bool isEqual(dynamic value, Object? other) {
-    var type = baseType(value.runtimeType);
+    var type = typeOf(value.runtimeType);
     if (_mappers[type] != null) {
       return _mappers[type]!.equals(value, other);
     } else {
@@ -86,7 +86,7 @@ abstract class Mapper<T> {
   }
 
   static String asString(dynamic value) {
-    var type = baseType(value.runtimeType);
+    var type = typeOf(value.runtimeType);
     if (_mappers[type] != null) {
       return _mappers[type]!.stringify(value);
     } else {
@@ -95,12 +95,12 @@ abstract class Mapper<T> {
     }
   }
 
-  static void use<T>(Mapper<T> mapper) => _mappers[baseType<T>()] = mapper;
- 
-  static String baseType<T>([Type? t]) {
-    var input = (t ?? T).toString();
-    return input.split('<')[0];
-  }
+  static void use<T>(Mapper<T> mapper) => _mappers[typeOf<T>()] = mapper;
+}
+
+String typeOf<T>([Type? t]) {
+  var input = (t ?? T).toString();
+  return input.split('<')[0];
 }
 
 void clearType(Map<String, dynamic> map) {
@@ -110,7 +110,7 @@ void clearType(Map<String, dynamic> map) {
 }
 
 abstract class Mappable<T> {
-  Mapper? get _mapper => _mappers[Mapper.baseType(runtimeType)];
+  Mapper? get _mapper => _mappers[typeOf(runtimeType)];
 
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);

@@ -1,3 +1,7 @@
+# 0.3.5
+
+- Fix minified types issue on web
+
 # 0.3.4
 
 - Ignore classes with only private constructors
