@@ -124,8 +124,9 @@ var _mappers = <String, Mapper>{
   typeOf<num>():      _PrimitiveMapper<num>((dynamic v) => num.parse(v.toString())),
   typeOf<bool>():     _PrimitiveMapper<bool>((dynamic v) => v is num ? v != 0 : v.toString() == 'true'),
   typeOf<DateTime>(): _DateTimeMapper(),
-  typeOf<List>():     _ListMapper(),
-  typeOf<Map>():      _MapMapper(),
+  typeOf<List>():     IterableMapper<List>(<T>(Iterable<T> i) => i.toList(), <T>(f) => f<List<T>>()),
+  typeOf<Set>():      IterableMapper<Set>(<T>(Iterable<T> i) => i.toSet(), <T>(f) => f<Set<T>>()),
+  typeOf<Map>():      MapMapper<Map>(<K, V>(Map<K, V> map) => map, <K, V>(f) => f<Map<K, V>>()),
   // generated mappers
   typeOf<Person>(): PersonMapper._(),
   typeOf<Car>(): CarMapper._(),
@@ -202,6 +203,17 @@ abstract class Mapper<T> {
       return value;
     } else {
       throw MapperException('Cannot encode value of type ${object.runtimeType} to Map. Instead encoded to type ${value.runtimeType}.');
+    }
+  }
+  
+  static T fromIterable<T>(Iterable<dynamic> iterable) => fromValue<T>(iterable);
+
+  static Iterable<dynamic> toIterable(dynamic object, {bool withDiscriminator = false}) {
+    var value = toValue(object, withDiscriminator: withDiscriminator);
+    if (value is Iterable<dynamic>) {
+      return value;
+    } else {
+      throw MapperException('Cannot encode value of type ${object.runtimeType} to Iterable. Instead encoded to type ${value.runtimeType}.');
     }
   }
 
@@ -282,21 +294,24 @@ class _DateTimeMapper extends BaseMapper<DateTime> {
   @override String encode(DateTime self) => self.toUtc().toIso8601String();
 }
 
-class _ListMapper extends BaseMapper<List> {
-  @override Function get decoder => decode;
-  List<T> decode<T>(dynamic l) => checked(l, (List l) => l.map((v) => Mapper.fromValue<T>(v)).toList());
+class IterableMapper<I extends Iterable> extends BaseMapper<I> {
+  Iterable<U> Function<U>(Iterable<U> iterable) fromIterable;
+  IterableMapper(this.fromIterable, this.typeFactory);
 
-  @override List encode(List self) => self.map((v) => Mapper.toValue(v)).toList();
-  @override Function get typeFactory => <T>(f) => f<List<T>>();
+  @override Function get decoder => decode;
+  Iterable<T> decode<T>(dynamic l) => checked(l, (Iterable l) => fromIterable(l.map((v) => Mapper.fromValue<T>(v))));
+  @override List encode(I self) => self.map((v) => Mapper.toValue(v)).toList();
+  @override Function typeFactory;
 }
 
-class _MapMapper extends BaseMapper<Map> {
-  @override Function get decoder => decode;
-  Map<K, V> decode<K, V>(dynamic m) => checked(m, (Map m) => m.map((key, value) =>
-      MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value))));
+class MapMapper<M extends Map> extends BaseMapper<M> {
+  Map<K, V> Function<K, V>(Map<K, V> map) fromMap;
+  MapMapper(this.fromMap, this.typeFactory);
 
-  @override Map encode(Map self) => self.map((key, value) => MapEntry(Mapper.toValue(key), Mapper.toValue(value)));
-  @override Function get typeFactory => <K, V>(f) => f<Map<K, V>>();
+  @override Function get decoder => decode;
+  Map<K, V> decode<K, V>(dynamic m) => checked(m,(Map m) => fromMap(m.map((key, value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)))));
+  @override Map encode(M self) => self.map((key, value) => MapEntry(Mapper.toValue(key), Mapper.toValue(value)));
+  @override Function typeFactory;
 }
 
 abstract class BaseMapper<T> implements Mapper<T> {

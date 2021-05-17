@@ -25,7 +25,7 @@ To get started, add the following lines to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  dart_mappable: ^0.3.6
+  dart_mappable: ^0.3.7
   build_runner: ^1.12.2
 ```
 
@@ -60,9 +60,9 @@ Last step is to `import` the generated files wherever you want / need them.
 
 ## TODOs
 
-- Improve documentation
-- Add examples
-- Encoding / Decoding options
+- More Encoding / Decoding options
+- Unmapped properties
+- Annotations (Optional!)
 
 ## Builder Config
 
@@ -238,7 +238,102 @@ class CustomGenericMapper extends BaseMapper<GenericBox> { // only use the base 
   dynamic encode(GenericBox self) { // no need for type parameters here
     return Mapper.toValue(self.content);
   }
+
+  // in case of generic types, we also must specify a type factory. This is a special type of 
+  // function used internally to construct generic instances of your type.
+  // specify any type arguments in alignment to the decoder function
+  @override
+  Function get typeFactory => <T>(f) => f<GenericBox<T>>();
 }
+
+// don't forget
+Mapper.use(CustomGenericMapper());
+```
+
+## Lists, Sets and Maps
+
+We support lists, sets and maps out of the box, without any special syntax, workarounds or hacks. Just use `Mapper.fromJson` as you normally would:
+
+```dart
+
+class Dog with Mappable {
+  String name;
+  Dog(this.name);
+}
+
+class Box<T> with Mappable {
+  T content;
+  Box(this.content);
+}
+
+void main() {
+
+  // simple list
+  List<int> nums = Mapper.fromJson('[2, 4, 105]');
+  print(nums); // [2, 4, 105]
+
+  // set of objects
+  Set<Dog> dogs = Mapper.fromJson('[{"name": "Thor"}, {"name": "Lasse"}, {"name": "Thor"}]');
+  print(dogs); // {Dog(name: Thor), Dog(name: Lasse)}
+
+  // or more complex lists, like generics
+  List<Box<double>> boxes = Mapper.fromJson('[{"content": 0.1}, {"content": 12.34}]');
+  print(boxes); // [Box(content: 0.1), Box(content: 12.34)]
+}
+```
+
+There is also the `Mapper.fromIterable` method. This can be used if you already have a list of dynamic objects instead of the raw json string.
+Additionally this can get handy to decode a dynamic list of partly-encoded values:
+
+```dart
+List<double> myNumbers = Mapper.fromIterable([2.312, '1.32', 500, '1e4']);
+print(myNumbers); // [2.312, 1.32, 500.0, 10000.0]
+```
+  
+### Non-Trivial Maps  
+  
+We also support decoding of non-trivial maps.
+Although the use-cases might be rare, you can decode to something other than a map of string keys like this:
+
+```dart
+var encodedMap = {
+  {'name': 'Bonny'}: 1,
+  {'name': 'Clyde'}: 5,
+};
+
+Map<Dog, int> treatsPerDog = Mapper.fromValue(encodedMap);
+print(treatsPerDog[Dog('Clyde')]!); // 5
+
+var myMap = Mapper.toValue(treatsPerDog);
+print(myMap); // {{name: Bonny}: 1, {name: Clyde}: 5}
+```
+
+> Make sure to do mixin Mapper on your key class, in order to enable easy property access
+
+> Since json only supports string keys, we can't do `Mapper.fromJson` or `Mapper.toJson` on these maps. You would have to decode / encode your keys and values separately.
+
+### Custom Mappers
+
+For special Iterable and Map types, you can of course specify `CustomMapper`s as described in the previous section.
+However, we provide ready-to-use `IterableMapper` and `MapMapper` to make your life a little bit easier:
+
+For both you have to provide 
+1. a factory function, which converts a generic iterable / map to your special implementation, 
+2. a type factory, similar to the one used in generic custom mappers.
+
+```dart
+Mapper.use(IterableMapper<HashSet>(
+  <T>(Iterable<T> i) => HashSet.of(i),
+  <T>(f) => f<HashSet<T>>(),
+));
+
+Mapper.use(MapMapper<HashMap>(
+  <K, V>(Map<K, V> m) => HashMap.of(m),
+  <K, V>(f) => f<HashMap<K, V>>(),
+));
+
+HashSet<Brand> brands = Mapper.fromJson('["toyota", "audi", "audi"]');
+print(brands); // {Brands.Toyota, Brands.Audi}
 ```
 
 ## Polymorphism and Discriminators

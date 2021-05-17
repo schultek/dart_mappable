@@ -71,7 +71,7 @@ void main() {
   dynamic whatAmI = Mapper.fromJson(boxJson);
   print(whatAmI.runtimeType); // Box<Confetti>
 
-  // also works with lists
-  List<Box<double>> boxes = Mapper.fromJson('[{"size": 10, "content": 0.1}, {"size": 2, "content": 12.34}]');
-  print(boxes[1].content); // 12.34
+  // also works with lists and sets
+  List<int> numbers = Mapper.fromJson('[2, 4, 105]');
+  print(numbers); // [2, 4, 105]
 }

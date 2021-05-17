@@ -1,3 +1,8 @@
+# 0.3.7
+
+- Add support for custom iterables and maps
+- Improve documentation on decoding lists, sets and maps
+
 # 0.3.6
 
 - Add support for abstract classes and polymorphism using type discriminators
