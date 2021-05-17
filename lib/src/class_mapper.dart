@@ -16,6 +16,8 @@ class ClassMapper {
   ClassElement element;
   ClassOptions options;
 
+  Set<Element> subElements = {};
+
   ClassMapper(this.element, this.options);
 
   String jsonKey(String fieldName) {
@@ -45,7 +47,7 @@ class ClassMapper {
     }
   }
 
-  String generateExtensionCode(Set<String> classes, Set<String> enums) {
+  String generateExtensionCode(Map<String, ClassMapper> classes) {
     ConstructorElement constructor = _chooseConstructor();
 
     var typeParams = '';
@@ -58,24 +60,33 @@ class ClassMapper {
         $mapperName._();
         
         $className$typeParams fromValue$typeParams(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap$typeParams(map));
-        $className$typeParams fromMap$typeParams(Map<String, dynamic> map) => ${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateConstructorParams(constructor)});
+        $className$typeParams fromMap$typeParams(Map<String, dynamic> map) => ${_generateFromMap(constructor)}
         
-        @override Map<String, dynamic> encode($className $paramName) => {${_generateMappingEntries(constructor, classes, enums)}};
-        @override String stringify($className self) => '$className(${_generateStringParams(constructor, classes)})';
-        @override int hash($className self) => ${_generateHashParams(constructor, classes)};
-        @override bool equals($className self, $className other) => ${_generateEqualsParams(constructor, classes)};
+        @override Map<String, dynamic> encode($className $paramName) => {${_generateMappingEntries(constructor, classes)}};
+        @override String stringify($className self) => '$className(${_generateStringParams(constructor, classes.keys.toSet())})';
+        @override int hash($className self) => ${_generateHashParams(constructor, classes.keys.toSet())};
+        @override bool equals($className self, $className other) => ${_generateEqualsParams(constructor, classes.keys.toSet())};
         
         @override Function get decoder => fromValue;
         @override Function get typeFactory => $typeParams(f) => f<$className$typeParams>();
+        @override String? get discriminator => ${options.discriminator != null ? "'${options.discriminator}'" : 'null'};
       }
     
       extension $extensionName$typeParams on $className$typeParams {
         String toJson() => Mapper.toJson(this);
         Map<String, dynamic> toMap() => Mapper.toMap(this);
-        $className$typeParams copy${constructor.parameters.isNotEmpty ? 'With' : ''}(${_generateCopyWithParams(constructor, classes)}) => ${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateCopyWithConstructorParams(constructor, classes)});
+        ${_generateCopyWith(constructor, typeParams, classes)}
       }
     '''
         .unindent();
+  }
+
+  String _generateFromMap(ConstructorElement constructor) {
+    if (element.isAbstract) {
+      return "throw MapperException('Cannot instantiate abstract class ${element.name}, are you missing a type discriminator?');";
+    } else {
+      return '${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateConstructorParams(constructor)});';
+    }
   }
 
   String _generateConstructorParams(ConstructorElement constructor) {
@@ -112,8 +123,7 @@ class ClassMapper {
 
   String _generateMappingEntries(
     ConstructorElement constructor,
-    Set<String> classes,
-    Set<String> enums,
+    Map<String, ClassMapper> classes,
   ) {
     List<String> params = [];
 
@@ -125,7 +135,7 @@ class ClassMapper {
       var supertype = element.supertype;
       if (supertype != null &&
           !supertype.isPrimitive &&
-          classes.contains(supertype.element.name)) {
+          classes.containsKey(supertype.element.name)) {
         return findGetter(name, supertype.element);
       }
     }
@@ -156,12 +166,12 @@ class ClassMapper {
           } else if (type.isDartCoreMap) {
             var types = (type as InterfaceType).typeArguments;
             return '$key$nullSuffix.map((key, value) => MapEntry(${toMappedType('key', types[0])}, ${toMappedType('value', types[1])}))';
-          } else if (classes.contains(type.element?.name)) {
-            return '$key$nullSuffix.toMap()';
-          } else if (enums.contains(type.element?.name)) {
-            return '$key$nullSuffix.toStringValue()';
           } else {
-            return 'Mapper.toValue($key)';
+            var args = [];
+            if (classes[type.element?.name]?.subElements.isNotEmpty ?? false) {
+              args.add(', withDiscriminator: true');
+            }
+            return 'Mapper.toValue($key${args.join()})';
           }
         }
       }
@@ -238,6 +248,19 @@ class ClassMapper {
       }
     }
     return params.join(' && ');
+  }
+
+  String _generateCopyWith(ConstructorElement constructor, String typeParams,
+      Map<String, ClassMapper> classes) {
+    if (element.isAbstract) {
+      return '';
+    } else {
+      var method = 'copy${constructor.parameters.isNotEmpty ? 'With' : ''}';
+      var params = _generateCopyWithParams(constructor, classes.keys.toSet());
+      var body =
+          '${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateCopyWithConstructorParams(constructor, classes.keys.toSet())})';
+      return '$className$typeParams $method($params) => $body;';
+    }
   }
 
   String _generateCopyWithParams(

@@ -54,7 +54,7 @@ class MappableBuilder implements Builder {
       var elements = elementsOf(library);
       bool hasMappedType = false;
 
-      void addRecursive(ClassElement element) {
+      void addRecursive(ClassElement element, [ClassElement? subElement]) {
         if (element.isEnum) {
           if (enumMappers.containsKey(element.name)) {
             return;
@@ -64,6 +64,9 @@ class MappableBuilder implements Builder {
               EnumMapper(element, libraryOptions.forEnum(element));
         } else {
           if (classMappers.containsKey(element.name)) {
+            if (subElement != null) {
+              classMappers[element.name]!.subElements.add(subElement);
+            }
             return;
           }
 
@@ -78,7 +81,7 @@ class MappableBuilder implements Builder {
 
           if (element.supertype != null &&
               !element.supertype!.isDartCoreObject) {
-            addRecursive(element.supertype!.element);
+            addRecursive(element.supertype!.element, element);
           }
         }
       }
@@ -104,8 +107,7 @@ class MappableBuilder implements Builder {
       '// === GENERATED MAPPER CLASSES AND EXTENSIONS ===',
       '',
       classMappers.values
-          .map((om) => om.generateExtensionCode(
-              classMappers.keys.toSet(), enumMappers.keys.toSet()))
+          .map((om) => om.generateExtensionCode(classMappers))
           .join(),
       enumMappers.values.map((em) => em.generateExtensionCode()).join(),
       '',

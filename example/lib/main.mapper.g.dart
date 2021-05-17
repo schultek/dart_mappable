@@ -10,13 +10,14 @@ class PersonMapper implements Mapper<Person> {
   Person fromValue(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   Person fromMap(Map<String, dynamic> map) => Person(map.get('name'), age: map.getOpt('age') ?? 18, car: map.getOpt('car'));
 
-  @override Map<String, dynamic> encode(Person p) => {'name': p.name, 'age': p.age, 'car': p.car?.toMap()};
+  @override Map<String, dynamic> encode(Person p) => {'name': p.name, 'age': p.age, 'car': Mapper.toValue(p.car)};
   @override String stringify(Person self) => 'Person(name: ${self.name}, age: ${self.age}, car: ${self.car})';
   @override int hash(Person self) => self.name.hashCode ^ self.age.hashCode ^ self.car.hashCode;
   @override bool equals(Person self, Person other) => self.name == other.name && self.age == other.age && self.car == other.car;
 
   @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<Person>();
+  @override String? get discriminator => null;
 }
 
 extension PersonExtension on Person {
@@ -31,13 +32,14 @@ class CarMapper implements Mapper<Car> {
   Car fromValue(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   Car fromMap(Map<String, dynamic> map) => Car(map.get('driven_km'), map.get('brand'));
 
-  @override Map<String, dynamic> encode(Car c) => {'driven_km': c.drivenKm, 'brand': c.brand.toStringValue()};
+  @override Map<String, dynamic> encode(Car c) => {'driven_km': c.drivenKm, 'brand': Mapper.toValue(c.brand)};
   @override String stringify(Car self) => 'Car(miles: ${self.miles}, brand: ${self.brand})';
   @override int hash(Car self) => self.drivenKm.hashCode ^ self.brand.hashCode;
   @override bool equals(Car self, Car other) => self.drivenKm == other.drivenKm && self.brand == other.brand;
 
   @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<Car>();
+  @override String? get discriminator => null;
 }
 
 extension CarExtension on Car {
@@ -59,6 +61,7 @@ class BoxMapper implements Mapper<Box> {
 
   @override Function get decoder => fromValue;
   @override Function get typeFactory => <T>(f) => f<Box<T>>();
+  @override String? get discriminator => null;
 }
 
 extension BoxExtension<T> on Box<T> {
@@ -80,6 +83,7 @@ class ConfettiMapper implements Mapper<Confetti> {
 
   @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<Confetti>();
+  @override String? get discriminator => null;
 }
 
 extension ConfettiExtension on Confetti {
@@ -138,6 +142,7 @@ abstract class Mapper<T> {
   dynamic encode(T self);
   Function get decoder;
   Function get typeFactory;
+  String? get discriminator;
   
   String stringify(T self);
   int hash(T self);
@@ -150,12 +155,17 @@ abstract class Mapper<T> {
       return value as T;
     } else {
       TypeInfo typeInfo;
-      if (value is Map<String, dynamic> && value['_type'] != null) {
-        typeInfo = getTypeInfo(value['_type'] as String);
+      if (value is Map<String, dynamic> && value['__type'] != null) {
+        typeInfo = getTypeInfo(value['__type'] as String);
       } else {
         typeInfo = getTypeInfo<T>();
       }
       var mapper = _mappers[typeInfo.type];
+      var discriminator = mapper?.discriminator ?? '_type';
+      if (value is Map<String, dynamic> && value[discriminator] != null) {
+        typeInfo = getTypeInfo(value[discriminator] as String);
+        mapper = _mappers[typeInfo.type];
+      }
       if (mapper != null) {
         return genericCall(typeInfo, mapper.decoder, value) as T;
       } else {
@@ -164,7 +174,7 @@ abstract class Mapper<T> {
     }
   }
 
-  static dynamic toValue(dynamic value) {
+  static dynamic toValue(dynamic value, {bool withDiscriminator = false}) {
     if (value == null) return null;
     var typeInfo = getTypeInfoFor(value);
     if (_mappers[typeInfo.type] != null) {
@@ -172,7 +182,10 @@ abstract class Mapper<T> {
       if (encoded is Map<String, dynamic>) {
         clearType(encoded);
         if (typeInfo.params.isNotEmpty) {
-          encoded['_type'] = typeInfo.toString();
+          encoded['__type'] = typeInfo.toString();
+        }
+        if (withDiscriminator) {
+          encoded[_mappers[typeInfo.type]!.discriminator ?? '_type'] = typeInfo.toString();
         }
       }
       return encoded;
@@ -183,8 +196,8 @@ abstract class Mapper<T> {
 
   static T fromMap<T>(Map<String, dynamic> map) => fromValue<T>(map);
 
-  static Map<String, dynamic> toMap(dynamic object) {
-    var value = toValue(object);
+  static Map<String, dynamic> toMap(dynamic object, {bool withDiscriminator = false}) {
+    var value = toValue(object, withDiscriminator: withDiscriminator);
     if (value is Map<String, dynamic>) {
       return value;
     } else {
@@ -192,8 +205,13 @@ abstract class Mapper<T> {
     }
   }
 
-  static T fromJson<T>(String json) => fromValue<T>(jsonDecode(json));
-  static String toJson(dynamic object) => jsonEncode(toValue(object));
+  static T fromJson<T>(String json) {
+    return fromValue<T>(jsonDecode(json));
+  }
+  
+  static String toJson(dynamic object, {bool withDiscriminator = false}) {
+    return jsonEncode(toValue(object, withDiscriminator: withDiscriminator));
+  }
 
   static bool isEqual(dynamic value, Object? other) {
     var type = typeOf(value.runtimeType);
@@ -224,7 +242,7 @@ String typeOf<T>([Type? t]) {
 }
 
 void clearType(Map<String, dynamic> map) {
-  map.removeWhere((key, _) => key == '_type');
+  map.removeWhere((key, _) => key == '__type');
   map.values.whereType<Map<String, dynamic>>().forEach(clearType);
   map.values.whereType<List>().forEach((l) => l.whereType<Map<String, dynamic>>().forEach(clearType));
 }
@@ -286,6 +304,7 @@ abstract class BaseMapper<T> implements Mapper<T> {
   @override int hash(T self) => self.hashCode;
   @override String stringify(T self) => self.toString();
   @override Function get typeFactory => (f) => f<T>();
+  @override String? get discriminator => null;
 }
 
 class _PrimitiveMapper<T> with BaseMapper<T> implements Mapper<T> {

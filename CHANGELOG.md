@@ -1,3 +1,7 @@
+# 0.3.6
+
+- Add support for abstract classes and polymorphism using type discriminators
+
 # 0.3.5
 
 - Fix minified types issue on web

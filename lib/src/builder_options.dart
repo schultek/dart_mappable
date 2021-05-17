@@ -7,18 +7,21 @@ class ClassOptions {
   String? constructor;
   CaseStyle? caseStyle;
   bool? ignoreNull;
+  String? discriminator;
   Map<String, String> fields;
 
   ClassOptions(
       {this.constructor,
       this.caseStyle,
       this.ignoreNull,
+      this.discriminator,
       this.fields = const {}});
 
   ClassOptions.parse(Map options)
       : constructor = options['constructor'] as String?,
         caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
         ignoreNull = options['ignoreNull'] as bool?,
+        discriminator = options['discriminator'] as String?,
         fields = (options['fields'] as Map?)?.cast<String, String>() ?? {};
 }
 
@@ -39,6 +42,7 @@ class LibraryOptions {
   CaseStyle? caseStyle;
   CaseStyle? enumCaseStyle;
   bool? ignoreNull;
+  String? discriminator;
 
   Map<String, ClassOptions> classes;
   Map<String, EnumOptions> enums;
@@ -50,7 +54,8 @@ class LibraryOptions {
       this.enums = const {},
       this.caseStyle,
       this.enumCaseStyle,
-      this.ignoreNull});
+      this.ignoreNull,
+      this.discriminator});
 
   LibraryOptions.parse(Map options)
       : include = options['include'] as List<String>?,
@@ -60,7 +65,8 @@ class LibraryOptions {
         caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
         enumCaseStyle =
             CaseStyle.fromString(options['enumCaseStyle'] as String?),
-        ignoreNull = options['ignoreNull'] as bool?;
+        ignoreNull = options['ignoreNull'] as bool?,
+        discriminator = options['discriminator'] as String?;
 
   bool shouldGenerateFor(ClassElement element) {
     if (classes.containsKey(element.name)) {
@@ -95,13 +101,16 @@ class LibraryOptions {
       return ClassOptions(
         caseStyle: caseStyle,
         ignoreNull: ignoreNull,
+        discriminator: discriminator,
       );
     } else {
       return ClassOptions(
-          constructor: options.constructor,
-          caseStyle: options.caseStyle ?? caseStyle,
-          ignoreNull: options.ignoreNull ?? ignoreNull,
-          fields: options.fields);
+        constructor: options.constructor,
+        caseStyle: options.caseStyle ?? caseStyle,
+        ignoreNull: options.ignoreNull ?? ignoreNull,
+        discriminator: options.discriminator ?? discriminator,
+        fields: options.fields,
+      );
     }
   }
 }
@@ -114,6 +123,7 @@ class GlobalOptions {
   CaseStyle? caseStyle;
   CaseStyle? enumCaseStyle;
   bool? ignoreNull;
+  String? discriminator;
 
   Map<String, LibraryOptions> libraries;
 
@@ -123,7 +133,8 @@ class GlobalOptions {
       this.libraries = const {},
       this.caseStyle,
       this.enumCaseStyle,
-      this.ignoreNull});
+      this.ignoreNull,
+      this.discriminator});
 
   GlobalOptions.parse(Map<String, dynamic> options)
       : include = options['include'] as List<String>?,
@@ -132,7 +143,8 @@ class GlobalOptions {
         caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
         enumCaseStyle =
             CaseStyle.fromString(options['enumCaseStyle'] as String?),
-        ignoreNull = options['ignoreNull'] as bool?;
+        ignoreNull = options['ignoreNull'] as bool?,
+        discriminator = options['discriminator'] as String?;
 
   LibraryOptions forLibrary(LibraryElement library) {
     var libFilePath =
@@ -146,6 +158,7 @@ class GlobalOptions {
         caseStyle: caseStyle,
         enumCaseStyle: enumCaseStyle,
         ignoreNull: ignoreNull,
+        discriminator: discriminator,
       );
     } else {
       return LibraryOptions(
@@ -160,6 +173,7 @@ class GlobalOptions {
         caseStyle: options.caseStyle ?? caseStyle,
         enumCaseStyle: options.enumCaseStyle ?? enumCaseStyle,
         ignoreNull: options.ignoreNull ?? ignoreNull,
+        discriminator: options.discriminator ?? discriminator,
       );
     }
   }
