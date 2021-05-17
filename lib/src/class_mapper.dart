@@ -160,7 +160,7 @@ class ClassMapper {
         } else {
           var nullSuffix =
               type.nullabilitySuffix == NullabilitySuffix.question ? '?' : '';
-          if (type.isDartCoreList) {
+          if (type.isDartCoreList || type.isDartCoreSet) {
             var tag = key[0].toLowerCase();
             return '$key$nullSuffix.map(($tag) => ${toMappedType(tag, (type as InterfaceType).typeArguments[0])}).toList()';
           } else if (type.isDartCoreMap) {
@@ -168,8 +168,13 @@ class ClassMapper {
             return '$key$nullSuffix.map((key, value) => MapEntry(${toMappedType('key', types[0])}, ${toMappedType('value', types[1])}))';
           } else {
             var args = [];
-            if (classes[type.element?.name]?.subElements.isNotEmpty ?? false) {
-              args.add(', withDiscriminator: true');
+            if (type.element != null && type.element is ClassElement) {
+              var e = type.element! as ClassElement;
+              if (classes[e.name]?.subElements.isNotEmpty ?? false) {
+                args.add(', withDiscriminator: true');
+              } else if (e.isAbstract || e.isMixin) {
+                args.add(', withDiscriminator: true');
+              }
             }
             return 'Mapper.toValue($key${args.join()})';
           }
