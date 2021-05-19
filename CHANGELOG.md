@@ -1,3 +1,7 @@
+# 0.3.8
+
+- Add support for custom discriminator values
+
 # 0.3.7
 
 - Add support for custom iterables and maps

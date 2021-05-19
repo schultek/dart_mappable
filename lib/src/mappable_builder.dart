@@ -54,34 +54,36 @@ class MappableBuilder implements Builder {
       var elements = elementsOf(library);
       bool hasMappedType = false;
 
-      void addRecursive(ClassElement element, [ClassElement? subElement]) {
+      ClassMapper? addRecursive(ClassElement element,
+          {bool isSuperClass = false}) {
         if (element.isEnum) {
           if (enumMappers.containsKey(element.name)) {
-            return;
+            return null;
           }
 
           enumMappers[element.name] =
               EnumMapper(element, libraryOptions.forEnum(element));
         } else {
           if (classMappers.containsKey(element.name)) {
-            if (subElement != null) {
-              classMappers[element.name]!.subElements.add(subElement);
-            }
-            return;
+            classMappers[element.name]!.isSuperMapper = isSuperClass;
+            return classMappers[element.name];
           }
 
-          var classMapper =
-              ClassMapper(element, libraryOptions.forClass(element));
+          var classMapper = ClassMapper(
+              element, libraryOptions.forClass(element),
+              isSuperMapper: isSuperClass);
 
           if (element.isPrivate || !classMapper.hasValidConstructor()) {
-            return;
+            return classMapper;
           }
 
           classMappers[element.name] = classMapper;
 
           if (element.supertype != null &&
               !element.supertype!.isDartCoreObject) {
-            addRecursive(element.supertype!.element, element);
+            var superMapper =
+                addRecursive(element.supertype!.element, isSuperClass: true);
+            classMapper.superMapper = superMapper;
           }
         }
       }
@@ -106,9 +108,7 @@ class MappableBuilder implements Builder {
       '',
       '// === GENERATED MAPPER CLASSES AND EXTENSIONS ===',
       '',
-      classMappers.values
-          .map((om) => om.generateExtensionCode(classMappers))
-          .join(),
+      classMappers.values.map((om) => om.generateExtensionCode()).join(),
       enumMappers.values.map((em) => em.generateExtensionCode()).join(),
       '',
       '// === ALL STATICALLY REGISTERED MAPPERS ===',

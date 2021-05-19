@@ -25,7 +25,7 @@ To get started, add the following lines to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  dart_mappable: ^0.3.7
+  dart_mappable: ^0.3.8
   build_runner: ^1.12.2
 ```
 
@@ -104,6 +104,7 @@ targets:
                 ClassA: # name of the class
                   constructor: decode # specify a named constructor to use (instead of using the default)
                   caseStyle: camelCase # overwrite the caseStyle
+                  discriminatorValue: my-class # set a custom value for the discriminator property
                   fields: # overwrite the string mapping for specific fields
                     someField: _my+special:json_key
               
@@ -341,7 +342,6 @@ print(brands); // {Brands.Toyota, Brands.Audi}
 A common pattern that you might want to use for your classes is polymorphism. As a simple example see the classes below. 
 
 ```dart
-
 abstract class Animal with Mappable {
   String name;
   Animal(this.name);
@@ -356,40 +356,26 @@ class Dog extends Animal {
   int age;
   Dog(String name, this.age) : super(name);
 }
-
-class Home {
-  Animal pet;
-  Home(this.pet);
-}
 ```
 
 Now when we want to encode a `Home` object, the `pet` property can either be a `Cat` or a `Dog`. 
 To make sure that this information isn't lost when converting to json, we need to add a **discriminator property**, that keeps track of the specific type of the `pet`.
-By default this property is named `_type`, but you can change it in the build configuration.
 
-When working with a wrapper class like `Home`, appending the discriminator property is done automatically for you. 
-However, when you work with a polymorphic class directly and implicitly, you have to tell the `Mapper` to include this property.
+By default this property is named `_type`, but you can change it in the build configuration. The value
+of this property will default to the name of the class, but you can change this as well with the `discriminatorValue` property.
+Make sure to specify the `discriminator` property on the base class - `Animal` in our example - and the `discriminatorValue` property
+on each of the child classes - `Cat` and `Dog` in our case.
 
 ```dart
-
 void main() {
-  // use polymorphic objects
-  Home home = Home(Dog('Conny', 8));
-  String homeJson = home.toJson();
-  print(homeJson); // {"pet":{"name":"Conny","age":8,"_type":"Dog"}}
-
-  Home myHome = Mapper.fromJson(homeJson);
-  print(myHome.pet); // Dog(age: 8)
-
-  // when you want to decode a polymorphic class implicitly, 
-  // make sure to set 'withDiscriminator' to true
-  String catJson = Mapper.toJson(Cat('Judy', 'Black'), withDiscriminator: true);
+  // encode a polymorphic class
+  String catJson = Mapper.toJson(Cat('Judy', 'Black'));
   print(catJson); // {"name":"Judy","color":"Black","_type":"Cat"}
 
   Animal myPet = Mapper.fromJson(catJson); // implicit decoding as an 'Animal'
   print(myPet.runtimeType); // Cat
 
-  // explicit decoding works as usual, not needing a discriminator
+  // explicit decoding also works as usual without a discriminator
   Cat myCat = Mapper.fromJson('{"name": "Kitty", "color": "Brown"}');
   print(myCat.name); // Kitty
 }

@@ -16,9 +16,10 @@ class ClassMapper {
   ClassElement element;
   ClassOptions options;
 
-  Set<Element> subElements = {};
+  bool isSuperMapper;
+  ClassMapper? superMapper;
 
-  ClassMapper(this.element, this.options);
+  ClassMapper(this.element, this.options, {this.isSuperMapper = false});
 
   String jsonKey(String fieldName) {
     if (options.fields[fieldName] != null) {
@@ -47,7 +48,7 @@ class ClassMapper {
     }
   }
 
-  String generateExtensionCode(Map<String, ClassMapper> classes) {
+  String generateExtensionCode() {
     ConstructorElement constructor = _chooseConstructor();
 
     var typeParams = '';
@@ -62,20 +63,20 @@ class ClassMapper {
         $className$typeParams fromValue$typeParams(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap$typeParams(map));
         $className$typeParams fromMap$typeParams(Map<String, dynamic> map) => ${_generateFromMap(constructor)}
         
-        @override Map<String, dynamic> encode($className $paramName) => {${_generateMappingEntries(constructor, classes)}};
-        @override String stringify($className self) => '$className(${_generateStringParams(constructor, classes.keys.toSet())})';
-        @override int hash($className self) => ${_generateHashParams(constructor, classes.keys.toSet())};
-        @override bool equals($className self, $className other) => ${_generateEqualsParams(constructor, classes.keys.toSet())};
+        @override Map<String, dynamic> encode($className $paramName) => {${_generateMappingEntries(constructor)}};
+        @override String stringify($className self) => '$className(${_generateStringParams(constructor)})';
+        @override int hash($className self) => ${_generateHashParams(constructor)};
+        @override bool equals($className self, $className other) => ${_generateEqualsParams(constructor)};
         
         @override Function get decoder => fromValue;
         @override Function get typeFactory => $typeParams(f) => f<$className$typeParams>();
-        @override String? get discriminator => ${options.discriminator != null ? "'${options.discriminator}'" : 'null'};
+        @override Discriminator? get discriminator => ${_generateDiscriminator()};
       }
     
       extension $extensionName$typeParams on $className$typeParams {
         String toJson() => Mapper.toJson(this);
         Map<String, dynamic> toMap() => Mapper.toMap(this);
-        ${_generateCopyWith(constructor, typeParams, classes)}
+        ${_generateCopyWith(constructor, typeParams)}
       }
     '''
         .unindent();
@@ -121,22 +122,16 @@ class ClassMapper {
     return params.join(', ');
   }
 
-  String _generateMappingEntries(
-    ConstructorElement constructor,
-    Map<String, ClassMapper> classes,
-  ) {
+  String _generateMappingEntries(ConstructorElement constructor) {
     List<String> params = [];
 
-    PropertyAccessorElement? findGetter(String name, ClassElement element) {
-      var g = element.getGetter(name);
+    PropertyAccessorElement? findGetter(String name, ClassMapper mapper) {
+      var g = mapper.element.getGetter(name);
       if (g != null) {
         return g;
       }
-      var supertype = element.supertype;
-      if (supertype != null &&
-          !supertype.isPrimitive &&
-          classes.containsKey(supertype.element.name)) {
-        return findGetter(name, supertype.element);
+      if (mapper.superMapper != null) {
+        return findGetter(name, mapper.superMapper!);
       }
     }
 
@@ -148,7 +143,7 @@ class ClassMapper {
       if (param is FieldFormalParameterElement) {
         type = param.field!.type;
       } else {
-        var getter = findGetter(name, constructor.enclosingElement);
+        var getter = findGetter(name, this);
         if (getter != null) {
           type = getter.type.returnType;
         }
@@ -167,16 +162,7 @@ class ClassMapper {
             var types = (type as InterfaceType).typeArguments;
             return '$key$nullSuffix.map((key, value) => MapEntry(${toMappedType('key', types[0])}, ${toMappedType('value', types[1])}))';
           } else {
-            var args = [];
-            if (type.element != null && type.element is ClassElement) {
-              var e = type.element! as ClassElement;
-              if (classes[e.name]?.subElements.isNotEmpty ?? false) {
-                args.add(', withDiscriminator: true');
-              } else if (e.isAbstract || e.isMixin) {
-                args.add(', withDiscriminator: true');
-              }
-            }
-            return 'Mapper.toValue($key${args.join()})';
+            return 'Mapper.toValue($key)';
           }
         }
       }
@@ -198,8 +184,7 @@ class ClassMapper {
     return params.join(', ');
   }
 
-  String _generateStringParams(
-      ConstructorElement constructor, Set<String> classes) {
+  String _generateStringParams(ConstructorElement constructor) {
     List<String> params = [];
 
     for (var field in element.fields) {
@@ -213,68 +198,59 @@ class ClassMapper {
     return params.join(', ');
   }
 
-  bool hasField(String field, Set<String> classes) {
-    bool elemHasField(ClassElement elem) {
-      if (elem.getGetter(field) != null) {
+  bool hasField(String field) {
+    bool _hasField(ClassMapper mapper) {
+      if (mapper.element.getGetter(field) != null) {
         return true;
       } else {
-        if (elem.supertype != null &&
-            !elem.supertype!.isPrimitive &&
-            classes.contains(elem.supertype!.element.name)) {
-          return elemHasField(elem.supertype!.element);
+        if (mapper.superMapper != null) {
+          return _hasField(mapper.superMapper!);
         } else {
           return false;
         }
       }
     }
 
-    return elemHasField(element);
+    return _hasField(this);
   }
 
-  String _generateHashParams(
-      ConstructorElement constructor, Set<String> classes) {
+  String _generateHashParams(ConstructorElement constructor) {
     List<String> params = [];
     for (var param in constructor.parameters) {
-      if (param is FieldFormalParameterElement ||
-          hasField(param.name, classes)) {
+      if (param is FieldFormalParameterElement || hasField(param.name)) {
         params.add('self.${param.name}.hashCode');
       }
     }
     return params.join(' ^ ');
   }
 
-  String _generateEqualsParams(
-      ConstructorElement constructor, Set<String> classes) {
+  String _generateEqualsParams(ConstructorElement constructor) {
     List<String> params = [];
     for (var param in constructor.parameters) {
-      if (param is FieldFormalParameterElement ||
-          hasField(param.name, classes)) {
+      if (param is FieldFormalParameterElement || hasField(param.name)) {
         params.add('self.${param.name} == other.${param.name}');
       }
     }
     return params.join(' && ');
   }
 
-  String _generateCopyWith(ConstructorElement constructor, String typeParams,
-      Map<String, ClassMapper> classes) {
+  String _generateCopyWith(ConstructorElement constructor, String typeParams) {
     if (element.isAbstract) {
       return '';
     } else {
       var method = 'copy${constructor.parameters.isNotEmpty ? 'With' : ''}';
-      var params = _generateCopyWithParams(constructor, classes.keys.toSet());
+      var params = _generateCopyWithParams(constructor);
       var body =
-          '${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateCopyWithConstructorParams(constructor, classes.keys.toSet())})';
+          '${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateCopyWithConstructorParams(constructor)})';
       return '$className$typeParams $method($params) => $body;';
     }
   }
 
-  String _generateCopyWithParams(
-      ConstructorElement constructor, Set<String> classes) {
+  String _generateCopyWithParams(ConstructorElement constructor) {
     if (constructor.parameters.isEmpty) return '';
     List<String> params = [];
     for (var param in constructor.parameters) {
-      if (param is FieldFormalParameterElement ||
-          hasField(param.name, classes)) {
+      if (param is FieldFormalParameterElement || hasField(param.name)) {
         var type = param.type.getDisplayString(withNullability: false);
         params.add('$type? ${param.name}');
       }
@@ -282,8 +258,7 @@ class ClassMapper {
     return '{${params.join(', ')}}';
   }
 
-  String _generateCopyWithConstructorParams(
-      ConstructorElement constructor, Set<String> classes) {
+  String _generateCopyWithConstructorParams(ConstructorElement constructor) {
     List<String> params = [];
     for (var param in constructor.parameters) {
       var str = '';
@@ -292,8 +267,7 @@ class ClassMapper {
         str = '${param.name}: ';
       }
 
-      if (param is FieldFormalParameterElement ||
-          hasField(param.name, classes)) {
+      if (param is FieldFormalParameterElement || hasField(param.name)) {
         str += '${param.name} ?? this.${param.name}';
       } else {
         str += param.name;
@@ -301,6 +275,23 @@ class ClassMapper {
       params.add(str);
     }
     return params.join(', ');
+  }
+
+  String _generateDiscriminator() {
+    if (superMapper != null || isSuperMapper) {
+      var args = <String>[];
+      if (isSuperMapper) {
+        args.add("key: '${options.discriminator ?? '_type'}'");
+      }
+      if (superMapper != null) {
+        args.add(
+            "superKey: '${superMapper!.options.discriminator ?? '_type'}'");
+        args.add("value: '${options.discriminatorValue ?? element.name}'");
+      }
+      return 'Discriminator(${args.join(', ')})';
+    } else {
+      return 'null';
+    }
   }
 }
 

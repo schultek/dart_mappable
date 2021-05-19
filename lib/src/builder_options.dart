@@ -8,6 +8,7 @@ class ClassOptions {
   CaseStyle? caseStyle;
   bool? ignoreNull;
   String? discriminator;
+  String? discriminatorValue;
   Map<String, String> fields;
 
   ClassOptions(
@@ -15,6 +16,7 @@ class ClassOptions {
       this.caseStyle,
       this.ignoreNull,
       this.discriminator,
+      this.discriminatorValue,
       this.fields = const {}});
 
   ClassOptions.parse(Map options)
@@ -22,6 +24,7 @@ class ClassOptions {
         caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
         ignoreNull = options['ignoreNull'] as bool?,
         discriminator = options['discriminator'] as String?,
+        discriminatorValue = options['discriminatorValue'] as String?,
         fields = (options['fields'] as Map?)?.cast<String, String>() ?? {};
 }
 
@@ -109,6 +112,7 @@ class LibraryOptions {
         caseStyle: options.caseStyle ?? caseStyle,
         ignoreNull: options.ignoreNull ?? ignoreNull,
         discriminator: options.discriminator ?? discriminator,
+        discriminatorValue: options.discriminatorValue,
         fields: options.fields,
       );
     }
