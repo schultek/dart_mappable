@@ -140,7 +140,7 @@ void clearType(Map<String, dynamic> map) {
   map.values.whereType<List>().forEach((l) => l.whereType<Map<String, dynamic>>().forEach(clearType));
 }
 
-abstract class Mappable<T> {
+mixin Mappable {
   Mapper? get _mapper => _mappers[typeOf(runtimeType)];
 
   String toJson() => Mapper.toJson(this);

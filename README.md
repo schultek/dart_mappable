@@ -1,22 +1,41 @@
-Imagine a serialization package with:
+Imagine a mapping & serialization package with:
 
 - **NO** boilerplate code (Nothing at all, ZERO lines of code)
-- **NO** annotations ("Don't @ me...")
 - **NO** minified/uglified generated files
-- **NO** extra dependencies (Yes, not even to this package)
+- **NO** need for annotations ("Don't @ me...")
+- **NO** extra dependencies (Yes, not even to this package*)
 
 while still being able to
 
 - **decode & encode** json
 - come with built-in **type & null-safety**
 - be **fully configurable**
-- support **custom types**
+- support **custom types**, **generics** and **polymorphism**
 
 Sounds too good to be true? Not anymore.
 
 # Dart Mappable
 
 > Have a look at the example!
+
+- [Coming Soon](#coming-soon)
+- [Get Started](#get-started)
+- [Builder Config](#builder-config)
+- [Case Styles](#case-styles)
+- [Utilize Constructors](#utilize-constructors)
+- [Custom Types](#custom-types)
+- [Lists, Sets and Maps](#lists-sets-and-maps)
+  - [Non-Trivial Maps](#non-trivial-maps)
+  - [Custom Mappers](#custom-mappers)
+- [Polymorphism and Discriminators](#polymorphism-and-discriminators)
+
+## Coming Soon
+
+- Annotations (Fully Optional!)
+- More Encoding / Decoding options
+- Unmapped properties
+
+> This package is still in active development. If you have any feedback or feature requests, write me and issue on github.
 
 ## Get Started
 
@@ -57,12 +76,6 @@ Last step is to `import` the generated files wherever you want / need them.
 
 > Hint: This package will generate clean, formatted, and easy to understand code. Have a look at the generated files. 
 > I guarantee you won't be drowned in uglified code.
-
-## TODOs
-
-- More Encoding / Decoding options
-- Unmapped properties
-- Annotations (Optional!)
 
 ## Builder Config
 
@@ -119,6 +132,8 @@ targets:
               ignoreNull: true # here: overwrite property to remove keys with null values
               caseStyle: custom(lc,+) # here: set a custom case style (see below)
 ```
+
+> Options are inherited by libraries and classes. This means that you can e.g. specify the case style on global, library or class level. Options on deeper levels override higher level options.
 
 ## Case Styles
 
