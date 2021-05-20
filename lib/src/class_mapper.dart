@@ -1,13 +1,19 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:dart_mappable/annotations.dart';
 import 'package:indent/indent.dart';
+import 'package:source_gen/source_gen.dart';
 
 import 'builder_options.dart';
 import 'case_style.dart';
 
 /// Generates code for a specific class
 class ClassMapper {
+  static const constructorChecker =
+      TypeChecker.fromRuntime(MappableConstructor);
+  static const fieldChecker = TypeChecker.fromRuntime(MappableField);
+
   String get className => element.name;
   String get mapperName => '${className}Mapper';
   String get extensionName => '${className}Extension';
@@ -21,22 +27,34 @@ class ClassMapper {
 
   ClassMapper(this.element, this.options, {this.isSuperMapper = false});
 
-  String jsonKey(String fieldName) {
-    if (options.fields[fieldName] != null) {
-      return options.fields[fieldName]!;
+  String jsonKey(ParameterElement param) {
+    if (options.fields[param.name] != null) {
+      return options.fields[param.name]!;
+    } else if (fieldChecker.hasAnnotationOf(param)) {
+      return fieldChecker
+          .firstAnnotationOf(param)!
+          .getField('key')!
+          .toStringValue()!;
+    } else if (param is FieldFormalParameterElement &&
+        param.field != null &&
+        fieldChecker.hasAnnotationOf(param.field!)) {
+      return fieldChecker
+          .firstAnnotationOf(param.field!)!
+          .getField('key')!
+          .toStringValue()!;
     } else {
-      return toCaseStyle(fieldName, options.caseStyle);
+      return toCaseStyle(param.name, options.caseStyle);
     }
   }
 
   ConstructorElement _chooseConstructor() {
-    if (options.constructor != null) {
-      return element.constructors
-          .firstWhere((c) => c.name == options.constructor);
-    } else {
-      return element.constructors
-          .firstWhere((c) => !c.isPrivate && c.parameters.isNotEmpty);
-    }
+    var explicitConstructor = element.constructors.where((c) =>
+        !c.isPrivate &&
+        (c.name == options.constructor ||
+            constructorChecker.hasAnnotationOf(c)));
+    return explicitConstructor.isNotEmpty
+        ? explicitConstructor.first
+        : element.constructors.firstWhere((c) => !c.isPrivate);
   }
 
   bool hasValidConstructor() {
@@ -111,7 +129,7 @@ class ClassMapper {
         str += 'Opt';
       }
 
-      str += "('${jsonKey(param.name)}')";
+      str += "('${jsonKey(param)}')";
 
       if (param.hasDefaultValue) {
         str += ' ?? ${param.defaultValueCode}';
@@ -168,7 +186,7 @@ class ClassMapper {
       }
 
       if (type != null) {
-        var key = jsonKey(name);
+        var key = jsonKey(param);
 
         var exp = toMappedType('$paramName.$name', type);
 
@@ -281,11 +299,11 @@ class ClassMapper {
     if (superMapper != null || isSuperMapper) {
       var args = <String>[];
       if (isSuperMapper) {
-        args.add("key: '${options.discriminator ?? '_type'}'");
+        args.add("key: '${options.discriminatorKey ?? '_type'}'");
       }
       if (superMapper != null) {
         args.add(
-            "superKey: '${superMapper!.options.discriminator ?? '_type'}'");
+            "superKey: '${superMapper!.options.discriminatorKey ?? '_type'}'");
         args.add("value: '${options.discriminatorValue ?? element.name}'");
       }
       return 'Discriminator(${args.join(', ')})';

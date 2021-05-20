@@ -1,3 +1,8 @@
+# 0.4.0
+
+- Add support for annotations
+- Add some initial tests
+
 # 0.3.8
 
 - Add support for custom discriminator values

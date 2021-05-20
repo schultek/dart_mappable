@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 import 'case_style.dart';
@@ -7,7 +8,7 @@ class ClassOptions {
   String? constructor;
   CaseStyle? caseStyle;
   bool? ignoreNull;
-  String? discriminator;
+  String? discriminatorKey;
   String? discriminatorValue;
   Map<String, String> fields;
 
@@ -15,7 +16,7 @@ class ClassOptions {
       {this.constructor,
       this.caseStyle,
       this.ignoreNull,
-      this.discriminator,
+      this.discriminatorKey,
       this.discriminatorValue,
       this.fields = const {}});
 
@@ -23,7 +24,7 @@ class ClassOptions {
       : constructor = options['constructor'] as String?,
         caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
         ignoreNull = options['ignoreNull'] as bool?,
-        discriminator = options['discriminator'] as String?,
+        discriminatorKey = options['discriminatorKey'] as String?,
         discriminatorValue = options['discriminatorValue'] as String?,
         fields = (options['fields'] as Map?)?.cast<String, String>() ?? {};
 }
@@ -45,7 +46,7 @@ class LibraryOptions {
   CaseStyle? caseStyle;
   CaseStyle? enumCaseStyle;
   bool? ignoreNull;
-  String? discriminator;
+  String? discriminatorKey;
 
   Map<String, ClassOptions> classes;
   Map<String, EnumOptions> enums;
@@ -58,7 +59,7 @@ class LibraryOptions {
       this.caseStyle,
       this.enumCaseStyle,
       this.ignoreNull,
-      this.discriminator});
+      this.discriminatorKey});
 
   LibraryOptions.parse(Map options)
       : include = options['include'] as List<String>?,
@@ -69,7 +70,7 @@ class LibraryOptions {
         enumCaseStyle =
             CaseStyle.fromString(options['enumCaseStyle'] as String?),
         ignoreNull = options['ignoreNull'] as bool?,
-        discriminator = options['discriminator'] as String?;
+        discriminatorKey = options['discriminatorKey'] as String?;
 
   bool shouldGenerateFor(ClassElement element) {
     if (classes.containsKey(element.name)) {
@@ -83,39 +84,38 @@ class LibraryOptions {
     }
   }
 
-  EnumOptions forEnum(ClassElement element) {
+  EnumOptions forEnum(ClassElement element, [DartObject? annotation]) {
     var options = enums[element.name];
 
-    if (options == null) {
-      return EnumOptions(
-        caseStyle: enumCaseStyle,
-      );
-    } else {
-      return EnumOptions(
-        caseStyle: options.caseStyle ?? enumCaseStyle,
-      );
-    }
+    return EnumOptions(
+      caseStyle: annotation?.getField('caseStyle')!.toStringValue() != null
+          ? CaseStyle.fromString(
+              annotation!.getField('caseStyle')!.toStringValue())
+          : options?.caseStyle ?? enumCaseStyle,
+    );
   }
 
-  ClassOptions forClass(ClassElement element) {
+  ClassOptions forClass(ClassElement element, [DartObject? annotation]) {
     var options = classes[element.name];
 
-    if (options == null) {
-      return ClassOptions(
-        caseStyle: caseStyle,
-        ignoreNull: ignoreNull,
-        discriminator: discriminator,
-      );
-    } else {
-      return ClassOptions(
-        constructor: options.constructor,
-        caseStyle: options.caseStyle ?? caseStyle,
-        ignoreNull: options.ignoreNull ?? ignoreNull,
-        discriminator: options.discriminator ?? discriminator,
-        discriminatorValue: options.discriminatorValue,
-        fields: options.fields,
-      );
-    }
+    return ClassOptions(
+      constructor: options?.constructor,
+      caseStyle: annotation?.getField('caseStyle')!.toStringValue() != null
+          ? CaseStyle.fromString(
+              annotation!.getField('caseStyle')!.toStringValue())
+          : options?.caseStyle ?? caseStyle,
+      ignoreNull: annotation?.getField('ignoreNull')!.toBoolValue() ??
+          options?.ignoreNull ??
+          ignoreNull,
+      discriminatorKey:
+          annotation?.getField('discriminatorKey')!.toStringValue() ??
+              options?.discriminatorKey ??
+              discriminatorKey,
+      discriminatorValue:
+          annotation?.getField('discriminatorValue')!.toStringValue() ??
+              options?.discriminatorValue,
+      fields: options?.fields ?? {},
+    );
   }
 }
 
@@ -127,7 +127,7 @@ class GlobalOptions {
   CaseStyle? caseStyle;
   CaseStyle? enumCaseStyle;
   bool? ignoreNull;
-  String? discriminator;
+  String? discriminatorKey;
 
   Map<String, LibraryOptions> libraries;
 
@@ -138,7 +138,7 @@ class GlobalOptions {
       this.caseStyle,
       this.enumCaseStyle,
       this.ignoreNull,
-      this.discriminator});
+      this.discriminatorKey});
 
   GlobalOptions.parse(Map<String, dynamic> options)
       : include = options['include'] as List<String>?,
@@ -148,7 +148,7 @@ class GlobalOptions {
         enumCaseStyle =
             CaseStyle.fromString(options['enumCaseStyle'] as String?),
         ignoreNull = options['ignoreNull'] as bool?,
-        discriminator = options['discriminator'] as String?;
+        discriminatorKey = options['discriminatorKey'] as String?;
 
   LibraryOptions forLibrary(LibraryElement library) {
     var libFilePath =
@@ -162,7 +162,7 @@ class GlobalOptions {
         caseStyle: caseStyle,
         enumCaseStyle: enumCaseStyle,
         ignoreNull: ignoreNull,
-        discriminator: discriminator,
+        discriminatorKey: discriminatorKey,
       );
     } else {
       return LibraryOptions(
@@ -177,7 +177,7 @@ class GlobalOptions {
         caseStyle: options.caseStyle ?? caseStyle,
         enumCaseStyle: options.enumCaseStyle ?? enumCaseStyle,
         ignoreNull: options.ignoreNull ?? ignoreNull,
-        discriminator: options.discriminator ?? discriminator,
+        discriminatorKey: options.discriminatorKey ?? discriminatorKey,
       );
     }
   }

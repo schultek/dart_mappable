@@ -5,3 +5,12 @@ builders:
     build_extensions: { ".dart": [ ".mapper.g.dart" ] }
     auto_apply: none
     build_to: source
+targets:
+  $default:
+    builders:
+      dart_mappable:
+        generate_for:
+          - test/test.dart
+        options:
+          caseStyle: snakeCase
+          enumCaseStyle: camelCase

@@ -20,7 +20,9 @@ Sounds too good to be true? Not anymore.
 
 - [Coming Soon](#coming-soon)
 - [Get Started](#get-started)
-- [Builder Config](#builder-config)
+- [Configuration](#configuration)
+    - [Builder Config](#builder-config)
+    - [Annotations](#annotations)
 - [Case Styles](#case-styles)
 - [Utilize Constructors](#utilize-constructors)
 - [Custom Types](#custom-types)
@@ -39,12 +41,12 @@ Sounds too good to be true? Not anymore.
 
 ## Get Started
 
-This package is designed to be purely used as a `dev_dependency`. No need to import this package anywhere in your code.
+This package is designed to be purely usable as a `dev_dependency`. No need to import this package anywhere in your code.
 To get started, add the following lines to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  dart_mappable: ^0.3.8
+  dart_mappable: ^0.4.0
   build_runner: ^1.12.2
 ```
 
@@ -71,13 +73,26 @@ You'll need to re-run code generation each time you are making changes to your c
 pub run build_runner watch
 ```
 
-This will generate a `.g.dart` file for each of your entry points specified in the `build.yaml` file.
+This will generate a `.mapper.g.dart` file for each of your entry points specified in the `build.yaml` file.
 Last step is to `import` the generated files wherever you want / need them.
 
 > Hint: This package will generate clean, formatted, and easy to understand code. Have a look at the generated files. 
 > I guarantee you won't be drowned in uglified code.
 
-## Builder Config
+## Configuration
+
+You can use this package and configure your classes in two different ways. 
+Either with a **Builder Config** or with **Annotations**. 
+You can use either of them, or mix them as you like on a class-by-class basis, since they have strong feature-parity.
+
+When only using the **Builder Config** as seen below, you can use this package purely as a dev dependency. 
+However when you like to use **Annotations**, you have to use specify a normal dependency to this package.
+
+> The **Builder Config** supports global and library level configurations, while **Annotations** naturally only support class level configurations. 
+> So when mixing the two options, a good practice would be to specify the global defaults in the **Builder Config**, and then overwrite some of them 
+> on a class-by-class basis with **Annotations**, depending on your use-case.
+
+### Builder Config
 
 Instead of clustering your code with annotations, this package uses builder options inside your `build.yaml` file 
 to specify how your classes should behave when serializing / deserializing. All options are optional!
@@ -103,7 +118,7 @@ targets:
           # if true removes all map keys with null values
           ignoreNull: false # or true
           # used as property name for type discriminators, defaults to '_type'
-          discriminator: isOfType
+          discriminatorKey: isOfType
           
           # overwrite options for specific libraries
           libraries: 
@@ -135,6 +150,18 @@ targets:
 
 > Options are inherited by libraries and classes. This means that you can e.g. specify the case style on global, library or class level. Options on deeper levels override higher level options.
 
+### Annotations
+
+In some cases it is easier to use **Annotations** on classes, that require some special configurations. 
+There are a total of **four** Annotations that you can use in your code:
+
+1. `@MappableClass()` can be used on a class to specify options like the `caseStyle` of the json keys, or wheter to ignore null values.
+2. `@MappableEnum()` can be used on a enum to specify the `caseStyle` of the stringified enum values.
+3. `@MappableConstructor()` can be used on a constructor to mark this to be used for decoding. It has no properties.
+4. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name. *Note: This can only be used on a field if it is directly assigned as a constructor parameter (`MyClass(this.myField)`). Setting this Annotation on any other field will have no effect. (See [Utilize Constructors](#utilize-constructors) for an explanation why this is.)
+
+> For a more detailed explanation of all the annotation properties, see the respective properties in the [Builder Config](#builder-config) or head to the [Api Documentation](https://pub.dev/documentation/dart_mappable/latest/annotations/annotations-library.html).
+
 ## Case Styles
 
 You can specify the case style for the json keys and your stringified enum values. Choose one of the existing styles or spefify a custom one.
@@ -154,7 +181,7 @@ You can also specify a custom case style using the `custom(ab,c)` syntax.
 - The letters before the comma define how to transform each word of a field name. They can be either `l` for `lowerCase`, `u` for `upperCase`, or `c` for `capitalCase`.
 When using only one letter, it is applied to all words. When using two letters, the first one is applied to only the first word and the second one to all 
 remaining words.
-- The one letter after the comma defines the seperator between each word, like `_` or `-`. This can be any character or empty.
+- The one letter after the comma defines the separator between each word, like `_` or `-`. This can be any character or empty.
 
 Here are some examples that can be achieved using this syntax:
 ```yaml
@@ -378,7 +405,7 @@ To make sure that this information isn't lost when converting to json, we need t
 
 By default this property is named `_type`, but you can change it in the build configuration. The value
 of this property will default to the name of the class, but you can change this as well with the `discriminatorValue` property.
-Make sure to specify the `discriminator` property on the base class - `Animal` in our example - and the `discriminatorValue` property
+Make sure to specify the `discriminatorKey` property on the base class - `Animal` in our example - and the `discriminatorValue` property
 on each of the child classes - `Cat` and `Dog` in our case.
 
 ```dart
