@@ -162,18 +162,23 @@ abstract class Mapper<T> {
         typeInfo = getTypeInfo<T>();
       }
       var mapper = _mappers[typeInfo.type];
-      if (value is Map<String, dynamic> && mapper?.discriminator != null && value[mapper!.discriminator!.key] != null) {
+      while (value is Map<String, dynamic> && mapper?.discriminator?.key != null) {
         var matches = _mappers.entries.where((e) {
           return e.value.discriminator?.superKey == mapper!.discriminator!.key 
               && e.value.discriminator?.value == value[mapper.discriminator!.key];
         });
-        if (matches.isNotEmpty) {
-          mapper = matches.first.value;
-          typeInfo = TypeInfo()..type = matches.first.key;
+        if (matches.isEmpty) {
+          break;
         }
+        mapper = matches.first.value;
+        typeInfo = TypeInfo()..type = matches.first.key;
       }
       if (mapper != null) {
-        return genericCall(typeInfo, mapper.decoder, value) as T;
+        try {
+          return genericCall(typeInfo, mapper.decoder, value) as T;
+        } catch (e) {
+          throw MapperException('Error on decoding type $T: ${e is MapperException ? e.message : e}');
+        }
       } else {
         throw MapperException('Cannot decode value $value of type ${value.runtimeType} to type $T. Unknown type. Did you forgot to include the class or register a custom mapper?');
       }
@@ -286,7 +291,7 @@ T checked<T, U>(dynamic v, T Function(U) fn) {
 class Discriminator {
   String? key;
   String? superKey;
-  String? value;
+  dynamic value;
   Discriminator({this.key, this.superKey, this.value});
 }
 

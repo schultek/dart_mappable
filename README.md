@@ -33,8 +33,7 @@ Sounds too good to be true? Not anymore.
 
 ## Coming Soon
 
-- Annotations (Fully Optional!)
-- More Encoding / Decoding options
+- Field-Specific Type-Converters
 - Unmapped properties
 
 > This package is still in active development. If you have any feedback or feature requests, write me and issue on github.
@@ -46,7 +45,7 @@ To get started, add the following lines to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  dart_mappable: ^0.4.0
+  dart_mappable: ^0.4.1
   build_runner: ^1.12.2
 ```
 
@@ -85,7 +84,7 @@ You can use this package and configure your classes in two different ways.
 Either with a **Builder Config** or with **Annotations**. 
 You can use either of them, or mix them as you like on a class-by-class basis, since they have strong feature-parity.
 
-When only using the **Builder Config** as seen below, you can use this package purely as a dev dependency. 
+When only using the **Builder Config** as seen below, you can use this package purely as a `dev_dependency`. 
 However when you like to use **Annotations**, you have to use specify a normal dependency to this package.
 
 > The **Builder Config** supports global and library level configurations, while **Annotations** naturally only support class level configurations. 
@@ -158,7 +157,7 @@ There are a total of **four** Annotations that you can use in your code:
 1. `@MappableClass()` can be used on a class to specify options like the `caseStyle` of the json keys, or wheter to ignore null values.
 2. `@MappableEnum()` can be used on a enum to specify the `caseStyle` of the stringified enum values.
 3. `@MappableConstructor()` can be used on a constructor to mark this to be used for decoding. It has no properties.
-4. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name. *Note: This can only be used on a field if it is directly assigned as a constructor parameter (`MyClass(this.myField)`). Setting this Annotation on any other field will have no effect. (See [Utilize Constructors](#utilize-constructors) for an explanation why this is.)
+4. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name. *Note: This can only be used on a field if it is directly assigned as a constructor parameter (`MyClass(this.myField)`). Setting this Annotation on any other field will have no effect. (See [Utilize Constructors](#utilize-constructors) for an explanation why this is.)*
 
 > For a more detailed explanation of all the annotation properties, see the respective properties in the [Builder Config](#builder-config) or head to the [Api Documentation](https://pub.dev/documentation/dart_mappable/latest/annotations/annotations-library.html).
 
@@ -420,5 +419,40 @@ void main() {
   // explicit decoding also works as usual without a discriminator
   Cat myCat = Mapper.fromJson('{"name": "Kitty", "color": "Brown"}');
   print(myCat.name); // Kitty
+}
+```
+
+### Null and Default Values
+
+There are two additional cases that you might want to cover. Either your discriminator property is `null`, or some other value, that you did not specify.
+
+1. For the `null` case, you can just set the `discriminatorValue` property to `null` and this will work as expected.
+2. For the other case, you can specify a fallback class to be used whenever we come across an unknown discriminator value.
+  - a) When using the **Build Config** set the `discriminatorValue`to `__default__`
+  - b) When using **Annotations** use like this: `@MappableClass(discriminatorValue: MappableClass.useAsDefault)`
+  
+```dart
+@MappableClass(discriminatorValue: null)
+class NullAnimal extends Animal {
+  NullAnimal(String name) : super(name);
+}
+
+@MappableClass(discriminatorValue: MappableClass.useAsDefault)
+class DefaultAnimal extends Animal {
+  @MappableField(key: '_type')
+  String type;
+
+  DefaultAnimal(String name, this.type) : super(name);
+}
+
+void main() {
+  // decode json with the discriminator set to null (same as missing property)
+  Animal animal1 = Mapper.fromJson('{"name": "Scar", "_type": null}');
+  print(animal1.runtimeType); // NullAnimal
+
+  // decode json with unknown discriminator value
+  Animal animal2 = Mapper.fromJson('{"name": "Balu", "_type": "Bear"}');
+  print(animal2.runtimeType); // DefaultAnimal
+  print(animal2.type); // Bear
 }
 ```

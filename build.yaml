@@ -14,3 +14,8 @@ targets:
         options:
           caseStyle: snakeCase
           enumCaseStyle: camelCase
+          libraries:
+            lib/annotations.dart:
+              include: []
+            lib/src/flags.dart:
+              include: []

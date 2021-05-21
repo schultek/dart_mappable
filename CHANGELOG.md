@@ -1,3 +1,9 @@
+# 0.4.1
+
+- Added support for null and default discriminators
+- Fixed toString generation
+- `discriminatorValue` can now be any constant expression
+
 # 0.4.0
 
 - Add support for annotations

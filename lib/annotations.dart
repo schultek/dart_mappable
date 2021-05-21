@@ -1,3 +1,5 @@
+import 'src/flags.dart';
+
 /// Used to annotate a class
 /// in order to generate mapping code
 class MappableClass {
@@ -19,6 +21,8 @@ class MappableClass {
 
   /// Custom value for the discriminator property
   final dynamic discriminatorValue;
+
+  static const useAsDefault = MappingFlags.useAsDefault;
 }
 
 /// Used to annotate an enum

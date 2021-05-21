@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 
 import 'models/model.dart';
+import 'models/polymorphism.dart';
 import 'test.mapper.g.dart';
 
 void main() {
@@ -80,7 +81,7 @@ void main() {
               '{"size":10,"content":{"color":"Rainbow"},"__type":"Box<Confetti>"}'));
 
       dynamic whatAmI = Mapper.fromJson(boxJson);
-      expect(whatAmI.runtimeType.toString(), equals('Box<Confetti>'));
+      expect(whatAmI.runtimeType, equals(type<Box<Confetti>>()));
     });
   });
 
@@ -90,4 +91,32 @@ void main() {
       expect(numbers, equals([2, 4, 105]));
     });
   });
+
+  group('Polymorphism', () {
+    test('Encode object', () {
+      String catJson = Mapper.toJson(Cat('Judy', 'Black'));
+      expect(catJson, equals('{"name":"Judy","color":"Black","_type":"Cat"}'));
+
+      Animal myPet = Mapper.fromJson(catJson);
+      expect(myPet.runtimeType, equals(type<Cat>()));
+    });
+
+    test('Decode object', () {
+      Animal myPet = Mapper.fromJson('{"name":"Kobi","age": 4,"_type":142}');
+      expect(myPet.runtimeType, equals(type<Dog>()));
+    });
+
+    test('Decode fallback', () {
+      Animal myPet = Mapper.fromJson('{"name":"Kobi","_type":null}');
+      expect(myPet.runtimeType, equals(type<NullAnimal>()));
+    });
+
+    test('Decode unknown', () {
+      Animal myPet = Mapper.fromJson('{"name":"Kobi","_type":"Bear"}');
+      expect(myPet.runtimeType, equals(type<DefaultAnimal>()));
+      expect((myPet as DefaultAnimal).type, equals('Bear'));
+    });
+  });
 }
+
+Type type<T>() => T;

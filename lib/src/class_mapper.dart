@@ -24,6 +24,9 @@ class ClassMapper {
 
   bool isSuperMapper;
   ClassMapper? superMapper;
+  ClassMapper? defaultSubMapper;
+
+  String? discriminatorValueCode;
 
   ClassMapper(this.element, this.options, {this.isSuperMapper = false});
 
@@ -102,7 +105,16 @@ class ClassMapper {
 
   String _generateFromMap(ConstructorElement constructor) {
     if (element.isAbstract) {
-      return "throw MapperException('Cannot instantiate abstract class ${element.name}, are you missing a type discriminator?');";
+      if (isSuperMapper) {
+        if (defaultSubMapper != null) {
+          return 'Mapper.fromMap<${defaultSubMapper!.className}>(map);';
+        }
+        var key = options.discriminatorKey ?? '_type';
+        var value = "\${map['$key']}";
+        return "throw MapperException('Cannot instantiate abstract class ${element.name}, did you forgot to specify a subclass for [ $key: \\'$value\\' ] or a default subclass?');";
+      } else {
+        return "throw const MapperException('Cannot instantiate abstract class ${element.name}.');";
+      }
     } else {
       return '${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateConstructorParams(constructor)});';
     }
@@ -205,14 +217,25 @@ class ClassMapper {
   String _generateStringParams(ConstructorElement constructor) {
     List<String> params = [];
 
-    for (var field in element.fields) {
-      if (field.getter?.isSynthetic ?? false) {
-        var str = '';
-        str = '${field.name}: ';
-        str += '\${self.${field.name}}';
-        params.add(str);
+    void addFieldsForMapper(ClassMapper mapper) {
+      if (mapper.superMapper != null) {
+        addFieldsForMapper(mapper.superMapper!);
+      }
+
+      for (var field in mapper.element.fields) {
+        if (!field.isStatic &&
+            !field.isPrivate &&
+            (field.getter?.isSynthetic ?? false)) {
+          var str = '';
+          str = '${field.name}: ';
+          str += '\${self.${field.name}}';
+          params.add(str);
+        }
       }
     }
+
+    addFieldsForMapper(this);
+
     return params.join(', ');
   }
 
@@ -239,7 +262,12 @@ class ClassMapper {
         params.add('self.${param.name}.hashCode');
       }
     }
-    return params.join(' ^ ');
+
+    if (params.isEmpty) {
+      return '0';
+    } else {
+      return params.join(' ^ ');
+    }
   }
 
   String _generateEqualsParams(ConstructorElement constructor) {
@@ -249,7 +277,11 @@ class ClassMapper {
         params.add('self.${param.name} == other.${param.name}');
       }
     }
-    return params.join(' && ');
+    if (params.isEmpty) {
+      return 'true';
+    } else {
+      return params.join(' && ');
+    }
   }
 
   String _generateCopyWith(ConstructorElement constructor, String typeParams) {
@@ -304,7 +336,8 @@ class ClassMapper {
       if (superMapper != null) {
         args.add(
             "superKey: '${superMapper!.options.discriminatorKey ?? '_type'}'");
-        args.add("value: '${options.discriminatorValue ?? element.name}'");
+        args.add(
+            "value: ${discriminatorValueCode ?? "'${options.discriminatorValue ?? element.name}'"}");
       }
       return 'Discriminator(${args.join(', ')})';
     } else {

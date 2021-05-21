@@ -62,8 +62,8 @@ class LibraryOptions {
       this.discriminatorKey});
 
   LibraryOptions.parse(Map options)
-      : include = options['include'] as List<String>?,
-        exclude = options['exclude'] as List<String>?,
+      : include = toList(options['include']),
+        exclude = toList(options['exclude']),
         classes = toMap(options['classes'], (v) => ClassOptions.parse(v)),
         enums = toMap(options['enums'], (v) => EnumOptions.parse(v)),
         caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
@@ -111,9 +111,7 @@ class LibraryOptions {
           annotation?.getField('discriminatorKey')!.toStringValue() ??
               options?.discriminatorKey ??
               discriminatorKey,
-      discriminatorValue:
-          annotation?.getField('discriminatorValue')!.toStringValue() ??
-              options?.discriminatorValue,
+      discriminatorValue: options?.discriminatorValue,
       fields: options?.fields ?? {},
     );
   }
@@ -141,8 +139,8 @@ class GlobalOptions {
       this.discriminatorKey});
 
   GlobalOptions.parse(Map<String, dynamic> options)
-      : include = options['include'] as List<String>?,
-        exclude = options['exclude'] as List<String>?,
+      : include = toList(options['include']),
+        exclude = toList(options['exclude']),
         libraries = toMap(options['libraries'], (v) => LibraryOptions.parse(v)),
         caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
         enumCaseStyle =
@@ -151,9 +149,20 @@ class GlobalOptions {
         discriminatorKey = options['discriminatorKey'] as String?;
 
   LibraryOptions forLibrary(LibraryElement library) {
-    var libFilePath =
-        'lib${library.identifier.substring(library.identifier.indexOf('/'))}';
-    var options = libraries[library.name] ?? libraries[libFilePath];
+    String? libFilePath;
+    if (library.identifier.startsWith('package:')) {
+      libFilePath =
+          'lib${library.identifier.substring(library.identifier.indexOf('/'))}';
+    } else if (library.identifier.startsWith('asset:')) {
+      libFilePath =
+          library.identifier.substring(library.identifier.indexOf('/') + 1);
+    } else {
+      // ignore: avoid_print
+      print('Unknown identifier: ${library.identifier}');
+    }
+    var options = libraries[library.name] ??
+        libraries[library.identifier] ??
+        libraries[libFilePath];
 
     if (options == null) {
       return LibraryOptions(
@@ -187,4 +196,8 @@ Map<String, T> toMap<T>(dynamic value, T Function(Map m) fn) {
   return (value as Map?)
           ?.map((k, dynamic v) => MapEntry(k as String, fn(v as Map))) ??
       {};
+}
+
+List<T>? toList<T>(dynamic value) {
+  return (value as List?)?.map((dynamic v) => v as T).toList();
 }

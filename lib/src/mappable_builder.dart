@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
+import 'package:dart_mappable/src/flags.dart';
 import 'package:indent/indent.dart';
 import 'package:path/path.dart' as path;
 import 'package:source_gen/source_gen.dart';
@@ -92,6 +95,8 @@ class MappableBuilder implements Builder {
             isSuperMapper: isSuperClass,
           );
 
+          DiscriminatorVisitor.visit(classMapper, library);
+
           if (element.isPrivate || !classMapper.hasValidConstructor()) {
             return classMapper;
           }
@@ -103,6 +108,23 @@ class MappableBuilder implements Builder {
             var superMapper =
                 addRecursive(element.supertype!.element, isSuperClass: true);
             classMapper.superMapper = superMapper;
+
+            if (superMapper != null) {
+              var field = classChecker
+                  .firstAnnotationOf(element)
+                  ?.getField('discriminatorValue');
+              if (field != null &&
+                  field.type?.element?.name ==
+                      MappingFlags.useAsDefault.runtimeType.toString()) {
+                if (field.getField('index')!.toIntValue() == 0) {
+                  superMapper.defaultSubMapper = classMapper;
+                  classMapper.discriminatorValueCode = "'__default__'";
+                }
+              } else if (classMapper.options.discriminatorValue ==
+                  '__default__') {
+                superMapper.defaultSubMapper = classMapper;
+              }
+            }
           }
         }
       }
@@ -149,6 +171,31 @@ class MappableBuilder implements Builder {
     for (var cu in element.units) {
       yield* cu.enums;
       yield* cu.types;
+    }
+  }
+}
+
+class DiscriminatorVisitor extends SimpleAstVisitor {
+  final ClassMapper mapper;
+  DiscriminatorVisitor(this.mapper);
+
+  static void visit(ClassMapper mapper, LibraryElement library) {
+    mapper.element.session!
+        .getParsedLibraryByElement(library)
+        .getElementDeclaration(mapper.element)!
+        .node
+        .visitChildren(DiscriminatorVisitor(mapper));
+  }
+
+  @override
+  dynamic visitAnnotation(Annotation node) {
+    if (node.name.name == 'MappableClass') {
+      node.arguments!.arguments
+          .whereType<NamedExpression>()
+          .where((e) => e.name.label.name == 'discriminatorValue')
+          .forEach((e) {
+        mapper.discriminatorValueCode = e.expression.toSource();
+      });
     }
   }
 }

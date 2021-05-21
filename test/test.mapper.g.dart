@@ -1,8 +1,119 @@
 // ignore_for_file: unnecessary_cast, prefer_relative_imports, unused_element
 import 'dart:convert';
+import 'models/polymorphism.dart';
 import 'models/model.dart';
 
 // === GENERATED MAPPER CLASSES AND EXTENSIONS ===
+
+class AnimalMapper implements Mapper<Animal> {
+  AnimalMapper._();
+
+  Animal fromValue(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Animal fromMap(Map<String, dynamic> map) => Mapper.fromMap<DefaultAnimal>(map);
+
+  @override Map<String, dynamic> encode(Animal a) => {'name': a.name};
+  @override String stringify(Animal self) => 'Animal(name: ${self.name})';
+  @override int hash(Animal self) => self.name.hashCode;
+  @override bool equals(Animal self, Animal other) => self.name == other.name;
+
+  @override Function get decoder => fromValue;
+  @override Function get typeFactory => (f) => f<Animal>();
+  @override Discriminator? get discriminator => Discriminator(key: '_type');
+}
+
+extension AnimalExtension on Animal {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+
+}
+
+class CatMapper implements Mapper<Cat> {
+  CatMapper._();
+
+  Cat fromValue(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Cat fromMap(Map<String, dynamic> map) => Cat(map.get('name'), map.get('color'));
+
+  @override Map<String, dynamic> encode(Cat c) => {'name': c.name, 'color': c.color};
+  @override String stringify(Cat self) => 'Cat(name: ${self.name}, color: ${self.color})';
+  @override int hash(Cat self) => self.name.hashCode ^ self.color.hashCode;
+  @override bool equals(Cat self, Cat other) => self.name == other.name && self.color == other.color;
+
+  @override Function get decoder => fromValue;
+  @override Function get typeFactory => (f) => f<Cat>();
+  @override Discriminator? get discriminator => Discriminator(superKey: '_type', value: 'Cat');
+}
+
+extension CatExtension on Cat {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  Cat copyWith({String? name, String? color}) => Cat(name ?? this.name, color ?? this.color);
+}
+
+class DogMapper implements Mapper<Dog> {
+  DogMapper._();
+
+  Dog fromValue(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Dog fromMap(Map<String, dynamic> map) => Dog(map.get('name'), map.get('age'));
+
+  @override Map<String, dynamic> encode(Dog d) => {'name': d.name, 'age': d.age};
+  @override String stringify(Dog self) => 'Dog(name: ${self.name}, age: ${self.age})';
+  @override int hash(Dog self) => self.name.hashCode ^ self.age.hashCode;
+  @override bool equals(Dog self, Dog other) => self.name == other.name && self.age == other.age;
+
+  @override Function get decoder => fromValue;
+  @override Function get typeFactory => (f) => f<Dog>();
+  @override Discriminator? get discriminator => Discriminator(superKey: '_type', value: Animal.Dog);
+}
+
+extension DogExtension on Dog {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  Dog copyWith({String? name, int? age}) => Dog(name ?? this.name, age ?? this.age);
+}
+
+class NullAnimalMapper implements Mapper<NullAnimal> {
+  NullAnimalMapper._();
+
+  NullAnimal fromValue(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  NullAnimal fromMap(Map<String, dynamic> map) => NullAnimal(map.get('name'));
+
+  @override Map<String, dynamic> encode(NullAnimal n) => {'name': n.name};
+  @override String stringify(NullAnimal self) => 'NullAnimal(name: ${self.name})';
+  @override int hash(NullAnimal self) => self.name.hashCode;
+  @override bool equals(NullAnimal self, NullAnimal other) => self.name == other.name;
+
+  @override Function get decoder => fromValue;
+  @override Function get typeFactory => (f) => f<NullAnimal>();
+  @override Discriminator? get discriminator => Discriminator(superKey: '_type', value: null);
+}
+
+extension NullAnimalExtension on NullAnimal {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  NullAnimal copyWith({String? name}) => NullAnimal(name ?? this.name);
+}
+
+class DefaultAnimalMapper implements Mapper<DefaultAnimal> {
+  DefaultAnimalMapper._();
+
+  DefaultAnimal fromValue(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  DefaultAnimal fromMap(Map<String, dynamic> map) => DefaultAnimal(map.get('name'), map.get('_type'));
+
+  @override Map<String, dynamic> encode(DefaultAnimal d) => {'name': d.name, '_type': d.type};
+  @override String stringify(DefaultAnimal self) => 'DefaultAnimal(name: ${self.name}, type: ${self.type})';
+  @override int hash(DefaultAnimal self) => self.name.hashCode ^ self.type.hashCode;
+  @override bool equals(DefaultAnimal self, DefaultAnimal other) => self.name == other.name && self.type == other.type;
+
+  @override Function get decoder => fromValue;
+  @override Function get typeFactory => (f) => f<DefaultAnimal>();
+  @override Discriminator? get discriminator => Discriminator(superKey: '_type', value: '__default__');
+}
+
+extension DefaultAnimalExtension on DefaultAnimal {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  DefaultAnimal copyWith({String? name, String? type}) => DefaultAnimal(name ?? this.name, type ?? this.type);
+}
 
 class PersonMapper implements Mapper<Person> {
   PersonMapper._();
@@ -128,6 +239,11 @@ var _mappers = <String, Mapper>{
   typeOf<Set>():      IterableMapper<Set>(<T>(Iterable<T> i) => i.toSet(), <T>(f) => f<Set<T>>()),
   typeOf<Map>():      MapMapper<Map>(<K, V>(Map<K, V> map) => map, <K, V>(f) => f<Map<K, V>>()),
   // generated mappers
+  typeOf<Animal>(): AnimalMapper._(),
+  typeOf<Cat>(): CatMapper._(),
+  typeOf<Dog>(): DogMapper._(),
+  typeOf<NullAnimal>(): NullAnimalMapper._(),
+  typeOf<DefaultAnimal>(): DefaultAnimalMapper._(),
   typeOf<Person>(): PersonMapper._(),
   typeOf<Car>(): CarMapper._(),
   typeOf<Box>(): BoxMapper._(),
@@ -162,18 +278,23 @@ abstract class Mapper<T> {
         typeInfo = getTypeInfo<T>();
       }
       var mapper = _mappers[typeInfo.type];
-      if (value is Map<String, dynamic> && mapper?.discriminator != null && value[mapper!.discriminator!.key] != null) {
+      while (value is Map<String, dynamic> && mapper?.discriminator?.key != null) {
         var matches = _mappers.entries.where((e) {
           return e.value.discriminator?.superKey == mapper!.discriminator!.key 
               && e.value.discriminator?.value == value[mapper.discriminator!.key];
         });
-        if (matches.isNotEmpty) {
-          mapper = matches.first.value;
-          typeInfo = TypeInfo()..type = matches.first.key;
+        if (matches.isEmpty) {
+          break;
         }
+        mapper = matches.first.value;
+        typeInfo = TypeInfo()..type = matches.first.key;
       }
       if (mapper != null) {
-        return genericCall(typeInfo, mapper.decoder, value) as T;
+        try {
+          return genericCall(typeInfo, mapper.decoder, value) as T;
+        } catch (e) {
+          throw MapperException('Error on decoding type $T: ${e is MapperException ? e.message : e}');
+        }
       } else {
         throw MapperException('Cannot decode value $value of type ${value.runtimeType} to type $T. Unknown type. Did you forgot to include the class or register a custom mapper?');
       }
@@ -286,7 +407,7 @@ T checked<T, U>(dynamic v, T Function(U) fn) {
 class Discriminator {
   String? key;
   String? superKey;
-  String? value;
+  dynamic value;
   Discriminator({this.key, this.superKey, this.value});
 }
 
