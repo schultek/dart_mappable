@@ -1,10 +1,12 @@
+import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:dart_mappable/annotations.dart';
 import 'package:indent/indent.dart';
 import 'package:source_gen/source_gen.dart';
 
+import '../annotations.dart';
+import 'annotation_visitor.dart';
 import 'builder_options.dart';
 import 'case_style.dart';
 
@@ -27,26 +29,34 @@ class ClassMapper {
   ClassMapper? defaultSubMapper;
 
   String? discriminatorValueCode;
+  bool usesHooks = false;
 
-  ClassMapper(this.element, this.options, {this.isSuperMapper = false});
+  ClassMapper(this.element, this.options,
+      {this.isSuperMapper = false, this.discriminatorValueCode});
+
+  DartObject? fieldAnnotation(ParameterElement param) {
+    return fieldChecker.firstAnnotationOf(param) ??
+        (param is FieldFormalParameterElement && param.field != null
+            ? fieldChecker.firstAnnotationOf(param.field!)
+            : null);
+  }
 
   String jsonKey(ParameterElement param) {
     if (options.fields[param.name] != null) {
       return options.fields[param.name]!;
-    } else if (fieldChecker.hasAnnotationOf(param)) {
-      return fieldChecker
-          .firstAnnotationOf(param)!
-          .getField('key')!
-          .toStringValue()!;
-    } else if (param is FieldFormalParameterElement &&
-        param.field != null &&
-        fieldChecker.hasAnnotationOf(param.field!)) {
-      return fieldChecker
-          .firstAnnotationOf(param.field!)!
-          .getField('key')!
-          .toStringValue()!;
-    } else {
-      return toCaseStyle(param.name, options.caseStyle);
+    }
+    String? field = fieldAnnotation(param)?.getField('key')!.toStringValue();
+    return field ?? toCaseStyle(param.name, options.caseStyle);
+  }
+
+  String? hookForParam(ParameterElement param) {
+    var annotation = fieldAnnotation(param);
+    if (annotation != null && !annotation.getField('hooks')!.isNull) {
+      var annotatedElement = fieldChecker.hasAnnotationOf(param)
+          ? param
+          : (param as FieldFormalParameterElement).field!;
+
+      return getAnnotationCode(annotatedElement, MappableField, 'hooks');
     }
   }
 
@@ -81,7 +91,7 @@ class ClassMapper {
       class $mapperName implements Mapper<$className> {
         $mapperName._();
         
-        $className$typeParams fromValue$typeParams(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap$typeParams(map));
+        $className$typeParams fromValue$typeParams(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap$typeParams(map));
         $className$typeParams fromMap$typeParams(Map<String, dynamic> map) => ${_generateFromMap(constructor)}
         
         @override Map<String, dynamic> encode($className $paramName) => {${_generateMappingEntries(constructor)}};
@@ -141,7 +151,16 @@ class ClassMapper {
         str += 'Opt';
       }
 
-      str += "('${jsonKey(param)}')";
+      var args = ["'${jsonKey(param)}'"];
+
+      var hook = hookForParam(param);
+
+      if (hook != null) {
+        usesHooks = true;
+        args.add('hooks: const $hook');
+      }
+
+      str += "(${args.join(', ')})";
 
       if (param.hasDefaultValue) {
         str += ' ?? ${param.defaultValueCode}';
@@ -179,28 +198,18 @@ class ClassMapper {
         }
       }
 
-      String toMappedType(String key, DartType type) {
-        if (type.isPrimitive) {
-          return key;
-        } else {
-          var nullSuffix =
-              type.nullabilitySuffix == NullabilitySuffix.question ? '?' : '';
-          if (type.isDartCoreList || type.isDartCoreSet) {
-            var tag = key[0].toLowerCase();
-            return '$key$nullSuffix.map(($tag) => ${toMappedType(tag, (type as InterfaceType).typeArguments[0])}).toList()';
-          } else if (type.isDartCoreMap) {
-            var types = (type as InterfaceType).typeArguments;
-            return '$key$nullSuffix.map((key, value) => MapEntry(${toMappedType('key', types[0])}, ${toMappedType('value', types[1])}))';
-          } else {
-            return 'Mapper.toValue($key)';
-          }
-        }
-      }
-
       if (type != null) {
         var key = jsonKey(param);
 
-        var exp = toMappedType('$paramName.$name', type);
+        String exp;
+
+        var hook = hookForParam(param);
+        if (hook != null) {
+          usesHooks = true;
+          exp = '_toValue($paramName.$name, hooks: const $hook)';
+        } else {
+          exp = 'Mapper.toValue($paramName.$name)';
+        }
 
         if (options.ignoreNull == true &&
             param.type.nullabilitySuffix != NullabilitySuffix.none) {
@@ -342,26 +351,6 @@ class ClassMapper {
       return 'Discriminator(${args.join(', ')})';
     } else {
       return 'null';
-    }
-  }
-}
-
-extension on DartType {
-  bool get isPrimitive {
-    if (isDartCoreList) {
-      return (this as InterfaceType).typeArguments[0].isPrimitive;
-    } else if (isDartCoreMap) {
-      return (this as InterfaceType).typeArguments[0].isPrimitive &&
-          (this as InterfaceType).typeArguments[1].isPrimitive;
-    } else {
-      return isDynamic ||
-          isDartCoreBool ||
-          isDartCoreInt ||
-          isDartCoreDouble ||
-          isDartCoreNum ||
-          isDartCoreString ||
-          isDartCoreNull ||
-          isDartCoreObject;
     }
   }
 }

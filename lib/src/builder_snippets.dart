@@ -1,16 +1,16 @@
 /// A set of Mappers for primitive types
 const defaultMappers = '''
   // primitive mappers
-  typeOf<dynamic>():  _PrimitiveMapper((dynamic v) => v),
-  typeOf<String>():   _PrimitiveMapper<String>((dynamic v) => v.toString()),
-  typeOf<int>():      _PrimitiveMapper<int>((dynamic v) => num.parse(v.toString()).round()),
-  typeOf<double>():   _PrimitiveMapper<double>((dynamic v) => double.parse(v.toString())),
-  typeOf<num>():      _PrimitiveMapper<num>((dynamic v) => num.parse(v.toString())),
-  typeOf<bool>():     _PrimitiveMapper<bool>((dynamic v) => v is num ? v != 0 : v.toString() == 'true'),
-  typeOf<DateTime>(): _DateTimeMapper(),
-  typeOf<List>():     IterableMapper<List>(<T>(Iterable<T> i) => i.toList(), <T>(f) => f<List<T>>()),
-  typeOf<Set>():      IterableMapper<Set>(<T>(Iterable<T> i) => i.toSet(), <T>(f) => f<Set<T>>()),
-  typeOf<Map>():      MapMapper<Map>(<K, V>(Map<K, V> map) => map, <K, V>(f) => f<Map<K, V>>()),
+  _typeOf<dynamic>():  _PrimitiveMapper((dynamic v) => v),
+  _typeOf<String>():   _PrimitiveMapper<String>((dynamic v) => v.toString()),
+  _typeOf<int>():      _PrimitiveMapper<int>((dynamic v) => num.parse(v.toString()).round()),
+  _typeOf<double>():   _PrimitiveMapper<double>((dynamic v) => double.parse(v.toString())),
+  _typeOf<num>():      _PrimitiveMapper<num>((dynamic v) => num.parse(v.toString())),
+  _typeOf<bool>():     _PrimitiveMapper<bool>((dynamic v) => v is num ? v != 0 : v.toString() == 'true'),
+  _typeOf<DateTime>(): _DateTimeMapper(),
+  _typeOf<List>():     IterableMapper<List>(<T>(Iterable<T> i) => i.toList(), <T>(f) => f<List<T>>()),
+  _typeOf<Set>():      IterableMapper<Set>(<T>(Iterable<T> i) => i.toSet(), <T>(f) => f<Set<T>>()),
+  _typeOf<Map>():      MapMapper<Map>(<K, V>(Map<K, V> map) => map, <K, V>(f) => f<Map<K, V>>()),
   // generated mappers''';
 
 /// Declarations for the Mapper class
@@ -67,7 +67,7 @@ abstract class Mapper<T> {
     if (_mappers[typeInfo.type] != null) {
       var encoded = _mappers[typeInfo.type]!.encode(value);
       if (encoded is Map<String, dynamic>) {
-        clearType(encoded);
+        _clearType(encoded);
         if (typeInfo.params.isNotEmpty) {
           encoded['__type'] = typeInfo.toString();
         }
@@ -112,7 +112,7 @@ abstract class Mapper<T> {
   }
 
   static bool isEqual(dynamic value, Object? other) {
-    var type = typeOf(value.runtimeType);
+    var type = _typeOf(value.runtimeType);
     if (_mappers[type] != null) {
       return _mappers[type]!.equals(value, other);
     } else {
@@ -122,7 +122,7 @@ abstract class Mapper<T> {
   }
 
   static String asString(dynamic value) {
-    var type = typeOf(value.runtimeType);
+    var type = _typeOf(value.runtimeType);
     if (_mappers[type] != null) {
       return _mappers[type]!.stringify(value);
     } else {
@@ -131,22 +131,22 @@ abstract class Mapper<T> {
     }
   }
 
-  static void use<T>(Mapper<T> mapper) => _mappers[typeOf<T>()] = mapper;
+  static void use<T>(Mapper<T> mapper) => _mappers[_typeOf<T>()] = mapper;
 }
 
-String typeOf<T>([Type? t]) {
+String _typeOf<T>([Type? t]) {
   var input = (t ?? T).toString();
   return input.split('<')[0];
 }
 
-void clearType(Map<String, dynamic> map) {
+void _clearType(Map<String, dynamic> map) {
   map.removeWhere((key, _) => key == '__type');
-  map.values.whereType<Map<String, dynamic>>().forEach(clearType);
-  map.values.whereType<List>().forEach((l) => l.whereType<Map<String, dynamic>>().forEach(clearType));
+  map.values.whereType<Map<String, dynamic>>().forEach(_clearType);
+  map.values.whereType<List>().forEach((l) => l.whereType<Map<String, dynamic>>().forEach(_clearType));
 }
 
 mixin Mappable {
-  Mapper? get _mapper => _mappers[typeOf(runtimeType)];
+  Mapper? get _mapper => _mappers[_typeOf(runtimeType)];
 
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
@@ -156,7 +156,7 @@ mixin Mappable {
   @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
 }
 
-T checked<T, U>(dynamic v, T Function(U) fn) {
+T _checked<T, U>(dynamic v, T Function(U) fn) {
   if (v is U) {
     return fn(v);
   } else {
@@ -200,7 +200,7 @@ class IterableMapper<I extends Iterable> extends BaseMapper<I> {
   IterableMapper(this.fromIterable, this.typeFactory);
 
   @override Function get decoder => decode;
-  Iterable<T> decode<T>(dynamic l) => checked(l, (Iterable l) => fromIterable(l.map((v) => Mapper.fromValue<T>(v))));
+  Iterable<T> decode<T>(dynamic l) => _checked(l, (Iterable l) => fromIterable(l.map((v) => Mapper.fromValue<T>(v))));
   @override List encode(I self) => self.map((v) => Mapper.toValue(v)).toList();
   @override Function typeFactory;
 }
@@ -210,7 +210,7 @@ class MapMapper<M extends Map> extends BaseMapper<M> {
   MapMapper(this.fromMap, this.typeFactory);
 
   @override Function get decoder => decode;
-  Map<K, V> decode<K, V>(dynamic m) => checked(m,(Map m) => fromMap(m.map((key, value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)))));
+  Map<K, V> decode<K, V>(dynamic m) => _checked(m,(Map m) => fromMap(m.map((key, value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)))));
   @override Map encode(M self) => self.map((key, value) => MapEntry(Mapper.toValue(key), Mapper.toValue(value)));
   @override Function typeFactory;
 }
@@ -218,72 +218,20 @@ class MapMapper<M extends Map> extends BaseMapper<M> {
 class _PrimitiveMapper<T> with BaseMapper<T> implements Mapper<T> {
   const _PrimitiveMapper(this.decoder);
   
-  final T Function(dynamic value) decoder;
+  @override final T Function(dynamic value) decoder;
   @override dynamic encode(T value) => value;
 }
 
 class _EnumMapper<T> with BaseMapper<T> implements Mapper<T> {
   _EnumMapper(this.strDecoder, this.encoder);
   
-  Function get decoder => (dynamic v) => checked(v, strDecoder);
+  @override
+  Function get decoder => (dynamic v) => _checked(v, strDecoder);
   
   final T Function(String value) strDecoder;
   final String Function(T value) encoder;
 
   @override String encode(T self) => encoder(self);
-}
-
-extension on Map<String, dynamic> {
-  T get<T>(String key) {
-    if (this[key] == null) {
-      throw MapperException('Parameter $key is required.');
-    }
-    return Mapper.fromValue<T>(this[key]!);
-  }
-
-  T? getOpt<T>(String key) {
-    if (this[key] == null) {
-      return null;
-    }
-    return get<T>(key);
-  }
-
-  List<T> getList<T>(String key) {
-    if (this[key] == null) {
-      throw MapperException('Parameter $key is required.');
-    } else if (this[key] is! List) {
-      throw MapperException(
-          'Parameter ${this[key]} with key $key is not a List');
-    }
-    List value = this[key] as List<dynamic>;
-    return value.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
-  }
-
-  List<T>? getListOpt<T>(String key) {
-    if (this[key] == null) {
-      return null;
-    }
-    return getList<T>(key);
-  }
-
-  Map<K, V> getMap<K, V>(String key) {
-    if (this[key] == null) {
-      throw MapperException('Parameter $key is required.');
-    } else if (this[key] is! Map) {
-      throw MapperException(
-          'Parameter ${this[key]} with key $key is not a Map');
-    }
-    Map value = this[key] as Map<dynamic, dynamic>;
-    return value.map((dynamic key, dynamic value) =>
-        MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
-  }
-
-  Map<K, V>? getMapOpt<K, V>(String key) {
-    if (this[key] == null) {
-      return null;
-    }
-    return getMap<K, V>(key);
-  }
 }
 
 class MapperException implements Exception {
@@ -342,7 +290,7 @@ TypeInfo getTypeInfo<T>([String? type]) {
   return curr;
 }
 
-void genericCall(TypeInfo info, Function fn, value) {
+dynamic genericCall(TypeInfo info, Function fn, dynamic value) {
   var params = [...info.params];
 
   dynamic call(dynamic Function<T>() next) {
@@ -363,7 +311,136 @@ void genericCall(TypeInfo info, Function fn, value) {
   } else if (params.length == 3) {
     return call(<A>() => call(<B>() => call(<C>() => fn<A, B, C>(value))));
   } else {
-    throw MapperException('Mapper only supports generic classes with up to 3 type arguments.');
+    throw MapperException('Cannot construct generic wrapper for type $info. Mapper only supports generic classes with up to 3 type arguments.');
+  }
+}
+''';
+
+const extensionWithoutHooks = r'''
+extension on Map<String, dynamic> {
+  T get<T>(String key) {
+    if (this[key] == null) {
+      throw MapperException('Parameter $key is required.');
+    }
+    return Mapper.fromValue<T>(this[key]!);
+  }
+
+  T? getOpt<T>(String key) {
+    if (this[key] == null) {
+      return null;
+    }
+    return get<T>(key);
+  }
+
+  List<T> getList<T>(String key) {
+    if (this[key] == null) {
+      throw MapperException('Parameter $key is required.');
+    } else if (this[key] is! List) {
+      throw MapperException(
+          'Parameter ${this[key]} with key $key is not a List');
+    }
+    List value = this[key] as List<dynamic>;
+    return value.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
+  }
+
+  List<T>? getListOpt<T>(String key) {
+    if (this[key] == null) {
+      return null;
+    }
+    return getList<T>(key);
+  }
+
+  Map<K, V> getMap<K, V>(String key) {
+    if (this[key] == null) {
+      throw MapperException('Parameter $key is required.');
+    } else if (this[key] is! Map) {
+      throw MapperException(
+          'Parameter ${this[key]} with key $key is not a Map');
+    }
+    Map value = this[key] as Map<dynamic, dynamic>;
+    return value.map((dynamic key, dynamic value) =>
+        MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
+  }
+
+  Map<K, V>? getMapOpt<K, V>(String key) {
+    if (this[key] == null) {
+      return null;
+    }
+    return getMap<K, V>(key);
+  }
+}
+''';
+
+const extensionWithHooks = r'''
+dynamic _toValue(dynamic value, {FieldHooks? hooks}) {
+  if (hooks == null) {
+    return Mapper.toValue(value);
+  } else {
+    return hooks.afterEncode(Mapper.toValue(hooks.beforeEncode(value)));
+  }
+}
+
+extension on Map<String, dynamic> {
+  T get<T>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+    if (v == null) {
+      throw MapperException('Parameter $key is required.');
+    }
+    return Mapper.fromValue<T>(v);
+  });
+
+  T? getOpt<T>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+    if (v == null) {
+      return null;
+    }
+    return Mapper.fromValue<T>(v);
+  });
+
+  List<T> getList<T>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+    if (v == null) {
+      throw MapperException('Parameter $key is required.');
+    } else if (v is! List) {
+      throw MapperException('Parameter $v with key $key is not a List');
+    }
+    List value = v as List<dynamic>;
+    return value.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
+  });
+
+  List<T>? getListOpt<T>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+    if (v == null) {
+      return null;
+    } else if (v is! List) {
+      throw MapperException('Parameter $v with key $key is not a List');
+    }
+    List value = v as List<dynamic>;
+    return value.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
+  });
+
+  Map<K, V> getMap<K, V>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+    if (v == null) {
+      throw MapperException('Parameter $key is required.');
+    } else if (v is! Map) {
+      throw MapperException('Parameter $v with key $key is not a Map');
+    }
+    Map value = v as Map<dynamic, dynamic>;
+    return value.map((dynamic key, dynamic value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
+  });
+
+  Map<K, V>? getMapOpt<K, V>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+    if (v == null) {
+      return null;
+    } else if (v is! Map) {
+      throw MapperException('Parameter $v with key $key is not a Map');
+    }
+    Map value = v as Map<dynamic, dynamic>;
+    return value.map((dynamic key, dynamic value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
+  });
+
+  T hooked<T>(FieldHooks? hooks, String key, T Function(dynamic v) fn) {
+    if (hooks == null) {
+      return fn(this[key]);
+    } else {
+      return hooks.afterDecode(fn(hooks.beforeDecode(this[key]))) as T;
+    }
   }
 }
 ''';

@@ -19,3 +19,5 @@ targets:
               include: []
             lib/src/flags.dart:
               include: []
+            test/models/model.dart:
+              exclude: [PlayerHooks]

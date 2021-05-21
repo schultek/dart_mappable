@@ -117,6 +117,21 @@ void main() {
       expect((myPet as DefaultAnimal).type, equals('Bear'));
     });
   });
+
+  group('Hooks', () {
+    test('Before Decode Hook', () {
+      Game game = Mapper.fromJson('{"player": {"id": "Tom"}}');
+      expect(game.player.id, equals('Tom'));
+
+      Game game2 = Mapper.fromJson('{"player": "John"}');
+      expect(game2.player.id, equals('John'));
+    });
+
+    test('After Encode Hook', () {
+      Game game = Game(Player('Tom'));
+      expect(game.toJson(), equals('{"player":"Tom"}'));
+    });
+  });
 }
 
 Type type<T>() => T;

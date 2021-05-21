@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
+import 'package:dart_mappable/src/annotation_visitor.dart';
 import 'package:dart_mappable/src/flags.dart';
 import 'package:indent/indent.dart';
 import 'package:path/path.dart' as path;
@@ -93,9 +92,9 @@ class MappableBuilder implements Builder {
               classChecker.firstAnnotationOf(element),
             ),
             isSuperMapper: isSuperClass,
+            discriminatorValueCode:
+                getAnnotationCode(element, MappableClass, 'discriminatorValue'),
           );
-
-          DiscriminatorVisitor.visit(classMapper, library);
 
           if (element.isPrivate || !classMapper.hasValidConstructor()) {
             return classMapper;
@@ -150,20 +149,31 @@ class MappableBuilder implements Builder {
       }
     }
 
+    var classMapperCode =
+        classMappers.values.map((om) => om.generateExtensionCode()).join();
+    var enumMapperCode =
+        enumMappers.values.map((em) => em.generateExtensionCode()).join();
+
+    var usesHooks = classMappers.values.any((c) => c.usesHooks);
+    if (usesHooks) {
+      imports.add(Uri.parse('package:dart_mappable/annotations.dart'));
+    }
+
     return ''
         '// ignore_for_file: unnecessary_cast, prefer_relative_imports, unused_element\n'
         "import 'dart:convert';\n"
         '${imports.map((i) => "import '$i';").join('\n')}\n'
         '\n// === GENERATED MAPPER CLASSES AND EXTENSIONS ===\n\n'
-        '${classMappers.values.map((om) => om.generateExtensionCode()).join()}\n'
-        '${enumMappers.values.map((em) => em.generateExtensionCode()).join()}\n'
+        '$classMapperCode\n'
+        '$enumMapperCode\n'
         '\n// === ALL STATICALLY REGISTERED MAPPERS ===\n\n'
         'var _mappers = <String, Mapper>{\n$defaultMappers\n'
-        '${classMappers.values.map((om) => 'typeOf<${om.className}>(): ${om.mapperName}._(),').join('\n').indent(2)}\n'
-        '${enumMappers.values.map((em) => 'typeOf<${em.className}>(): _EnumMapper<${em.className}>(${em.mapperName}.fromString, (${em.className} ${em.paramName}) => ${em.paramName}.toStringValue()),').join('\n').indent(2)}\n'
+        '${classMappers.values.map((om) => '_typeOf<${om.className}>(): ${om.mapperName}._(),').join('\n').indent(2)}\n'
+        '${enumMappers.values.map((em) => '_typeOf<${em.className}>(): _EnumMapper<${em.className}>(${em.mapperName}.fromString, (${em.className} ${em.paramName}) => ${em.paramName}.toStringValue()),').join('\n').indent(2)}\n'
         '};\n'
         '\n// === GENERATED UTILITY CLASSES ===\n\n'
-        '$mapperCode';
+        '$mapperCode'
+        '${usesHooks ? extensionWithHooks : extensionWithoutHooks}';
   }
 
   /// All of the declared classes and enums in this library.
@@ -171,31 +181,6 @@ class MappableBuilder implements Builder {
     for (var cu in element.units) {
       yield* cu.enums;
       yield* cu.types;
-    }
-  }
-}
-
-class DiscriminatorVisitor extends SimpleAstVisitor {
-  final ClassMapper mapper;
-  DiscriminatorVisitor(this.mapper);
-
-  static void visit(ClassMapper mapper, LibraryElement library) {
-    mapper.element.session!
-        .getParsedLibraryByElement(library)
-        .getElementDeclaration(mapper.element)!
-        .node
-        .visitChildren(DiscriminatorVisitor(mapper));
-  }
-
-  @override
-  dynamic visitAnnotation(Annotation node) {
-    if (node.name.name == 'MappableClass') {
-      node.arguments!.arguments
-          .whereType<NamedExpression>()
-          .where((e) => e.name.label.name == 'discriminatorValue')
-          .forEach((e) {
-        mapper.discriminatorValueCode = e.expression.toSource();
-      });
     }
   }
 }

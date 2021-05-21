@@ -1,3 +1,7 @@
+# 0.4.2
+
+- Added support for encoding/decoding hooks
+
 # 0.4.1
 
 - Added support for null and default discriminators
@@ -6,25 +10,25 @@
 
 # 0.4.0
 
-- Add support for annotations
-- Add some initial tests
+- Added support for annotations
+- Added some initial tests
 
 # 0.3.8
 
-- Add support for custom discriminator values
+- Added support for custom discriminator values
 
 # 0.3.7
 
-- Add support for custom iterables and maps
-- Improve documentation on decoding lists, sets and maps
+- Added support for custom iterables and maps
+- Improved documentation on decoding lists, sets and maps
 
 # 0.3.6
 
-- Add support for abstract classes and polymorphism using type discriminators
+- Added support for abstract classes and polymorphism using type discriminators
 
 # 0.3.5
 
-- Fix minified types issue on web
+- Fixed minified types issue on web
 
 # 0.3.4
 
@@ -32,11 +36,11 @@
 
 # 0.3.3
 
-- Change auto_apply to none
+- Changed auto_apply to none
 
 # 0.3.2
 
-- Add support for DateTime
+- Added support for DateTime
 
 # 0.3.1
 
@@ -49,31 +53,31 @@
 
 # 0.2.1+1
 
-- Fix formatting
+- Fixed formatting
 - Export BuildOptions and CaseStyle classes
 
 # 0.2.1
 
-- Add support for `.toString()`, `==` and `hashCode` using the `Mappable` mixin
+- Added support for `.toString()`, `==` and `hashCode` using the `Mappable` mixin
 
 # 0.2.0+1
 
-- Change builder signature
+- Changed builder signature
 
 # 0.2.0
 
 - Support null-safety
-- Add code documentation
+- Added code documentation
 
 # 0.1.1+1
 
-- Improve example
-- Improve README
+- Improved example
+- Improved README
 
 # 0.1.1
 
-- Add initial documentation to README
-- Add yaml configuration options
+- Added initial documentation to README
+- Added yaml configuration options
 
 # 0.1.0
 

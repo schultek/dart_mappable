@@ -45,10 +45,21 @@ class MappableConstructor {
 /// Used to annotate a parameter or field
 /// to overwrite the mapped key
 class MappableField {
-  const MappableField({
-    required this.key,
-  });
+  const MappableField({this.key, this.hooks});
 
   /// Use this key instead of the field name
-  final String key;
+  final String? key;
+
+  /// Define custom hooks used only for this field
+  final FieldHooks? hooks;
+}
+
+abstract class FieldHooks {
+  const FieldHooks();
+
+  dynamic beforeDecode(dynamic value) => value;
+  dynamic afterDecode(dynamic value) => value;
+
+  dynamic beforeEncode(dynamic value) => value;
+  dynamic afterEncode(dynamic value) => value;
 }

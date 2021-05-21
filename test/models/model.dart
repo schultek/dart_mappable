@@ -1,3 +1,5 @@
+import 'package:dart_mappable/annotations.dart';
+
 import '../test.mapper.g.dart';
 
 class Person with Mappable {
@@ -32,4 +34,36 @@ class Box<T> {
 class Confetti {
   String color;
   Confetti(this.color);
+}
+
+class PlayerHooks extends FieldHooks {
+  const PlayerHooks();
+
+  @override
+  dynamic beforeDecode(dynamic value) {
+    if (value is String) {
+      return {'id': value};
+    }
+    return value;
+  }
+
+  @override
+  dynamic afterEncode(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      return value['id'];
+    }
+    return value;
+  }
+}
+
+class Game {
+  @MappableField(hooks: PlayerHooks())
+  Player player;
+
+  Game(this.player);
+}
+
+class Player {
+  String id;
+  Player(this.id);
 }
