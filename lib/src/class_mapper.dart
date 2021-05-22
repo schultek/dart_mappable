@@ -196,7 +196,8 @@ class ClassMapper {
       } else if (param.type.isDartCoreMap) {
         str += 'Map';
       }
-      if (param.isOptional ||
+      if (param.type.isDynamic ||
+          param.isOptional ||
           param.type.nullabilitySuffix == NullabilitySuffix.question) {
         str += 'Opt';
       }
