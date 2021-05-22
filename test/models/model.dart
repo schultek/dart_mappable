@@ -25,7 +25,7 @@ class Car with Mappable {
   int get drivenKm => (miles / 0.62).round();
 }
 
-class Box<T> {
+class Box<T extends Object> {
   int size;
   T content;
 

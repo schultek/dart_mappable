@@ -107,9 +107,11 @@ class ClassMapper {
   }
 
   String generateExtensionCode() {
-    var typeParams = '';
+    var typeParams = '', typeParamsDeclaration = '';
     if (element.typeParameters.isNotEmpty) {
       typeParams = '<${element.typeParameters.map((p) => p.name).join(', ')}>';
+      typeParamsDeclaration =
+          '<${element.typeParameters.map((p) => p.getDisplayString(withNullability: false)).join(', ')}>';
     }
 
     return '''
@@ -117,8 +119,8 @@ class ClassMapper {
         $mapperName._();
         
         @override Function get decoder => decode;
-        $className$typeParams decode$typeParams(dynamic v) => ${_generateFromMapCall('_checked(v, (Map<String, dynamic> map) => fromMap$typeParams(map))')};
-        $className$typeParams fromMap$typeParams(Map<String, dynamic> map) => ${_generateFromMap()}
+        $className$typeParams decode$typeParamsDeclaration(dynamic v) => ${_generateFromMapCall('_checked(v, (Map<String, dynamic> map) => fromMap$typeParams(map))')};
+        $className$typeParams fromMap$typeParamsDeclaration(Map<String, dynamic> map) => ${_generateFromMap()}
         
         @override dynamic encode($className v) => ${_generateToMapCall('toMap(v)')};
         Map<String, dynamic> toMap($className $paramName) => {${_generateMappingEntries()}};
@@ -127,11 +129,11 @@ class ClassMapper {
         @override int hash($className self) => ${_generateHashParams()};
         @override bool equals($className self, $className other) => ${_generateEqualsParams()};
         
-        @override Function get typeFactory => $typeParams(f) => f<$className$typeParams>();
+        @override Function get typeFactory => $typeParamsDeclaration(f) => f<$className$typeParams>();
         @override Discriminator? get discriminator => ${_generateDiscriminator()};
       }
     
-      extension $extensionName$typeParams on $className$typeParams {
+      extension $extensionName$typeParamsDeclaration on $className$typeParams {
         String toJson() => Mapper.toJson(this);
         Map<String, dynamic> toMap() => Mapper.toMap(this);
         ${_generateCopyWith(typeParams)}
@@ -396,14 +398,23 @@ class ClassMapper {
         args.add("key: '${options.discriminatorKey ?? '_type'}'");
       }
       if (superMapper != null) {
-        args.add(
-            "superKey: '${superMapper!.options.discriminatorKey ?? '_type'}'");
+        args.add("superKey: '${_getDiscriminatorSuperKey()}'");
         args.add(
             "value: ${discriminatorValueCode ?? "'${options.discriminatorValue ?? element.name}'"}");
       }
       return 'Discriminator(${args.join(', ')})';
     } else {
       return 'null';
+    }
+  }
+
+  String _getDiscriminatorSuperKey() {
+    if (superMapper != null && superMapper!.options.discriminatorKey != null) {
+      return superMapper!.options.discriminatorKey!;
+    } else if (superMapper != null) {
+      return superMapper!._getDiscriminatorSuperKey();
+    } else {
+      return '_type';
     }
   }
 

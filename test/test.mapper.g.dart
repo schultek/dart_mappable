@@ -179,8 +179,8 @@ class BoxMapper implements Mapper<Box> {
   BoxMapper._();
 
   @override Function get decoder => decode;
-  Box<T> decode<T>(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
-  Box<T> fromMap<T>(Map<String, dynamic> map) => Box(map.get('size'), content: map.get('content'));
+  Box<T> decode<T extends Object>(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
+  Box<T> fromMap<T extends Object>(Map<String, dynamic> map) => Box(map.get('size'), content: map.get('content'));
 
   @override dynamic encode(Box v) => toMap(v);
   Map<String, dynamic> toMap(Box b) => {'size': Mapper.toValue(b.size), 'content': Mapper.toValue(b.content)};
@@ -189,11 +189,11 @@ class BoxMapper implements Mapper<Box> {
   @override int hash(Box self) => self.size.hashCode ^ self.content.hashCode;
   @override bool equals(Box self, Box other) => self.size == other.size && self.content == other.content;
 
-  @override Function get typeFactory => <T>(f) => f<Box<T>>();
+  @override Function get typeFactory => <T extends Object>(f) => f<Box<T>>();
   @override Discriminator? get discriminator => null;
 }
 
-extension BoxExtension<T> on Box<T> {
+extension BoxExtension<T extends Object> on Box<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   Box<T> copyWith({int? size, T? content}) => Box(size ?? this.size, content: content ?? this.content);
