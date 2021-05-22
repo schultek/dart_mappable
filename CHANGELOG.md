@@ -1,3 +1,7 @@
+# 0.4.3
+
+- Subclasses now inherit field annotations
+
 # 0.4.2
 
 - Added support for encoding/decoding hooks

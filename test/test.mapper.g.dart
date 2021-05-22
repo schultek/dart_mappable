@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'models/polymorphism.dart';
 import 'models/model.dart';
+import 'models/inheritance.dart';
 import 'package:dart_mappable/annotations.dart';
 
 // === GENERATED MAPPER CLASSES AND EXTENSIONS ===
@@ -248,6 +249,72 @@ extension PlayerExtension on Player {
   Player copyWith({String? id}) => Player(id ?? this.id);
 }
 
+class ClothesMapper implements Mapper<Clothes> {
+  ClothesMapper._();
+
+  Clothes fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Clothes fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate abstract class Clothes, did you forgot to specify a subclass for [ _type: '${map['_type']}' ] or a default subclass?");
+
+  @override Map<String, dynamic> encode(Clothes c) => {'howbig': Mapper.toValue(c.size), 'color': Mapper.toValue(c.color)};
+  @override String stringify(Clothes self) => 'Clothes(size: ${self.size}, color: ${self.color})';
+  @override int hash(Clothes self) => self.size.hashCode ^ self.color.hashCode;
+  @override bool equals(Clothes self, Clothes other) => self.size == other.size && self.color == other.color;
+
+  @override Function get decoder => fromValue;
+  @override Function get typeFactory => (f) => f<Clothes>();
+  @override Discriminator? get discriminator => Discriminator(key: '_type');
+}
+
+extension ClothesExtension on Clothes {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+
+}
+
+class TShirtMapper implements Mapper<TShirt> {
+  TShirtMapper._();
+
+  TShirt fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  TShirt fromMap(Map<String, dynamic> map) => TShirt(map.get('neck'), map.get('howbig'), map.getOpt('color'));
+
+  @override Map<String, dynamic> encode(TShirt t) => {'neck': Mapper.toValue(t.neck), 'howbig': Mapper.toValue(t.size), 'color': Mapper.toValue(t.color)};
+  @override String stringify(TShirt self) => 'TShirt(size: ${self.size}, color: ${self.color}, neck: ${self.neck})';
+  @override int hash(TShirt self) => self.neck.hashCode ^ self.size.hashCode ^ self.color.hashCode;
+  @override bool equals(TShirt self, TShirt other) => self.neck == other.neck && self.size == other.size && self.color == other.color;
+
+  @override Function get decoder => fromValue;
+  @override Function get typeFactory => (f) => f<TShirt>();
+  @override Discriminator? get discriminator => Discriminator(superKey: '_type', value: 'TShirt');
+}
+
+extension TShirtExtension on TShirt {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  TShirt copyWith({String? neck, int? size, String? color}) => TShirt(neck ?? this.neck, size ?? this.size, color ?? this.color);
+}
+
+class JeansMapper implements Mapper<Jeans> {
+  JeansMapper._();
+
+  Jeans fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Jeans fromMap(Map<String, dynamic> map) => Jeans(map.get('age'), map.getOpt('color'), map.get('howbig'));
+
+  @override Map<String, dynamic> encode(Jeans j) => {'age': Mapper.toValue(j.age), 'color': Mapper.toValue(j.color), 'howbig': Mapper.toValue(j.size)};
+  @override String stringify(Jeans self) => 'Jeans(size: ${self.size}, color: ${self.color}, age: ${self.age})';
+  @override int hash(Jeans self) => self.age.hashCode ^ self.color.hashCode ^ self.size.hashCode;
+  @override bool equals(Jeans self, Jeans other) => self.age == other.age && self.color == other.color && self.size == other.size;
+
+  @override Function get decoder => fromValue;
+  @override Function get typeFactory => (f) => f<Jeans>();
+  @override Discriminator? get discriminator => Discriminator(superKey: '_type', value: 'Jeans');
+}
+
+extension JeansExtension on Jeans {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  Jeans copyWith({int? age, String? color, int? size}) => Jeans(age ?? this.age, color ?? this.color, size ?? this.size);
+}
+
 
 extension BrandMapper on Brand {
   static Brand fromString(String value) {
@@ -295,6 +362,9 @@ var _mappers = <String, Mapper>{
   _typeOf<Confetti>(): ConfettiMapper._(),
   _typeOf<Game>(): GameMapper._(),
   _typeOf<Player>(): PlayerMapper._(),
+  _typeOf<Clothes>(): ClothesMapper._(),
+  _typeOf<TShirt>(): TShirtMapper._(),
+  _typeOf<Jeans>(): JeansMapper._(),
 
   _typeOf<Brand>(): _EnumMapper<Brand>(BrandMapper.fromString, (Brand b) => b.toStringValue()),
 

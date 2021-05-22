@@ -1,5 +1,6 @@
 import 'package:test/test.dart';
 
+import 'models/inheritance.dart';
 import 'models/model.dart';
 import 'models/polymorphism.dart';
 import 'test.mapper.g.dart';
@@ -130,6 +131,17 @@ void main() {
     test('After Encode Hook', () {
       Game game = Game(Player('Tom'));
       expect(game.toJson(), equals('{"player":"Tom"}'));
+    });
+  });
+
+  group('Inheritance', () {
+    test('Decode Inherited', () {
+      Jeans jeans = Mapper.fromJson('{"age": 2, "howbig": 1, "color": "blue"}');
+      expect(jeans.size, equals(1));
+
+      var json = jeans.toJson();
+      expect(
+          json, equals('{"age":2,"color":"blue","howbig":1,"_type":"Jeans"}'));
     });
   });
 }

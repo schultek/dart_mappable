@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
@@ -46,7 +47,11 @@ class ClassMapper {
       return options.fields[param.name]!;
     }
     String? field = fieldAnnotation(param)?.getField('key')!.toStringValue();
-    return field ?? toCaseStyle(param.name, options.caseStyle);
+    if (field != null) return field;
+    if (superMapper != null && superParams[param.name] != null) {
+      return superMapper!.jsonKey(superParams[param.name]!);
+    }
+    return toCaseStyle(param.name, options.caseStyle);
   }
 
   String? hookForParam(ParameterElement param) {
@@ -57,22 +62,27 @@ class ClassMapper {
           : (param as FieldFormalParameterElement).field!;
 
       return getAnnotationCode(annotatedElement, MappableField, 'hooks');
+    } else if (superMapper != null && superParams[param.name] != null) {
+      return superMapper!.hookForParam(superParams[param.name]!);
     }
   }
 
-  ConstructorElement _chooseConstructor() {
+  ConstructorElement? _constructor;
+  ConstructorElement get constructor => _constructor ??= _getConstructor();
+  ConstructorElement _getConstructor() {
     var explicitConstructor = element.constructors.where((c) =>
         !c.isPrivate &&
         (c.name == options.constructor ||
             constructorChecker.hasAnnotationOf(c)));
-    return explicitConstructor.isNotEmpty
+    var constructor = explicitConstructor.isNotEmpty
         ? explicitConstructor.first
         : element.constructors.firstWhere((c) => !c.isPrivate);
+    return constructor;
   }
 
   bool hasValidConstructor() {
     try {
-      var _ = _chooseConstructor();
+      var _ = constructor;
       return true;
     } catch (_) {
       return false;
@@ -80,8 +90,6 @@ class ClassMapper {
   }
 
   String generateExtensionCode() {
-    ConstructorElement constructor = _chooseConstructor();
-
     var typeParams = '';
     if (element.typeParameters.isNotEmpty) {
       typeParams = '<${element.typeParameters.map((p) => p.name).join(', ')}>';
@@ -92,12 +100,12 @@ class ClassMapper {
         $mapperName._();
         
         $className$typeParams fromValue$typeParams(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap$typeParams(map));
-        $className$typeParams fromMap$typeParams(Map<String, dynamic> map) => ${_generateFromMap(constructor)}
+        $className$typeParams fromMap$typeParams(Map<String, dynamic> map) => ${_generateFromMap()}
         
-        @override Map<String, dynamic> encode($className $paramName) => {${_generateMappingEntries(constructor)}};
-        @override String stringify($className self) => '$className(${_generateStringParams(constructor)})';
-        @override int hash($className self) => ${_generateHashParams(constructor)};
-        @override bool equals($className self, $className other) => ${_generateEqualsParams(constructor)};
+        @override Map<String, dynamic> encode($className $paramName) => {${_generateMappingEntries()}};
+        @override String stringify($className self) => '$className(${_generateStringParams()})';
+        @override int hash($className self) => ${_generateHashParams()};
+        @override bool equals($className self, $className other) => ${_generateEqualsParams()};
         
         @override Function get decoder => fromValue;
         @override Function get typeFactory => $typeParams(f) => f<$className$typeParams>();
@@ -107,13 +115,13 @@ class ClassMapper {
       extension $extensionName$typeParams on $className$typeParams {
         String toJson() => Mapper.toJson(this);
         Map<String, dynamic> toMap() => Mapper.toMap(this);
-        ${_generateCopyWith(constructor, typeParams)}
+        ${_generateCopyWith(typeParams)}
       }
     '''
         .unindent();
   }
 
-  String _generateFromMap(ConstructorElement constructor) {
+  String _generateFromMap() {
     if (element.isAbstract) {
       if (isSuperMapper) {
         if (defaultSubMapper != null) {
@@ -121,16 +129,16 @@ class ClassMapper {
         }
         var key = options.discriminatorKey ?? '_type';
         var value = "\${map['$key']}";
-        return "throw MapperException('Cannot instantiate abstract class ${element.name}, did you forgot to specify a subclass for [ $key: \\'$value\\' ] or a default subclass?');";
+        return 'throw MapperException("Cannot instantiate abstract class ${element.name}, did you forgot to specify a subclass for [ $key: \'$value\' ] or a default subclass?");';
       } else {
         return "throw const MapperException('Cannot instantiate abstract class ${element.name}.');";
       }
     } else {
-      return '${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateConstructorParams(constructor)});';
+      return '${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateConstructorParams()});';
     }
   }
 
-  String _generateConstructorParams(ConstructorElement constructor) {
+  String _generateConstructorParams() {
     List<String> params = [];
     for (var param in constructor.parameters) {
       var str = '';
@@ -171,7 +179,7 @@ class ClassMapper {
     return params.join(', ');
   }
 
-  String _generateMappingEntries(ConstructorElement constructor) {
+  String _generateMappingEntries() {
     List<String> params = [];
 
     PropertyAccessorElement? findGetter(String name, ClassMapper mapper) {
@@ -223,7 +231,7 @@ class ClassMapper {
     return params.join(', ');
   }
 
-  String _generateStringParams(ConstructorElement constructor) {
+  String _generateStringParams() {
     List<String> params = [];
 
     void addFieldsForMapper(ClassMapper mapper) {
@@ -264,7 +272,7 @@ class ClassMapper {
     return _hasField(this);
   }
 
-  String _generateHashParams(ConstructorElement constructor) {
+  String _generateHashParams() {
     List<String> params = [];
     for (var param in constructor.parameters) {
       if (param is FieldFormalParameterElement || hasField(param.name)) {
@@ -279,7 +287,7 @@ class ClassMapper {
     }
   }
 
-  String _generateEqualsParams(ConstructorElement constructor) {
+  String _generateEqualsParams() {
     List<String> params = [];
     for (var param in constructor.parameters) {
       if (param is FieldFormalParameterElement || hasField(param.name)) {
@@ -293,19 +301,19 @@ class ClassMapper {
     }
   }
 
-  String _generateCopyWith(ConstructorElement constructor, String typeParams) {
+  String _generateCopyWith(String typeParams) {
     if (element.isAbstract) {
       return '';
     } else {
       var method = 'copy${constructor.parameters.isNotEmpty ? 'With' : ''}';
-      var params = _generateCopyWithParams(constructor);
+      var params = _generateCopyWithParams();
       var body =
-          '${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateCopyWithConstructorParams(constructor)})';
+          '${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateCopyWithConstructorParams()})';
       return '$className$typeParams $method($params) => $body;';
     }
   }
 
-  String _generateCopyWithParams(ConstructorElement constructor) {
+  String _generateCopyWithParams() {
     if (constructor.parameters.isEmpty) return '';
     List<String> params = [];
     for (var param in constructor.parameters) {
@@ -317,7 +325,7 @@ class ClassMapper {
     return '{${params.join(', ')}}';
   }
 
-  String _generateCopyWithConstructorParams(ConstructorElement constructor) {
+  String _generateCopyWithConstructorParams() {
     List<String> params = [];
     for (var param in constructor.parameters) {
       var str = '';
@@ -351,6 +359,38 @@ class ClassMapper {
       return 'Discriminator(${args.join(', ')})';
     } else {
       return 'null';
+    }
+  }
+
+  Map<String, ParameterElement> superParams = {};
+
+  void analyzeSuperConstructor() {
+    if (superMapper == null) return;
+
+    var node = constructor.session!
+        .getParsedLibraryByElement(constructor.library)
+        .getElementDeclaration(constructor)!
+        .node;
+
+    if (node is ConstructorDeclaration) {
+      if (node.initializers.isNotEmpty) {
+        var last = node.initializers.last;
+        if (last is SuperConstructorInvocation) {
+          var args = last.argumentList.arguments;
+          var i = 0;
+          for (var arg in args) {
+            if (arg is SimpleIdentifier) {
+              superParams[arg.name] = superMapper!.constructor.parameters[i];
+            } else if (arg is NamedExpression &&
+                arg.expression is SimpleIdentifier) {
+              superParams[(arg.expression as SimpleIdentifier).name] =
+                  superMapper!.constructor.parameters.firstWhere(
+                      (p) => p.isNamed && p.name == arg.name.label.name);
+            }
+            i++;
+          }
+        }
+      }
     }
   }
 }

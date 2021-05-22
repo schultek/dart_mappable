@@ -109,6 +109,7 @@ class MappableBuilder implements Builder {
             classMapper.superMapper = superMapper;
 
             if (superMapper != null) {
+              classMapper.analyzeSuperConstructor();
               var field = classChecker
                   .firstAnnotationOf(element)
                   ?.getField('discriminatorValue');
@@ -125,6 +126,8 @@ class MappableBuilder implements Builder {
               }
             }
           }
+
+          return classMapper;
         }
       }
 
