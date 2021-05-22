@@ -316,6 +316,19 @@ dynamic genericCall(TypeInfo info, Function fn, dynamic value) {
 }
 ''';
 
+const classHooksCode = '''
+T _hookedDecode<T>(MappingHooks hooks, dynamic value, T Function(dynamic value) fn) {
+  var v = hooks.beforeDecode(value);
+  if (v is! T) v = fn(v);
+  return hooks.afterDecode(v) as T;
+}
+dynamic _hookedEncode<T>(MappingHooks hooks, T value, dynamic Function(T value) fn) {
+  var v = hooks.beforeEncode(value);
+  if (v is T) v = fn(v);
+  return hooks.afterEncode(v);
+}
+''';
+
 const extensionWithoutHooks = r'''
 extension on Map<String, dynamic> {
   T get<T>(String key) {
@@ -372,7 +385,7 @@ extension on Map<String, dynamic> {
 ''';
 
 const extensionWithHooks = r'''
-dynamic _toValue(dynamic value, {FieldHooks? hooks}) {
+dynamic _toValue(dynamic value, {MappingHooks? hooks}) {
   if (hooks == null) {
     return Mapper.toValue(value);
   } else {
@@ -381,21 +394,21 @@ dynamic _toValue(dynamic value, {FieldHooks? hooks}) {
 }
 
 extension on Map<String, dynamic> {
-  T get<T>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+  T get<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
     if (v == null) {
       throw MapperException('Parameter $key is required.');
     }
     return Mapper.fromValue<T>(v);
   });
 
-  T? getOpt<T>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+  T? getOpt<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
     if (v == null) {
       return null;
     }
     return Mapper.fromValue<T>(v);
   });
 
-  List<T> getList<T>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+  List<T> getList<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
     if (v == null) {
       throw MapperException('Parameter $key is required.');
     } else if (v is! List) {
@@ -405,7 +418,7 @@ extension on Map<String, dynamic> {
     return value.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
   });
 
-  List<T>? getListOpt<T>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+  List<T>? getListOpt<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
     if (v == null) {
       return null;
     } else if (v is! List) {
@@ -415,7 +428,7 @@ extension on Map<String, dynamic> {
     return value.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
   });
 
-  Map<K, V> getMap<K, V>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+  Map<K, V> getMap<K, V>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
     if (v == null) {
       throw MapperException('Parameter $key is required.');
     } else if (v is! Map) {
@@ -425,7 +438,7 @@ extension on Map<String, dynamic> {
     return value.map((dynamic key, dynamic value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
   });
 
-  Map<K, V>? getMapOpt<K, V>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+  Map<K, V>? getMapOpt<K, V>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
     if (v == null) {
       return null;
     } else if (v is! Map) {
@@ -435,7 +448,7 @@ extension on Map<String, dynamic> {
     return value.map((dynamic key, dynamic value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
   });
 
-  T hooked<T>(FieldHooks? hooks, String key, T Function(dynamic v) fn) {
+  T hooked<T>(MappingHooks? hooks, String key, T Function(dynamic v) fn) {
     if (hooks == null) {
       return fn(this[key]);
     } else {

@@ -15,6 +15,7 @@ import 'case_style.dart';
 class ClassMapper {
   static const constructorChecker =
       TypeChecker.fromRuntime(MappableConstructor);
+  static const classChecker = TypeChecker.fromRuntime(MappableClass);
   static const fieldChecker = TypeChecker.fromRuntime(MappableField);
 
   String get className => element.name;
@@ -30,7 +31,7 @@ class ClassMapper {
   ClassMapper? defaultSubMapper;
 
   String? discriminatorValueCode;
-  bool usesHooks = false;
+  bool usesFieldHooks = false;
 
   ClassMapper(this.element, this.options,
       {this.isSuperMapper = false, this.discriminatorValueCode});
@@ -67,6 +68,22 @@ class ClassMapper {
     }
   }
 
+  String? _hookForClass;
+  String? get hookForClass => _hookForClass != null
+      ? _hookForClass!.isEmpty
+          ? null
+          : _hookForClass
+      : _getHookForClass();
+  String? _getHookForClass() {
+    var annotation = classChecker.firstAnnotationOf(element);
+    String? hook;
+    if (annotation != null && !annotation.getField('hooks')!.isNull) {
+      hook = getAnnotationCode(element, MappableClass, 'hooks');
+    }
+    _hookForClass = hook ?? '';
+    return hook;
+  }
+
   ConstructorElement? _constructor;
   ConstructorElement get constructor => _constructor ??= _getConstructor();
   ConstructorElement _getConstructor() {
@@ -99,15 +116,17 @@ class ClassMapper {
       class $mapperName implements Mapper<$className> {
         $mapperName._();
         
-        $className$typeParams fromValue$typeParams(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap$typeParams(map));
+        @override Function get decoder => decode;
+        $className$typeParams decode$typeParams(dynamic v) => ${_generateFromMapCall('_checked(v, (Map<String, dynamic> map) => fromMap$typeParams(map))')};
         $className$typeParams fromMap$typeParams(Map<String, dynamic> map) => ${_generateFromMap()}
         
-        @override Map<String, dynamic> encode($className $paramName) => {${_generateMappingEntries()}};
+        @override dynamic encode($className v) => ${_generateToMapCall('toMap(v)')};
+        Map<String, dynamic> toMap($className $paramName) => {${_generateMappingEntries()}};
+        
         @override String stringify($className self) => '$className(${_generateStringParams()})';
         @override int hash($className self) => ${_generateHashParams()};
         @override bool equals($className self, $className other) => ${_generateEqualsParams()};
         
-        @override Function get decoder => fromValue;
         @override Function get typeFactory => $typeParams(f) => f<$className$typeParams>();
         @override Discriminator? get discriminator => ${_generateDiscriminator()};
       }
@@ -119,6 +138,29 @@ class ClassMapper {
       }
     '''
         .unindent();
+  }
+
+  String _generateFromMapCall(String fromMap) {
+    var wrapped = fromMap;
+    if (hookForClass != null) {
+      wrapped = '_hookedDecode(const $hookForClass, v, (v) => $wrapped)';
+    }
+    if (superMapper != null) {
+      wrapped = superMapper!._generateFromMapCall(wrapped);
+    }
+    return wrapped;
+  }
+
+  String _generateToMapCall(String toMap, [String? name]) {
+    var wrapped = toMap;
+    if (hookForClass != null) {
+      wrapped =
+          '_hookedEncode<${name ?? className}>(const $hookForClass, v, (v) => $wrapped)';
+    }
+    if (superMapper != null) {
+      wrapped = superMapper!._generateToMapCall(wrapped, name ?? className);
+    }
+    return wrapped;
   }
 
   String _generateFromMap() {
@@ -164,7 +206,7 @@ class ClassMapper {
       var hook = hookForParam(param);
 
       if (hook != null) {
-        usesHooks = true;
+        usesFieldHooks = true;
         args.add('hooks: const $hook');
       }
 
@@ -213,7 +255,7 @@ class ClassMapper {
 
         var hook = hookForParam(param);
         if (hook != null) {
-          usesHooks = true;
+          usesFieldHooks = true;
           exp = '_toValue($paramName.$name, hooks: const $hook)';
         } else {
           exp = 'Mapper.toValue($paramName.$name)';
@@ -257,19 +299,11 @@ class ClassMapper {
   }
 
   bool hasField(String field) {
-    bool _hasField(ClassMapper mapper) {
-      if (mapper.element.getGetter(field) != null) {
-        return true;
-      } else {
-        if (mapper.superMapper != null) {
-          return _hasField(mapper.superMapper!);
-        } else {
-          return false;
-        }
-      }
+    if (element.getGetter(field) != null) {
+      return true;
+    } else {
+      return superMapper?.hasField(field) ?? false;
     }
-
-    return _hasField(this);
   }
 
   String _generateHashParams() {
@@ -277,6 +311,8 @@ class ClassMapper {
     for (var param in constructor.parameters) {
       if (param is FieldFormalParameterElement || hasField(param.name)) {
         params.add('self.${param.name}.hashCode');
+      } else if (superMapper != null && superParams[param.name] != null) {
+        params.add('self.${superParams[param.name]!.name}.hashCode');
       }
     }
 
@@ -292,6 +328,9 @@ class ClassMapper {
     for (var param in constructor.parameters) {
       if (param is FieldFormalParameterElement || hasField(param.name)) {
         params.add('self.${param.name} == other.${param.name}');
+      } else if (superMapper != null && superParams[param.name] != null) {
+        params.add(
+            'self.${superParams[param.name]!.name} == other.${superParams[param.name]!.name}');
       }
     }
     if (params.isEmpty) {
@@ -317,9 +356,11 @@ class ClassMapper {
     if (constructor.parameters.isEmpty) return '';
     List<String> params = [];
     for (var param in constructor.parameters) {
+      var type = param.type.getDisplayString(withNullability: false);
       if (param is FieldFormalParameterElement || hasField(param.name)) {
-        var type = param.type.getDisplayString(withNullability: false);
         params.add('$type? ${param.name}');
+      } else if (superMapper != null && superParams[param.name] != null) {
+        params.add('$type? ${superParams[param.name]!.name}');
       }
     }
     return '{${params.join(', ')}}';
@@ -336,6 +377,9 @@ class ClassMapper {
 
       if (param is FieldFormalParameterElement || hasField(param.name)) {
         str += '${param.name} ?? this.${param.name}';
+      } else if (superMapper != null && superParams[param.name] != null) {
+        str +=
+            '${superParams[param.name]!.name} ?? this.${superParams[param.name]!.name}';
       } else {
         str += param.name;
       }

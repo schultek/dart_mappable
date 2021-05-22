@@ -36,7 +36,7 @@ class Confetti {
   Confetti(this.color);
 }
 
-class PlayerHooks extends FieldHooks {
+class PlayerHooks extends MappingHooks {
   const PlayerHooks();
 
   @override

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'src/flags.dart';
 
 /// Used to annotate a class
@@ -8,6 +10,7 @@ class MappableClass {
     this.ignoreNull,
     this.discriminatorKey,
     this.discriminatorValue,
+    this.hooks,
   });
 
   /// The case style for the map keys
@@ -21,6 +24,9 @@ class MappableClass {
 
   /// Custom value for the discriminator property
   final dynamic discriminatorValue;
+
+  /// Define custom hooks used only for this class
+  final MappingHooks? hooks;
 
   static const useAsDefault = MappingFlags.useAsDefault;
 }
@@ -51,15 +57,78 @@ class MappableField {
   final String? key;
 
   /// Define custom hooks used only for this field
-  final FieldHooks? hooks;
+  final MappingHooks? hooks;
 }
 
-abstract class FieldHooks {
-  const FieldHooks();
+abstract class MappingHooks {
+  const MappingHooks();
 
   dynamic beforeDecode(dynamic value) => value;
   dynamic afterDecode(dynamic value) => value;
 
   dynamic beforeEncode(dynamic value) => value;
   dynamic afterEncode(dynamic value) => value;
+}
+
+class UnmappedPropertiesHooks extends MappingHooks {
+  final String key;
+  const UnmappedPropertiesHooks(this.key);
+
+  @override
+  dynamic beforeDecode(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      return UnusedPropertiesMap.of(value, key: key);
+    }
+    return value;
+  }
+
+  @override
+  dynamic afterEncode(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      var props = value.remove(key);
+      value.addAll(props is Map<String, dynamic> ? props : {});
+    }
+    return value;
+  }
+}
+
+class UnusedPropertiesMap with MapMixin<String, dynamic> {
+  Map<String, dynamic> wrapped;
+  Map<String, dynamic> unused;
+
+  String key;
+
+  UnusedPropertiesMap.of(this.wrapped, {required this.key})
+      : unused = {...wrapped};
+
+  @override
+  dynamic operator [](Object? key) {
+    if (key == this.key) {
+      return unused;
+    } else {
+      unused.remove(key);
+      return wrapped[key];
+    }
+  }
+
+  @override
+  void operator []=(String key, dynamic value) {
+    unused[key] = value;
+    wrapped[key] = value;
+  }
+
+  @override
+  void clear() {
+    unused.clear();
+    wrapped.clear();
+  }
+
+  @override
+  Iterable<String> get keys => wrapped.keys;
+
+  @override
+  dynamic remove(Object? key) {
+    unused.remove(key);
+    wrapped.remove(key);
+  }
 }

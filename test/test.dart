@@ -144,6 +144,14 @@ void main() {
           json, equals('{"age":2,"color":"blue","howbig":1,"_type":"Jeans"}'));
     });
   });
+
+  group('Class Hooks', () {
+    test('Unmapped Properties', () {
+      TShirt tshirt = Mapper.fromJson(
+          '{"neck": "V", "howbig": 1, "color": "green", "tag": "wool", "quality": "good"}');
+      expect(tshirt.unmappedProps, equals({'tag': 'wool', 'quality': 'good'}));
+    });
+  });
 }
 
 Type type<T>() => T;

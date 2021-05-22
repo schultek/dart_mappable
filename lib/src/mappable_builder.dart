@@ -157,8 +157,9 @@ class MappableBuilder implements Builder {
     var enumMapperCode =
         enumMappers.values.map((em) => em.generateExtensionCode()).join();
 
-    var usesHooks = classMappers.values.any((c) => c.usesHooks);
-    if (usesHooks) {
+    var usesFieldHooks = classMappers.values.any((c) => c.usesFieldHooks);
+    var usesClassHooks = classMappers.values.any((c) => c.hookForClass != null);
+    if (usesFieldHooks || usesClassHooks) {
       imports.add(Uri.parse('package:dart_mappable/annotations.dart'));
     }
 
@@ -176,7 +177,8 @@ class MappableBuilder implements Builder {
         '};\n'
         '\n// === GENERATED UTILITY CLASSES ===\n\n'
         '$mapperCode'
-        '${usesHooks ? extensionWithHooks : extensionWithoutHooks}';
+        '${usesClassHooks ? classHooksCode : ''}'
+        '${usesFieldHooks ? extensionWithHooks : extensionWithoutHooks}';
   }
 
   /// All of the declared classes and enums in this library.

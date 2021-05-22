@@ -1,3 +1,7 @@
+# 0.4.4
+
+- Added support for class-specific hooks
+
 # 0.4.3
 
 - Subclasses now inherit field annotations

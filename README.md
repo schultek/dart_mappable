@@ -32,6 +32,7 @@ Sounds too good to be true? Not anymore.
 - [Polymorphism and Discriminators](#polymorphism-and-discriminators)
   - [Null and Default Values](#null-and-default-values)
 - [Encoding / Decoding Hooks](#encoding--decoding-hooks)
+  - [Unmapped Properties](#unmapped-properties)
 
 ## Coming Soon
 
@@ -47,7 +48,7 @@ To get started, add the following lines to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  dart_mappable: ^0.4.3
+  dart_mappable: ^0.4.4
   build_runner: ^1.12.2
 ```
 
@@ -156,7 +157,7 @@ targets:
 In some cases it is easier to use **Annotations** on classes, that require some special configurations. 
 There are a total of **four** Annotations that you can use in your code:
 
-1. `@MappableClass()` can be used on a class to specify options like the `caseStyle` of the json keys, or wheter to ignore null values.
+1. `@MappableClass()` can be used on a class to specify options like the `caseStyle` of the json keys, whether to ignore null values, or [hooks](#encoding--decoding-hooks).
 2. `@MappableEnum()` can be used on a enum to specify the `caseStyle` of the stringified enum values.
 3. `@MappableConstructor()` can be used on a constructor to mark this to be used for decoding. It has no properties.
 4. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name, or [hooks](#encoding--decoding-hooks). *Note: This can only be used on a field if it is directly assigned as a constructor parameter (`MyClass(this.myField)`). Setting this Annotation on any other field will have no effect. (See [Utilize Constructors](#utilize-constructors) for an explanation why this is.)*
@@ -461,16 +462,21 @@ void main() {
 
 ## Encoding / Decoding Hooks
 
-Hooks provide a way to hook into the encoding and decoding process for a single field. 
-When using hooks, you have the possibility to inspect and modify fields before and after they are encoded or decoded.
+Hooks provide a way to hook into the encoding and decoding process for a class or single field. 
+When using hooks, you have the possibility to inspect and modify values before and after they are encoded or decoded.
 
-To use hooks, create a custom class extending the `FieldHooks` class, and set this as the `hooks` argument of the `MappableField` annotation like this:
+To use hooks, create a custom class extending the `MappingHooks` class, and set this as the `hooks` argument of either the `MappableClass` or `MappableField` annotation like this:
 
 ```dart
-class PlayerHooks extends FieldHooks {
+class GameHooks extends MappingHooks {
+  const GameHooks();
+}
+
+class PlayerHooks extends MappingHooks {
   const PlayerHooks();
 }
 
+@MappableClass(hooks: GameHooks())
 class Game {
   @MappableField(hooks: PlayerHooks())
   Player player;
@@ -484,7 +490,7 @@ class Player {
 }
 ```
 
-Now, whenever an instance of `Game` is encoded or decoded, the `PlayerHooks` will be applied. 
+Now, whenever an instance of `Game` is encoded or decoded, the `GameHooks` will be applied to the class and the `PlayerHooks` will be applied to the `player` field. 
 Inside your hooks class, you have four methods that you can override:
 
 - `dynamic beforeDecode(dynamic value)`
@@ -495,14 +501,14 @@ Inside your hooks class, you have four methods that you can override:
 Each method takes a dynamic value and returns an optionally modified value.
 
 > Tip: If the `beforeDecode` hook already returns an instance of the target type, the normal decoding logic is effectively skipped. The same is true for the `beforeEncode` hook.
-> This gives you the possibility to effectively define 'field-specific custom mappers'.
+> This gives you the possibility to effectively define custom mappers, especially on a field-by-field level.
 
 A simple use-case for this would be to modify the input json before an object is decoded. 
 In the example below, the player field can either be a full json object, or a single string. 
 The string would then be treated as the id of the player.
 
 ```dart
-class PlayerHooks extends FieldHooks {
+class PlayerHooks extends MappingHooks {
   const PlayerHooks();
 
   @override
@@ -524,5 +530,33 @@ void main() {
   // Special case: 'player' is a string instead of an object
   Game game2 = Mapper.fromJson('{"player": "John"}');
   print(game.player.id); // John
+}
+```
+
+Additionally, it is important to note that field- and class-hooks are inherited by any subclasses. 
+When both the superclass and the subclass define class-hooks, both are applied in the following order:
+`super.beforeDecode -> sub.beforeDecode -> decode -> sub.afterDecode -> super.afterDecode`. For field-hooks, only the sub-class-hook is applied.
+
+### Unmapped Properties
+
+A frequently needed use-case for hooks is to catch additional, unmapped properties from json when decoding an object. 
+Because of this, we provide a ready-to-use `MappingHook` called `UnmappedPropertiesHooks`.
+
+To use this hook, define a `Map<String, dynamic` field in your class, and provide it's name to the `UnmappedPropertiesHooks` constructor. 
+Be aware that you have to provide the matching json key of the field (after applying the case style, etc.) instead of the field name.
+
+```dart
+@MappableClass(hooks: UnmappedPropertiesHooks('unmapped_props'))
+class Game {
+  String id;
+  Map<String, dynamic> unmappedProps;
+
+  Game(this.id, this.unmappedProps);
+}
+
+void main() {
+  Game game = Mapper.fromJson('{"id": 1, "type": "pacman", "score": 100}');
+  print(game.id); // 1
+  print(game.unmappedProps); // {type: pacman, score: 100}
 }
 ```

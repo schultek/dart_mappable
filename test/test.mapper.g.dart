@@ -10,15 +10,17 @@ import 'package:dart_mappable/annotations.dart';
 class AnimalMapper implements Mapper<Animal> {
   AnimalMapper._();
 
-  Animal fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  @override Function get decoder => decode;
+  Animal decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Animal fromMap(Map<String, dynamic> map) => Mapper.fromMap<DefaultAnimal>(map);
 
-  @override Map<String, dynamic> encode(Animal a) => {'name': Mapper.toValue(a.name)};
+  @override dynamic encode(Animal v) => toMap(v);
+  Map<String, dynamic> toMap(Animal a) => {'name': Mapper.toValue(a.name)};
+
   @override String stringify(Animal self) => 'Animal(name: ${self.name})';
   @override int hash(Animal self) => self.name.hashCode;
   @override bool equals(Animal self, Animal other) => self.name == other.name;
 
-  @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<Animal>();
   @override Discriminator? get discriminator => Discriminator(key: '_type');
 }
@@ -32,15 +34,17 @@ extension AnimalExtension on Animal {
 class CatMapper implements Mapper<Cat> {
   CatMapper._();
 
-  Cat fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  @override Function get decoder => decode;
+  Cat decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Cat fromMap(Map<String, dynamic> map) => Cat(map.get('name'), map.get('color'));
 
-  @override Map<String, dynamic> encode(Cat c) => {'name': Mapper.toValue(c.name), 'color': Mapper.toValue(c.color)};
+  @override dynamic encode(Cat v) => toMap(v);
+  Map<String, dynamic> toMap(Cat c) => {'name': Mapper.toValue(c.name), 'color': Mapper.toValue(c.color)};
+
   @override String stringify(Cat self) => 'Cat(name: ${self.name}, color: ${self.color})';
   @override int hash(Cat self) => self.name.hashCode ^ self.color.hashCode;
   @override bool equals(Cat self, Cat other) => self.name == other.name && self.color == other.color;
 
-  @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<Cat>();
   @override Discriminator? get discriminator => Discriminator(superKey: '_type', value: 'Cat');
 }
@@ -54,15 +58,17 @@ extension CatExtension on Cat {
 class DogMapper implements Mapper<Dog> {
   DogMapper._();
 
-  Dog fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  @override Function get decoder => decode;
+  Dog decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Dog fromMap(Map<String, dynamic> map) => Dog(map.get('name'), map.get('age'));
 
-  @override Map<String, dynamic> encode(Dog d) => {'name': Mapper.toValue(d.name), 'age': Mapper.toValue(d.age)};
+  @override dynamic encode(Dog v) => toMap(v);
+  Map<String, dynamic> toMap(Dog d) => {'name': Mapper.toValue(d.name), 'age': Mapper.toValue(d.age)};
+
   @override String stringify(Dog self) => 'Dog(name: ${self.name}, age: ${self.age})';
   @override int hash(Dog self) => self.name.hashCode ^ self.age.hashCode;
   @override bool equals(Dog self, Dog other) => self.name == other.name && self.age == other.age;
 
-  @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<Dog>();
   @override Discriminator? get discriminator => Discriminator(superKey: '_type', value: Animal.Dog);
 }
@@ -76,15 +82,17 @@ extension DogExtension on Dog {
 class NullAnimalMapper implements Mapper<NullAnimal> {
   NullAnimalMapper._();
 
-  NullAnimal fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  @override Function get decoder => decode;
+  NullAnimal decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   NullAnimal fromMap(Map<String, dynamic> map) => NullAnimal(map.get('name'));
 
-  @override Map<String, dynamic> encode(NullAnimal n) => {'name': Mapper.toValue(n.name)};
+  @override dynamic encode(NullAnimal v) => toMap(v);
+  Map<String, dynamic> toMap(NullAnimal n) => {'name': Mapper.toValue(n.name)};
+
   @override String stringify(NullAnimal self) => 'NullAnimal(name: ${self.name})';
   @override int hash(NullAnimal self) => self.name.hashCode;
   @override bool equals(NullAnimal self, NullAnimal other) => self.name == other.name;
 
-  @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<NullAnimal>();
   @override Discriminator? get discriminator => Discriminator(superKey: '_type', value: null);
 }
@@ -98,15 +106,17 @@ extension NullAnimalExtension on NullAnimal {
 class DefaultAnimalMapper implements Mapper<DefaultAnimal> {
   DefaultAnimalMapper._();
 
-  DefaultAnimal fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  @override Function get decoder => decode;
+  DefaultAnimal decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   DefaultAnimal fromMap(Map<String, dynamic> map) => DefaultAnimal(map.get('name'), map.get('_type'));
 
-  @override Map<String, dynamic> encode(DefaultAnimal d) => {'name': Mapper.toValue(d.name), '_type': Mapper.toValue(d.type)};
+  @override dynamic encode(DefaultAnimal v) => toMap(v);
+  Map<String, dynamic> toMap(DefaultAnimal d) => {'name': Mapper.toValue(d.name), '_type': Mapper.toValue(d.type)};
+
   @override String stringify(DefaultAnimal self) => 'DefaultAnimal(name: ${self.name}, type: ${self.type})';
   @override int hash(DefaultAnimal self) => self.name.hashCode ^ self.type.hashCode;
   @override bool equals(DefaultAnimal self, DefaultAnimal other) => self.name == other.name && self.type == other.type;
 
-  @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<DefaultAnimal>();
   @override Discriminator? get discriminator => Discriminator(superKey: '_type', value: '__default__');
 }
@@ -120,15 +130,17 @@ extension DefaultAnimalExtension on DefaultAnimal {
 class PersonMapper implements Mapper<Person> {
   PersonMapper._();
 
-  Person fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  @override Function get decoder => decode;
+  Person decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Person fromMap(Map<String, dynamic> map) => Person(map.get('name'), age: map.getOpt('age') ?? 18, car: map.getOpt('car'));
 
-  @override Map<String, dynamic> encode(Person p) => {'name': Mapper.toValue(p.name), 'age': Mapper.toValue(p.age), 'car': Mapper.toValue(p.car)};
+  @override dynamic encode(Person v) => toMap(v);
+  Map<String, dynamic> toMap(Person p) => {'name': Mapper.toValue(p.name), 'age': Mapper.toValue(p.age), 'car': Mapper.toValue(p.car)};
+
   @override String stringify(Person self) => 'Person(name: ${self.name}, age: ${self.age}, car: ${self.car})';
   @override int hash(Person self) => self.name.hashCode ^ self.age.hashCode ^ self.car.hashCode;
   @override bool equals(Person self, Person other) => self.name == other.name && self.age == other.age && self.car == other.car;
 
-  @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<Person>();
   @override Discriminator? get discriminator => null;
 }
@@ -142,15 +154,17 @@ extension PersonExtension on Person {
 class CarMapper implements Mapper<Car> {
   CarMapper._();
 
-  Car fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  @override Function get decoder => decode;
+  Car decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Car fromMap(Map<String, dynamic> map) => Car(map.get('driven_km'), map.get('brand'));
 
-  @override Map<String, dynamic> encode(Car c) => {'driven_km': Mapper.toValue(c.drivenKm), 'brand': Mapper.toValue(c.brand)};
+  @override dynamic encode(Car v) => toMap(v);
+  Map<String, dynamic> toMap(Car c) => {'driven_km': Mapper.toValue(c.drivenKm), 'brand': Mapper.toValue(c.brand)};
+
   @override String stringify(Car self) => 'Car(miles: ${self.miles}, brand: ${self.brand})';
   @override int hash(Car self) => self.drivenKm.hashCode ^ self.brand.hashCode;
   @override bool equals(Car self, Car other) => self.drivenKm == other.drivenKm && self.brand == other.brand;
 
-  @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<Car>();
   @override Discriminator? get discriminator => null;
 }
@@ -164,15 +178,17 @@ extension CarExtension on Car {
 class BoxMapper implements Mapper<Box> {
   BoxMapper._();
 
-  Box<T> fromValue<T>(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
+  @override Function get decoder => decode;
+  Box<T> decode<T>(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
   Box<T> fromMap<T>(Map<String, dynamic> map) => Box(map.get('size'), content: map.get('content'));
 
-  @override Map<String, dynamic> encode(Box b) => {'size': Mapper.toValue(b.size), 'content': Mapper.toValue(b.content)};
+  @override dynamic encode(Box v) => toMap(v);
+  Map<String, dynamic> toMap(Box b) => {'size': Mapper.toValue(b.size), 'content': Mapper.toValue(b.content)};
+
   @override String stringify(Box self) => 'Box(size: ${self.size}, content: ${self.content})';
   @override int hash(Box self) => self.size.hashCode ^ self.content.hashCode;
   @override bool equals(Box self, Box other) => self.size == other.size && self.content == other.content;
 
-  @override Function get decoder => fromValue;
   @override Function get typeFactory => <T>(f) => f<Box<T>>();
   @override Discriminator? get discriminator => null;
 }
@@ -186,15 +202,17 @@ extension BoxExtension<T> on Box<T> {
 class ConfettiMapper implements Mapper<Confetti> {
   ConfettiMapper._();
 
-  Confetti fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  @override Function get decoder => decode;
+  Confetti decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Confetti fromMap(Map<String, dynamic> map) => Confetti(map.get('color'));
 
-  @override Map<String, dynamic> encode(Confetti c) => {'color': Mapper.toValue(c.color)};
+  @override dynamic encode(Confetti v) => toMap(v);
+  Map<String, dynamic> toMap(Confetti c) => {'color': Mapper.toValue(c.color)};
+
   @override String stringify(Confetti self) => 'Confetti(color: ${self.color})';
   @override int hash(Confetti self) => self.color.hashCode;
   @override bool equals(Confetti self, Confetti other) => self.color == other.color;
 
-  @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<Confetti>();
   @override Discriminator? get discriminator => null;
 }
@@ -208,15 +226,17 @@ extension ConfettiExtension on Confetti {
 class GameMapper implements Mapper<Game> {
   GameMapper._();
 
-  Game fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  @override Function get decoder => decode;
+  Game decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Game fromMap(Map<String, dynamic> map) => Game(map.get('player', hooks: const PlayerHooks()));
 
-  @override Map<String, dynamic> encode(Game g) => {'player': _toValue(g.player, hooks: const PlayerHooks())};
+  @override dynamic encode(Game v) => toMap(v);
+  Map<String, dynamic> toMap(Game g) => {'player': _toValue(g.player, hooks: const PlayerHooks())};
+
   @override String stringify(Game self) => 'Game(player: ${self.player})';
   @override int hash(Game self) => self.player.hashCode;
   @override bool equals(Game self, Game other) => self.player == other.player;
 
-  @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<Game>();
   @override Discriminator? get discriminator => null;
 }
@@ -230,15 +250,17 @@ extension GameExtension on Game {
 class PlayerMapper implements Mapper<Player> {
   PlayerMapper._();
 
-  Player fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  @override Function get decoder => decode;
+  Player decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Player fromMap(Map<String, dynamic> map) => Player(map.get('id'));
 
-  @override Map<String, dynamic> encode(Player p) => {'id': Mapper.toValue(p.id)};
+  @override dynamic encode(Player v) => toMap(v);
+  Map<String, dynamic> toMap(Player p) => {'id': Mapper.toValue(p.id)};
+
   @override String stringify(Player self) => 'Player(id: ${self.id})';
   @override int hash(Player self) => self.id.hashCode;
   @override bool equals(Player self, Player other) => self.id == other.id;
 
-  @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<Player>();
   @override Discriminator? get discriminator => null;
 }
@@ -252,15 +274,17 @@ extension PlayerExtension on Player {
 class ClothesMapper implements Mapper<Clothes> {
   ClothesMapper._();
 
-  Clothes fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  @override Function get decoder => decode;
+  Clothes decode(dynamic v) => _hookedDecode(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => _checked(v, (Map<String, dynamic> map) => fromMap(map)));
   Clothes fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate abstract class Clothes, did you forgot to specify a subclass for [ _type: '${map['_type']}' ] or a default subclass?");
 
-  @override Map<String, dynamic> encode(Clothes c) => {'howbig': Mapper.toValue(c.size), 'color': Mapper.toValue(c.color)};
-  @override String stringify(Clothes self) => 'Clothes(size: ${self.size}, color: ${self.color})';
-  @override int hash(Clothes self) => self.size.hashCode ^ self.color.hashCode;
-  @override bool equals(Clothes self, Clothes other) => self.size == other.size && self.color == other.color;
+  @override dynamic encode(Clothes v) => _hookedEncode<Clothes>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => toMap(v));
+  Map<String, dynamic> toMap(Clothes c) => {'howbig': Mapper.toValue(c.size), 'color': Mapper.toValue(c.color), 'unmapped_props': Mapper.toValue(c.unmappedProps)};
 
-  @override Function get decoder => fromValue;
+  @override String stringify(Clothes self) => 'Clothes(size: ${self.size}, color: ${self.color}, unmappedProps: ${self.unmappedProps})';
+  @override int hash(Clothes self) => self.size.hashCode ^ self.color.hashCode ^ self.unmappedProps.hashCode;
+  @override bool equals(Clothes self, Clothes other) => self.size == other.size && self.color == other.color && self.unmappedProps == other.unmappedProps;
+
   @override Function get typeFactory => (f) => f<Clothes>();
   @override Discriminator? get discriminator => Discriminator(key: '_type');
 }
@@ -274,15 +298,17 @@ extension ClothesExtension on Clothes {
 class TShirtMapper implements Mapper<TShirt> {
   TShirtMapper._();
 
-  TShirt fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
-  TShirt fromMap(Map<String, dynamic> map) => TShirt(map.get('neck'), map.get('howbig'), map.getOpt('color'));
+  @override Function get decoder => decode;
+  TShirt decode(dynamic v) => _hookedDecode(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => _checked(v, (Map<String, dynamic> map) => fromMap(map)));
+  TShirt fromMap(Map<String, dynamic> map) => TShirt(map.get('neck'), map.get('howbig'), map.getOpt('color'), map.getMap('unmapped_props'));
 
-  @override Map<String, dynamic> encode(TShirt t) => {'neck': Mapper.toValue(t.neck), 'howbig': Mapper.toValue(t.size), 'color': Mapper.toValue(t.color)};
-  @override String stringify(TShirt self) => 'TShirt(size: ${self.size}, color: ${self.color}, neck: ${self.neck})';
-  @override int hash(TShirt self) => self.neck.hashCode ^ self.size.hashCode ^ self.color.hashCode;
-  @override bool equals(TShirt self, TShirt other) => self.neck == other.neck && self.size == other.size && self.color == other.color;
+  @override dynamic encode(TShirt v) => _hookedEncode<TShirt>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => toMap(v));
+  Map<String, dynamic> toMap(TShirt t) => {'neck': Mapper.toValue(t.neck), 'howbig': Mapper.toValue(t.size), 'color': Mapper.toValue(t.color)};
 
-  @override Function get decoder => fromValue;
+  @override String stringify(TShirt self) => 'TShirt(size: ${self.size}, color: ${self.color}, unmappedProps: ${self.unmappedProps}, neck: ${self.neck})';
+  @override int hash(TShirt self) => self.neck.hashCode ^ self.size.hashCode ^ self.color.hashCode ^ self.unmappedProps.hashCode;
+  @override bool equals(TShirt self, TShirt other) => self.neck == other.neck && self.size == other.size && self.color == other.color && self.unmappedProps == other.unmappedProps;
+
   @override Function get typeFactory => (f) => f<TShirt>();
   @override Discriminator? get discriminator => Discriminator(superKey: '_type', value: 'TShirt');
 }
@@ -290,21 +316,71 @@ class TShirtMapper implements Mapper<TShirt> {
 extension TShirtExtension on TShirt {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  TShirt copyWith({String? neck, int? size, String? color}) => TShirt(neck ?? this.neck, size ?? this.size, color ?? this.color);
+  TShirt copyWith({String? neck, int? size, String? color, Map<String, dynamic>? unmappedProps}) => TShirt(neck ?? this.neck, size ?? this.size, color ?? this.color, unmappedProps ?? this.unmappedProps);
+}
+
+class JeansHooksMapper implements Mapper<JeansHooks> {
+  JeansHooksMapper._();
+
+  @override Function get decoder => decode;
+  JeansHooks decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  JeansHooks fromMap(Map<String, dynamic> map) => JeansHooks();
+
+  @override dynamic encode(JeansHooks v) => toMap(v);
+  Map<String, dynamic> toMap(JeansHooks j) => {};
+
+  @override String stringify(JeansHooks self) => 'JeansHooks()';
+  @override int hash(JeansHooks self) => 0;
+  @override bool equals(JeansHooks self, JeansHooks other) => true;
+
+  @override Function get typeFactory => (f) => f<JeansHooks>();
+  @override Discriminator? get discriminator => Discriminator(superKey: '_type', value: 'JeansHooks');
+}
+
+extension JeansHooksExtension on JeansHooks {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  JeansHooks copy() => JeansHooks();
+}
+
+class MappingHooksMapper implements Mapper<MappingHooks> {
+  MappingHooksMapper._();
+
+  @override Function get decoder => decode;
+  MappingHooks decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  MappingHooks fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate abstract class MappingHooks, did you forgot to specify a subclass for [ _type: '${map['_type']}' ] or a default subclass?");
+
+  @override dynamic encode(MappingHooks v) => toMap(v);
+  Map<String, dynamic> toMap(MappingHooks m) => {};
+
+  @override String stringify(MappingHooks self) => 'MappingHooks()';
+  @override int hash(MappingHooks self) => 0;
+  @override bool equals(MappingHooks self, MappingHooks other) => true;
+
+  @override Function get typeFactory => (f) => f<MappingHooks>();
+  @override Discriminator? get discriminator => Discriminator(key: '_type');
+}
+
+extension MappingHooksExtension on MappingHooks {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+
 }
 
 class JeansMapper implements Mapper<Jeans> {
   JeansMapper._();
 
-  Jeans fromValue(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  @override Function get decoder => decode;
+  Jeans decode(dynamic v) => _hookedDecode(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => _hookedDecode(const JeansHooks(), v, (v) => _checked(v, (Map<String, dynamic> map) => fromMap(map))));
   Jeans fromMap(Map<String, dynamic> map) => Jeans(map.get('age'), map.getOpt('color'), map.get('howbig'));
 
-  @override Map<String, dynamic> encode(Jeans j) => {'age': Mapper.toValue(j.age), 'color': Mapper.toValue(j.color), 'howbig': Mapper.toValue(j.size)};
-  @override String stringify(Jeans self) => 'Jeans(size: ${self.size}, color: ${self.color}, age: ${self.age})';
+  @override dynamic encode(Jeans v) => _hookedEncode<Jeans>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => _hookedEncode<Jeans>(const JeansHooks(), v, (v) => toMap(v)));
+  Map<String, dynamic> toMap(Jeans j) => {'age': Mapper.toValue(j.age), 'color': Mapper.toValue(j.color), 'howbig': Mapper.toValue(j.size)};
+
+  @override String stringify(Jeans self) => 'Jeans(size: ${self.size}, color: ${self.color}, unmappedProps: ${self.unmappedProps}, age: ${self.age})';
   @override int hash(Jeans self) => self.age.hashCode ^ self.color.hashCode ^ self.size.hashCode;
   @override bool equals(Jeans self, Jeans other) => self.age == other.age && self.color == other.color && self.size == other.size;
 
-  @override Function get decoder => fromValue;
   @override Function get typeFactory => (f) => f<Jeans>();
   @override Discriminator? get discriminator => Discriminator(superKey: '_type', value: 'Jeans');
 }
@@ -364,6 +440,8 @@ var _mappers = <String, Mapper>{
   _typeOf<Player>(): PlayerMapper._(),
   _typeOf<Clothes>(): ClothesMapper._(),
   _typeOf<TShirt>(): TShirtMapper._(),
+  _typeOf<JeansHooks>(): JeansHooksMapper._(),
+  _typeOf<MappingHooks>(): MappingHooksMapper._(),
   _typeOf<Jeans>(): JeansMapper._(),
 
   _typeOf<Brand>(): _EnumMapper<Brand>(BrandMapper.fromString, (Brand b) => b.toStringValue()),
@@ -671,7 +749,17 @@ dynamic genericCall(TypeInfo info, Function fn, dynamic value) {
     throw MapperException('Cannot construct generic wrapper for type $info. Mapper only supports generic classes with up to 3 type arguments.');
   }
 }
-dynamic _toValue(dynamic value, {FieldHooks? hooks}) {
+T _hookedDecode<T>(MappingHooks hooks, dynamic value, T Function(dynamic value) fn) {
+  var v = hooks.beforeDecode(value);
+  if (v is! T) v = fn(v);
+  return hooks.afterDecode(v) as T;
+}
+dynamic _hookedEncode<T>(MappingHooks hooks, T value, dynamic Function(T value) fn) {
+  var v = hooks.beforeEncode(value);
+  if (v is T) v = fn(v);
+  return hooks.afterEncode(v);
+}
+dynamic _toValue(dynamic value, {MappingHooks? hooks}) {
   if (hooks == null) {
     return Mapper.toValue(value);
   } else {
@@ -680,21 +768,21 @@ dynamic _toValue(dynamic value, {FieldHooks? hooks}) {
 }
 
 extension on Map<String, dynamic> {
-  T get<T>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+  T get<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
     if (v == null) {
       throw MapperException('Parameter $key is required.');
     }
     return Mapper.fromValue<T>(v);
   });
 
-  T? getOpt<T>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+  T? getOpt<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
     if (v == null) {
       return null;
     }
     return Mapper.fromValue<T>(v);
   });
 
-  List<T> getList<T>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+  List<T> getList<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
     if (v == null) {
       throw MapperException('Parameter $key is required.');
     } else if (v is! List) {
@@ -704,7 +792,7 @@ extension on Map<String, dynamic> {
     return value.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
   });
 
-  List<T>? getListOpt<T>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+  List<T>? getListOpt<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
     if (v == null) {
       return null;
     } else if (v is! List) {
@@ -714,7 +802,7 @@ extension on Map<String, dynamic> {
     return value.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
   });
 
-  Map<K, V> getMap<K, V>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+  Map<K, V> getMap<K, V>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
     if (v == null) {
       throw MapperException('Parameter $key is required.');
     } else if (v is! Map) {
@@ -724,7 +812,7 @@ extension on Map<String, dynamic> {
     return value.map((dynamic key, dynamic value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
   });
 
-  Map<K, V>? getMapOpt<K, V>(String key, {FieldHooks? hooks}) => hooked(hooks, key, (v) {
+  Map<K, V>? getMapOpt<K, V>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
     if (v == null) {
       return null;
     } else if (v is! Map) {
@@ -734,7 +822,7 @@ extension on Map<String, dynamic> {
     return value.map((dynamic key, dynamic value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
   });
 
-  T hooked<T>(FieldHooks? hooks, String key, T Function(dynamic v) fn) {
+  T hooked<T>(MappingHooks? hooks, String key, T Function(dynamic v) fn) {
     if (hooks == null) {
       return fn(this[key]);
     } else {
