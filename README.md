@@ -34,11 +34,6 @@ Sounds too good to be true? Not anymore.
 - [Encoding / Decoding Hooks](#encoding--decoding-hooks)
   - [Unmapped Properties](#unmapped-properties)
 
-## Coming Soon
-
-- Field-Specific Type-Converters
-- Unmapped properties
-
 > This package is still in active development. If you have any feedback or feature requests, write me and issue on github.
 
 ## Get Started
