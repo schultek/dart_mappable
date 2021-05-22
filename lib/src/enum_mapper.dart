@@ -25,7 +25,7 @@ class EnumMapper {
         static $className fromString(String value) {
           switch (value) {
             ${values.map((v) => "case '${v.value}': return $className.${v.key};").join("\n            ")}
-            default: throw MapperException('Cannot parse String \$value to enum $className');
+            default: ${_generateDefaultCase()}
           }
         }
         String toStringValue() {
@@ -36,5 +36,16 @@ class EnumMapper {
       }
     '''
         .unindent();
+  }
+
+  String _generateDefaultCase() {
+    if (options.defaultValue != null) {
+      if (options.defaultValue is int) {
+        return 'return $className.values[${options.defaultValue}];';
+      } else if (options.defaultValue is String) {
+        return 'return $className.${options.defaultValue};';
+      }
+    }
+    return "throw MapperException('Cannot parse String \$value to enum $className');";
   }
 }

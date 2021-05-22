@@ -13,6 +13,7 @@ class Person with Mappable {
   factory Person.fromMap(Map<String, dynamic> map) => Mapper.fromMap(map);
 }
 
+@MappableEnum(defaultValue: Brand.Audi)
 enum Brand { Toyota, Audi, BMW }
 
 class Car with Mappable {

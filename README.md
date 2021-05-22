@@ -43,7 +43,7 @@ To get started, add the following lines to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  dart_mappable: ^0.4.4
+  dart_mappable: ^0.4.5
   build_runner: ^1.12.2
 ```
 
@@ -137,6 +137,7 @@ targets:
               enums:
                 MyEnum:
                   caseStyle: snakeCase # overwrite the caseStyle
+                  defaultValue: enumValueA # set a default value for decoding (can also be the value index)
             
             # referenced by its name
             models: 
@@ -153,7 +154,7 @@ In some cases it is easier to use **Annotations** on classes, that require some 
 There are a total of **four** Annotations that you can use in your code:
 
 1. `@MappableClass()` can be used on a class to specify options like the `caseStyle` of the json keys, whether to ignore null values, or [hooks](#encoding--decoding-hooks).
-2. `@MappableEnum()` can be used on a enum to specify the `caseStyle` of the stringified enum values.
+2. `@MappableEnum()` can be used on a enum to specify the `caseStyle` of the stringified enum values, or the `defaultValue`.
 3. `@MappableConstructor()` can be used on a constructor to mark this to be used for decoding. It has no properties.
 4. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name, or [hooks](#encoding--decoding-hooks). *Note: This can only be used on a field if it is directly assigned as a constructor parameter (`MyClass(this.myField)`). Setting this Annotation on any other field will have no effect. (See [Utilize Constructors](#utilize-constructors) for an explanation why this is.)*
 

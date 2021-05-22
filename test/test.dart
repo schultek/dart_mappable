@@ -48,6 +48,11 @@ void main() {
           equals(
               '{"name":"Max","age":18,"car":{"driven_km":1000,"brand":"audi"}}'));
     });
+
+    test('Enum default', () {
+      Car car = Mapper.fromJson('{"driven_km": 1000, "brand": "some"}');
+      expect(car.brand, equals(Brand.Audi));
+    });
   });
 
   group('Mapper functions', () {

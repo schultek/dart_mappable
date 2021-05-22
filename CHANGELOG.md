@@ -1,3 +1,7 @@
+# 0.4.5
+
+- Added default enum values
+
 # 0.4.4
 
 - Added support for class-specific hooks

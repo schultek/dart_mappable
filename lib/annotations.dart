@@ -36,10 +36,15 @@ class MappableClass {
 class MappableEnum {
   const MappableEnum({
     this.caseStyle,
+    this.defaultValue,
   });
 
   /// The case style for the stringified enum values
   final String? caseStyle;
+
+  /// The default value when decoding a string.
+  /// Must be a value of the annotated enum
+  final Object? defaultValue;
 }
 
 /// Used to annotate a constructor

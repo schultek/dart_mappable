@@ -398,7 +398,7 @@ extension BrandMapper on Brand {
       case 'toyota': return Brand.Toyota;
       case 'audi': return Brand.Audi;
       case 'bmw': return Brand.BMW;
-      default: throw MapperException('Cannot parse String $value to enum Brand');
+      default: return Brand.values[1];
     }
   }
   String toStringValue() {

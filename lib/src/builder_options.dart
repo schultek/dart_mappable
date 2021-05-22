@@ -32,10 +32,12 @@ class ClassOptions {
 /// The builder options for a specific enum
 class EnumOptions {
   CaseStyle? caseStyle;
-  EnumOptions({this.caseStyle});
+  dynamic defaultValue;
+  EnumOptions({this.caseStyle, this.defaultValue});
 
   EnumOptions.parse(Map options)
-      : caseStyle = CaseStyle.fromString(options['caseStyle'] as String?);
+      : caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
+        defaultValue = options['defaultValue'];
 }
 
 /// The builder options for a specific library
@@ -92,6 +94,11 @@ class LibraryOptions {
           ? CaseStyle.fromString(
               annotation!.getField('caseStyle')!.toStringValue())
           : options?.caseStyle ?? enumCaseStyle,
+      defaultValue: annotation
+              ?.getField('defaultValue')!
+              .getField('index')
+              ?.toIntValue() ??
+          options?.defaultValue,
     );
   }
 
