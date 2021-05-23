@@ -3,13 +3,13 @@ import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:indent/indent.dart';
 import 'package:source_gen/source_gen.dart';
 
 import '../annotations.dart';
 import 'annotation_visitor.dart';
 import 'builder_options.dart';
 import 'case_style.dart';
+import 'flags.dart';
 
 /// Generates code for a specific class
 class ClassMapper {
@@ -26,15 +26,14 @@ class ClassMapper {
   ClassElement element;
   ClassOptions options;
 
-  bool isSuperMapper;
   ClassMapper? superMapper;
-  ClassMapper? defaultSubMapper;
+  List<ClassMapper> subMappers = [];
 
-  String? discriminatorValueCode;
   bool usesFieldHooks = false;
 
-  ClassMapper(this.element, this.options,
-      {this.isSuperMapper = false, this.discriminatorValueCode});
+  ClassMapper(this.element, this.options);
+
+  bool get isSuperMapper => subMappers.isNotEmpty;
 
   DartObject? fieldAnnotation(ParameterElement param) {
     return fieldChecker.firstAnnotationOf(param) ??
@@ -114,43 +113,114 @@ class ClassMapper {
           '<${element.typeParameters.map((p) => p.getDisplayString(withNullability: false)).join(', ')}>';
     }
 
-    return '''
-      class $mapperName implements Mapper<$className> {
-        $mapperName._();
-        
-        @override Function get decoder => decode;
-        $className$typeParams decode$typeParamsDeclaration(dynamic v) => ${_generateFromMapCall('_checked(v, (Map<String, dynamic> map) => fromMap$typeParams(map))')};
-        $className$typeParams fromMap$typeParamsDeclaration(Map<String, dynamic> map) => ${_generateFromMap()}
-        
-        @override dynamic encode($className v) => ${_generateToMapCall('toMap(v)')};
-        Map<String, dynamic> toMap($className $paramName) => {${_generateMappingEntries()}};
-        
-        @override String stringify($className self) => '$className(${_generateStringParams()})';
-        @override int hash($className self) => ${_generateHashParams()};
-        @override bool equals($className self, $className other) => ${_generateEqualsParams()};
-        
-        @override Function get typeFactory => $typeParamsDeclaration(f) => f<$className$typeParams>();
-        @override Discriminator? get discriminator => ${_generateDiscriminator()};
-      }
-    
-      extension $extensionName$typeParamsDeclaration on $className$typeParams {
-        String toJson() => Mapper.toJson(this);
-        Map<String, dynamic> toMap() => Mapper.toMap(this);
-        ${_generateCopyWith(typeParams)}
-      }
-    '''
-        .unindent();
+    return ''
+        'class $mapperName implements Mapper<$className> {\n'
+        '  $mapperName._();\n'
+        '\n'
+        '  @override Function get decoder => ${_generateDecoder()};\n'
+        '  $className$typeParams decode$typeParamsDeclaration(dynamic v) => ${_generateFromMapCall(typeParams)};\n'
+        '  $className$typeParams fromMap$typeParamsDeclaration(Map<String, dynamic> map) => ${_generateFromMap()}\n'
+        '\n'
+        '  @override dynamic encode($className v) => ${_generateToMapCall('toMap(v)')};\n'
+        '  Map<String, dynamic> toMap($className $paramName) => {${_generateMappingEntries()}};\n'
+        '\n'
+        "  @override String stringify($className self) => '$className(${_generateStringParams()})';\n"
+        '  @override int hash($className self) => ${_generateHashParams()};\n'
+        '  @override bool equals($className self, $className other) => ${_generateEqualsParams()};\n'
+        '\n'
+        '  @override Function get typeFactory => $typeParamsDeclaration(f) => f<$className$typeParams>();\n'
+        '}\n'
+        '\n'
+        'extension $extensionName$typeParamsDeclaration on $className$typeParams {\n'
+        '  String toJson() => Mapper.toJson(this);\n'
+        '  Map<String, dynamic> toMap() => Mapper.toMap(this);\n'
+        '  ${_generateCopyWith(typeParams)}\n'
+        '}';
   }
 
-  String _generateFromMapCall(String fromMap) {
-    var wrapped = fromMap;
-    if (hookForClass != null) {
-      wrapped = '_hookedDecode(const $hookForClass, v, (v) => $wrapped)';
+  String _generateDecoder([String fn = 'decode']) {
+    var wrapped = fn;
+    if (superMapper != null && superMapper!.hookForClass != null) {
+      wrapped =
+          '(v) => _hookedDecode(const ${superMapper!.hookForClass}, v, $wrapped)';
     }
     if (superMapper != null) {
-      wrapped = superMapper!._generateFromMapCall(wrapped);
+      wrapped = superMapper!._generateDecoder(wrapped);
     }
     return wrapped;
+  }
+
+  String get discriminatorKey =>
+      options.discriminatorKey ?? superMapper?.discriminatorKey ?? '_type';
+
+  String _generateFromMapCall(String typeParams) {
+    var call = '';
+
+    if (subMappers.isEmpty) {
+      call = '=> fromMap$typeParams(map)';
+    } else {
+      call = '{\n'
+          "    switch(map['$discriminatorKey']) {\n"
+          '      ${_generateTypeCases(typeParams).join('\n      ')}\n'
+          '    }\n'
+          '  }';
+    }
+
+    call = '_checked(v, (Map<String, dynamic> map) $call)';
+    if (hookForClass != null) {
+      call = '_hookedDecode(const $hookForClass, v, (v) => $call)';
+    }
+    return call;
+  }
+
+  List<String> _generateTypeCases(String typeParams) {
+    var cases = _getDiscriminatorCases();
+
+    String? defaultCase;
+
+    var sortedCases = <MapEntry<List<String>, String>>[];
+
+    for (var c in cases) {
+      if (c.key.contains('default')) {
+        defaultCase = c.value;
+      } else {
+        sortedCases.add(MapEntry(c.key..sort(), c.value));
+      }
+    }
+    sortedCases.sort((a, b) => a.key.first.compareTo(b.key.first));
+
+    var statements = <String>[];
+
+    for (var c in sortedCases) {
+      c.key.take(c.key.length - 1).forEach((s) => statements.add('case $s:'));
+      statements.add('case ${c.key.last}: return ${c.value}._().decode(map);');
+    }
+    if (defaultCase != null) {
+      statements.add('default: return $defaultCase._().decode(map);');
+    } else {
+      statements.add('default: return fromMap$typeParams(map);');
+    }
+
+    return statements;
+  }
+
+  List<MapEntry<List<String>, String>> _getDiscriminatorCases() {
+    var cases = <MapEntry<List<String>, String>>[];
+
+    for (var mapper in subMappers) {
+      if (mapper.discriminatorValueCode != null) {
+        cases
+            .add(MapEntry([mapper.discriminatorValueCode!], mapper.mapperName));
+      } else {
+        var subCases = mapper._getDiscriminatorCases();
+        if (subCases.isNotEmpty) {
+          cases.add(MapEntry(
+              subCases.expand((e) => e.key).toList(), mapper.mapperName));
+        }
+      }
+    }
+
+    return cases;
   }
 
   String _generateToMapCall(String toMap, [String? name]) {
@@ -168,9 +238,6 @@ class ClassMapper {
   String _generateFromMap() {
     if (element.isAbstract) {
       if (isSuperMapper) {
-        if (defaultSubMapper != null) {
-          return 'Mapper.fromMap<${defaultSubMapper!.className}>(map);';
-        }
         var key = options.discriminatorKey ?? '_type';
         var value = "\${map['$key']}";
         return 'throw MapperException("Cannot instantiate abstract class ${element.name}, did you forgot to specify a subclass for [ $key: \'$value\' ] or a default subclass?");';
@@ -254,6 +321,8 @@ class ClassMapper {
       if (type != null) {
         var key = jsonKey(param);
 
+        params.removeWhere((p) => p.startsWith("'$key':"));
+
         String exp;
 
         var hook = hookForParam(param);
@@ -270,6 +339,14 @@ class ClassMapper {
         } else {
           params.add("'$key': $exp");
         }
+      }
+    }
+
+    if (superMapper != null && discriminatorValueCode != null) {
+      if (!params
+          .any((p) => p.contains("'${superMapper!.discriminatorKey}':"))) {
+        params
+            .add("'${superMapper!.discriminatorKey}': $discriminatorValueCode");
       }
     }
 
@@ -391,31 +468,38 @@ class ClassMapper {
     return params.join(', ');
   }
 
-  String _generateDiscriminator() {
-    if (superMapper != null || isSuperMapper) {
-      var args = <String>[];
-      if (isSuperMapper) {
-        args.add("key: '${options.discriminatorKey ?? '_type'}'");
-      }
-      if (superMapper != null) {
-        args.add("superKey: '${_getDiscriminatorSuperKey()}'");
-        args.add(
-            "value: ${discriminatorValueCode ?? "'${options.discriminatorValue ?? element.name}'"}");
-      }
-      return 'Discriminator(${args.join(', ')})';
-    } else {
-      return 'null';
-    }
-  }
+  String? _discriminatorValueCode;
+  String? get discriminatorValueCode => _discriminatorValueCode != null
+      ? _discriminatorValueCode!.isEmpty
+          ? null
+          : _discriminatorValueCode
+      : _getDiscriminatorValueCode();
+  String? _getDiscriminatorValueCode() {
+    String? code;
 
-  String _getDiscriminatorSuperKey() {
-    if (superMapper != null && superMapper!.options.discriminatorKey != null) {
-      return superMapper!.options.discriminatorKey!;
-    } else if (superMapper != null) {
-      return superMapper!._getDiscriminatorSuperKey();
-    } else {
-      return '_type';
+    var field =
+        classChecker.firstAnnotationOf(element)?.getField('discriminatorValue');
+
+    if (options.discriminatorValue != null) {
+      if (options.discriminatorValue == '__default__') {
+        code = 'default';
+      } else {
+        code = "'${options.discriminatorValue}'";
+      }
+    } else if (field != null) {
+      if (field.type?.element?.name ==
+              MappingFlags.useAsDefault.runtimeType.toString() &&
+          field.getField('index')!.toIntValue() == 0) {
+        code = 'default';
+      } else {
+        code = getAnnotationCode(element, MappableClass, 'discriminatorValue');
+      }
     }
+    if (!element.isAbstract && superMapper != null && code == null) {
+      code = "'${element.name}'";
+    }
+    _discriminatorValueCode = code ?? '';
+    return code;
   }
 
   Map<String, ParameterElement> superParams = {};

@@ -1,3 +1,8 @@
+# 0.4.6
+
+- Changed code generation to handle polymorphism explicitly (using switch statement)
+- Fixed issue with multiple levels of inheritance
+
 # 0.4.5
 
 - Added default enum values

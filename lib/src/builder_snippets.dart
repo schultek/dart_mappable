@@ -19,7 +19,6 @@ abstract class Mapper<T> {
   dynamic encode(T self);
   Function get decoder;
   Function get typeFactory;
-  Discriminator? get discriminator;
   
   String stringify(T self);
   int hash(T self);
@@ -38,17 +37,6 @@ abstract class Mapper<T> {
         typeInfo = getTypeInfo<T>();
       }
       var mapper = _mappers[typeInfo.type];
-      while (value is Map<String, dynamic> && mapper?.discriminator?.key != null) {
-        var matches = _mappers.entries.where((e) {
-          return e.value.discriminator?.superKey == mapper!.discriminator!.key 
-              && e.value.discriminator?.value == value[mapper.discriminator!.key];
-        });
-        if (matches.isEmpty) {
-          break;
-        }
-        mapper = matches.first.value;
-        typeInfo = TypeInfo()..type = matches.first.key;
-      }
       if (mapper != null) {
         try {
           return genericCall(typeInfo, mapper.decoder, value) as T;
@@ -70,9 +58,6 @@ abstract class Mapper<T> {
         _clearType(encoded);
         if (typeInfo.params.isNotEmpty) {
           encoded['__type'] = typeInfo.toString();
-        }
-        if (_mappers[typeInfo.type]!.discriminator?.superKey != null) {
-          encoded[_mappers[typeInfo.type]!.discriminator!.superKey!] = _mappers[typeInfo.type]!.discriminator!.value;
         }
       }
       return encoded;
@@ -164,19 +149,11 @@ T _checked<T, U>(dynamic v, T Function(U) fn) {
   }
 }
 
-class Discriminator {
-  String? key;
-  String? superKey;
-  dynamic value;
-  Discriminator({this.key, this.superKey, this.value});
-}
-
 abstract class BaseMapper<T> implements Mapper<T> {
   @override bool equals(T self, Object? other) => self == other;
   @override int hash(T self) => self.hashCode;
   @override String stringify(T self) => self.toString();
   @override Function get typeFactory => (f) => f<T>();
-  @override Discriminator? get discriminator => null;
 }
 
 class _DateTimeMapper extends BaseMapper<DateTime> {

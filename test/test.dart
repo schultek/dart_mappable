@@ -146,7 +146,7 @@ void main() {
 
       var json = jeans.toJson();
       expect(
-          json, equals('{"age":2,"color":"blue","howbig":1,"_type":"Jeans"}'));
+          json, equals('{"age":2,"color":"blue","howbig":1,"label":"Jeans"}'));
     });
   });
 

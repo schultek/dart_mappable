@@ -18,7 +18,6 @@ Sounds too good to be true? Not anymore.
 
 > Have a look at the example!
 
-- [Coming Soon](#coming-soon)
 - [Get Started](#get-started)
 - [Configuration](#configuration)
     - [Builder Config](#builder-config)
@@ -43,7 +42,7 @@ To get started, add the following lines to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  dart_mappable: ^0.4.5
+  dart_mappable: ^0.4.6
   build_runner: ^1.12.2
 ```
 

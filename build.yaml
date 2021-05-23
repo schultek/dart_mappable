@@ -21,3 +21,5 @@ targets:
               include: []
             test/models/model.dart:
               exclude: [PlayerHooks]
+            test/models/inheritance.dart:
+              exclude: [JeansHooks]

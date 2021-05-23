@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:dart_mappable/src/annotation_visitor.dart';
-import 'package:dart_mappable/src/flags.dart';
 import 'package:indent/indent.dart';
 import 'package:path/path.dart' as path;
 import 'package:source_gen/source_gen.dart';
@@ -66,7 +64,7 @@ class MappableBuilder implements Builder {
 
       ClassMapper? addRecursive(
         ClassElement element, {
-        bool isSuperClass = false,
+        ClassMapper? subMapper,
       }) {
         if (element.isEnum) {
           if (enumMappers.containsKey(element.name)) {
@@ -81,7 +79,9 @@ class MappableBuilder implements Builder {
               ));
         } else {
           if (classMappers.containsKey(element.name)) {
-            classMappers[element.name]!.isSuperMapper = isSuperClass;
+            if (subMapper != null) {
+              classMappers[element.name]!.subMappers.add(subMapper);
+            }
             return classMappers[element.name];
           }
 
@@ -91,10 +91,11 @@ class MappableBuilder implements Builder {
               element,
               classChecker.firstAnnotationOf(element),
             ),
-            isSuperMapper: isSuperClass,
-            discriminatorValueCode:
-                getAnnotationCode(element, MappableClass, 'discriminatorValue'),
           );
+
+          if (subMapper != null) {
+            classMapper.subMappers.add(subMapper);
+          }
 
           if (element.isPrivate || !classMapper.hasValidConstructor()) {
             return classMapper;
@@ -104,26 +105,12 @@ class MappableBuilder implements Builder {
 
           if (element.supertype != null &&
               !element.supertype!.isDartCoreObject) {
-            var superMapper =
-                addRecursive(element.supertype!.element, isSuperClass: true);
+            var superMapper = addRecursive(element.supertype!.element,
+                subMapper: classMapper);
             classMapper.superMapper = superMapper;
 
             if (superMapper != null) {
               classMapper.analyzeSuperConstructor();
-              var field = classChecker
-                  .firstAnnotationOf(element)
-                  ?.getField('discriminatorValue');
-              if (field != null &&
-                  field.type?.element?.name ==
-                      MappingFlags.useAsDefault.runtimeType.toString()) {
-                if (field.getField('index')!.toIntValue() == 0) {
-                  superMapper.defaultSubMapper = classMapper;
-                  classMapper.discriminatorValueCode = "'__default__'";
-                }
-              } else if (classMapper.options.discriminatorValue ==
-                  '__default__') {
-                superMapper.defaultSubMapper = classMapper;
-              }
             }
           }
 
@@ -152,8 +139,9 @@ class MappableBuilder implements Builder {
       }
     }
 
-    var classMapperCode =
-        classMappers.values.map((om) => om.generateExtensionCode()).join();
+    var classMapperCode = classMappers.values
+        .map((om) => om.generateExtensionCode())
+        .join('\n\n');
     var enumMapperCode =
         enumMappers.values.map((em) => em.generateExtensionCode()).join();
 
@@ -168,7 +156,7 @@ class MappableBuilder implements Builder {
         "import 'dart:convert';\n"
         '${imports.map((i) => "import '$i';").join('\n')}\n'
         '\n// === GENERATED MAPPER CLASSES AND EXTENSIONS ===\n\n'
-        '$classMapperCode\n'
+        '$classMapperCode\n\n'
         '$enumMapperCode\n'
         '\n// === ALL STATICALLY REGISTERED MAPPERS ===\n\n'
         'var _mappers = <String, Mapper>{\n$defaultMappers\n'

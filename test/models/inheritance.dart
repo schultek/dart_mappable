@@ -1,6 +1,7 @@
 import 'package:dart_mappable/annotations.dart';
 
-@MappableClass(hooks: UnmappedPropertiesHooks('unmapped_props'))
+@MappableClass(
+    hooks: UnmappedPropertiesHooks('unmapped_props'), discriminatorKey: 'label')
 abstract class Clothes {
   @MappableField(key: 'howbig')
   int size;
@@ -8,6 +9,11 @@ abstract class Clothes {
   Map<String, dynamic> unmappedProps;
 
   Clothes(this.size, {this.color, this.unmappedProps = const {}});
+}
+
+abstract class SummerClothes extends Clothes {
+  SummerClothes(int size, String? color, Map<String, dynamic> unmappedProps)
+      : super(size, color: color, unmappedProps: unmappedProps);
 }
 
 class TShirt extends Clothes {
@@ -24,4 +30,19 @@ class JeansHooks extends MappingHooks {
 class Jeans extends Clothes {
   int age;
   Jeans(this.age, String? color, int size) : super(size, color: color);
+}
+
+class Shorts extends SummerClothes {
+  String tag;
+
+  Shorts(this.tag, int size, String? color, Map<String, dynamic> unmappedProps)
+      : super(size, color, unmappedProps);
+}
+
+@MappableClass(discriminatorValue: 'hottie')
+class Top extends SummerClothes {
+  int length;
+
+  Top(this.length, int size, String? color, Map<String, dynamic> unmappedProps)
+      : super(size, color, unmappedProps);
 }
