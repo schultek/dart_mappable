@@ -400,16 +400,24 @@ class Dog extends Animal {
 Now when we want to encode a `Home` object, the `pet` property can either be a `Cat` or a `Dog`. 
 To make sure that this information isn't lost when converting to json, we need to add a **discriminator property**, that keeps track of the specific type of the `pet`.
 
-By default this property is named `_type`, but you can change it in the build configuration. The value
+By default no discriminator is applied, but you can change this in the build configuration by setting the `discriminatorKey` property on the base class. The value
 of this property will default to the name of the class, but you can change this as well with the `discriminatorValue` property.
 Make sure to specify the `discriminatorKey` property on the base class - `Animal` in our example - and the `discriminatorValue` property
 on each of the child classes - `Cat` and `Dog` in our case.
 
 ```dart
+
+@MappableClass(discriminatorKey: 'type')
+abstract class Animal with Mappable {
+  ...
+}
+
+...
+
 void main() {
   // encode a polymorphic class
   String catJson = Mapper.toJson(Cat('Judy', 'Black'));
-  print(catJson); // {"name":"Judy","color":"Black","_type":"Cat"}
+  print(catJson); // {"name":"Judy","color":"Black","type":"Cat"}
 
   Animal myPet = Mapper.fromJson(catJson); // implicit decoding as an 'Animal'
   print(myPet.runtimeType); // Cat
@@ -437,19 +445,17 @@ class NullAnimal extends Animal {
 
 @MappableClass(discriminatorValue: MappableClass.useAsDefault)
 class DefaultAnimal extends Animal {
-  @MappableField(key: '_type')
   String type;
-
   DefaultAnimal(String name, this.type) : super(name);
 }
 
 void main() {
   // decode json with the discriminator set to null (same as missing property)
-  Animal animal1 = Mapper.fromJson('{"name": "Scar", "_type": null}');
+  Animal animal1 = Mapper.fromJson('{"name": "Scar", "type": null}');
   print(animal1.runtimeType); // NullAnimal
 
   // decode json with unknown discriminator value
-  Animal animal2 = Mapper.fromJson('{"name": "Balu", "_type": "Bear"}');
+  Animal animal2 = Mapper.fromJson('{"name": "Balu", "type": "Bear"}');
   print(animal2.runtimeType); // DefaultAnimal
   print(animal2.type); // Bear
 }

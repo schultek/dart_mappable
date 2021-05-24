@@ -150,13 +150,13 @@ class ClassMapper {
     return wrapped;
   }
 
-  String get discriminatorKey =>
-      options.discriminatorKey ?? superMapper?.discriminatorKey ?? '_type';
+  String? get discriminatorKey =>
+      options.discriminatorKey ?? superMapper?.discriminatorKey;
 
   String _generateFromMapCall(String typeParams) {
     var call = '';
 
-    if (subMappers.isEmpty) {
+    if (subMappers.isEmpty || discriminatorKey == null) {
       call = '=> fromMap$typeParams(map)';
     } else {
       call = '{\n'
@@ -250,7 +250,7 @@ class ClassMapper {
 
   String _generateFromMap() {
     if (element.isAbstract) {
-      if (isSuperMapper) {
+      if (isSuperMapper && discriminatorKey != null) {
         return 'throw MapperException("Cannot instantiate abstract class ${element.name}, did you forgot to specify a subclass for [ $discriminatorKey: \'\${map[\'$discriminatorKey\']}\' ] or a default subclass?");';
       } else {
         return "throw const MapperException('Cannot instantiate abstract class ${element.name}.');";
@@ -353,7 +353,10 @@ class ClassMapper {
       }
     }
 
-    if (superMapper != null && discriminatorValueCode != null) {
+    if (superMapper != null &&
+        superMapper!.discriminatorKey != null &&
+        discriminatorValueCode != null &&
+        discriminatorValueCode != 'default') {
       if (!params
           .any((p) => p.contains("'${superMapper!.discriminatorKey}':"))) {
         if (discriminatorValueCode!.startsWith('[') &&

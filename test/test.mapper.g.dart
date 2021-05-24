@@ -12,14 +12,14 @@ class AnimalMapper implements Mapper<Animal> {
 
   @override Function get decoder => decode;
   Animal decode(dynamic v) => _checked(v, (Map<String, dynamic> map) {
-    switch(map['_type']) {
+    switch(map['type']) {
       case 'Cat': return CatMapper._().decode(map);
       case Animal.Dog: return DogMapper._().decode(map);
       case null: return NullAnimalMapper._().decode(map);
       default: return DefaultAnimalMapper._().decode(map);
     }
   });
-  Animal fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate abstract class Animal, did you forgot to specify a subclass for [ _type: '${map['_type']}' ] or a default subclass?");
+  Animal fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate abstract class Animal, did you forgot to specify a subclass for [ type: '${map['type']}' ] or a default subclass?");
 
   @override dynamic encode(Animal v) => toMap(v);
   Map<String, dynamic> toMap(Animal a) => {'name': Mapper.toValue(a.name)};
@@ -45,7 +45,7 @@ class CatMapper implements Mapper<Cat> {
   Cat fromMap(Map<String, dynamic> map) => Cat(map.get('name'), map.get('color'));
 
   @override dynamic encode(Cat v) => toMap(v);
-  Map<String, dynamic> toMap(Cat c) => {'name': Mapper.toValue(c.name), 'color': Mapper.toValue(c.color), '_type': 'Cat'};
+  Map<String, dynamic> toMap(Cat c) => {'name': Mapper.toValue(c.name), 'color': Mapper.toValue(c.color), 'type': 'Cat'};
 
   @override String stringify(Cat self) => 'Cat(name: ${self.name}, color: ${self.color})';
   @override int hash(Cat self) => self.name.hashCode ^ self.color.hashCode;
@@ -68,7 +68,7 @@ class DogMapper implements Mapper<Dog> {
   Dog fromMap(Map<String, dynamic> map) => Dog(map.get('name'), map.get('age'));
 
   @override dynamic encode(Dog v) => toMap(v);
-  Map<String, dynamic> toMap(Dog d) => {'name': Mapper.toValue(d.name), 'age': Mapper.toValue(d.age), '_type': Animal.Dog};
+  Map<String, dynamic> toMap(Dog d) => {'name': Mapper.toValue(d.name), 'age': Mapper.toValue(d.age), 'type': Animal.Dog};
 
   @override String stringify(Dog self) => 'Dog(name: ${self.name}, age: ${self.age})';
   @override int hash(Dog self) => self.name.hashCode ^ self.age.hashCode;
@@ -91,7 +91,7 @@ class NullAnimalMapper implements Mapper<NullAnimal> {
   NullAnimal fromMap(Map<String, dynamic> map) => NullAnimal(map.get('name'));
 
   @override dynamic encode(NullAnimal v) => toMap(v);
-  Map<String, dynamic> toMap(NullAnimal n) => {'name': Mapper.toValue(n.name), '_type': null};
+  Map<String, dynamic> toMap(NullAnimal n) => {'name': Mapper.toValue(n.name), 'type': null};
 
   @override String stringify(NullAnimal self) => 'NullAnimal(name: ${self.name})';
   @override int hash(NullAnimal self) => self.name.hashCode;
@@ -111,10 +111,10 @@ class DefaultAnimalMapper implements Mapper<DefaultAnimal> {
 
   @override Function get decoder => decode;
   DefaultAnimal decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
-  DefaultAnimal fromMap(Map<String, dynamic> map) => DefaultAnimal(map.get('name'), map.get('_type'));
+  DefaultAnimal fromMap(Map<String, dynamic> map) => DefaultAnimal(map.get('name'), map.get('type'));
 
   @override dynamic encode(DefaultAnimal v) => toMap(v);
-  Map<String, dynamic> toMap(DefaultAnimal d) => {'name': Mapper.toValue(d.name), '_type': Mapper.toValue(d.type)};
+  Map<String, dynamic> toMap(DefaultAnimal d) => {'name': Mapper.toValue(d.name), 'type': Mapper.toValue(d.type)};
 
   @override String stringify(DefaultAnimal self) => 'DefaultAnimal(name: ${self.name}, type: ${self.type})';
   @override int hash(DefaultAnimal self) => self.name.hashCode ^ self.type.hashCode;

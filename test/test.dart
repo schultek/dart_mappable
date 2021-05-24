@@ -101,24 +101,24 @@ void main() {
   group('Polymorphism', () {
     test('Encode object', () {
       String catJson = Mapper.toJson(Cat('Judy', 'Black'));
-      expect(catJson, equals('{"name":"Judy","color":"Black","_type":"Cat"}'));
+      expect(catJson, equals('{"name":"Judy","color":"Black","type":"Cat"}'));
 
       Animal myPet = Mapper.fromJson(catJson);
       expect(myPet.runtimeType, equals(type<Cat>()));
     });
 
     test('Decode object', () {
-      Animal myPet = Mapper.fromJson('{"name":"Kobi","age": 4,"_type":142}');
+      Animal myPet = Mapper.fromJson('{"name":"Kobi","age": 4,"type":142}');
       expect(myPet.runtimeType, equals(type<Dog>()));
     });
 
     test('Decode fallback', () {
-      Animal myPet = Mapper.fromJson('{"name":"Kobi","_type":null}');
+      Animal myPet = Mapper.fromJson('{"name":"Kobi","type":null}');
       expect(myPet.runtimeType, equals(type<NullAnimal>()));
     });
 
     test('Decode unknown', () {
-      Animal myPet = Mapper.fromJson('{"name":"Kobi","_type":"Bear"}');
+      Animal myPet = Mapper.fromJson('{"name":"Kobi","type":"Bear"}');
       expect(myPet.runtimeType, equals(type<DefaultAnimal>()));
       expect((myPet as DefaultAnimal).type, equals('Bear'));
     });

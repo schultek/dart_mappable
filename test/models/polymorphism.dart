@@ -2,6 +2,7 @@ import 'package:dart_mappable/annotations.dart';
 
 import '../test.mapper.g.dart';
 
+@MappableClass(discriminatorKey: 'type')
 abstract class Animal with Mappable {
   static const int Dog = 142;
 
@@ -27,7 +28,6 @@ class NullAnimal extends Animal {
 
 @MappableClass(discriminatorValue: MappableClass.useAsDefault)
 class DefaultAnimal extends Animal {
-  @MappableField(key: '_type')
   String type;
 
   DefaultAnimal(String name, this.type) : super(name);
