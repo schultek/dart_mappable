@@ -39,7 +39,7 @@ class Shorts extends SummerClothes {
       : super(size, color, unmappedProps);
 }
 
-@MappableClass(discriminatorValue: 'hottie')
+@MappableClass(discriminatorValue: ['ATop', 'BTop'])
 class Top extends SummerClothes {
   int length;
 

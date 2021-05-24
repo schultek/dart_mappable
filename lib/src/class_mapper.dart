@@ -211,8 +211,19 @@ class ClassMapper {
 
     for (var mapper in subMappers) {
       if (mapper.discriminatorValueCode != null) {
-        cases
-            .add(MapEntry([mapper.discriminatorValueCode!], mapper.mapperName));
+        if (mapper.discriminatorValueCode!.startsWith('[') &&
+            mapper.discriminatorValueCode!.endsWith(']')) {
+          cases.add(MapEntry(
+              mapper.discriminatorValueCode!
+                  .substring(1, mapper.discriminatorValueCode!.length - 1)
+                  .split(',')
+                  .map((s) => s.trim())
+                  .toList(),
+              mapper.mapperName));
+        } else {
+          cases.add(
+              MapEntry([mapper.discriminatorValueCode!], mapper.mapperName));
+        }
       } else {
         var subCases = mapper._getDiscriminatorCases();
         if (subCases.isNotEmpty) {
@@ -345,8 +356,18 @@ class ClassMapper {
     if (superMapper != null && discriminatorValueCode != null) {
       if (!params
           .any((p) => p.contains("'${superMapper!.discriminatorKey}':"))) {
-        params
-            .add("'${superMapper!.discriminatorKey}': $discriminatorValueCode");
+        if (discriminatorValueCode!.startsWith('[') &&
+            discriminatorValueCode!.endsWith(']')) {
+          var value = discriminatorValueCode!
+              .substring(1, discriminatorValueCode!.length - 1)
+              .split(',')
+              .first
+              .trim();
+          params.add("'${superMapper!.discriminatorKey}': $value");
+        } else {
+          params.add(
+              "'${superMapper!.discriminatorKey}': $discriminatorValueCode");
+        }
       }
     }
 

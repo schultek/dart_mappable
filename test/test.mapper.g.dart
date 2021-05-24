@@ -273,9 +273,10 @@ class ClothesMapper implements Mapper<Clothes> {
   @override Function get decoder => decode;
   Clothes decode(dynamic v) => _hookedDecode(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => _checked(v, (Map<String, dynamic> map) {
     switch(map['label']) {
+      case 'ATop':
+      case 'BTop':
+      case 'Shorts': return SummerClothesMapper._().decode(map);
       case 'Jeans': return JeansMapper._().decode(map);
-      case 'Shorts':
-      case 'hottie': return SummerClothesMapper._().decode(map);
       case 'TShirt': return TShirtMapper._().decode(map);
       default: return fromMap(map);
     }
@@ -304,8 +305,9 @@ class SummerClothesMapper implements Mapper<SummerClothes> {
   @override Function get decoder => (v) => _hookedDecode(const UnmappedPropertiesHooks('unmapped_props'), v, decode);
   SummerClothes decode(dynamic v) => _checked(v, (Map<String, dynamic> map) {
     switch(map['label']) {
+      case 'ATop':
+      case 'BTop': return TopMapper._().decode(map);
       case 'Shorts': return ShortsMapper._().decode(map);
-      case 'hottie': return TopMapper._().decode(map);
       default: return fromMap(map);
     }
   });
@@ -404,7 +406,7 @@ class TopMapper implements Mapper<Top> {
   Top fromMap(Map<String, dynamic> map) => Top(map.get('length'), map.get('howbig'), map.getOpt('color'), map.getMap('unmapped_props'));
 
   @override dynamic encode(Top v) => _hookedEncode<Top>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => toMap(v));
-  Map<String, dynamic> toMap(Top t) => {'length': Mapper.toValue(t.length), 'howbig': Mapper.toValue(t.size), 'color': Mapper.toValue(t.color), 'unmapped_props': Mapper.toValue(t.unmappedProps), 'label': 'hottie'};
+  Map<String, dynamic> toMap(Top t) => {'length': Mapper.toValue(t.length), 'howbig': Mapper.toValue(t.size), 'color': Mapper.toValue(t.color), 'unmapped_props': Mapper.toValue(t.unmappedProps), 'label': 'ATop'};
 
   @override String stringify(Top self) => 'Top(size: ${self.size}, color: ${self.color}, unmappedProps: ${self.unmappedProps}, length: ${self.length})';
   @override int hash(Top self) => self.length.hashCode ^ self.size.hashCode ^ self.color.hashCode ^ self.unmappedProps.hashCode;
