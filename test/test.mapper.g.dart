@@ -309,7 +309,7 @@ class SummerClothesMapper implements Mapper<SummerClothes> {
       default: return fromMap(map);
     }
   });
-  SummerClothes fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate abstract class SummerClothes, did you forgot to specify a subclass for [ _type: '${map['_type']}' ] or a default subclass?");
+  SummerClothes fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate abstract class SummerClothes, did you forgot to specify a subclass for [ label: '${map['label']}' ] or a default subclass?");
 
   @override dynamic encode(SummerClothes v) => _hookedEncode<SummerClothes>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => toMap(v));
   Map<String, dynamic> toMap(SummerClothes s) => {'howbig': Mapper.toValue(s.size), 'color': Mapper.toValue(s.color), 'unmapped_props': Mapper.toValue(s.unmappedProps)};

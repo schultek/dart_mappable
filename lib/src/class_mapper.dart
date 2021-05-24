@@ -193,10 +193,12 @@ class ClassMapper {
 
     for (var c in sortedCases) {
       c.key.take(c.key.length - 1).forEach((s) => statements.add('case $s:'));
-      statements.add('case ${c.key.last}: return ${c.value}._().decode(map);');
+      statements.add(
+          'case ${c.key.last}: return ${c.value}._().decode(map)${typeParams.isNotEmpty ? ' as $className$typeParams' : ''};');
     }
     if (defaultCase != null) {
-      statements.add('default: return $defaultCase._().decode(map);');
+      statements.add(
+          'default: return $defaultCase._().decode(map)${typeParams.isNotEmpty ? ' as $className$typeParams' : ''};');
     } else {
       statements.add('default: return fromMap$typeParams(map);');
     }
@@ -238,9 +240,7 @@ class ClassMapper {
   String _generateFromMap() {
     if (element.isAbstract) {
       if (isSuperMapper) {
-        var key = options.discriminatorKey ?? '_type';
-        var value = "\${map['$key']}";
-        return 'throw MapperException("Cannot instantiate abstract class ${element.name}, did you forgot to specify a subclass for [ $key: \'$value\' ] or a default subclass?");';
+        return 'throw MapperException("Cannot instantiate abstract class ${element.name}, did you forgot to specify a subclass for [ $discriminatorKey: \'\${map[\'$discriminatorKey\']}\' ] or a default subclass?");';
       } else {
         return "throw const MapperException('Cannot instantiate abstract class ${element.name}.');";
       }
