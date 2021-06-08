@@ -15,11 +15,5 @@ targets:
           caseStyle: snakeCase
           enumCaseStyle: camelCase
           libraries:
-            lib/annotations.dart:
-              include: []
-            lib/src/flags.dart:
-              include: []
-            test/models/model.dart:
-              exclude: [PlayerHooks]
-            test/models/inheritance.dart:
-              exclude: [JeansHooks]
+            test/models/:
+              exclude: [PlayerHooks, JeansHooks]

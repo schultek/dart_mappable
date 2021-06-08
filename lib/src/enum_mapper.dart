@@ -3,22 +3,35 @@ import 'package:indent/indent.dart';
 
 import 'builder_options.dart';
 import 'case_style.dart';
+import 'utils.dart';
 
 /// Generates code for a specific enum
 class EnumMapper {
+  ClassElement element;
+
+  late final CaseStyle? caseStyle;
+  late final int? defaultValue;
+
   String get className => element.name;
   String get mapperName => '${className}Mapper';
   String get paramName => className[0].toLowerCase();
 
-  ClassElement element;
-  EnumOptions options;
+  EnumMapper(this.element, LibraryOptions options) {
+    var annotation = enumChecker.firstAnnotationOf(element);
 
-  EnumMapper(this.element, this.options);
+    caseStyle = annotation?.getField('caseStyle')!.toStringValue() != null
+        ? CaseStyle.fromString(
+            annotation!.getField('caseStyle')!.toStringValue())
+        : options.caseStyle;
+
+    defaultValue =
+        annotation?.getField('defaultValue')!.getField('index')?.toIntValue();
+  }
 
   String generateExtensionCode() {
     var values = element.fields
         .where((f) => f.isEnumConstant)
-        .map((f) => MapEntry(f.name, toCaseStyle(f.name, options.caseStyle)));
+        .map((f) => MapEntry(f.name, toCaseStyle(f.name, caseStyle)));
 
     return '''
       extension $mapperName on $className {
@@ -39,12 +52,8 @@ class EnumMapper {
   }
 
   String _generateDefaultCase() {
-    if (options.defaultValue != null) {
-      if (options.defaultValue is int) {
-        return 'return $className.values[${options.defaultValue}];';
-      } else if (options.defaultValue is String) {
-        return 'return $className.${options.defaultValue};';
-      }
+    if (defaultValue != null) {
+      return 'return $className.values[$defaultValue];';
     }
     return "throw MapperException('Cannot parse String \$value to enum $className');";
   }

@@ -16,13 +16,13 @@ const defaultMappers = '''
 /// Declarations for the Mapper class
 const mapperCode = r'''
 abstract class Mapper<T> {
-  dynamic encode(T self);
-  Function get decoder;
-  Function get typeFactory;
+  Function? get encoder;
+  Function? get decoder;
+  Function? get typeFactory;
   
-  String stringify(T self);
-  int hash(T self);
-  bool equals(T self, T other);
+  String? stringify(T self);
+  int? hash(T self);
+  bool? equals(T self, T other);
 
   Mapper._();
 
@@ -37,9 +37,9 @@ abstract class Mapper<T> {
         typeInfo = getTypeInfo<T>();
       }
       var mapper = _mappers[typeInfo.type];
-      if (mapper != null) {
+      if (mapper?.decoder != null) {
         try {
-          return genericCall(typeInfo, mapper.decoder, value) as T;
+          return genericCall(typeInfo, mapper!.decoder!, value) as T;
         } catch (e) {
           throw MapperException('Error on decoding type $T: ${e is MapperException ? e.message : e}');
         }
@@ -52,8 +52,8 @@ abstract class Mapper<T> {
   static dynamic toValue(dynamic value) {
     if (value == null) return null;
     var typeInfo = getTypeInfoFor(value);
-    if (_mappers[typeInfo.type] != null) {
-      var encoded = _mappers[typeInfo.type]!.encode(value);
+    if (_mappers[typeInfo.type]?.encoder != null) {
+      var encoded = _mappers[typeInfo.type]!.encoder!.call(value);
       if (encoded is Map<String, dynamic>) {
         _clearType(encoded);
         if (typeInfo.params.isNotEmpty) {
@@ -98,22 +98,12 @@ abstract class Mapper<T> {
 
   static bool isEqual(dynamic value, Object? other) {
     var type = _typeOf(value.runtimeType);
-    if (_mappers[type] != null) {
-      return _mappers[type]!.equals(value, other);
-    } else {
-      throw MapperException(
-          'Cannot compare value of type $type for equality. Unknown type. Did you forgot to include the class or register a custom mapper?');
-    }
+    return _mappers[type]?.equals(value, other) ?? value == other;
   }
 
   static String asString(dynamic value) {
     var type = _typeOf(value.runtimeType);
-    if (_mappers[type] != null) {
-      return _mappers[type]!.stringify(value);
-    } else {
-      throw MapperException(
-          'Cannot stringify value of type $type. Unknown type. Did you forgot to include the class or register a custom mapper?');
-    }
+    return _mappers[type]?.stringify(value) ?? value.toString();
   }
 
   static void use<T>(Mapper<T> mapper) => _mappers[_typeOf<T>()] = mapper;
@@ -137,7 +127,7 @@ mixin Mappable {
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 
   @override String toString() => _mapper?.stringify(this) ?? super.toString();
-  @override bool operator ==(Object other) => _mapper != null ? identical(this, other) || runtimeType == other.runtimeType && _mapper!.equals(this, other) : super == other;
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && (_mapper?.equals(this, other) ?? super == other));
   @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
 }
 
@@ -150,15 +140,32 @@ T _checked<T, U>(dynamic v, T Function(U) fn) {
 }
 
 abstract class BaseMapper<T> implements Mapper<T> {
-  @override bool equals(T self, Object? other) => self == other;
-  @override int hash(T self) => self.hashCode;
-  @override String stringify(T self) => self.toString();
-  @override Function get typeFactory => (f) => f<T>();
+  const BaseMapper();
+  
+  @override Function? get decoder => null;
+  @override Function? get encoder => null;
+  @override Function? get typeFactory => null;
+  
+  @override bool? equals(T self, T other) => null;
+  @override int? hash(T self) => null;
+  @override String? stringify(T self) => null;
 }
 
-class _DateTimeMapper extends BaseMapper<DateTime> {
-  @override Function get decoder => decode;
+abstract class CustomMapper<T> extends BaseMapper<T> {
+ const CustomMapper();
+ 
+ @override Function get encoder => encode;
+ dynamic encode(T self);
+ 
+ @override Function get decoder => decode;
+ T decode(dynamic value);
+ 
+ @override Function get typeFactory => (f) => f<T>();
+}
 
+class _DateTimeMapper extends CustomMapper<DateTime> {
+
+  @override
   DateTime decode(dynamic d) {
     if (d is String) {
       return DateTime.parse(d);
@@ -169,16 +176,18 @@ class _DateTimeMapper extends BaseMapper<DateTime> {
     }
   }
   
-  @override String encode(DateTime self) => self.toUtc().toIso8601String();
+  @override
+  String encode(DateTime self) {
+    return self.toUtc().toIso8601String();
+  }
 }
 
 class IterableMapper<I extends Iterable> extends BaseMapper<I> {
   Iterable<U> Function<U>(Iterable<U> iterable) fromIterable;
   IterableMapper(this.fromIterable, this.typeFactory);
 
-  @override Function get decoder => decode;
-  Iterable<T> decode<T>(dynamic l) => _checked(l, (Iterable l) => fromIterable(l.map((v) => Mapper.fromValue<T>(v))));
-  @override List encode(I self) => self.map((v) => Mapper.toValue(v)).toList();
+  @override Function get decoder => <T>(dynamic l) => _checked(l, (Iterable l) => fromIterable(l.map((v) => Mapper.fromValue<T>(v))));
+  @override Function get encoder => (I self) => self.map((v) => Mapper.toValue(v)).toList();
   @override Function typeFactory;
 }
 
@@ -186,29 +195,27 @@ class MapMapper<M extends Map> extends BaseMapper<M> {
   Map<K, V> Function<K, V>(Map<K, V> map) fromMap;
   MapMapper(this.fromMap, this.typeFactory);
 
-  @override Function get decoder => decode;
-  Map<K, V> decode<K, V>(dynamic m) => _checked(m,(Map m) => fromMap(m.map((key, value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)))));
-  @override Map encode(M self) => self.map((key, value) => MapEntry(Mapper.toValue(key), Mapper.toValue(value)));
+  @override Function get decoder => <K, V>(dynamic m) => _checked(m,(Map m) => fromMap(m.map((key, value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)))));
+  @override Function get encoder => (M self) => self.map((key, value) => MapEntry(Mapper.toValue(key), Mapper.toValue(value)));
   @override Function typeFactory;
 }
 
-class _PrimitiveMapper<T> with BaseMapper<T> implements Mapper<T> {
+class _PrimitiveMapper<T> extends BaseMapper<T> {
   const _PrimitiveMapper(this.decoder);
   
   @override final T Function(dynamic value) decoder;
-  @override dynamic encode(T value) => value;
+  @override Function get encoder => (T value) => value;
+  @override Function get typeFactory => (f) => f<T>();
 }
 
-class _EnumMapper<T> with BaseMapper<T> implements Mapper<T> {
-  _EnumMapper(this.strDecoder, this.encoder);
+class _EnumMapper<T> extends CustomMapper<T> {
+  _EnumMapper(this._decoder, this._encoder);
   
-  @override
-  Function get decoder => (dynamic v) => _checked(v, strDecoder);
+  final T Function(String value) _decoder;
+  final String Function(T value) _encoder;
   
-  final T Function(String value) strDecoder;
-  final String Function(T value) encoder;
-
-  @override String encode(T self) => encoder(self);
+  @override T decode(dynamic v) => _checked(v, _decoder);
+  @override dynamic encode(T value) => _encoder(value);
 }
 
 class MapperException implements Exception {
@@ -273,7 +280,7 @@ dynamic genericCall(TypeInfo info, Function fn, dynamic value) {
   dynamic call(dynamic Function<T>() next) {
     var t = params.removeAt(0);
     if (_mappers[t.type] != null) {
-      return genericCall(t, _mappers[t.type]!.typeFactory, next);
+      return genericCall(t, _mappers[t.type]!.typeFactory ?? (f) => f(), next);
     } else {
       throw MapperException('Cannot find generic wrapper for type $t.');
     }

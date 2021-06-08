@@ -1,44 +1,7 @@
-import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 import 'case_style.dart';
-
-/// The builder options for a specific class
-class ClassOptions {
-  String? constructor;
-  CaseStyle? caseStyle;
-  bool? ignoreNull;
-  String? discriminatorKey;
-  String? discriminatorValue;
-  Map<String, String> fields;
-
-  ClassOptions(
-      {this.constructor,
-      this.caseStyle,
-      this.ignoreNull,
-      this.discriminatorKey,
-      this.discriminatorValue,
-      this.fields = const {}});
-
-  ClassOptions.parse(Map options)
-      : constructor = options['constructor'] as String?,
-        caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
-        ignoreNull = options['ignoreNull'] as bool?,
-        discriminatorKey = options['discriminatorKey'] as String?,
-        discriminatorValue = options['discriminatorValue'] as String?,
-        fields = (options['fields'] as Map?)?.cast<String, String>() ?? {};
-}
-
-/// The builder options for a specific enum
-class EnumOptions {
-  CaseStyle? caseStyle;
-  dynamic defaultValue;
-  EnumOptions({this.caseStyle, this.defaultValue});
-
-  EnumOptions.parse(Map options)
-      : caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
-        defaultValue = options['defaultValue'];
-}
+import 'utils.dart';
 
 /// The builder options for a specific library
 class LibraryOptions {
@@ -49,111 +12,45 @@ class LibraryOptions {
   CaseStyle? enumCaseStyle;
   bool? ignoreNull;
   String? discriminatorKey;
-
-  Map<String, ClassOptions> classes;
-  Map<String, EnumOptions> enums;
+  List<String>? generateMethods;
 
   LibraryOptions(
       {this.include,
       this.exclude,
-      this.classes = const {},
-      this.enums = const {},
       this.caseStyle,
       this.enumCaseStyle,
       this.ignoreNull,
-      this.discriminatorKey});
+      this.discriminatorKey,
+      this.generateMethods});
 
   LibraryOptions.parse(Map options)
       : include = toList(options['include']),
         exclude = toList(options['exclude']),
-        classes = toMap(options['classes'], (v) => ClassOptions.parse(v)),
-        enums = toMap(options['enums'], (v) => EnumOptions.parse(v)),
         caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
         enumCaseStyle =
             CaseStyle.fromString(options['enumCaseStyle'] as String?),
         ignoreNull = options['ignoreNull'] as bool?,
-        discriminatorKey = options['discriminatorKey'] as String?;
+        discriminatorKey = options['discriminatorKey'] as String?,
+        generateMethods = toList(options['generateMethods']);
 
   bool shouldGenerateFor(ClassElement element) {
-    if (classes.containsKey(element.name)) {
-      return true;
-    } else if (include != null) {
+    if (include != null) {
       return include!.contains(element.name);
     } else if (exclude != null) {
       return !exclude!.contains(element.name) && !element.isDartCoreObject;
     } else {
-      return !element.isDartCoreObject;
+      return false;
     }
-  }
-
-  EnumOptions forEnum(ClassElement element, [DartObject? annotation]) {
-    var options = enums[element.name];
-
-    return EnumOptions(
-      caseStyle: annotation?.getField('caseStyle')!.toStringValue() != null
-          ? CaseStyle.fromString(
-              annotation!.getField('caseStyle')!.toStringValue())
-          : options?.caseStyle ?? enumCaseStyle,
-      defaultValue: annotation
-              ?.getField('defaultValue')!
-              .getField('index')
-              ?.toIntValue() ??
-          options?.defaultValue,
-    );
-  }
-
-  ClassOptions forClass(ClassElement element, [DartObject? annotation]) {
-    var options = classes[element.name];
-
-    return ClassOptions(
-      constructor: options?.constructor,
-      caseStyle: annotation?.getField('caseStyle')!.toStringValue() != null
-          ? CaseStyle.fromString(
-              annotation!.getField('caseStyle')!.toStringValue())
-          : options?.caseStyle ?? caseStyle,
-      ignoreNull: annotation?.getField('ignoreNull')!.toBoolValue() ??
-          options?.ignoreNull ??
-          ignoreNull,
-      discriminatorKey:
-          annotation?.getField('discriminatorKey')!.toStringValue() ??
-              options?.discriminatorKey ??
-              discriminatorKey,
-      discriminatorValue: options?.discriminatorValue,
-      fields: options?.fields ?? {},
-    );
   }
 }
 
 /// The global builder options from the build.yaml file
-class GlobalOptions {
-  List<String>? include;
-  List<String>? exclude;
-
-  CaseStyle? caseStyle;
-  CaseStyle? enumCaseStyle;
-  bool? ignoreNull;
-  String? discriminatorKey;
-
+class GlobalOptions extends LibraryOptions {
   Map<String, LibraryOptions> libraries;
 
-  GlobalOptions(
-      {this.include,
-      this.exclude,
-      this.libraries = const {},
-      this.caseStyle,
-      this.enumCaseStyle,
-      this.ignoreNull,
-      this.discriminatorKey});
-
   GlobalOptions.parse(Map<String, dynamic> options)
-      : include = toList(options['include']),
-        exclude = toList(options['exclude']),
-        libraries = toMap(options['libraries'], (v) => LibraryOptions.parse(v)),
-        caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
-        enumCaseStyle =
-            CaseStyle.fromString(options['enumCaseStyle'] as String?),
-        ignoreNull = options['ignoreNull'] as bool?,
-        discriminatorKey = options['discriminatorKey'] as String?;
+      : libraries = toMap(options['libraries'], (v) => LibraryOptions.parse(v)),
+        super.parse(options);
 
   LibraryOptions forLibrary(LibraryElement library) {
     String? libFilePath;
@@ -167,44 +64,29 @@ class GlobalOptions {
       // ignore: avoid_print
       print('Unknown identifier: ${library.identifier}');
     }
-    var options = libraries[library.name] ??
-        libraries[library.identifier] ??
-        libraries[libFilePath];
 
-    if (options == null) {
-      return LibraryOptions(
-        include: include,
-        exclude: exclude,
-        caseStyle: caseStyle,
-        enumCaseStyle: enumCaseStyle,
-        ignoreNull: ignoreNull,
-        discriminatorKey: discriminatorKey,
-      );
-    } else {
-      return LibraryOptions(
-        include: (options.include ?? include) != null
-            ? [...options.include ?? [], ...include ?? []]
-            : null,
-        exclude: (options.exclude ?? exclude) != null
-            ? [...options.exclude ?? [], ...exclude ?? []]
-            : null,
-        classes: options.classes,
-        enums: options.enums,
-        caseStyle: options.caseStyle ?? caseStyle,
-        enumCaseStyle: options.enumCaseStyle ?? enumCaseStyle,
-        ignoreNull: options.ignoreNull ?? ignoreNull,
-        discriminatorKey: options.discriminatorKey ?? discriminatorKey,
-      );
+    LibraryOptions? options;
+    for (var key in libraries.keys) {
+      if (key == library.name ||
+          key == library.identifier ||
+          (libFilePath?.startsWith(key) ?? false)) {
+        options = libraries[key];
+        break;
+      }
     }
+
+    return LibraryOptions(
+      include: (options?.include ?? include) != null
+          ? [...options?.include ?? [], ...include ?? []]
+          : null,
+      exclude: (options?.exclude ?? exclude) != null
+          ? [...options?.exclude ?? [], ...exclude ?? []]
+          : null,
+      caseStyle: options?.caseStyle ?? caseStyle,
+      enumCaseStyle: options?.enumCaseStyle ?? enumCaseStyle,
+      ignoreNull: options?.ignoreNull ?? ignoreNull,
+      discriminatorKey: options?.discriminatorKey ?? discriminatorKey,
+      generateMethods: options?.generateMethods ?? generateMethods,
+    );
   }
-}
-
-Map<String, T> toMap<T>(dynamic value, T Function(Map m) fn) {
-  return (value as Map?)
-          ?.map((k, dynamic v) => MapEntry(k as String, fn(v as Map))) ??
-      {};
-}
-
-List<T>? toList<T>(dynamic value) {
-  return (value as List?)?.map((dynamic v) => v as T).toList();
 }

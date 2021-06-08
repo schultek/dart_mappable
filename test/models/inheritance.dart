@@ -1,4 +1,4 @@
-import 'package:dart_mappable/annotations.dart';
+import 'package:dart_mappable/src/annotations.dart';
 
 @MappableClass(
     hooks: UnmappedPropertiesHooks('unmapped_props'), discriminatorKey: 'label')

@@ -1,4 +1,4 @@
-import 'package:dart_mappable/annotations.dart';
+import 'package:dart_mappable/src/annotations.dart';
 
 import '../test.mapper.g.dart';
 
@@ -16,6 +16,11 @@ class Person with Mappable {
 @MappableEnum(defaultValue: Brand.Audi)
 enum Brand { Toyota, Audi, BMW }
 
+@MappableClass(
+    generateMethods: GenerateMethods.decode |
+        GenerateMethods.encode |
+        GenerateMethods.stringify |
+        GenerateMethods.equals)
 class Car with Mappable {
   final double miles;
   final Brand brand;
@@ -67,4 +72,12 @@ class Game {
 class Player {
   String id;
   Player(this.id);
+}
+
+@MappableClass(generateMethods: GenerateMethods.equals)
+class CheckBoard {
+  bool checked;
+  int count;
+
+  CheckBoard({required this.checked, required this.count});
 }

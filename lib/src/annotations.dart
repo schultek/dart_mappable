@@ -1,7 +1,5 @@
 import 'dart:collection';
 
-import 'src/flags.dart';
-
 /// Used to annotate a class
 /// in order to generate mapping code
 class MappableClass {
@@ -11,6 +9,7 @@ class MappableClass {
     this.discriminatorKey,
     this.discriminatorValue,
     this.hooks,
+    this.generateMethods,
   });
 
   /// The case style for the map keys
@@ -28,7 +27,32 @@ class MappableClass {
   /// Define custom hooks used only for this class
   final MappingHooks? hooks;
 
+  /// Specify which methods to generate for this class
+  final int? generateMethods;
+
   static const useAsDefault = MappingFlags.useAsDefault;
+}
+
+enum MappingFlags { useAsDefault }
+
+class GenerateMethods {
+  /// Indicates to generate the fromMap / fromJson methods
+  static const decode = 0x1;
+
+  /// Indicates to generate the toMap / toJson methods
+  static const encode = 0x2;
+
+  /// Indicates to generate the toString method
+  static const stringify = 0x04;
+
+  /// Indicates to generate the == and hashCode methods
+  static const equals = 0x08;
+
+  /// Indicates to generate the copyWith method
+  static const copy = 0x10;
+
+  /// Indicates to generate all available methods
+  static const all = 0x1F;
 }
 
 /// Used to annotate an enum

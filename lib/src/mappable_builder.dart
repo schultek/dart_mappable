@@ -4,13 +4,12 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:indent/indent.dart';
 import 'package:path/path.dart' as path;
-import 'package:source_gen/source_gen.dart';
 
-import '../annotations.dart';
 import 'builder_options.dart';
 import 'builder_snippets.dart';
 import 'class_mapper.dart';
 import 'enum_mapper.dart';
+import 'utils.dart';
 
 /// The main builder used for code generation
 class MappableBuilder implements Builder {
@@ -45,15 +44,8 @@ class MappableBuilder implements Builder {
     Map<String, ClassMapper> classMappers = {};
     Map<String, EnumMapper> enumMappers = {};
 
-    var classChecker = const TypeChecker.fromRuntime(MappableClass);
-    var enumChecker = const TypeChecker.fromRuntime(MappableEnum);
-
     for (var library in libraries) {
       if (library.isInSdk) {
-        continue;
-      } else if (library.identifier.startsWith('package:') &&
-          !library.identifier
-              .startsWith('package:${buildStep.inputId.package}/')) {
         continue;
       }
 
@@ -71,12 +63,7 @@ class MappableBuilder implements Builder {
             return null;
           }
 
-          enumMappers[element.name] = EnumMapper(
-              element,
-              libraryOptions.forEnum(
-                element,
-                enumChecker.firstAnnotationOf(element),
-              ));
+          enumMappers[element.name] = EnumMapper(element, libraryOptions);
         } else {
           if (classMappers.containsKey(element.name)) {
             if (subMapper != null) {
@@ -85,13 +72,7 @@ class MappableBuilder implements Builder {
             return classMappers[element.name];
           }
 
-          var classMapper = ClassMapper(
-            element,
-            libraryOptions.forClass(
-              element,
-              classChecker.firstAnnotationOf(element),
-            ),
-          );
+          var classMapper = ClassMapper(element, libraryOptions);
 
           if (subMapper != null) {
             classMapper.subMappers.add(subMapper);
@@ -107,10 +88,9 @@ class MappableBuilder implements Builder {
               !element.supertype!.isDartCoreObject) {
             var superMapper = addRecursive(element.supertype!.element,
                 subMapper: classMapper);
-            classMapper.superMapper = superMapper;
 
             if (superMapper != null) {
-              classMapper.analyzeSuperConstructor();
+              classMapper.setSuperMapper(superMapper);
             }
           }
 
@@ -148,7 +128,7 @@ class MappableBuilder implements Builder {
     var usesFieldHooks = classMappers.values.any((c) => c.usesFieldHooks);
     var usesClassHooks = classMappers.values.any((c) => c.hookForClass != null);
     if (usesFieldHooks || usesClassHooks) {
-      imports.add(Uri.parse('package:dart_mappable/annotations.dart'));
+      imports.add(Uri.parse('package:dart_mappable/dart_mappable.dart'));
     }
 
     return ''
@@ -167,13 +147,5 @@ class MappableBuilder implements Builder {
         '$mapperCode'
         '${usesClassHooks ? classHooksCode : ''}'
         '${usesFieldHooks ? extensionWithHooks : extensionWithoutHooks}';
-  }
-
-  /// All of the declared classes and enums in this library.
-  Iterable<ClassElement> elementsOf(LibraryElement element) sync* {
-    for (var cu in element.units) {
-      yield* cu.enums;
-      yield* cu.types;
-    }
   }
 }

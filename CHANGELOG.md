@@ -1,3 +1,10 @@
+# 0.5.0
+
+- Reworked configuration system - build.yaml now only support global and library level options
+- Added support for disabling generation of single methods
+- Simplified CustomMappers
+- Improved documentation
+
 # 0.4.6
 
 - Changed code generation to handle polymorphism explicitly (using switch statement)

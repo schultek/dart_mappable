@@ -18,7 +18,7 @@ String toCaseStyle(String text, CaseStyle? style) {
 
 /// Used to transform fields to a specific case style
 class CaseStyle {
-  const CaseStyle(this.head, this.tail, this.separator);
+  const CaseStyle({this.head, this.tail, this.separator = ''});
 
   /// Transforms the first word of a field name
   final TextTransform? head;
@@ -36,19 +36,18 @@ class CaseStyle {
       return null;
     } else {
       switch (value) {
-        case camelCase:
-          return const CaseStyle(
-              TextTransform.lowerCase, TextTransform.capitalCase, '');
-        case pascalCase:
-          return const CaseStyle(null, TextTransform.capitalCase, '');
-        case snakeCase:
-          return const CaseStyle(null, TextTransform.lowerCase, '_');
-        case paramCase:
-          return const CaseStyle(null, TextTransform.lowerCase, '-');
-        case lowerCase:
-          return const CaseStyle(null, TextTransform.lowerCase, '');
-        case upperCase:
-          return const CaseStyle(null, TextTransform.upperCase, '');
+        case 'camelCase':
+          return camelCase;
+        case 'pascalCase':
+          return pascalCase;
+        case 'snakeCase':
+          return snakeCase;
+        case 'paramCase':
+          return paramCase;
+        case 'lowerCase':
+          return lowerCase;
+        case 'upperCase':
+          return upperCase;
       }
       if (value.startsWith('custom')) {
         var match = customCase.firstMatch(value);
@@ -70,7 +69,7 @@ class CaseStyle {
 
         separator = match.group(2)!;
 
-        return CaseStyle(head, tail, separator);
+        return CaseStyle(head: head, tail: tail, separator: separator);
       }
     }
   }
@@ -82,22 +81,25 @@ class CaseStyle {
   static const unmodified = 'unmodified';
 
   /// Transforms to 'fieldName'
-  static const camelCase = 'camelCase';
+  static const camelCase =
+      CaseStyle(head: TextTransform.lowerCase, tail: TextTransform.capitalCase);
 
   /// Transforms to 'FieldName'
-  static const pascalCase = 'pascalCase';
+  static const pascalCase = CaseStyle(tail: TextTransform.capitalCase);
 
   /// Transforms to 'field_name'
-  static const snakeCase = 'snakeCase';
+  static const snakeCase =
+      CaseStyle(tail: TextTransform.lowerCase, separator: '_');
 
   /// Transforms to 'field-name'
-  static const paramCase = 'paramCase';
+  static const paramCase =
+      CaseStyle(tail: TextTransform.lowerCase, separator: '-');
 
   /// Transforms to 'fieldname'
-  static const lowerCase = 'lowerCase';
+  static const lowerCase = CaseStyle(tail: TextTransform.lowerCase);
 
   /// Transforms to 'FIELDNAME'
-  static const upperCase = 'upperCase';
+  static const upperCase = CaseStyle(tail: TextTransform.upperCase);
 }
 
 /// Text transformation applied to a single word
