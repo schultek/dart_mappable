@@ -113,7 +113,7 @@ targets:
           enumCaseStyle: none # or 'camelCase', 'snakeCase', etc.
           # if true removes all map keys with null values
           ignoreNull: false # or true
-          # used as property name for type discriminators, defaults to '_type'
+          # used as property name for type discriminators
           discriminatorKey: isOfType
           
           # overwrite options for specific libraries
