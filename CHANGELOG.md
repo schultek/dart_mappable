@@ -1,3 +1,9 @@
+# 0.5.1
+
+- Added @CustomMapper annotation to auto-add custom mappers without needing to do `Mapper.use`
+- Fixed decoding issue with nullable types
+- Added missing documentation comments
+
 # 0.5.0
 
 - Reworked configuration system - build.yaml now only support global and library level options

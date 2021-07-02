@@ -33,8 +33,10 @@ class MappableClass {
   static const useAsDefault = MappingFlags.useAsDefault;
 }
 
+/// Collection of flags used for annotations
 enum MappingFlags { useAsDefault }
 
+/// Collection of constants to indicate which methods and extensions to generate for a specific class
 class GenerateMethods {
   /// Indicates to generate the fromMap / fromJson methods
   static const decode = 0x1;
@@ -89,6 +91,7 @@ class MappableField {
   final MappingHooks? hooks;
 }
 
+/// Extend this class to define custom [MappingHooks] for a class or field
 abstract class MappingHooks {
   const MappingHooks();
 
@@ -99,7 +102,10 @@ abstract class MappingHooks {
   dynamic afterEncode(dynamic value) => value;
 }
 
+/// Ready-to-use [MappingHooks] to get all unmapped properties in a [Map].
 class UnmappedPropertiesHooks extends MappingHooks {
+  /// The key of the target property of your class.
+  /// Needs to be specified in the correct case-style
   final String key;
   const UnmappedPropertiesHooks(this.key);
 
@@ -121,6 +127,7 @@ class UnmappedPropertiesHooks extends MappingHooks {
   }
 }
 
+/// Helper class for the [UnmappedPropertiesHooks]
 class UnusedPropertiesMap with MapMixin<String, dynamic> {
   Map<String, dynamic> wrapped;
   Map<String, dynamic> unused;
@@ -160,4 +167,10 @@ class UnusedPropertiesMap with MapMixin<String, dynamic> {
     unused.remove(key);
     wrapped.remove(key);
   }
+}
+
+/// Used to annotate a class used as a custom mapper.
+/// The target class must implement [Mapper], e.g. by extending [SimpleMapper] or [BaseMapper]
+class CustomMapper {
+  const CustomMapper();
 }

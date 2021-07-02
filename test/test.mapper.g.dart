@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'models/polymorphism.dart';
 import 'models/model.dart';
 import 'models/inheritance.dart';
+import 'models/custom.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 // === GENERATED MAPPER CLASSES AND EXTENSIONS ===
@@ -427,6 +428,75 @@ extension TopMapperExtension on Top {
   Top copyWith({int? length, int? size, String? color, Map<String, dynamic>? unmappedProps}) => Top(length ?? this.length, size ?? this.size, color ?? this.color, unmappedProps ?? this.unmappedProps);
 }
 
+class PrivateClassMapperMapper extends BaseMapper<PrivateClassMapper> {
+  PrivateClassMapperMapper._();
+
+  @override Function get decoder => decode;
+  PrivateClassMapper decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  PrivateClassMapper fromMap(Map<String, dynamic> map) => PrivateClassMapper();
+
+  @override Function get encoder => (PrivateClassMapper v) => toMap(v);
+  Map<String, dynamic> toMap(PrivateClassMapper p) => {};
+
+  @override String? stringify(PrivateClassMapper self) => 'PrivateClassMapper()';
+  @override int? hash(PrivateClassMapper self) => 0;
+  @override bool? equals(PrivateClassMapper self, PrivateClassMapper other) => true;
+
+  @override Function get typeFactory => (f) => f<PrivateClassMapper>();
+}
+
+extension PrivateClassMapperMapperExtension on PrivateClassMapper {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  PrivateClassMapper copy() => PrivateClassMapper();
+}
+
+class GenericBoxMapper extends BaseMapper<GenericBox> {
+  GenericBoxMapper._();
+
+  @override Function get decoder => decode;
+  GenericBox<T> decode<T>(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
+  GenericBox<T> fromMap<T>(Map<String, dynamic> map) => GenericBox(map.get('content'));
+
+  @override Function get encoder => (GenericBox v) => toMap(v);
+  Map<String, dynamic> toMap(GenericBox g) => {'content': Mapper.toValue(g.content)};
+
+  @override String? stringify(GenericBox self) => 'GenericBox(content: ${self.content})';
+  @override int? hash(GenericBox self) => self.content.hashCode;
+  @override bool? equals(GenericBox self, GenericBox other) => self.content == other.content;
+
+  @override Function get typeFactory => <T>(f) => f<GenericBox<T>>();
+}
+
+extension GenericBoxMapperExtension<T> on GenericBox<T> {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  GenericBox<T> copyWith({T? content}) => GenericBox(content ?? this.content);
+}
+
+class CustomGenericMapperMapper extends BaseMapper<CustomGenericMapper> {
+  CustomGenericMapperMapper._();
+
+  @override Function get decoder => decode;
+  CustomGenericMapper decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  CustomGenericMapper fromMap(Map<String, dynamic> map) => CustomGenericMapper();
+
+  @override Function get encoder => (CustomGenericMapper v) => toMap(v);
+  Map<String, dynamic> toMap(CustomGenericMapper c) => {};
+
+  @override String? stringify(CustomGenericMapper self) => 'CustomGenericMapper(decoder: ${self.decoder}, encoder: ${self.encoder})';
+  @override int? hash(CustomGenericMapper self) => 0;
+  @override bool? equals(CustomGenericMapper self, CustomGenericMapper other) => true;
+
+  @override Function get typeFactory => (f) => f<CustomGenericMapper>();
+}
+
+extension CustomGenericMapperMapperExtension on CustomGenericMapper {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  CustomGenericMapper copy() => CustomGenericMapper();
+}
+
 extension BrandMapper on Brand {
   static Brand fromString(String value) {
     switch (value) {
@@ -480,8 +550,14 @@ var _mappers = <String, Mapper>{
   _typeOf<Jeans>(): JeansMapper._(),
   _typeOf<Shorts>(): ShortsMapper._(),
   _typeOf<Top>(): TopMapper._(),
+  _typeOf<PrivateClassMapper>(): PrivateClassMapperMapper._(),
+  _typeOf<GenericBox>(): GenericBoxMapper._(),
+  _typeOf<CustomGenericMapper>(): CustomGenericMapperMapper._(),
 
   _typeOf<Brand>(): _EnumMapper<Brand>(BrandMapper.fromString, (Brand b) => b.toStringValue()),
+
+  _typeOf<MyPrivateClass>(): PrivateClassMapper(),
+  _typeOf<GenericBox>(): CustomGenericMapper(),
 
 };
 
@@ -579,6 +655,7 @@ abstract class Mapper<T> {
   }
 
   static void use<T>(Mapper<T> mapper) => _mappers[_typeOf<T>()] = mapper;
+  static Mapper<T>? unuse<T>() => _mappers.remove(_typeOf<T>()) as Mapper<T>?;
 }
 
 String _typeOf<T>([Type? t]) {
@@ -623,9 +700,7 @@ abstract class BaseMapper<T> implements Mapper<T> {
   @override String? stringify(T self) => null;
 }
 
-abstract class CustomMapper<T> extends BaseMapper<T> {
- const CustomMapper();
- 
+abstract class SimpleMapper<T> extends BaseMapper<T> {
  @override Function get encoder => encode;
  dynamic encode(T self);
  
@@ -635,7 +710,7 @@ abstract class CustomMapper<T> extends BaseMapper<T> {
  @override Function get typeFactory => (f) => f<T>();
 }
 
-class _DateTimeMapper extends CustomMapper<DateTime> {
+class _DateTimeMapper extends SimpleMapper<DateTime> {
 
   @override
   DateTime decode(dynamic d) {
@@ -680,7 +755,7 @@ class _PrimitiveMapper<T> extends BaseMapper<T> {
   @override Function get typeFactory => (f) => f<T>();
 }
 
-class _EnumMapper<T> extends CustomMapper<T> {
+class _EnumMapper<T> extends SimpleMapper<T> {
   _EnumMapper(this._decoder, this._encoder);
   
   final T Function(String value) _decoder;
@@ -698,14 +773,14 @@ class MapperException implements Exception {
   String toString() => 'MapperException: $message';
 }
 
-
 class TypeInfo {
   String type = '';
   List<TypeInfo> params = [];
+  bool isNullable = false;
   TypeInfo? parent;
 
   @override
-  String toString() => '$type${params.isNotEmpty ? '<${params.join(', ')}>' : ''}';
+  String toString() => '$type${params.isNotEmpty ? '<${params.join(', ')}>${isNullable ? '?' : ''}' : ''}';
 }
 
 TypeInfo getTypeInfoFor(dynamic value) {
@@ -738,6 +813,8 @@ TypeInfo getTypeInfo<T>([String? type]) {
       curr = curr.parent!;
       curr.params.add(t..parent = curr);
       curr = t;
+    } else if (c == '?') {
+      curr.isNullable = true;
     } else {
       curr.type += c;
     }

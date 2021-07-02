@@ -1,5 +1,6 @@
 import 'package:test/test.dart';
 
+import 'models/custom.dart';
 import 'models/inheritance.dart';
 import 'models/model.dart';
 import 'models/polymorphism.dart';
@@ -52,6 +53,11 @@ void main() {
     test('Enum default', () {
       Car car = Mapper.fromJson('{"driven_km": 1000, "brand": "some"}');
       expect(car.brand, equals(Brand.Audi));
+    });
+
+    test('Decode Null-Type', () {
+      int? i = Mapper.fromValue('1');
+      expect(i, equals(1));
     });
   });
 
@@ -155,6 +161,36 @@ void main() {
       TShirt tshirt = Mapper.fromJson(
           '{"neck": "V", "howbig": 1, "color": "green", "tag": "wool", "quality": "good"}');
       expect(tshirt.unmappedProps, equals({'tag': 'wool', 'quality': 'good'}));
+    });
+  });
+
+  group('Custom Mappers', () {
+    test('Simple Custom Mapper', () {
+      MyPrivateClass c = Mapper.fromValue('test');
+      expect(c.runtimeType, equals(MyPrivateClass));
+
+      var s = Mapper.toValue(c);
+      expect(s, equals('__private__'));
+    });
+
+    test('Use and unuse Mapper', () {
+      var mapper = Mapper.unuse<int>()!;
+
+      MapperException? error;
+      int? i;
+      try {
+        i = Mapper.fromValue('2');
+      } on MapperException catch (e) {
+        error = e;
+      }
+
+      expect(error, isNotNull);
+      expect(i, isNull);
+
+      Mapper.use(mapper);
+      i = Mapper.fromValue('2');
+
+      expect(i, equals(2));
     });
   });
 }

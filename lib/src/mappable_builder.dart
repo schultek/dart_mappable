@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:indent/indent.dart';
@@ -43,6 +44,8 @@ class MappableBuilder implements Builder {
 
     Map<String, ClassMapper> classMappers = {};
     Map<String, EnumMapper> enumMappers = {};
+
+    Map<String, ClassElement> customMappers = {};
 
     for (var library in libraries) {
       if (library.isInSdk) {
@@ -105,6 +108,19 @@ class MappableBuilder implements Builder {
           addRecursive(element);
           hasMappedType = true;
         }
+
+        if (customMapperChecker.hasAnnotationOf(element)) {
+          var node = element.session!
+              .getParsedLibraryByElement(element.library)
+              .getElementDeclaration(element)!
+              .node;
+          if (node is ClassDeclaration) {
+            var type = node
+                .extendsClause!.superclass.typeArguments!.arguments.first
+                .toString();
+            customMappers[type] = element;
+          }
+        }
       }
 
       if (hasMappedType) {
@@ -127,6 +143,7 @@ class MappableBuilder implements Builder {
 
     var usesFieldHooks = classMappers.values.any((c) => c.usesFieldHooks);
     var usesClassHooks = classMappers.values.any((c) => c.hookForClass != null);
+
     if (usesFieldHooks || usesClassHooks) {
       imports.add(Uri.parse('package:dart_mappable/dart_mappable.dart'));
     }
@@ -142,6 +159,7 @@ class MappableBuilder implements Builder {
         'var _mappers = <String, Mapper>{\n$defaultMappers\n'
         '${classMappers.values.map((om) => '_typeOf<${om.className}>(): ${om.mapperName}._(),').join('\n').indent(2)}\n'
         '${enumMappers.values.map((em) => '_typeOf<${em.className}>(): _EnumMapper<${em.className}>(${em.mapperName}.fromString, (${em.className} ${em.paramName}) => ${em.paramName}.toStringValue()),').join('\n').indent(2)}\n'
+        '${customMappers.entries.map((e) => '_typeOf<${e.key}>(): ${e.value.name}(),').join('\n').indent(2)}\n'
         '};\n'
         '\n// === GENERATED UTILITY CLASSES ===\n\n'
         '$mapperCode'

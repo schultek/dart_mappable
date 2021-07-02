@@ -31,7 +31,7 @@ Sounds too good to be true? Not anymore.
   - [Null and Default Values](#null-and-default-values)
 - [Encoding / Decoding Hooks](#encoding--decoding-hooks)
   - [Unmapped Properties](#unmapped-properties)
-- [Custom Types](#custom-types)
+- [Custom Mappers](#custom-mappers)
   - [Generic Custom Types](#generic-custom-types)
   - [Custom Iterables and Maps](#custom-iterables-and-maps)
 
@@ -46,7 +46,7 @@ To get started, add the following lines to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  dart_mappable: ^0.5.0
+  dart_mappable: ^0.5.1
   build_runner: ^1.12.2
 ```
 
@@ -87,6 +87,8 @@ You can use this package and configure the code generation in two different ways
 
 On a global, or library-specific level use the **Builder Config**. To configure class-specific options, use **Annotations**.
 You can use either of them, or mix them as you like. 
+
+When using **Annotations** you have to use this package as a normal dependency - instead of as a `dev_dependency`!
 
 ### Builder Config
 
@@ -137,15 +139,17 @@ Most general properties that you set in the **Builder Config** can be overridden
 
 ### Annotations
 
-In some cases it is easier to use **Annotations** on classes, that require some special configurations. 
-There are a total of **four** Annotations that you can use in your code:
+In some cases it is easier to use **Annotations** on classes, that require some special configurations. Make sure to use this package as a normal `dependency` to enable **Annotations**.  
+
+There are a total of **five** Annotations that you can use in your code:
 
 1. `@MappableClass()` can be used on a class to specify options like the `caseStyle` of the json keys, whether to ignore null values, or [hooks](#encoding--decoding-hooks).
 2. `@MappableEnum()` can be used on a enum to specify the `caseStyle` of the stringified enum values, or the `defaultValue`.
 3. `@MappableConstructor()` can be used on a constructor to mark this to be used for decoding. It has no properties.
 4. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name, or [hooks](#encoding--decoding-hooks). *Note: This can only be used on a field if it is directly assigned as a constructor parameter (`MyClass(this.myField)`). Setting this Annotation on any other field will have no effect. (See [Utilize Constructors](#utilize-constructors) for an explanation why this is.)*
+5. `@CustomMapper()` can be used to specify a custom mapper, used alongside the generated mappers. See [Custom Mappers](#custom-mappers) for a details explanation.
 
-> For a more detailed explanation of all the annotation properties, head to the [Api Documentation](https://pub.dev/documentation/dart_mappable/latest/annotations/annotations-library.html).
+> For a more detailed explanation of all the annotation properties, head to the [Api Documentation](https://pub.dev/documentation/dart_mappable/latest/dart_mappable/dart_mappable-library.html).
 
 ## Generation Methods
 
@@ -297,7 +301,7 @@ var myMap = Mapper.toValue(treatsPerDog);
 print(myMap); // {{name: Bonny}: 1, {name: Clyde}: 5}
 ```
 
-> Make sure to do mixin Mapper on your key class, in order to enable easy property access
+> Make sure to mixin `Mappable` on your key class, in order to enable easy property access
 
 > Since json only supports string keys, we can't do `Mapper.fromJson` or `Mapper.toJson` on these maps. You would have to decode / encode your keys and values separately.
 
@@ -487,12 +491,13 @@ void main() {
 }
 ```
 
-## Custom Types
+## Custom Mappers
 
 You can create custom mappers to serialize / deserialize custom types that are not part of the generated code like this:
 
 ```dart
-class CustomStringMapper extends CustomMapper<String> {
+@CustomMapper()
+class CustomStringMapper extends SimpleMapper<String> {
   @override
   String decode(dynamic value) {
     return (value as String).substring(1);
@@ -503,18 +508,19 @@ class CustomStringMapper extends CustomMapper<String> {
     return '_$self';
   }
 }
-
-// then, somewhere early in your code (e.g. main function)
-Mapper.use(CustomStringMapper());
 ```
 
 There are also additional methods you can override, like `stringify`, or `equals`.
 This will enable `Mapper.isEqual` and `Mapper.asString` on this type.
 
+Using the `@CustomMapper()` annotation, this mapper will automatically be registered and used by the library. 
+Or, you can instead register a custom mapper dynamically using `Mapper.use<MyClass>(MyCustomMapper())` and unregister using `Mapper.unuse<MyClass>()`.
+This might come in handy if you want to switch between different custom mappers for the same type. Also, be aware that you can also `unuse()` (and replace) any mappers, both custom, generated, and mappers of primitive types. 
+
 ### Generic Custom Types
 
 When dealing with generic types, we need a more sophisticated syntax for decoding. 
-Instead of extending `CustomMapper` you have to extend `BaseMapper` when wanting to decode a generic class.
+Instead of extending `SimpleMapper` you have to extend `BaseMapper` when wanting to decode a generic class.
 Next, instead of overriding the `decode` function, specify a `decoder` getter, which must be a function that can accept up to three additional type arguments.
 
 You also need to construct a `typeFactory` as shown below.
@@ -525,6 +531,7 @@ class GenericBox<T> {
   GenericBox(this.content);
 }
 
+@CustomMapper()
 class CustomGenericMapper extends BaseMapper<GenericBox> { // only use the base type here
 
   @override
@@ -533,9 +540,9 @@ class CustomGenericMapper extends BaseMapper<GenericBox> { // only use the base 
   };
   
   @override
-  dynamic encode(GenericBox self) { // no need for type parameters here
+  Function encoder = (GenericBox self) { // no need for type parameters here
     return Mapper.toValue(self.content);
-  }
+  };
 
   // in case of generic types, we also must specify a type factory. This is a special type of 
   // function used internally to construct generic instances of your type.
@@ -543,9 +550,6 @@ class CustomGenericMapper extends BaseMapper<GenericBox> { // only use the base 
   @override
   Function get typeFactory => <T>(f) => f<GenericBox<T>>();
 }
-
-// don't forget
-Mapper.use(CustomGenericMapper());
 ```
 
 ### Custom Iterables and Maps

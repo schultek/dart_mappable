@@ -107,6 +107,7 @@ abstract class Mapper<T> {
   }
 
   static void use<T>(Mapper<T> mapper) => _mappers[_typeOf<T>()] = mapper;
+  static Mapper<T>? unuse<T>() => _mappers.remove(_typeOf<T>()) as Mapper<T>?;
 }
 
 String _typeOf<T>([Type? t]) {
@@ -151,9 +152,7 @@ abstract class BaseMapper<T> implements Mapper<T> {
   @override String? stringify(T self) => null;
 }
 
-abstract class CustomMapper<T> extends BaseMapper<T> {
- const CustomMapper();
- 
+abstract class SimpleMapper<T> extends BaseMapper<T> {
  @override Function get encoder => encode;
  dynamic encode(T self);
  
@@ -163,7 +162,7 @@ abstract class CustomMapper<T> extends BaseMapper<T> {
  @override Function get typeFactory => (f) => f<T>();
 }
 
-class _DateTimeMapper extends CustomMapper<DateTime> {
+class _DateTimeMapper extends SimpleMapper<DateTime> {
 
   @override
   DateTime decode(dynamic d) {
@@ -208,7 +207,7 @@ class _PrimitiveMapper<T> extends BaseMapper<T> {
   @override Function get typeFactory => (f) => f<T>();
 }
 
-class _EnumMapper<T> extends CustomMapper<T> {
+class _EnumMapper<T> extends SimpleMapper<T> {
   _EnumMapper(this._decoder, this._encoder);
   
   final T Function(String value) _decoder;
@@ -226,14 +225,14 @@ class MapperException implements Exception {
   String toString() => 'MapperException: $message';
 }
 
-
 class TypeInfo {
   String type = '';
   List<TypeInfo> params = [];
+  bool isNullable = false;
   TypeInfo? parent;
 
   @override
-  String toString() => '$type${params.isNotEmpty ? '<${params.join(', ')}>' : ''}';
+  String toString() => '$type${params.isNotEmpty ? '<${params.join(', ')}>${isNullable ? '?' : ''}' : ''}';
 }
 
 TypeInfo getTypeInfoFor(dynamic value) {
@@ -266,6 +265,8 @@ TypeInfo getTypeInfo<T>([String? type]) {
       curr = curr.parent!;
       curr.params.add(t..parent = curr);
       curr = t;
+    } else if (c == '?') {
+      curr.isNullable = true;
     } else {
       curr.type += c;
     }

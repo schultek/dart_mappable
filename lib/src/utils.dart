@@ -8,6 +8,7 @@ const enumChecker = TypeChecker.fromRuntime(MappableEnum);
 const constructorChecker = TypeChecker.fromRuntime(MappableConstructor);
 const classChecker = TypeChecker.fromRuntime(MappableClass);
 const fieldChecker = TypeChecker.fromRuntime(MappableField);
+const customMapperChecker = TypeChecker.fromRuntime(CustomMapper);
 
 String? getAnnotationCode(
     Element annotatedElement, Type annotationType, String property) {
