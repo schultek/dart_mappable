@@ -4,13 +4,13 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 
-import 'annotations.dart';
-import 'builder_options.dart';
-import 'case_style.dart';
-import 'utils.dart';
+import '../builder_options.dart';
+import '../core/annotations.dart';
+import '../core/case_style.dart';
+import '../utils.dart';
 
 /// Generates code for a specific class
-class ClassMapper {
+class ClassMapperBuilder {
   ClassElement element;
 
   late final CaseStyle? caseStyle;
@@ -19,8 +19,8 @@ class ClassMapper {
   late String? discriminatorValueCode;
   late int generateMethods;
 
-  ClassMapper? superMapper;
-  List<ClassMapper> subMappers = [];
+  ClassMapperBuilder? superMapper;
+  List<ClassMapperBuilder> subMappers = [];
 
   bool usesFieldHooks = false;
 
@@ -31,7 +31,7 @@ class ClassMapper {
 
   bool get isSuperMapper => subMappers.isNotEmpty;
 
-  ClassMapper(this.element, LibraryOptions options) {
+  ClassMapperBuilder(this.element, LibraryOptions options) {
     var annotation = classChecker.firstAnnotationOf(element);
 
     caseStyle = annotation?.getField('caseStyle')!.toStringValue() != null
@@ -99,7 +99,7 @@ class ClassMapper {
     return (generateMethods & method) != 0;
   }
 
-  void setSuperMapper(ClassMapper mapper) {
+  void setSuperMapper(ClassMapperBuilder mapper) {
     superMapper = mapper;
     discriminatorKey ??= superMapper!.discriminatorKey;
     if (!element.isAbstract) {
@@ -121,7 +121,7 @@ class ClassMapper {
     if (superMapper != null && superParams[param.name] != null) {
       return superMapper!.jsonKey(superParams[param.name]!);
     }
-    return toCaseStyle(param.name, caseStyle);
+    return caseStyle.transform(param.name);
   }
 
   String? hookForParam(ParameterElement param) {
@@ -411,7 +411,8 @@ class ClassMapper {
   String _generateMappingEntries() {
     List<String> params = [];
 
-    PropertyAccessorElement? findGetter(String name, ClassMapper mapper) {
+    PropertyAccessorElement? findGetter(
+        String name, ClassMapperBuilder mapper) {
       var g = mapper.element.getGetter(name);
       if (g != null) {
         return g;
@@ -486,7 +487,7 @@ class ClassMapper {
   String _generateStringParams() {
     List<String> params = [];
 
-    void addFieldsForMapper(ClassMapper mapper) {
+    void addFieldsForMapper(ClassMapperBuilder mapper) {
       if (mapper.superMapper != null) {
         addFieldsForMapper(mapper.superMapper!);
       }
@@ -601,8 +602,8 @@ class ClassMapper {
 
     var node = constructor.session!
         .getParsedLibraryByElement(constructor.library)
-        .getElementDeclaration(constructor)!
-        .node;
+        .getElementDeclaration(constructor)
+        ?.node;
 
     if (node is ConstructorDeclaration) {
       if (node.initializers.isNotEmpty) {

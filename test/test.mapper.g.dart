@@ -1,12 +1,58 @@
-// ignore_for_file: unnecessary_cast, prefer_relative_imports, unused_element
 import 'dart:convert';
-import 'models/polymorphism.dart';
-import 'models/model.dart';
-import 'models/inheritance.dart';
-import 'models/custom.dart';
+
 import 'package:dart_mappable/dart_mappable.dart';
 
-// === GENERATED MAPPER CLASSES AND EXTENSIONS ===
+import 'models/custom.dart';
+import 'models/external.dart';
+import 'models/inheritance.dart';
+import 'models/model.dart';
+import 'models/polymorphism.dart';
+
+
+// === ALL STATICALLY REGISTERED MAPPERS ===
+
+var _mappers = <String, BaseMapper>{
+  // primitive mappers
+  _typeOf<dynamic>():  PrimitiveMapper((dynamic v) => v),
+  _typeOf<String>():   PrimitiveMapper<String>((dynamic v) => v.toString()),
+  _typeOf<int>():      PrimitiveMapper<int>((dynamic v) => num.parse(v.toString()).round()),
+  _typeOf<double>():   PrimitiveMapper<double>((dynamic v) => double.parse(v.toString())),
+  _typeOf<num>():      PrimitiveMapper<num>((dynamic v) => num.parse(v.toString())),
+  _typeOf<bool>():     PrimitiveMapper<bool>((dynamic v) => v is num ? v != 0 : v.toString() == 'true'),
+  _typeOf<DateTime>(): DateTimeMapper(),
+  _typeOf<List>():     IterableMapper<List>(<T>(Iterable<T> i) => i.toList(), <T>(f) => f<List<T>>()),
+  _typeOf<Set>():      IterableMapper<Set>(<T>(Iterable<T> i) => i.toSet(), <T>(f) => f<Set<T>>()),
+  _typeOf<Map>():      MapMapper<Map>(<K, V>(Map<K, V> map) => map, <K, V>(f) => f<Map<K, V>>()),
+  // class mappers
+  _typeOf<Animal>(): AnimalMapper._(),
+  _typeOf<Cat>(): CatMapper._(),
+  _typeOf<Dog>(): DogMapper._(),
+  _typeOf<NullAnimal>(): NullAnimalMapper._(),
+  _typeOf<DefaultAnimal>(): DefaultAnimalMapper._(),
+  _typeOf<MyPrivateClass>(): MyPrivateClassMapper._(),
+  _typeOf<Person>(): PersonMapper._(),
+  _typeOf<Car>(): CarMapper._(),
+  _typeOf<Box>(): BoxMapper._(),
+  _typeOf<Confetti>(): ConfettiMapper._(),
+  _typeOf<Game>(): GameMapper._(),
+  _typeOf<Player>(): PlayerMapper._(),
+  _typeOf<CheckBoard>(): CheckBoardMapper._(),
+  _typeOf<Clothes>(): ClothesMapper._(),
+  _typeOf<SummerClothes>(): SummerClothesMapper._(),
+  _typeOf<TShirt>(): TShirtMapper._(),
+  _typeOf<Jeans>(): JeansMapper._(),
+  _typeOf<Shorts>(): ShortsMapper._(),
+  _typeOf<Top>(): TopMapper._(),
+  _typeOf<GenericBox>(): GenericBoxMapper._(),
+  // enum mappers
+  _typeOf<Brand>(): EnumMapper<Brand>(BrandMapper.fromString, (Brand b) => b.toStringValue()),
+  // custom mappers
+  _typeOf<MyPrivateClass>(): PrivateClassMapper(),
+  _typeOf<GenericBox>(): CustomGenericMapper(),
+};
+
+
+// === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
 class AnimalMapper extends BaseMapper<Animal> {
   AnimalMapper._();
@@ -127,6 +173,29 @@ extension DefaultAnimalMapperExtension on DefaultAnimal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   DefaultAnimal copyWith({String? name, String? type}) => DefaultAnimal(name ?? this.name, type ?? this.type);
+}
+
+class MyPrivateClassMapper extends BaseMapper<MyPrivateClass> {
+  MyPrivateClassMapper._();
+
+  @override Function get decoder => decode;
+  MyPrivateClass decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  MyPrivateClass fromMap(Map<String, dynamic> map) => MyPrivateClass();
+
+  @override Function get encoder => (MyPrivateClass v) => toMap(v);
+  Map<String, dynamic> toMap(MyPrivateClass m) => {};
+
+  @override String? stringify(MyPrivateClass self) => 'MyPrivateClass()';
+  @override int? hash(MyPrivateClass self) => 0;
+  @override bool? equals(MyPrivateClass self, MyPrivateClass other) => true;
+
+  @override Function get typeFactory => (f) => f<MyPrivateClass>();
+}
+
+extension MyPrivateClassMapperExtension on MyPrivateClass {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  MyPrivateClass copy() => MyPrivateClass();
 }
 
 class PersonMapper extends BaseMapper<Person> {
@@ -428,29 +497,6 @@ extension TopMapperExtension on Top {
   Top copyWith({int? length, int? size, String? color, Map<String, dynamic>? unmappedProps}) => Top(length ?? this.length, size ?? this.size, color ?? this.color, unmappedProps ?? this.unmappedProps);
 }
 
-class PrivateClassMapperMapper extends BaseMapper<PrivateClassMapper> {
-  PrivateClassMapperMapper._();
-
-  @override Function get decoder => decode;
-  PrivateClassMapper decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
-  PrivateClassMapper fromMap(Map<String, dynamic> map) => PrivateClassMapper();
-
-  @override Function get encoder => (PrivateClassMapper v) => toMap(v);
-  Map<String, dynamic> toMap(PrivateClassMapper p) => {};
-
-  @override String? stringify(PrivateClassMapper self) => 'PrivateClassMapper()';
-  @override int? hash(PrivateClassMapper self) => 0;
-  @override bool? equals(PrivateClassMapper self, PrivateClassMapper other) => true;
-
-  @override Function get typeFactory => (f) => f<PrivateClassMapper>();
-}
-
-extension PrivateClassMapperMapperExtension on PrivateClassMapper {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PrivateClassMapper copy() => PrivateClassMapper();
-}
-
 class GenericBoxMapper extends BaseMapper<GenericBox> {
   GenericBoxMapper._();
 
@@ -474,28 +520,8 @@ extension GenericBoxMapperExtension<T> on GenericBox<T> {
   GenericBox<T> copyWith({T? content}) => GenericBox(content ?? this.content);
 }
 
-class CustomGenericMapperMapper extends BaseMapper<CustomGenericMapper> {
-  CustomGenericMapperMapper._();
 
-  @override Function get decoder => decode;
-  CustomGenericMapper decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
-  CustomGenericMapper fromMap(Map<String, dynamic> map) => CustomGenericMapper();
-
-  @override Function get encoder => (CustomGenericMapper v) => toMap(v);
-  Map<String, dynamic> toMap(CustomGenericMapper c) => {};
-
-  @override String? stringify(CustomGenericMapper self) => 'CustomGenericMapper(decoder: ${self.decoder}, encoder: ${self.encoder})';
-  @override int? hash(CustomGenericMapper self) => 0;
-  @override bool? equals(CustomGenericMapper self, CustomGenericMapper other) => true;
-
-  @override Function get typeFactory => (f) => f<CustomGenericMapper>();
-}
-
-extension CustomGenericMapperMapperExtension on CustomGenericMapper {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CustomGenericMapper copy() => CustomGenericMapper();
-}
+// === GENERATED ENUM MAPPERS AND EXTENSIONS ===
 
 extension BrandMapper on Brand {
   static Brand fromString(String value) {
@@ -506,6 +532,7 @@ extension BrandMapper on Brand {
       default: return Brand.values[1];
     }
   }
+
   String toStringValue() {
     switch (this) {
       case Brand.Toyota: return 'toyota';
@@ -516,62 +543,9 @@ extension BrandMapper on Brand {
 }
 
 
+// === GENERATED UTILITY CODE ===
 
-// === ALL STATICALLY REGISTERED MAPPERS ===
-
-var _mappers = <String, Mapper>{
-  // primitive mappers
-  _typeOf<dynamic>():  _PrimitiveMapper((dynamic v) => v),
-  _typeOf<String>():   _PrimitiveMapper<String>((dynamic v) => v.toString()),
-  _typeOf<int>():      _PrimitiveMapper<int>((dynamic v) => num.parse(v.toString()).round()),
-  _typeOf<double>():   _PrimitiveMapper<double>((dynamic v) => double.parse(v.toString())),
-  _typeOf<num>():      _PrimitiveMapper<num>((dynamic v) => num.parse(v.toString())),
-  _typeOf<bool>():     _PrimitiveMapper<bool>((dynamic v) => v is num ? v != 0 : v.toString() == 'true'),
-  _typeOf<DateTime>(): _DateTimeMapper(),
-  _typeOf<List>():     IterableMapper<List>(<T>(Iterable<T> i) => i.toList(), <T>(f) => f<List<T>>()),
-  _typeOf<Set>():      IterableMapper<Set>(<T>(Iterable<T> i) => i.toSet(), <T>(f) => f<Set<T>>()),
-  _typeOf<Map>():      MapMapper<Map>(<K, V>(Map<K, V> map) => map, <K, V>(f) => f<Map<K, V>>()),
-  // generated mappers
-  _typeOf<Animal>(): AnimalMapper._(),
-  _typeOf<Cat>(): CatMapper._(),
-  _typeOf<Dog>(): DogMapper._(),
-  _typeOf<NullAnimal>(): NullAnimalMapper._(),
-  _typeOf<DefaultAnimal>(): DefaultAnimalMapper._(),
-  _typeOf<Person>(): PersonMapper._(),
-  _typeOf<Car>(): CarMapper._(),
-  _typeOf<Box>(): BoxMapper._(),
-  _typeOf<Confetti>(): ConfettiMapper._(),
-  _typeOf<Game>(): GameMapper._(),
-  _typeOf<Player>(): PlayerMapper._(),
-  _typeOf<CheckBoard>(): CheckBoardMapper._(),
-  _typeOf<Clothes>(): ClothesMapper._(),
-  _typeOf<SummerClothes>(): SummerClothesMapper._(),
-  _typeOf<TShirt>(): TShirtMapper._(),
-  _typeOf<Jeans>(): JeansMapper._(),
-  _typeOf<Shorts>(): ShortsMapper._(),
-  _typeOf<Top>(): TopMapper._(),
-  _typeOf<PrivateClassMapper>(): PrivateClassMapperMapper._(),
-  _typeOf<GenericBox>(): GenericBoxMapper._(),
-  _typeOf<CustomGenericMapper>(): CustomGenericMapperMapper._(),
-
-  _typeOf<Brand>(): _EnumMapper<Brand>(BrandMapper.fromString, (Brand b) => b.toStringValue()),
-
-  _typeOf<MyPrivateClass>(): PrivateClassMapper(),
-  _typeOf<GenericBox>(): CustomGenericMapper(),
-
-};
-
-// === GENERATED UTILITY CLASSES ===
-
-abstract class Mapper<T> {
-  Function? get encoder;
-  Function? get decoder;
-  Function? get typeFactory;
-  
-  String? stringify(T self);
-  int? hash(T self);
-  bool? equals(T self, T other);
-
+class Mapper<T> {
   Mapper._();
 
   static T fromValue<T>(dynamic value) {
@@ -654,8 +628,8 @@ abstract class Mapper<T> {
     return _mappers[type]?.stringify(value) ?? value.toString();
   }
 
-  static void use<T>(Mapper<T> mapper) => _mappers[_typeOf<T>()] = mapper;
-  static Mapper<T>? unuse<T>() => _mappers.remove(_typeOf<T>()) as Mapper<T>?;
+  static void use<T>(BaseMapper<T> mapper) => _mappers[_typeOf<T>()] = mapper;
+  static BaseMapper<T>? unuse<T>() => _mappers.remove(_typeOf<T>()) as BaseMapper<T>?;
 }
 
 String _typeOf<T>([Type? t]) {
@@ -670,7 +644,7 @@ void _clearType(Map<String, dynamic> map) {
 }
 
 mixin Mappable {
-  Mapper? get _mapper => _mappers[_typeOf(runtimeType)];
+  BaseMapper? get _mapper => _mappers[_typeOf(runtimeType)];
 
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
@@ -688,29 +662,7 @@ T _checked<T, U>(dynamic v, T Function(U) fn) {
   }
 }
 
-abstract class BaseMapper<T> implements Mapper<T> {
-  const BaseMapper();
-  
-  @override Function? get decoder => null;
-  @override Function? get encoder => null;
-  @override Function? get typeFactory => null;
-  
-  @override bool? equals(T self, T other) => null;
-  @override int? hash(T self) => null;
-  @override String? stringify(T self) => null;
-}
-
-abstract class SimpleMapper<T> extends BaseMapper<T> {
- @override Function get encoder => encode;
- dynamic encode(T self);
- 
- @override Function get decoder => decode;
- T decode(dynamic value);
- 
- @override Function get typeFactory => (f) => f<T>();
-}
-
-class _DateTimeMapper extends SimpleMapper<DateTime> {
+class DateTimeMapper extends SimpleMapper<DateTime> {
 
   @override
   DateTime decode(dynamic d) {
@@ -747,80 +699,22 @@ class MapMapper<M extends Map> extends BaseMapper<M> {
   @override Function typeFactory;
 }
 
-class _PrimitiveMapper<T> extends BaseMapper<T> {
-  const _PrimitiveMapper(this.decoder);
+class PrimitiveMapper<T> extends BaseMapper<T> {
+  const PrimitiveMapper(this.decoder);
   
   @override final T Function(dynamic value) decoder;
   @override Function get encoder => (T value) => value;
   @override Function get typeFactory => (f) => f<T>();
 }
 
-class _EnumMapper<T> extends SimpleMapper<T> {
-  _EnumMapper(this._decoder, this._encoder);
+class EnumMapper<T> extends SimpleMapper<T> {
+  EnumMapper(this._decoder, this._encoder);
   
   final T Function(String value) _decoder;
   final String Function(T value) _encoder;
   
   @override T decode(dynamic v) => _checked(v, _decoder);
   @override dynamic encode(T value) => _encoder(value);
-}
-
-class MapperException implements Exception {
-  final String message;
-  const MapperException(this.message);
-
-  @override
-  String toString() => 'MapperException: $message';
-}
-
-class TypeInfo {
-  String type = '';
-  List<TypeInfo> params = [];
-  bool isNullable = false;
-  TypeInfo? parent;
-
-  @override
-  String toString() => '$type${params.isNotEmpty ? '<${params.join(', ')}>${isNullable ? '?' : ''}' : ''}';
-}
-
-TypeInfo getTypeInfoFor(dynamic value) {
-  var info = getTypeInfo(value.runtimeType.toString());
-  if (value is List) {
-    return info..type = 'List';
-  } else if (value is Map) {
-    return info..type = 'Map';
-  } else {
-    return info;
-  }
-}
-
-TypeInfo getTypeInfo<T>([String? type]) {
-  var typeString = type ?? T.toString();
-  var curr = TypeInfo();
-
-  for (var i = 0; i < typeString.length; i++) {
-    var c = typeString[i];
-    if (c == '<') {
-      var t = TypeInfo();
-      curr.params.add(t..parent = curr);
-      curr = t;
-    } else if (c == '>') {
-      curr = curr.parent!;
-    } else if (c == ' ') {
-      continue;
-    } else if (c == ',') {
-      var t = TypeInfo();
-      curr = curr.parent!;
-      curr.params.add(t..parent = curr);
-      curr = t;
-    } else if (c == '?') {
-      curr.isNullable = true;
-    } else {
-      curr.type += c;
-    }
-  }
-
-  return curr;
 }
 
 dynamic genericCall(TypeInfo info, Function fn, dynamic value) {
@@ -847,6 +741,7 @@ dynamic genericCall(TypeInfo info, Function fn, dynamic value) {
     throw MapperException('Cannot construct generic wrapper for type $info. Mapper only supports generic classes with up to 3 type arguments.');
   }
 }
+
 T _hookedDecode<T>(MappingHooks hooks, dynamic value, T Function(dynamic value) fn) {
   var v = hooks.beforeDecode(value);
   if (v is! T) v = fn(v);
@@ -857,6 +752,7 @@ dynamic _hookedEncode<T>(MappingHooks hooks, T value, dynamic Function(T value) 
   if (v is T) v = fn(v);
   return hooks.afterEncode(v);
 }
+
 dynamic _toValue(dynamic value, {MappingHooks? hooks}) {
   if (hooks == null) {
     return Mapper.toValue(value);
@@ -865,7 +761,7 @@ dynamic _toValue(dynamic value, {MappingHooks? hooks}) {
   }
 }
 
-extension on Map<String, dynamic> {
+extension MapGet on Map<String, dynamic> {
   T get<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
     if (v == null) {
       throw MapperException('Parameter $key is required.');
@@ -886,8 +782,7 @@ extension on Map<String, dynamic> {
     } else if (v is! List) {
       throw MapperException('Parameter $v with key $key is not a List');
     }
-    List value = v as List<dynamic>;
-    return value.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
+    return v.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
   });
 
   List<T>? getListOpt<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
@@ -896,8 +791,7 @@ extension on Map<String, dynamic> {
     } else if (v is! List) {
       throw MapperException('Parameter $v with key $key is not a List');
     }
-    List value = v as List<dynamic>;
-    return value.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
+    return v.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
   });
 
   Map<K, V> getMap<K, V>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
@@ -906,8 +800,7 @@ extension on Map<String, dynamic> {
     } else if (v is! Map) {
       throw MapperException('Parameter $v with key $key is not a Map');
     }
-    Map value = v as Map<dynamic, dynamic>;
-    return value.map((dynamic key, dynamic value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
+    return v.map((dynamic key, dynamic value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
   });
 
   Map<K, V>? getMapOpt<K, V>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
@@ -916,8 +809,7 @@ extension on Map<String, dynamic> {
     } else if (v is! Map) {
       throw MapperException('Parameter $v with key $key is not a Map');
     }
-    Map value = v as Map<dynamic, dynamic>;
-    return value.map((dynamic key, dynamic value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
+    return v.map((dynamic key, dynamic value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
   });
 
   T hooked<T>(MappingHooks? hooks, String key, T Function(dynamic v) fn) {

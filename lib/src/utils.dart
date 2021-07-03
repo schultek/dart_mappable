@@ -1,14 +1,18 @@
+import 'dart:collection';
+
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:source_gen/source_gen.dart';
 
-import 'annotations.dart';
+import 'core/annotations.dart';
+import 'core/mappers.dart';
 
 const enumChecker = TypeChecker.fromRuntime(MappableEnum);
 const constructorChecker = TypeChecker.fromRuntime(MappableConstructor);
 const classChecker = TypeChecker.fromRuntime(MappableClass);
 const fieldChecker = TypeChecker.fromRuntime(MappableField);
 const customMapperChecker = TypeChecker.fromRuntime(CustomMapper);
+const mapperChecker = TypeChecker.fromRuntime(BaseMapper);
 
 String? getAnnotationCode(
     Element annotatedElement, Type annotationType, String property) {
@@ -84,5 +88,46 @@ class Computed<T> {
       _didCompute = true;
     }
     return _value as T;
+  }
+}
+
+class UnusedPropertiesMap with MapMixin<String, dynamic> {
+  Map<String, dynamic> wrapped;
+  Map<String, dynamic> unused;
+
+  String key;
+
+  UnusedPropertiesMap.of(this.wrapped, {required this.key})
+      : unused = {...wrapped};
+
+  @override
+  dynamic operator [](Object? key) {
+    if (key == this.key) {
+      return unused;
+    } else {
+      unused.remove(key);
+      return wrapped[key];
+    }
+  }
+
+  @override
+  void operator []=(String key, dynamic value) {
+    unused[key] = value;
+    wrapped[key] = value;
+  }
+
+  @override
+  void clear() {
+    unused.clear();
+    wrapped.clear();
+  }
+
+  @override
+  Iterable<String> get keys => wrapped.keys;
+
+  @override
+  dynamic remove(Object? key) {
+    unused.remove(key);
+    wrapped.remove(key);
   }
 }

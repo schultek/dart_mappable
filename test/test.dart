@@ -1,6 +1,8 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
 import 'models/custom.dart';
+import 'models/external.dart';
 import 'models/inheritance.dart';
 import 'models/model.dart';
 import 'models/polymorphism.dart';
@@ -191,6 +193,14 @@ void main() {
       i = Mapper.fromValue('2');
 
       expect(i, equals(2));
+    });
+
+    test('Generic custom Mapper', () {
+      GenericBox<int> box = Mapper.fromValue('2');
+      expect(box.content, equals(2));
+
+      var json = box.toJson();
+      expect(json, equals('2'));
     });
   });
 }

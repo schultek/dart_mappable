@@ -1,4 +1,4 @@
-import 'package:dart_mappable/src/annotations.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
 import '../test.mapper.g.dart';
 

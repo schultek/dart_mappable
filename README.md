@@ -37,16 +37,20 @@ Sounds too good to be true? Not anymore.
 
 > This package is still in active development. If you have any feedback or feature requests, write me and issue on github.
 
-## Get Started
+### TODOs
 
-This package is designed to be purely usable as a `dev_dependency` for an ultra-quick setup. No need to import this package anywhere in your code.
-Then, when you need more fine control and special use-cases, you can switch to a normal dependency to enable the full functionality of this package.
+- Different copyWith modi (Basic, Optional, Advanced)
+- Choose properties for toString / equals
+- Use CaseStyle type in annotations
+
+## Get Started
 
 To get started, add the following lines to your `pubspec.yaml`:
 
 ```yaml
+dependencies:
+  dart_mappable: ^0.6.0
 dev_dependencies:
-  dart_mappable: ^0.5.1
   build_runner: ^1.12.2
 ```
 
@@ -69,7 +73,7 @@ In order to generate the serialization code, run the following command:
 pub run build_runner build
 ```
 
-You'll need to re-run code generation each time you are making changes to your code. So for development time, use watch like this
+You'll need to re-run code generation each time you are making changes to your code. So for development time, use `watch` like this
 
 ```shell script
 pub run build_runner watch
@@ -85,15 +89,20 @@ Last step is to `import` the generated files wherever you want / need them.
 
 You can use this package and configure the code generation in two different ways. 
 
-On a global, or library-specific level use the **Builder Config**. To configure class-specific options, use **Annotations**.
-You can use either of them, or mix them as you like. 
+- On a global, or library-specific level use the [Builder Config](#builder-config). 
+- To configure class-specific options, use [Annotations](#annotations).
 
-When using **Annotations** you have to use this package as a normal dependency - instead of as a `dev_dependency`!
+You can use either of them, or mix them as you like. 
 
 ### Builder Config
 
-Instead of clustering your code with annotations, this package uses builder options inside your `build.yaml` file 
-to specify how your classes should behave when serializing / deserializing. All options are optional!
+This package uses a variety builder options inside your `build.yaml` file 
+to specify how your classes should behave when serializing / deserializing. There are a few key-aspects when using build options:
+
+1. All options are optional!
+2. Options are inherited by libraries and classes. This means that you can e.g. specify the case style on global, library or class level. 
+3. Options on deeper levels override higher level options.
+4. Most general properties that you set in the **Builder Config** can be overridden on a class-by-class basis with [Annotations](#annotations).
 
 ```yaml
 targets:
@@ -133,13 +142,9 @@ targets:
               caseStyle: custom(lc,+) # here: set a custom case style (see below)
 ```
 
-Options are inherited by libraries and classes. This means that you can e.g. specify the case style on global, library or class level. 
-Options on deeper levels override higher level options.
-Most general properties that you set in the **Builder Config** can be overridden on a class-by-class basis with **Annotations**.
-
 ### Annotations
 
-In some cases it is easier to use **Annotations** on classes, that require some special configurations. Make sure to use this package as a normal `dependency` to enable **Annotations**.  
+In some cases it is easier to use **Annotations** on classes, that require some special configurations.
 
 There are a total of **five** Annotations that you can use in your code:
 
@@ -211,8 +216,7 @@ class Event {
 > Tip regarding the matching getters: Not-having them won't break your code. 
 > However this will lead to desynched serialization (keys missing in your json) and eventually to errors when trying to deserialize back.
 
-> Tip: dart_mappable will always use the first constructor it sees, but you can use a specific constructor using the `MappableConstructor()` annotation.
-
+> Tip: dart_mappable will always use the first constructor it sees, but you can use a specific constructor using the `@MappableConstructor()` annotation.
 
 ## Case Styles
 
@@ -472,8 +476,8 @@ When both the superclass and the subclass define class-hooks, both are applied i
 A frequently needed use-case for hooks is to catch additional, unmapped properties from json when decoding an object. 
 Because of this, we provide a ready-to-use `MappingHook` called `UnmappedPropertiesHooks`.
 
-To use this hook, define a `Map<String, dynamic` field in your class, and provide it's name to the `UnmappedPropertiesHooks` constructor. 
-Be aware that you have to provide the matching json key of the field (after applying the case style, etc.) instead of the field name.
+To use this hook, define a `Map<String, dynamic>` field in your class, and provide it's name to the `UnmappedPropertiesHooks` constructor. 
+Be aware that you have to provide the matching json key of the field (after applying the case style, etc.) instead of the dart field name.
 
 ```dart
 @MappableClass(hooks: UnmappedPropertiesHooks('unmapped_props'))

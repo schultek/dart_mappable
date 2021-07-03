@@ -1,21 +1,6 @@
 final splitter = RegExp(r'[ ./_\-\\]+|(?<=[a-z])(?=[A-Z])');
 final customCase = RegExp(r'^custom\(([luc][luc]?)?,(.?)\)$');
 
-/// Transforms a [String] to the given [CaseStyle]
-String toCaseStyle(String text, CaseStyle? style) {
-  if (style == null) return text;
-  var words = text.split(splitter);
-  if (style.head != null) {
-    words = [
-      words[0].transform(style.head),
-      ...words.skip(1).map((w) => w.transform(style.tail))
-    ];
-  } else if (style.tail != null) {
-    words = words.map((w) => w.transform(style.tail)).toList();
-  }
-  return words.join(style.separator);
-}
-
 /// Used to transform fields to a specific case style
 class CaseStyle {
   const CaseStyle({this.head, this.tail, this.separator = ''});
@@ -61,10 +46,10 @@ class CaseStyle {
 
         var transforms = match.group(1)!;
         if (transforms.length == 1) {
-          tail = parseTransform(transforms);
+          tail = TextTransformParser.parse(transforms);
         } else if (transforms.length == 2) {
-          head = parseTransform(transforms[0]);
-          tail = parseTransform(transforms[1]);
+          head = TextTransformParser.parse(transforms[0]);
+          tail = TextTransformParser.parse(transforms[1]);
         }
 
         separator = match.group(2)!;
@@ -102,43 +87,66 @@ class CaseStyle {
   static const upperCase = CaseStyle(tail: TextTransform.upperCase);
 }
 
+extension CaseStyleTransform on CaseStyle? {
+  /// Transforms a [String] to the given [CaseStyle]
+  String transform(String text) {
+    var style = this;
+    if (style == null) {
+      return text;
+    } else {
+      var words = text.split(splitter);
+      if (style.head != null) {
+        words = [
+          style.head.transform(words[0]),
+          ...words.skip(1).map((w) => style.tail.transform(w))
+        ];
+      } else if (style.tail != null) {
+        words = words.map((w) => style.tail.transform(w)).toList();
+      }
+      return words.join(style.separator);
+    }
+  }
+}
+
 /// Text transformation applied to a single word
 enum TextTransform { upperCase, lowerCase, capitalCase }
 
-TextTransform? parseTransform(String value) {
-  switch (value) {
-    case 'l':
-      return TextTransform.lowerCase;
-    case 'u':
-      return TextTransform.upperCase;
-    case 'c':
-      return TextTransform.capitalCase;
-    default:
-      return null;
+extension TextTransformParser on TextTransform {
+  static TextTransform? parse(String value) {
+    switch (value) {
+      case 'l':
+        return TextTransform.lowerCase;
+      case 'u':
+        return TextTransform.upperCase;
+      case 'c':
+        return TextTransform.capitalCase;
+      default:
+        return null;
+    }
+  }
+
+  String asString() {
+    switch (this) {
+      case TextTransform.lowerCase:
+        return 'lower';
+      case TextTransform.upperCase:
+        return 'upper';
+      case TextTransform.capitalCase:
+        return 'capital';
+    }
   }
 }
 
-String tranToString(TextTransform tr) {
-  switch (tr) {
-    case TextTransform.lowerCase:
-      return 'lower';
-    case TextTransform.upperCase:
-      return 'upper';
-    case TextTransform.capitalCase:
-      return 'capital';
-  }
-}
-
-extension on String {
-  String transform(TextTransform? t) {
-    if (t == TextTransform.upperCase) {
-      return toUpperCase();
-    } else if (t == TextTransform.lowerCase) {
-      return toLowerCase();
-    } else if (t == TextTransform.capitalCase) {
-      return this[0].toUpperCase() + substring(1).toLowerCase();
+extension TextTransformer on TextTransform? {
+  String transform(String text) {
+    if (this == TextTransform.upperCase) {
+      return text.toUpperCase();
+    } else if (this == TextTransform.lowerCase) {
+      return text.toLowerCase();
+    } else if (this == TextTransform.capitalCase) {
+      return text[0].toUpperCase() + text.substring(1).toLowerCase();
     } else {
-      return this;
+      return text;
     }
   }
 }

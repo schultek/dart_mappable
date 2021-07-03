@@ -1,16 +1,13 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../test.mapper.g.dart';
-
-class MyPrivateClass {
-  MyPrivateClass._();
-}
+import 'external.dart';
 
 @CustomMapper()
 class PrivateClassMapper extends SimpleMapper<MyPrivateClass> {
   @override
   MyPrivateClass decode(dynamic value) {
-    return MyPrivateClass._();
+    return MyPrivateClass();
   }
 
   @override

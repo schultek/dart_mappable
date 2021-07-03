@@ -1,3 +1,6 @@
 library dart_mappable;
 
-export 'src/annotations.dart';
+export 'src/core/annotations.dart';
+export 'src/core/case_style.dart';
+export 'src/core/hooks.dart';
+export 'src/core/mappers.dart';

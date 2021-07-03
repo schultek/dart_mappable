@@ -1,12 +1,11 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:indent/indent.dart';
 
-import 'builder_options.dart';
-import 'case_style.dart';
-import 'utils.dart';
+import '../builder_options.dart';
+import '../core/case_style.dart';
+import '../utils.dart';
 
 /// Generates code for a specific enum
-class EnumMapper {
+class EnumMapperBuilder {
   ClassElement element;
 
   late final CaseStyle? caseStyle;
@@ -16,7 +15,7 @@ class EnumMapper {
   String get mapperName => '${className}Mapper';
   String get paramName => className[0].toLowerCase();
 
-  EnumMapper(this.element, LibraryOptions options) {
+  EnumMapperBuilder(this.element, LibraryOptions options) {
     var annotation = enumChecker.firstAnnotationOf(element);
 
     caseStyle = annotation?.getField('caseStyle')!.toStringValue() != null
@@ -31,24 +30,23 @@ class EnumMapper {
   String generateExtensionCode() {
     var values = element.fields
         .where((f) => f.isEnumConstant)
-        .map((f) => MapEntry(f.name, toCaseStyle(f.name, caseStyle)));
+        .map((f) => MapEntry(f.name, caseStyle.transform(f.name)));
 
-    return '''
-      extension $mapperName on $className {
-        static $className fromString(String value) {
-          switch (value) {
-            ${values.map((v) => "case '${v.value}': return $className.${v.key};").join("\n            ")}
-            default: ${_generateDefaultCase()}
-          }
-        }
-        String toStringValue() {
-          switch (this) {
-            ${values.map((v) => "case $className.${v.key}: return '${v.value}';").join("\n            ")}
-          }
-        }
-      }
-    '''
-        .unindent();
+    return ''
+        'extension $mapperName on $className {\n'
+        '  static $className fromString(String value) {\n'
+        '    switch (value) {\n'
+        '      ${values.map((v) => "case '${v.value}': return $className.${v.key};").join("\n      ")}\n'
+        '      default: ${_generateDefaultCase()}\n'
+        '    }\n'
+        '  }\n'
+        '\n'
+        '  String toStringValue() {\n'
+        '    switch (this) {\n'
+        '      ${values.map((v) => "case $className.${v.key}: return '${v.value}';").join("\n      ")}\n'
+        '    }\n'
+        '  }\n'
+        '}';
   }
 
   String _generateDefaultCase() {

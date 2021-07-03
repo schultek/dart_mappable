@@ -1,3 +1,7 @@
+# 0.6.0
+
+- Removed usage-support as dev_dependency in favor of safer generation
+
 # 0.5.1
 
 - Added @CustomMapper annotation to auto-add custom mappers without needing to do `Mapper.use`
