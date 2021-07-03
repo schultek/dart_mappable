@@ -47,6 +47,8 @@ class TypeInfo {
     var info = fromType(value.runtimeType.toString());
     if (value is List) {
       return info..type = 'List';
+    } else if (value is Set) {
+      return info..type = 'Set';
     } else if (value is Map) {
       return info..type = 'Map';
     } else {

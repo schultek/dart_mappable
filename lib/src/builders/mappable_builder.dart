@@ -57,8 +57,11 @@ class MappableBuilder implements Builder {
       } else if (lib.isScheme('package') &&
           lib.pathSegments.first == buildStep.inputId.package) {
         var libPath = lib.replace(pathSegments: lib.pathSegments.skip(1)).path;
-        var relativePath = path.relative(libPath,
-            from: path.dirname(buildStep.inputId.uri.path));
+        var input = buildStep.inputId.uri;
+        var inputPath =
+            input.replace(pathSegments: input.pathSegments.skip(1)).path;
+        var relativePath =
+            path.relative(libPath, from: path.dirname(inputPath));
         imports.add(relativePath);
       } else {
         imports.add(lib.toString());
