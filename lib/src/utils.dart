@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:source_gen/source_gen.dart';
@@ -72,62 +70,5 @@ Iterable<ClassElement> elementsOf(LibraryElement element) sync* {
   for (var cu in element.units) {
     yield* cu.enums;
     yield* cu.types;
-  }
-}
-
-class Computed<T> {
-  T Function() computation;
-  Computed(this.computation);
-
-  bool _didCompute = false;
-  T? _value;
-
-  T get value {
-    if (!_didCompute) {
-      _value = computation();
-      _didCompute = true;
-    }
-    return _value as T;
-  }
-}
-
-class UnusedPropertiesMap with MapMixin<String, dynamic> {
-  Map<String, dynamic> wrapped;
-  Map<String, dynamic> unused;
-
-  String key;
-
-  UnusedPropertiesMap.of(this.wrapped, {required this.key})
-      : unused = {...wrapped};
-
-  @override
-  dynamic operator [](Object? key) {
-    if (key == this.key) {
-      return unused;
-    } else {
-      unused.remove(key);
-      return wrapped[key];
-    }
-  }
-
-  @override
-  void operator []=(String key, dynamic value) {
-    unused[key] = value;
-    wrapped[key] = value;
-  }
-
-  @override
-  void clear() {
-    unused.clear();
-    wrapped.clear();
-  }
-
-  @override
-  Iterable<String> get keys => wrapped.keys;
-
-  @override
-  dynamic remove(Object? key) {
-    unused.remove(key);
-    wrapped.remove(key);
   }
 }

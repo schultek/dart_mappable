@@ -1,3 +1,8 @@
+# 0.6.1
+
+- Fixed imports issue
+- Fixed platform analysis
+
 # 0.6.0
 
 - Removed usage-support as dev_dependency in favor of safer generation

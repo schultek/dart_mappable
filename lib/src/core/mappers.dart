@@ -42,44 +42,44 @@ class TypeInfo {
   @override
   String toString() =>
       '$type${params.isNotEmpty ? '<${params.join(', ')}>${isNullable ? '?' : ''}' : ''}';
-}
 
-TypeInfo getTypeInfoFor(dynamic value) {
-  var info = getTypeInfo(value.runtimeType.toString());
-  if (value is List) {
-    return info..type = 'List';
-  } else if (value is Map) {
-    return info..type = 'Map';
-  } else {
-    return info;
-  }
-}
-
-TypeInfo getTypeInfo<T>([String? type]) {
-  var typeString = type ?? T.toString();
-  var curr = TypeInfo();
-
-  for (var i = 0; i < typeString.length; i++) {
-    var c = typeString[i];
-    if (c == '<') {
-      var t = TypeInfo();
-      curr.params.add(t..parent = curr);
-      curr = t;
-    } else if (c == '>') {
-      curr = curr.parent!;
-    } else if (c == ' ') {
-      continue;
-    } else if (c == ',') {
-      var t = TypeInfo();
-      curr = curr.parent!;
-      curr.params.add(t..parent = curr);
-      curr = t;
-    } else if (c == '?') {
-      curr.isNullable = true;
+  static TypeInfo fromValue(dynamic value) {
+    var info = fromType(value.runtimeType.toString());
+    if (value is List) {
+      return info..type = 'List';
+    } else if (value is Map) {
+      return info..type = 'Map';
     } else {
-      curr.type += c;
+      return info;
     }
   }
 
-  return curr;
+  static TypeInfo fromType<T>([String? type]) {
+    var typeString = type ?? T.toString();
+    var curr = TypeInfo();
+
+    for (var i = 0; i < typeString.length; i++) {
+      var c = typeString[i];
+      if (c == '<') {
+        var t = TypeInfo();
+        curr.params.add(t..parent = curr);
+        curr = t;
+      } else if (c == '>') {
+        curr = curr.parent!;
+      } else if (c == ' ') {
+        continue;
+      } else if (c == ',') {
+        var t = TypeInfo();
+        curr = curr.parent!;
+        curr.params.add(t..parent = curr);
+        curr = t;
+      } else if (c == '?') {
+        curr.isNullable = true;
+      } else {
+        curr.type += c;
+      }
+    }
+
+    return curr;
+  }
 }

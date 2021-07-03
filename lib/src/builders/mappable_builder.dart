@@ -50,12 +50,18 @@ class MappableBuilder implements Builder {
 
     void addImport(LibraryElement library) {
       var lib = library.source.uri;
-      if (lib.isScheme('package')) {
-        imports.add(lib.toString());
-      } else {
+      if (lib.isScheme('asset')) {
         var relativePath = path.relative(lib.path,
             from: path.dirname(buildStep.inputId.uri.path));
         imports.add(relativePath);
+      } else if (lib.isScheme('package') &&
+          lib.pathSegments.first == buildStep.inputId.package) {
+        var libPath = lib.replace(pathSegments: lib.pathSegments.skip(1)).path;
+        var relativePath = path.relative(libPath,
+            from: path.dirname(buildStep.inputId.uri.path));
+        imports.add(relativePath);
+      } else {
+        imports.add(lib.toString());
       }
     }
 

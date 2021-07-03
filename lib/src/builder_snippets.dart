@@ -23,9 +23,9 @@ class Mapper<T> {
     } else {
       TypeInfo typeInfo;
       if (value is Map<String, dynamic> && value['__type'] != null) {
-        typeInfo = getTypeInfo(value['__type'] as String);
+        typeInfo = TypeInfo.fromType(value['__type'] as String);
       } else {
-        typeInfo = getTypeInfo<T>();
+        typeInfo = TypeInfo.fromType<T>();
       }
       var mapper = _mappers[typeInfo.type];
       if (mapper?.decoder != null) {
@@ -42,7 +42,7 @@ class Mapper<T> {
 
   static dynamic toValue(dynamic value) {
     if (value == null) return null;
-    var typeInfo = getTypeInfoFor(value);
+    var typeInfo = TypeInfo.fromValue(value);
     if (_mappers[typeInfo.type]?.encoder != null) {
       var encoded = _mappers[typeInfo.type]!.encoder!.call(value);
       if (encoded is Map<String, dynamic>) {
