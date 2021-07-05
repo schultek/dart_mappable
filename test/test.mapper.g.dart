@@ -68,9 +68,16 @@ class AnimalMapper extends BaseMapper<Animal> {
       default: return DefaultAnimalMapper._().decode(map);
     }
   });
-  Animal fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate abstract class Animal, did you forgot to specify a subclass for [ type: '${map['type']}' ] or a default subclass?");
+  Animal fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate class Animal, did you forgot to specify a subclass for [ type: '${map['type']}' ] or a default subclass?");
 
-  @override Function get encoder => (Animal v) => toMap(v);
+  @override Function get encoder => (Animal v) => encode(v);
+  dynamic encode(Animal v) {
+    if (v is Cat) { return CatMapper._().encode(v); }
+    else if (v is Dog) { return DogMapper._().encode(v); }
+    else if (v is NullAnimal) { return NullAnimalMapper._().encode(v); }
+    else if (v is DefaultAnimal) { return DefaultAnimalMapper._().encode(v); }
+    else { return toMap(v); }
+  }
   Map<String, dynamic> toMap(Animal a) => {'name': Mapper.toValue(a.name)};
 
   @override String? stringify(Animal self) => 'Animal(name: ${self.name})';
@@ -92,7 +99,8 @@ class CatMapper extends BaseMapper<Cat> {
   Cat decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Cat fromMap(Map<String, dynamic> map) => Cat(map.get('name'), map.get('color'));
 
-  @override Function get encoder => (Cat v) => toMap(v);
+  @override Function get encoder => (Cat v) => encode(v);
+  dynamic encode(Cat v) => toMap(v);
   Map<String, dynamic> toMap(Cat c) => {'name': Mapper.toValue(c.name), 'color': Mapper.toValue(c.color), 'type': 'Cat'};
 
   @override String? stringify(Cat self) => 'Cat(name: ${self.name}, color: ${self.color})';
@@ -115,7 +123,8 @@ class DogMapper extends BaseMapper<Dog> {
   Dog decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Dog fromMap(Map<String, dynamic> map) => Dog(map.get('name'), map.get('age'));
 
-  @override Function get encoder => (Dog v) => toMap(v);
+  @override Function get encoder => (Dog v) => encode(v);
+  dynamic encode(Dog v) => toMap(v);
   Map<String, dynamic> toMap(Dog d) => {'name': Mapper.toValue(d.name), 'age': Mapper.toValue(d.age), 'type': Animal.Dog};
 
   @override String? stringify(Dog self) => 'Dog(name: ${self.name}, age: ${self.age})';
@@ -138,7 +147,8 @@ class NullAnimalMapper extends BaseMapper<NullAnimal> {
   NullAnimal decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   NullAnimal fromMap(Map<String, dynamic> map) => NullAnimal(map.get('name'));
 
-  @override Function get encoder => (NullAnimal v) => toMap(v);
+  @override Function get encoder => (NullAnimal v) => encode(v);
+  dynamic encode(NullAnimal v) => toMap(v);
   Map<String, dynamic> toMap(NullAnimal n) => {'name': Mapper.toValue(n.name), 'type': null};
 
   @override String? stringify(NullAnimal self) => 'NullAnimal(name: ${self.name})';
@@ -161,7 +171,8 @@ class DefaultAnimalMapper extends BaseMapper<DefaultAnimal> {
   DefaultAnimal decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   DefaultAnimal fromMap(Map<String, dynamic> map) => DefaultAnimal(map.get('name'), map.get('type'));
 
-  @override Function get encoder => (DefaultAnimal v) => toMap(v);
+  @override Function get encoder => (DefaultAnimal v) => encode(v);
+  dynamic encode(DefaultAnimal v) => toMap(v);
   Map<String, dynamic> toMap(DefaultAnimal d) => {'name': Mapper.toValue(d.name), 'type': Mapper.toValue(d.type)};
 
   @override String? stringify(DefaultAnimal self) => 'DefaultAnimal(name: ${self.name}, type: ${self.type})';
@@ -184,7 +195,8 @@ class MyPrivateClassMapper extends BaseMapper<MyPrivateClass> {
   MyPrivateClass decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   MyPrivateClass fromMap(Map<String, dynamic> map) => MyPrivateClass();
 
-  @override Function get encoder => (MyPrivateClass v) => toMap(v);
+  @override Function get encoder => (MyPrivateClass v) => encode(v);
+  dynamic encode(MyPrivateClass v) => toMap(v);
   Map<String, dynamic> toMap(MyPrivateClass m) => {};
 
   @override String? stringify(MyPrivateClass self) => 'MyPrivateClass()';
@@ -207,7 +219,8 @@ class PersonMapper extends BaseMapper<Person> {
   Person decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Person fromMap(Map<String, dynamic> map) => Person(map.get('name'), age: map.getOpt('age') ?? 18, car: map.getOpt('car'));
 
-  @override Function get encoder => (Person v) => toMap(v);
+  @override Function get encoder => (Person v) => encode(v);
+  dynamic encode(Person v) => toMap(v);
   Map<String, dynamic> toMap(Person p) => {'name': Mapper.toValue(p.name), 'age': Mapper.toValue(p.age), 'car': Mapper.toValue(p.car)};
 
   @override String? stringify(Person self) => 'Person(name: ${self.name}, age: ${self.age}, car: ${self.car})';
@@ -230,7 +243,8 @@ class CarMapper extends BaseMapper<Car> {
   Car decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Car fromMap(Map<String, dynamic> map) => Car(map.get('driven_km'), map.get('brand'));
 
-  @override Function get encoder => (Car v) => toMap(v);
+  @override Function get encoder => (Car v) => encode(v);
+  dynamic encode(Car v) => toMap(v);
   Map<String, dynamic> toMap(Car c) => {'driven_km': Mapper.toValue(c.drivenKm), 'brand': Mapper.toValue(c.brand)};
 
   @override String? stringify(Car self) => 'Car(miles: ${self.miles}, brand: ${self.brand})';
@@ -252,7 +266,8 @@ class BoxMapper extends BaseMapper<Box> {
   Box<T> decode<T extends Object>(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
   Box<T> fromMap<T extends Object>(Map<String, dynamic> map) => Box(map.get('size'), content: map.get('content'));
 
-  @override Function get encoder => (Box v) => toMap(v);
+  @override Function get encoder => (Box v) => encode(v);
+  dynamic encode(Box v) => toMap(v);
   Map<String, dynamic> toMap(Box b) => {'size': Mapper.toValue(b.size), 'content': Mapper.toValue(b.content)};
 
   @override String? stringify(Box self) => 'Box(size: ${self.size}, content: ${self.content})';
@@ -275,7 +290,8 @@ class ConfettiMapper extends BaseMapper<Confetti> {
   Confetti decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Confetti fromMap(Map<String, dynamic> map) => Confetti(map.get('color'));
 
-  @override Function get encoder => (Confetti v) => toMap(v);
+  @override Function get encoder => (Confetti v) => encode(v);
+  dynamic encode(Confetti v) => toMap(v);
   Map<String, dynamic> toMap(Confetti c) => {'color': Mapper.toValue(c.color)};
 
   @override String? stringify(Confetti self) => 'Confetti(color: ${self.color})';
@@ -298,7 +314,8 @@ class GameMapper extends BaseMapper<Game> {
   Game decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Game fromMap(Map<String, dynamic> map) => Game(map.get('player', hooks: const PlayerHooks()));
 
-  @override Function get encoder => (Game v) => toMap(v);
+  @override Function get encoder => (Game v) => encode(v);
+  dynamic encode(Game v) => toMap(v);
   Map<String, dynamic> toMap(Game g) => {'player': _toValue(g.player, hooks: const PlayerHooks())};
 
   @override String? stringify(Game self) => 'Game(player: ${self.player})';
@@ -321,7 +338,8 @@ class PlayerMapper extends BaseMapper<Player> {
   Player decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Player fromMap(Map<String, dynamic> map) => Player(map.get('id'));
 
-  @override Function get encoder => (Player v) => toMap(v);
+  @override Function get encoder => (Player v) => encode(v);
+  dynamic encode(Player v) => toMap(v);
   Map<String, dynamic> toMap(Player p) => {'id': Mapper.toValue(p.id)};
 
   @override String? stringify(Player self) => 'Player(id: ${self.id})';
@@ -361,9 +379,15 @@ class ClothesMapper extends BaseMapper<Clothes> {
       default: return fromMap(map);
     }
   }));
-  Clothes fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate abstract class Clothes, did you forgot to specify a subclass for [ label: '${map['label']}' ] or a default subclass?");
+  Clothes fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate class Clothes, did you forgot to specify a subclass for [ label: '${map['label']}' ] or a default subclass?");
 
-  @override Function get encoder => (Clothes v) => _hookedEncode<Clothes>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => toMap(v));
+  @override Function get encoder => (Clothes v) => encode(v);
+  dynamic encode(Clothes v) => _hookedEncode<Clothes>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) {
+    if (v is SummerClothes) { return SummerClothesMapper._().encode(v); }
+    else if (v is TShirt) { return TShirtMapper._().encode(v); }
+    else if (v is Jeans) { return JeansMapper._().encode(v); }
+    else { return toMap(v); }
+  });
   Map<String, dynamic> toMap(Clothes c) => {'howbig': Mapper.toValue(c.size), 'color': Mapper.toValue(c.color), 'unmapped_props': Mapper.toValue(c.unmappedProps)};
 
   @override String? stringify(Clothes self) => 'Clothes(size: ${self.size}, color: ${self.color}, unmappedProps: ${self.unmappedProps})';
@@ -390,9 +414,14 @@ class SummerClothesMapper extends BaseMapper<SummerClothes> {
       default: return fromMap(map);
     }
   });
-  SummerClothes fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate abstract class SummerClothes, did you forgot to specify a subclass for [ label: '${map['label']}' ] or a default subclass?");
+  SummerClothes fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate class SummerClothes, did you forgot to specify a subclass for [ label: '${map['label']}' ] or a default subclass?");
 
-  @override Function get encoder => (SummerClothes v) => _hookedEncode<SummerClothes>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => toMap(v));
+  @override Function get encoder => (SummerClothes v) => _hookedEncode<SummerClothes>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => encode(v));
+  dynamic encode(SummerClothes v) {
+    if (v is Shorts) { return ShortsMapper._().encode(v); }
+    else if (v is Top) { return TopMapper._().encode(v); }
+    else { return toMap(v); }
+  }
   Map<String, dynamic> toMap(SummerClothes s) => {'howbig': Mapper.toValue(s.size), 'color': Mapper.toValue(s.color), 'unmapped_props': Mapper.toValue(s.unmappedProps)};
 
   @override String? stringify(SummerClothes self) => 'SummerClothes(size: ${self.size}, color: ${self.color}, unmappedProps: ${self.unmappedProps})';
@@ -414,7 +443,8 @@ class TShirtMapper extends BaseMapper<TShirt> {
   TShirt decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   TShirt fromMap(Map<String, dynamic> map) => TShirt(map.get('neck'), map.get('howbig'), map.getOpt('color'), map.getMap('unmapped_props'));
 
-  @override Function get encoder => (TShirt v) => _hookedEncode<TShirt>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => toMap(v));
+  @override Function get encoder => (TShirt v) => _hookedEncode<TShirt>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => encode(v));
+  dynamic encode(TShirt v) => toMap(v);
   Map<String, dynamic> toMap(TShirt t) => {'neck': Mapper.toValue(t.neck), 'howbig': Mapper.toValue(t.size), 'color': Mapper.toValue(t.color), 'label': 'TShirt'};
 
   @override String? stringify(TShirt self) => 'TShirt(size: ${self.size}, color: ${self.color}, unmappedProps: ${self.unmappedProps}, neck: ${self.neck})';
@@ -437,7 +467,8 @@ class JeansMapper extends BaseMapper<Jeans> {
   Jeans decode(dynamic v) => _hookedDecode(const JeansHooks(), v, (v) => _checked(v, (Map<String, dynamic> map) => fromMap(map)));
   Jeans fromMap(Map<String, dynamic> map) => Jeans(map.get('age'), map.getOpt('color'), map.get('howbig'));
 
-  @override Function get encoder => (Jeans v) => _hookedEncode<Jeans>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => _hookedEncode<Jeans>(const JeansHooks(), v, (v) => toMap(v)));
+  @override Function get encoder => (Jeans v) => _hookedEncode<Jeans>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => encode(v));
+  dynamic encode(Jeans v) => _hookedEncode<Jeans>(const JeansHooks(), v, (v) => toMap(v));
   Map<String, dynamic> toMap(Jeans j) => {'age': Mapper.toValue(j.age), 'color': Mapper.toValue(j.color), 'howbig': Mapper.toValue(j.size), 'label': 'Jeans'};
 
   @override String? stringify(Jeans self) => 'Jeans(size: ${self.size}, color: ${self.color}, unmappedProps: ${self.unmappedProps}, age: ${self.age})';
@@ -460,7 +491,8 @@ class ShortsMapper extends BaseMapper<Shorts> {
   Shorts decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Shorts fromMap(Map<String, dynamic> map) => Shorts(map.get('tag'), map.get('howbig'), map.getOpt('color'), map.getMap('unmapped_props'));
 
-  @override Function get encoder => (Shorts v) => _hookedEncode<Shorts>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => toMap(v));
+  @override Function get encoder => (Shorts v) => _hookedEncode<Shorts>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => encode(v));
+  dynamic encode(Shorts v) => toMap(v);
   Map<String, dynamic> toMap(Shorts s) => {'tag': Mapper.toValue(s.tag), 'howbig': Mapper.toValue(s.size), 'color': Mapper.toValue(s.color), 'unmapped_props': Mapper.toValue(s.unmappedProps), 'label': 'Shorts'};
 
   @override String? stringify(Shorts self) => 'Shorts(size: ${self.size}, color: ${self.color}, unmappedProps: ${self.unmappedProps}, tag: ${self.tag})';
@@ -483,7 +515,8 @@ class TopMapper extends BaseMapper<Top> {
   Top decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Top fromMap(Map<String, dynamic> map) => Top(map.get('length'), map.get('howbig'), map.getOpt('color'), map.getMap('unmapped_props'));
 
-  @override Function get encoder => (Top v) => _hookedEncode<Top>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => toMap(v));
+  @override Function get encoder => (Top v) => _hookedEncode<Top>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => encode(v));
+  dynamic encode(Top v) => toMap(v);
   Map<String, dynamic> toMap(Top t) => {'length': Mapper.toValue(t.length), 'howbig': Mapper.toValue(t.size), 'color': Mapper.toValue(t.color), 'unmapped_props': Mapper.toValue(t.unmappedProps), 'label': 'ATop'};
 
   @override String? stringify(Top self) => 'Top(size: ${self.size}, color: ${self.color}, unmappedProps: ${self.unmappedProps}, length: ${self.length})';
@@ -506,7 +539,8 @@ class GenericBoxMapper extends BaseMapper<GenericBox> {
   GenericBox<T> decode<T>(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
   GenericBox<T> fromMap<T>(Map<String, dynamic> map) => GenericBox(map.get('content'));
 
-  @override Function get encoder => (GenericBox v) => toMap(v);
+  @override Function get encoder => (GenericBox v) => encode(v);
+  dynamic encode(GenericBox v) => toMap(v);
   Map<String, dynamic> toMap(GenericBox g) => {'content': Mapper.toValue(g.content)};
 
   @override String? stringify(GenericBox self) => 'GenericBox(content: ${self.content})';
@@ -576,11 +610,15 @@ class Mapper<T> {
   static dynamic toValue(dynamic value) {
     if (value == null) return null;
     var typeInfo = TypeInfo.fromValue(value);
-    if (_mappers[typeInfo.type]?.encoder != null) {
-      var encoded = _mappers[typeInfo.type]!.encoder!.call(value);
+    var mapper = _mappers[typeInfo.type] ?? _mappers.values
+      .cast<BaseMapper?>()
+      .firstWhere((m) => m!.isFor(value), orElse: () => null);
+    if (mapper != null && mapper.encoder != null) {
+      var encoded = mapper.encoder!.call(value);
       if (encoded is Map<String, dynamic>) {
         _clearType(encoded);
         if (typeInfo.params.isNotEmpty) {
+          typeInfo.type = _typeOf(mapper.type);
           encoded['__type'] = typeInfo.toString();
         }
       }
@@ -707,6 +745,8 @@ class PrimitiveMapper<T> extends BaseMapper<T> {
   @override final T Function(dynamic value) decoder;
   @override Function get encoder => (T value) => value;
   @override Function get typeFactory => (f) => f<T>();
+  
+  @override bool isFor(dynamic v) => v.runtimeType == T;
 }
 
 class EnumMapper<T> extends SimpleMapper<T> {

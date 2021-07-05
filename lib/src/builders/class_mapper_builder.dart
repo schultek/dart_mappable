@@ -18,6 +18,7 @@ class ClassMapperBuilder {
   late String? discriminatorKey;
   late String? discriminatorValueCode;
   late int generateMethods;
+  late ConstructorElement? constructor;
 
   ClassMapperBuilder? superMapper;
   List<ClassMapperBuilder> subMappers = [];
@@ -31,8 +32,19 @@ class ClassMapperBuilder {
 
   bool get isSuperMapper => subMappers.isNotEmpty;
 
-  ClassMapperBuilder(this.element, LibraryOptions options) {
-    var annotation = classChecker.firstAnnotationOf(element);
+  DartObject? annotation;
+
+  ClassMapperBuilder(this.element, LibraryOptions options,
+      [ConstructorElement? annotatedFactory]) {
+    annotation = classChecker.firstAnnotationOf(annotatedFactory ?? element);
+
+    constructor = annotatedFactory?.redirectedConstructor ??
+        element.constructors
+            .where((c) => !c.isPrivate && constructorChecker.hasAnnotationOf(c))
+            .firstOrNull ??
+        element.constructors
+            .where((c) => !c.isPrivate && !classChecker.hasAnnotationOf(c))
+            .firstOrNull;
 
     caseStyle = annotation?.getField('caseStyle')!.toStringValue() != null
         ? CaseStyle.fromString(
@@ -47,16 +59,15 @@ class ClassMapperBuilder {
         annotation?.getField('discriminatorKey')!.toStringValue() ??
             options.discriminatorKey;
 
-    var discriminatorValueField =
-        classChecker.firstAnnotationOf(element)?.getField('discriminatorValue');
+    var discriminatorValueField = annotation?.getField('discriminatorValue');
     if (discriminatorValueField != null) {
       if (discriminatorValueField.type?.element?.name ==
               MappingFlags.useAsDefault.runtimeType.toString() &&
           discriminatorValueField.getField('index')!.toIntValue() == 0) {
         discriminatorValueCode = 'default';
       } else {
-        discriminatorValueCode =
-            getAnnotationCode(element, MappableClass, 'discriminatorValue');
+        discriminatorValueCode = getAnnotationCode(
+            annotatedFactory ?? element, MappableClass, 'discriminatorValue');
       }
     } else {
       discriminatorValueCode = null;
@@ -144,34 +155,17 @@ class ClassMapperBuilder {
           : _hookForClass
       : _getHookForClass();
   String? _getHookForClass() {
-    var annotation = classChecker.firstAnnotationOf(element);
     String? hook;
-    if (annotation != null && !annotation.getField('hooks')!.isNull) {
+    if (annotation != null && !annotation!.getField('hooks')!.isNull) {
       hook = getAnnotationCode(element, MappableClass, 'hooks');
     }
     _hookForClass = hook ?? '';
     return hook;
   }
 
-  ConstructorElement? _constructor;
-  ConstructorElement get constructor => _constructor ??= _getConstructor();
-  ConstructorElement _getConstructor() {
-    var explicitConstructor = element.constructors
-        .where((c) => !c.isPrivate && constructorChecker.hasAnnotationOf(c));
-    var constructor = explicitConstructor.isNotEmpty
-        ? explicitConstructor.first
-        : element.constructors.firstWhere((c) => !c.isPrivate);
-    return constructor;
-  }
-
-  bool hasValidConstructor() {
-    try {
-      var _ = constructor;
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
+  bool get hasCallableConstructor =>
+      constructor != null &&
+      !(element.isAbstract && constructor!.redirectedConstructor == null);
 
   String generateExtensionCode() {
     var typeParams = '', typeParamsDeclaration = '';
@@ -198,7 +192,8 @@ class ClassMapperBuilder {
 
     if (shouldGenerate(GenerateMethods.encode)) {
       snippets.add('\n'
-          '  @override Function get encoder => ($className v) => ${_generateToMapCall('toMap(v)')};\n'
+          '  @override Function get encoder => ($className v) => ${_generateEncodeCall('encode(v)')};\n'
+          '  dynamic encode($className v) ${_generateEncode()}\n'
           '  Map<String, dynamic> toMap($className $paramName) => {${_generateMappingEntries()}};\n'
           '');
     }
@@ -238,7 +233,7 @@ class ClassMapperBuilder {
           '');
     }
 
-    if (!element.isAbstract && shouldGenerate(GenerateMethods.copy)) {
+    if (hasCallableConstructor && shouldGenerate(GenerateMethods.copy)) {
       snippets.add('  ${_generateCopyWith(typeParams)}\n');
     }
 
@@ -342,33 +337,57 @@ class ClassMapperBuilder {
     return cases;
   }
 
-  String _generateToMapCall(String toMap, [String? name]) {
-    var wrapped = toMap;
-    if (hookForClass != null) {
+  String _generateEncodeCall(String encode, [String? name]) {
+    var wrapped = encode;
+    if (superMapper != null && superMapper!.hookForClass != null) {
       wrapped =
-          '_hookedEncode<${name ?? className}>(const $hookForClass, v, (v) => $wrapped)';
+          '_hookedEncode<${name ?? className}>(const ${superMapper!.hookForClass}, v, (v) => $wrapped)';
     }
     if (superMapper != null) {
-      wrapped = superMapper!._generateToMapCall(wrapped, name ?? className);
+      wrapped = superMapper!._generateEncodeCall(wrapped, name ?? className);
     }
     return wrapped;
   }
 
+  String _generateEncode() {
+    String call;
+    if (subMappers.isEmpty) {
+      call = '=> toMap(v)';
+    } else {
+      var subEncode = [];
+
+      for (var subMapper in subMappers) {
+        subEncode.add(
+            'if (v is ${subMapper.className}) { return ${subMapper.mapperName}._().encode(v); }\n');
+      }
+
+      call = '{\n'
+          '    ${subEncode.join('    else ')}'
+          '    else { return toMap(v); }\n'
+          '  }';
+    }
+
+    if (hookForClass != null) {
+      call = '=> _hookedEncode<$className>(const $hookForClass, v, (v) $call)';
+    }
+    return call + (call.endsWith('}') ? '' : ';');
+  }
+
   String _generateFromMap() {
-    if (element.isAbstract) {
+    if (!hasCallableConstructor) {
       if (isSuperMapper && discriminatorKey != null) {
-        return 'throw MapperException("Cannot instantiate abstract class ${element.name}, did you forgot to specify a subclass for [ $discriminatorKey: \'\${map[\'$discriminatorKey\']}\' ] or a default subclass?");';
+        return 'throw MapperException("Cannot instantiate class ${element.name}, did you forgot to specify a subclass for [ $discriminatorKey: \'\${map[\'$discriminatorKey\']}\' ] or a default subclass?");';
       } else {
-        return "throw const MapperException('Cannot instantiate abstract class ${element.name}.');";
+        return "throw const MapperException('Cannot instantiate class ${element.name}, no valid constructor found.');";
       }
     } else {
-      return '${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateConstructorParams()});';
+      return '${element.name}${constructor!.name != '' ? '.${constructor!.name}' : ''}(${_generateConstructorParams()});';
     }
   }
 
   String _generateConstructorParams() {
     List<String> params = [];
-    for (var param in constructor.parameters) {
+    for (var param in constructor!.parameters) {
       var str = '';
 
       if (param.isNamed) {
@@ -422,7 +441,7 @@ class ClassMapperBuilder {
       }
     }
 
-    for (var param in constructor.parameters) {
+    for (ParameterElement param in constructor?.parameters ?? []) {
       var name = param.name;
 
       DartType? type;
@@ -519,7 +538,7 @@ class ClassMapperBuilder {
 
   String _generateHashParams() {
     List<String> params = [];
-    for (var param in constructor.parameters) {
+    for (ParameterElement param in constructor?.parameters ?? []) {
       if (param is FieldFormalParameterElement || hasField(param.name)) {
         params.add('self.${param.name}.hashCode');
       } else if (superMapper != null && superParams[param.name] != null) {
@@ -536,7 +555,7 @@ class ClassMapperBuilder {
 
   String _generateEqualsParams() {
     List<String> params = [];
-    for (var param in constructor.parameters) {
+    for (ParameterElement param in constructor?.parameters ?? []) {
       if (param is FieldFormalParameterElement || hasField(param.name)) {
         params.add('self.${param.name} == other.${param.name}');
       } else if (superMapper != null && superParams[param.name] != null) {
@@ -552,22 +571,28 @@ class ClassMapperBuilder {
   }
 
   String _generateCopyWith(String typeParams) {
-    var method = 'copy${constructor.parameters.isNotEmpty ? 'With' : ''}';
+    var method = 'copy${constructor!.parameters.isNotEmpty ? 'With' : ''}';
     var params = _generateCopyWithParams();
     var body =
-        '${element.name}${constructor.name != '' ? '.${constructor.name}' : ''}(${_generateCopyWithConstructorParams()})';
+        '${element.name}${constructor!.name != '' ? '.${constructor!.name}' : ''}(${_generateCopyWithConstructorParams()})';
     return '$className$typeParams $method($params) => $body;';
   }
 
   String _generateCopyWithParams() {
-    if (constructor.parameters.isEmpty) return '';
+    if (constructor!.parameters.isEmpty) return '';
     List<String> params = [];
-    for (var param in constructor.parameters) {
+    for (var param in constructor!.parameters) {
       var type = param.type.getDisplayString(withNullability: false);
       if (param is FieldFormalParameterElement || hasField(param.name)) {
         params.add('$type? ${param.name}');
       } else if (superMapper != null && superParams[param.name] != null) {
         params.add('$type? ${superParams[param.name]!.name}');
+      } else {
+        if (param.type.nullabilitySuffix == NullabilitySuffix.question) {
+          params.add('$type? ${param.name}');
+        } else {
+          params.add('required $type ${param.name}');
+        }
       }
     }
     return '{${params.join(', ')}}';
@@ -575,7 +600,7 @@ class ClassMapperBuilder {
 
   String _generateCopyWithConstructorParams() {
     List<String> params = [];
-    for (var param in constructor.parameters) {
+    for (var param in constructor!.parameters) {
       var str = '';
 
       if (param.isNamed) {
@@ -598,11 +623,11 @@ class ClassMapperBuilder {
   Map<String, ParameterElement> superParams = {};
 
   void analyzeSuperConstructor() {
-    if (superMapper == null) return;
+    if (superMapper == null || constructor == null) return;
 
-    var node = constructor.session!
-        .getParsedLibraryByElement(constructor.library)
-        .getElementDeclaration(constructor)
+    var node = constructor!.session!
+        .getParsedLibraryByElement(constructor!.library)
+        .getElementDeclaration(constructor!)
         ?.node;
 
     if (node is ConstructorDeclaration) {
@@ -613,11 +638,11 @@ class ClassMapperBuilder {
           var i = 0;
           for (var arg in args) {
             if (arg is SimpleIdentifier) {
-              superParams[arg.name] = superMapper!.constructor.parameters[i];
+              superParams[arg.name] = superMapper!.constructor!.parameters[i];
             } else if (arg is NamedExpression &&
                 arg.expression is SimpleIdentifier) {
               superParams[(arg.expression as SimpleIdentifier).name] =
-                  superMapper!.constructor.parameters.firstWhere(
+                  superMapper!.constructor!.parameters.firstWhere(
                       (p) => p.isNamed && p.name == arg.name.label.name);
             }
             i++;

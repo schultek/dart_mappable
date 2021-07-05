@@ -1,5 +1,14 @@
-/// A set of Mappers for primitive types
-const defaultMappers = '''
+import 'dart:convert';
+
+import 'package:dart_mappable/dart_mappable.dart';
+
+import 'main.dart';
+
+
+// === ALL STATICALLY REGISTERED MAPPERS ===
+
+var _mappers = <String, BaseMapper>{
+  // primitive mappers
   _typeOf<dynamic>():  PrimitiveMapper((dynamic v) => v),
   _typeOf<String>():   PrimitiveMapper<String>((dynamic v) => v.toString()),
   _typeOf<int>():      PrimitiveMapper<int>((dynamic v) => num.parse(v.toString()).round()),
@@ -10,10 +19,133 @@ const defaultMappers = '''
   _typeOf<List>():     IterableMapper<List>(<T>(Iterable<T> i) => i.toList(), <T>(f) => f<List<T>>()),
   _typeOf<Set>():      IterableMapper<Set>(<T>(Iterable<T> i) => i.toSet(), <T>(f) => f<Set<T>>()),
   _typeOf<Map>():      MapMapper<Map>(<K, V>(Map<K, V> map) => map, <K, V>(f) => f<Map<K, V>>()),
-''';
+  // class mappers
+  _typeOf<Union>(): UnionMapper._(),
+  _typeOf<Data>(): DataMapper._(),
+  _typeOf<Loading>(): LoadingMapper._(),
+  _typeOf<ErrorDetails>(): ErrorDetailsMapper._(),
+  // enum mappers
+  // custom mappers
+};
 
-/// Declarations for the Mapper class
-const mapperCode = r'''
+
+// === GENERATED CLASS MAPPERS AND EXTENSIONS ===
+
+class UnionMapper extends BaseMapper<Union> {
+  UnionMapper._();
+
+  @override Function get decoder => decode;
+  Union decode(dynamic v) => _checked(v, (Map<String, dynamic> map) {
+    switch(map['type']) {
+      case 'data': return DataMapper._().decode(map);
+      case 'error': return ErrorDetailsMapper._().decode(map);
+      case 'loading': return LoadingMapper._().decode(map);
+      default: return fromMap(map);
+    }
+  });
+  Union fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate class Union, did you forgot to specify a subclass for [ type: '${map['type']}' ] or a default subclass?");
+
+  @override Function get encoder => (Union v) => encode(v);
+  Map<String, dynamic> encode(Union v) {
+    if (v is Data) return DataMapper._().encode(v);
+    else if (v is Loading) return LoadingMapper._().encode(v);
+    else if (v is ErrorDetails) return ErrorDetailsMapper._().encode(v);
+    else return toMap(v);
+  }
+  Map<String, dynamic> toMap(Union u) => {};
+
+  @override String? stringify(Union self) => 'Union()';
+  @override int? hash(Union self) => 0;
+  @override bool? equals(Union self, Union other) => true;
+
+  @override Function get typeFactory => (f) => f<Union>();
+}
+
+extension UnionMapperExtension on Union {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+}
+
+class DataMapper extends BaseMapper<Data> {
+  DataMapper._();
+
+  @override Function get decoder => decode;
+  Data decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Data fromMap(Map<String, dynamic> map) => Data(map.get('mykey'));
+
+  @override Function get encoder => (Data v) => encode(v);
+  Map<String, dynamic> encode(Data v) => toMap(v);
+  Map<String, dynamic> toMap(Data d) => {'mykey': Mapper.toValue(d.value), 'type': 'data'};
+
+  @override String? stringify(Data self) => 'Data()';
+  @override int? hash(Data self) => self.value.hashCode;
+  @override bool? equals(Data self, Data other) => self.value == other.value;
+
+  @override Function get typeFactory => (f) => f<Data>();
+}
+
+extension DataMapperExtension on Data {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  Data copyWith({int? value}) => Data(value ?? this.value);
+}
+
+class LoadingMapper extends BaseMapper<Loading> {
+  LoadingMapper._();
+
+  @override Function get decoder => decode;
+  Loading decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Loading fromMap(Map<String, dynamic> map) => Loading();
+
+  @override Function get encoder => (Loading v) => encode(v);
+  Map<String, dynamic> encode(Loading v) => toMap(v);
+  Map<String, dynamic> toMap(Loading l) => {'type': 'loading'};
+
+  @override String? stringify(Loading self) => 'Loading()';
+  @override int? hash(Loading self) => 0;
+  @override bool? equals(Loading self, Loading other) => true;
+
+  @override Function get typeFactory => (f) => f<Loading>();
+}
+
+extension LoadingMapperExtension on Loading {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  Loading copy() => Loading();
+}
+
+class ErrorDetailsMapper extends BaseMapper<ErrorDetails> {
+  ErrorDetailsMapper._();
+
+  @override Function get decoder => decode;
+  ErrorDetails decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  ErrorDetails fromMap(Map<String, dynamic> map) => ErrorDetails(map.getOpt('message'));
+
+  @override Function get encoder => (ErrorDetails v) => encode(v);
+  Map<String, dynamic> encode(ErrorDetails v) => toMap(v);
+  Map<String, dynamic> toMap(ErrorDetails e) => {'message': Mapper.toValue(e.message), 'type': 'error'};
+
+  @override String? stringify(ErrorDetails self) => 'ErrorDetails()';
+  @override int? hash(ErrorDetails self) => self.message.hashCode;
+  @override bool? equals(ErrorDetails self, ErrorDetails other) => self.message == other.message;
+
+  @override Function get typeFactory => (f) => f<ErrorDetails>();
+}
+
+extension ErrorDetailsMapperExtension on ErrorDetails {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  ErrorDetails copyWith({String? message}) => ErrorDetails(message ?? this.message);
+}
+
+
+// === GENERATED ENUM MAPPERS AND EXTENSIONS ===
+
+
+
+
+// === GENERATED UTILITY CODE ===
+
 class Mapper<T> {
   Mapper._();
 
@@ -295,4 +427,3 @@ extension MapGet on Map<String, dynamic> {
     }
   }
 }
-''';

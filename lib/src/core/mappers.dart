@@ -10,6 +10,9 @@ abstract class BaseMapper<T> {
   bool? equals(T self, T other) => null;
   int? hash(T self) => null;
   String? stringify(T self) => null;
+
+  Type get type => T;
+  bool isFor(dynamic v) => v is T;
 }
 
 /// Simple wrapper around the [BaseMapper] class that provides direct abstract function declarations

@@ -1,3 +1,8 @@
+# 0.6.2
+
+- Added support for factory constructors and sealed classes
+- Added example for usage with freezed package
+
 # 0.6.1
 
 - Fixed imports issue

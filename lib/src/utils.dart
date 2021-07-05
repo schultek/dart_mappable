@@ -28,7 +28,7 @@ String? getAnnotationCode(
     } else {
       return null;
     }
-  } else if (node is ClassDeclaration) {
+  } else if (node is Declaration) {
     annotations = node.metadata;
   } else {
     return null;
@@ -71,4 +71,8 @@ Iterable<ClassElement> elementsOf(LibraryElement element) sync* {
     yield* cu.enums;
     yield* cu.types;
   }
+}
+
+extension OptIter<T> on Iterable<T> {
+  T? get firstOrNull => isEmpty ? null : first;
 }

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../main.dart';
+import 'main.dart';
 
 
 // === ALL STATICALLY REGISTERED MAPPERS ===

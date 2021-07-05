@@ -34,6 +34,8 @@ Sounds too good to be true? Not anymore.
 - [Custom Mappers](#custom-mappers)
   - [Generic Custom Types](#generic-custom-types)
   - [Custom Iterables and Maps](#custom-iterables-and-maps)
+- [Supported Packages](#supported-packages)
+  - [Freezed](#freezed)
 
 > This package is still in active development. If you have any feedback or feature requests, write me and issue on github.
 
@@ -49,9 +51,9 @@ To get started, add the following lines to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dart_mappable: ^0.6.1
+  dart_mappable: ^0.6.2
 dev_dependencies:
-  build_runner: ^1.12.2
+  build_runner: ^2.0.5
 ```
 
 Next, create a `build.yaml` in the root directory of your package and add this snippet:
@@ -579,3 +581,56 @@ Mapper.use(MapMapper<HashMap>(
 HashSet<Brand> brands = Mapper.fromJson('["toyota", "audi", "audi"]');
 print(brands); // {Brands.Toyota, Brands.Audi}
 ```
+
+## Supported Packages
+
+This package aims to be compatible with other code-generation packages. Check the `examples` directory for some common use-cases.
+
+### Freezed
+
+[Freezed](https://pub.dev/packages/freezed) is a "code generator for unions/pattern-matching/copy"; 
+With this package, it is easy to create union or sealed classes. 
+
+Here is a simple example taken from their documentation:
+
+```dart
+@freezed
+class Union with _$Union {
+  const factory Union(int value) = Data;
+  const factory Union.loading() = Loading;
+  const factory Union.error([String? message]) = ErrorDetails;
+}
+```
+
+To make it compatible with dart_mappable, just add your `@MappableClass` annotations to both the parent class, and all **factory constructors**, as if they were the child classes. 
+For a description of the `discriminatorKey` and `discriminatorValue` properties head up to the [Polymorphism and Discriminators](#polymorphism-and-discriminators) section.
+You can also add the `@MappableField()` annotation to any of the fields.
+
+```dart
+@freezed
+@MappableClass(discriminatorKey: 'type')
+class Union with _$Union {
+  @MappableClass(discriminatorValue: 'data')
+  const factory Union.data(@MappableField(key: 'mykey') int value) = Data;
+  @MappableClass(discriminatorValue: 'loading')
+  const factory Union.loading() = Loading;
+  @MappableClass(discriminatorValue: 'error')
+  const factory Union.error([String? message]) = ErrorDetails;
+}
+```
+
+This will now allow you to use this and the resulting `Data`, `Loading` and `ErrorDetails` classes as usual:
+
+```dart
+void main() {
+  var data = Union.data(42);
+
+  var dataJson = data.toJson();
+  print(dataJson); // {"mykey":42,"type":"data"}
+
+  var parsedData = Mapper.fromJson<Union>(dataJson);
+  print(parsedData); // Union.data(value: 42)
+}
+```
+
+For the full example and generated files, check out the `examples/example_freezed` directory.

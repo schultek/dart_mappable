@@ -25,9 +25,14 @@ class MappableBuilder implements Builder {
     var outputId = inputId.changeExtension('.mapper.g.dart');
     var visibleLibraries = await resolver.libraries.toList();
 
-    var generatedSource = generate(visibleLibraries, buildStep);
+    try {
+      var generatedSource = generate(visibleLibraries, buildStep);
 
-    await buildStep.writeAsString(outputId, generatedSource);
+      await buildStep.writeAsString(outputId, generatedSource);
+    } catch (e, st) {
+      print(e);
+      print(st);
+    }
   }
 
   @override
@@ -80,6 +85,7 @@ class MappableBuilder implements Builder {
       ClassMapperBuilder? addRecursive(
         ClassElement element, {
         ClassMapperBuilder? subMapper,
+        ConstructorElement? annotatedFactory,
       }) {
         if (element.isEnum) {
           if (enumMappers.containsKey(element.name)) {
@@ -96,25 +102,39 @@ class MappableBuilder implements Builder {
             return classMappers[element.name];
           }
 
-          var classMapper = ClassMapperBuilder(element, libraryOptions);
+          var classMapper =
+              ClassMapperBuilder(element, libraryOptions, annotatedFactory);
 
           if (subMapper != null) {
             classMapper.subMappers.add(subMapper);
           }
 
-          if (element.isPrivate || !classMapper.hasValidConstructor()) {
+          if (element.isPrivate) {
             return classMapper;
           }
 
           classMappers[element.name] = classMapper;
 
-          if (element.supertype != null &&
-              !element.supertype!.isDartCoreObject) {
-            var superMapper = addRecursive(element.supertype!.element,
-                subMapper: classMapper);
+          var supertype = element.supertype;
+          if (supertype == null || supertype.isDartCoreObject) {
+            supertype =
+                element.interfaces.isNotEmpty ? element.interfaces.first : null;
+          }
 
+          if (supertype != null && !supertype.isDartCoreObject) {
+            var superMapper =
+                addRecursive(supertype.element, subMapper: classMapper);
             if (superMapper != null) {
               classMapper.setSuperMapper(superMapper);
+            }
+          }
+
+          for (var c in element.constructors) {
+            if (c.isFactory &&
+                c.redirectedConstructor != null &&
+                classChecker.hasAnnotationOf(c)) {
+              var e = c.redirectedConstructor!.returnType.element;
+              addRecursive(e, annotatedFactory: c);
             }
           }
 
