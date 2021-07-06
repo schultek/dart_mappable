@@ -32,6 +32,7 @@ var _mappers = <String, BaseMapper>{
   _typeOf<DefaultAnimal>(): DefaultAnimalMapper._(),
   _typeOf<MyPrivateClass>(): MyPrivateClassMapper._(),
   _typeOf<Person>(): PersonMapper._(),
+  _typeOf<ProjectConfig>(): ProjectConfigMapper._(),
   _typeOf<Car>(): CarMapper._(),
   _typeOf<Box>(): BoxMapper._(),
   _typeOf<Confetti>(): ConfettiMapper._(),
@@ -234,6 +235,30 @@ extension PersonMapperExtension on Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   Person copyWith({String? name, int? age, Car? car}) => Person(name ?? this.name, age: age ?? this.age, car: car ?? this.car);
+}
+
+class ProjectConfigMapper extends BaseMapper<ProjectConfig> {
+  ProjectConfigMapper._();
+
+  @override Function get decoder => decode;
+  ProjectConfig decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  ProjectConfig fromMap(Map<String, dynamic> map) => ProjectConfig(taskFilter: map.getListOpt('task_filter') ?? const [], taskDetailsFilter: map.getListOpt('task_details_filter') ?? const []);
+
+  @override Function get encoder => (ProjectConfig v) => encode(v);
+  dynamic encode(ProjectConfig v) => toMap(v);
+  Map<String, dynamic> toMap(ProjectConfig p) => {'task_filter': Mapper.toValue(p.taskFilter), 'task_details_filter': Mapper.toValue(p.taskDetailsFilter)};
+
+  @override String? stringify(ProjectConfig self) => 'ProjectConfig(taskFilter: ${self.taskFilter}, taskDetailsFilter: ${self.taskDetailsFilter})';
+  @override int? hash(ProjectConfig self) => self.taskFilter.hashCode ^ self.taskDetailsFilter.hashCode;
+  @override bool? equals(ProjectConfig self, ProjectConfig other) => self.taskFilter == other.taskFilter && self.taskDetailsFilter == other.taskDetailsFilter;
+
+  @override Function get typeFactory => (f) => f<ProjectConfig>();
+}
+
+extension ProjectConfigMapperExtension on ProjectConfig {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  ProjectConfig copyWith({List<String>? taskFilter, List<String>? taskDetailsFilter}) => ProjectConfig(taskFilter: taskFilter ?? this.taskFilter, taskDetailsFilter: taskDetailsFilter ?? this.taskDetailsFilter);
 }
 
 class CarMapper extends BaseMapper<Car> {

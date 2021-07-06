@@ -1,3 +1,7 @@
+# 0.6.3
+
+- Fixed missing default values of constructor parameters
+
 # 0.6.2
 
 - Added support for factory constructors and sealed classes

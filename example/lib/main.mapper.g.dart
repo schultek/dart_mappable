@@ -39,7 +39,8 @@ class PersonMapper extends BaseMapper<Person> {
   Person decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Person fromMap(Map<String, dynamic> map) => Person(map.get('name'), age: map.getOpt('age') ?? 18, car: map.getOpt('car'));
 
-  @override Function get encoder => (Person v) => toMap(v);
+  @override Function get encoder => (Person v) => encode(v);
+  dynamic encode(Person v) => toMap(v);
   Map<String, dynamic> toMap(Person p) => {'name': Mapper.toValue(p.name), 'age': Mapper.toValue(p.age), 'car': Mapper.toValue(p.car)};
 
   @override String? stringify(Person self) => 'Person(name: ${self.name}, age: ${self.age}, car: ${self.car})';
@@ -62,7 +63,8 @@ class CarMapper extends BaseMapper<Car> {
   Car decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Car fromMap(Map<String, dynamic> map) => Car(map.get('driven_km'), map.get('brand'));
 
-  @override Function get encoder => (Car v) => toMap(v);
+  @override Function get encoder => (Car v) => encode(v);
+  dynamic encode(Car v) => toMap(v);
   Map<String, dynamic> toMap(Car c) => {'driven_km': Mapper.toValue(c.drivenKm), 'brand': Mapper.toValue(c.brand)};
 
   @override String? stringify(Car self) => 'Car(miles: ${self.miles}, brand: ${self.brand})';
@@ -85,7 +87,8 @@ class BoxMapper extends BaseMapper<Box> {
   Box<T> decode<T>(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
   Box<T> fromMap<T>(Map<String, dynamic> map) => Box(map.get('size'), content: map.get('content'));
 
-  @override Function get encoder => (Box v) => toMap(v);
+  @override Function get encoder => (Box v) => encode(v);
+  dynamic encode(Box v) => toMap(v);
   Map<String, dynamic> toMap(Box b) => {'size': Mapper.toValue(b.size), 'content': Mapper.toValue(b.content)};
 
   @override String? stringify(Box self) => 'Box(size: ${self.size}, content: ${self.content})';
@@ -108,7 +111,8 @@ class ConfettiMapper extends BaseMapper<Confetti> {
   Confetti decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
   Confetti fromMap(Map<String, dynamic> map) => Confetti(map.get('color'));
 
-  @override Function get encoder => (Confetti v) => toMap(v);
+  @override Function get encoder => (Confetti v) => encode(v);
+  dynamic encode(Confetti v) => toMap(v);
   Map<String, dynamic> toMap(Confetti c) => {'color': Mapper.toValue(c.color)};
 
   @override String? stringify(Confetti self) => 'Confetti(color: ${self.color})';
@@ -178,11 +182,15 @@ class Mapper<T> {
   static dynamic toValue(dynamic value) {
     if (value == null) return null;
     var typeInfo = TypeInfo.fromValue(value);
-    if (_mappers[typeInfo.type]?.encoder != null) {
-      var encoded = _mappers[typeInfo.type]!.encoder!.call(value);
+    var mapper = _mappers[typeInfo.type] ?? _mappers.values
+      .cast<BaseMapper?>()
+      .firstWhere((m) => m!.isFor(value), orElse: () => null);
+    if (mapper != null && mapper.encoder != null) {
+      var encoded = mapper.encoder!.call(value);
       if (encoded is Map<String, dynamic>) {
         _clearType(encoded);
         if (typeInfo.params.isNotEmpty) {
+          typeInfo.type = _typeOf(mapper.type);
           encoded['__type'] = typeInfo.toString();
         }
       }
@@ -309,6 +317,8 @@ class PrimitiveMapper<T> extends BaseMapper<T> {
   @override final T Function(dynamic value) decoder;
   @override Function get encoder => (T value) => value;
   @override Function get typeFactory => (f) => f<T>();
+  
+  @override bool isFor(dynamic v) => v.runtimeType == T;
 }
 
 class EnumMapper<T> extends SimpleMapper<T> {

@@ -13,6 +13,14 @@ class Person with Mappable {
   factory Person.fromMap(Map<String, dynamic> map) => Mapper.fromMap(map);
 }
 
+@MappableClass()
+class ProjectConfig with Mappable {
+  final List<String> taskFilter, taskDetailsFilter;
+
+  const ProjectConfig(
+      {this.taskFilter = const [], this.taskDetailsFilter = const []});
+}
+
 @MappableEnum(defaultValue: Brand.Audi)
 enum Brand { Toyota, Audi, BMW }
 

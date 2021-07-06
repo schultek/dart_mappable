@@ -418,8 +418,18 @@ class ClassMapperBuilder {
 
       str += "(${args.join(', ')})";
 
-      if (param.hasDefaultValue) {
+      if (param.hasDefaultValue && param.defaultValueCode != 'null') {
         str += ' ?? ${param.defaultValueCode}';
+      } else {
+        var node = param.session!
+            .getParsedLibraryByElement(param.library!)
+            .getElementDeclaration(param)
+            ?.node;
+
+        if (node is DefaultFormalParameter &&
+            node.defaultValue.toString() != 'null') {
+          str += ' ?? ${node.defaultValue}';
+        }
       }
 
       params.add(str);
