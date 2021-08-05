@@ -421,11 +421,7 @@ class ClassMapperBuilder {
       if (param.hasDefaultValue && param.defaultValueCode != 'null') {
         str += ' ?? ${param.defaultValueCode}';
       } else {
-        var node = param.session!
-            .getParsedLibraryByElement(param.library!)
-            .getElementDeclaration(param)
-            ?.node;
-
+        var node = param.getNode();
         if (node is DefaultFormalParameter &&
             node.defaultValue.toString() != 'null') {
           str += ' ?? ${node.defaultValue}';
@@ -635,10 +631,7 @@ class ClassMapperBuilder {
   void analyzeSuperConstructor() {
     if (superMapper == null || constructor == null) return;
 
-    var node = constructor!.session!
-        .getParsedLibraryByElement(constructor!.library)
-        .getElementDeclaration(constructor!)
-        ?.node;
+    var node = constructor!.getNode();
 
     if (node is ConstructorDeclaration) {
       if (node.initializers.isNotEmpty) {

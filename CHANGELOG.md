@@ -1,3 +1,7 @@
+# 0.6.4
+
+- Upgrade dependencies
+
 # 0.6.3
 
 - Fixed missing default values of constructor parameters

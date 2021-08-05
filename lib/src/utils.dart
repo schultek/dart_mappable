@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:source_gen/source_gen.dart';
@@ -12,12 +13,18 @@ const fieldChecker = TypeChecker.fromRuntime(MappableField);
 const customMapperChecker = TypeChecker.fromRuntime(CustomMapper);
 const mapperChecker = TypeChecker.fromRuntime(BaseMapper);
 
+extension GetNode on Element {
+  AstNode? getNode() {
+    return (session?.getParsedLibraryByElement2(library!)
+            as ParsedLibraryResult?)
+        ?.getElementDeclaration(this)
+        ?.node;
+  }
+}
+
 String? getAnnotationCode(
     Element annotatedElement, Type annotationType, String property) {
-  var node = annotatedElement.session!
-      .getParsedLibraryByElement(annotatedElement.library!)
-      .getElementDeclaration(annotatedElement)!
-      .node;
+  var node = annotatedElement.getNode();
 
   NodeList<Annotation> annotations;
 
@@ -69,7 +76,7 @@ List<T>? toList<T>(dynamic value) {
 Iterable<ClassElement> elementsOf(LibraryElement element) sync* {
   for (var cu in element.units) {
     yield* cu.enums;
-    yield* cu.types;
+    yield* cu.classes;
   }
 }
 
