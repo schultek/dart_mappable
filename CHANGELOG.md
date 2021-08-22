@@ -1,3 +1,7 @@
+# 0.6.5
+
+- Fixed imports on windows
+
 # 0.6.4
 
 - Upgrade dependencies

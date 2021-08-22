@@ -25,14 +25,8 @@ class MappableBuilder implements Builder {
     var outputId = inputId.changeExtension('.mapper.g.dart');
     var visibleLibraries = await resolver.libraries.toList();
 
-    try {
-      var generatedSource = generate(visibleLibraries, buildStep);
-
-      await buildStep.writeAsString(outputId, generatedSource);
-    } catch (e, st) {
-      print(e);
-      print(st);
-    }
+    var generatedSource = generate(visibleLibraries, buildStep);
+    await buildStep.writeAsString(outputId, generatedSource);
   }
 
   @override
@@ -56,9 +50,9 @@ class MappableBuilder implements Builder {
     void addImport(LibraryElement library) {
       var lib = library.source.uri;
       if (lib.isScheme('asset')) {
-        var relativePath = path.relative(lib.path,
-            from: path.dirname(buildStep.inputId.uri.path));
-        imports.add(relativePath);
+        var relativePath = path.posix
+            .relative(lib.path, from: path.dirname(buildStep.inputId.uri.path));
+        imports.add(relativePath.replaceAll('\\', '/'));
       } else if (lib.isScheme('package') &&
           lib.pathSegments.first == buildStep.inputId.package) {
         var libPath = lib.replace(pathSegments: lib.pathSegments.skip(1)).path;
@@ -67,9 +61,9 @@ class MappableBuilder implements Builder {
             input.replace(pathSegments: input.pathSegments.skip(1)).path;
         var relativePath =
             path.relative(libPath, from: path.dirname(inputPath));
-        imports.add(relativePath);
+        imports.add(relativePath.replaceAll('\\', '/'));
       } else {
-        imports.add(lib.toString());
+        imports.add(lib.toString().replaceAll('\\', '/'));
       }
     }
 
