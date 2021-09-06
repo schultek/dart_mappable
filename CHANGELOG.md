@@ -1,3 +1,7 @@
+# 0.7.0
+
+- Update license
+
 # 0.6.5
 
 - Fixed imports on windows
