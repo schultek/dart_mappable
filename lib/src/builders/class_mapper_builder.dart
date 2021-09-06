@@ -523,7 +523,7 @@ class ClassMapperBuilder {
             (field.getter?.isSynthetic ?? false)) {
           var str = '';
           str = '${field.name}: ';
-          str += '\${self.${field.name}}';
+          str += '\${Mapper.asString(self.${field.name})}';
           params.add(str);
         }
       }
@@ -546,14 +546,14 @@ class ClassMapperBuilder {
     List<String> params = [];
     for (ParameterElement param in constructor?.parameters ?? []) {
       if (param is FieldFormalParameterElement || hasField(param.name)) {
-        params.add('self.${param.name}.hashCode');
+        params.add('Mapper.hash(self.${param.name})');
       } else if (superMapper != null && superParams[param.name] != null) {
-        params.add('self.${superParams[param.name]!.name}.hashCode');
+        params.add('Mapper.hash(self.${superParams[param.name]!.name})');
       }
     }
 
     if (params.isEmpty) {
-      return '0';
+      return 'self.hashCode';
     } else {
       return params.join(' ^ ');
     }
@@ -563,10 +563,10 @@ class ClassMapperBuilder {
     List<String> params = [];
     for (ParameterElement param in constructor?.parameters ?? []) {
       if (param is FieldFormalParameterElement || hasField(param.name)) {
-        params.add('self.${param.name} == other.${param.name}');
+        params.add('Mapper.isEqual(self.${param.name}, other.${param.name})');
       } else if (superMapper != null && superParams[param.name] != null) {
         params.add(
-            'self.${superParams[param.name]!.name} == other.${superParams[param.name]!.name}');
+            'Mapper.isEqual(self.${superParams[param.name]!.name}, other.${superParams[param.name]!.name})');
       }
     }
     if (params.isEmpty) {

@@ -104,6 +104,12 @@ void main() {
       List<int> numbers = Mapper.fromJson('[2, 4, 105]');
       expect(numbers, equals([2, 4, 105]));
     });
+
+    test('Equality', () {
+      Items a = Items([Item(1), Item(2)], {1: Item(3)});
+      Items b = Items([Item(1), Item(2)], {1: Item(3)});
+      expect(Mapper.isEqual(a, b), equals(true));
+    });
   });
 
   group('Polymorphism', () {

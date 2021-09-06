@@ -43,9 +43,9 @@ class PersonMapper extends BaseMapper<Person> {
   dynamic encode(Person v) => toMap(v);
   Map<String, dynamic> toMap(Person p) => {'name': Mapper.toValue(p.name), 'age': Mapper.toValue(p.age), 'car': Mapper.toValue(p.car)};
 
-  @override String? stringify(Person self) => 'Person(name: ${self.name}, age: ${self.age}, car: ${self.car})';
-  @override int? hash(Person self) => self.name.hashCode ^ self.age.hashCode ^ self.car.hashCode;
-  @override bool? equals(Person self, Person other) => self.name == other.name && self.age == other.age && self.car == other.car;
+  @override String? stringify(Person self) => 'Person(name: ${Mapper.asString(self.name)}, age: ${Mapper.asString(self.age)}, car: ${Mapper.asString(self.car)})';
+  @override int? hash(Person self) => Mapper.hash(self.name) ^ Mapper.hash(self.age) ^ Mapper.hash(self.car);
+  @override bool? equals(Person self, Person other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.age, other.age) && Mapper.isEqual(self.car, other.car);
 
   @override Function get typeFactory => (f) => f<Person>();
 }
@@ -67,9 +67,9 @@ class CarMapper extends BaseMapper<Car> {
   dynamic encode(Car v) => toMap(v);
   Map<String, dynamic> toMap(Car c) => {'driven_km': Mapper.toValue(c.drivenKm), 'brand': Mapper.toValue(c.brand)};
 
-  @override String? stringify(Car self) => 'Car(miles: ${self.miles}, brand: ${self.brand})';
-  @override int? hash(Car self) => self.drivenKm.hashCode ^ self.brand.hashCode;
-  @override bool? equals(Car self, Car other) => self.drivenKm == other.drivenKm && self.brand == other.brand;
+  @override String? stringify(Car self) => 'Car(miles: ${Mapper.asString(self.miles)}, brand: ${Mapper.asString(self.brand)})';
+  @override int? hash(Car self) => Mapper.hash(self.drivenKm) ^ Mapper.hash(self.brand);
+  @override bool? equals(Car self, Car other) => Mapper.isEqual(self.drivenKm, other.drivenKm) && Mapper.isEqual(self.brand, other.brand);
 
   @override Function get typeFactory => (f) => f<Car>();
 }
@@ -91,9 +91,9 @@ class BoxMapper extends BaseMapper<Box> {
   dynamic encode(Box v) => toMap(v);
   Map<String, dynamic> toMap(Box b) => {'size': Mapper.toValue(b.size), 'content': Mapper.toValue(b.content)};
 
-  @override String? stringify(Box self) => 'Box(size: ${self.size}, content: ${self.content})';
-  @override int? hash(Box self) => self.size.hashCode ^ self.content.hashCode;
-  @override bool? equals(Box self, Box other) => self.size == other.size && self.content == other.content;
+  @override String? stringify(Box self) => 'Box(size: ${Mapper.asString(self.size)}, content: ${Mapper.asString(self.content)})';
+  @override int? hash(Box self) => Mapper.hash(self.size) ^ Mapper.hash(self.content);
+  @override bool? equals(Box self, Box other) => Mapper.isEqual(self.size, other.size) && Mapper.isEqual(self.content, other.content);
 
   @override Function get typeFactory => <T>(f) => f<Box<T>>();
 }
@@ -115,9 +115,9 @@ class ConfettiMapper extends BaseMapper<Confetti> {
   dynamic encode(Confetti v) => toMap(v);
   Map<String, dynamic> toMap(Confetti c) => {'color': Mapper.toValue(c.color)};
 
-  @override String? stringify(Confetti self) => 'Confetti(color: ${self.color})';
-  @override int? hash(Confetti self) => self.color.hashCode;
-  @override bool? equals(Confetti self, Confetti other) => self.color == other.color;
+  @override String? stringify(Confetti self) => 'Confetti(color: ${Mapper.asString(self.color)})';
+  @override int? hash(Confetti self) => Mapper.hash(self.color);
+  @override bool? equals(Confetti self, Confetti other) => Mapper.isEqual(self.color, other.color);
 
   @override Function get typeFactory => (f) => f<Confetti>();
 }
@@ -231,13 +231,18 @@ class Mapper<T> {
   }
 
   static bool isEqual(dynamic value, Object? other) {
-    var type = _typeOf(value.runtimeType);
-    return _mappers[type]?.equals(value, other) ?? value == other;
+    var type = TypeInfo.fromValue(value);
+    return _mappers[type.type]?.equals(value, other) ?? value == other;
+  }
+  
+  static int hash(dynamic value) {
+    var type = TypeInfo.fromValue(value);
+    return _mappers[type.type]?.hash(value) ?? value.hashCode;
   }
 
   static String asString(dynamic value) {
-    var type = _typeOf(value.runtimeType);
-    return _mappers[type]?.stringify(value) ?? value.toString();
+    var type = TypeInfo.fromValue(value);
+    return _mappers[type.type]?.stringify(value) ?? value.toString();
   }
 
   static void use<T>(BaseMapper<T> mapper) => _mappers[_typeOf<T>()] = mapper;
@@ -293,22 +298,32 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
   }
 }
 
-class IterableMapper<I extends Iterable> extends BaseMapper<I> {
+class MapperEquality implements Equality {
+  @override bool equals(dynamic e1, dynamic e2) => Mapper.isEqual(e1, e2);
+  @override int hash(dynamic e) => Mapper.hash(e);
+  @override bool isValidKey(Object? o) => true;
+}
+
+class IterableMapper<I extends Iterable> extends BaseMapper<I> with MapperEqualityMixin<I> {
   Iterable<U> Function<U>(Iterable<U> iterable) fromIterable;
   IterableMapper(this.fromIterable, this.typeFactory);
 
   @override Function get decoder => <T>(dynamic l) => _checked(l, (Iterable l) => fromIterable(l.map((v) => Mapper.fromValue<T>(v))));
   @override Function get encoder => (I self) => self.map((v) => Mapper.toValue(v)).toList();
   @override Function typeFactory;
+  
+  @override Equality equality = IterableEquality(MapperEquality());
 }
 
-class MapMapper<M extends Map> extends BaseMapper<M> {
+class MapMapper<M extends Map> extends BaseMapper<M> with MapperEqualityMixin<M> {
   Map<K, V> Function<K, V>(Map<K, V> map) fromMap;
   MapMapper(this.fromMap, this.typeFactory);
 
   @override Function get decoder => <K, V>(dynamic m) => _checked(m,(Map m) => fromMap(m.map((key, value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)))));
   @override Function get encoder => (M self) => self.map((key, value) => MapEntry(Mapper.toValue(key), Mapper.toValue(value)));
   @override Function typeFactory;
+  
+  @override Equality equality = MapEquality(keys: MapperEquality(), values: MapperEquality());
 }
 
 class PrimitiveMapper<T> extends BaseMapper<T> {

@@ -1,3 +1,8 @@
+import 'package:collection/collection.dart';
+
+export 'package:collection/collection.dart'
+    show Equality, IterableEquality, MapEquality;
+
 /// This class needs to be implemented by all mappers
 abstract class BaseMapper<T> {
   const BaseMapper();
@@ -26,6 +31,15 @@ abstract class SimpleMapper<T> extends BaseMapper<T> {
   @override
   Function get decoder => decode;
   T decode(dynamic value);
+}
+
+mixin MapperEqualityMixin<T> implements BaseMapper<T> {
+  Equality get equality;
+
+  @override
+  bool? equals(T self, T other) => equality.equals(self, other);
+  @override
+  int? hash(T self) => equality.hash(self);
 }
 
 class MapperException implements Exception {

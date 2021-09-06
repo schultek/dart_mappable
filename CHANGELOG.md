@@ -1,3 +1,7 @@
+# 0.7.1
+
+- Deep equality for lists and maps
+
 # 0.7.0
 
 - Update license

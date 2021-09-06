@@ -92,13 +92,18 @@ class Mapper<T> {
   }
 
   static bool isEqual(dynamic value, Object? other) {
-    var type = _typeOf(value.runtimeType);
-    return _mappers[type]?.equals(value, other) ?? value == other;
+    var type = TypeInfo.fromValue(value);
+    return _mappers[type.type]?.equals(value, other) ?? value == other;
+  }
+  
+  static int hash(dynamic value) {
+    var type = TypeInfo.fromValue(value);
+    return _mappers[type.type]?.hash(value) ?? value.hashCode;
   }
 
   static String asString(dynamic value) {
-    var type = _typeOf(value.runtimeType);
-    return _mappers[type]?.stringify(value) ?? value.toString();
+    var type = TypeInfo.fromValue(value);
+    return _mappers[type.type]?.stringify(value) ?? value.toString();
   }
 
   static void use<T>(BaseMapper<T> mapper) => _mappers[_typeOf<T>()] = mapper;
@@ -154,22 +159,32 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
   }
 }
 
-class IterableMapper<I extends Iterable> extends BaseMapper<I> {
+class MapperEquality implements Equality {
+  @override bool equals(dynamic e1, dynamic e2) => Mapper.isEqual(e1, e2);
+  @override int hash(dynamic e) => Mapper.hash(e);
+  @override bool isValidKey(Object? o) => true;
+}
+
+class IterableMapper<I extends Iterable> extends BaseMapper<I> with MapperEqualityMixin<I> {
   Iterable<U> Function<U>(Iterable<U> iterable) fromIterable;
   IterableMapper(this.fromIterable, this.typeFactory);
 
   @override Function get decoder => <T>(dynamic l) => _checked(l, (Iterable l) => fromIterable(l.map((v) => Mapper.fromValue<T>(v))));
   @override Function get encoder => (I self) => self.map((v) => Mapper.toValue(v)).toList();
   @override Function typeFactory;
+  
+  @override Equality equality = IterableEquality(MapperEquality());
 }
 
-class MapMapper<M extends Map> extends BaseMapper<M> {
+class MapMapper<M extends Map> extends BaseMapper<M> with MapperEqualityMixin<M> {
   Map<K, V> Function<K, V>(Map<K, V> map) fromMap;
   MapMapper(this.fromMap, this.typeFactory);
 
   @override Function get decoder => <K, V>(dynamic m) => _checked(m,(Map m) => fromMap(m.map((key, value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)))));
   @override Function get encoder => (M self) => self.map((key, value) => MapEntry(Mapper.toValue(key), Mapper.toValue(value)));
   @override Function typeFactory;
+  
+  @override Equality equality = MapEquality(keys: MapperEquality(), values: MapperEquality());
 }
 
 class PrimitiveMapper<T> extends BaseMapper<T> {

@@ -46,16 +46,16 @@ class UnionMapper extends BaseMapper<Union> {
   Union fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate class Union, did you forgot to specify a subclass for [ type: '${map['type']}' ] or a default subclass?");
 
   @override Function get encoder => (Union v) => encode(v);
-  Map<String, dynamic> encode(Union v) {
-    if (v is Data) return DataMapper._().encode(v);
-    else if (v is Loading) return LoadingMapper._().encode(v);
-    else if (v is ErrorDetails) return ErrorDetailsMapper._().encode(v);
-    else return toMap(v);
+  dynamic encode(Union v) {
+    if (v is Data) { return DataMapper._().encode(v); }
+    else if (v is Loading) { return LoadingMapper._().encode(v); }
+    else if (v is ErrorDetails) { return ErrorDetailsMapper._().encode(v); }
+    else { return toMap(v); }
   }
   Map<String, dynamic> toMap(Union u) => {};
 
   @override String? stringify(Union self) => 'Union()';
-  @override int? hash(Union self) => 0;
+  @override int? hash(Union self) => self.hashCode;
   @override bool? equals(Union self, Union other) => true;
 
   @override Function get typeFactory => (f) => f<Union>();
@@ -74,12 +74,12 @@ class DataMapper extends BaseMapper<Data> {
   Data fromMap(Map<String, dynamic> map) => Data(map.get('mykey'));
 
   @override Function get encoder => (Data v) => encode(v);
-  Map<String, dynamic> encode(Data v) => toMap(v);
+  dynamic encode(Data v) => toMap(v);
   Map<String, dynamic> toMap(Data d) => {'mykey': Mapper.toValue(d.value), 'type': 'data'};
 
   @override String? stringify(Data self) => 'Data()';
-  @override int? hash(Data self) => self.value.hashCode;
-  @override bool? equals(Data self, Data other) => self.value == other.value;
+  @override int? hash(Data self) => Mapper.hash(self.value);
+  @override bool? equals(Data self, Data other) => Mapper.isEqual(self.value, other.value);
 
   @override Function get typeFactory => (f) => f<Data>();
 }
@@ -98,11 +98,11 @@ class LoadingMapper extends BaseMapper<Loading> {
   Loading fromMap(Map<String, dynamic> map) => Loading();
 
   @override Function get encoder => (Loading v) => encode(v);
-  Map<String, dynamic> encode(Loading v) => toMap(v);
+  dynamic encode(Loading v) => toMap(v);
   Map<String, dynamic> toMap(Loading l) => {'type': 'loading'};
 
   @override String? stringify(Loading self) => 'Loading()';
-  @override int? hash(Loading self) => 0;
+  @override int? hash(Loading self) => self.hashCode;
   @override bool? equals(Loading self, Loading other) => true;
 
   @override Function get typeFactory => (f) => f<Loading>();
@@ -122,12 +122,12 @@ class ErrorDetailsMapper extends BaseMapper<ErrorDetails> {
   ErrorDetails fromMap(Map<String, dynamic> map) => ErrorDetails(map.getOpt('message'));
 
   @override Function get encoder => (ErrorDetails v) => encode(v);
-  Map<String, dynamic> encode(ErrorDetails v) => toMap(v);
+  dynamic encode(ErrorDetails v) => toMap(v);
   Map<String, dynamic> toMap(ErrorDetails e) => {'message': Mapper.toValue(e.message), 'type': 'error'};
 
   @override String? stringify(ErrorDetails self) => 'ErrorDetails()';
-  @override int? hash(ErrorDetails self) => self.message.hashCode;
-  @override bool? equals(ErrorDetails self, ErrorDetails other) => self.message == other.message;
+  @override int? hash(ErrorDetails self) => Mapper.hash(self.message);
+  @override bool? equals(ErrorDetails self, ErrorDetails other) => Mapper.isEqual(self.message, other.message);
 
   @override Function get typeFactory => (f) => f<ErrorDetails>();
 }
@@ -224,13 +224,18 @@ class Mapper<T> {
   }
 
   static bool isEqual(dynamic value, Object? other) {
-    var type = _typeOf(value.runtimeType);
-    return _mappers[type]?.equals(value, other) ?? value == other;
+    var type = TypeInfo.fromValue(value);
+    return _mappers[type.type]?.equals(value, other) ?? value == other;
+  }
+  
+  static int hash(dynamic value) {
+    var type = TypeInfo.fromValue(value);
+    return _mappers[type.type]?.hash(value) ?? value.hashCode;
   }
 
   static String asString(dynamic value) {
-    var type = _typeOf(value.runtimeType);
-    return _mappers[type]?.stringify(value) ?? value.toString();
+    var type = TypeInfo.fromValue(value);
+    return _mappers[type.type]?.stringify(value) ?? value.toString();
   }
 
   static void use<T>(BaseMapper<T> mapper) => _mappers[_typeOf<T>()] = mapper;
@@ -286,22 +291,32 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
   }
 }
 
-class IterableMapper<I extends Iterable> extends BaseMapper<I> {
+class MapperEquality implements Equality {
+  @override bool equals(dynamic e1, dynamic e2) => Mapper.isEqual(e1, e2);
+  @override int hash(dynamic e) => Mapper.hash(e);
+  @override bool isValidKey(Object? o) => true;
+}
+
+class IterableMapper<I extends Iterable> extends BaseMapper<I> with MapperEqualityMixin<I> {
   Iterable<U> Function<U>(Iterable<U> iterable) fromIterable;
   IterableMapper(this.fromIterable, this.typeFactory);
 
   @override Function get decoder => <T>(dynamic l) => _checked(l, (Iterable l) => fromIterable(l.map((v) => Mapper.fromValue<T>(v))));
   @override Function get encoder => (I self) => self.map((v) => Mapper.toValue(v)).toList();
   @override Function typeFactory;
+  
+  @override Equality equality = IterableEquality(MapperEquality());
 }
 
-class MapMapper<M extends Map> extends BaseMapper<M> {
+class MapMapper<M extends Map> extends BaseMapper<M> with MapperEqualityMixin<M> {
   Map<K, V> Function<K, V>(Map<K, V> map) fromMap;
   MapMapper(this.fromMap, this.typeFactory);
 
   @override Function get decoder => <K, V>(dynamic m) => _checked(m,(Map m) => fromMap(m.map((key, value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)))));
   @override Function get encoder => (M self) => self.map((key, value) => MapEntry(Mapper.toValue(key), Mapper.toValue(value)));
   @override Function typeFactory;
+  
+  @override Equality equality = MapEquality(keys: MapperEquality(), values: MapperEquality());
 }
 
 class PrimitiveMapper<T> extends BaseMapper<T> {

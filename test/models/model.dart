@@ -89,3 +89,16 @@ class CheckBoard {
 
   CheckBoard({required this.checked, required this.count});
 }
+
+class Items {
+  List<Item> items;
+  Map<int, Item> items2;
+
+  Items(this.items, this.items2);
+}
+
+class Item {
+  int index;
+
+  Item(this.index);
+}
