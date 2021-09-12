@@ -1,3 +1,7 @@
+# 0.7.2
+
+- Fix equals bug
+
 # 0.7.1
 
 - Deep equality for lists and maps
