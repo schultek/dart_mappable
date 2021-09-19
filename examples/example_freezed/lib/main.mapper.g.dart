@@ -87,7 +87,18 @@ class DataMapper extends BaseMapper<Data> {
 extension DataMapperExtension on Data {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  Data copyWith({int? value}) => Data(value ?? this.value);
+  DataCopyWith<Data> get copyWith => DataCopyWith(this, _$identity);
+}
+
+abstract class DataCopyWith<$R> {
+  factory DataCopyWith(Data value, Then<Data, $R> then) = _DataCopyWithImpl<$R>;
+  $R call({int? value});
+}
+
+class _DataCopyWithImpl<$R> extends BaseCopyWith<Data, $R> implements DataCopyWith<$R> {
+  _DataCopyWithImpl(Data value, Then<Data, $R> then) : super(value, then);
+
+  $R call({int? value}) => _then(Data(value ?? _value.value));
 }
 
 class LoadingMapper extends BaseMapper<Loading> {
@@ -111,7 +122,18 @@ class LoadingMapper extends BaseMapper<Loading> {
 extension LoadingMapperExtension on Loading {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  Loading copy() => Loading();
+  LoadingCopyWith<Loading> get copyWith => LoadingCopyWith(this, _$identity);
+}
+
+abstract class LoadingCopyWith<$R> {
+  factory LoadingCopyWith(Loading value, Then<Loading, $R> then) = _LoadingCopyWithImpl<$R>;
+  $R call();
+}
+
+class _LoadingCopyWithImpl<$R> extends BaseCopyWith<Loading, $R> implements LoadingCopyWith<$R> {
+  _LoadingCopyWithImpl(Loading value, Then<Loading, $R> then) : super(value, then);
+
+  $R call() => _then(Loading());
 }
 
 class ErrorDetailsMapper extends BaseMapper<ErrorDetails> {
@@ -135,7 +157,18 @@ class ErrorDetailsMapper extends BaseMapper<ErrorDetails> {
 extension ErrorDetailsMapperExtension on ErrorDetails {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ErrorDetails copyWith({String? message}) => ErrorDetails(message ?? this.message);
+  ErrorDetailsCopyWith<ErrorDetails> get copyWith => ErrorDetailsCopyWith(this, _$identity);
+}
+
+abstract class ErrorDetailsCopyWith<$R> {
+  factory ErrorDetailsCopyWith(ErrorDetails value, Then<ErrorDetails, $R> then) = _ErrorDetailsCopyWithImpl<$R>;
+  $R call({String? message});
+}
+
+class _ErrorDetailsCopyWithImpl<$R> extends BaseCopyWith<ErrorDetails, $R> implements ErrorDetailsCopyWith<$R> {
+  _ErrorDetailsCopyWithImpl(ErrorDetails value, Then<ErrorDetails, $R> then) : super(value, then);
+
+  $R call({Object? message = _none}) => _then(ErrorDetails(or(message, _value.message)));
 }
 
 
@@ -224,6 +257,9 @@ class Mapper<T> {
   }
 
   static bool isEqual(dynamic value, Object? other) {
+    if (value == null || other == null) {
+      return value == other;
+    }
     var type = TypeInfo.fromValue(value);
     return _mappers[type.type]?.equals(value, other) ?? value == other;
   }
@@ -442,3 +478,19 @@ extension MapGet on Map<String, dynamic> {
     }
   }
 }
+
+class _None { const _None(); }
+const _none = _None();
+
+T _$identity<T>(T value) => value;
+typedef Then<$T, $R> = $R Function($T);
+
+class BaseCopyWith<$T, $R> {
+  BaseCopyWith(this._value, this._then);
+
+  final $T _value;
+  final Then<$T, $R> _then;
+  
+  T or<T>(Object? _v, T v) => _v == _none ? v : _v as T;
+}
+

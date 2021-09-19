@@ -41,19 +41,15 @@ Sounds too good to be true? Not anymore.
 
 ### TODOs
 
-- Different copyWith modi (Basic, Optional, Advanced)
 - Choose properties for toString / equals
-- Use CaseStyle type in annotations
 
 ## Get Started
 
-To get started, add the following lines to your `pubspec.yaml`:
+First, add `dart_mappable` as a dependency, and `build_runner` as a dev_dependency.
 
-```yaml
-dependencies:
-  dart_mappable: ^0.7.2
-dev_dependencies:
-  build_runner: ^2.0.5
+```shell script
+flutter pub add super_annotations
+flutter pub add build_runner --dev
 ```
 
 Next, create a `build.yaml` in the root directory of your package and add this snippet:
@@ -75,7 +71,8 @@ In order to generate the serialization code, run the following command:
 pub run build_runner build
 ```
 
-You'll need to re-run code generation each time you are making changes to your code. So for development time, use `watch` like this
+You'll need to re-run code generation each time you are making changes to your code.
+During development, you can use `watch` like this
 
 ```shell script
 pub run build_runner watch
@@ -168,7 +165,7 @@ The following methods are supported:
 
 - **decode**: Will generate code used by `Mapper.fromJson`, `Mapper.fromMap` and `Mapper.fromValue`.
 - **encode**: Will generate code used by `Mapper.toJson`, `Mapper.toMap` and `Mapper.toValue` as well as the extension methods `toJson` and `toMap`.
-- **copy**: Will generate the extension method `copyWith` or `copy`.
+- **copy**: Will generate the extension method `copyWith`.
 - **stringify**: Will generate code used by `Mapper.asString` or when using the `Mappable` mixin's `toString` override.
 - **equals**: Will generate code used by `Mapper.isEqual` or when using the `Mappable` mixin's `==` or `hashCode` overrides.
 
@@ -247,7 +244,6 @@ custom(u,_): myFieldName -> MY_FIELD_NAME
 custom(uc,+): myFieldName -> MY+Field+Name
 custom(cl,): myFieldName -> Myfieldname
 ```
-
 
 ## Lists, Sets and Maps
 
@@ -436,8 +432,8 @@ Inside your hooks class, you have four methods that you can override:
 
 Each method takes a dynamic value and returns an optionally modified value.
 
-> Tip: If the `beforeDecode` hook already returns an instance of the target type, the normal decoding logic is effectively skipped. The same is true for the `beforeEncode` hook.
-> This gives you the possibility to effectively define custom mappers, especially on a field-by-field level.
+> Tip: If the `beforeDecode` hook already returns an instance of the target type, the normal decoding logic is skipped. The same is true for the `beforeEncode` hook.
+> This gives you the possibility to use different custom mappers on the same type, especially on a field-by-field level.
 
 A simple use-case for this would be to modify the input json before an object is decoded. 
 In the example below, the player field can either be a full json object, or a single string. 

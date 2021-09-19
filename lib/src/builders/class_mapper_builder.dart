@@ -19,6 +19,7 @@ class ClassMapperBuilder {
   late String? discriminatorValueCode;
   late int generateMethods;
   late ConstructorElement? constructor;
+  late final bool hasHooks;
 
   ClassMapperBuilder? superMapper;
   List<ClassMapperBuilder> subMappers = [];
@@ -32,11 +33,10 @@ class ClassMapperBuilder {
 
   bool get isSuperMapper => subMappers.isNotEmpty;
 
-  DartObject? annotation;
-
   ClassMapperBuilder(this.element, LibraryOptions options,
       [ConstructorElement? annotatedFactory]) {
-    annotation = classChecker.firstAnnotationOf(annotatedFactory ?? element);
+    var annotation =
+        classChecker.firstAnnotationOf(annotatedFactory ?? element);
 
     constructor = annotatedFactory?.redirectedConstructor ??
         element.constructors
@@ -46,9 +46,8 @@ class ClassMapperBuilder {
             .where((c) => !c.isPrivate && !classChecker.hasAnnotationOf(c))
             .firstOrNull;
 
-    caseStyle = annotation?.getField('caseStyle')!.toStringValue() != null
-        ? CaseStyle.fromString(
-            annotation!.getField('caseStyle')!.toStringValue())
+    caseStyle = annotation != null && !annotation.getField('caseStyle')!.isNull
+        ? caseStyleFromAnnotation(annotation.getField('caseStyle')!)
         : options.caseStyle;
 
     ignoreNull = annotation?.getField('ignoreNull')!.toBoolValue() ??
@@ -76,6 +75,8 @@ class ClassMapperBuilder {
     generateMethods = annotation?.getField('generateMethods')!.toIntValue() ??
         _toGenerateFlags(options.generateMethods) ??
         GenerateMethods.all;
+
+    hasHooks = annotation != null && !annotation.getField('hooks')!.isNull;
   }
 
   int? _toGenerateFlags(List<String>? flags) {
@@ -156,7 +157,7 @@ class ClassMapperBuilder {
       : _getHookForClass();
   String? _getHookForClass() {
     String? hook;
-    if (annotation != null && !annotation!.getField('hooks')!.isNull) {
+    if (hasHooks) {
       hook = getAnnotationCode(element, MappableClass, 'hooks');
     }
     _hookForClass = hook ?? '';
@@ -167,7 +168,7 @@ class ClassMapperBuilder {
       constructor != null &&
       !(element.isAbstract && constructor!.redirectedConstructor == null);
 
-  String generateExtensionCode() {
+  String generateExtensionCode(Map<String, ClassMapperBuilder> builders) {
     var typeParams = '', typeParamsDeclaration = '';
     if (element.typeParameters.isNotEmpty) {
       typeParams = '<${element.typeParameters.map((p) => p.name).join(', ')}>';
@@ -235,9 +236,11 @@ class ClassMapperBuilder {
 
     if (hasCallableConstructor && shouldGenerate(GenerateMethods.copy)) {
       snippets.add('  ${_generateCopyWith(typeParams)}\n');
+      snippets.add('}\n\n');
+      snippets.add(_generateCopyWithClasses(typeParams, builders));
+    } else {
+      snippets.add('}');
     }
-
-    snippets.add('}');
 
     return snippets.join();
   }
@@ -577,22 +580,100 @@ class ClassMapperBuilder {
   }
 
   String _generateCopyWith(String typeParams) {
-    var method = 'copy${constructor!.parameters.isNotEmpty ? 'With' : ''}';
-    var params = _generateCopyWithParams();
-    var body =
-        '${element.name}${constructor!.name != '' ? '.${constructor!.name}' : ''}(${_generateCopyWithConstructorParams()})';
-    return '$className$typeParams $method($params) => $body;';
+    var classTypeParams = element.typeParameters.isNotEmpty
+        ? ', ${element.typeParameters.map((p) => p.name).join(', ')}'
+        : '';
+
+    return '${className}CopyWith<$className$typeParams$classTypeParams> get copyWith => ${className}CopyWith(this, _\$identity);';
   }
 
-  String _generateCopyWithParams() {
+  String _generateCopyWithClasses(
+      String typeParams, Map<String, ClassMapperBuilder> builders) {
+    var copyFields = constructor!.parameters
+        .map((param) {
+          if (param is FieldFormalParameterElement || hasField(param.name)) {
+            return param;
+          } else if (superMapper != null && superParams[param.name] != null) {
+            return superParams[param.name];
+          } else {
+            return null;
+          }
+        })
+        .map((p) => MapEntry(p, builders[p?.type.element?.name]))
+        .where((b) => b.value?.shouldGenerate(GenerateMethods.copy) ?? false);
+
+    var classTypeParamsDef = element.typeParameters
+        .map((p) => ', ${p.getDisplayString(withNullability: true)}')
+        .join();
+    var classTypeParams =
+        element.typeParameters.map((p) => ', ${p.name}').join();
+
+    var snippets = <String>[];
+
+    snippets.add(''
+        'abstract class ${className}CopyWith<\$R$classTypeParamsDef> {\n'
+        '  factory ${className}CopyWith($className$typeParams value, Then<$className$typeParams, \$R> then) = _${className}CopyWithImpl<\$R$classTypeParams>;\n');
+
+    for (var b in copyFields) {
+      var fieldTypeParams = b.key!.type is InterfaceType
+          ? (b.key!.type as InterfaceType)
+              .typeArguments
+              .map((t) => ', ${t.getDisplayString(withNullability: true)}')
+              .join()
+          : '';
+      snippets.add(
+          '  ${b.value!.className}CopyWith<\$R$fieldTypeParams>${b.key!.type.isNullable ? '?' : ''} get ${b.key!.name};\n');
+    }
+
+    snippets.add('  \$R call(${_generateCopyWithParams()});\n'
+        '}\n\n'
+        'class _${className}CopyWithImpl<\$R$classTypeParamsDef> extends BaseCopyWith<$className$typeParams, \$R> implements ${className}CopyWith<\$R$classTypeParams> {\n'
+        '  _${className}CopyWithImpl($className$typeParams value, Then<$className$typeParams, \$R> then) : super(value, then);\n'
+        '\n');
+
+    for (var b in copyFields) {
+      var fieldTypeParams = b.key!.type is InterfaceType
+          ? (b.key!.type as InterfaceType)
+              .typeArguments
+              .map((t) => ', ${t.getDisplayString(withNullability: true)}')
+              .join()
+          : '';
+
+      snippets.add(
+          '  @override ${b.value!.className}CopyWith<\$R$fieldTypeParams>${b.key!.type.isNullable ? '?' : ''} get ${b.key!.name} => ');
+
+      if (b.key!.type.isNullable) {
+        snippets.add(
+            '_value.${b.key!.name} != null ? ${b.value!.className}CopyWith(_value.${b.key!.name}!, (v) => call(${b.key!.name}: v)) : null;\n');
+      } else {
+        snippets.add(
+            '${b.value!.className}CopyWith(_value.${b.key!.name}, (v) => call(${b.key!.name}: v));\n');
+      }
+    }
+
+    snippets.add(
+        '  @override \$R call(${_generateCopyWithParams(implVersion: true)}) => _then(${element.name}${constructor!.name != '' ? '.${constructor!.name}' : ''}(${_generateCopyWithConstructorParams()}));\n'
+        '}');
+
+    return snippets.join();
+  }
+
+  String _generateCopyWithParams({bool implVersion = false}) {
     if (constructor!.parameters.isEmpty) return '';
     List<String> params = [];
     for (var param in constructor!.parameters) {
       var type = param.type.getDisplayString(withNullability: false);
+      String paramDef(ParameterElement p) {
+        var isNullable = p.type.nullabilitySuffix == NullabilitySuffix.question;
+        return implVersion && isNullable
+            ? 'Object? ${p.name} = _none'
+            : '$type? ${p.name}';
+      }
+
       if (param is FieldFormalParameterElement || hasField(param.name)) {
-        params.add('$type? ${param.name}');
+        params.add(paramDef(param));
       } else if (superMapper != null && superParams[param.name] != null) {
-        params.add('$type? ${superParams[param.name]!.name}');
+        params.add(paramDef(superParams[param.name]!));
       } else {
         if (param.type.nullabilitySuffix == NullabilitySuffix.question) {
           params.add('$type? ${param.name}');
@@ -613,11 +694,18 @@ class ClassMapperBuilder {
         str = '${param.name}: ';
       }
 
+      String paramString(ParameterElement p) {
+        if (p.type.nullabilitySuffix == NullabilitySuffix.question) {
+          return 'or(${p.name}, _value.${p.name})';
+        } else {
+          return '${p.name} ?? _value.${p.name}';
+        }
+      }
+
       if (param is FieldFormalParameterElement || hasField(param.name)) {
-        str += '${param.name} ?? this.${param.name}';
+        str += paramString(param);
       } else if (superMapper != null && superParams[param.name] != null) {
-        str +=
-            '${superParams[param.name]!.name} ?? this.${superParams[param.name]!.name}';
+        str += paramString(superParams[param.name]!);
       } else {
         str += param.name;
       }

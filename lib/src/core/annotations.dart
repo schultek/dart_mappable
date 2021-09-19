@@ -1,3 +1,5 @@
+import 'case_style.dart';
+
 /// Used to annotate a class
 /// in order to generate mapping code
 class MappableClass {
@@ -11,7 +13,7 @@ class MappableClass {
   });
 
   /// The case style for the map keys
-  final String? caseStyle;
+  final CaseStyle? caseStyle;
 
   /// If true removes all map keys with null values
   final bool? ignoreNull;
@@ -64,7 +66,7 @@ class MappableEnum {
   });
 
   /// The case style for the stringified enum values
-  final String? caseStyle;
+  final CaseStyle? caseStyle;
 
   /// The default value when decoding a string.
   /// Must be a value of the annotated enum

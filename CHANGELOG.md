@@ -1,3 +1,9 @@
+# 0.8.0
+
+- Use CaseStyle in annotations
+- Respect null in copyWith methods
+- Chained copyWith methods
+
 # 0.7.2
 
 - Fix equals bug

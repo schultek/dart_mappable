@@ -6,9 +6,6 @@ class Person with Mappable {
   final Car? car;
 
   Person(this.name, {this.age = 18, this.car});
-
-  // optional factory wrapper
-  factory Person.fromMap(Map<String, dynamic> map) => Mapper.fromMap(map);
 }
 
 enum Brand { Toyota, Audi, BMW }
@@ -36,9 +33,11 @@ class Confetti {
 
 void main() {
   // decode from json string
-  String personJson = '{"name": "Max", "car": {"driven_km": 1000, "brand": "audi"}}';
-  Person person = Mapper.fromJson(personJson);
-  print(person); // Person(name: Max, age: 18, car: Car(miles: 620.0, brand: Brand.Audi))
+  String json = '{"name": "Max", "car": {"driven_km": 1000, "brand": "audi"}}';
+  Person person = Mapper.fromJson(json);
+
+  print(person);
+  // Person(name: Max, age: 18, car: Car(miles: 620.0, brand: Brand.Audi))
 
   // make a copy
   Person person2 = person.copyWith(name: 'Anna', age: 20);
@@ -49,7 +48,7 @@ void main() {
   print(map); // {name: Max, age: 18, car: {driven_km: 1000, brand: audi}}
 
   // decode from map
-  Person person3 = Person.fromMap(map);
+  Person person3 = Mapper.fromMap(map);
   print(person3); // Person(name: Max, age: 18, car: ...
 
   // check equality
@@ -65,7 +64,8 @@ void main() {
   // use generic objects
   Box<Confetti> box = Box(10, content: Confetti('Rainbow'));
   String boxJson = box.toJson();
-  print(boxJson); // {"size":10,"content":{"color":"Rainbow"},"_type":"Box<Confetti>"}
+  print(boxJson);
+  // {"size":10,"content":{"color":"Rainbow"},"_type":"Box<Confetti>"}
 
   // ... somewhere else
   dynamic whatAmI = Mapper.fromJson(boxJson);

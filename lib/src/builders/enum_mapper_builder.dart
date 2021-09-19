@@ -18,9 +18,8 @@ class EnumMapperBuilder {
   EnumMapperBuilder(this.element, LibraryOptions options) {
     var annotation = enumChecker.firstAnnotationOf(element);
 
-    caseStyle = annotation?.getField('caseStyle')!.toStringValue() != null
-        ? CaseStyle.fromString(
-            annotation!.getField('caseStyle')!.toStringValue())
+    caseStyle = annotation != null && !annotation.getField('caseStyle')!.isNull
+        ? caseStyleFromAnnotation(annotation.getField('caseStyle')!)
         : options.caseStyle;
 
     defaultValue =

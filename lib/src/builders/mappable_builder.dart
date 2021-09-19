@@ -172,7 +172,7 @@ class MappableBuilder implements Builder {
         '};\n'
         '\n\n'
         '// === GENERATED CLASS MAPPERS AND EXTENSIONS ===\n\n'
-        '${classMappers.values.map((om) => om.generateExtensionCode()).join('\n\n')}\n'
+        '${classMappers.values.map((om) => om.generateExtensionCode(classMappers)).join('\n\n')}\n'
         '\n\n'
         '// === GENERATED ENUM MAPPERS AND EXTENSIONS ===\n\n'
         '${enumMappers.values.map((em) => em.generateExtensionCode()).join('\n\n')}\n'
