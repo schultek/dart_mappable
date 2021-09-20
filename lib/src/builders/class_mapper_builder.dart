@@ -600,7 +600,9 @@ class ClassMapperBuilder {
           }
         })
         .map((p) => MapEntry(p, builders[p?.type.element?.name]))
-        .where((b) => b.value?.shouldGenerate(GenerateMethods.copy) ?? false);
+        .where((b) =>
+            (b.value?.hasCallableConstructor ?? false) &&
+            (b.value?.shouldGenerate(GenerateMethods.copy) ?? false));
 
     var classTypeParamsDef = element.typeParameters
         .map((p) => ', ${p.getDisplayString(withNullability: true)}')

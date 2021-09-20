@@ -1,3 +1,7 @@
+# 0.8.1
+
+- Fixed missing copyWith implementation bug
+
 # 0.8.0
 
 - Use CaseStyle in annotations
