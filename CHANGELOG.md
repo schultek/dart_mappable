@@ -1,3 +1,7 @@
+# 0.8.2
+
+- Fixed enum caseStyle bug
+
 # 0.8.1
 
 - Fixed missing copyWith implementation bug

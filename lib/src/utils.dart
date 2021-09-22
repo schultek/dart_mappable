@@ -90,12 +90,15 @@ extension OptIter<T> on Iterable<T> {
 
 CaseStyle? caseStyleFromAnnotation(DartObject obj) {
   return CaseStyle(
-    head:
-        TextTransformParser.parse(obj.getField('head')!.toStringValue() ?? ''),
-    tail:
-        TextTransformParser.parse(obj.getField('tail')!.toStringValue() ?? ''),
+    head: textTransformFromAnnotation(obj.getField('head')!),
+    tail: textTransformFromAnnotation(obj.getField('tail')!),
     separator: obj.getField('separator')!.toStringValue() ?? '',
   );
+}
+
+TextTransform? textTransformFromAnnotation(DartObject obj) {
+  var index = obj.getField('index')?.toIntValue();
+  return index != null ? TextTransform.values.skip(index).firstOrNull : null;
 }
 
 extension NullableType on DartType {

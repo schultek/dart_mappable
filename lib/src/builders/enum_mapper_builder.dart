@@ -20,7 +20,7 @@ class EnumMapperBuilder {
 
     caseStyle = annotation != null && !annotation.getField('caseStyle')!.isNull
         ? caseStyleFromAnnotation(annotation.getField('caseStyle')!)
-        : options.caseStyle;
+        : options.enumCaseStyle;
 
     defaultValue =
         annotation?.getField('defaultValue')!.getField('index')?.toIntValue();

@@ -2,6 +2,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
 import 'models/custom.dart';
+import 'models/enum.dart';
 import 'models/external.dart';
 import 'models/inheritance.dart';
 import 'models/model.dart';
@@ -207,6 +208,17 @@ void main() {
 
       var json = box.toJson();
       expect(json, equals('2'));
+    });
+  });
+
+  group('Enums', () {
+    test('Default enum case', () {
+      expect(State.On.toStringValue(), equals('on'));
+      expect(State.off.toStringValue(), equals('off'));
+      expect(State.itsComplicated.toStringValue(), equals('itsComplicated'));
+      expect(Color.Green.toStringValue(), equals('green'));
+      expect(Color.BLUE.toStringValue(), equals('blue'));
+      expect(Color.bloodRED.toStringValue(), equals('blood-red'));
     });
   });
 }

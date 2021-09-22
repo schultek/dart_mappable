@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'models/custom.dart';
+import 'models/enum.dart';
 import 'models/external.dart';
 import 'models/inheritance.dart';
 import 'models/model.dart';
@@ -49,6 +50,8 @@ var _mappers = <String, BaseMapper>{
   _typeOf<Top>(): TopMapper._(),
   _typeOf<GenericBox>(): GenericBoxMapper._(),
   // enum mappers
+  _typeOf<State>(): EnumMapper<State>(StateMapper.fromString, (State s) => s.toStringValue()),
+  _typeOf<Color>(): EnumMapper<Color>(ColorMapper.fromString, (Color c) => c.toStringValue()),
   _typeOf<Brand>(): EnumMapper<Brand>(BrandMapper.fromString, (Brand b) => b.toStringValue()),
   // custom mappers
   _typeOf<HashMap>(): HashMapMapper(),
@@ -833,6 +836,44 @@ class _GenericBoxCopyWithImpl<$R, T> extends BaseCopyWith<GenericBox<T>, $R> imp
 
 
 // === GENERATED ENUM MAPPERS AND EXTENSIONS ===
+
+extension StateMapper on State {
+  static State fromString(String value) {
+    switch (value) {
+      case 'on': return State.On;
+      case 'off': return State.off;
+      case 'itsComplicated': return State.itsComplicated;
+      default: throw MapperException('Cannot parse String $value to enum State');
+    }
+  }
+
+  String toStringValue() {
+    switch (this) {
+      case State.On: return 'on';
+      case State.off: return 'off';
+      case State.itsComplicated: return 'itsComplicated';
+    }
+  }
+}
+
+extension ColorMapper on Color {
+  static Color fromString(String value) {
+    switch (value) {
+      case 'green': return Color.Green;
+      case 'blue': return Color.BLUE;
+      case 'blood-red': return Color.bloodRED;
+      default: throw MapperException('Cannot parse String $value to enum Color');
+    }
+  }
+
+  String toStringValue() {
+    switch (this) {
+      case Color.Green: return 'green';
+      case Color.BLUE: return 'blue';
+      case Color.bloodRED: return 'blood-red';
+    }
+  }
+}
 
 extension BrandMapper on Brand {
   static Brand fromString(String value) {

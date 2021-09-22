@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../test.mapper.g.dart';
