@@ -170,6 +170,7 @@ void main() {
       TShirt tshirt = Mapper.fromJson(
           '{"neck": "V", "howbig": 1, "color": "green", "tag": "wool", "quality": "good"}');
       expect(tshirt.unmappedProps, equals({'tag': 'wool', 'quality': 'good'}));
+      expect(tshirt.toMap()['tag'], equals('wool'));
     });
   });
 

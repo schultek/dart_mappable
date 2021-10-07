@@ -1,3 +1,7 @@
+# 0.8.3
+
+- Fixed unmapped properties hook
+
 # 0.8.2
 
 - Fixed enum caseStyle bug

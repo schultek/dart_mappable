@@ -21,7 +21,9 @@ class UnmappedPropertiesHooks extends MappingHooks {
   dynamic afterEncode(dynamic value) {
     if (value is Map<String, dynamic>) {
       var props = value.remove(key);
-      value.addAll(props is Map<String, dynamic> ? props : {});
+      if (props is Map) {
+        value.addAll(props.cast());
+      }
     }
     return value;
   }

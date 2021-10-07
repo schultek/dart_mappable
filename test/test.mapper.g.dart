@@ -668,7 +668,7 @@ class TShirtMapper extends BaseMapper<TShirt> {
 
   @override Function get encoder => (TShirt v) => _hookedEncode<TShirt>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => encode(v));
   dynamic encode(TShirt v) => toMap(v);
-  Map<String, dynamic> toMap(TShirt t) => {'neck': Mapper.toValue(t.neck), 'howbig': Mapper.toValue(t.size), 'color': Mapper.toValue(t.color), 'label': 'TShirt'};
+  Map<String, dynamic> toMap(TShirt t) => {'neck': Mapper.toValue(t.neck), 'howbig': Mapper.toValue(t.size), 'color': Mapper.toValue(t.color), 'unmapped_props': Mapper.toValue(t.unmappedProps), 'label': 'TShirt'};
 
   @override String? stringify(TShirt self) => 'TShirt(size: ${Mapper.asString(self.size)}, color: ${Mapper.asString(self.color)}, unmappedProps: ${Mapper.asString(self.unmappedProps)}, neck: ${Mapper.asString(self.neck)})';
   @override int? hash(TShirt self) => Mapper.hash(self.neck) ^ Mapper.hash(self.size) ^ Mapper.hash(self.color) ^ Mapper.hash(self.unmappedProps);

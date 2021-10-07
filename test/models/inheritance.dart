@@ -18,8 +18,8 @@ abstract class SummerClothes extends Clothes {
 
 class TShirt extends Clothes {
   String neck;
-  TShirt(this.neck, int size, String? color, Map<String, dynamic> props)
-      : super(size, color: color, unmappedProps: props);
+  TShirt(this.neck, int size, String? color, Map<String, dynamic> unmappedProps)
+      : super(size, color: color, unmappedProps: unmappedProps);
 }
 
 class JeansHooks extends MappingHooks {
