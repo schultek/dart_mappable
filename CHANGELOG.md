@@ -1,3 +1,7 @@
+# 0.8.4
+
+- Added get, getAll and useAll methods to Mapper
+
 # 0.8.3
 
 - Fixed unmapped properties hook

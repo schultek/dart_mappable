@@ -65,8 +65,8 @@ abstract class PersonCopyWith<$R> {
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<Person, $R> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(Person value, Then<Person, $R> then) : super(value, then);
 
-  CarCopyWith<$R>? get car => _value.car != null ? CarCopyWith(_value.car!, (v) => call(car: v)) : null;
-  $R call({String? name, int? age, Object? car = _none}) => _then(Person(name ?? _value.name, age: age ?? _value.age, car: or(car, _value.car)));
+  @override CarCopyWith<$R>? get car => _value.car != null ? CarCopyWith(_value.car!, (v) => call(car: v)) : null;
+  @override $R call({String? name, int? age, Object? car = _none}) => _then(Person(name ?? _value.name, age: age ?? _value.age, car: or(car, _value.car)));
 }
 
 class CarMapper extends BaseMapper<Car> {
@@ -101,7 +101,7 @@ abstract class CarCopyWith<$R> {
 class _CarCopyWithImpl<$R> extends BaseCopyWith<Car, $R> implements CarCopyWith<$R> {
   _CarCopyWithImpl(Car value, Then<Car, $R> then) : super(value, then);
 
-  $R call({int? drivenKm, Brand? brand}) => _then(Car(drivenKm ?? _value.drivenKm, brand ?? _value.brand));
+  @override $R call({int? drivenKm, Brand? brand}) => _then(Car(drivenKm ?? _value.drivenKm, brand ?? _value.brand));
 }
 
 class BoxMapper extends BaseMapper<Box> {
@@ -136,7 +136,7 @@ abstract class BoxCopyWith<$R, T> {
 class _BoxCopyWithImpl<$R, T> extends BaseCopyWith<Box<T>, $R> implements BoxCopyWith<$R, T> {
   _BoxCopyWithImpl(Box<T> value, Then<Box<T>, $R> then) : super(value, then);
 
-  $R call({int? size, T? content}) => _then(Box(size ?? _value.size, content: content ?? _value.content));
+  @override $R call({int? size, T? content}) => _then(Box(size ?? _value.size, content: content ?? _value.content));
 }
 
 class ConfettiMapper extends BaseMapper<Confetti> {
@@ -171,7 +171,7 @@ abstract class ConfettiCopyWith<$R> {
 class _ConfettiCopyWithImpl<$R> extends BaseCopyWith<Confetti, $R> implements ConfettiCopyWith<$R> {
   _ConfettiCopyWithImpl(Confetti value, Then<Confetti, $R> then) : super(value, then);
 
-  $R call({String? color}) => _then(Confetti(color ?? _value.color));
+  @override $R call({String? color}) => _then(Confetti(color ?? _value.color));
 }
 
 
@@ -296,6 +296,10 @@ class Mapper<T> {
 
   static void use<T>(BaseMapper<T> mapper) => _mappers[_typeOf<T>()] = mapper;
   static BaseMapper<T>? unuse<T>() => _mappers.remove(_typeOf<T>()) as BaseMapper<T>?;
+  static void useAll(List<BaseMapper> mappers) => _mappers.addEntries(mappers.map((m) => MapEntry(_typeOf(m.type), m)));
+  
+  static BaseMapper<T>? get<T>() => _mappers[_typeOf<T>()] as BaseMapper<T>?;
+  static List<BaseMapper> getAll() => [..._mappers.values];
 }
 
 String _typeOf<T>([Type? t]) {
