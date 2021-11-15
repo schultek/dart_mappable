@@ -578,7 +578,7 @@ class ClassMapperBuilder {
         ? ', ${element.typeParameters.map((p) => p.name).join(', ')}'
         : '';
 
-    return '${className}CopyWith<$className$typeParams$classTypeParams> get copyWith => ${className}CopyWith(this, _\$identity);';
+    return '${className}CopyWith<$className$typeParams$classTypeParams> get copyWith => ${className}CopyWith(this, \$identity);';
   }
 
   String _generateCopyWithClasses(
@@ -640,15 +640,15 @@ class ClassMapperBuilder {
 
       if (b.key!.type.isNullable) {
         snippets.add(
-            '_value.${b.key!.name} != null ? ${b.value!.className}CopyWith(_value.${b.key!.name}!, (v) => call(${b.key!.name}: v)) : null;\n');
+            '\$value.${b.key!.name} != null ? ${b.value!.className}CopyWith(\$value.${b.key!.name}!, (v) => call(${b.key!.name}: v)) : null;\n');
       } else {
         snippets.add(
-            '${b.value!.className}CopyWith(_value.${b.key!.name}, (v) => call(${b.key!.name}: v));\n');
+            '${b.value!.className}CopyWith(\$value.${b.key!.name}, (v) => call(${b.key!.name}: v));\n');
       }
     }
 
     snippets.add(
-        '  @override \$R call(${_generateCopyWithParams(implVersion: true)}) => _then(${element.name}${constructor!.name != '' ? '.${constructor!.name}' : ''}(${_generateCopyWithConstructorParams()}));\n'
+        '  @override \$R call(${_generateCopyWithParams(implVersion: true)}) => \$then(${element.name}${constructor!.name != '' ? '.${constructor!.name}' : ''}(${_generateCopyWithConstructorParams()}));\n'
         '}');
 
     return snippets.join();
@@ -662,7 +662,7 @@ class ClassMapperBuilder {
       String paramDef(ParameterElement p) {
         var isNullable = p.type.nullabilitySuffix == NullabilitySuffix.question;
         return implVersion && isNullable
-            ? 'Object? ${p.name} = _none'
+            ? 'Object? ${p.name} = \$none'
             : '$type? ${p.name}';
       }
 
@@ -692,9 +692,9 @@ class ClassMapperBuilder {
 
       String paramString(ParameterElement p) {
         if (p.type.nullabilitySuffix == NullabilitySuffix.question) {
-          return 'or(${p.name}, _value.${p.name})';
+          return 'or(${p.name}, \$value.${p.name})';
         } else {
-          return '${p.name} ?? _value.${p.name}';
+          return '${p.name} ?? \$value.${p.name}';
         }
       }
 

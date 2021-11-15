@@ -37,3 +37,21 @@ extension HooksMapping on MappingHooks? {
 extension NullIterable<T> on Iterable<T> {
   T? get firstOrNull => isEmpty ? null : first;
 }
+
+class _None {
+  const _None();
+}
+
+const $none = _None();
+
+T $identity<T>(T value) => value;
+typedef Then<$T, $R> = $R Function($T);
+
+class BaseCopyWith<$T, $R> {
+  BaseCopyWith(this.$value, this.$then);
+
+  final $T $value;
+  final Then<$T, $R> $then;
+
+  T or<T>(Object? _v, T v) => _v == $none ? v : _v as T;
+}

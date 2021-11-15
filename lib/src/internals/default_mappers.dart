@@ -25,21 +25,22 @@ class EnumMapper<T> extends SimpleMapper<T> {
   final String Function(T value) _encoder;
 
   @override
-  T decode(dynamic v) => checked(v, _decoder);
+  T decode(dynamic value) => checked(value, _decoder);
   @override
-  dynamic encode(T value) => _encoder(value);
+  dynamic encode(T self) => _encoder(self);
 }
 
 class DateTimeMapper extends SimpleMapper<DateTime> {
   @override
-  DateTime decode(dynamic d) {
-    if (d is String) {
-      return DateTime.parse(d);
-    } else if (d is num) {
-      return DateTime.fromMillisecondsSinceEpoch(d.round());
+  DateTime decode(dynamic value) {
+    if (value is String) {
+      return DateTime.parse(value);
+    } else if (value is num) {
+      return DateTime.fromMillisecondsSinceEpoch(value.round());
     } else {
       throw MapperException(
-          'Cannot decode value of type ${d.runtimeType} to type DateTime, because a value of type String or num is expected.');
+          'Cannot decode value of type ${value.runtimeType} to type DateTime, '
+          'because a value of type String or num is expected.');
     }
   }
 

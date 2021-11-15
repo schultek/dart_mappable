@@ -74,7 +74,7 @@ class DataMapper extends BaseMapper<Data> {
 extension DataMapperExtension on Data {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DataCopyWith<Data> get copyWith => DataCopyWith(this, _$identity);
+  DataCopyWith<Data> get copyWith => DataCopyWith(this, $identity);
 }
 
 abstract class DataCopyWith<$R> {
@@ -85,7 +85,7 @@ abstract class DataCopyWith<$R> {
 class _DataCopyWithImpl<$R> extends BaseCopyWith<Data, $R> implements DataCopyWith<$R> {
   _DataCopyWithImpl(Data value, Then<Data, $R> then) : super(value, then);
 
-  @override $R call({int? value}) => _then(Data(value ?? _value.value));
+  @override $R call({int? value}) => $then(Data(value ?? $value.value));
 }
 
 class LoadingMapper extends BaseMapper<Loading> {
@@ -109,7 +109,7 @@ class LoadingMapper extends BaseMapper<Loading> {
 extension LoadingMapperExtension on Loading {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  LoadingCopyWith<Loading> get copyWith => LoadingCopyWith(this, _$identity);
+  LoadingCopyWith<Loading> get copyWith => LoadingCopyWith(this, $identity);
 }
 
 abstract class LoadingCopyWith<$R> {
@@ -120,7 +120,7 @@ abstract class LoadingCopyWith<$R> {
 class _LoadingCopyWithImpl<$R> extends BaseCopyWith<Loading, $R> implements LoadingCopyWith<$R> {
   _LoadingCopyWithImpl(Loading value, Then<Loading, $R> then) : super(value, then);
 
-  @override $R call() => _then(Loading());
+  @override $R call() => $then(Loading());
 }
 
 class ErrorDetailsMapper extends BaseMapper<ErrorDetails> {
@@ -144,7 +144,7 @@ class ErrorDetailsMapper extends BaseMapper<ErrorDetails> {
 extension ErrorDetailsMapperExtension on ErrorDetails {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ErrorDetailsCopyWith<ErrorDetails> get copyWith => ErrorDetailsCopyWith(this, _$identity);
+  ErrorDetailsCopyWith<ErrorDetails> get copyWith => ErrorDetailsCopyWith(this, $identity);
 }
 
 abstract class ErrorDetailsCopyWith<$R> {
@@ -155,7 +155,7 @@ abstract class ErrorDetailsCopyWith<$R> {
 class _ErrorDetailsCopyWithImpl<$R> extends BaseCopyWith<ErrorDetails, $R> implements ErrorDetailsCopyWith<$R> {
   _ErrorDetailsCopyWithImpl(ErrorDetails value, Then<ErrorDetails, $R> then) : super(value, then);
 
-  @override $R call({Object? message = _none}) => _then(ErrorDetails(or(message, _value.message)));
+  @override $R call({Object? message = $none}) => $then(ErrorDetails(or(message, $value.message)));
 }
 
 
@@ -222,18 +222,4 @@ extension MapGet on Map<String, dynamic> {
       hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
 }
 
-class _None { const _None(); }
-const _none = _None();
-
-T _$identity<T>(T value) => value;
-typedef Then<$T, $R> = $R Function($T);
-
-class BaseCopyWith<$T, $R> {
-  BaseCopyWith(this._value, this._then);
-
-  final $T _value;
-  final Then<$T, $R> _then;
-  
-  T or<T>(Object? _v, T v) => _v == _none ? v : _v as T;
-}
 

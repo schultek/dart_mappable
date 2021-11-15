@@ -38,7 +38,7 @@ class GameMapper extends BaseMapper<Game> {
 extension GameMapperExtension on Game {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  GameCopyWith<Game> get copyWith => GameCopyWith(this, _$identity);
+  GameCopyWith<Game> get copyWith => GameCopyWith(this, $identity);
 }
 
 abstract class GameCopyWith<$R> {
@@ -50,8 +50,8 @@ abstract class GameCopyWith<$R> {
 class _GameCopyWithImpl<$R> extends BaseCopyWith<Game, $R> implements GameCopyWith<$R> {
   _GameCopyWithImpl(Game value, Then<Game, $R> then) : super(value, then);
 
-  @override PlayerCopyWith<$R> get player => PlayerCopyWith(_value.player, (v) => call(player: v));
-  @override $R call({Player? player}) => _then(Game(player ?? _value.player));
+  @override PlayerCopyWith<$R> get player => PlayerCopyWith($value.player, (v) => call(player: v));
+  @override $R call({Player? player}) => $then(Game(player ?? $value.player));
 }
 
 class PlayerMapper extends BaseMapper<Player> {
@@ -75,7 +75,7 @@ class PlayerMapper extends BaseMapper<Player> {
 extension PlayerMapperExtension on Player {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PlayerCopyWith<Player> get copyWith => PlayerCopyWith(this, _$identity);
+  PlayerCopyWith<Player> get copyWith => PlayerCopyWith(this, $identity);
 }
 
 abstract class PlayerCopyWith<$R> {
@@ -86,7 +86,7 @@ abstract class PlayerCopyWith<$R> {
 class _PlayerCopyWithImpl<$R> extends BaseCopyWith<Player, $R> implements PlayerCopyWith<$R> {
   _PlayerCopyWithImpl(Player value, Then<Player, $R> then) : super(value, then);
 
-  @override $R call({String? id}) => _then(Player(id ?? _value.id));
+  @override $R call({String? id}) => $then(Player(id ?? $value.id));
 }
 
 class ClothesMapper extends BaseMapper<Clothes> {
@@ -110,7 +110,7 @@ class ClothesMapper extends BaseMapper<Clothes> {
 extension ClothesMapperExtension on Clothes {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ClothesCopyWith<Clothes> get copyWith => ClothesCopyWith(this, _$identity);
+  ClothesCopyWith<Clothes> get copyWith => ClothesCopyWith(this, $identity);
 }
 
 abstract class ClothesCopyWith<$R> {
@@ -121,7 +121,7 @@ abstract class ClothesCopyWith<$R> {
 class _ClothesCopyWithImpl<$R> extends BaseCopyWith<Clothes, $R> implements ClothesCopyWith<$R> {
   _ClothesCopyWithImpl(Clothes value, Then<Clothes, $R> then) : super(value, then);
 
-  @override $R call({int? size, Map<String, dynamic>? unmappedProps}) => _then(Clothes(size ?? _value.size, unmappedProps: unmappedProps ?? _value.unmappedProps));
+  @override $R call({int? size, Map<String, dynamic>? unmappedProps}) => $then(Clothes(size ?? $value.size, unmappedProps: unmappedProps ?? $value.unmappedProps));
 }
 
 
@@ -188,18 +188,4 @@ extension MapGet on Map<String, dynamic> {
       hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
 }
 
-class _None { const _None(); }
-const _none = _None();
-
-T _$identity<T>(T value) => value;
-typedef Then<$T, $R> = $R Function($T);
-
-class BaseCopyWith<$T, $R> {
-  BaseCopyWith(this._value, this._then);
-
-  final $T _value;
-  final Then<$T, $R> _then;
-  
-  T or<T>(Object? _v, T v) => _v == _none ? v : _v as T;
-}
 

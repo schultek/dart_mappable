@@ -38,7 +38,7 @@ class GenericBoxMapper extends BaseMapper<GenericBox> {
 extension GenericBoxMapperExtension<T> on GenericBox<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  GenericBoxCopyWith<GenericBox<T>, T> get copyWith => GenericBoxCopyWith(this, _$identity);
+  GenericBoxCopyWith<GenericBox<T>, T> get copyWith => GenericBoxCopyWith(this, $identity);
 }
 
 abstract class GenericBoxCopyWith<$R, T> {
@@ -49,7 +49,7 @@ abstract class GenericBoxCopyWith<$R, T> {
 class _GenericBoxCopyWithImpl<$R, T> extends BaseCopyWith<GenericBox<T>, $R> implements GenericBoxCopyWith<$R, T> {
   _GenericBoxCopyWithImpl(GenericBox<T> value, Then<GenericBox<T>, $R> then) : super(value, then);
 
-  @override $R call({T? content}) => _then(GenericBox(content ?? _value.content));
+  @override $R call({T? content}) => $then(GenericBox(content ?? $value.content));
 }
 
 
@@ -116,18 +116,4 @@ extension MapGet on Map<String, dynamic> {
       hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
 }
 
-class _None { const _None(); }
-const _none = _None();
-
-T _$identity<T>(T value) => value;
-typedef Then<$T, $R> = $R Function($T);
-
-class BaseCopyWith<$T, $R> {
-  BaseCopyWith(this._value, this._then);
-
-  final $T _value;
-  final Then<$T, $R> _then;
-  
-  T or<T>(Object? _v, T v) => _v == _none ? v : _v as T;
-}
 

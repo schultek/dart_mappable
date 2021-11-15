@@ -40,7 +40,7 @@ class PersonMapper extends BaseMapper<Person> {
 extension PersonMapperExtension on Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<Person> get copyWith => PersonCopyWith(this, _$identity);
+  PersonCopyWith<Person> get copyWith => PersonCopyWith(this, $identity);
 }
 
 abstract class PersonCopyWith<$R> {
@@ -52,8 +52,8 @@ abstract class PersonCopyWith<$R> {
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<Person, $R> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(Person value, Then<Person, $R> then) : super(value, then);
 
-  @override CarCopyWith<$R>? get car => _value.car != null ? CarCopyWith(_value.car!, (v) => call(car: v)) : null;
-  @override $R call({String? name, int? age, Object? car = _none}) => _then(Person(name ?? _value.name, age: age ?? _value.age, car: or(car, _value.car)));
+  @override CarCopyWith<$R>? get car => $value.car != null ? CarCopyWith($value.car!, (v) => call(car: v)) : null;
+  @override $R call({String? name, int? age, Object? car = $none}) => $then(Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
 }
 
 class CarMapper extends BaseMapper<Car> {
@@ -77,7 +77,7 @@ class CarMapper extends BaseMapper<Car> {
 extension CarMapperExtension on Car {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CarCopyWith<Car> get copyWith => CarCopyWith(this, _$identity);
+  CarCopyWith<Car> get copyWith => CarCopyWith(this, $identity);
 }
 
 abstract class CarCopyWith<$R> {
@@ -88,7 +88,7 @@ abstract class CarCopyWith<$R> {
 class _CarCopyWithImpl<$R> extends BaseCopyWith<Car, $R> implements CarCopyWith<$R> {
   _CarCopyWithImpl(Car value, Then<Car, $R> then) : super(value, then);
 
-  @override $R call({int? drivenKm, Brand? brand}) => _then(Car(drivenKm ?? _value.drivenKm, brand ?? _value.brand));
+  @override $R call({int? drivenKm, Brand? brand}) => $then(Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
 }
 
 class BoxMapper extends BaseMapper<Box> {
@@ -112,7 +112,7 @@ class BoxMapper extends BaseMapper<Box> {
 extension BoxMapperExtension<T> on Box<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  BoxCopyWith<Box<T>, T> get copyWith => BoxCopyWith(this, _$identity);
+  BoxCopyWith<Box<T>, T> get copyWith => BoxCopyWith(this, $identity);
 }
 
 abstract class BoxCopyWith<$R, T> {
@@ -123,7 +123,7 @@ abstract class BoxCopyWith<$R, T> {
 class _BoxCopyWithImpl<$R, T> extends BaseCopyWith<Box<T>, $R> implements BoxCopyWith<$R, T> {
   _BoxCopyWithImpl(Box<T> value, Then<Box<T>, $R> then) : super(value, then);
 
-  @override $R call({int? size, T? content}) => _then(Box(size ?? _value.size, content: content ?? _value.content));
+  @override $R call({int? size, T? content}) => $then(Box(size ?? $value.size, content: content ?? $value.content));
 }
 
 class ConfettiMapper extends BaseMapper<Confetti> {
@@ -147,7 +147,7 @@ class ConfettiMapper extends BaseMapper<Confetti> {
 extension ConfettiMapperExtension on Confetti {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ConfettiCopyWith<Confetti> get copyWith => ConfettiCopyWith(this, _$identity);
+  ConfettiCopyWith<Confetti> get copyWith => ConfettiCopyWith(this, $identity);
 }
 
 abstract class ConfettiCopyWith<$R> {
@@ -158,7 +158,7 @@ abstract class ConfettiCopyWith<$R> {
 class _ConfettiCopyWithImpl<$R> extends BaseCopyWith<Confetti, $R> implements ConfettiCopyWith<$R> {
   _ConfettiCopyWithImpl(Confetti value, Then<Confetti, $R> then) : super(value, then);
 
-  @override $R call({String? color}) => _then(Confetti(color ?? _value.color));
+  @override $R call({String? color}) => $then(Confetti(color ?? $value.color));
 }
 
 
@@ -242,18 +242,4 @@ extension MapGet on Map<String, dynamic> {
       hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
 }
 
-class _None { const _None(); }
-const _none = _None();
-
-T _$identity<T>(T value) => value;
-typedef Then<$T, $R> = $R Function($T);
-
-class BaseCopyWith<$T, $R> {
-  BaseCopyWith(this._value, this._then);
-
-  final $T _value;
-  final Then<$T, $R> _then;
-  
-  T or<T>(Object? _v, T v) => _v == _none ? v : _v as T;
-}
 

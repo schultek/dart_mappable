@@ -37,7 +37,7 @@ class ItemsMapper extends BaseMapper<Items> {
 extension ItemsMapperExtension on Items {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ItemsCopyWith<Items> get copyWith => ItemsCopyWith(this, _$identity);
+  ItemsCopyWith<Items> get copyWith => ItemsCopyWith(this, $identity);
 }
 
 abstract class ItemsCopyWith<$R> {
@@ -48,7 +48,7 @@ abstract class ItemsCopyWith<$R> {
 class _ItemsCopyWithImpl<$R> extends BaseCopyWith<Items, $R> implements ItemsCopyWith<$R> {
   _ItemsCopyWithImpl(Items value, Then<Items, $R> then) : super(value, then);
 
-  @override $R call({List<Item>? items, Map<int, Item>? items2}) => _then(Items(items ?? _value.items, items2 ?? _value.items2));
+  @override $R call({List<Item>? items, Map<int, Item>? items2}) => $then(Items(items ?? $value.items, items2 ?? $value.items2));
 }
 
 class ItemMapper extends BaseMapper<Item> {
@@ -72,7 +72,7 @@ class ItemMapper extends BaseMapper<Item> {
 extension ItemMapperExtension on Item {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ItemCopyWith<Item> get copyWith => ItemCopyWith(this, _$identity);
+  ItemCopyWith<Item> get copyWith => ItemCopyWith(this, $identity);
 }
 
 abstract class ItemCopyWith<$R> {
@@ -83,7 +83,7 @@ abstract class ItemCopyWith<$R> {
 class _ItemCopyWithImpl<$R> extends BaseCopyWith<Item, $R> implements ItemCopyWith<$R> {
   _ItemCopyWithImpl(Item value, Then<Item, $R> then) : super(value, then);
 
-  @override $R call({int? index}) => _then(Item(index ?? _value.index));
+  @override $R call({int? index}) => $then(Item(index ?? $value.index));
 }
 
 
@@ -150,18 +150,4 @@ extension MapGet on Map<String, dynamic> {
       hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
 }
 
-class _None { const _None(); }
-const _none = _None();
-
-T _$identity<T>(T value) => value;
-typedef Then<$T, $R> = $R Function($T);
-
-class BaseCopyWith<$T, $R> {
-  BaseCopyWith(this._value, this._then);
-
-  final $T _value;
-  final Then<$T, $R> _then;
-  
-  T or<T>(Object? _v, T v) => _v == _none ? v : _v as T;
-}
 

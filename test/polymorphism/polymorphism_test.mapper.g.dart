@@ -76,7 +76,7 @@ class CatMapper extends BaseMapper<Cat> {
 extension CatMapperExtension on Cat {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CatCopyWith<Cat> get copyWith => CatCopyWith(this, _$identity);
+  CatCopyWith<Cat> get copyWith => CatCopyWith(this, $identity);
 }
 
 abstract class CatCopyWith<$R> {
@@ -87,7 +87,7 @@ abstract class CatCopyWith<$R> {
 class _CatCopyWithImpl<$R> extends BaseCopyWith<Cat, $R> implements CatCopyWith<$R> {
   _CatCopyWithImpl(Cat value, Then<Cat, $R> then) : super(value, then);
 
-  @override $R call({String? name, String? color}) => _then(Cat(name ?? _value.name, color ?? _value.color));
+  @override $R call({String? name, String? color}) => $then(Cat(name ?? $value.name, color ?? $value.color));
 }
 
 class DogMapper extends BaseMapper<Dog> {
@@ -111,7 +111,7 @@ class DogMapper extends BaseMapper<Dog> {
 extension DogMapperExtension on Dog {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DogCopyWith<Dog> get copyWith => DogCopyWith(this, _$identity);
+  DogCopyWith<Dog> get copyWith => DogCopyWith(this, $identity);
 }
 
 abstract class DogCopyWith<$R> {
@@ -122,7 +122,7 @@ abstract class DogCopyWith<$R> {
 class _DogCopyWithImpl<$R> extends BaseCopyWith<Dog, $R> implements DogCopyWith<$R> {
   _DogCopyWithImpl(Dog value, Then<Dog, $R> then) : super(value, then);
 
-  @override $R call({String? name, int? age}) => _then(Dog(name ?? _value.name, age ?? _value.age));
+  @override $R call({String? name, int? age}) => $then(Dog(name ?? $value.name, age ?? $value.age));
 }
 
 class NullAnimalMapper extends BaseMapper<NullAnimal> {
@@ -146,7 +146,7 @@ class NullAnimalMapper extends BaseMapper<NullAnimal> {
 extension NullAnimalMapperExtension on NullAnimal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  NullAnimalCopyWith<NullAnimal> get copyWith => NullAnimalCopyWith(this, _$identity);
+  NullAnimalCopyWith<NullAnimal> get copyWith => NullAnimalCopyWith(this, $identity);
 }
 
 abstract class NullAnimalCopyWith<$R> {
@@ -157,7 +157,7 @@ abstract class NullAnimalCopyWith<$R> {
 class _NullAnimalCopyWithImpl<$R> extends BaseCopyWith<NullAnimal, $R> implements NullAnimalCopyWith<$R> {
   _NullAnimalCopyWithImpl(NullAnimal value, Then<NullAnimal, $R> then) : super(value, then);
 
-  @override $R call({String? name}) => _then(NullAnimal(name ?? _value.name));
+  @override $R call({String? name}) => $then(NullAnimal(name ?? $value.name));
 }
 
 class DefaultAnimalMapper extends BaseMapper<DefaultAnimal> {
@@ -181,7 +181,7 @@ class DefaultAnimalMapper extends BaseMapper<DefaultAnimal> {
 extension DefaultAnimalMapperExtension on DefaultAnimal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DefaultAnimalCopyWith<DefaultAnimal> get copyWith => DefaultAnimalCopyWith(this, _$identity);
+  DefaultAnimalCopyWith<DefaultAnimal> get copyWith => DefaultAnimalCopyWith(this, $identity);
 }
 
 abstract class DefaultAnimalCopyWith<$R> {
@@ -192,7 +192,7 @@ abstract class DefaultAnimalCopyWith<$R> {
 class _DefaultAnimalCopyWithImpl<$R> extends BaseCopyWith<DefaultAnimal, $R> implements DefaultAnimalCopyWith<$R> {
   _DefaultAnimalCopyWithImpl(DefaultAnimal value, Then<DefaultAnimal, $R> then) : super(value, then);
 
-  @override $R call({String? name, String? type}) => _then(DefaultAnimal(name ?? _value.name, type ?? _value.type));
+  @override $R call({String? name, String? type}) => $then(DefaultAnimal(name ?? $value.name, type ?? $value.type));
 }
 
 
@@ -259,18 +259,4 @@ extension MapGet on Map<String, dynamic> {
       hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
 }
 
-class _None { const _None(); }
-const _none = _None();
-
-T _$identity<T>(T value) => value;
-typedef Then<$T, $R> = $R Function($T);
-
-class BaseCopyWith<$T, $R> {
-  BaseCopyWith(this._value, this._then);
-
-  final $T _value;
-  final Then<$T, $R> _then;
-  
-  T or<T>(Object? _v, T v) => _v == _none ? v : _v as T;
-}
 

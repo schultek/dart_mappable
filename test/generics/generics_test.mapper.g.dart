@@ -37,7 +37,7 @@ class BoxMapper extends BaseMapper<Box> {
 extension BoxMapperExtension<T extends Object> on Box<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  BoxCopyWith<Box<T>, T> get copyWith => BoxCopyWith(this, _$identity);
+  BoxCopyWith<Box<T>, T> get copyWith => BoxCopyWith(this, $identity);
 }
 
 abstract class BoxCopyWith<$R, T extends Object> {
@@ -48,7 +48,7 @@ abstract class BoxCopyWith<$R, T extends Object> {
 class _BoxCopyWithImpl<$R, T extends Object> extends BaseCopyWith<Box<T>, $R> implements BoxCopyWith<$R, T> {
   _BoxCopyWithImpl(Box<T> value, Then<Box<T>, $R> then) : super(value, then);
 
-  @override $R call({int? size, List<T>? contents}) => _then(Box(size ?? _value.size, contents: contents ?? _value.contents));
+  @override $R call({int? size, List<T>? contents}) => $then(Box(size ?? $value.size, contents: contents ?? $value.contents));
 }
 
 class ConfettiMapper extends BaseMapper<Confetti> {
@@ -72,7 +72,7 @@ class ConfettiMapper extends BaseMapper<Confetti> {
 extension ConfettiMapperExtension on Confetti {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ConfettiCopyWith<Confetti> get copyWith => ConfettiCopyWith(this, _$identity);
+  ConfettiCopyWith<Confetti> get copyWith => ConfettiCopyWith(this, $identity);
 }
 
 abstract class ConfettiCopyWith<$R> {
@@ -83,7 +83,7 @@ abstract class ConfettiCopyWith<$R> {
 class _ConfettiCopyWithImpl<$R> extends BaseCopyWith<Confetti, $R> implements ConfettiCopyWith<$R> {
   _ConfettiCopyWithImpl(Confetti value, Then<Confetti, $R> then) : super(value, then);
 
-  @override $R call({String? color}) => _then(Confetti(color ?? _value.color));
+  @override $R call({String? color}) => $then(Confetti(color ?? $value.color));
 }
 
 
@@ -150,18 +150,4 @@ extension MapGet on Map<String, dynamic> {
       hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
 }
 
-class _None { const _None(); }
-const _none = _None();
-
-T _$identity<T>(T value) => value;
-typedef Then<$T, $R> = $R Function($T);
-
-class BaseCopyWith<$T, $R> {
-  BaseCopyWith(this._value, this._then);
-
-  final $T _value;
-  final Then<$T, $R> _then;
-  
-  T or<T>(Object? _v, T v) => _v == _none ? v : _v as T;
-}
 

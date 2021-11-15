@@ -22,7 +22,7 @@ class PersonMapper extends BaseMapper<Person> {
 }
 
 extension PersonMapperExtension on Person {
-  PersonCopyWith<Person> get copyWith => PersonCopyWith(this, _$identity);
+  PersonCopyWith<Person> get copyWith => PersonCopyWith(this, $identity);
 }
 
 abstract class PersonCopyWith<$R> {
@@ -34,8 +34,8 @@ abstract class PersonCopyWith<$R> {
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<Person, $R> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(Person value, Then<Person, $R> then) : super(value, then);
 
-  @override CarCopyWith<$R> get car => CarCopyWith(_value.car, (v) => call(car: v));
-  @override $R call({String? name, Car? car}) => _then(Person(name ?? _value.name, car ?? _value.car));
+  @override CarCopyWith<$R> get car => CarCopyWith($value.car, (v) => call(car: v));
+  @override $R call({String? name, Car? car}) => $then(Person(name ?? $value.name, car ?? $value.car));
 }
 
 class CarMapper extends BaseMapper<Car> {
@@ -43,7 +43,7 @@ class CarMapper extends BaseMapper<Car> {
 }
 
 extension CarMapperExtension on Car {
-  CarCopyWith<Car> get copyWith => CarCopyWith(this, _$identity);
+  CarCopyWith<Car> get copyWith => CarCopyWith(this, $identity);
 }
 
 abstract class CarCopyWith<$R> {
@@ -55,8 +55,8 @@ abstract class CarCopyWith<$R> {
 class _CarCopyWithImpl<$R> extends BaseCopyWith<Car, $R> implements CarCopyWith<$R> {
   _CarCopyWithImpl(Car value, Then<Car, $R> then) : super(value, then);
 
-  @override BrandCopyWith<$R> get brand => BrandCopyWith(_value.brand, (v) => call(brand: v));
-  @override $R call({Brand? brand, String? model}) => _then(Car(brand ?? _value.brand, model ?? _value.model));
+  @override BrandCopyWith<$R> get brand => BrandCopyWith($value.brand, (v) => call(brand: v));
+  @override $R call({Brand? brand, String? model}) => $then(Car(brand ?? $value.brand, model ?? $value.model));
 }
 
 class BrandMapper extends BaseMapper<Brand> {
@@ -64,7 +64,7 @@ class BrandMapper extends BaseMapper<Brand> {
 }
 
 extension BrandMapperExtension on Brand {
-  BrandCopyWith<Brand> get copyWith => BrandCopyWith(this, _$identity);
+  BrandCopyWith<Brand> get copyWith => BrandCopyWith(this, $identity);
 }
 
 abstract class BrandCopyWith<$R> {
@@ -75,7 +75,7 @@ abstract class BrandCopyWith<$R> {
 class _BrandCopyWithImpl<$R> extends BaseCopyWith<Brand, $R> implements BrandCopyWith<$R> {
   _BrandCopyWithImpl(Brand value, Then<Brand, $R> then) : super(value, then);
 
-  @override $R call({String? name}) => _then(Brand(name ?? _value.name));
+  @override $R call({String? name}) => $then(Brand(name ?? $value.name));
 }
 
 
@@ -142,18 +142,4 @@ extension MapGet on Map<String, dynamic> {
       hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
 }
 
-class _None { const _None(); }
-const _none = _None();
-
-T _$identity<T>(T value) => value;
-typedef Then<$T, $R> = $R Function($T);
-
-class BaseCopyWith<$T, $R> {
-  BaseCopyWith(this._value, this._then);
-
-  final $T _value;
-  final Then<$T, $R> _then;
-  
-  T or<T>(Object? _v, T v) => _v == _none ? v : _v as T;
-}
 
