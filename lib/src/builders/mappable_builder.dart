@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:path/path.dart' as path;
 
 import 'builder_options.dart';
 import 'builder_snippets.dart';
 import 'class_mapper_builder.dart';
 import 'enum_mapper_builder.dart';
+import 'imports_builder.dart';
 import 'utils.dart';
 
 /// The main builder used for code generation
@@ -37,34 +37,13 @@ class MappableBuilder implements Builder {
   /// Main generation handler
   /// Searches for mappable classes and enums recursively
   String generate(List<LibraryElement> libraries, BuildStep buildStep) {
-    Set<String> imports = {
-      'package:dart_mappable/internals.dart',
-    };
+    var imports = ImportsBuilder(buildStep.inputId)
+      ..add(Uri.parse('package:dart_mappable/internals.dart'));
 
     Map<String, ClassMapperBuilder> classMappers = {};
     Map<String, EnumMapperBuilder> enumMappers = {};
 
     Map<String, ClassElement> customMappers = {};
-
-    void addImport(LibraryElement library) {
-      var lib = library.source.uri;
-      if (lib.isScheme('asset')) {
-        var relativePath = path.posix
-            .relative(lib.path, from: path.dirname(buildStep.inputId.uri.path));
-        imports.add(relativePath.replaceAll('\\', '/'));
-      } else if (lib.isScheme('package') &&
-          lib.pathSegments.first == buildStep.inputId.package) {
-        var libPath = lib.replace(pathSegments: lib.pathSegments.skip(1)).path;
-        var input = buildStep.inputId.uri;
-        var inputPath =
-            input.replace(pathSegments: input.pathSegments.skip(1)).path;
-        var relativePath =
-            path.relative(libPath, from: path.dirname(inputPath));
-        imports.add(relativePath.replaceAll('\\', '/'));
-      } else {
-        imports.add(lib.toString().replaceAll('\\', '/'));
-      }
-    }
 
     for (var library in libraries) {
       if (library.isInSdk) {
@@ -145,19 +124,19 @@ class MappableBuilder implements Builder {
           }
           var type = element.allSupertypes[mapperIndex].typeArguments[0];
           customMappers[type.element!.name!] = element;
-          addImport(library);
-          addImport(type.element!.library!);
+          imports.addLibrary(library);
+          imports.addLibrary(type.element!.library!);
         } else if (libraryOptions.shouldGenerateFor(element) ||
             (!element.isEnum && classChecker.hasAnnotationOf(element)) ||
             (element.isEnum && enumChecker.hasAnnotationOf(element))) {
           addRecursive(element);
-          addImport(library);
+          imports.addLibrary(library);
         }
       }
     }
 
     return ''
-        '${organizeImports(imports)}\n'
+        '${imports.write()}\n'
         '// === ALL STATICALLY REGISTERED MAPPERS ===\n\n'
         'var _mappers = <BaseMapper>{\n'
         '  // class mappers\n'
@@ -176,27 +155,5 @@ class MappableBuilder implements Builder {
         '\n\n'
         '// === GENERATED UTILITY CODE ===\n\n'
         '$mapperCode';
-  }
-
-  String organizeImports(Set<String> imports) {
-    List<String> sdk = [], package = [], relative = [];
-
-    for (var import in imports) {
-      if (import.startsWith('dart:')) {
-        sdk.add(import);
-      } else if (import.startsWith('package:')) {
-        package.add(import);
-      } else {
-        relative.add(import);
-      }
-    }
-
-    sdk.sort();
-    package.sort();
-    relative.sort();
-
-    String joined(List<String> s) =>
-        s.isNotEmpty ? '${s.map((s) => "import '$s';").join('\n')}\n\n' : '';
-    return joined(sdk) + joined(package) + joined(relative);
   }
 }
