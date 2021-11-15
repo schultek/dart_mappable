@@ -1,11 +1,12 @@
 import 'dart:convert';
 
+import 'package:type_plus/type_plus.dart' hide typeOf;
+
 import '../core/mappers.dart';
 import 'default_mappers.dart';
 import 'mapper_utils.dart';
-import 'type_info.dart';
 
-abstract class MapperContainer {
+abstract class MapperContainer implements TypeProvider {
   final Map<String, BaseMapper> _mappers = {};
 
   MapperContainer(Set<BaseMapper> mappers) {
@@ -22,53 +23,76 @@ abstract class MapperContainer {
       MapMapper<Map>(<K, V>(map) => map, <K, V>(f) => f<Map<K, V>>(), this),
       ...mappers,
     ]);
+    TypePlus.register(this);
+  }
+
+  BaseMapper? _mapperFor(dynamic value) {
+    bool isType<T>() => value is T;
+    return _mappers[idOf(value.runtimeType.base)] ??
+        _mappers.values
+            .where((m) => m.type != dynamic)
+            .where((m) => isType.callWith(typeArguments: [m.type]) as bool)
+            .firstOrNull;
+  }
+
+  @override
+  Function? getFactoryById(String id) {
+    return _mappers[id]?.typeFactory;
+  }
+
+  @override
+  List<Function> getFactoriesByName(String name) {
+    return _mappers.values
+        .where((m) => m.type.name == name)
+        .map((m) => m.typeFactory)
+        .toList();
+  }
+
+  @override
+  String idOf(Type type) {
+    return type.name; // TODO support non-unique names
   }
 
   T fromValue<T>(dynamic value) {
     if (value.runtimeType == T || value == null) {
       return value as T;
     } else {
-      TypeInfo typeInfo;
+      var type = T;
       if (value is Map<String, dynamic> && value['__type'] != null) {
-        typeInfo = TypeInfo.fromType(value['__type'] as String);
-      } else {
-        typeInfo = TypeInfo.fromType<T>();
+        type = TypePlus.fromId(value['__type'] as String);
       }
-      var mapper = _mappers[typeInfo.type];
+      var mapper = _mappers[type.baseId];
       if (mapper != null) {
         try {
-          return genericCall(typeInfo, mapper.decoder, value, _mappers) as T;
+          return mapper.decoder
+              .callWith(parameters: [value], typeArguments: type.args) as T;
         } catch (e) {
           throw MapperException(
-              'Error on decoding type $T: ${e is MapperException ? e.message : e}');
+              'Error on decoding type $type: ${e is MapperException ? e.message : e}');
         }
       } else {
         throw MapperException(
-            'Cannot decode value $value of type ${value.runtimeType} to type $T. Unknown type. Did you forgot to include the class or register a custom mapper?');
+            'Cannot decode value $value of type ${value.runtimeType} to type $type. Unknown type. Did you forgot to include the class or register a custom mapper?');
       }
     }
   }
 
   dynamic toValue(dynamic value) {
     if (value == null) return null;
-    var typeInfo = TypeInfo.fromValue(value);
-    var mapper = _mappers[typeInfo.type] ??
-        _mappers.values
-            .cast<BaseMapper?>()
-            .firstWhere((m) => m!.isFor(value), orElse: () => null);
+    var type = value.runtimeType;
+    var mapper = _mapperFor(value);
     if (mapper != null) {
       var encoded = mapper.encoder.call(value);
       if (encoded is Map<String, dynamic>) {
         clearType(encoded);
-        if (typeInfo.params.isNotEmpty) {
-          typeInfo.type = typeOf(mapper.type);
-          encoded['__type'] = typeInfo.toString();
+        if (type.args.isNotEmpty) {
+          encoded['__type'] = type.id;
         }
       }
       return encoded;
     } else {
       throw MapperException(
-          'Cannot encode value $value of type ${value.runtimeType}. Unknown type. Did you forgot to include the class or register a custom mapper?');
+          'Cannot encode value $value of type $type. Unknown type. Did you forgot to include the class or register a custom mapper?');
     }
   }
 
@@ -108,26 +132,23 @@ abstract class MapperContainer {
     if (value == null || other == null) {
       return value == other;
     }
-    var type = TypeInfo.fromValue(value);
-    return _mappers[type.type]?.equals(value, other) ?? value == other;
+    return _mapperFor(value)?.equals(value, other) ?? value == other;
   }
 
   int hash(dynamic value) {
-    var type = TypeInfo.fromValue(value);
-    return _mappers[type.type]?.hash(value) ?? value.hashCode;
+    return _mapperFor(value)?.hash(value) ?? value.hashCode;
   }
 
   String asString(dynamic value) {
-    var type = TypeInfo.fromValue(value);
-    return _mappers[type.type]?.stringify(value) ?? value.toString();
+    return _mapperFor(value)?.stringify(value) ?? value.toString();
   }
 
-  void use<T>(BaseMapper<T> mapper) => _mappers[typeOf<T>()] = mapper;
-  BaseMapper<T>? unuse<T>() => _mappers.remove(typeOf<T>()) as BaseMapper<T>?;
+  void use<T>(BaseMapper<T> mapper) => _mappers[idOf(T)] = mapper;
+  BaseMapper<T>? unuse<T>() => _mappers.remove(idOf(T)) as BaseMapper<T>?;
   void useAll(List<BaseMapper> mappers) =>
-      _mappers.addEntries(mappers.map((m) => MapEntry(typeOf(m.type), m)));
+      _mappers.addEntries(mappers.map((m) => MapEntry(idOf(m.type), m)));
 
   BaseMapper<T>? get<T>([Type? type]) =>
-      _mappers[typeOf<T>(type)] as BaseMapper<T>?;
+      _mappers[idOf(type ?? T)] as BaseMapper<T>?;
   List<BaseMapper> getAll() => [..._mappers.values];
 }

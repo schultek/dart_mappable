@@ -7,7 +7,7 @@ abstract class BaseMapper<T> {
   Function get encoder =>
       (_) => throw MapperException('Encoding is not supported for $type.');
 
-  Function? get typeFactory => (f) => f<T>();
+  Function get typeFactory => (f) => f<T>();
 
   bool? equals(T self, T other) => null;
   int? hash(T self) => null;
