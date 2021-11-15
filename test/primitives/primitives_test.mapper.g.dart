@@ -1,4 +1,4 @@
-import 'package:dart_mappable/dart_mappable.dart';
+import 'package:dart_mappable/internals.dart';
 
 import 'primitives_test.dart';
 
@@ -20,7 +20,7 @@ class ItemsMapper extends BaseMapper<Items> {
   ItemsMapper._();
 
   @override Function get decoder => decode;
-  Items decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Items decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   Items fromMap(Map<String, dynamic> map) => Items(map.get('items'), map.get('items2'));
 
   @override Function get encoder => (Items v) => encode(v);
@@ -55,7 +55,7 @@ class ItemMapper extends BaseMapper<Item> {
   ItemMapper._();
 
   @override Function get decoder => decode;
-  Item decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Item decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   Item fromMap(Map<String, dynamic> map) => Item(map.get('index'));
 
   @override Function get encoder => (Item v) => encode(v);
@@ -138,8 +138,6 @@ mixin Mappable {
       ?? super == other));
   @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
 }
-
-const _checked = MapperContainer.checked;
 
 extension MapGet on Map<String, dynamic> {
   T get<T>(String key, {MappingHooks? hooks}) => _getOr(

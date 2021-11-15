@@ -45,8 +45,6 @@ mixin Mappable {
   @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
 }
 
-const _checked = MapperContainer.checked;
-
 extension MapGet on Map<String, dynamic> {
   T get<T>(String key, {MappingHooks? hooks}) => _getOr(
       key, hooks, () => throw MapperException('Parameter $key is required.'));

@@ -1,4 +1,4 @@
-import 'package:dart_mappable/dart_mappable.dart';
+import 'package:dart_mappable/internals.dart';
 
 import 'custom_mapper_test.dart';
 
@@ -21,7 +21,7 @@ class GenericBoxMapper extends BaseMapper<GenericBox> {
   GenericBoxMapper._();
 
   @override Function get decoder => decode;
-  GenericBox<T> decode<T>(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
+  GenericBox<T> decode<T>(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
   GenericBox<T> fromMap<T>(Map<String, dynamic> map) => GenericBox(map.get('content'));
 
   @override Function get encoder => (GenericBox v) => encode(v);
@@ -104,8 +104,6 @@ mixin Mappable {
       ?? super == other));
   @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
 }
-
-const _checked = MapperContainer.checked;
 
 extension MapGet on Map<String, dynamic> {
   T get<T>(String key, {MappingHooks? hooks}) => _getOr(

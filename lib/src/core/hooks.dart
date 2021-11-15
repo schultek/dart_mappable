@@ -2,22 +2,6 @@ import 'dart:collection';
 
 import 'annotations.dart';
 
-extension HooksMapping on MappingHooks? {
-  T decode<T>(dynamic value, T Function(dynamic value) fn) {
-    if (this == null) return fn(value);
-    var v = this!.beforeDecode(value);
-    if (v is! T) v = fn(v);
-    return this!.afterDecode(v) as T;
-  }
-
-  dynamic encode<T>(T value, dynamic Function(T value) fn) {
-    if (this == null) return fn(value);
-    var v = this!.beforeEncode(value);
-    if (v is T) v = fn(v);
-    return this!.afterEncode(v);
-  }
-}
-
 /// Ready-to-use [MappingHooks] to get all unmapped properties in a [Map].
 class UnmappedPropertiesHooks extends MappingHooks {
   /// The key of the target property of your class.

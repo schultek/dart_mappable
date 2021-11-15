@@ -4,11 +4,11 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:path/path.dart' as path;
 
-import '../builder_options.dart';
-import '../builder_snippets.dart';
-import '../utils.dart';
+import 'builder_options.dart';
+import 'builder_snippets.dart';
 import 'class_mapper_builder.dart';
 import 'enum_mapper_builder.dart';
+import 'utils.dart';
 
 /// The main builder used for code generation
 class MappableBuilder implements Builder {
@@ -38,7 +38,7 @@ class MappableBuilder implements Builder {
   /// Searches for mappable classes and enums recursively
   String generate(List<LibraryElement> libraries, BuildStep buildStep) {
     Set<String> imports = {
-      'package:dart_mappable/dart_mappable.dart',
+      'package:dart_mappable/internals.dart',
     };
 
     Map<String, ClassMapperBuilder> classMappers = {};

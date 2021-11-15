@@ -1,4 +1,4 @@
-import 'package:dart_mappable/dart_mappable.dart';
+import 'package:dart_mappable/internals.dart';
 
 import 'polymorphism_test.dart';
 
@@ -23,7 +23,7 @@ class AnimalMapper extends BaseMapper<Animal> {
   AnimalMapper._();
 
   @override Function get decoder => decode;
-  Animal decode(dynamic v) => _checked(v, (Map<String, dynamic> map) {
+  Animal decode(dynamic v) => checked(v, (Map<String, dynamic> map) {
     switch(map['type']) {
       case 'Cat': return CatMapper._().decode(map);
       case 1: return DogMapper._().decode(map);
@@ -59,7 +59,7 @@ class CatMapper extends BaseMapper<Cat> {
   CatMapper._();
 
   @override Function get decoder => decode;
-  Cat decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Cat decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   Cat fromMap(Map<String, dynamic> map) => Cat(map.get('name'), map.get('color'));
 
   @override Function get encoder => (Cat v) => encode(v);
@@ -94,7 +94,7 @@ class DogMapper extends BaseMapper<Dog> {
   DogMapper._();
 
   @override Function get decoder => decode;
-  Dog decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Dog decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   Dog fromMap(Map<String, dynamic> map) => Dog(map.get('name'), map.get('age'));
 
   @override Function get encoder => (Dog v) => encode(v);
@@ -129,7 +129,7 @@ class NullAnimalMapper extends BaseMapper<NullAnimal> {
   NullAnimalMapper._();
 
   @override Function get decoder => decode;
-  NullAnimal decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  NullAnimal decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   NullAnimal fromMap(Map<String, dynamic> map) => NullAnimal(map.get('name'));
 
   @override Function get encoder => (NullAnimal v) => encode(v);
@@ -164,7 +164,7 @@ class DefaultAnimalMapper extends BaseMapper<DefaultAnimal> {
   DefaultAnimalMapper._();
 
   @override Function get decoder => decode;
-  DefaultAnimal decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  DefaultAnimal decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   DefaultAnimal fromMap(Map<String, dynamic> map) => DefaultAnimal(map.get('name'), map.get('type'));
 
   @override Function get encoder => (DefaultAnimal v) => encode(v);
@@ -247,8 +247,6 @@ mixin Mappable {
       ?? super == other));
   @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
 }
-
-const _checked = MapperContainer.checked;
 
 extension MapGet on Map<String, dynamic> {
   T get<T>(String key, {MappingHooks? hooks}) => _getOr(

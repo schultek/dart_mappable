@@ -1,4 +1,4 @@
-import 'package:dart_mappable/dart_mappable.dart';
+import 'package:dart_mappable/internals.dart';
 
 import 'hooks_test.dart';
 
@@ -21,7 +21,7 @@ class GameMapper extends BaseMapper<Game> {
   GameMapper._();
 
   @override Function get decoder => decode;
-  Game decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Game decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   Game fromMap(Map<String, dynamic> map) => Game(map.get('player', hooks: const PlayerHooks()));
 
   @override Function get encoder => (Game v) => encode(v);
@@ -58,7 +58,7 @@ class PlayerMapper extends BaseMapper<Player> {
   PlayerMapper._();
 
   @override Function get decoder => decode;
-  Player decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Player decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   Player fromMap(Map<String, dynamic> map) => Player(map.get('id'));
 
   @override Function get encoder => (Player v) => encode(v);
@@ -93,7 +93,7 @@ class ClothesMapper extends BaseMapper<Clothes> {
   ClothesMapper._();
 
   @override Function get decoder => decode;
-  Clothes decode(dynamic v) => const UnmappedPropertiesHooks('unmapped_props').decode(v, (v) => _checked(v, (Map<String, dynamic> map) => fromMap(map)));
+  Clothes decode(dynamic v) => const UnmappedPropertiesHooks('unmapped_props').decode(v, (v) => checked(v, (Map<String, dynamic> map) => fromMap(map)));
   Clothes fromMap(Map<String, dynamic> map) => Clothes(map.get('size'), unmappedProps: map.getOpt('unmapped_props') ?? const {});
 
   @override Function get encoder => (Clothes v) => encode(v);
@@ -176,8 +176,6 @@ mixin Mappable {
       ?? super == other));
   @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
 }
-
-const _checked = MapperContainer.checked;
 
 extension MapGet on Map<String, dynamic> {
   T get<T>(String key, {MappingHooks? hooks}) => _getOr(

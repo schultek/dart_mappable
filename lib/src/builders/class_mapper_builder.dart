@@ -4,10 +4,10 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 
-import '../builder_options.dart';
 import '../core/annotations.dart';
 import '../core/case_style.dart';
-import '../utils.dart';
+import 'builder_options.dart';
+import 'utils.dart';
 
 /// Generates code for a specific class
 class ClassMapperBuilder {
@@ -269,7 +269,7 @@ class ClassMapperBuilder {
           '  }';
     }
 
-    call = '_checked(v, (Map<String, dynamic> map) $call)';
+    call = 'checked(v, (Map<String, dynamic> map) $call)';
     if (hookForClass != null) {
       call = 'const $hookForClass.decode(v, (v) => $call)';
     }

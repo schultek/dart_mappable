@@ -6,9 +6,9 @@ import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:source_gen/source_gen.dart';
 
-import 'core/annotations.dart';
-import 'core/case_style.dart';
-import 'core/mappers.dart';
+import '../core/annotations.dart';
+import '../core/case_style.dart';
+import '../core/mappers.dart';
 
 const enumChecker = TypeChecker.fromRuntime(MappableEnum);
 const constructorChecker = TypeChecker.fromRuntime(MappableConstructor);

@@ -1,4 +1,4 @@
-import 'package:dart_mappable/dart_mappable.dart';
+import 'package:dart_mappable/internals.dart';
 
 import 'generics_test.dart';
 
@@ -20,7 +20,7 @@ class BoxMapper extends BaseMapper<Box> {
   BoxMapper._();
 
   @override Function get decoder => decode;
-  Box<T> decode<T extends Object>(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
+  Box<T> decode<T extends Object>(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
   Box<T> fromMap<T extends Object>(Map<String, dynamic> map) => Box(map.get('size'), contents: map.get('contents'));
 
   @override Function get encoder => (Box v) => encode(v);
@@ -55,7 +55,7 @@ class ConfettiMapper extends BaseMapper<Confetti> {
   ConfettiMapper._();
 
   @override Function get decoder => decode;
-  Confetti decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Confetti decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   Confetti fromMap(Map<String, dynamic> map) => Confetti(map.get('color'));
 
   @override Function get encoder => (Confetti v) => encode(v);
@@ -138,8 +138,6 @@ mixin Mappable {
       ?? super == other));
   @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
 }
-
-const _checked = MapperContainer.checked;
 
 extension MapGet on Map<String, dynamic> {
   T get<T>(String key, {MappingHooks? hooks}) => _getOr(

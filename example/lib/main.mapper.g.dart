@@ -1,4 +1,4 @@
-import 'package:dart_mappable/dart_mappable.dart';
+import 'package:dart_mappable/internals.dart';
 
 import 'main.dart';
 
@@ -23,7 +23,7 @@ class PersonMapper extends BaseMapper<Person> {
   PersonMapper._();
 
   @override Function get decoder => decode;
-  Person decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Person decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   Person fromMap(Map<String, dynamic> map) => Person(map.get('name'), age: map.getOpt('age') ?? 18, car: map.getOpt('car'));
 
   @override Function get encoder => (Person v) => encode(v);
@@ -60,7 +60,7 @@ class CarMapper extends BaseMapper<Car> {
   CarMapper._();
 
   @override Function get decoder => decode;
-  Car decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Car decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   Car fromMap(Map<String, dynamic> map) => Car(map.get('driven_km'), map.get('brand'));
 
   @override Function get encoder => (Car v) => encode(v);
@@ -95,7 +95,7 @@ class BoxMapper extends BaseMapper<Box> {
   BoxMapper._();
 
   @override Function get decoder => decode;
-  Box<T> decode<T>(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
+  Box<T> decode<T>(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
   Box<T> fromMap<T>(Map<String, dynamic> map) => Box(map.get('size'), content: map.get('content'));
 
   @override Function get encoder => (Box v) => encode(v);
@@ -130,7 +130,7 @@ class ConfettiMapper extends BaseMapper<Confetti> {
   ConfettiMapper._();
 
   @override Function get decoder => decode;
-  Confetti decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Confetti decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   Confetti fromMap(Map<String, dynamic> map) => Confetti(map.get('color'));
 
   @override Function get encoder => (Confetti v) => encode(v);
@@ -230,8 +230,6 @@ mixin Mappable {
       ?? super == other));
   @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
 }
-
-const _checked = MapperContainer.checked;
 
 extension MapGet on Map<String, dynamic> {
   T get<T>(String key, {MappingHooks? hooks}) => _getOr(

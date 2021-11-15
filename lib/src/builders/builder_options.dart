@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 
-import 'core/case_style.dart';
+import '../core/case_style.dart';
 import 'utils.dart';
 
 /// The builder options for a specific library
