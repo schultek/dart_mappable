@@ -1,4 +1,4 @@
-include: package:lint/analysis_options.yaml
+include: package:lints/recommended.yaml
 
 analyzer:
   strong-mode:
@@ -10,6 +10,3 @@ linter:
     sort_pub_dependencies: true
     prefer_relative_imports: true
     prefer_single_quotes: true
-
-    prefer_final_locals: false
-    prefer_final_in_for_each: false
