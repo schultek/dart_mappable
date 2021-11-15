@@ -38,7 +38,6 @@ class MappableBuilder implements Builder {
   /// Searches for mappable classes and enums recursively
   String generate(List<LibraryElement> libraries, BuildStep buildStep) {
     Set<String> imports = {
-      'dart:convert',
       'package:dart_mappable/dart_mappable.dart',
     };
 
@@ -160,15 +159,13 @@ class MappableBuilder implements Builder {
     return ''
         '${organizeImports(imports)}\n'
         '// === ALL STATICALLY REGISTERED MAPPERS ===\n\n'
-        'var _mappers = <String, BaseMapper>{\n'
-        '  // primitive mappers\n'
-        '$defaultMappers'
+        'var _mappers = <BaseMapper>{\n'
         '  // class mappers\n'
-        '${classMappers.values.map((om) => '  _typeOf<${om.className}>(): ${om.mapperName}._(),\n').join()}'
+        '${classMappers.values.map((om) => '  ${om.mapperName}._(),\n').join()}'
         '  // enum mappers\n'
-        '${enumMappers.values.map((em) => '  _typeOf<${em.className}>(): EnumMapper<${em.className}>(${em.mapperName}.fromString, (${em.className} ${em.paramName}) => ${em.paramName}.toStringValue()),\n').join()}'
+        '${enumMappers.values.map((em) => '  EnumMapper<${em.className}>(${em.mapperName}.fromString, (${em.className} ${em.paramName}) => ${em.paramName}.toStringValue()),\n').join()}'
         '  // custom mappers\n'
-        '${customMappers.entries.map((e) => '  _typeOf<${e.key}>(): ${e.value.name}(),\n').join()}'
+        '${customMappers.entries.map((e) => '  ${e.value.name}(),\n').join()}'
         '};\n'
         '\n\n'
         '// === GENERATED CLASS MAPPERS AND EXTENSIONS ===\n\n'

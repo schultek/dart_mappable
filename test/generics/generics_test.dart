@@ -7,9 +7,9 @@ import 'generics_test.mapper.g.dart';
 @MappableClass()
 class Box<T extends Object> {
   int size;
-  T content;
+  List<T> contents;
 
-  Box(this.size, {required this.content});
+  Box(this.size, {required this.contents});
 }
 
 @MappableClass()
@@ -21,12 +21,12 @@ class Confetti {
 void main() {
   group('Generic classes', () {
     test('Should encode generic objects', () {
-      Box<Confetti> box = Box(10, content: Confetti('Rainbow'));
+      Box<Confetti> box = Box(10, contents: [Confetti('Rainbow')]);
       String boxJson = box.toJson();
       expect(
         boxJson,
         equals(
-            '{"size":10,"content":{"color":"Rainbow"},"__type":"Box<Confetti>"}'),
+            '{"size":10,"contents":[{"color":"Rainbow"}],"__type":"Box<Confetti>"}'),
       );
 
       dynamic whatAmI = Mapper.fromJson(boxJson);
