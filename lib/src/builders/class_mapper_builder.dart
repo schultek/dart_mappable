@@ -399,11 +399,6 @@ class ClassMapperBuilder {
 
       str += 'map.get';
 
-      if (param.type.isDartCoreList) {
-        str += 'List';
-      } else if (param.type.isDartCoreMap) {
-        str += 'Map';
-      }
       if (param.type.isDynamic ||
           param.isOptional ||
           param.type.nullabilitySuffix == NullabilitySuffix.question) {

@@ -21,7 +21,7 @@ class BoxMapper extends BaseMapper<Box> {
 
   @override Function get decoder => decode;
   Box<T> decode<T extends Object>(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
-  Box<T> fromMap<T extends Object>(Map<String, dynamic> map) => Box(map.get('size'), contents: map.getList('contents'));
+  Box<T> fromMap<T extends Object>(Map<String, dynamic> map) => Box(map.get('size'), contents: map.get('contents'));
 
   @override Function get encoder => (Box v) => encode(v);
   dynamic encode(Box v) => toMap(v);
@@ -178,42 +178,6 @@ extension MapGet on Map<String, dynamic> {
       return null;
     }
     return Mapper.fromValue<T>(v);
-  });
-
-  List<T> getList<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
-    if (v == null) {
-      throw MapperException('Parameter $key is required.');
-    } else if (v is! List) {
-      throw MapperException('Parameter $v with key $key is not a List');
-    }
-    return v.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
-  });
-
-  List<T>? getListOpt<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
-    if (v == null) {
-      return null;
-    } else if (v is! List) {
-      throw MapperException('Parameter $v with key $key is not a List');
-    }
-    return v.map((dynamic item) => Mapper.fromValue<T>(item)).toList();
-  });
-
-  Map<K, V> getMap<K, V>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
-    if (v == null) {
-      throw MapperException('Parameter $key is required.');
-    } else if (v is! Map) {
-      throw MapperException('Parameter $v with key $key is not a Map');
-    }
-    return v.map((dynamic key, dynamic value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
-  });
-
-  Map<K, V>? getMapOpt<K, V>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
-    if (v == null) {
-      return null;
-    } else if (v is! Map) {
-      throw MapperException('Parameter $v with key $key is not a Map');
-    }
-    return v.map((dynamic key, dynamic value) => MapEntry(Mapper.fromValue<K>(key), Mapper.fromValue<V>(value)));
   });
 
   T hooked<T>(MappingHooks? hooks, String key, T Function(dynamic v) fn) {
