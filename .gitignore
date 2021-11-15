@@ -9,5 +9,5 @@ build/
 pubspec.lock
 
 doc/api/
-
+coverage/
 

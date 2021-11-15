@@ -1,3 +1,7 @@
+# 0.8.5
+
+- Restructured and improved tests
+
 # 0.8.4
 
 - Added get, getAll and useAll methods to Mapper
