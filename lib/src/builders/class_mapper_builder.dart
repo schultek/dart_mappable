@@ -248,8 +248,7 @@ class ClassMapperBuilder {
   String _generateDecoder([String fn = 'decode']) {
     var wrapped = fn;
     if (superMapper != null && superMapper!.hookForClass != null) {
-      wrapped =
-          '(v) => _hookedDecode(const ${superMapper!.hookForClass}, v, $wrapped)';
+      wrapped = '(v) => const ${superMapper!.hookForClass}.decode(v, $wrapped)';
     }
     if (superMapper != null) {
       wrapped = superMapper!._generateDecoder(wrapped);
@@ -272,7 +271,7 @@ class ClassMapperBuilder {
 
     call = '_checked(v, (Map<String, dynamic> map) $call)';
     if (hookForClass != null) {
-      call = '_hookedDecode(const $hookForClass, v, (v) => $call)';
+      call = 'const $hookForClass.decode(v, (v) => $call)';
     }
     return call;
   }
@@ -344,7 +343,7 @@ class ClassMapperBuilder {
     var wrapped = encode;
     if (superMapper != null && superMapper!.hookForClass != null) {
       wrapped =
-          '_hookedEncode<${name ?? className}>(const ${superMapper!.hookForClass}, v, (v) => $wrapped)';
+          'const ${superMapper!.hookForClass}.encode<${name ?? className}>(v, (v) => $wrapped)';
     }
     if (superMapper != null) {
       wrapped = superMapper!._generateEncodeCall(wrapped, name ?? className);
@@ -371,7 +370,7 @@ class ClassMapperBuilder {
     }
 
     if (hookForClass != null) {
-      call = '=> _hookedEncode<$className>(const $hookForClass, v, (v) $call)';
+      call = '=> const $hookForClass.encode<$className>(v, (v) $call)';
     }
     return call + (call.endsWith('}') ? '' : ';');
   }
@@ -469,7 +468,7 @@ class ClassMapperBuilder {
         var hook = hookForParam(param);
         if (hook != null) {
           usesFieldHooks = true;
-          exp = '_toValue($paramName.$name, hooks: const $hook)';
+          exp = 'const $hook.encode($paramName.$name, Mapper.toValue)';
         } else {
           exp = 'Mapper.toValue($paramName.$name)';
         }

@@ -26,7 +26,7 @@ class GameMapper extends BaseMapper<Game> {
 
   @override Function get encoder => (Game v) => encode(v);
   dynamic encode(Game v) => toMap(v);
-  Map<String, dynamic> toMap(Game g) => {'player': _toValue(g.player, hooks: const PlayerHooks())};
+  Map<String, dynamic> toMap(Game g) => {'player': const PlayerHooks().encode(g.player, Mapper.toValue)};
 
   @override String? stringify(Game self) => 'Game(player: ${Mapper.asString(self.player)})';
   @override int? hash(Game self) => Mapper.hash(self.player);
@@ -93,11 +93,11 @@ class ClothesMapper extends BaseMapper<Clothes> {
   ClothesMapper._();
 
   @override Function get decoder => decode;
-  Clothes decode(dynamic v) => _hookedDecode(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => _checked(v, (Map<String, dynamic> map) => fromMap(map)));
+  Clothes decode(dynamic v) => const UnmappedPropertiesHooks('unmapped_props').decode(v, (v) => _checked(v, (Map<String, dynamic> map) => fromMap(map)));
   Clothes fromMap(Map<String, dynamic> map) => Clothes(map.get('size'), unmappedProps: map.getOpt('unmapped_props') ?? const {});
 
   @override Function get encoder => (Clothes v) => encode(v);
-  dynamic encode(Clothes v) => _hookedEncode<Clothes>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => toMap(v));
+  dynamic encode(Clothes v) => const UnmappedPropertiesHooks('unmapped_props').encode<Clothes>(v, (v) => toMap(v));
   Map<String, dynamic> toMap(Clothes c) => {'size': Mapper.toValue(c.size), 'unmapped_props': Mapper.toValue(c.unmappedProps)};
 
   @override String? stringify(Clothes self) => 'Clothes(size: ${Mapper.asString(self.size)}, unmappedProps: ${Mapper.asString(self.unmappedProps)})';
@@ -144,8 +144,7 @@ class Mapper {
 
   static T fromValue<T>(dynamic value) => i.fromValue<T>(value);
   static T fromMap<T>(Map<String, dynamic> map) => i.fromMap<T>(map);
-  static T fromIterable<T>(Iterable<dynamic> iterable) =>
-      i.fromIterable<T>(iterable);
+  static T fromIterable<T>(Iterable<dynamic> iterable) => i.fromIterable<T>(iterable);
   static T fromJson<T>(String json) => i.fromJson<T>(json);
 
   static dynamic toValue(dynamic value) => i.toValue(value);
@@ -171,60 +170,24 @@ mixin Mappable {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 
-  @override
-  String toString() => _mapper?.stringify(this) ?? super.toString();
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (runtimeType == other.runtimeType &&
-          (_mapper?.equals(this, other) ?? super == other));
-  @override
-  int get hashCode => _mapper?.hash(this) ?? super.hashCode;
+  @override String toString() => _mapper?.stringify(this) ?? super.toString();
+  @override bool operator ==(Object other) => identical(this, other) ||
+      (runtimeType == other.runtimeType && (_mapper?.equals(this, other) 
+      ?? super == other));
+  @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
 }
 
-final _checked = MapperContainer.checked;
-
-T _hookedDecode<T>(MappingHooks hooks, dynamic value, T Function(dynamic value) fn) {
-  var v = hooks.beforeDecode(value);
-  if (v is! T) v = fn(v);
-  return hooks.afterDecode(v) as T;
-}
-dynamic _hookedEncode<T>(MappingHooks hooks, T value, dynamic Function(T value) fn) {
-  var v = hooks.beforeEncode(value);
-  if (v is T) v = fn(v);
-  return hooks.afterEncode(v);
-}
-
-dynamic _toValue(dynamic value, {MappingHooks? hooks}) {
-  if (hooks == null) {
-    return Mapper.toValue(value);
-  } else {
-    return hooks.afterEncode(Mapper.toValue(hooks.beforeEncode(value)));
-  }
-}
+const _checked = MapperContainer.checked;
 
 extension MapGet on Map<String, dynamic> {
-  T get<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
-    if (v == null) {
-      throw MapperException('Parameter $key is required.');
-    }
-    return Mapper.fromValue<T>(v);
-  });
+  T get<T>(String key, {MappingHooks? hooks}) => _getOr(
+      key, hooks, () => throw MapperException('Parameter $key is required.'));
 
-  T? getOpt<T>(String key, {MappingHooks? hooks}) => hooked(hooks, key, (v) {
-    if (v == null) {
-      return null;
-    }
-    return Mapper.fromValue<T>(v);
-  });
+  T? getOpt<T>(String key, {MappingHooks? hooks}) =>
+      _getOr(key, hooks, () => null);
 
-  T hooked<T>(MappingHooks? hooks, String key, T Function(dynamic v) fn) {
-    if (hooks == null) {
-      return fn(this[key]);
-    } else {
-      return hooks.afterDecode(fn(hooks.beforeDecode(this[key]))) as T;
-    }
-  }
+  T _getOr<T>(String key, MappingHooks? hooks, T Function() or) =>
+      hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
 }
 
 class _None { const _None(); }
