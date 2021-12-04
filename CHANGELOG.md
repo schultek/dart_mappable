@@ -1,3 +1,7 @@
+# 0.8.6
+
+- Fixed bug in isEquals method
+
 # 0.8.5
 
 - Restructured and improved tests

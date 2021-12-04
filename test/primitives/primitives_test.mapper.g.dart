@@ -187,6 +187,8 @@ class Mapper<T> {
   static bool isEqual(dynamic value, Object? other) {
     if (value == null || other == null) {
       return value == other;
+    } else if (value.runtimeType != other.runtimeType) {
+      return false;
     }
     var type = TypeInfo.fromValue(value);
     return _mappers[type.type]?.equals(value, other) ?? value == other;
