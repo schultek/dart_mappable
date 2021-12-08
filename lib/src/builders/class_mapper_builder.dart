@@ -589,20 +589,24 @@ class ClassMapperBuilder {
 
   String _generateCopyWithClasses(
       String typeParams, Map<String, ClassMapperBuilder> builders) {
-    var copyFields = constructor!.parameters
-        .map((param) {
-          if (param is FieldFormalParameterElement || hasField(param.name)) {
-            return param;
-          } else if (superMapper != null && superParams[param.name] != null) {
-            return superParams[param.name];
-          } else {
-            return null;
-          }
-        })
-        .map((p) => MapEntry(p, builders[p?.type.element?.name]))
-        .where((b) =>
-            (b.value?.hasCallableConstructor ?? false) &&
-            (b.value?.shouldGenerate(GenerateMethods.copy) ?? false));
+    var copyFields = constructor!.parameters.map((param) {
+      if (param is FieldFormalParameterElement || hasField(param.name)) {
+        return param;
+      } else if (superMapper != null && superParams[param.name] != null) {
+        return superParams[param.name];
+      } else {
+        return null;
+      }
+    }).map((p) {
+      if (p?.type.isDartCoreList ?? false) {
+        var it = p!.type as InterfaceType;
+        return MapEntry(p, builders[it.typeArguments.first.element?.name]);
+      } else {
+        return MapEntry(p, builders[p?.type.element?.name]);
+      }
+    }).where((b) =>
+        (b.value?.hasCallableConstructor ?? false) &&
+        (b.value?.shouldGenerate(GenerateMethods.copy) ?? false));
 
     var classTypeParamsDef = element.typeParameters
         .map((p) => ', ${p.getDisplayString(withNullability: true)}')
@@ -623,8 +627,20 @@ class ClassMapperBuilder {
               .map((t) => ', ${t.getDisplayString(withNullability: true)}')
               .join()
           : '';
+      var copyWithName = '${b.value!.className}CopyWith';
+
+      if (b.key!.type.isDartCoreList) {
+        var typeArg = (b.key!.type as InterfaceType).typeArguments.first;
+        var typeParams = typeArg is InterfaceType
+            ? typeArg.typeArguments
+                .map((t) => ', ${t.getDisplayString(withNullability: true)}')
+                .join()
+            : '';
+        fieldTypeParams += ', $copyWithName<\$R$typeParams>';
+        copyWithName = 'ListCopyWith';
+      }
       snippets.add(
-          '  ${b.value!.className}CopyWith<\$R$fieldTypeParams>${b.key!.type.isNullable ? '?' : ''} get ${b.key!.name};\n');
+          '  $copyWithName<\$R$fieldTypeParams>${b.key!.type.isNullable ? '?' : ''} get ${b.key!.name};\n');
     }
 
     snippets.add('  \$R call(${_generateCopyWithParams()});\n'
@@ -640,16 +656,29 @@ class ClassMapperBuilder {
               .map((t) => ', ${t.getDisplayString(withNullability: true)}')
               .join()
           : '';
+      var copyWithName = '${b.value!.className}CopyWith';
+      var params = ', (v) => call(${b.key!.name}: v)';
+
+      if (b.key!.type.isDartCoreList) {
+        params = ', (v, t) => $copyWithName(v, t)$params';
+        var typeArg = (b.key!.type as InterfaceType).typeArguments.first;
+        var typeParams = typeArg is InterfaceType
+            ? typeArg.typeArguments
+                .map((t) => ', ${t.getDisplayString(withNullability: true)}')
+                .join()
+            : '';
+        fieldTypeParams += ', $copyWithName<\$R$typeParams>';
+        copyWithName = 'ListCopyWith';
+      }
 
       snippets.add(
-          '  @override ${b.value!.className}CopyWith<\$R$fieldTypeParams>${b.key!.type.isNullable ? '?' : ''} get ${b.key!.name} => ');
+          '  @override $copyWithName<\$R$fieldTypeParams>${b.key!.type.isNullable ? '?' : ''} get ${b.key!.name} => ');
 
       if (b.key!.type.isNullable) {
         snippets.add(
-            '_value.${b.key!.name} != null ? ${b.value!.className}CopyWith(_value.${b.key!.name}!, (v) => call(${b.key!.name}: v)) : null;\n');
+            '_value.${b.key!.name} != null ? $copyWithName(_value.${b.key!.name}!$params) : null;\n');
       } else {
-        snippets.add(
-            '${b.value!.className}CopyWith(_value.${b.key!.name}, (v) => call(${b.key!.name}: v));\n');
+        snippets.add('$copyWithName(_value.${b.key!.name}$params);\n');
       }
     }
 

@@ -23,6 +23,7 @@ var _mappers = <String, BaseMapper>{
   _typeOf<Person>(): PersonMapper._(),
   _typeOf<Car>(): CarMapper._(),
   _typeOf<Brand>(): BrandMapper._(),
+  _typeOf<Dealership>(): DealershipMapper._(),
   // enum mappers
   // custom mappers
 };
@@ -32,9 +33,25 @@ var _mappers = <String, BaseMapper>{
 
 class PersonMapper extends BaseMapper<Person> {
   PersonMapper._();
+
+  @override Function get decoder => decode;
+  Person decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Person fromMap(Map<String, dynamic> map) => Person(map.get('name'), map.get('car'));
+
+  @override Function get encoder => (Person v) => encode(v);
+  dynamic encode(Person v) => toMap(v);
+  Map<String, dynamic> toMap(Person p) => {'name': Mapper.toValue(p.name), 'car': Mapper.toValue(p.car)};
+
+  @override String? stringify(Person self) => 'Person(name: ${Mapper.asString(self.name)}, car: ${Mapper.asString(self.car)})';
+  @override int? hash(Person self) => Mapper.hash(self.name) ^ Mapper.hash(self.car);
+  @override bool? equals(Person self, Person other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.car, other.car);
+
+  @override Function get typeFactory => (f) => f<Person>();
 }
 
 extension PersonMapperExtension on Person {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
   PersonCopyWith<Person> get copyWith => PersonCopyWith(this, _$identity);
 }
 
@@ -53,9 +70,25 @@ class _PersonCopyWithImpl<$R> extends BaseCopyWith<Person, $R> implements Person
 
 class CarMapper extends BaseMapper<Car> {
   CarMapper._();
+
+  @override Function get decoder => decode;
+  Car decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Car fromMap(Map<String, dynamic> map) => Car(map.get('brand'), map.get('model'));
+
+  @override Function get encoder => (Car v) => encode(v);
+  dynamic encode(Car v) => toMap(v);
+  Map<String, dynamic> toMap(Car c) => {'brand': Mapper.toValue(c.brand), 'model': Mapper.toValue(c.model)};
+
+  @override String? stringify(Car self) => 'Car(model: ${Mapper.asString(self.model)}, brand: ${Mapper.asString(self.brand)})';
+  @override int? hash(Car self) => Mapper.hash(self.brand) ^ Mapper.hash(self.model);
+  @override bool? equals(Car self, Car other) => Mapper.isEqual(self.brand, other.brand) && Mapper.isEqual(self.model, other.model);
+
+  @override Function get typeFactory => (f) => f<Car>();
 }
 
 extension CarMapperExtension on Car {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
   CarCopyWith<Car> get copyWith => CarCopyWith(this, _$identity);
 }
 
@@ -74,9 +107,25 @@ class _CarCopyWithImpl<$R> extends BaseCopyWith<Car, $R> implements CarCopyWith<
 
 class BrandMapper extends BaseMapper<Brand> {
   BrandMapper._();
+
+  @override Function get decoder => decode;
+  Brand decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Brand fromMap(Map<String, dynamic> map) => Brand(map.get('name'));
+
+  @override Function get encoder => (Brand v) => encode(v);
+  dynamic encode(Brand v) => toMap(v);
+  Map<String, dynamic> toMap(Brand b) => {'name': Mapper.toValue(b.name)};
+
+  @override String? stringify(Brand self) => 'Brand(name: ${Mapper.asString(self.name)})';
+  @override int? hash(Brand self) => Mapper.hash(self.name);
+  @override bool? equals(Brand self, Brand other) => Mapper.isEqual(self.name, other.name);
+
+  @override Function get typeFactory => (f) => f<Brand>();
 }
 
 extension BrandMapperExtension on Brand {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
   BrandCopyWith<Brand> get copyWith => BrandCopyWith(this, _$identity);
 }
 
@@ -89,6 +138,43 @@ class _BrandCopyWithImpl<$R> extends BaseCopyWith<Brand, $R> implements BrandCop
   _BrandCopyWithImpl(Brand value, Then<Brand, $R> then) : super(value, then);
 
   @override $R call({String? name}) => _then(Brand(name ?? _value.name));
+}
+
+class DealershipMapper extends BaseMapper<Dealership> {
+  DealershipMapper._();
+
+  @override Function get decoder => decode;
+  Dealership decode(dynamic v) => _checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Dealership fromMap(Map<String, dynamic> map) => Dealership(map.getList('cars'), map.getMap('sales_rep'));
+
+  @override Function get encoder => (Dealership v) => encode(v);
+  dynamic encode(Dealership v) => toMap(v);
+  Map<String, dynamic> toMap(Dealership d) => {'cars': Mapper.toValue(d.cars), 'sales_rep': Mapper.toValue(d.salesRep)};
+
+  @override String? stringify(Dealership self) => 'Dealership(cars: ${Mapper.asString(self.cars)}, salesRep: ${Mapper.asString(self.salesRep)})';
+  @override int? hash(Dealership self) => Mapper.hash(self.cars) ^ Mapper.hash(self.salesRep);
+  @override bool? equals(Dealership self, Dealership other) => Mapper.isEqual(self.cars, other.cars) && Mapper.isEqual(self.salesRep, other.salesRep);
+
+  @override Function get typeFactory => (f) => f<Dealership>();
+}
+
+extension DealershipMapperExtension on Dealership {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  DealershipCopyWith<Dealership> get copyWith => DealershipCopyWith(this, _$identity);
+}
+
+abstract class DealershipCopyWith<$R> {
+  factory DealershipCopyWith(Dealership value, Then<Dealership, $R> then) = _DealershipCopyWithImpl<$R>;
+  ListCopyWith<$R, Car, CarCopyWith<$R>> get cars;
+  $R call({List<Car>? cars, Map<Brand, Person>? salesRep});
+}
+
+class _DealershipCopyWithImpl<$R> extends BaseCopyWith<Dealership, $R> implements DealershipCopyWith<$R> {
+  _DealershipCopyWithImpl(Dealership value, Then<Dealership, $R> then) : super(value, then);
+
+  @override ListCopyWith<$R, Car, CarCopyWith<$R>> get cars => ListCopyWith(_value.cars, (v, t) => CarCopyWith(v, t), (v) => call(cars: v));
+  @override $R call({List<Car>? cars, Map<Brand, Person>? salesRep}) => _then(Dealership(cars ?? _value.cars, salesRep ?? _value.salesRep));
 }
 
 
@@ -418,5 +504,39 @@ class BaseCopyWith<$T, $R> {
   final Then<$T, $R> _then;
   
   T or<T>(Object? _v, T v) => _v == _none ? v : _v as T;
+}
+
+class ListCopyWith<$R, $T, $C> extends BaseCopyWith<List<$T>, $R> {
+  ListCopyWith(List<$T> value, this.itemCopyWith, Then<List<$T>, $R> then)
+      : super(value, then);
+  $C Function($T a, Then<$T, $R> b) itemCopyWith;
+
+  $C at(int index) => itemCopyWith(_value[index], (v) => replace(index, v));
+
+  $R add($T v) => addAll([v]);
+
+  $R addAll(Iterable<$T> v) => _then([..._value, ...v]);
+
+  $R replace(int index, $T v) => splice(index, 1, [v]);
+
+  $R insert(int index, $T v) => insertAll(index, [v]);
+
+  $R insertAll(int index, Iterable<$T> v) => splice(index, 0, v);
+
+  $R removeAt(int index) => splice(index, 1);
+
+  $R splice(int index, int removeCount, [Iterable<$T>? toInsert]) => _then([
+        ..._value.take(index),
+        if (toInsert != null) ...toInsert,
+        ..._value.skip(index + removeCount),
+      ]);
+
+  $R take(int count) => _then(_value.take(count).toList());
+
+  $R skip(int count) => _then(_value.skip(count).toList());
+
+  $R where(bool Function($T) test) => _then(_value.where(test).toList());
+
+  $R sublist(int start, [int? end]) => _then(_value.sublist(start, end));
 }
 

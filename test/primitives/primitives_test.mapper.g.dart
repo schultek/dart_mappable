@@ -55,12 +55,14 @@ extension ItemsMapperExtension on Items {
 
 abstract class ItemsCopyWith<$R> {
   factory ItemsCopyWith(Items value, Then<Items, $R> then) = _ItemsCopyWithImpl<$R>;
+  ListCopyWith<$R, Item, ItemCopyWith<$R>> get items;
   $R call({List<Item>? items, Map<int, Item>? items2});
 }
 
 class _ItemsCopyWithImpl<$R> extends BaseCopyWith<Items, $R> implements ItemsCopyWith<$R> {
   _ItemsCopyWithImpl(Items value, Then<Items, $R> then) : super(value, then);
 
+  @override ListCopyWith<$R, Item, ItemCopyWith<$R>> get items => ListCopyWith(_value.items, (v, t) => ItemCopyWith(v, t), (v) => call(items: v));
   @override $R call({List<Item>? items, Map<int, Item>? items2}) => _then(Items(items ?? _value.items, items2 ?? _value.items2));
 }
 
@@ -426,5 +428,39 @@ class BaseCopyWith<$T, $R> {
   final Then<$T, $R> _then;
   
   T or<T>(Object? _v, T v) => _v == _none ? v : _v as T;
+}
+
+class ListCopyWith<$R, $T, $C> extends BaseCopyWith<List<$T>, $R> {
+  ListCopyWith(List<$T> value, this.itemCopyWith, Then<List<$T>, $R> then)
+      : super(value, then);
+  $C Function($T a, Then<$T, $R> b) itemCopyWith;
+
+  $C at(int index) => itemCopyWith(_value[index], (v) => replace(index, v));
+
+  $R add($T v) => addAll([v]);
+
+  $R addAll(Iterable<$T> v) => _then([..._value, ...v]);
+
+  $R replace(int index, $T v) => splice(index, 1, [v]);
+
+  $R insert(int index, $T v) => insertAll(index, [v]);
+
+  $R insertAll(int index, Iterable<$T> v) => splice(index, 0, v);
+
+  $R removeAt(int index) => splice(index, 1);
+
+  $R splice(int index, int removeCount, [Iterable<$T>? toInsert]) => _then([
+        ..._value.take(index),
+        if (toInsert != null) ...toInsert,
+        ..._value.skip(index + removeCount),
+      ]);
+
+  $R take(int count) => _then(_value.take(count).toList());
+
+  $R skip(int count) => _then(_value.skip(count).toList());
+
+  $R where(bool Function($T) test) => _then(_value.where(test).toList());
+
+  $R sublist(int start, [int? end]) => _then(_value.sublist(start, end));
 }
 

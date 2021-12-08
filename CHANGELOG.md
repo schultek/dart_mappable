@@ -1,3 +1,7 @@
+# 0.8.7
+
+- Added support for lists in copyWith chains
+
 # 0.8.6
 
 - Fixed bug in isEquals method
