@@ -48,7 +48,7 @@ class UnionMapper extends BaseMapper<Union> {
   @override Function get typeFactory => (f) => f<Union>();
 }
 
-extension UnionMapperExtension on Union {
+extension UnionMapperExtension  on Union {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 }
@@ -71,7 +71,7 @@ class DataMapper extends BaseMapper<Data> {
   @override Function get typeFactory => (f) => f<Data>();
 }
 
-extension DataMapperExtension on Data {
+extension DataMapperExtension  on Data {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   DataCopyWith<Data> get copyWith => DataCopyWith(this, $identity);
@@ -106,7 +106,7 @@ class LoadingMapper extends BaseMapper<Loading> {
   @override Function get typeFactory => (f) => f<Loading>();
 }
 
-extension LoadingMapperExtension on Loading {
+extension LoadingMapperExtension  on Loading {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   LoadingCopyWith<Loading> get copyWith => LoadingCopyWith(this, $identity);
@@ -141,7 +141,7 @@ class ErrorDetailsMapper extends BaseMapper<ErrorDetails> {
   @override Function get typeFactory => (f) => f<ErrorDetails>();
 }
 
-extension ErrorDetailsMapperExtension on ErrorDetails {
+extension ErrorDetailsMapperExtension  on ErrorDetails {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   ErrorDetailsCopyWith<ErrorDetails> get copyWith => ErrorDetailsCopyWith(this, $identity);

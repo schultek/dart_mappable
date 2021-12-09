@@ -4,6 +4,7 @@ import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
 
 import '../core/annotations.dart';
@@ -76,16 +77,11 @@ List<T>? toList<T>(dynamic value) {
   }
 }
 
-/// All of the declared classes and enums in this library.
-Iterable<ClassElement> elementsOf(LibraryElement element) sync* {
-  for (var cu in element.units) {
-    yield* cu.enums;
-    yield* cu.classes;
-  }
-}
-
-extension OptIter<T> on Iterable<T> {
-  T? get firstOrNull => isEmpty ? null : first;
+DartObject? fieldAnnotation(ParameterElement param) {
+  return fieldChecker.firstAnnotationOf(param) ??
+      (param is FieldFormalParameterElement && param.field != null
+          ? fieldChecker.firstAnnotationOf(param.field!)
+          : null);
 }
 
 CaseStyle? caseStyleFromAnnotation(DartObject obj) {

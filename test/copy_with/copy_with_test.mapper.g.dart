@@ -36,7 +36,7 @@ class PersonMapper extends BaseMapper<Person> {
   @override Function get typeFactory => (f) => f<Person>();
 }
 
-extension PersonMapperExtension on Person {
+extension PersonMapperExtension  on Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   PersonCopyWith<Person> get copyWith => PersonCopyWith(this, $identity);
@@ -73,7 +73,7 @@ class CarMapper extends BaseMapper<Car> {
   @override Function get typeFactory => (f) => f<Car>();
 }
 
-extension CarMapperExtension on Car {
+extension CarMapperExtension  on Car {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   CarCopyWith<Car> get copyWith => CarCopyWith(this, $identity);
@@ -110,7 +110,7 @@ class BrandMapper extends BaseMapper<Brand> {
   @override Function get typeFactory => (f) => f<Brand>();
 }
 
-extension BrandMapperExtension on Brand {
+extension BrandMapperExtension  on Brand {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   BrandCopyWith<Brand> get copyWith => BrandCopyWith(this, $identity);
@@ -145,7 +145,7 @@ class DealershipMapper extends BaseMapper<Dealership> {
   @override Function get typeFactory => (f) => f<Dealership>();
 }
 
-extension DealershipMapperExtension on Dealership {
+extension DealershipMapperExtension  on Dealership {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   DealershipCopyWith<Dealership> get copyWith => DealershipCopyWith(this, $identity);

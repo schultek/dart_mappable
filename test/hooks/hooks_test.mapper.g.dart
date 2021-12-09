@@ -35,7 +35,7 @@ class GameMapper extends BaseMapper<Game> {
   @override Function get typeFactory => (f) => f<Game>();
 }
 
-extension GameMapperExtension on Game {
+extension GameMapperExtension  on Game {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   GameCopyWith<Game> get copyWith => GameCopyWith(this, $identity);
@@ -72,7 +72,7 @@ class PlayerMapper extends BaseMapper<Player> {
   @override Function get typeFactory => (f) => f<Player>();
 }
 
-extension PlayerMapperExtension on Player {
+extension PlayerMapperExtension  on Player {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   PlayerCopyWith<Player> get copyWith => PlayerCopyWith(this, $identity);
@@ -107,7 +107,7 @@ class ClothesMapper extends BaseMapper<Clothes> {
   @override Function get typeFactory => (f) => f<Clothes>();
 }
 
-extension ClothesMapperExtension on Clothes {
+extension ClothesMapperExtension  on Clothes {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   ClothesCopyWith<Clothes> get copyWith => ClothesCopyWith(this, $identity);

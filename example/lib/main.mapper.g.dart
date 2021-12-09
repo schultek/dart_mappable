@@ -37,7 +37,7 @@ class PersonMapper extends BaseMapper<Person> {
   @override Function get typeFactory => (f) => f<Person>();
 }
 
-extension PersonMapperExtension on Person {
+extension PersonMapperExtension  on Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   PersonCopyWith<Person> get copyWith => PersonCopyWith(this, $identity);
@@ -74,7 +74,7 @@ class CarMapper extends BaseMapper<Car> {
   @override Function get typeFactory => (f) => f<Car>();
 }
 
-extension CarMapperExtension on Car {
+extension CarMapperExtension  on Car {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   CarCopyWith<Car> get copyWith => CarCopyWith(this, $identity);
@@ -109,7 +109,7 @@ class BoxMapper extends BaseMapper<Box> {
   @override Function get typeFactory => <T>(f) => f<Box<T>>();
 }
 
-extension BoxMapperExtension<T> on Box<T> {
+extension BoxMapperExtension <T> on Box<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   BoxCopyWith<Box<T>, T> get copyWith => BoxCopyWith(this, $identity);
@@ -144,7 +144,7 @@ class ConfettiMapper extends BaseMapper<Confetti> {
   @override Function get typeFactory => (f) => f<Confetti>();
 }
 
-extension ConfettiMapperExtension on Confetti {
+extension ConfettiMapperExtension  on Confetti {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   ConfettiCopyWith<Confetti> get copyWith => ConfettiCopyWith(this, $identity);

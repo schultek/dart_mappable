@@ -24,7 +24,7 @@ class PersonMapper extends BaseMapper<Person> {
   Map<String, dynamic> toMap(Person p) => {'name': Mapper.toValue(p.name)};
 }
 
-extension PersonMapperExtension on Person {
+extension PersonMapperExtension  on Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   PersonCopyWith<Person> get copyWith => PersonCopyWith(this, $identity);
@@ -49,7 +49,7 @@ class CarMapper extends BaseMapper<Car> {
   @override bool? equals(Car self, Car other) => Mapper.isEqual(self.brand, other.brand);
 }
 
-extension CarMapperExtension on Car {
+extension CarMapperExtension  on Car {
 }
 
 

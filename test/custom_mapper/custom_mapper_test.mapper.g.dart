@@ -35,7 +35,7 @@ class GenericBoxMapper extends BaseMapper<GenericBox> {
   @override Function get typeFactory => <T>(f) => f<GenericBox<T>>();
 }
 
-extension GenericBoxMapperExtension<T> on GenericBox<T> {
+extension GenericBoxMapperExtension <T> on GenericBox<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   GenericBoxCopyWith<GenericBox<T>, T> get copyWith => GenericBoxCopyWith(this, $identity);

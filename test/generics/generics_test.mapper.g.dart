@@ -34,7 +34,7 @@ class BoxMapper extends BaseMapper<Box> {
   @override Function get typeFactory => <T extends Object>(f) => f<Box<T>>();
 }
 
-extension BoxMapperExtension<T extends Object> on Box<T> {
+extension BoxMapperExtension <T extends Object> on Box<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   BoxCopyWith<Box<T>, T> get copyWith => BoxCopyWith(this, $identity);
@@ -69,7 +69,7 @@ class ConfettiMapper extends BaseMapper<Confetti> {
   @override Function get typeFactory => (f) => f<Confetti>();
 }
 
-extension ConfettiMapperExtension on Confetti {
+extension ConfettiMapperExtension  on Confetti {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   ConfettiCopyWith<Confetti> get copyWith => ConfettiCopyWith(this, $identity);

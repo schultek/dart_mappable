@@ -55,6 +55,35 @@ class GenerateMethods {
 
   /// Indicates to generate all available methods
   static const all = 0x1F;
+
+  /// Parses a list of flags to the correct method combination
+  static int? parse(List<String>? flags) {
+    if (flags == null) return null;
+    int joinedFlag = 0;
+    for (var flag in flags) {
+      switch (flag) {
+        case 'decode':
+          joinedFlag |= GenerateMethods.decode;
+          break;
+        case 'encode':
+          joinedFlag |= GenerateMethods.encode;
+          break;
+        case 'stringify':
+          joinedFlag |= GenerateMethods.stringify;
+          break;
+        case 'equals':
+          joinedFlag |= GenerateMethods.equals;
+          break;
+        case 'copy':
+          joinedFlag |= GenerateMethods.copy;
+          break;
+        case 'all':
+          joinedFlag |= GenerateMethods.all;
+          break;
+      }
+    }
+    return joinedFlag;
+  }
 }
 
 /// Used to annotate an enum
