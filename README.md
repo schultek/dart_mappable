@@ -469,6 +469,14 @@ Additionally, it is important to note that field- and class-hooks are inherited 
 When both the superclass and the subclass define class-hooks, both are applied in the following order:
 `super.beforeDecode -> sub.beforeDecode -> decode -> sub.afterDecode -> super.afterDecode`. For field-hooks, only the sub-class-hook is applied.
 
+### Chaining multiple MappingHooks
+
+You can chain and apply multiple hooks using the `ChainedHooks` class like this:
+`@MappableClass(hooks: ChainedHooks([ MyHooks1(), MyHooks2(), ... ]))`.
+
+The hooks are applied for encoding and decoding in nested order:
+`first.beforeDecode -> second.beforeDecode -> ... -> decode -> ... -> second.afterDecode -> first.afterDecode`.
+
 ### Unmapped Properties
 
 A frequently needed use-case for hooks is to catch additional, unmapped properties from json when decoding an object. 
