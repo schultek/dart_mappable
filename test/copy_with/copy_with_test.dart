@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 import 'copy_with_test.mapper.g.dart';
 
-@MappableClass(generateMethods: GenerateMethods.copy)
+@MappableClass()
 class Person with Mappable {
   final String name;
   final Car car;
@@ -11,7 +11,7 @@ class Person with Mappable {
   Person(this.name, this.car);
 }
 
-@MappableClass(generateMethods: GenerateMethods.copy)
+@MappableClass()
 class Car with Mappable {
   final String model;
   final Brand brand;
@@ -19,11 +19,19 @@ class Car with Mappable {
   Car(this.brand, this.model);
 }
 
-@MappableClass(generateMethods: GenerateMethods.copy)
+@MappableClass()
 class Brand with Mappable {
   final String name;
 
   Brand(this.name);
+}
+
+@MappableClass()
+class Dealership with Mappable {
+  final List<Car> cars;
+  final Map<Brand, Person> salesRep;
+
+  Dealership(this.cars, this.salesRep);
 }
 
 void main() {
@@ -42,6 +50,23 @@ void main() {
       expect(p2.car.brand, isNot(equals(person.car.brand)));
       expect(person.car.brand.name, equals('Audi'));
       expect(p2.car.brand.name, equals('BMW'));
+    });
+
+    test('Should generate copyWith extensions for List and Map', () {
+      var audi = Brand('Audi');
+      var bmw = Brand('BMW');
+      var dealership = Dealership([Car(audi, 'A9'), Car(bmw, 'M4')], {});
+
+      expect(
+        dealership.copyWith.cars.at(0).call(model: 'A8'),
+        equals(Dealership([Car(audi, 'A8'), Car(bmw, 'M4')], {})),
+      );
+
+      expect(
+        dealership.copyWith.cars.add(Car(audi, 'A8')),
+        equals(
+            Dealership([Car(audi, 'A9'), Car(bmw, 'M4'), Car(audi, 'A8')], {})),
+      );
     });
   });
 }

@@ -132,15 +132,10 @@ class _ClothesCopyWithImpl<$R> extends BaseCopyWith<Clothes, $R> implements Clot
 
 // === GENERATED UTILITY CODE ===
 
-
-class _Mapper extends MapperContainer {
-  _Mapper._() : super(_mappers);
-}
-
 class Mapper {
   Mapper._();
 
-  static late _Mapper i = _Mapper._();
+  static late MapperContainer i = MapperContainer(_mappers);
 
   static T fromValue<T>(dynamic value) => i.fromValue<T>(value);
   static T fromMap<T>(Map<String, dynamic> map) => i.fromMap<T>(map);
@@ -187,5 +182,3 @@ extension MapGet on Map<String, dynamic> {
   T _getOr<T>(String key, MappingHooks? hooks, T Function() or) =>
       hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
 }
-
-

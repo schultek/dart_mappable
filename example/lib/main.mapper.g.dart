@@ -206,9 +206,26 @@ class Mapper {
   static Iterable<dynamic> toIterable(dynamic object) => i.toIterable(object);
   static String toJson(dynamic object) => i.toJson(object);
 
+<<<<<<< HEAD
   static bool isEqual(dynamic value, Object? other) => i.isEqual(value, other);
   static int hash(dynamic value) => i.hash(value);
   static String asString(dynamic value) => i.asString(value);
+=======
+  static bool isEqual(dynamic value, Object? other) {
+    if (value == null || other == null) {
+      return value == other;
+    } else if (value.runtimeType != other.runtimeType) {
+      return false;
+    }
+    var type = TypeInfo.fromValue(value);
+    return _mappers[type.type]?.equals(value, other) ?? value == other;
+  }
+  
+  static int hash(dynamic value) {
+    var type = TypeInfo.fromValue(value);
+    return _mappers[type.type]?.hash(value) ?? value.hashCode;
+  }
+>>>>>>> main
 
   static void use<T>(BaseMapper<T> mapper) => i.use<T>(mapper);
   static BaseMapper<T>? unuse<T>() => i.unuse<T>();
@@ -242,4 +259,40 @@ extension MapGet on Map<String, dynamic> {
       hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
 }
 
+<<<<<<< HEAD
+=======
+class ListCopyWith<$R, $T, $C> extends BaseCopyWith<List<$T>, $R> {
+  ListCopyWith(List<$T> value, this.itemCopyWith, Then<List<$T>, $R> then)
+      : super(value, then);
+  $C Function($T a, Then<$T, $R> b) itemCopyWith;
+
+  $C at(int index) => itemCopyWith(_value[index], (v) => replace(index, v));
+
+  $R add($T v) => addAll([v]);
+
+  $R addAll(Iterable<$T> v) => _then([..._value, ...v]);
+
+  $R replace(int index, $T v) => splice(index, 1, [v]);
+
+  $R insert(int index, $T v) => insertAll(index, [v]);
+
+  $R insertAll(int index, Iterable<$T> v) => splice(index, 0, v);
+
+  $R removeAt(int index) => splice(index, 1);
+
+  $R splice(int index, int removeCount, [Iterable<$T>? toInsert]) => _then([
+        ..._value.take(index),
+        if (toInsert != null) ...toInsert,
+        ..._value.skip(index + removeCount),
+      ]);
+
+  $R take(int count) => _then(_value.take(count).toList());
+
+  $R skip(int count) => _then(_value.skip(count).toList());
+
+  $R where(bool Function($T) test) => _then(_value.where(test).toList());
+
+  $R sublist(int start, [int? end]) => _then(_value.sublist(start, end));
+}
+>>>>>>> main
 

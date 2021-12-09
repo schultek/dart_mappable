@@ -42,12 +42,14 @@ extension ItemsMapperExtension on Items {
 
 abstract class ItemsCopyWith<$R> {
   factory ItemsCopyWith(Items value, Then<Items, $R> then) = _ItemsCopyWithImpl<$R>;
+  ListCopyWith<$R, Item, ItemCopyWith<$R>> get items;
   $R call({List<Item>? items, Map<int, Item>? items2});
 }
 
 class _ItemsCopyWithImpl<$R> extends BaseCopyWith<Items, $R> implements ItemsCopyWith<$R> {
   _ItemsCopyWithImpl(Items value, Then<Items, $R> then) : super(value, then);
 
+  @override ListCopyWith<$R, Item, ItemCopyWith<$R>> get items => ListCopyWith($value.items, (v, t) => ItemCopyWith(v, t), (v) => call(items: v));
   @override $R call({List<Item>? items, Map<int, Item>? items2}) => $then(Items(items ?? $value.items, items2 ?? $value.items2));
 }
 
@@ -94,15 +96,10 @@ class _ItemCopyWithImpl<$R> extends BaseCopyWith<Item, $R> implements ItemCopyWi
 
 // === GENERATED UTILITY CODE ===
 
-
-class _Mapper extends MapperContainer {
-  _Mapper._() : super(_mappers);
-}
-
 class Mapper {
   Mapper._();
 
-  static late _Mapper i = _Mapper._();
+  static late MapperContainer i = MapperContainer(_mappers);
 
   static T fromValue<T>(dynamic value) => i.fromValue<T>(value);
   static T fromMap<T>(Map<String, dynamic> map) => i.fromMap<T>(map);
@@ -149,5 +146,3 @@ extension MapGet on Map<String, dynamic> {
   T _getOr<T>(String key, MappingHooks? hooks, T Function() or) =>
       hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
 }
-
-
