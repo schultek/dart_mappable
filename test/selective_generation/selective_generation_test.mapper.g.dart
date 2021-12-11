@@ -1,5 +1,6 @@
 import 'package:dart_mappable/internals.dart';
 
+import 'other/models.dart';
 import 'selective_generation_test.dart';
 
 

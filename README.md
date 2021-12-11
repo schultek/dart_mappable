@@ -25,6 +25,8 @@ Sounds too good to be true? Not anymore.
 - [Generation Methods](#generation-methods)
 - [Utilize Constructors](#utilize-constructors)
 - [Case Styles](#case-styles)
+- [Copy With](#copywith)
+    - [Deep Copy](#deep-copy)
 - [Lists, Sets and Maps](#lists-sets-and-maps)
   - [Non-Trivial Maps](#non-trivial-maps)
 - [Polymorphism and Discriminators](#polymorphism-and-discriminators)
@@ -42,6 +44,7 @@ Sounds too good to be true? Not anymore.
 ### TODOs
 
 - Choose properties for toString / equals
+- CopyWith interface for maps
 
 ## Get Started
 
@@ -207,7 +210,7 @@ class Event {
   DateTime date;
 
   // custom formatting as unix timestamp
-  Car.format(int timestamp) : date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+  Event.format(int timestamp) : date = DateTime.fromMillisecondsSinceEpoch(timestamp);
   int get timestamp => date.millisecondsSinceEpoch;
 }
 ```
@@ -245,12 +248,66 @@ custom(uc,+): myFieldName -> MY+Field+Name
 custom(cl,): myFieldName -> Myfieldname
 ```
 
+## CopyWith
+
+`dart_mappable` can generate a powerful `copyWith` method for your classes. It supports assigning `null` as well as chained deep copies.
+
+```dart
+class Person {
+  String name;
+  int? age;
+    
+  Person(this.name, this.age);
+}
+
+void main() {
+  var person = Person('Tom', 20);
+
+  // `age` not passed, its value is preserved
+  print(person.copyWith(name: 'Max')); // Person(name: Max, age: 24)
+  // `age` is set to `null`
+  print(person.copyWith(age: null)); // Person(name: Tom, age: null)
+}
+```
+
+### Deep Copy
+
+When having complex nested classes, this syntax can get quite verbose. Therefore this package provides a special syntax for nested classes, similar to [freezed](https://pub.dev/packages/freezed#deep-copy).
+
+Consider the following classes:
+
+```dart
+class Person {
+  String name;
+
+  Person(this.name);
+}
+
+class Company {
+  Person manager;
+  List<Person> employees;
+  Company(this.manager, this.employees);
+}
+
+void main() {
+  var company = Company(Person('Anna'), [Person('Max'), Person('Tom')]);
+  
+  // access nested object using the 'dot' syntax
+  print(company.copyWith.manager(name: 'Laura')); // Company(manager: Person(name: 'Laura'), ...)
+  
+  // this also works with lists
+  print(company.copyWith.employees.at(0)(name: 'John')); // Company(..., employees: [Person(name: 'John), Person(name: 'Tom')])
+}
+```
+
+When working with `List`s and `copyWith`, there are different methods you can use to access, add, remove or filter elements. 
+The complete interface is documented [here](https://pub.dev/documentation/dart_mappable/latest/internaly/ListCopyWith-class.html)
+
 ## Lists, Sets and Maps
 
 We support lists, sets and maps out of the box, without any special syntax, workarounds or hacks. Just use `Mapper.fromJson` as you normally would:
 
 ```dart
-
 class Dog with Mappable {
   String name;
   Dog(this.name);

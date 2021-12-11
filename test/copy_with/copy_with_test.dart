@@ -52,7 +52,7 @@ void main() {
       expect(p2.car.brand.name, equals('BMW'));
     });
 
-    test('Should generate copyWith extensions for List and Map', () {
+    test('Should generate copyWith extensions for Lists', () {
       var audi = Brand('Audi');
       var bmw = Brand('BMW');
       var dealership = Dealership([Car(audi, 'A9'), Car(bmw, 'M4')], {});

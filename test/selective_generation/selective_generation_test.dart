@@ -2,6 +2,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
 import '../utils.dart';
+import 'other/models.dart';
 import 'selective_generation_test.mapper.g.dart';
 
 @MappableClass(
@@ -11,15 +12,6 @@ class Person with Mappable {
   final String name;
 
   Person(this.name);
-}
-
-@MappableClass(
-  generateMethods: GenerateMethods.equals | GenerateMethods.stringify,
-)
-class Car with Mappable {
-  final String brand;
-
-  Car(this.brand);
 }
 
 void main() {
