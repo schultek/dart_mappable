@@ -1,3 +1,7 @@
+# 0.9.0
+
+- Changed implementation of UnmappedPropertiesHook to allow target parameter at any position in constructor
+
 # 0.8.7
 
 - Added support for lists in copyWith chains

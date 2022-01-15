@@ -10,6 +10,7 @@ var _mappers = <BaseMapper>{
   GameMapper._(),
   PlayerMapper._(),
   ClothesMapper._(),
+  ComponentMapper._(),
   // enum mappers
   // custom mappers
 };
@@ -122,6 +123,41 @@ class _ClothesCopyWithImpl<$R> extends BaseCopyWith<Clothes, $R> implements Clot
   _ClothesCopyWithImpl(Clothes value, Then<Clothes, $R> then) : super(value, then);
 
   @override $R call({int? size, Map<String, dynamic>? unmappedProps}) => $then(Clothes(size ?? $value.size, unmappedProps: unmappedProps ?? $value.unmappedProps));
+}
+
+class ComponentMapper extends BaseMapper<Component> {
+  ComponentMapper._();
+
+  @override Function get decoder => decode;
+  Component decode(dynamic v) => const UnmappedPropertiesHooks('unmapped_props').decode(v, (v) => checked(v, (Map<String, dynamic> map) => fromMap(map)));
+  Component fromMap(Map<String, dynamic> map) => Component(map.get('id'), map.getOpt('unmapped_props'), map.get('name'));
+
+  @override Function get encoder => (Component v) => encode(v);
+  dynamic encode(Component v) => const UnmappedPropertiesHooks('unmapped_props').encode<Component>(v, (v) => toMap(v));
+  Map<String, dynamic> toMap(Component c) => {'id': Mapper.toValue(c.id), 'unmapped_props': Mapper.toValue(c.unmappedProps), 'name': Mapper.toValue(c.name)};
+
+  @override String? stringify(Component self) => 'Component(id: ${Mapper.asString(self.id)}, name: ${Mapper.asString(self.name)}, unmappedProps: ${Mapper.asString(self.unmappedProps)})';
+  @override int? hash(Component self) => Mapper.hash(self.id) ^ Mapper.hash(self.unmappedProps) ^ Mapper.hash(self.name);
+  @override bool? equals(Component self, Component other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.unmappedProps, other.unmappedProps) && Mapper.isEqual(self.name, other.name);
+
+  @override Function get typeFactory => (f) => f<Component>();
+}
+
+extension ComponentMapperExtension  on Component {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  ComponentCopyWith<Component> get copyWith => ComponentCopyWith(this, $identity);
+}
+
+abstract class ComponentCopyWith<$R> {
+  factory ComponentCopyWith(Component value, Then<Component, $R> then) = _ComponentCopyWithImpl<$R>;
+  $R call({String? id, Map<String, dynamic>? unmappedProps, String? name});
+}
+
+class _ComponentCopyWithImpl<$R> extends BaseCopyWith<Component, $R> implements ComponentCopyWith<$R> {
+  _ComponentCopyWithImpl(Component value, Then<Component, $R> then) : super(value, then);
+
+  @override $R call({String? id, Object? unmappedProps = $none, String? name}) => $then(Component(id ?? $value.id, or(unmappedProps, $value.unmappedProps), name ?? $value.name));
 }
 
 
