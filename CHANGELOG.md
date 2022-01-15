@@ -1,3 +1,15 @@
+# 1.0.0-dev.0
+
+- Large refactoring and restructuring 
+  - Restructured builder implementation
+  - Moved code out of generated files into package
+- `Mapper` is now a singleton class
+  - `fromValue`, `toValue` and all other methods are now instance methods accessible with `Mapper.i.fromValue()`
+  - the legacy static methods are still available, but forward to the instance methods
+- Switched to using the `type_plus` package for internal handling of generics
+- Added `ChainedHooks`, `UnescapeNewlinesHooks` and `EmptyToNullHooks`
+- Documented `copyWith` functionalities
+
 # 0.9.0
 
 - Changed implementation of UnmappedPropertiesHook to allow target parameter at any position in constructor
