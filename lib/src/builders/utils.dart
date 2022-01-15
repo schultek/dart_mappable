@@ -20,10 +20,10 @@ const mapperChecker = TypeChecker.fromRuntime(BaseMapper);
 
 extension GetNode on Element {
   AstNode? getNode() {
-    return (session?.getParsedLibraryByElement2(library!)
-            as ParsedLibraryResult?)
-        ?.getElementDeclaration(this)
-        ?.node;
+    var result = session?.getParsedLibraryByElement2(library!);
+    if (result is ParsedLibraryResult) {
+      return result.getElementDeclaration(this)?.node;
+    }
   }
 }
 
