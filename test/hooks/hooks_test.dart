@@ -45,6 +45,16 @@ class Clothes {
   Clothes(this.size, {this.unmappedProps = const {}});
 }
 
+@MappableClass(hooks: UnmappedPropertiesHooks('unmapped_props'))
+class Component {
+  String id;
+  String name;
+
+  Map<String, dynamic>? unmappedProps;
+
+  Component(this.id, this.unmappedProps, this.name);
+}
+
 void main() {
   group('Hooks', () {
     test('Before Decode Hook', () {
@@ -68,6 +78,13 @@ void main() {
       expect(clothes.unmappedProps, equals({'color': 'green', 'quality': 2}));
       expect(
           clothes.toMap(), equals({'size': 1, 'color': 'green', 'quality': 2}));
+
+      Component component =
+          Mapper.fromJson('{"id": "some_id", "value": 3, "name": "my_comp"}');
+      expect(component.unmappedProps, equals({'value': 3}));
+      component.name = 'changed';
+      expect(component.toMap(),
+          equals({'id': 'some_id', 'name': 'changed', 'value': 3}));
     });
   });
 }
