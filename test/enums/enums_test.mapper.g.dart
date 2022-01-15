@@ -8,8 +8,8 @@ import 'enums_test.dart';
 var _mappers = <BaseMapper>{
   // class mappers
   // enum mappers
-  EnumMapper<State>(StateMapper.fromString, (State s) => s.toStringValue()),
-  EnumMapper<Color>(ColorMapper.fromString, (Color c) => c.toStringValue()),
+  StateMapper._(),
+  ColorMapper._(),
   // custom mappers
 };
 
@@ -21,8 +21,10 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED ENUM MAPPERS AND EXTENSIONS ===
 
-extension StateMapper on State {
-  static State fromString(String value) {
+class StateMapper extends EnumMapper<State> {
+  StateMapper._();
+
+  @override  State fromString(String value) {
     switch (value) {
       case 'on': return State.On;
       case 'off': return State.off;
@@ -31,8 +33,8 @@ extension StateMapper on State {
     }
   }
 
-  String toStringValue() {
-    switch (this) {
+  @override  String toStringValue(State value) {
+    switch (value) {
       case State.On: return 'on';
       case State.off: return 'off';
       case State.itsCOMPLICATED: return 'itsComplicated';
@@ -40,8 +42,14 @@ extension StateMapper on State {
   }
 }
 
-extension ColorMapper on Color {
-  static Color fromString(String value) {
+extension StateMapperExtension on State {
+  String toStringValue() => Mapper.toValue(this) as String;
+}
+
+class ColorMapper extends EnumMapper<Color> {
+  ColorMapper._();
+
+  @override  Color fromString(String value) {
     switch (value) {
       case 'green': return Color.Green;
       case 'blue': return Color.BLUE;
@@ -50,13 +58,17 @@ extension ColorMapper on Color {
     }
   }
 
-  String toStringValue() {
-    switch (this) {
+  @override  String toStringValue(Color value) {
+    switch (value) {
       case Color.Green: return 'green';
       case Color.BLUE: return 'blue';
       case Color.bloodRED: return 'blood-red';
     }
   }
+}
+
+extension ColorMapperExtension on Color {
+  String toStringValue() => Mapper.toValue(this) as String;
 }
 
 

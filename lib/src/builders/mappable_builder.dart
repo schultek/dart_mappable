@@ -54,7 +54,7 @@ class MappableBuilder implements Builder {
         '  // class mappers\n'
         '${classMappers.map((om) => '  ${om.config.mapperName}._(),\n').join()}'
         '  // enum mappers\n'
-        '${enumMappers.map((em) => '  ${em.instanceLiteral}').join()}'
+        '${enumMappers.map((em) => '  ${em.config.mapperName}._(),\n').join()}'
         '  // custom mappers\n'
         '${customMappers.map((e) => '  ${e.name}(),\n').join()}'
         '};\n'

@@ -10,7 +10,7 @@ var _mappers = <BaseMapper>{
   PersonMapper._(),
   CarMapper._(),
   // enum mappers
-  EnumMapper<Brand>(BrandMapper.fromString, (Brand b) => b.toStringValue()),
+  BrandMapper._(),
   // custom mappers
 };
 
@@ -92,8 +92,10 @@ class _CarCopyWithImpl<$R> extends BaseCopyWith<Car, $R> implements CarCopyWith<
 
 // === GENERATED ENUM MAPPERS AND EXTENSIONS ===
 
-extension BrandMapper on Brand {
-  static Brand fromString(String value) {
+class BrandMapper extends EnumMapper<Brand> {
+  BrandMapper._();
+
+  @override  Brand fromString(String value) {
     switch (value) {
       case 'toyota': return Brand.Toyota;
       case 'audi': return Brand.Audi;
@@ -102,13 +104,17 @@ extension BrandMapper on Brand {
     }
   }
 
-  String toStringValue() {
-    switch (this) {
+  @override  String toStringValue(Brand value) {
+    switch (value) {
       case Brand.Toyota: return 'toyota';
       case Brand.Audi: return 'audi';
       case Brand.BMW: return 'bmw';
     }
   }
+}
+
+extension BrandMapperExtension on Brand {
+  String toStringValue() => Mapper.toValue(this) as String;
 }
 
 

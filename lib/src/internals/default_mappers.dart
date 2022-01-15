@@ -18,16 +18,16 @@ class PrimitiveMapper<T> extends BaseMapper<T> {
   bool isFor(dynamic v) => v.runtimeType == T;
 }
 
-class EnumMapper<T> extends SimpleMapper<T> {
-  EnumMapper(this._decoder, this._encoder);
+abstract class EnumMapper<T> extends SimpleMapper<T> {
+  EnumMapper();
 
-  final T Function(String value) _decoder;
-  final String Function(T value) _encoder;
+  T fromString(String value);
+  String toStringValue(T value);
 
   @override
-  T decode(dynamic value) => checked(value, _decoder);
+  T decode(dynamic value) => checked(value, fromString);
   @override
-  dynamic encode(T self) => _encoder(self);
+  dynamic encode(T self) => toStringValue(self);
 }
 
 class DateTimeMapper extends SimpleMapper<DateTime> {
