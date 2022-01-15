@@ -8,4 +8,4 @@ dependencies:
     path: ../
 
 dev_dependencies:
-  build_runner: ^2.0.5
+  build_runner: ^2.1.0
