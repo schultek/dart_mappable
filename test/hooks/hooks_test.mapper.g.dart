@@ -23,6 +23,7 @@ var _mappers = <String, BaseMapper>{
   _typeOf<Game>(): GameMapper._(),
   _typeOf<Player>(): PlayerMapper._(),
   _typeOf<Clothes>(): ClothesMapper._(),
+  _typeOf<Component>(): ComponentMapper._(),
   // enum mappers
   // custom mappers
 };
@@ -135,6 +136,41 @@ class _ClothesCopyWithImpl<$R> extends BaseCopyWith<Clothes, $R> implements Clot
   _ClothesCopyWithImpl(Clothes value, Then<Clothes, $R> then) : super(value, then);
 
   @override $R call({int? size, Map<String, dynamic>? unmappedProps}) => _then(Clothes(size ?? _value.size, unmappedProps: unmappedProps ?? _value.unmappedProps));
+}
+
+class ComponentMapper extends BaseMapper<Component> {
+  ComponentMapper._();
+
+  @override Function get decoder => decode;
+  Component decode(dynamic v) => _hookedDecode(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => _checked(v, (Map<String, dynamic> map) => fromMap(map)));
+  Component fromMap(Map<String, dynamic> map) => Component(map.get('id'), map.getMapOpt('unmapped_props'), map.get('name'));
+
+  @override Function get encoder => (Component v) => encode(v);
+  dynamic encode(Component v) => _hookedEncode<Component>(const UnmappedPropertiesHooks('unmapped_props'), v, (v) => toMap(v));
+  Map<String, dynamic> toMap(Component c) => {'id': Mapper.toValue(c.id), 'unmapped_props': Mapper.toValue(c.unmappedProps), 'name': Mapper.toValue(c.name)};
+
+  @override String? stringify(Component self) => 'Component(id: ${Mapper.asString(self.id)}, name: ${Mapper.asString(self.name)}, unmappedProps: ${Mapper.asString(self.unmappedProps)})';
+  @override int? hash(Component self) => Mapper.hash(self.id) ^ Mapper.hash(self.unmappedProps) ^ Mapper.hash(self.name);
+  @override bool? equals(Component self, Component other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.unmappedProps, other.unmappedProps) && Mapper.isEqual(self.name, other.name);
+
+  @override Function get typeFactory => (f) => f<Component>();
+}
+
+extension ComponentMapperExtension on Component {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  ComponentCopyWith<Component> get copyWith => ComponentCopyWith(this, _$identity);
+}
+
+abstract class ComponentCopyWith<$R> {
+  factory ComponentCopyWith(Component value, Then<Component, $R> then) = _ComponentCopyWithImpl<$R>;
+  $R call({String? id, Map<String, dynamic>? unmappedProps, String? name});
+}
+
+class _ComponentCopyWithImpl<$R> extends BaseCopyWith<Component, $R> implements ComponentCopyWith<$R> {
+  _ComponentCopyWithImpl(Component value, Then<Component, $R> then) : super(value, then);
+
+  @override $R call({String? id, Object? unmappedProps = _none, String? name}) => _then(Component(id ?? _value.id, or(unmappedProps, _value.unmappedProps), name ?? _value.name));
 }
 
 
