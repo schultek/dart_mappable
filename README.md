@@ -477,8 +477,6 @@ Because of this, we provide a ready-to-use `MappingHook` called `UnmappedPropert
 To use this hook, define a `Map<String, dynamic>` field in your class, and provide it's name to the `UnmappedPropertiesHooks` constructor. 
 Be aware that you have to provide the matching json key of the field (after applying the case style, etc.) instead of the dart field name.
 
-Also you need to make sure that this field is **the last parameter** in your constructor.
-
 ```dart
 @MappableClass(hooks: UnmappedPropertiesHooks('unmapped_props'))
 class Game {
