@@ -82,6 +82,7 @@ extension CatMapperExtension  on Cat {
 abstract class CatCopyWith<$R> {
   factory CatCopyWith(Cat value, Then<Cat, $R> then) = _CatCopyWithImpl<$R>;
   $R call({String? name, String? color});
+  $R apply(Cat Function(Cat) transform);
 }
 
 class _CatCopyWithImpl<$R> extends BaseCopyWith<Cat, $R> implements CatCopyWith<$R> {
@@ -117,6 +118,7 @@ extension DogMapperExtension  on Dog {
 abstract class DogCopyWith<$R> {
   factory DogCopyWith(Dog value, Then<Dog, $R> then) = _DogCopyWithImpl<$R>;
   $R call({String? name, int? age});
+  $R apply(Dog Function(Dog) transform);
 }
 
 class _DogCopyWithImpl<$R> extends BaseCopyWith<Dog, $R> implements DogCopyWith<$R> {
@@ -152,6 +154,7 @@ extension NullAnimalMapperExtension  on NullAnimal {
 abstract class NullAnimalCopyWith<$R> {
   factory NullAnimalCopyWith(NullAnimal value, Then<NullAnimal, $R> then) = _NullAnimalCopyWithImpl<$R>;
   $R call({String? name});
+  $R apply(NullAnimal Function(NullAnimal) transform);
 }
 
 class _NullAnimalCopyWithImpl<$R> extends BaseCopyWith<NullAnimal, $R> implements NullAnimalCopyWith<$R> {
@@ -187,6 +190,7 @@ extension DefaultAnimalMapperExtension  on DefaultAnimal {
 abstract class DefaultAnimalCopyWith<$R> {
   factory DefaultAnimalCopyWith(DefaultAnimal value, Then<DefaultAnimal, $R> then) = _DefaultAnimalCopyWithImpl<$R>;
   $R call({String? name, String? type});
+  $R apply(DefaultAnimal Function(DefaultAnimal) transform);
 }
 
 class _DefaultAnimalCopyWithImpl<$R> extends BaseCopyWith<DefaultAnimal, $R> implements DefaultAnimalCopyWith<$R> {

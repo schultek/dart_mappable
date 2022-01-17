@@ -46,6 +46,7 @@ abstract class GameCopyWith<$R> {
   factory GameCopyWith(Game value, Then<Game, $R> then) = _GameCopyWithImpl<$R>;
   PlayerCopyWith<$R> get player;
   $R call({Player? player});
+  $R apply(Game Function(Game) transform);
 }
 
 class _GameCopyWithImpl<$R> extends BaseCopyWith<Game, $R> implements GameCopyWith<$R> {
@@ -82,6 +83,7 @@ extension PlayerMapperExtension  on Player {
 abstract class PlayerCopyWith<$R> {
   factory PlayerCopyWith(Player value, Then<Player, $R> then) = _PlayerCopyWithImpl<$R>;
   $R call({String? id});
+  $R apply(Player Function(Player) transform);
 }
 
 class _PlayerCopyWithImpl<$R> extends BaseCopyWith<Player, $R> implements PlayerCopyWith<$R> {
@@ -117,6 +119,7 @@ extension ClothesMapperExtension  on Clothes {
 abstract class ClothesCopyWith<$R> {
   factory ClothesCopyWith(Clothes value, Then<Clothes, $R> then) = _ClothesCopyWithImpl<$R>;
   $R call({int? size, Map<String, dynamic>? unmappedProps});
+  $R apply(Clothes Function(Clothes) transform);
 }
 
 class _ClothesCopyWithImpl<$R> extends BaseCopyWith<Clothes, $R> implements ClothesCopyWith<$R> {
@@ -152,6 +155,7 @@ extension ComponentMapperExtension  on Component {
 abstract class ComponentCopyWith<$R> {
   factory ComponentCopyWith(Component value, Then<Component, $R> then) = _ComponentCopyWithImpl<$R>;
   $R call({String? id, Map<String, dynamic>? unmappedProps, String? name});
+  $R apply(Component Function(Component) transform);
 }
 
 class _ComponentCopyWithImpl<$R> extends BaseCopyWith<Component, $R> implements ComponentCopyWith<$R> {

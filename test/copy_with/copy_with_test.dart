@@ -50,22 +50,50 @@ void main() {
       expect(p2.car.brand, isNot(equals(person.car.brand)));
       expect(person.car.brand.name, equals('Audi'));
       expect(p2.car.brand.name, equals('BMW'));
+
+      Person p3 =
+          person.copyWith.car.apply((c) => Car(c.brand, c.model + '_xx'));
+      expect(p3.car.brand, equals(person.car.brand));
+      expect(p3.car.model, equals('A8_xx'));
     });
 
-    test('Should generate copyWith extensions for Lists', () {
+    test('Should generate copyWith extensions for Lists and Maps', () {
       var audi = Brand('Audi');
       var bmw = Brand('BMW');
-      var dealership = Dealership([Car(audi, 'A9'), Car(bmw, 'M4')], {});
+      var porsche = Brand('Porsche');
+      var cars = [Car(audi, 'A9'), Car(bmw, 'M4')];
+      var salesRep = {
+        audi: Person('Max', Car(audi, 'A9')),
+        bmw: Person('Cathy', Car(bmw, 'M3')),
+      };
+
+      var dealership = Dealership([...cars], {...salesRep});
 
       expect(
         dealership.copyWith.cars.at(0).call(model: 'A8'),
-        equals(Dealership([Car(audi, 'A8'), Car(bmw, 'M4')], {})),
+        equals(Dealership([Car(audi, 'A8'), Car(bmw, 'M4')], salesRep)),
       );
 
       expect(
         dealership.copyWith.cars.add(Car(audi, 'A8')),
-        equals(
-            Dealership([Car(audi, 'A9'), Car(bmw, 'M4'), Car(audi, 'A8')], {})),
+        equals(Dealership([...cars, Car(audi, 'A8')], salesRep)),
+      );
+
+      expect(
+        dealership.copyWith.salesRep.get(audi)!(name: 'Tony'),
+        equals(Dealership(cars, {
+          ...salesRep,
+          audi: Person('Tony', Car(audi, 'A9')),
+        })),
+      );
+
+      expect(
+        dealership.copyWith.salesRep
+            .put(porsche, Person('Justus', Car(porsche, '911'))),
+        equals(Dealership(cars, {
+          ...salesRep,
+          porsche: Person('Justus', Car(porsche, '911')),
+        })),
       );
     });
   });

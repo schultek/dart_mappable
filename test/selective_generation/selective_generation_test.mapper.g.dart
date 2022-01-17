@@ -34,6 +34,7 @@ extension PersonMapperExtension  on Person {
 abstract class PersonCopyWith<$R> {
   factory PersonCopyWith(Person value, Then<Person, $R> then) = _PersonCopyWithImpl<$R>;
   $R call({String? name});
+  $R apply(Person Function(Person) transform);
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<Person, $R> implements PersonCopyWith<$R> {

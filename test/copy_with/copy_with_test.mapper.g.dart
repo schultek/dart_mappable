@@ -46,6 +46,7 @@ abstract class PersonCopyWith<$R> {
   factory PersonCopyWith(Person value, Then<Person, $R> then) = _PersonCopyWithImpl<$R>;
   CarCopyWith<$R> get car;
   $R call({String? name, Car? car});
+  $R apply(Person Function(Person) transform);
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<Person, $R> implements PersonCopyWith<$R> {
@@ -83,6 +84,7 @@ abstract class CarCopyWith<$R> {
   factory CarCopyWith(Car value, Then<Car, $R> then) = _CarCopyWithImpl<$R>;
   BrandCopyWith<$R> get brand;
   $R call({Brand? brand, String? model});
+  $R apply(Car Function(Car) transform);
 }
 
 class _CarCopyWithImpl<$R> extends BaseCopyWith<Car, $R> implements CarCopyWith<$R> {
@@ -119,6 +121,7 @@ extension BrandMapperExtension  on Brand {
 abstract class BrandCopyWith<$R> {
   factory BrandCopyWith(Brand value, Then<Brand, $R> then) = _BrandCopyWithImpl<$R>;
   $R call({String? name});
+  $R apply(Brand Function(Brand) transform);
 }
 
 class _BrandCopyWithImpl<$R> extends BaseCopyWith<Brand, $R> implements BrandCopyWith<$R> {
@@ -154,13 +157,16 @@ extension DealershipMapperExtension  on Dealership {
 abstract class DealershipCopyWith<$R> {
   factory DealershipCopyWith(Dealership value, Then<Dealership, $R> then) = _DealershipCopyWithImpl<$R>;
   ListCopyWith<$R, Car, CarCopyWith<$R>> get cars;
+  MapCopyWith<$R, Brand, Person, PersonCopyWith<$R>> get salesRep;
   $R call({List<Car>? cars, Map<Brand, Person>? salesRep});
+  $R apply(Dealership Function(Dealership) transform);
 }
 
 class _DealershipCopyWithImpl<$R> extends BaseCopyWith<Dealership, $R> implements DealershipCopyWith<$R> {
   _DealershipCopyWithImpl(Dealership value, Then<Dealership, $R> then) : super(value, then);
 
   @override ListCopyWith<$R, Car, CarCopyWith<$R>> get cars => ListCopyWith($value.cars, (v, t) => CarCopyWith(v, t), (v) => call(cars: v));
+  @override MapCopyWith<$R, Brand, Person, PersonCopyWith<$R>> get salesRep => MapCopyWith($value.salesRep, (v, t) => PersonCopyWith(v, t), (v) => call(salesRep: v));
   @override $R call({List<Car>? cars, Map<Brand, Person>? salesRep}) => $then(Dealership(cars ?? $value.cars, salesRep ?? $value.salesRep));
 }
 

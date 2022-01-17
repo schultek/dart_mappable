@@ -52,6 +52,9 @@ class CopyWithGenerator {
       if (p?.type.isDartCoreList ?? false) {
         var it = p!.type as InterfaceType;
         return MapEntry(p, getConfig(it.typeArguments.first.element));
+      } else if (p?.type.isDartCoreMap ?? false) {
+        var it = p!.type as InterfaceType;
+        return MapEntry(p, getConfig(it.typeArguments[1].element));
       } else {
         return MapEntry(p, getConfig(p?.type.element));
       }
@@ -89,12 +92,25 @@ class CopyWithGenerator {
             : '';
         fieldTypeParams += ', $copyWithName<\$R$typeParams>';
         copyWithName = 'ListCopyWith';
+      } else if (b.key!.type.isDartCoreMap) {
+        var it = b.key!.type as InterfaceType;
+
+        var valueTypeArg = it.typeArguments[1];
+
+        var typeParams = valueTypeArg is InterfaceType
+            ? valueTypeArg.typeArguments
+                .map((t) => ', ${t.getDisplayString(withNullability: true)}')
+                .join()
+            : '';
+        fieldTypeParams += ', $copyWithName<\$R$typeParams>';
+        copyWithName = 'MapCopyWith';
       }
       snippets.add(
           '  $copyWithName<\$R$fieldTypeParams>${b.key!.type.isNullable ? '?' : ''} get ${b.key!.name};\n');
     }
 
     snippets.add('  \$R call(${_generateCopyWithParams(config)});\n'
+        '  \$R apply(${config.className}${config.typeParams} Function(${config.className}${config.typeParams}) transform);\n'
         '}\n\n'
         'class _${config.className}CopyWithImpl<\$R$classTypeParamsDef> extends BaseCopyWith<${config.className}${config.typeParams}, \$R> implements ${config.className}CopyWith<\$R$classTypeParams> {\n'
         '  _${config.className}CopyWithImpl(${config.className}${config.typeParams} value, Then<${config.className}${config.typeParams}, \$R> then) : super(value, then);\n'
@@ -120,6 +136,16 @@ class CopyWithGenerator {
             : '';
         fieldTypeParams += ', $copyWithName<\$R$typeParams>';
         copyWithName = 'ListCopyWith';
+      } else if (b.key!.type.isDartCoreMap) {
+        params = ', (v, t) => $copyWithName(v, t)$params';
+        var typeArg = (b.key!.type as InterfaceType).typeArguments[1];
+        var typeParams = typeArg is InterfaceType
+            ? typeArg.typeArguments
+                .map((t) => ', ${t.getDisplayString(withNullability: true)}')
+                .join()
+            : '';
+        fieldTypeParams += ', $copyWithName<\$R$typeParams>';
+        copyWithName = 'MapCopyWith';
       }
 
       snippets.add(

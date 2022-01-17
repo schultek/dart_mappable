@@ -1,0 +1,51 @@
+import 'mapper_utils.dart';
+
+typedef _ItemCopyWith<$C, $V, $R> = $C Function($V a, Then<$V, $R> b);
+
+/// Interface used for [Map]s in chained copyWith methods
+/// All methods return a new modified map and do not modify the original map
+abstract class MapCopyWith<$R, $K, $V, $C> {
+  factory MapCopyWith(Map<$K, $V> value, _ItemCopyWith<$C, $V, $R> item,
+      Then<Map<$K, $V>, $R> then) = _MapCopyWith;
+
+  /// Access the copyWith interface for the value of [key]
+  $C? get($K key);
+
+  /// Returns a new map with [value] inserted at [key]
+  $R put($K key, $V v);
+
+  /// Returns a new map with all entries inserted to the map
+  $R putAll(Map<$K, $V> v);
+
+  /// Returns a new map with the value at [key] replaced with a new value
+  $R replace($K key, $V v);
+
+  /// Returns a new map without the value at [key]
+  $R removeAt($K key);
+
+  /// Applies any transformer function on the value
+  $R apply(Map<$K, $V> Function(Map<$K, $V>) transform);
+}
+
+class _MapCopyWith<$R, $K, $V, $C> extends BaseCopyWith<Map<$K, $V>, $R>
+    implements MapCopyWith<$R, $K, $V, $C> {
+  _MapCopyWith(Map<$K, $V> value, this._item, Then<Map<$K, $V>, $R> then)
+      : super(value, then);
+  final _ItemCopyWith<$C, $V, $R> _item;
+
+  @override
+  $C? get($K key) =>
+      $value[key] != null ? _item($value[key]!, (v) => replace(key, v)) : null;
+
+  @override
+  $R put($K key, $V v) => putAll({key: v});
+
+  @override
+  $R putAll(Map<$K, $V> v) => $then({...$value, ...v});
+
+  @override
+  $R replace($K key, $V v) => $then({...$value, key: v});
+
+  @override
+  $R removeAt($K key) => $then({...$value}..remove(key));
+}

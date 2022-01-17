@@ -43,13 +43,16 @@ extension ItemsMapperExtension  on Items {
 abstract class ItemsCopyWith<$R> {
   factory ItemsCopyWith(Items value, Then<Items, $R> then) = _ItemsCopyWithImpl<$R>;
   ListCopyWith<$R, Item, ItemCopyWith<$R>> get items;
+  MapCopyWith<$R, int, Item, ItemCopyWith<$R>> get items2;
   $R call({List<Item>? items, Map<int, Item>? items2});
+  $R apply(Items Function(Items) transform);
 }
 
 class _ItemsCopyWithImpl<$R> extends BaseCopyWith<Items, $R> implements ItemsCopyWith<$R> {
   _ItemsCopyWithImpl(Items value, Then<Items, $R> then) : super(value, then);
 
   @override ListCopyWith<$R, Item, ItemCopyWith<$R>> get items => ListCopyWith($value.items, (v, t) => ItemCopyWith(v, t), (v) => call(items: v));
+  @override MapCopyWith<$R, int, Item, ItemCopyWith<$R>> get items2 => MapCopyWith($value.items2, (v, t) => ItemCopyWith(v, t), (v) => call(items2: v));
   @override $R call({List<Item>? items, Map<int, Item>? items2}) => $then(Items(items ?? $value.items, items2 ?? $value.items2));
 }
 
@@ -80,6 +83,7 @@ extension ItemMapperExtension  on Item {
 abstract class ItemCopyWith<$R> {
   factory ItemCopyWith(Item value, Then<Item, $R> then) = _ItemCopyWithImpl<$R>;
   $R call({int? index});
+  $R apply(Item Function(Item) transform);
 }
 
 class _ItemCopyWithImpl<$R> extends BaseCopyWith<Item, $R> implements ItemCopyWith<$R> {

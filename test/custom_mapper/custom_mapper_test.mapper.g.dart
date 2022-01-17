@@ -44,6 +44,7 @@ extension GenericBoxMapperExtension <T> on GenericBox<T> {
 abstract class GenericBoxCopyWith<$R, T> {
   factory GenericBoxCopyWith(GenericBox<T> value, Then<GenericBox<T>, $R> then) = _GenericBoxCopyWithImpl<$R, T>;
   $R call({T? content});
+  $R apply(GenericBox<T> Function(GenericBox<T>) transform);
 }
 
 class _GenericBoxCopyWithImpl<$R, T> extends BaseCopyWith<GenericBox<T>, $R> implements GenericBoxCopyWith<$R, T> {

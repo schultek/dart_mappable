@@ -45,6 +45,7 @@ abstract class PersonCopyWith<$R> {
   factory PersonCopyWith(Person value, Then<Person, $R> then) = _PersonCopyWithImpl<$R>;
   CarCopyWith<$R>? get car;
   $R call({String? name, int? age, Car? car});
+  $R apply(Person Function(Person) transform);
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<Person, $R> implements PersonCopyWith<$R> {
@@ -81,6 +82,7 @@ extension CarMapperExtension  on Car {
 abstract class CarCopyWith<$R> {
   factory CarCopyWith(Car value, Then<Car, $R> then) = _CarCopyWithImpl<$R>;
   $R call({int? drivenKm, Brand? brand});
+  $R apply(Car Function(Car) transform);
 }
 
 class _CarCopyWithImpl<$R> extends BaseCopyWith<Car, $R> implements CarCopyWith<$R> {

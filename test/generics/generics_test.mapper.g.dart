@@ -43,6 +43,7 @@ extension BoxMapperExtension <T extends Object> on Box<T> {
 abstract class BoxCopyWith<$R, T extends Object> {
   factory BoxCopyWith(Box<T> value, Then<Box<T>, $R> then) = _BoxCopyWithImpl<$R, T>;
   $R call({int? size, List<T>? contents});
+  $R apply(Box<T> Function(Box<T>) transform);
 }
 
 class _BoxCopyWithImpl<$R, T extends Object> extends BaseCopyWith<Box<T>, $R> implements BoxCopyWith<$R, T> {
@@ -78,6 +79,7 @@ extension ConfettiMapperExtension  on Confetti {
 abstract class ConfettiCopyWith<$R> {
   factory ConfettiCopyWith(Confetti value, Then<Confetti, $R> then) = _ConfettiCopyWithImpl<$R>;
   $R call({String? color});
+  $R apply(Confetti Function(Confetti) transform);
 }
 
 class _ConfettiCopyWithImpl<$R> extends BaseCopyWith<Confetti, $R> implements ConfettiCopyWith<$R> {

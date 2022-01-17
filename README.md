@@ -293,15 +293,24 @@ void main() {
   var company = Company(Person('Anna'), [Person('Max'), Person('Tom')]);
   
   // access nested object using the 'dot' syntax
-  print(company.copyWith.manager(name: 'Laura')); // Company(manager: Person(name: 'Laura'), ...)
+  print(company.copyWith.manager(name: 'Laura')); 
+  // prints: Company(manager: Person(name: 'Laura'), ...)
   
   // this also works with lists
-  print(company.copyWith.employees.at(0)(name: 'John')); // Company(..., employees: [Person(name: 'John), Person(name: 'Tom')])
+  print(company.copyWith.employees.at(0)(name: 'John')); 
+  // prints: Company(..., employees: [Person(name: 'John), Person(name: 'Tom')])
+  
+  // you can also use 'apply' with a custom function to transform a value
+  print(company.copyWith.manager.apply((manager) => Person(manager.name.toUpperCase())));
+  // prints: Company(manager: Person(name: 'LAURA'), ...)
 }
 ```
 
-When working with `List`s and `copyWith`, there are different methods you can use to access, add, remove or filter elements. 
-The complete interface is documented [here](https://pub.dev/documentation/dart_mappable/latest/internaly/ListCopyWith-class.html)
+When working with `List`s or `Map`s and `copyWith`, there are different methods you can use to access, add, remove or filter elements. 
+The complete interfaces are documented 
+
+- [here](https://pub.dev/documentation/dart_mappable/latest/internals/ListCopyWith-class.html) for Lists
+- [here](https://pub.dev/documentation/dart_mappable/latest/internals/MapCopyWith-class.html) for Maps
 
 ## Lists, Sets and Maps
 
