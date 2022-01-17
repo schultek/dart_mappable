@@ -7,4 +7,3 @@ targets:
         options:
           caseStyle: snakeCase
           enumCaseStyle: camelCase
-          exclude: []

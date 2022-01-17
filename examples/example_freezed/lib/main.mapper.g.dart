@@ -80,6 +80,7 @@ extension DataMapperExtension  on Data {
 abstract class DataCopyWith<$R> {
   factory DataCopyWith(Data value, Then<Data, $R> then) = _DataCopyWithImpl<$R>;
   $R call({int? value});
+  $R apply(Data Function(Data) transform);
 }
 
 class _DataCopyWithImpl<$R> extends BaseCopyWith<Data, $R> implements DataCopyWith<$R> {
@@ -115,6 +116,7 @@ extension LoadingMapperExtension  on Loading {
 abstract class LoadingCopyWith<$R> {
   factory LoadingCopyWith(Loading value, Then<Loading, $R> then) = _LoadingCopyWithImpl<$R>;
   $R call();
+  $R apply(Loading Function(Loading) transform);
 }
 
 class _LoadingCopyWithImpl<$R> extends BaseCopyWith<Loading, $R> implements LoadingCopyWith<$R> {
@@ -150,6 +152,7 @@ extension ErrorDetailsMapperExtension  on ErrorDetails {
 abstract class ErrorDetailsCopyWith<$R> {
   factory ErrorDetailsCopyWith(ErrorDetails value, Then<ErrorDetails, $R> then) = _ErrorDetailsCopyWithImpl<$R>;
   $R call({String? message});
+  $R apply(ErrorDetails Function(ErrorDetails) transform);
 }
 
 class _ErrorDetailsCopyWithImpl<$R> extends BaseCopyWith<ErrorDetails, $R> implements ErrorDetailsCopyWith<$R> {

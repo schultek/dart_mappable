@@ -1,5 +1,8 @@
+import 'package:dart_mappable/dart_mappable.dart';
+
 import 'main.mapper.g.dart';
 
+@MappableClass()
 class Person with Mappable {
   final String name;
   final int age;
@@ -8,8 +11,10 @@ class Person with Mappable {
   Person(this.name, {this.age = 18, this.car});
 }
 
+@MappableEnum()
 enum Brand { Toyota, Audi, BMW }
 
+@MappableClass()
 class Car with Mappable {
   final double miles;
   final Brand brand;
@@ -19,6 +24,7 @@ class Car with Mappable {
   int get drivenKm => (miles / 0.62).round();
 }
 
+@MappableClass()
 class Box<T> {
   int size;
   T content;
@@ -26,6 +32,7 @@ class Box<T> {
   Box(this.size, {required this.content});
 }
 
+@MappableClass()
 class Confetti {
   String color;
   Confetti(this.color);

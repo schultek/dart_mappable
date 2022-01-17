@@ -1,3 +1,9 @@
+# 1.0.0-dev.1
+
+- Improved Readme, added **How to use** section
+- Added `MapCopyWith` interface and added `apply()` method to `copyWith` handlers
+- Added `@MappableLib()` annotation and moved library-level configuration logic from build options to annotation properties
+
 # 1.0.0-dev.0
 
 - Large refactoring and restructuring 
