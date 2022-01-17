@@ -10,9 +10,8 @@ import 'class_mapper_target.dart';
 import 'enum_mapper_target.dart';
 
 class MapperTargets {
-  final GlobalOptions options;
   final ImportsBuilder imports;
-  MapperTargets(AssetId inputId, this.options)
+  MapperTargets(AssetId inputId)
       : imports = ImportsBuilder(inputId)
           ..add(Uri.parse('package:dart_mappable/internals.dart'));
 
@@ -20,13 +19,7 @@ class MapperTargets {
   Map<ClassElement, ClassMapperTarget> classes = {};
   Map<String, ClassElement> customMappers = {};
 
-  void addElementsFromLibrary(LibraryElement library) {
-    if (library.isInSdk) {
-      return;
-    }
-
-    var libraryOptions = options.forLibrary(library);
-
+  void addElementsFromLibrary(LibraryElement library, MappableOptions options) {
     var elements = elementsOf(library);
 
     for (var element in elements) {
@@ -41,16 +34,16 @@ class MapperTargets {
         customMappers[type.element!.name!] = element;
         imports.addLibrary(library);
         imports.addLibrary(type.element!.library!);
-      } else if (libraryOptions.shouldGenerateFor(element) ||
+      } else if (options.shouldGenerateFor(element) ||
           (!element.isEnum && classChecker.hasAnnotationOf(element)) ||
           (element.isEnum && enumChecker.hasAnnotationOf(element))) {
-        addElement(element, libraryOptions);
+        addElement(element, options);
         imports.addLibrary(library);
       }
     }
   }
 
-  void addElement(ClassElement element, LibraryOptions options) {
+  void addElement(ClassElement element, MappableOptions options) {
     if (element.isPrivate) return;
     if (element.isEnum) {
       if (enums.containsKey(element)) {
@@ -107,7 +100,7 @@ class MapperTargets {
 
 abstract class MapperTarget {
   ClassElement element;
-  LibraryOptions options;
+  MappableOptions options;
   MapperTarget(this.element, this.options);
 
   Element get annotatedElement => element;

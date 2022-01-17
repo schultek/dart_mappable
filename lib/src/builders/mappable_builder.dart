@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
@@ -8,24 +9,28 @@ import 'builder_snippets.dart';
 import 'config/mapper_targets.dart';
 import 'generators/class_mapper_generator.dart';
 import 'generators/enum_mapper_generator.dart';
+import 'utils.dart';
 
 /// The main builder used for code generation
 class MappableBuilder implements Builder {
   /// The global options defined in the 'build.yaml' file
-  late GlobalOptions options;
+  late MappableOptions options;
 
   MappableBuilder(BuilderOptions options)
-      : options = GlobalOptions.parse(options.config);
+      : options = MappableOptions.parse(options.config);
 
   @override
   FutureOr<void> build(BuildStep buildStep) async {
-    var resolver = buildStep.resolver;
     var inputId = buildStep.inputId;
     var outputId = inputId.changeExtension('.mapper.g.dart');
-    var visibleLibraries = await resolver.libraries.toList();
 
-    var generatedSource = generate(visibleLibraries, buildStep);
-    await buildStep.writeAsString(outputId, generatedSource);
+    try {
+      var generatedSource = generate(buildStep);
+      await buildStep.writeAsString(outputId, generatedSource);
+    } catch (e, st) {
+      print(st);
+      rethrow;
+    }
   }
 
   @override
@@ -35,10 +40,14 @@ class MappableBuilder implements Builder {
 
   /// Main generation handler
   /// Searches for mappable classes and enums recursively
-  String generate(List<LibraryElement> libraries, BuildStep buildStep) {
-    var targets = MapperTargets(buildStep.inputId, options);
-    for (var library in libraries) {
-      targets.addElementsFromLibrary(library);
+  Future<String> generate(BuildStep buildStep) async {
+    var targets = MapperTargets(buildStep.inputId);
+    var entryLib = await buildStep.inputLibrary;
+
+    var libraries = resolveLibraries(entryLib);
+
+    for (var entry in libraries.entries) {
+      targets.addElementsFromLibrary(entry.key, entry.value);
     }
 
     var classMappers =
@@ -67,5 +76,58 @@ class MappableBuilder implements Builder {
         '\n\n'
         '// === GENERATED UTILITY CODE ===\n\n'
         '$mapperCode';
+  }
+
+  Map<LibraryElement, MappableOptions> resolveLibraries(
+      LibraryElement entryLib) {
+    var libraries = <LibraryElement, MappableOptions>{};
+
+    final toVisit = Queue<MapEntry<LibraryElement, MappableOptions>>();
+
+    toVisit.add(MapEntry(entryLib, options));
+
+    void visitDirective(Element directive, LibraryElement? library,
+        MappableOptions parentOptions, MappableOptions? options) {
+      if (library == null) return;
+
+      if (libChecker.hasAnnotationOf(directive)) {
+        var libOptions =
+            MappableOptions.from(libChecker.firstAnnotationOf(directive)!);
+        options = options?.apply(libOptions, forceJoin: false) ?? libOptions;
+      }
+
+      options = parentOptions.apply(options);
+
+      if (libraries.containsKey(library)) {
+        libraries[library] = libraries[library]!.join(options);
+      } else {
+        toVisit.add(MapEntry(library, options));
+      }
+    }
+
+    while (toVisit.isNotEmpty) {
+      var entry = toVisit.removeFirst();
+      var library = entry.key;
+      var parentOptions = entry.value;
+
+      MappableOptions? options;
+
+      if (library.isInSdk) continue;
+
+      if (libChecker.hasAnnotationOf(library)) {
+        options = MappableOptions.from(libChecker.firstAnnotationOf(library)!);
+      }
+
+      libraries[library] = parentOptions.apply(options);
+
+      for (var import in library.imports) {
+        visitDirective(import, import.importedLibrary, parentOptions, options);
+      }
+      for (var export in library.exports) {
+        visitDirective(export, export.exportedLibrary, parentOptions, options);
+      }
+    }
+
+    return libraries;
   }
 }

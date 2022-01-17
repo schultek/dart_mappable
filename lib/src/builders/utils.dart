@@ -15,6 +15,7 @@ const enumChecker = TypeChecker.fromRuntime(MappableEnum);
 const constructorChecker = TypeChecker.fromRuntime(MappableConstructor);
 const classChecker = TypeChecker.fromRuntime(MappableClass);
 const fieldChecker = TypeChecker.fromRuntime(MappableField);
+const libChecker = TypeChecker.fromRuntime(MappableLib);
 const customMapperChecker = TypeChecker.fromRuntime(CustomMapper);
 const mapperChecker = TypeChecker.fromRuntime(BaseMapper);
 
@@ -84,12 +85,14 @@ DartObject? fieldAnnotation(ParameterElement param) {
           : null);
 }
 
-CaseStyle? caseStyleFromAnnotation(DartObject obj) {
-  return CaseStyle(
-    head: textTransformFromAnnotation(obj.getField('head')!),
-    tail: textTransformFromAnnotation(obj.getField('tail')!),
-    separator: obj.getField('separator')!.toStringValue() ?? '',
-  );
+CaseStyle? caseStyleFromAnnotation(DartObject? obj) {
+  return obj != null && !obj.isNull
+      ? CaseStyle(
+          head: textTransformFromAnnotation(obj.getField('head')!),
+          tail: textTransformFromAnnotation(obj.getField('tail')!),
+          separator: obj.getField('separator')!.toStringValue() ?? '',
+        )
+      : null;
 }
 
 TextTransform? textTransformFromAnnotation(DartObject obj) {

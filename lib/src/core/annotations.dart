@@ -120,6 +120,41 @@ class MappableField {
   final MappingHooks? hooks;
 }
 
+/// Used to annotate a library
+/// to define default values and include / exclude classes
+class MappableLib {
+  const MappableLib({
+    this.caseStyle,
+    this.enumCaseStyle,
+    this.ignoreNull,
+    this.discriminatorKey,
+    this.generateMethods,
+    this.include,
+    this.exclude,
+  }) : assert(include == null || exclude == null);
+
+  /// The case style for the map keys
+  final CaseStyle? caseStyle;
+
+  /// The case style for the stringified enum values
+  final CaseStyle? enumCaseStyle;
+
+  /// If true removes all map keys with null values
+  final bool? ignoreNull;
+
+  /// Property key used for type discriminators
+  final String? discriminatorKey;
+
+  /// Specify which methods to generate for classes
+  final int? generateMethods;
+
+  /// Specify which classes to include
+  final List<Type>? include;
+
+  /// Specify which classes to exclude
+  final List<Type>? exclude;
+}
+
 /// Extend this class to define custom [MappingHooks] for a class or field
 abstract class MappingHooks {
   const MappingHooks();

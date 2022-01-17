@@ -13,7 +13,7 @@ class ClassMapperTarget extends MapperTarget {
   List<ClassMapperTarget> subTargets = [];
   ClassMapperTarget? superTarget;
 
-  ClassMapperTarget(ClassElement element, LibraryOptions options)
+  ClassMapperTarget(ClassElement element, MappableOptions options)
       : super(element, options);
 
   @override
@@ -124,9 +124,8 @@ class ClassMapperTarget extends MapperTarget {
   }
 
   CaseStyle? get caseStyle =>
-      annotation != null && !annotation!.getField('caseStyle')!.isNull
-          ? caseStyleFromAnnotation(annotation!.getField('caseStyle')!)
-          : options.caseStyle;
+      caseStyleFromAnnotation(annotation?.getField('caseStyle')) ??
+      options.caseStyle;
 
   bool get ignoreNull {
     return annotation?.getField('ignoreNull')!.toBoolValue() ??
@@ -136,7 +135,7 @@ class ClassMapperTarget extends MapperTarget {
 
   int get generateMethods {
     return annotation?.getField('generateMethods')!.toIntValue() ??
-        GenerateMethods.parse(options.generateMethods) ??
+        options.generateMethods ??
         GenerateMethods.all;
   }
 }
@@ -145,7 +144,7 @@ class FactoryConstructorMapperTarget extends ClassMapperTarget {
   ConstructorElement factoryConstructor;
 
   FactoryConstructorMapperTarget(
-      this.factoryConstructor, LibraryOptions options)
+      this.factoryConstructor, MappableOptions options)
       : super(factoryConstructor.redirectedConstructor!.returnType.element,
             options);
 

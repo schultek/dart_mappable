@@ -21,6 +21,7 @@ targets:
           - test/hooks/hooks_test.dart
           - test/custom_mapper/custom_mapper_test.dart
           - test/mapper/mapper_test.dart
+          - test/lib_mapping/lib_mapping_test.dart
         options:
           caseStyle: snakeCase
           enumCaseStyle: camelCase

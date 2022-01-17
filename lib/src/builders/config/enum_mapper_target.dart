@@ -8,7 +8,7 @@ import 'enum_mapper_config.dart';
 import 'mapper_targets.dart';
 
 class EnumMapperTarget extends MapperTarget {
-  EnumMapperTarget(ClassElement element, LibraryOptions options)
+  EnumMapperTarget(ClassElement element, MappableOptions options)
       : super(element, options);
 
   late EnumMapperConfig config = _buildConfig();

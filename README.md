@@ -19,16 +19,16 @@ Sounds too good to be true? Not anymore.
 > Have a look at the example!
 
 - [Get Started](#get-started)
-- [Configuration](#configuration)
-    - [Builder Config](#builder-config)
-    - [Annotations](#annotations)
-- [Generation Methods](#generation-methods)
-- [Utilize Constructors](#utilize-constructors)
-- [Case Styles](#case-styles)
-- [Copy With](#copywith)
-    - [Deep Copy](#deep-copy)
+- [How to use](#how-to-use)
+  - [Global options](#global-options)
+  - [Mapper interface](#mapper-interface)
+  - [Generation Methods](#generation-methods)
+  - [Utilize Constructors](#utilize-constructors)
+  - [Case Styles](#case-styles)
 - [Lists, Sets and Maps](#lists-sets-and-maps)
   - [Non-Trivial Maps](#non-trivial-maps)
+- [Copy With](#copywith)
+  - [Deep Copy](#deep-copy)
 - [Polymorphism and Discriminators](#polymorphism-and-discriminators)
   - [Null and Default Values](#null-and-default-values)
 - [Encoding / Decoding Hooks](#encoding--decoding-hooks)
@@ -44,7 +44,6 @@ Sounds too good to be true? Not anymore.
 ### TODOs
 
 - Choose properties for toString / equals
-- CopyWith interface for maps
 
 ## Get Started
 
@@ -64,8 +63,15 @@ targets:
       dart_mappable:
         generate_for:
           - lib/main.dart # modify this if you have a different entry point
-        options:
-          - include: [YourModelClass, SomeOtherClass] # add the classes you want to enable code generation for
+```
+
+Then annotate your classes that you want to use with `@MappableClass()`:
+
+```dart
+@MappableClass()
+class MyClass {
+  ...
+}
 ```
 
 In order to generate the serialization code, run the following command:
@@ -74,8 +80,8 @@ In order to generate the serialization code, run the following command:
 pub run build_runner build
 ```
 
-You'll need to re-run code generation each time you are making changes to your code.
-During development, you can use `watch` like this
+You'll need to re-run code generation each time you are making changes to your annotated classes.
+During development, you can use `watch` to automatically watch your changes like this
 
 ```shell script
 pub run build_runner watch
@@ -84,27 +90,102 @@ pub run build_runner watch
 This will generate a `.mapper.g.dart` file for each of your entry points specified in the `build.yaml` file.
 Last step is to `import` the generated files wherever you want / need them.
 
-> Hint: This package will generate clean, formatted, and easy to understand code. Have a look at the generated files. 
-> I guarantee you won't be drowned in uglified code.
+## How to use
 
-## Configuration
+The recommended way to use `dart_mappable` is to annotate your model classes with `@MappableClass()` and your enums with `@MappableEnum()`.
+Each annotation has a set of properties to configure the generated code.
 
-You can use this package and configure the code generation in two different ways. 
+```dart
+@MappableClass()
+class MyClass { ... }
 
-- On a global, or library-specific level use the [Builder Config](#builder-config). 
-- To configure class-specific options, use [Annotations](#annotations).
+@MappableEnum()
+enum MyEnum { ... }
+```
 
-You can use either of them, or mix them as you like. 
+The properties are documented  [here](https://pub.dev/documentation/dart_mappable/latest/dart_mappable/MappableClass-class.html) for `@MappableClass()` and [here](https://pub.dev/documentation/dart_mappable/latest/dart_mappable/MappableEnum-class.html) for `@MappableEnum()`.
 
-### Builder Config
+For deserialization, `dart_mappable` will use the first available constructor of a class, but you can use a specific constructor using the `@MappableConstructor()` annotation.
 
-This package uses a variety builder options inside your `build.yaml` file 
-to specify how your classes should behave when serializing / deserializing. There are a few key-aspects when using build options:
+```dart
+@MappableClass()
+class MyClass {
+  MyClass(); // Don't use this
+  
+  @MappableConstructor()
+  MyClass.special(); // Use this
+}
+```
 
-1. All options are optional!
-2. Options are inherited by libraries and classes. This means that you can e.g. specify the case style on global, library or class level. 
-3. Options on deeper levels override higher level options.
-4. Most general properties that you set in the **Builder Config** can be overridden on a class-by-class basis with [Annotations](#annotations).
+You can also annotate a single field or constructor parameter of a class using `@MappableField()` to set a specific json key or add [hooks](#encoding--decoding-hooks). 
+
+```dart
+@MappableClass()
+class MyClass {
+  MyClass(this.value);
+
+  @MappableField(key: 'my_key')
+  String value;
+}
+```
+
+*Note: This can only be used on a field if it is directly assigned as a constructor parameter (`MyClass(this.myField)`). 
+Setting this annotation on any other field will have no effect. 
+(See [Utilize Constructors](#utilize-constructors) for an explanation why this is.)*
+
+You can add the `@MappableLib()` annotation to your `library` statement to set a default configuration for all included classes and enums, e.g. the [case style](#case-styles).
+
+```dart
+@MappableLib(caseStyle: CaseStyle.camelCase) // will be applied to all classes
+library models;
+
+@MappableClass() // no need to set caseStyle here
+class MyClass {
+  ...
+}
+```
+
+You can also use the `include` and `exclude` property to add any or all classes and enums in a library. Using `exclude` will result in 
+all classes in a library except the specified ones to be included.
+Classes or enums specified using those properties do not need to have the `@MappableClass()` or `@MappableEnum()` annotation.
+
+```dart
+@MappableLib(include: [MyClass])
+library models;
+
+// will be used even without annotation
+class MyClass {
+  ...
+}
+```
+
+The `@MappableLib()` annotation can also be used on `import` or `export` statements. This is especially useful when you want to use classes from an external package, since you can't modify its code and add the necessary annotations to its classes and enums.
+
+```dart
+@MappableLib(include: [ClassA, ClassB]) // ClassA and ClassB are defined in external_package
+import 'package:external_package/external_package.dart';
+
+...
+```
+
+Lastly, you can define [custom mappers](#custom-mappers) using the '@CustomMapper()' annotation.
+
+---
+
+Here are again all **six** annotations that you can use in your code:
+
+1. `@MappableClass()` can be used on a class to specify options like the `caseStyle` of the json keys, whether to ignore null values, or [hooks](#encoding--decoding-hooks).
+2. `@MappableEnum()` can be used on an enum to specify the `caseStyle` of the stringified enum values, or the `defaultValue`.
+3. `@MappableConstructor()` can be used on a constructor to mark this to be used for decoding. It has no properties.
+4. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name, or [hooks](#encoding--decoding-hooks).
+5. `@MappableLib()` can be used on a library statement or import / export statement to set a default configuration for the annotated library or include / exclude classes.
+6. `@CustomMapper()` can be used to specify a custom mapper, used alongside the generated mappers. See [Custom Mappers](#custom-mappers) for a details explanation.
+
+For an overview of all the annotation properties, head to the [Api Documentation](https://pub.dev/documentation/dart_mappable/latest/dart_mappable/dart_mappable-library.html).
+
+### Global options
+
+Additionally to using the `@MappableClass()` and `@MappableLib()` annotations for configuration, you can also define a subset of their properties as global options in the `build.yaml` file:
 
 ```yaml
 targets:
@@ -115,11 +196,6 @@ targets:
           - lib/main.dart
           - lib/models.dart # multiple independent entry files
         options:
-
-          # use only one of (exclude, include)
-          exclude: [ClassA, ClassB] # ignores specific classes, generates code for all else
-          include: [ClassC, ClassD] # generates code for specified classes, ignores all else
-
           # the case style for the map keys, defaults to 'none'
           caseStyle: none # or 'camelCase', 'snakeCase', etc.
           # the case style for stringified enum values, defaults to 'none'
@@ -127,43 +203,32 @@ targets:
           # if true removes all map keys with null values
           ignoreNull: false # or true
           # used as property name for type discriminators
-          discriminatorKey: isOfType
-          
-          # overwrite options for specific libraries
-          libraries: 
-
-            # referenced by its entry point (works with files and directory paths)
-            lib/main.dart: 
-              include: [ClassA] # here: include only class 'ClassA'
-              generateMethods: [equals, copy] # here: only generate equals and copy methods
-        
-            # referenced by its name
-            models: 
-              exclude: [] # here: include everything
-              ignoreNull: true # here: overwrite property to remove keys with null values
-              caseStyle: custom(lc,+) # here: set a custom case style (see below)
+          discriminatorKey: type
+          # used to specify which methods to generate (all by default)
+          generateMethods: [decode, encode, copy, stringify, equals]
 ```
 
-### Annotations
+### Mapper Interface
 
-In some cases it is easier to use **Annotations** on classes, that require some special configurations.
+`dart_mappable` will generate a main `Mapper` class that provides access to all important methods:
 
-There are a total of **five** Annotations that you can use in your code:
+- `Mapper.fromValue<T>(encoded)` will take an encoded object and return a decoded object of type `T`.
+- `Mapper.fromMap<T>(encoded)` and `Mapper.fromJson<T>(encoded)` internally use `fromValue` but expect a `Map<String, dynamic` or `String` respectively.
+- `Mapper.toValue(decoded)` will take any object and return an encoded object of type `dynamic` (usually a `Map<String, dynamic` for custom classes).
+- `Mapper.toMap(decoded)` and `Mapper.toJson(encoded)` internally use `toValue` but will return a `Map<String, dynamic>` or `String` respectively.
+- `Mapper.isEqual(a, b)` will compare two objects for equality.
+- `Mapper.asString(o)` will return a string representation of an object.
 
-1. `@MappableClass()` can be used on a class to specify options like the `caseStyle` of the json keys, whether to ignore null values, or [hooks](#encoding--decoding-hooks).
-2. `@MappableEnum()` can be used on a enum to specify the `caseStyle` of the stringified enum values, or the `defaultValue`.
-3. `@MappableConstructor()` can be used on a constructor to mark this to be used for decoding. It has no properties.
-4. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name, or [hooks](#encoding--decoding-hooks). *Note: This can only be used on a field if it is directly assigned as a constructor parameter (`MyClass(this.myField)`). Setting this Annotation on any other field will have no effect. (See [Utilize Constructors](#utilize-constructors) for an explanation why this is.)*
-5. `@CustomMapper()` can be used to specify a custom mapper, used alongside the generated mappers. See [Custom Mappers](#custom-mappers) for a details explanation.
+Also for each included class there are `.toMap()` and `toJson()` extension methods generated, which internally call `Mapper.toMap()` and `Mapper.toJson()` respectively.
 
-> For a more detailed explanation of all the annotation properties, head to the [Api Documentation](https://pub.dev/documentation/dart_mappable/latest/dart_mappable/dart_mappable-library.html).
+In order for classes to support comparison via `==` as well as a custom `toString()` implementation, you have to use the `Mappable` mixin on those classes.
 
-## Generation Methods
+### Generation Methods
 
 This package can generate a few different sets of methods, which can be activated or deactivated. This makes sure that only code is generated that you actually need.
 By default, all methods are generated for each class.
 
-You can set the `generateMethods` property to specify which methods to generate. Either in the **Builder Config** using a List of Strings, or with the **Annotation** using the `GenerateMethods` flags. 
+You can set the `generateMethods` property to specify which methods to generate. Either in the **global options** using a List of Strings, or with a **annotation** using the `GenerateMethods` flags. 
 The following methods are supported:
 
 - **decode**: Will generate code used by `Mapper.fromJson`, `Mapper.fromMap` and `Mapper.fromValue`.
@@ -172,9 +237,9 @@ The following methods are supported:
 - **stringify**: Will generate code used by `Mapper.asString` or when using the `Mappable` mixin's `toString` override.
 - **equals**: Will generate code used by `Mapper.isEqual` or when using the `Mappable` mixin's `==` or `hashCode` overrides.
 
-When using **Annotations**, you can specify multiple methods using the *bitwise-or* operator like this: `@MappableClass(generateMethods: GenerateMethods.copy | GenerateMethods.equals | GenerateMethods.stringify)`.
+When using **annotations**, you can specify multiple methods using the *bitwise-or* operator like this: `@MappableClass(generateMethods: GenerateMethods.copy | GenerateMethods.equals | GenerateMethods.stringify)`.
 
-## Utilize Constructors
+### Utilize Constructors
 
 There exist a lot of custom use cases, when it comes to mapping any object. Common ones include renaming fields, ignoring fields, computing values, or custom date or number formats.
 Instead of providing custom tailored serialization options for each use-case, this package utilizes the power of constructor arguments to cover all of them. Thereby, you keep full control
@@ -201,7 +266,7 @@ class Person {
  
   // computed name value
   Person.computed(String firstName, String lastName, this.age) : name = '$firstName $lastName';
-  // again: have matching getters for all arguments, reversing the computed value
+  // again: have matching getters for all arguments, reversing the computed value *
   String get firstName => name.split(' ')[0];
   String get lastName => name.split(' ')[1];
 }
@@ -215,12 +280,12 @@ class Event {
 }
 ```
 
-> Tip regarding the matching getters: Not-having them won't break your code. 
-> However this will lead to desynched serialization (keys missing in your json) and eventually to errors when trying to deserialize back.
+**\*Regarding the matching getters:** Not-having them won't break your code. 
+However this will lead to desynched serialization (keys missing in your json) and eventually to errors when trying to deserialize back.
 
-> Tip: dart_mappable will always use the first constructor it sees, but you can use a specific constructor using the `@MappableConstructor()` annotation.
+*Remember: dart_mappable will always use the first constructor it sees, but you can use a specific constructor using the `@MappableConstructor()` annotation.*
 
-## Case Styles
+### Case Styles
 
 You can specify the case style for the json keys and your stringified enum values. Choose one of the existing styles or specify a custom one.
 
@@ -247,6 +312,67 @@ custom(u,_): myFieldName -> MY_FIELD_NAME
 custom(uc,+): myFieldName -> MY+Field+Name
 custom(cl,): myFieldName -> Myfieldname
 ```
+
+## Lists, Sets and Maps
+
+`dart_mappable` support `List`s, `Set`s and `Map`s out of the box, without any special syntax, workarounds or hacks. Just use `Mapper.fromJson` as you normally would:
+
+```dart
+class Dog with Mappable {
+  String name;
+  Dog(this.name);
+}
+
+class Box<T> with Mappable {
+  T content;
+  Box(this.content);
+}
+
+void main() {
+
+  // simple list
+  List<int> nums = Mapper.fromJson('[2, 4, 105]');
+  print(nums); // [2, 4, 105]
+
+  // set of objects
+  Set<Dog> dogs = Mapper.fromJson('[{"name": "Thor"}, {"name": "Lasse"}, {"name": "Thor"}]');
+  print(dogs); // {Dog(name: Thor), Dog(name: Lasse)}
+
+  // or more complex lists, like generics
+  List<Box<double>> boxes = Mapper.fromJson('[{"content": 0.1}, {"content": 12.34}]');
+  print(boxes); // [Box(content: 0.1), Box(content: 12.34)]
+}
+```
+
+There is also the `Mapper.fromIterable` method. This can be used if you already have a list of dynamic objects instead of the raw json string.
+Additionally this can get handy to decode a dynamic list of partly-encoded values:
+
+```dart
+List<double> myNumbers = Mapper.fromIterable([2.312, '1.32', 500, '1e4']);
+print(myNumbers); // [2.312, 1.32, 500.0, 10000.0]
+```
+  
+### Non-Trivial Maps  
+  
+We also support decoding of non-trivial maps.
+Although the use-cases might be rare, you can decode to something other than a map of string keys like this:
+
+```dart
+var encodedMap = {
+  {'name': 'Bonny'}: 1,
+  {'name': 'Clyde'}: 5,
+};
+
+Map<Dog, int> treatsPerDog = Mapper.fromValue(encodedMap);
+print(treatsPerDog[Dog('Clyde')]!); // 5
+
+var myMap = Mapper.toValue(treatsPerDog);
+print(myMap); // {{name: Bonny}: 1, {name: Clyde}: 5}
+```
+
+> Make sure to mixin `Mappable` on your key class, in order to enable easy property access
+
+> Since json only supports string keys, we can't do `Mapper.fromJson` or `Mapper.toJson` on these maps. You would have to decode / encode your keys and values separately.
 
 ## CopyWith
 
@@ -306,74 +432,11 @@ void main() {
 }
 ```
 
-When working with `List`s or `Map`s and `copyWith`, there are different methods you can use to access, add, remove or filter elements. 
-The complete interfaces are documented 
+When working with `List`s or `Map`s and `copyWith`, there are different methods you can use to access, add, remove or filter elements.
+The complete interfaces are documented
 
 - [here](https://pub.dev/documentation/dart_mappable/latest/internals/ListCopyWith-class.html) for Lists
 - [here](https://pub.dev/documentation/dart_mappable/latest/internals/MapCopyWith-class.html) for Maps
-
-## Lists, Sets and Maps
-
-We support lists, sets and maps out of the box, without any special syntax, workarounds or hacks. Just use `Mapper.fromJson` as you normally would:
-
-```dart
-class Dog with Mappable {
-  String name;
-  Dog(this.name);
-}
-
-class Box<T> with Mappable {
-  T content;
-  Box(this.content);
-}
-
-void main() {
-
-  // simple list
-  List<int> nums = Mapper.fromJson('[2, 4, 105]');
-  print(nums); // [2, 4, 105]
-
-  // set of objects
-  Set<Dog> dogs = Mapper.fromJson('[{"name": "Thor"}, {"name": "Lasse"}, {"name": "Thor"}]');
-  print(dogs); // {Dog(name: Thor), Dog(name: Lasse)}
-
-  // or more complex lists, like generics
-  List<Box<double>> boxes = Mapper.fromJson('[{"content": 0.1}, {"content": 12.34}]');
-  print(boxes); // [Box(content: 0.1), Box(content: 12.34)]
-}
-```
-
-There is also the `Mapper.fromIterable` method. This can be used if you already have a list of dynamic objects instead of the raw json string.
-Additionally this can get handy to decode a dynamic list of partly-encoded values:
-
-```dart
-List<double> myNumbers = Mapper.fromIterable([2.312, '1.32', 500, '1e4']);
-print(myNumbers); // [2.312, 1.32, 500.0, 10000.0]
-```
-  
-### Non-Trivial Maps  
-  
-We also support decoding of non-trivial maps.
-Although the use-cases might be rare, you can decode to something other than a map of string keys like this:
-
-```dart
-var encodedMap = {
-  {'name': 'Bonny'}: 1,
-  {'name': 'Clyde'}: 5,
-};
-
-Map<Dog, int> treatsPerDog = Mapper.fromValue(encodedMap);
-print(treatsPerDog[Dog('Clyde')]!); // 5
-
-var myMap = Mapper.toValue(treatsPerDog);
-print(myMap); // {{name: Bonny}: 1, {name: Clyde}: 5}
-```
-
-> Make sure to mixin `Mappable` on your key class, in order to enable easy property access
-
-> Since json only supports string keys, we can't do `Mapper.fromJson` or `Mapper.toJson` on these maps. You would have to decode / encode your keys and values separately.
-
-
 
 ## Polymorphism and Discriminators
 
