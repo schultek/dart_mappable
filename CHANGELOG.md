@@ -1,3 +1,7 @@
+# 1.0.0-dev.2
+
+- Fixed lint warnings to remove `?` from unnecessary `dynamic?` types
+
 # 1.0.0-dev.1
 
 - Improved Readme, added **How to use** section
