@@ -24,6 +24,8 @@ extension GetNode on Element {
     var result = session?.getParsedLibraryByElement(library!);
     if (result is ParsedLibraryResult) {
       return result.getElementDeclaration(this)?.node;
+    } else {
+      return null;
     }
   }
 }
@@ -58,6 +60,8 @@ String? getAnnotationCode(
       }
     }
   }
+
+  return null;
 }
 
 Map<String, T> toMap<T>(dynamic value, T Function(Map m) fn) {

@@ -173,9 +173,10 @@ class CopyWithGenerator {
     for (var param in config.constructor!.parameters) {
       var type = param.type.getDisplayString(withNullability: false);
       String paramDef(ParameterElement p) {
+        var isDynamic = p.type.isDynamic;
         return implVersion && p.type.isNullable
             ? 'Object? ${p.name} = \$none'
-            : '$type? ${p.name}';
+            : '$type${isDynamic ? '' : '?'} ${p.name}';
       }
 
       if (param is FieldFormalParameterElement || config.hasField(param.name)) {
@@ -185,7 +186,8 @@ class CopyWithGenerator {
         params.add(paramDef(config.superParams[param.name]!));
       } else {
         if (param.type.isNullable) {
-          params.add('$type? ${param.name}');
+          var isDynamic = param.type.isDynamic;
+          params.add('$type${isDynamic ? '' : '?'} ${param.name}');
         } else {
           params.add('required $type ${param.name}');
         }

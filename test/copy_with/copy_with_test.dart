@@ -21,7 +21,7 @@ class Car with Mappable {
 
 @MappableClass()
 class Brand with Mappable {
-  final String name;
+  final dynamic name;
 
   Brand(this.name);
 }

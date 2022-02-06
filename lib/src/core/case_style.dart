@@ -55,6 +55,8 @@ class CaseStyle {
         separator = match.group(2)!;
 
         return CaseStyle(head: head, tail: tail, separator: separator);
+      } else {
+        return null;
       }
     }
   }

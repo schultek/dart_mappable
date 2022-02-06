@@ -68,6 +68,8 @@ class ClassMapperConfig {
       return getAnnotationCode(annotatedElement, MappableField, 'hooks');
     } else if (superConfig != null && superParams[param.name] != null) {
       return superConfig!.hookForParam(superParams[param.name]!);
+    } else {
+      return null;
     }
   }
 

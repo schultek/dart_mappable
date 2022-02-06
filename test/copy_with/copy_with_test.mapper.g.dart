@@ -99,7 +99,7 @@ class BrandMapper extends BaseMapper<Brand> {
 
   @override Function get decoder => decode;
   Brand decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Brand fromMap(Map<String, dynamic> map) => Brand(map.get('name'));
+  Brand fromMap(Map<String, dynamic> map) => Brand(map.getOpt('name'));
 
   @override Function get encoder => (Brand v) => encode(v);
   dynamic encode(Brand v) => toMap(v);
@@ -120,14 +120,14 @@ extension BrandMapperExtension  on Brand {
 
 abstract class BrandCopyWith<$R> {
   factory BrandCopyWith(Brand value, Then<Brand, $R> then) = _BrandCopyWithImpl<$R>;
-  $R call({String? name});
+  $R call({dynamic name});
   $R apply(Brand Function(Brand) transform);
 }
 
 class _BrandCopyWithImpl<$R> extends BaseCopyWith<Brand, $R> implements BrandCopyWith<$R> {
   _BrandCopyWithImpl(Brand value, Then<Brand, $R> then) : super(value, then);
 
-  @override $R call({String? name}) => $then(Brand(name ?? $value.name));
+  @override $R call({dynamic name}) => $then(Brand(name ?? $value.name));
 }
 
 class DealershipMapper extends BaseMapper<Dealership> {
