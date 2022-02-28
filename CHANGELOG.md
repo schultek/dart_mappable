@@ -1,3 +1,7 @@
+# 0.9.1
+
+- Fix README
+
 # 0.9.0
 
 - Changed implementation of UnmappedPropertiesHook to allow target parameter at any position in constructor
