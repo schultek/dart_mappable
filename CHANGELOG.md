@@ -1,3 +1,7 @@
+# 1.0.0-dev.3
+
+- Fixed README
+
 # 1.0.0-dev.2
 
 - Fixed lint warnings to remove `?` from unnecessary `dynamic?` types
@@ -19,6 +23,10 @@
 - Switched to using the `type_plus` package for internal handling of generics
 - Added `ChainedHooks`, `UnescapeNewlinesHooks` and `EmptyToNullHooks`
 - Documented `copyWith` functionalities
+
+# 0.9.1
+
+- Fixed README
 
 # 0.9.0
 

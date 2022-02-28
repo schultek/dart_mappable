@@ -50,7 +50,7 @@ Sounds too good to be true? Not anymore.
 First, add `dart_mappable` as a dependency, and `build_runner` as a dev_dependency.
 
 ```shell script
-flutter pub add super_annotations
+flutter pub add dart_mappable
 flutter pub add build_runner --dev
 ```
 
