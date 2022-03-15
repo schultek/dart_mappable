@@ -1,3 +1,7 @@
+# 1.0.0-dev.5
+
+- Update type_plus integration
+
 # 1.0.0-dev.4
 
 - Update dependencies

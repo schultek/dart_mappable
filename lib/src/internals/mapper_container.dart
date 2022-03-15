@@ -49,7 +49,7 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
 
   BaseMapper? _mapperFor(dynamic value) {
     bool isType<T>() => value is T;
-    return _mappers[idOf(value.runtimeType.base)] ??
+    return _mappers[value.runtimeType.baseId] ??
         _mappers.values
             .where((m) => m.type != dynamic)
             .where((m) => isType.callWith(typeArguments: [m.type]) as bool)
@@ -180,14 +180,15 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
   @override
   void use<T>(BaseMapper<T> mapper) => _mappers[idOf(T)] = mapper;
   @override
-  BaseMapper<T>? unuse<T>() => _mappers.remove(idOf(T)) as BaseMapper<T>?;
+  BaseMapper<T>? unuse<T>() => _mappers.remove(T.baseId) as BaseMapper<T>?;
   @override
-  void useAll(List<BaseMapper> mappers) =>
-      _mappers.addEntries(mappers.map((m) => MapEntry(idOf(m.type), m)));
+  void useAll(List<BaseMapper> mappers) => _mappers.addEntries(mappers.map((m) {
+        return MapEntry(idOf(m.type), m);
+      }));
 
   @override
   BaseMapper<T>? get<T>([Type? type]) =>
-      _mappers[idOf(type ?? T)] as BaseMapper<T>?;
+      _mappers[(type ?? T).baseId] as BaseMapper<T>?;
   @override
   List<BaseMapper> getAll() => [..._mappers.values];
 }

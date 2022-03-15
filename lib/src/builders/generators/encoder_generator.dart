@@ -77,6 +77,7 @@ class EncoderGenerator {
       if (mapper.superConfig != null) {
         return findGetter(name, mapper.superConfig!);
       }
+      return null;
     }
 
     for (ParameterElement param in config.constructor?.parameters ?? []) {

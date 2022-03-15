@@ -29,6 +29,7 @@ class ClassMapperTarget extends MapperTarget {
     if (supertype != null && !supertype.isDartCoreObject) {
       return supertype.element;
     }
+    return null;
   }
 
   void setSuperTarget(ClassMapperTarget target) {
@@ -121,6 +122,7 @@ class ClassMapperTarget extends MapperTarget {
     if (annotation != null && !annotation!.getField('hooks')!.isNull) {
       return readAnnotation('hooks');
     }
+    return null;
   }
 
   CaseStyle? get caseStyle =>
