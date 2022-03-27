@@ -1,3 +1,7 @@
+# 1.0.0-dev.6
+
+- Fixed nullable dynamic in copyWith
+
 # 1.0.0-dev.5
 
 - Update type_plus integration

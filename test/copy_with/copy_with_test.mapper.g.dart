@@ -61,7 +61,7 @@ class CarMapper extends BaseMapper<Car> {
 
   @override Function get decoder => decode;
   Car decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Car fromMap(Map<String, dynamic> map) => Car(map.get('brand'), map.get('model'));
+  Car fromMap(Map<String, dynamic> map) => Car(map.getOpt('brand'), map.get('model'));
 
   @override Function get encoder => (Car v) => encode(v);
   dynamic encode(Car v) => toMap(v);
@@ -82,7 +82,7 @@ extension CarMapperExtension  on Car {
 
 abstract class CarCopyWith<$R> {
   factory CarCopyWith(Car value, Then<Car, $R> then) = _CarCopyWithImpl<$R>;
-  BrandCopyWith<$R> get brand;
+  BrandCopyWith<$R>? get brand;
   $R call({Brand? brand, String? model});
   $R apply(Car Function(Car) transform);
 }
@@ -90,8 +90,8 @@ abstract class CarCopyWith<$R> {
 class _CarCopyWithImpl<$R> extends BaseCopyWith<Car, $R> implements CarCopyWith<$R> {
   _CarCopyWithImpl(Car value, Then<Car, $R> then) : super(value, then);
 
-  @override BrandCopyWith<$R> get brand => BrandCopyWith($value.brand, (v) => call(brand: v));
-  @override $R call({Brand? brand, String? model}) => $then(Car(brand ?? $value.brand, model ?? $value.model));
+  @override BrandCopyWith<$R>? get brand => $value.brand != null ? BrandCopyWith($value.brand!, (v) => call(brand: v)) : null;
+  @override $R call({Object? brand = $none, String? model}) => $then(Car(or(brand, $value.brand), model ?? $value.model));
 }
 
 class BrandMapper extends BaseMapper<Brand> {
@@ -127,7 +127,7 @@ abstract class BrandCopyWith<$R> {
 class _BrandCopyWithImpl<$R> extends BaseCopyWith<Brand, $R> implements BrandCopyWith<$R> {
   _BrandCopyWithImpl(Brand value, Then<Brand, $R> then) : super(value, then);
 
-  @override $R call({dynamic name}) => $then(Brand(name ?? $value.name));
+  @override $R call({Object? name = $none}) => $then(Brand(or(name, $value.name)));
 }
 
 class DealershipMapper extends BaseMapper<Dealership> {

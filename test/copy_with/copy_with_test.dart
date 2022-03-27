@@ -14,7 +14,7 @@ class Person with Mappable {
 @MappableClass()
 class Car with Mappable {
   final String model;
-  final Brand brand;
+  final Brand? brand;
 
   Car(this.brand, this.model);
 }
@@ -46,10 +46,16 @@ void main() {
       expect(person.car.model, equals('A8'));
       expect(p1.car.model, equals('A1'));
 
-      Person p2 = person.copyWith.car.brand(name: 'BMW');
+      Person p2 = person.copyWith.car.brand!(name: 'BMW');
       expect(p2.car.brand, isNot(equals(person.car.brand)));
-      expect(person.car.brand.name, equals('Audi'));
-      expect(p2.car.brand.name, equals('BMW'));
+      expect(person.car.brand!.name, equals('Audi'));
+      expect(p2.car.brand!.name, equals('BMW'));
+
+      p2 = p2.copyWith.car.brand!(name: null);
+      expect(p2.car.brand!.name, equals(null));
+
+      p2 = p2.copyWith.car(brand: null);
+      expect(p2.car.brand, equals(null));
 
       Person p3 =
           person.copyWith.car.apply((c) => Car(c.brand, c.model + '_xx'));

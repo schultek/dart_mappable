@@ -174,7 +174,7 @@ class CopyWithGenerator {
       var type = param.type.getDisplayString(withNullability: false);
       String paramDef(ParameterElement p) {
         var isDynamic = p.type.isDynamic;
-        return implVersion && p.type.isNullable
+        return implVersion && (p.type.isNullable || isDynamic)
             ? 'Object? ${p.name} = \$none'
             : '$type${isDynamic ? '' : '?'} ${p.name}';
       }
@@ -206,7 +206,7 @@ class CopyWithGenerator {
       }
 
       String paramString(ParameterElement p) {
-        if (p.type.isNullable) {
+        if (p.type.isNullable || p.type.isDynamic) {
           return 'or(${p.name}, \$value.${p.name})';
         } else {
           return '${p.name} ?? \$value.${p.name}';
