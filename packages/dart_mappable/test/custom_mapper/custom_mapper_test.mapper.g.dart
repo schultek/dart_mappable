@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
 import 'custom_mapper_test.dart';

@@ -13,6 +13,7 @@ class MapperTargets {
   final ImportsBuilder imports;
   MapperTargets(AssetId inputId)
       : imports = ImportsBuilder(inputId)
+          ..add(Uri.parse('package:dart_mappable/dart_mappable.dart'))
           ..add(Uri.parse('package:dart_mappable/internals.dart'));
 
   Map<ClassElement, EnumMapperTarget> enums = {};

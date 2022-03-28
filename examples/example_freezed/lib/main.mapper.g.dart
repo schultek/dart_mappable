@@ -1,3 +1,4 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
 import 'main.dart';

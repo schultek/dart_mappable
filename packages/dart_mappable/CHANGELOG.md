@@ -1,3 +1,11 @@
+# 1.0.0+2
+
+- Fixed Pubspec
+
+# 1.0.0+1
+
+- Fixed Readme
+
 # 1.0.0
 
 - Large refactoring and restructuring
