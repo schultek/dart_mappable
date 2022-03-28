@@ -43,11 +43,12 @@ Sounds too good to be true? Not anymore.
 
 ## Get Started
 
-First, add `dart_mappable` as a dependency, and `build_runner` as a dev_dependency.
+First, add `dart_mappable` as a dependency, together with `dart_mappable_builder` and `build_runner` as a dev_dependency.
 
 ```shell script
 flutter pub add dart_mappable
 flutter pub add build_runner --dev
+flutter pub add dart_mappable_builder --dev
 ```
 
 Next, create a `build.yaml` in the root directory of your package and add this snippet:
@@ -56,7 +57,7 @@ Next, create a `build.yaml` in the root directory of your package and add this s
 targets:
   $default:
     builders:
-      dart_mappable:
+      dart_mappable_builder:
         generate_for:
           - lib/main.dart # modify this if you have a different entry point
 ```
@@ -64,6 +65,8 @@ targets:
 Then annotate your classes that you want to use with `@MappableClass()`:
 
 ```dart
+import 'package:dart_mappable/dart_mappable.dart';
+
 @MappableClass()
 class MyClass {
   ...
@@ -84,7 +87,7 @@ pub run build_runner watch
 ```
 
 This will generate a `.mapper.g.dart` file for each of your entry points specified in the `build.yaml` file.
-Last step is to `import` the generated files wherever you want / need them.
+Last step is to `import` the generated file wherever you want / need them.
 
 ## How to use
 
@@ -187,7 +190,7 @@ Additionally to using the `@MappableClass()` and `@MappableLib()` annotations fo
 targets:
   $default:
     builders:
-      dart_mappable:
+      dart_mappable_builder:
         generate_for:
           - lib/main.dart
           - lib/models.dart # multiple independent entry files
