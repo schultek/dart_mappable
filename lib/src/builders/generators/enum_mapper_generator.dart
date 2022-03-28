@@ -38,6 +38,6 @@ class EnumMapperGenerator {
     if (config.defaultValue != null) {
       return 'return ${config.className}.values[${config.defaultValue}];';
     }
-    return "throw MapperException('Cannot parse String \$value to enum ${config.className}');";
+    return 'throw MapperException.unknownEnumValue(value);';
   }
 }

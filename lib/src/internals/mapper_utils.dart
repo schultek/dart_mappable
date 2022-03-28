@@ -1,5 +1,56 @@
 import '../core/annotations.dart';
-import '../core/mappers.dart';
+import '../core/mapper_exception.dart';
+import 'mapper_container.dart';
+
+extension GuardedUtils on MapperContainer {
+  T $get<T>(Map<String, dynamic> map, String key, [MappingHooks? hooks]) {
+    return guard(
+      MapperMethod.decode,
+      '.$key',
+      () => hooks.decode<T>(
+        map[key],
+        (v) => v == null
+            ? throw MapperException.missingParameter(key)
+            : fromValue<T>(v),
+      ),
+    );
+  }
+
+  T? $getOpt<T>(Map<String, dynamic> map, String key, [MappingHooks? hooks]) {
+    return guard(
+      MapperMethod.decode,
+      '.$key',
+      () => hooks.decode<T?>(
+        map[key],
+        (v) => v == null ? null : fromValue<T>(v),
+      ),
+    );
+  }
+
+  T $dec<T>(dynamic value, String key, [MappingHooks? hooks]) {
+    return guard(
+      MapperMethod.decode,
+      '.$key',
+      () => hooks.decode<T>(value, fromValue),
+    );
+  }
+
+  dynamic $enc<T>(T value, String key, [MappingHooks? hooks]) {
+    return guard(
+      MapperMethod.encode,
+      '.$key',
+      () => hooks.encode<T>(value, toValue),
+    );
+  }
+}
+
+T guard<T>(MapperMethod method, String hint, T Function() fn) {
+  try {
+    return fn();
+  } catch (e) {
+    throw MapperException.chain(method, hint, e);
+  }
+}
 
 void clearType(Map<String, dynamic> map) {
   map.removeWhere((key, _) => key == '__type');
@@ -13,8 +64,7 @@ T checked<T, U>(dynamic v, T Function(U) fn) {
   if (v is U) {
     return fn(v);
   } else {
-    throw MapperException(
-        'Cannot decode value of type ${v.runtimeType} to type $T, because a value of type $U is expected.');
+    throw MapperException.unexpectedType(v.runtimeType, T, U.toString());
   }
 }
 

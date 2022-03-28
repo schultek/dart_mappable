@@ -1,3 +1,7 @@
+# 1.0.0-dev.7
+
+- Added descriptive and comprehensible exception handling
+
 # 1.0.0-dev.6
 
 - Fixed nullable dynamic in copyWith
@@ -26,7 +30,7 @@
 
 # 1.0.0-dev.0
 
-- Large refactoring and restructuring 
+- Large refactoring and restructuring
   - Restructured builder implementation
   - Moved code out of generated files into package
 - `Mapper` is now a singleton class

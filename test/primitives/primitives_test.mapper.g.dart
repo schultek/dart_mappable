@@ -21,15 +21,15 @@ class ItemsMapper extends BaseMapper<Items> {
 
   @override Function get decoder => decode;
   Items decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Items fromMap(Map<String, dynamic> map) => Items(map.get('items'), map.get('items2'));
+  Items fromMap(Map<String, dynamic> map) => Items(Mapper.i.$get(map, 'items'), Mapper.i.$get(map, 'items2'));
 
   @override Function get encoder => (Items v) => encode(v);
   dynamic encode(Items v) => toMap(v);
-  Map<String, dynamic> toMap(Items i) => {'items': Mapper.toValue(i.items), 'items2': Mapper.toValue(i.items2)};
+  Map<String, dynamic> toMap(Items i) => {'items': Mapper.i.$enc(i.items, 'items'), 'items2': Mapper.i.$enc(i.items2, 'items2')};
 
-  @override String? stringify(Items self) => 'Items(items: ${Mapper.asString(self.items)}, items2: ${Mapper.asString(self.items2)})';
-  @override int? hash(Items self) => Mapper.hash(self.items) ^ Mapper.hash(self.items2);
-  @override bool? equals(Items self, Items other) => Mapper.isEqual(self.items, other.items) && Mapper.isEqual(self.items2, other.items2);
+  @override String stringify(Items self) => 'Items(items: ${Mapper.asString(self.items)}, items2: ${Mapper.asString(self.items2)})';
+  @override int hash(Items self) => Mapper.hash(self.items) ^ Mapper.hash(self.items2);
+  @override bool equals(Items self, Items other) => Mapper.isEqual(self.items, other.items) && Mapper.isEqual(self.items2, other.items2);
 
   @override Function get typeFactory => (f) => f<Items>();
 }
@@ -61,15 +61,15 @@ class ItemMapper extends BaseMapper<Item> {
 
   @override Function get decoder => decode;
   Item decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Item fromMap(Map<String, dynamic> map) => Item(map.get('index'));
+  Item fromMap(Map<String, dynamic> map) => Item(Mapper.i.$get(map, 'index'));
 
   @override Function get encoder => (Item v) => encode(v);
   dynamic encode(Item v) => toMap(v);
-  Map<String, dynamic> toMap(Item i) => {'index': Mapper.toValue(i.index)};
+  Map<String, dynamic> toMap(Item i) => {'index': Mapper.i.$enc(i.index, 'index')};
 
-  @override String? stringify(Item self) => 'Item(index: ${Mapper.asString(self.index)})';
-  @override int? hash(Item self) => Mapper.hash(self.index);
-  @override bool? equals(Item self, Item other) => Mapper.isEqual(self.index, other.index);
+  @override String stringify(Item self) => 'Item(index: ${Mapper.asString(self.index)})';
+  @override int hash(Item self) => Mapper.hash(self.index);
+  @override bool equals(Item self, Item other) => Mapper.isEqual(self.index, other.index);
 
   @override Function get typeFactory => (f) => f<Item>();
 }
@@ -128,25 +128,35 @@ class Mapper {
 }
 
 mixin Mappable {
-  BaseMapper? get _mapper => Mapper.get(runtimeType);
-
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 
-  @override String toString() => _mapper?.stringify(this) ?? super.toString();
-  @override bool operator ==(Object other) => identical(this, other) ||
-      (runtimeType == other.runtimeType && (_mapper?.equals(this, other) 
-      ?? super == other));
-  @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
-}
+  @override
+  String toString() {
+    return _guard(() => Mapper.asString(this), super.toString);
+  }
 
-extension MapGet on Map<String, dynamic> {
-  T get<T>(String key, {MappingHooks? hooks}) => _getOr(
-      key, hooks, () => throw MapperException('Parameter $key is required.'));
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            _guard(() => Mapper.isEqual(this, other), () => super == other));
+  }
 
-  T? getOpt<T>(String key, {MappingHooks? hooks}) =>
-      _getOr(key, hooks, () => null);
+  @override
+  int get hashCode {
+    return _guard(() => Mapper.hash(this), () => super.hashCode);
+  }
 
-  T _getOr<T>(String key, MappingHooks? hooks, T Function() or) =>
-      hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
+  T _guard<T>(T Function() fn, T Function() fallback) {
+    try {
+      return fn();
+    } on MapperException catch (e) {
+      if (e.isUnsupported()) {
+        return fallback();
+      } else {
+        rethrow;
+      }
+    }
+  }
 }

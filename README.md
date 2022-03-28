@@ -41,10 +41,6 @@ Sounds too good to be true? Not anymore.
 
 > This package is still in active development. If you have any feedback or feature requests, write me and issue on github.
 
-### TODOs
-
-- Choose properties for toString / equals
-
 ## Get Started
 
 First, add `dart_mappable` as a dependency, and `build_runner` as a dev_dependency.
@@ -632,35 +628,44 @@ void main() {
 
 ## Custom Mappers
 
-You can create custom mappers to serialize / deserialize custom types that are not part of the generated code like this:
+You can create custom mappers to serialize / deserialize custom types that are not part of the generated code.
+To do this, create a class extending `SimpleMapper<T>` with `T` being the type that you want to decode to / encode from.
+Then use the `@CustomMapper` annotation and implement the `decode()` and `encode()` methods.
+
+A custom mapper for the `Uri` type would look like this:
 
 ```dart
 @CustomMapper()
-class CustomStringMapper extends SimpleMapper<String> {
+class UriMapper extends SimpleMapper<Uri> {
   @override
-  String decode(dynamic value) {
-    return (value as String).substring(1);
+  Uri decode(dynamic value) {
+    return Uri.parse(value as String);
   }
-  
+
   @override
-  dynamic encode(String self) {
-    return '_$self';
+  dynamic encode(Uri self) {
+    return self.toString();
   }
 }
 ```
+
+In the `encode()` method you should return a primitive serializable type, like `String`, `int`, 
+`bool`, etc. or a `List` or `Map` of those types.
 
 There are also additional methods you can override, like `stringify`, or `equals`.
 This will enable `Mapper.isEqual` and `Mapper.asString` on this type.
 
 Using the `@CustomMapper()` annotation, this mapper will automatically be registered and used by the library. 
 Or, you can instead register a custom mapper dynamically using `Mapper.use<MyClass>(MyCustomMapper())` and unregister using `Mapper.unuse<MyClass>()`.
-This might come in handy if you want to switch between different custom mappers for the same type. Also, be aware that you can also `unuse()` (and replace) any mappers, both custom, generated, and mappers of primitive types. 
+This might come in handy if you want to switch between different custom mappers for the same type. 
+Also, be aware that you can also `unuse()` (and replace) any mappers, both custom, generated, and mappers of primitive types. 
 
 ### Generic Custom Types
 
 When dealing with generic types, we need a more sophisticated syntax for decoding. 
 Instead of extending `SimpleMapper` you have to extend `BaseMapper` when wanting to decode a generic class.
-Next, instead of overriding the `decode` function, specify a `decoder` getter, which must be a function that can accept up to three additional type arguments.
+Next, instead of overriding the `decode` function, specify a `decoder` getter, which must be a function that 
+can accept up to five additional type arguments.
 
 You also need to construct a `typeFactory` as shown below.
 
@@ -685,7 +690,7 @@ class CustomGenericMapper extends BaseMapper<GenericBox> { // only use the base 
 
   // in case of generic types, we also must specify a type factory. This is a special type of 
   // function used internally to construct generic instances of your type.
-  // specify any type arguments in alignment to the decoder function
+  // Specify any type arguments in alignment to the decoder function
   @override
   Function get typeFactory => <T>(f) => f<GenericBox<T>>();
 }

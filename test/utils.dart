@@ -1,6 +1,9 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-final throwsMapperException = throwsA(const TypeMatcher<MapperException>());
+Matcher throwsMapperException(MapperException e) {
+  return throwsA(isA<MapperException>()
+      .having((e) => e.message, 'message', equals(e.message)));
+}
 
 Type type<T>() => T;

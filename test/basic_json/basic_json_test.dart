@@ -1,6 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
+import '../utils.dart';
 import 'basic_json_test.mapper.g.dart';
 
 @MappableClass()
@@ -75,6 +76,48 @@ void main() {
     test('Should use default enum value', () {
       Car car = Mapper.fromJson('{"driven_km": 1000, "brand": "some"}');
       expect(car.brand, equals(Brand.Audi));
+    });
+
+    test('Should throw mapper exception', () {
+      Mapper.unuse<Brand>();
+
+      expect(
+        () => Mapper.fromJson<Person>('{"name": "Max", "car": '
+            '{"driven_km": 1000, "brand": "audi"}}'),
+        throwsMapperException(MapperException.chain(
+          MapperMethod.decode,
+          '(Person).car(Car).brand(Brand)',
+          MapperException.unknownType(Brand),
+        )),
+      );
+
+      expect(
+        () => Mapper.fromJson<Map<String, Car>>('{"emma": '
+            '{"driven_km": 1000, "brand": "audi"}}'),
+        throwsMapperException(MapperException.chain(
+          MapperMethod.decode,
+          '(Map<String, Car>).value(Car).brand(Brand)',
+          MapperException.unknownType(Brand),
+        )),
+      );
+
+      expect(
+        () => Mapper.toValue(person),
+        throwsMapperException(MapperException.chain(
+          MapperMethod.encode,
+          '(Person).car(Car).brand[Brand.Audi]',
+          MapperException.unknownType(Brand),
+        )),
+      );
+
+      expect(
+        () => Mapper.fromJson<Person>('{}'),
+        throwsMapperException(MapperException.chain(
+          MapperMethod.decode,
+          '(Person).name',
+          MapperException.missingParameter('name'),
+        )),
+      );
     });
   });
 }

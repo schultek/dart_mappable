@@ -25,11 +25,25 @@ void main() {
       expect(Mapper.fromValue<State>('on'), equals(State.On));
       expect(Mapper.fromValue<State>('off'), equals(State.off));
       expect(Mapper.fromValue<State>('none'), equals(State.off));
-      expect(() => Mapper.fromValue<State>(1), throwsMapperException);
+      expect(
+        () => Mapper.fromValue<State>(1),
+        throwsMapperException(MapperException.chain(
+          MapperMethod.decode,
+          '(State)',
+          MapperException.unexpectedType(int, State, 'String'),
+        )),
+      );
 
       expect(Mapper.fromValue<Color>('green'), equals(Color.Green));
       expect(Mapper.fromValue<Color>('blood-red'), equals(Color.bloodRED));
-      expect(() => Mapper.fromValue<Color>('pink'), throwsMapperException);
+      expect(
+        () => Mapper.fromValue<Color>('pink'),
+        throwsMapperException(MapperException.chain(
+          MapperMethod.decode,
+          '(Color)',
+          MapperException.unknownEnumValue('pink'),
+        )),
+      );
     });
   });
 }

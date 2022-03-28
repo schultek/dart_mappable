@@ -125,9 +125,9 @@ class DecoderGenerator {
   String _generateFromMap(ClassMapperConfig config) {
     if (!config.hasCallableConstructor) {
       if (config.subConfigs.isNotEmpty && config.discriminatorKey != null) {
-        return 'throw MapperException("Cannot instantiate class ${config.className}, did you forgot to specify a subclass for [ ${config.discriminatorKey}: \'\${map[\'${config.discriminatorKey}\']}\' ] or a default subclass?");';
+        return "throw MapperException.missingSubclass('${config.className}', '${config.discriminatorKey}', '\${map['${config.discriminatorKey}']}');";
       } else {
-        return "throw const MapperException('Cannot instantiate class ${config.className}, no valid constructor found.');";
+        return "throw const MapperException.missingConstructor('${config.className}');";
       }
     } else {
       return '${config.className}${config.constructor!.name != '' ? '.${config.constructor!.name}' : ''}(${_generateConstructorParams(config)});';
@@ -143,18 +143,18 @@ class DecoderGenerator {
         str = '${param.name}: ';
       }
 
-      str += 'map.get';
+      str += 'Mapper.i.\$get';
 
       if (param.type.isDynamic || param.isOptional || param.type.isNullable) {
         str += 'Opt';
       }
 
-      var args = ["'${config.jsonKey(param)}'"];
+      var args = ['map', "'${config.jsonKey(param)}'"];
 
       var hook = config.hookForParam(param);
 
       if (hook != null) {
-        args.add('hooks: const $hook');
+        args.add('const $hook');
       }
 
       str += "(${args.join(', ')})";

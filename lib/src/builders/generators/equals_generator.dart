@@ -12,8 +12,8 @@ class EqualsGenerator {
         generated += '\n';
       }
       generated += ''
-          '  @override int? hash(${config.className} self) => ${_generateHashParams(config)};\n'
-          '  @override bool? equals(${config.className} self, ${config.className} other) => ${_generateEqualsParams(config)};\n'
+          '  @override int hash(${config.className} self) => ${_generateHashParams(config)};\n'
+          '  @override bool equals(${config.className} self, ${config.className} other) => ${_generateEqualsParams(config)};\n'
           '';
     }
     return generated;

@@ -104,9 +104,9 @@ class EncoderGenerator {
 
         var hook = config.hookForParam(param);
         if (hook != null) {
-          exp = 'const $hook.encode($paramName.$name, Mapper.toValue)';
+          exp = 'Mapper.i.\$enc($paramName.$name, \'$name\', const $hook)';
         } else {
-          exp = 'Mapper.toValue($paramName.$name)';
+          exp = 'Mapper.i.\$enc($paramName.$name, \'$name\')';
         }
 
         if (config.ignoreNull &&

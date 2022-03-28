@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:type_plus/type_plus.dart' hide typeOf;
 
+import '../core/mapper_exception.dart';
 import '../core/mappers.dart';
 import 'default_mappers.dart';
 import 'mapper_utils.dart';
@@ -47,13 +48,21 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
     TypePlus.register(this);
   }
 
-  BaseMapper? _mapperFor(dynamic value) {
+  BaseMapper _mapperFor(dynamic value, MapperMethod method) {
     bool isType<T>() => value is T;
-    return _mappers[value.runtimeType.baseId] ??
+    var mapper = _mappers[value.runtimeType.baseId] ??
         _mappers.values
             .where((m) => m.type != dynamic)
             .where((m) => isType.callWith(typeArguments: [m.type]) as bool)
             .firstOrNull;
+    if (mapper == null) {
+      throw MapperException.chain(
+        method,
+        '[$value]',
+        MapperException.unknownType(value.runtimeType),
+      );
+    }
+    return mapper;
   }
 
   @override
@@ -89,12 +98,11 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
           return mapper.decoder
               .callWith(parameters: [value], typeArguments: type.args) as T;
         } catch (e) {
-          throw MapperException(
-              'Error on decoding type $type: ${e is MapperException ? e.message : e}');
+          throw MapperException.chain(MapperMethod.decode, '($type)', e);
         }
       } else {
-        throw MapperException(
-            'Cannot decode value $value of type ${value.runtimeType} to type $type. Unknown type. Did you forgot to include the class or register a custom mapper?');
+        throw MapperException.chain(
+            MapperMethod.decode, '($type)', MapperException.unknownType(type));
       }
     }
   }
@@ -103,8 +111,8 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
   dynamic toValue(dynamic value) {
     if (value == null) return null;
     var type = value.runtimeType;
-    var mapper = _mapperFor(value);
-    if (mapper != null) {
+    var mapper = _mapperFor(value, MapperMethod.encode);
+    try {
       var encoded = mapper.encoder.call(value);
       if (encoded is Map<String, dynamic>) {
         clearType(encoded);
@@ -113,9 +121,8 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
         }
       }
       return encoded;
-    } else {
-      throw MapperException(
-          'Cannot encode value $value of type $type. Unknown type. Did you forgot to include the class or register a custom mapper?');
+    } catch (e) {
+      throw MapperException.chain(MapperMethod.encode, '($type)', e);
     }
   }
 
@@ -128,8 +135,8 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
     if (value is Map<String, dynamic>) {
       return value;
     } else {
-      throw MapperException(
-          'Cannot encode value of type ${object.runtimeType} to Map. Instead encoded to type ${value.runtimeType}.');
+      throw MapperException.incorrectEncoding(
+          object.runtimeType, 'Map', value.runtimeType);
     }
   }
 
@@ -142,8 +149,8 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
     if (value is Iterable<dynamic>) {
       return value;
     } else {
-      throw MapperException(
-          'Cannot encode value of type ${object.runtimeType} to Iterable. Instead encoded to type ${value.runtimeType}.');
+      throw MapperException.incorrectEncoding(
+          object.runtimeType, 'Iterable', value.runtimeType);
     }
   }
 
@@ -159,22 +166,35 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
 
   @override
   bool isEqual(dynamic value, Object? other) {
-    if (value == null || other == null) {
-      return value == other;
+    if (value == null) {
+      return other == null;
     } else if (value.runtimeType != other.runtimeType) {
       return false;
     }
-    return _mapperFor(value)?.equals(value, other) ?? value == other;
+    try {
+      return _mapperFor(value, MapperMethod.equals).equals(value, other);
+    } catch (e) {
+      throw MapperException.chain(MapperMethod.equals, '[$value]', e);
+    }
   }
 
   @override
   int hash(dynamic value) {
-    return _mapperFor(value)?.hash(value) ?? value.hashCode;
+    try {
+      return _mapperFor(value, MapperMethod.hash).hash(value);
+    } catch (e) {
+      throw MapperException.chain(MapperMethod.hash, '[$value]', e);
+    }
   }
 
   @override
   String asString(dynamic value) {
-    return _mapperFor(value)?.stringify(value) ?? value.toString();
+    try {
+      return _mapperFor(value, MapperMethod.stringify).stringify(value);
+    } catch (e) {
+      throw MapperException.chain(
+          MapperMethod.stringify, '(Instance of ${value.runtimeType})', e);
+    }
   }
 
   @override

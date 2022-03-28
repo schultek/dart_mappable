@@ -28,26 +28,36 @@ class Mapper {
 }
 
 mixin Mappable {
-  BaseMapper? get _mapper => Mapper.get(runtimeType);
-
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 
-  @override String toString() => _mapper?.stringify(this) ?? super.toString();
-  @override bool operator ==(Object other) => identical(this, other) ||
-      (runtimeType == other.runtimeType && (_mapper?.equals(this, other) 
-      ?? super == other));
-  @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
-}
+  @override
+  String toString() {
+    return _guard(() => Mapper.asString(this), super.toString);
+  }
 
-extension MapGet on Map<String, dynamic> {
-  T get<T>(String key, {MappingHooks? hooks}) => _getOr(
-      key, hooks, () => throw MapperException('Parameter $key is required.'));
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            _guard(() => Mapper.isEqual(this, other), () => super == other));
+  }
 
-  T? getOpt<T>(String key, {MappingHooks? hooks}) =>
-      _getOr(key, hooks, () => null);
+  @override
+  int get hashCode {
+    return _guard(() => Mapper.hash(this), () => super.hashCode);
+  }
 
-  T _getOr<T>(String key, MappingHooks? hooks, T Function() or) =>
-      hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
+  T _guard<T>(T Function() fn, T Function() fallback) {
+    try {
+      return fn();
+    } on MapperException catch (e) {
+      if (e.isUnsupported()) {
+        return fallback();
+      } else {
+        rethrow;
+      }
+    }
+  }
 }
 ''';

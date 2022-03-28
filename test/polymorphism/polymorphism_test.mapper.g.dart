@@ -31,7 +31,7 @@ class AnimalMapper extends BaseMapper<Animal> {
       default: return DefaultAnimalMapper._().decode(map);
     }
   });
-  Animal fromMap(Map<String, dynamic> map) => throw MapperException("Cannot instantiate class Animal, did you forgot to specify a subclass for [ type: '${map['type']}' ] or a default subclass?");
+  Animal fromMap(Map<String, dynamic> map) => throw MapperException.missingSubclass('Animal', 'type', '${map['type']}');
 
   @override Function get encoder => (Animal v) => encode(v);
   dynamic encode(Animal v) {
@@ -41,11 +41,11 @@ class AnimalMapper extends BaseMapper<Animal> {
     else if (v is DefaultAnimal) { return DefaultAnimalMapper._().encode(v); }
     else { return toMap(v); }
   }
-  Map<String, dynamic> toMap(Animal a) => {'name': Mapper.toValue(a.name)};
+  Map<String, dynamic> toMap(Animal a) => {'name': Mapper.i.$enc(a.name, 'name')};
 
-  @override String? stringify(Animal self) => 'Animal(name: ${Mapper.asString(self.name)})';
-  @override int? hash(Animal self) => Mapper.hash(self.name);
-  @override bool? equals(Animal self, Animal other) => Mapper.isEqual(self.name, other.name);
+  @override String stringify(Animal self) => 'Animal(name: ${Mapper.asString(self.name)})';
+  @override int hash(Animal self) => Mapper.hash(self.name);
+  @override bool equals(Animal self, Animal other) => Mapper.isEqual(self.name, other.name);
 
   @override Function get typeFactory => (f) => f<Animal>();
 }
@@ -60,15 +60,15 @@ class CatMapper extends BaseMapper<Cat> {
 
   @override Function get decoder => decode;
   Cat decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Cat fromMap(Map<String, dynamic> map) => Cat(map.get('name'), map.get('color'));
+  Cat fromMap(Map<String, dynamic> map) => Cat(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'color'));
 
   @override Function get encoder => (Cat v) => encode(v);
   dynamic encode(Cat v) => toMap(v);
-  Map<String, dynamic> toMap(Cat c) => {'name': Mapper.toValue(c.name), 'color': Mapper.toValue(c.color), 'type': 'Cat'};
+  Map<String, dynamic> toMap(Cat c) => {'name': Mapper.i.$enc(c.name, 'name'), 'color': Mapper.i.$enc(c.color, 'color'), 'type': 'Cat'};
 
-  @override String? stringify(Cat self) => 'Cat(name: ${Mapper.asString(self.name)}, color: ${Mapper.asString(self.color)})';
-  @override int? hash(Cat self) => Mapper.hash(self.name) ^ Mapper.hash(self.color);
-  @override bool? equals(Cat self, Cat other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.color, other.color);
+  @override String stringify(Cat self) => 'Cat(name: ${Mapper.asString(self.name)}, color: ${Mapper.asString(self.color)})';
+  @override int hash(Cat self) => Mapper.hash(self.name) ^ Mapper.hash(self.color);
+  @override bool equals(Cat self, Cat other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.color, other.color);
 
   @override Function get typeFactory => (f) => f<Cat>();
 }
@@ -96,15 +96,15 @@ class DogMapper extends BaseMapper<Dog> {
 
   @override Function get decoder => decode;
   Dog decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Dog fromMap(Map<String, dynamic> map) => Dog(map.get('name'), map.get('age'));
+  Dog fromMap(Map<String, dynamic> map) => Dog(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'age'));
 
   @override Function get encoder => (Dog v) => encode(v);
   dynamic encode(Dog v) => toMap(v);
-  Map<String, dynamic> toMap(Dog d) => {'name': Mapper.toValue(d.name), 'age': Mapper.toValue(d.age), 'type': 1};
+  Map<String, dynamic> toMap(Dog d) => {'name': Mapper.i.$enc(d.name, 'name'), 'age': Mapper.i.$enc(d.age, 'age'), 'type': 1};
 
-  @override String? stringify(Dog self) => 'Dog(name: ${Mapper.asString(self.name)}, age: ${Mapper.asString(self.age)})';
-  @override int? hash(Dog self) => Mapper.hash(self.name) ^ Mapper.hash(self.age);
-  @override bool? equals(Dog self, Dog other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.age, other.age);
+  @override String stringify(Dog self) => 'Dog(name: ${Mapper.asString(self.name)}, age: ${Mapper.asString(self.age)})';
+  @override int hash(Dog self) => Mapper.hash(self.name) ^ Mapper.hash(self.age);
+  @override bool equals(Dog self, Dog other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.age, other.age);
 
   @override Function get typeFactory => (f) => f<Dog>();
 }
@@ -132,15 +132,15 @@ class NullAnimalMapper extends BaseMapper<NullAnimal> {
 
   @override Function get decoder => decode;
   NullAnimal decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  NullAnimal fromMap(Map<String, dynamic> map) => NullAnimal(map.get('name'));
+  NullAnimal fromMap(Map<String, dynamic> map) => NullAnimal(Mapper.i.$get(map, 'name'));
 
   @override Function get encoder => (NullAnimal v) => encode(v);
   dynamic encode(NullAnimal v) => toMap(v);
-  Map<String, dynamic> toMap(NullAnimal n) => {'name': Mapper.toValue(n.name), 'type': null};
+  Map<String, dynamic> toMap(NullAnimal n) => {'name': Mapper.i.$enc(n.name, 'name'), 'type': null};
 
-  @override String? stringify(NullAnimal self) => 'NullAnimal(name: ${Mapper.asString(self.name)})';
-  @override int? hash(NullAnimal self) => Mapper.hash(self.name);
-  @override bool? equals(NullAnimal self, NullAnimal other) => Mapper.isEqual(self.name, other.name);
+  @override String stringify(NullAnimal self) => 'NullAnimal(name: ${Mapper.asString(self.name)})';
+  @override int hash(NullAnimal self) => Mapper.hash(self.name);
+  @override bool equals(NullAnimal self, NullAnimal other) => Mapper.isEqual(self.name, other.name);
 
   @override Function get typeFactory => (f) => f<NullAnimal>();
 }
@@ -168,15 +168,15 @@ class DefaultAnimalMapper extends BaseMapper<DefaultAnimal> {
 
   @override Function get decoder => decode;
   DefaultAnimal decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  DefaultAnimal fromMap(Map<String, dynamic> map) => DefaultAnimal(map.get('name'), map.get('type'));
+  DefaultAnimal fromMap(Map<String, dynamic> map) => DefaultAnimal(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'type'));
 
   @override Function get encoder => (DefaultAnimal v) => encode(v);
   dynamic encode(DefaultAnimal v) => toMap(v);
-  Map<String, dynamic> toMap(DefaultAnimal d) => {'name': Mapper.toValue(d.name), 'type': Mapper.toValue(d.type)};
+  Map<String, dynamic> toMap(DefaultAnimal d) => {'name': Mapper.i.$enc(d.name, 'name'), 'type': Mapper.i.$enc(d.type, 'type')};
 
-  @override String? stringify(DefaultAnimal self) => 'DefaultAnimal(name: ${Mapper.asString(self.name)}, type: ${Mapper.asString(self.type)})';
-  @override int? hash(DefaultAnimal self) => Mapper.hash(self.name) ^ Mapper.hash(self.type);
-  @override bool? equals(DefaultAnimal self, DefaultAnimal other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.type, other.type);
+  @override String stringify(DefaultAnimal self) => 'DefaultAnimal(name: ${Mapper.asString(self.name)}, type: ${Mapper.asString(self.type)})';
+  @override int hash(DefaultAnimal self) => Mapper.hash(self.name) ^ Mapper.hash(self.type);
+  @override bool equals(DefaultAnimal self, DefaultAnimal other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.type, other.type);
 
   @override Function get typeFactory => (f) => f<DefaultAnimal>();
 }
@@ -235,25 +235,35 @@ class Mapper {
 }
 
 mixin Mappable {
-  BaseMapper? get _mapper => Mapper.get(runtimeType);
-
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 
-  @override String toString() => _mapper?.stringify(this) ?? super.toString();
-  @override bool operator ==(Object other) => identical(this, other) ||
-      (runtimeType == other.runtimeType && (_mapper?.equals(this, other) 
-      ?? super == other));
-  @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
-}
+  @override
+  String toString() {
+    return _guard(() => Mapper.asString(this), super.toString);
+  }
 
-extension MapGet on Map<String, dynamic> {
-  T get<T>(String key, {MappingHooks? hooks}) => _getOr(
-      key, hooks, () => throw MapperException('Parameter $key is required.'));
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            _guard(() => Mapper.isEqual(this, other), () => super == other));
+  }
 
-  T? getOpt<T>(String key, {MappingHooks? hooks}) =>
-      _getOr(key, hooks, () => null);
+  @override
+  int get hashCode {
+    return _guard(() => Mapper.hash(this), () => super.hashCode);
+  }
 
-  T _getOr<T>(String key, MappingHooks? hooks, T Function() or) =>
-      hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
+  T _guard<T>(T Function() fn, T Function() fallback) {
+    try {
+      return fn();
+    } on MapperException catch (e) {
+      if (e.isUnsupported()) {
+        return fallback();
+      } else {
+        rethrow;
+      }
+    }
+  }
 }

@@ -1,10 +1,11 @@
 import 'package:collection/collection.dart';
 
+import '../core/mapper_exception.dart';
 import '../core/mappers.dart';
 import 'mapper_container.dart';
 import 'mapper_utils.dart';
 
-class PrimitiveMapper<T> extends BaseMapper<T> {
+class PrimitiveMapper<T> extends BaseMapper<T> with PrimitiveMethodsMixin<T> {
   const PrimitiveMapper(this.decoder);
 
   @override
@@ -18,7 +19,8 @@ class PrimitiveMapper<T> extends BaseMapper<T> {
   bool isFor(dynamic v) => v.runtimeType == T;
 }
 
-abstract class EnumMapper<T> extends SimpleMapper<T> {
+abstract class EnumMapper<T> extends SimpleMapper<T>
+    with PrimitiveMethodsMixin<T> {
   EnumMapper();
 
   T fromString(String value);
@@ -30,7 +32,8 @@ abstract class EnumMapper<T> extends SimpleMapper<T> {
   dynamic encode(T self) => toStringValue(self);
 }
 
-class DateTimeMapper extends SimpleMapper<DateTime> {
+class DateTimeMapper extends SimpleMapper<DateTime>
+    with PrimitiveMethodsMixin<DateTime> {
   @override
   DateTime decode(dynamic value) {
     if (value is String) {
@@ -38,9 +41,8 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
     } else if (value is num) {
       return DateTime.fromMillisecondsSinceEpoch(value.round());
     } else {
-      throw MapperException(
-          'Cannot decode value of type ${value.runtimeType} to type DateTime, '
-          'because a value of type String or num is expected.');
+      throw MapperException.unexpectedType(
+          value.runtimeType, DateTime, 'String or num');
     }
   }
 
@@ -58,15 +60,19 @@ class IterableMapper<I extends Iterable> extends BaseMapper<I>
 
   @override
   Function get decoder => <T>(dynamic l) => checked(
-      l, (Iterable l) => fromIterable(l.map((v) => mapper.fromValue<T>(v))));
+      l, (Iterable l) => fromIterable(l.map((v) => mapper.$dec<T>(v, 'item'))));
   @override
   Function get encoder =>
-      (I self) => self.map((v) => mapper.toValue(v)).toList();
+      (I self) => self.map((v) => mapper.$enc(v, 'item')).toList();
   @override
   Function typeFactory;
 
   @override
   late Equality equality = IterableEquality(MapperEquality(mapper));
+
+  @override
+  String stringify(I self) =>
+      '(${self.map((e) => mapper.asString(e)).join(', ')})';
 }
 
 class MapMapper<M extends Map> extends BaseMapper<M>
@@ -78,8 +84,8 @@ class MapMapper<M extends Map> extends BaseMapper<M>
   @override
   Function get decoder => <K, V>(dynamic m) => checked(
       m,
-      (Map m) => fromMap(m.map((key, value) =>
-          MapEntry(mapper.fromValue<K>(key), mapper.fromValue<V>(value)))));
+      (Map m) => fromMap(m.map((key, value) => MapEntry(
+          mapper.$dec<K>(key, 'key'), mapper.$dec<V>(value, 'value')))));
   @override
   Function get encoder => (M self) => self.map(
       (key, value) => MapEntry(mapper.toValue(key), mapper.toValue(value)));
@@ -89,15 +95,29 @@ class MapMapper<M extends Map> extends BaseMapper<M>
   @override
   late Equality equality =
       MapEquality(keys: MapperEquality(mapper), values: MapperEquality(mapper));
+
+  @override
+  String stringify(M self) =>
+      '{${self.entries.map((e) => '${mapper.asString(e.key)}: '
+          '${mapper.asString(e.value)}').join(', ')}}';
+}
+
+mixin PrimitiveMethodsMixin<T> implements BaseMapper<T> {
+  @override
+  bool equals(T self, T other) => self == other;
+  @override
+  int hash(T self) => self.hashCode;
+  @override
+  String stringify(T self) => self.toString();
 }
 
 mixin MapperEqualityMixin<T> implements BaseMapper<T> {
   Equality get equality;
 
   @override
-  bool? equals(T self, T other) => equality.equals(self, other);
+  bool equals(T self, T other) => equality.equals(self, other);
   @override
-  int? hash(T self) => equality.hash(self);
+  int hash(T self) => equality.hash(self);
 }
 
 class MapperEquality implements Equality {

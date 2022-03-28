@@ -52,6 +52,19 @@ class CustomGenericMapper extends BaseMapper<GenericBox> {
   Function get typeFactory => <T>(f) => f<GenericBox<T>>();
 }
 
+@CustomMapper()
+class UriMapper extends SimpleMapper<Uri> {
+  @override
+  Uri decode(dynamic value) {
+    return Uri.parse(value as String);
+  }
+
+  @override
+  dynamic encode(Uri self) {
+    return self.toString();
+  }
+}
+
 void main() {
   group('Custom Mappers', () {
     test('Simple Custom Mapper', () {
@@ -70,6 +83,20 @@ void main() {
 
       var json = box.toJson();
       expect(json, equals('2'));
+    });
+
+    test('Custom Uri Mapper', () {
+      var uri = Uri(
+          scheme: 'http',
+          host: 'example.com',
+          path: 'some/path',
+          query: 'key=value');
+
+      var encoded = Mapper.toValue(uri);
+      expect(encoded, equals('http://example.com/some/path?key=value'));
+
+      var decoded = Mapper.fromValue<Uri>(encoded);
+      expect(decoded, equals(uri));
     });
   });
 }

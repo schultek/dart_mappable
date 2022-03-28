@@ -25,7 +25,14 @@ void main() {
       expect(person.copyWith(name: 'Max').name, equals('Max'));
 
       // should not work
-      expect(() => Mapper.fromJson<Person>('{}'), throwsMapperException);
+      expect(
+        () => Mapper.fromJson<Person>('{}'),
+        throwsMapperException(MapperException.chain(
+          MapperMethod.decode,
+          '(Person)',
+          MapperException.unsupportedMethod(MapperMethod.decode, Person),
+        )),
+      );
       expect(person, isNot(equals(Person('Tom'))));
       expect(person.toString(), equals("Instance of 'Person'"));
     });
@@ -40,9 +47,24 @@ void main() {
       expect(Mapper.asString(car), equals('Car(brand: Audi)'));
 
       // should not work
-      expect(() => Mapper.fromJson<Car>('{}'), throwsMapperException);
-      expect(() => car.toMap(),
-          throwsMapperException); // TODO: should throw noSuchMethod
+      expect(
+        () => Mapper.fromJson<Car>('{}'),
+        throwsMapperException(MapperException.chain(
+          MapperMethod.decode,
+          '(Car)',
+          MapperException.unsupportedMethod(MapperMethod.decode, Car),
+        )),
+      );
+
+      expect(
+        () => car.toMap(),
+        throwsMapperException(MapperException.chain(
+          MapperMethod.encode,
+          '(Car)',
+          MapperException.unsupportedMethod(MapperMethod.encode, Car),
+        )),
+      );
+
       expect(() => (car as dynamic).copyWith, throwsNoSuchMethodError);
     });
   });

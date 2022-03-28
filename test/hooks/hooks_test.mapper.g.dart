@@ -23,15 +23,15 @@ class GameMapper extends BaseMapper<Game> {
 
   @override Function get decoder => decode;
   Game decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Game fromMap(Map<String, dynamic> map) => Game(map.get('player', hooks: const PlayerHooks()));
+  Game fromMap(Map<String, dynamic> map) => Game(Mapper.i.$get(map, 'player', const PlayerHooks()));
 
   @override Function get encoder => (Game v) => encode(v);
   dynamic encode(Game v) => toMap(v);
-  Map<String, dynamic> toMap(Game g) => {'player': const PlayerHooks().encode(g.player, Mapper.toValue)};
+  Map<String, dynamic> toMap(Game g) => {'player': Mapper.i.$enc(g.player, 'player', const PlayerHooks())};
 
-  @override String? stringify(Game self) => 'Game(player: ${Mapper.asString(self.player)})';
-  @override int? hash(Game self) => Mapper.hash(self.player);
-  @override bool? equals(Game self, Game other) => Mapper.isEqual(self.player, other.player);
+  @override String stringify(Game self) => 'Game(player: ${Mapper.asString(self.player)})';
+  @override int hash(Game self) => Mapper.hash(self.player);
+  @override bool equals(Game self, Game other) => Mapper.isEqual(self.player, other.player);
 
   @override Function get typeFactory => (f) => f<Game>();
 }
@@ -61,15 +61,15 @@ class PlayerMapper extends BaseMapper<Player> {
 
   @override Function get decoder => decode;
   Player decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Player fromMap(Map<String, dynamic> map) => Player(map.get('id'));
+  Player fromMap(Map<String, dynamic> map) => Player(Mapper.i.$get(map, 'id'));
 
   @override Function get encoder => (Player v) => encode(v);
   dynamic encode(Player v) => toMap(v);
-  Map<String, dynamic> toMap(Player p) => {'id': Mapper.toValue(p.id)};
+  Map<String, dynamic> toMap(Player p) => {'id': Mapper.i.$enc(p.id, 'id')};
 
-  @override String? stringify(Player self) => 'Player(id: ${Mapper.asString(self.id)})';
-  @override int? hash(Player self) => Mapper.hash(self.id);
-  @override bool? equals(Player self, Player other) => Mapper.isEqual(self.id, other.id);
+  @override String stringify(Player self) => 'Player(id: ${Mapper.asString(self.id)})';
+  @override int hash(Player self) => Mapper.hash(self.id);
+  @override bool equals(Player self, Player other) => Mapper.isEqual(self.id, other.id);
 
   @override Function get typeFactory => (f) => f<Player>();
 }
@@ -97,15 +97,15 @@ class ClothesMapper extends BaseMapper<Clothes> {
 
   @override Function get decoder => decode;
   Clothes decode(dynamic v) => const UnmappedPropertiesHooks('unmapped_props').decode(v, (v) => checked(v, (Map<String, dynamic> map) => fromMap(map)));
-  Clothes fromMap(Map<String, dynamic> map) => Clothes(map.get('size'), unmappedProps: map.getOpt('unmapped_props') ?? const {});
+  Clothes fromMap(Map<String, dynamic> map) => Clothes(Mapper.i.$get(map, 'size'), unmappedProps: Mapper.i.$getOpt(map, 'unmapped_props') ?? const {});
 
   @override Function get encoder => (Clothes v) => encode(v);
   dynamic encode(Clothes v) => const UnmappedPropertiesHooks('unmapped_props').encode<Clothes>(v, (v) => toMap(v));
-  Map<String, dynamic> toMap(Clothes c) => {'size': Mapper.toValue(c.size), 'unmapped_props': Mapper.toValue(c.unmappedProps)};
+  Map<String, dynamic> toMap(Clothes c) => {'size': Mapper.i.$enc(c.size, 'size'), 'unmapped_props': Mapper.i.$enc(c.unmappedProps, 'unmappedProps')};
 
-  @override String? stringify(Clothes self) => 'Clothes(size: ${Mapper.asString(self.size)}, unmappedProps: ${Mapper.asString(self.unmappedProps)})';
-  @override int? hash(Clothes self) => Mapper.hash(self.size) ^ Mapper.hash(self.unmappedProps);
-  @override bool? equals(Clothes self, Clothes other) => Mapper.isEqual(self.size, other.size) && Mapper.isEqual(self.unmappedProps, other.unmappedProps);
+  @override String stringify(Clothes self) => 'Clothes(size: ${Mapper.asString(self.size)}, unmappedProps: ${Mapper.asString(self.unmappedProps)})';
+  @override int hash(Clothes self) => Mapper.hash(self.size) ^ Mapper.hash(self.unmappedProps);
+  @override bool equals(Clothes self, Clothes other) => Mapper.isEqual(self.size, other.size) && Mapper.isEqual(self.unmappedProps, other.unmappedProps);
 
   @override Function get typeFactory => (f) => f<Clothes>();
 }
@@ -133,15 +133,15 @@ class ComponentMapper extends BaseMapper<Component> {
 
   @override Function get decoder => decode;
   Component decode(dynamic v) => const UnmappedPropertiesHooks('unmapped_props').decode(v, (v) => checked(v, (Map<String, dynamic> map) => fromMap(map)));
-  Component fromMap(Map<String, dynamic> map) => Component(map.get('id'), map.getOpt('unmapped_props'), map.get('name'));
+  Component fromMap(Map<String, dynamic> map) => Component(Mapper.i.$get(map, 'id'), Mapper.i.$getOpt(map, 'unmapped_props'), Mapper.i.$get(map, 'name'));
 
   @override Function get encoder => (Component v) => encode(v);
   dynamic encode(Component v) => const UnmappedPropertiesHooks('unmapped_props').encode<Component>(v, (v) => toMap(v));
-  Map<String, dynamic> toMap(Component c) => {'id': Mapper.toValue(c.id), 'unmapped_props': Mapper.toValue(c.unmappedProps), 'name': Mapper.toValue(c.name)};
+  Map<String, dynamic> toMap(Component c) => {'id': Mapper.i.$enc(c.id, 'id'), 'unmapped_props': Mapper.i.$enc(c.unmappedProps, 'unmappedProps'), 'name': Mapper.i.$enc(c.name, 'name')};
 
-  @override String? stringify(Component self) => 'Component(id: ${Mapper.asString(self.id)}, name: ${Mapper.asString(self.name)}, unmappedProps: ${Mapper.asString(self.unmappedProps)})';
-  @override int? hash(Component self) => Mapper.hash(self.id) ^ Mapper.hash(self.unmappedProps) ^ Mapper.hash(self.name);
-  @override bool? equals(Component self, Component other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.unmappedProps, other.unmappedProps) && Mapper.isEqual(self.name, other.name);
+  @override String stringify(Component self) => 'Component(id: ${Mapper.asString(self.id)}, name: ${Mapper.asString(self.name)}, unmappedProps: ${Mapper.asString(self.unmappedProps)})';
+  @override int hash(Component self) => Mapper.hash(self.id) ^ Mapper.hash(self.unmappedProps) ^ Mapper.hash(self.name);
+  @override bool equals(Component self, Component other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.unmappedProps, other.unmappedProps) && Mapper.isEqual(self.name, other.name);
 
   @override Function get typeFactory => (f) => f<Component>();
 }
@@ -200,25 +200,35 @@ class Mapper {
 }
 
 mixin Mappable {
-  BaseMapper? get _mapper => Mapper.get(runtimeType);
-
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 
-  @override String toString() => _mapper?.stringify(this) ?? super.toString();
-  @override bool operator ==(Object other) => identical(this, other) ||
-      (runtimeType == other.runtimeType && (_mapper?.equals(this, other) 
-      ?? super == other));
-  @override int get hashCode => _mapper?.hash(this) ?? super.hashCode;
-}
+  @override
+  String toString() {
+    return _guard(() => Mapper.asString(this), super.toString);
+  }
 
-extension MapGet on Map<String, dynamic> {
-  T get<T>(String key, {MappingHooks? hooks}) => _getOr(
-      key, hooks, () => throw MapperException('Parameter $key is required.'));
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            _guard(() => Mapper.isEqual(this, other), () => super == other));
+  }
 
-  T? getOpt<T>(String key, {MappingHooks? hooks}) =>
-      _getOr(key, hooks, () => null);
+  @override
+  int get hashCode {
+    return _guard(() => Mapper.hash(this), () => super.hashCode);
+  }
 
-  T _getOr<T>(String key, MappingHooks? hooks, T Function() or) =>
-      hooks.decode(this[key], (v) => v == null ? or() : Mapper.fromValue<T>(v));
+  T _guard<T>(T Function() fn, T Function() fallback) {
+    try {
+      return fn();
+    } on MapperException catch (e) {
+      if (e.isUnsupported()) {
+        return fallback();
+      } else {
+        rethrow;
+      }
+    }
+  }
 }

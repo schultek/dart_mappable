@@ -5,7 +5,7 @@ class ToStringGenerator {
   String generateToStringMethods(ClassMapperConfig config) {
     if (config.shouldGenerate(GenerateMethods.stringify)) {
       return '\n'
-          "  @override String? stringify(${config.className} self) => '${config.className}(${_generateStringParams(config)})';\n"
+          "  @override String stringify(${config.className} self) => '${config.className}(${_generateStringParams(config)})';\n"
           '';
     } else {
       return '';

@@ -1,17 +1,23 @@
-/// This class needs to be implemented by all mappers
+import 'mapper_exception.dart';
+
+/// This class needs to be implemented by all mappers.
+/// It defaults to throwing unsupported exceptions for all methods.
 abstract class BaseMapper<T> {
   const BaseMapper();
 
   Function get decoder =>
-      (_) => throw MapperException('Decoding is not supported for $type.');
+      (_) => throw MapperException.unsupportedMethod(MapperMethod.decode, type);
   Function get encoder =>
-      (_) => throw MapperException('Encoding is not supported for $type.');
+      (_) => throw MapperException.unsupportedMethod(MapperMethod.encode, type);
 
   Function get typeFactory => (f) => f<T>();
 
-  bool? equals(T self, T other) => null;
-  int? hash(T self) => null;
-  String? stringify(T self) => null;
+  bool equals(T self, T other) =>
+      throw MapperException.unsupportedMethod(MapperMethod.equals, type);
+  int hash(T self) =>
+      throw MapperException.unsupportedMethod(MapperMethod.hash, type);
+  String stringify(T self) =>
+      throw MapperException.unsupportedMethod(MapperMethod.stringify, type);
 
   Type get type => T;
   bool isFor(dynamic v) => v is T;
@@ -28,12 +34,4 @@ abstract class SimpleMapper<T> extends BaseMapper<T> {
   @override
   Function get decoder => decode;
   T decode(dynamic value);
-}
-
-class MapperException implements Exception {
-  final String message;
-  const MapperException(this.message);
-
-  @override
-  String toString() => 'MapperException: $message';
 }
