@@ -9,6 +9,6 @@ targets:
     builders:
       freezed:freezed:
         enabled: false
-      dart_mappable:
+      dart_mappable_builder:
         generate_for:
           - lib/main.dart

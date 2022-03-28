@@ -1,0 +1,7 @@
+builders:
+  dart_mappable_builder:
+    import: "package:dart_mappable_builder/builder.dart"
+    builder_factories: [ "buildMappable" ]
+    build_extensions: { ".dart": [ ".mapper.g.dart" ] }
+    auto_apply: none
+    build_to: source

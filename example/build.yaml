@@ -1,9 +1,0 @@
-targets:
-  $default:
-    builders:
-      dart_mappable:
-        generate_for:
-          - lib/main.dart
-        options:
-          caseStyle: snakeCase
-          enumCaseStyle: camelCase
