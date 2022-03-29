@@ -127,7 +127,7 @@ class DecoderGenerator {
       if (config.subConfigs.isNotEmpty && config.discriminatorKey != null) {
         return "throw MapperException.missingSubclass('${config.className}', '${config.discriminatorKey}', '\${map['${config.discriminatorKey}']}');";
       } else {
-        return "throw const MapperException.missingConstructor('${config.className}');";
+        return "throw MapperException.missingConstructor('${config.className}');";
       }
     } else {
       return '${config.className}${config.constructor!.name != '' ? '.${config.constructor!.name}' : ''}(${_generateConstructorParams(config)});';
@@ -136,33 +136,32 @@ class DecoderGenerator {
 
   String _generateConstructorParams(ClassMapperConfig config) {
     List<String> params = [];
-    for (var param in config.constructor!.parameters) {
+    for (var param in config.params) {
       var str = '';
 
-      if (param.isNamed) {
-        str = '${param.name}: ';
+      var p = param.parameter;
+
+      if (p.isNamed) {
+        str = '${p.name}: ';
       }
-
       str += 'Mapper.i.\$get';
-
-      if (param.type.isDynamic || param.isOptional || param.type.isNullable) {
+      if (p.type.isDynamic || p.isOptional || p.type.isNullable) {
         str += 'Opt';
       }
 
-      var args = ['map', "'${config.jsonKey(param)}'"];
+      var args = ['map', "'${param.jsonKey(config.caseStyle)}'"];
 
-      var hook = config.hookForParam(param);
-
+      var hook = param.hook;
       if (hook != null) {
         args.add('const $hook');
       }
 
       str += "(${args.join(', ')})";
 
-      if (param.hasDefaultValue && param.defaultValueCode != 'null') {
-        str += ' ?? ${param.defaultValueCode}';
+      if (p.hasDefaultValue && p.defaultValueCode != 'null') {
+        str += ' ?? ${p.defaultValueCode}';
       } else {
-        var node = param.getNode();
+        var node = p.getNode();
         if (node is DefaultFormalParameter &&
             node.defaultValue.toString() != 'null') {
           str += ' ?? ${node.defaultValue}';

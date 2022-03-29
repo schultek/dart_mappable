@@ -39,9 +39,12 @@ String? getAnnotationCode(
     } else {
       return null;
     }
+  } else if (node is FormalParameter) {
+    annotations = node.metadata;
   } else if (node is Declaration) {
     annotations = node.metadata;
   } else {
+    print('Unknown node type: ${node.runtimeType} $node');
     return null;
   }
 

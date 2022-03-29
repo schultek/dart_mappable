@@ -279,8 +279,10 @@ class Event {
 }
 ```
 
-**\*Regarding the matching getters:** Not-having them won't break your code. 
-However this will lead to desynched serialization (keys missing in your json) and eventually to errors when trying to deserialize back.
+**\* Regarding the matching getters:** Not-having them won't break your code. 
+However this will lead to desynched serialization (keys missing in your json) and eventually to 
+errors when trying to deserialize back. You will also get a warning in the builder output to know 
+when this happens.
 
 *Remember: dart_mappable will always use the first constructor it sees, but you can use a specific constructor using the `@MappableConstructor()` annotation.*
 

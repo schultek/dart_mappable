@@ -28,7 +28,11 @@ class MappableBuilder implements Builder {
       var generatedSource = generate(buildStep);
       await buildStep.writeAsString(outputId, generatedSource);
     } catch (e, st) {
-      print(st);
+      print('An unexpected error occurred.\n'
+          'This is probably a bug in dart_mappable.\n'
+          'Please report this here: '
+          'https://github.com/schultek/dart_mappable/issues\n\n'
+          'The error was:\n$e\n\n$st');
       rethrow;
     }
   }

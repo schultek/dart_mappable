@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../utils.dart';
+import 'parameter_config.dart';
 
 class ClassMapperConfig {
   final ClassElement element;
@@ -17,8 +17,8 @@ class ClassMapperConfig {
   final int generateMethods;
 
   final ClassMapperConfig? superConfig;
-  final Map<String, ParameterElement> superParams;
   final List<ClassMapperConfig> subConfigs;
+  final List<ParameterConfig> params;
 
   ClassMapperConfig({
     required this.element,
@@ -30,47 +30,28 @@ class ClassMapperConfig {
     required this.ignoreNull,
     required this.generateMethods,
     required this.superConfig,
-    required this.superParams,
     required this.subConfigs,
-  });
+    required this.params,
+  }) {
+    checkUnresolvedParameters();
+  }
 
   String get className => element.name;
   String get mapperName => '${className}Mapper';
 
-  String jsonKey(ParameterElement param) {
-    String? field = fieldAnnotation(param)?.getField('key')!.toStringValue();
-    if (field != null) return field;
-    if (superConfig != null && superParams[param.name] != null) {
-      return superConfig!.jsonKey(superParams[param.name]!);
-    }
-    return caseStyle.transform(param.name);
-  }
-
-  bool hasField(String field) {
-    if (element.getGetter(field) != null) {
-      return true;
-    } else {
-      return superConfig?.hasField(field) ?? false;
+  Iterable<FieldElement> get allPublicFields sync* {
+    yield* superConfig?.allPublicFields ?? [];
+    for (var field in element.fields) {
+      if (!field.isStatic &&
+          field.isPublic &&
+          (field.getter?.isSynthetic ?? false)) {
+        yield field;
+      }
     }
   }
 
   bool shouldGenerate(int method) {
     return (generateMethods & method) != 0;
-  }
-
-  String? hookForParam(ParameterElement param) {
-    var annotation = fieldAnnotation(param);
-    if (annotation != null && !annotation.getField('hooks')!.isNull) {
-      var annotatedElement = fieldChecker.hasAnnotationOf(param)
-          ? param
-          : (param as FieldFormalParameterElement).field!;
-
-      return getAnnotationCode(annotatedElement, MappableField, 'hooks');
-    } else if (superConfig != null && superParams[param.name] != null) {
-      return superConfig!.hookForParam(superParams[param.name]!);
-    } else {
-      return null;
-    }
   }
 
   late bool hasCallableConstructor = constructor != null &&
@@ -83,4 +64,20 @@ class ClassMapperConfig {
   late String typeParamsDeclaration = element.typeParameters.isNotEmpty
       ? '<${element.typeParameters.map((p) => p.getDisplayString(withNullability: false)).join(', ')}>'
       : '';
+
+  void checkUnresolvedParameters() {
+    var unresolved = params.whereType<UnresolvedParameterConfig>();
+    if (unresolved.isNotEmpty) {
+      print('\nClass $className defines constructor parameters that could not '
+          'be resolved against any field or getter in the class.\nThis won\'t '
+          'break your code, but make lead to unexpected behaviour when '
+          'serializing this class. Also \'.copyWith()\' won\'t work on these '
+          'parameters.\n\nThe following problematic parameters were detected:\n'
+          '${unresolved.map((p) => '- ${p.parameter.name}: ${p.message}').join('\n\n')}\n\n'
+          'Please make sure every constructor parameter can be resolved to a '
+          'field or getter.\nIf you think this is a bug with dart_mappable '
+          'and the listed parameters should be resolved correctly, please file '
+          'an issue here: https://github.com/schultek/dart_mappable/issues\n');
+    }
+  }
 }

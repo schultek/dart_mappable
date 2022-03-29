@@ -1,9 +1,8 @@
-import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/class_mapper_config.dart';
+import '../config/parameter_config.dart';
 
 class EncoderGenerator {
   String generateEncoderMethods(ClassMapperConfig config) {
@@ -69,52 +68,31 @@ class EncoderGenerator {
   String _generateMappingEntries(ClassMapperConfig config) {
     List<String> params = [];
 
-    PropertyAccessorElement? findGetter(String name, ClassMapperConfig mapper) {
-      var g = mapper.element.getGetter(name);
-      if (g != null) {
-        return g;
-      }
-      if (mapper.superConfig != null) {
-        return findGetter(name, mapper.superConfig!);
-      }
-      return null;
-    }
+    for (var param in config.params) {
+      if (param is UnresolvedParameterConfig) continue;
 
-    for (ParameterElement param in config.constructor?.parameters ?? []) {
-      var name = param.name;
+      var name = param.accessor.name;
+      var type = param.accessor.type;
 
-      DartType? type;
+      var key = param.jsonKey(config.caseStyle);
 
-      if (param is FieldFormalParameterElement) {
-        type = param.field!.type;
+      params.removeWhere((p) => p.startsWith("'$key':"));
+
+      String exp;
+      var paramName = config.className[0].toLowerCase();
+
+      var hook = param.hook;
+      if (hook != null) {
+        exp = 'Mapper.i.\$enc($paramName.$name, \'$name\', const $hook)';
       } else {
-        var getter = findGetter(name, config);
-        if (getter != null) {
-          type = getter.type.returnType;
-        }
+        exp = 'Mapper.i.\$enc($paramName.$name, \'$name\')';
       }
 
-      if (type != null) {
-        var key = config.jsonKey(param);
-
-        params.removeWhere((p) => p.startsWith("'$key':"));
-
-        String exp;
-        var paramName = config.className[0].toLowerCase();
-
-        var hook = config.hookForParam(param);
-        if (hook != null) {
-          exp = 'Mapper.i.\$enc($paramName.$name, \'$name\', const $hook)';
-        } else {
-          exp = 'Mapper.i.\$enc($paramName.$name, \'$name\')';
-        }
-
-        if (config.ignoreNull &&
-            param.type.nullabilitySuffix != NullabilitySuffix.none) {
-          params.add("if ($exp != null) '$key': $exp");
-        } else {
-          params.add("'$key': $exp");
-        }
+      if (config.ignoreNull &&
+          type.nullabilitySuffix != NullabilitySuffix.none) {
+        params.add("if ($exp != null) '$key': $exp");
+      } else {
+        params.add("'$key': $exp");
       }
     }
 

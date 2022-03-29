@@ -3,6 +3,7 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/class_mapper_config.dart';
+import '../config/parameter_config.dart';
 import '../utils.dart';
 
 typedef GetConfig = ClassMapperConfig? Function(Element? e);
@@ -39,29 +40,6 @@ class CopyWithGenerator {
 
   String _generateCopyWithClasses(
       ClassMapperConfig config, GetConfig getConfig) {
-    var copyFields = config.constructor!.parameters.map((param) {
-      if (param is FieldFormalParameterElement || config.hasField(param.name)) {
-        return param;
-      } else if (config.superConfig != null &&
-          config.superParams[param.name] != null) {
-        return config.superParams[param.name];
-      } else {
-        return null;
-      }
-    }).map((p) {
-      if (p?.type.isDartCoreList ?? false) {
-        var it = p!.type as InterfaceType;
-        return MapEntry(p, getConfig(it.typeArguments.first.element));
-      } else if (p?.type.isDartCoreMap ?? false) {
-        var it = p!.type as InterfaceType;
-        return MapEntry(p, getConfig(it.typeArguments[1].element));
-      } else {
-        return MapEntry(p, getConfig(p?.type.element));
-      }
-    }).where((b) =>
-        (b.value?.hasCallableConstructor ?? false) &&
-        (b.value?.shouldGenerate(GenerateMethods.copy) ?? false));
-
     var classTypeParamsDef = config.element.typeParameters
         .map((p) => ', ${p.getDisplayString(withNullability: true)}')
         .join();
@@ -74,39 +52,71 @@ class CopyWithGenerator {
         'abstract class ${config.className}CopyWith<\$R$classTypeParamsDef> {\n'
         '  factory ${config.className}CopyWith(${config.className}${config.typeParams} value, Then<${config.className}${config.typeParams}, \$R> then) = _${config.className}CopyWithImpl<\$R$classTypeParams>;\n');
 
-    for (var b in copyFields) {
-      var fieldTypeParams = b.key!.type is InterfaceType
-          ? (b.key!.type as InterfaceType)
+    var copyParams = <ParameterConfig, ClassMapperConfig?>{};
+
+    for (var param in config.params) {
+      if (param is UnresolvedParameterConfig) {
+        continue;
+      }
+
+      Element? classElement;
+      if (param.parameter.type.isDartCoreList) {
+        var it = param.parameter.type as InterfaceType;
+        classElement = it.typeArguments.first.element;
+      } else if (param.parameter.type.isDartCoreMap) {
+        var it = param.parameter.type as InterfaceType;
+        classElement = it.typeArguments[1].element;
+      } else {
+        classElement = param.parameter.type.element;
+      }
+
+      var classConfig = getConfig(classElement);
+      if (classConfig != null &&
+          classConfig.hasCallableConstructor &&
+          classConfig.shouldGenerate(GenerateMethods.copy)) {
+        copyParams[param] = classConfig;
+      }
+    }
+
+    for (var param in copyParams.keys) {
+      var p = param.parameter;
+      var a = param.accessor;
+      var classConfig = copyParams[param]!;
+
+      var fieldTypeParams = p.type is InterfaceType
+          ? (p.type as InterfaceType)
               .typeArguments
               .map((t) => ', ${t.getDisplayString(withNullability: true)}')
               .join()
           : '';
-      var copyWithName = '${b.value!.className}CopyWith';
 
-      if (b.key!.type.isDartCoreList) {
-        var typeArg = (b.key!.type as InterfaceType).typeArguments.first;
+      var copyWithName = '${classConfig.className}CopyWith';
+
+      if (p.type.isDartCoreList) {
+        var typeArg = (p.type as InterfaceType).typeArguments.first;
         var typeParams = typeArg is InterfaceType
             ? typeArg.typeArguments
                 .map((t) => ', ${t.getDisplayString(withNullability: true)}')
                 .join()
             : '';
+
         fieldTypeParams += ', $copyWithName<\$R$typeParams>';
         copyWithName = 'ListCopyWith';
-      } else if (b.key!.type.isDartCoreMap) {
-        var it = b.key!.type as InterfaceType;
+      } else if (p.type.isDartCoreMap) {
+        var it = p.type as InterfaceType;
 
         var valueTypeArg = it.typeArguments[1];
-
         var typeParams = valueTypeArg is InterfaceType
             ? valueTypeArg.typeArguments
                 .map((t) => ', ${t.getDisplayString(withNullability: true)}')
                 .join()
             : '';
+
         fieldTypeParams += ', $copyWithName<\$R$typeParams>';
         copyWithName = 'MapCopyWith';
       }
       snippets.add(
-          '  $copyWithName<\$R$fieldTypeParams>${b.key!.type.isNullable ? '?' : ''} get ${b.key!.name};\n');
+          '  $copyWithName<\$R$fieldTypeParams>${a.type.isNullable ? '?' : ''} get ${a.name};\n');
     }
 
     snippets.add('  \$R call(${_generateCopyWithParams(config)});\n'
@@ -116,46 +126,54 @@ class CopyWithGenerator {
         '  _${config.className}CopyWithImpl(${config.className}${config.typeParams} value, Then<${config.className}${config.typeParams}, \$R> then) : super(value, then);\n'
         '\n');
 
-    for (var b in copyFields) {
-      var fieldTypeParams = b.key!.type is InterfaceType
-          ? (b.key!.type as InterfaceType)
+    for (var param in copyParams.keys) {
+      var p = param.parameter;
+      var a = param.accessor;
+      var classConfig = copyParams[param]!;
+
+      var fieldTypeParams = p.type is InterfaceType
+          ? (p.type as InterfaceType)
               .typeArguments
               .map((t) => ', ${t.getDisplayString(withNullability: true)}')
               .join()
           : '';
-      var copyWithName = '${b.value!.className}CopyWith';
-      var params = ', (v) => call(${b.key!.name}: v)';
+      var copyWithName = '${classConfig.className}CopyWith';
+      var params = ', (v) => call(${p.name}: v)';
 
-      if (b.key!.type.isDartCoreList) {
+      if (p.type.isDartCoreList) {
         params = ', (v, t) => $copyWithName(v, t)$params';
-        var typeArg = (b.key!.type as InterfaceType).typeArguments.first;
+
+        var typeArg = (p.type as InterfaceType).typeArguments.first;
         var typeParams = typeArg is InterfaceType
             ? typeArg.typeArguments
                 .map((t) => ', ${t.getDisplayString(withNullability: true)}')
                 .join()
             : '';
+
         fieldTypeParams += ', $copyWithName<\$R$typeParams>';
         copyWithName = 'ListCopyWith';
-      } else if (b.key!.type.isDartCoreMap) {
+      } else if (p.type.isDartCoreMap) {
         params = ', (v, t) => $copyWithName(v, t)$params';
-        var typeArg = (b.key!.type as InterfaceType).typeArguments[1];
+
+        var typeArg = (p.type as InterfaceType).typeArguments[1];
         var typeParams = typeArg is InterfaceType
             ? typeArg.typeArguments
                 .map((t) => ', ${t.getDisplayString(withNullability: true)}')
                 .join()
             : '';
+
         fieldTypeParams += ', $copyWithName<\$R$typeParams>';
         copyWithName = 'MapCopyWith';
       }
 
       snippets.add(
-          '  @override $copyWithName<\$R$fieldTypeParams>${b.key!.type.isNullable ? '?' : ''} get ${b.key!.name} => ');
+          '  @override $copyWithName<\$R$fieldTypeParams>${a.type.isNullable ? '?' : ''} get ${a.name} => ');
 
-      if (b.key!.type.isNullable) {
+      if (a.type.isNullable) {
         snippets.add(
-            '\$value.${b.key!.name} != null ? $copyWithName(\$value.${b.key!.name}!$params) : null;\n');
+            '\$value.${a.name} != null ? $copyWithName(\$value.${a.name}!$params) : null;\n');
       } else {
-        snippets.add('$copyWithName(\$value.${b.key!.name}$params);\n');
+        snippets.add('$copyWithName(\$value.${a.name}$params);\n');
       }
     }
 
@@ -168,59 +186,55 @@ class CopyWithGenerator {
 
   String _generateCopyWithParams(ClassMapperConfig config,
       {bool implVersion = false}) {
-    if (config.constructor!.parameters.isEmpty) return '';
-    List<String> params = [];
-    for (var param in config.constructor!.parameters) {
-      var type = param.type.getDisplayString(withNullability: false);
-      String paramDef(ParameterElement p) {
-        var isDynamic = p.type.isDynamic;
-        return implVersion && (p.type.isNullable || isDynamic)
-            ? 'Object? ${p.name} = \$none'
-            : '$type${isDynamic ? '' : '?'} ${p.name}';
-      }
+    if (config.params.isEmpty) return '';
 
-      if (param is FieldFormalParameterElement || config.hasField(param.name)) {
-        params.add(paramDef(param));
-      } else if (config.superConfig != null &&
-          config.superParams[param.name] != null) {
-        params.add(paramDef(config.superParams[param.name]!));
-      } else {
-        if (param.type.isNullable) {
-          var isDynamic = param.type.isDynamic;
-          params.add('$type${isDynamic ? '' : '?'} ${param.name}');
+    List<String> params = [];
+    for (var param in config.params) {
+      var p = param.parameter;
+
+      var type = p.type.getDisplayString(withNullability: false);
+
+      if (param is UnresolvedParameterConfig) {
+        if (p.type.isNullable) {
+          var isDynamic = p.type.isDynamic;
+          params.add('$type${isDynamic ? '' : '?'} ${p.name}');
         } else {
-          params.add('required $type ${param.name}');
+          params.add('required $type ${p.name}');
+        }
+      } else {
+        var isDynamic = p.type.isDynamic;
+        if (implVersion && (p.type.isNullable || isDynamic)) {
+          params.add('Object? ${p.name} = \$none');
+        } else {
+          params.add('$type${isDynamic ? '' : '?'} ${p.name}');
         }
       }
     }
+
     return '{${params.join(', ')}}';
   }
 
   String _generateCopyWithConstructorParams(ClassMapperConfig config) {
     List<String> params = [];
-    for (var param in config.constructor!.parameters) {
+    for (var param in config.params) {
+      var p = param.parameter;
       var str = '';
 
-      if (param.isNamed) {
-        str = '${param.name}: ';
+      if (p.isNamed) {
+        str = '${p.name}: ';
       }
 
-      String paramString(ParameterElement p) {
+      if (param is UnresolvedParameterConfig) {
+        str += p.name;
+      } else {
+        var a = param.accessor;
         if (p.type.isNullable || p.type.isDynamic) {
-          return 'or(${p.name}, \$value.${p.name})';
+          str += 'or(${p.name}, \$value.${a.name})';
         } else {
-          return '${p.name} ?? \$value.${p.name}';
+          str += '${p.name} ?? \$value.${a.name}';
         }
       }
 
-      if (param is FieldFormalParameterElement || config.hasField(param.name)) {
-        str += paramString(param);
-      } else if (config.superConfig != null &&
-          config.superParams[param.name] != null) {
-        str += paramString(config.superParams[param.name]!);
-      } else {
-        str += param.name;
-      }
       params.add(str);
     }
     return params.join(', ');

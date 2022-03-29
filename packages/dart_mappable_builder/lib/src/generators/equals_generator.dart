@@ -1,4 +1,3 @@
-import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/class_mapper_config.dart';
@@ -21,17 +20,13 @@ class EqualsGenerator {
 
   String _generateHashParams(ClassMapperConfig config) {
     List<String> params = [];
-    for (ParameterElement param in config.constructor?.parameters ?? []) {
-      if (param is FieldFormalParameterElement || config.hasField(param.name)) {
-        params.add('Mapper.hash(self.${param.name})');
-      } else if (config.superConfig != null &&
-          config.superParams[param.name] != null) {
-        params.add('Mapper.hash(self.${config.superParams[param.name]!.name})');
-      }
+
+    for (var field in config.allPublicFields) {
+      params.add('Mapper.hash(self.${field.name})');
     }
 
     if (params.isEmpty) {
-      return 'self.hashCode';
+      return '0';
     } else {
       return params.join(' ^ ');
     }
@@ -39,15 +34,11 @@ class EqualsGenerator {
 
   String _generateEqualsParams(ClassMapperConfig config) {
     List<String> params = [];
-    for (ParameterElement param in config.constructor?.parameters ?? []) {
-      if (param is FieldFormalParameterElement || config.hasField(param.name)) {
-        params.add('Mapper.isEqual(self.${param.name}, other.${param.name})');
-      } else if (config.superConfig != null &&
-          config.superParams[param.name] != null) {
-        params.add(
-            'Mapper.isEqual(self.${config.superParams[param.name]!.name}, other.${config.superParams[param.name]!.name})');
-      }
+
+    for (var field in config.allPublicFields) {
+      params.add('Mapper.isEqual(self.${field.name}, other.${field.name})');
     }
+
     if (params.isEmpty) {
       return 'true';
     } else {

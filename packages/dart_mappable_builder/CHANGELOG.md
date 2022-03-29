@@ -1,6 +1,7 @@
-# 1.0.0+1
+# 1.0.1
 
-- Fixed Readme
+- Improved resolving of constructor parameters, which fixed various issues 
+  in `copyWith` and `toMap` methods
 
 # 1.0.0
 

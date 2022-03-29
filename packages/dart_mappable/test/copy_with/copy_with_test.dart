@@ -34,6 +34,18 @@ class Dealership with Mappable {
   Dealership(this.cars, this.salesRep);
 }
 
+@MappableClass()
+class ItemList<T> {
+  final List<T> items;
+
+  ItemList(List<T>? items) : items = items ?? [];
+}
+
+@MappableClass()
+class BrandList extends ItemList<Brand> {
+  BrandList(List<Brand>? brands) : super(brands);
+}
+
 void main() {
   group('Copy with extensions', () {
     test('Should generate copyWith extensions', () {
@@ -101,6 +113,15 @@ void main() {
           porsche: Person('Justus', Car(porsche, '911')),
         })),
       );
+    });
+
+    test('Should resolve parameters', () {
+      var list = BrandList([Brand('Audi'), Brand('Bmw')]);
+      expect(list.items.length, equals(2));
+      list = list.copyWith.items.add(Brand('Skoda'));
+      expect(list.items.length, equals(3));
+      list = list.copyWith(brands: null);
+      expect(list.items.length, equals(0));
     });
   });
 }

@@ -43,7 +43,7 @@ class UnionMapper extends BaseMapper<Union> {
   Map<String, dynamic> toMap(Union u) => {};
 
   @override String stringify(Union self) => 'Union()';
-  @override int hash(Union self) => self.hashCode;
+  @override int hash(Union self) => 0;
   @override bool equals(Union self, Union other) => true;
 
   @override Function get typeFactory => (f) => f<Union>();
@@ -66,8 +66,8 @@ class DataMapper extends BaseMapper<Data> {
   Map<String, dynamic> toMap(Data d) => {'mykey': Mapper.i.$enc(d.value, 'value'), 'type': 'data'};
 
   @override String stringify(Data self) => 'Data()';
-  @override int hash(Data self) => Mapper.hash(self.value);
-  @override bool equals(Data self, Data other) => Mapper.isEqual(self.value, other.value);
+  @override int hash(Data self) => 0;
+  @override bool equals(Data self, Data other) => true;
 
   @override Function get typeFactory => (f) => f<Data>();
 }
@@ -102,7 +102,7 @@ class LoadingMapper extends BaseMapper<Loading> {
   Map<String, dynamic> toMap(Loading l) => {'type': 'loading'};
 
   @override String stringify(Loading self) => 'Loading()';
-  @override int hash(Loading self) => self.hashCode;
+  @override int hash(Loading self) => 0;
   @override bool equals(Loading self, Loading other) => true;
 
   @override Function get typeFactory => (f) => f<Loading>();
@@ -138,8 +138,8 @@ class ErrorDetailsMapper extends BaseMapper<ErrorDetails> {
   Map<String, dynamic> toMap(ErrorDetails e) => {'message': Mapper.i.$enc(e.message, 'message'), 'type': 'error'};
 
   @override String stringify(ErrorDetails self) => 'ErrorDetails()';
-  @override int hash(ErrorDetails self) => Mapper.hash(self.message);
-  @override bool equals(ErrorDetails self, ErrorDetails other) => Mapper.isEqual(self.message, other.message);
+  @override int hash(ErrorDetails self) => 0;
+  @override bool equals(ErrorDetails self, ErrorDetails other) => true;
 
   @override Function get typeFactory => (f) => f<ErrorDetails>();
 }

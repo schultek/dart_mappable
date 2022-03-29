@@ -9,6 +9,7 @@ import 'hooks_test.dart';
 var _mappers = <BaseMapper>{
   // class mappers
   GameMapper._(),
+  CardGameMapper._(),
   PlayerMapper._(),
   ClothesMapper._(),
   ComponentMapper._(),
@@ -27,7 +28,10 @@ class GameMapper extends BaseMapper<Game> {
   Game fromMap(Map<String, dynamic> map) => Game(Mapper.i.$get(map, 'player', const PlayerHooks()));
 
   @override Function get encoder => (Game v) => encode(v);
-  dynamic encode(Game v) => toMap(v);
+  dynamic encode(Game v) {
+    if (v is CardGame) { return CardGameMapper._().encode(v); }
+    else { return toMap(v); }
+  }
   Map<String, dynamic> toMap(Game g) => {'player': Mapper.i.$enc(g.player, 'player', const PlayerHooks())};
 
   @override String stringify(Game self) => 'Game(player: ${Mapper.asString(self.player)})';
@@ -55,6 +59,44 @@ class _GameCopyWithImpl<$R> extends BaseCopyWith<Game, $R> implements GameCopyWi
 
   @override PlayerCopyWith<$R> get player => PlayerCopyWith($value.player, (v) => call(player: v));
   @override $R call({Player? player}) => $then(Game(player ?? $value.player));
+}
+
+class CardGameMapper extends BaseMapper<CardGame> {
+  CardGameMapper._();
+
+  @override Function get decoder => decode;
+  CardGame decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  CardGame fromMap(Map<String, dynamic> map) => CardGame(Mapper.i.$get(map, 'player', const ChainedHooks([PlayerHooks(), CardPlayerHooks()])));
+
+  @override Function get encoder => (CardGame v) => encode(v);
+  dynamic encode(CardGame v) => toMap(v);
+  Map<String, dynamic> toMap(CardGame c) => {'player': Mapper.i.$enc(c.player, 'player', const ChainedHooks([PlayerHooks(), CardPlayerHooks()]))};
+
+  @override String stringify(CardGame self) => 'CardGame(player: ${Mapper.asString(self.player)})';
+  @override int hash(CardGame self) => Mapper.hash(self.player);
+  @override bool equals(CardGame self, CardGame other) => Mapper.isEqual(self.player, other.player);
+
+  @override Function get typeFactory => (f) => f<CardGame>();
+}
+
+extension CardGameMapperExtension  on CardGame {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  CardGameCopyWith<CardGame> get copyWith => CardGameCopyWith(this, $identity);
+}
+
+abstract class CardGameCopyWith<$R> {
+  factory CardGameCopyWith(CardGame value, Then<CardGame, $R> then) = _CardGameCopyWithImpl<$R>;
+  PlayerCopyWith<$R> get player;
+  $R call({Player? player});
+  $R apply(CardGame Function(CardGame) transform);
+}
+
+class _CardGameCopyWithImpl<$R> extends BaseCopyWith<CardGame, $R> implements CardGameCopyWith<$R> {
+  _CardGameCopyWithImpl(CardGame value, Then<CardGame, $R> then) : super(value, then);
+
+  @override PlayerCopyWith<$R> get player => PlayerCopyWith($value.player, (v) => call(player: v));
+  @override $R call({Player? player}) => $then(CardGame(player ?? $value.player));
 }
 
 class PlayerMapper extends BaseMapper<Player> {
@@ -141,8 +183,8 @@ class ComponentMapper extends BaseMapper<Component> {
   Map<String, dynamic> toMap(Component c) => {'id': Mapper.i.$enc(c.id, 'id'), 'unmapped_props': Mapper.i.$enc(c.unmappedProps, 'unmappedProps'), 'name': Mapper.i.$enc(c.name, 'name')};
 
   @override String stringify(Component self) => 'Component(id: ${Mapper.asString(self.id)}, name: ${Mapper.asString(self.name)}, unmappedProps: ${Mapper.asString(self.unmappedProps)})';
-  @override int hash(Component self) => Mapper.hash(self.id) ^ Mapper.hash(self.unmappedProps) ^ Mapper.hash(self.name);
-  @override bool equals(Component self, Component other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.unmappedProps, other.unmappedProps) && Mapper.isEqual(self.name, other.name);
+  @override int hash(Component self) => Mapper.hash(self.id) ^ Mapper.hash(self.name) ^ Mapper.hash(self.unmappedProps);
+  @override bool equals(Component self, Component other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.unmappedProps, other.unmappedProps);
 
   @override Function get typeFactory => (f) => f<Component>();
 }

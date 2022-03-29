@@ -70,8 +70,8 @@ class CarMapper extends BaseMapper<Car> {
   Map<String, dynamic> toMap(Car c) => {'driven_km': Mapper.i.$enc(c.drivenKm, 'drivenKm'), 'brand': Mapper.i.$enc(c.brand, 'brand')};
 
   @override String stringify(Car self) => 'Car(miles: ${Mapper.asString(self.miles)}, brand: ${Mapper.asString(self.brand)})';
-  @override int hash(Car self) => Mapper.hash(self.drivenKm) ^ Mapper.hash(self.brand);
-  @override bool equals(Car self, Car other) => Mapper.isEqual(self.drivenKm, other.drivenKm) && Mapper.isEqual(self.brand, other.brand);
+  @override int hash(Car self) => Mapper.hash(self.miles) ^ Mapper.hash(self.brand);
+  @override bool equals(Car self, Car other) => Mapper.isEqual(self.miles, other.miles) && Mapper.isEqual(self.brand, other.brand);
 
   @override Function get typeFactory => (f) => f<Car>();
 }

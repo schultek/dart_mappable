@@ -31,6 +31,23 @@ class Game {
   Game(this.player);
 }
 
+class CardPlayerHooks extends MappingHooks {
+  const CardPlayerHooks();
+
+  @override
+  beforeDecode(value) {
+    return value is Map<String, dynamic>
+        ? {'id': value['id'] + '-card'}
+        : value;
+  }
+}
+
+@MappableClass()
+class CardGame extends Game {
+  CardGame(@MappableField(hooks: CardPlayerHooks()) Player player)
+      : super(player);
+}
+
 @MappableClass()
 class Player {
   String id;
@@ -66,8 +83,13 @@ void main() {
     });
 
     test('After Encode Hook', () {
-      Game game = Game(Player('Tom'));
+      var game = Game(Player('Tom'));
       expect(game.toJson(), equals('{"player":"Tom"}'));
+    });
+
+    test('Chained field hooks', () {
+      var game = Mapper.fromMap<CardGame>({'player': 'Anna'});
+      expect(game.player.id, equals('Anna-card'));
     });
   });
 

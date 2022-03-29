@@ -1,10 +1,8 @@
-# 1.0.0+2
+# 1.0.1
 
-- Fixed Pubspec
-
-# 1.0.0+1
-
-- Fixed Readme
+- Improved resolving of constructor parameters, which fixed various issues
+  in `copyWith` and `toMap` methods
+- Now printing comprehensive warning in the builder output if a parameter cannot be resolved
 
 # 1.0.0
 

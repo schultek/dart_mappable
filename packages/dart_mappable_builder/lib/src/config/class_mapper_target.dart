@@ -7,6 +7,7 @@ import '../builder_options.dart';
 import '../utils.dart';
 import 'class_mapper_config.dart';
 import 'mapper_targets.dart';
+import 'parameter_config.dart';
 
 class ClassMapperTarget extends MapperTarget {
   List<ClassMapperTarget> subTargets = [];
@@ -48,42 +49,104 @@ class ClassMapperTarget extends MapperTarget {
       ignoreNull: ignoreNull,
       generateMethods: generateMethods,
       superConfig: superTarget?.config,
-      superParams: analyzeSuperParams(),
       subConfigs: [],
+      params: analyzeParams(),
     );
     config.superConfig?.subConfigs.add(config);
     return config;
   }
 
-  Map<String, ParameterElement> analyzeSuperParams() {
-    var params = <String, ParameterElement>{};
+  List<ParameterConfig> analyzeParams() {
+    var params = <ParameterConfig>[];
 
-    if (superTarget == null || constructor == null) return params;
+    if (constructor == null) return params;
 
-    var node = constructor!.getNode();
-
-    if (node is! ConstructorDeclaration || node.initializers.isEmpty) {
-      return params;
-    }
-
-    var last = node.initializers.last;
-    if (last is SuperConstructorInvocation) {
-      var args = last.argumentList.arguments;
-      var i = 0;
-      for (var arg in args) {
-        if (arg is SimpleIdentifier) {
-          params[arg.name] = superTarget!.constructor!.parameters[i];
-        } else if (arg is NamedExpression &&
-            arg.expression is SimpleIdentifier) {
-          params[(arg.expression as SimpleIdentifier).name] = superTarget!
-              .constructor!.parameters
-              .firstWhere((p) => p.isNamed && p.name == arg.name.label.name);
-        }
-        i++;
-      }
+    for (var param in constructor!.parameters) {
+      params.add(getParameterConfig(param));
     }
 
     return params;
+  }
+
+  ParameterConfig getParameterConfig(ParameterElement param) {
+    if (param is FieldFormalParameterElement) {
+      return FieldParameterConfig(param, param.field!);
+    }
+
+    var getter = element.getGetter(param.name);
+    if (getter != null) {
+      var getterType = getter.type.returnType;
+      if (getterType == param.type) {
+        return FieldParameterConfig(param, getter.variable);
+      }
+
+      if (!getterType.isNullable &&
+          param.type.isNullable &&
+          getterType.getDisplayString(withNullability: false) ==
+              param.type.getDisplayString(withNullability: false)) {
+        return FieldParameterConfig(param, getter.variable);
+      }
+
+      return UnresolvedParameterConfig(
+        param,
+        'Found getter or field related to this parameter, but it has a '
+        'non-matching type. Expected ${param.type} but got ${getter.type.returnType}.',
+      );
+    }
+
+    ParameterElement? superParameter = _findSuperParameter(param);
+    if (superParameter != null) {
+      var superConfig = superTarget!.getParameterConfig(superParameter);
+      if (superConfig is UnresolvedParameterConfig) {
+        return UnresolvedParameterConfig(
+          param,
+          'Problem in super constructor: ${superConfig.message}',
+        );
+      } else {
+        return SuperParameterConfig(param, superConfig);
+      }
+    }
+
+    return UnresolvedParameterConfig(
+      param,
+      'Cannot find field or getter related to this parameter.',
+    );
+  }
+
+  ParameterElement? _findSuperParameter(ParameterElement param) {
+    var superConfig = superTarget?.config;
+    if (superConfig == null) return null;
+
+    var node = constructor!.getNode();
+    if (node is ConstructorDeclaration && node.initializers.isNotEmpty) {
+      var last = node.initializers.last;
+      if (last is SuperConstructorInvocation) {
+        var superConstructorName = last.constructorName?.name ?? '';
+        var superConstructor = superConfig.element.constructors
+            .firstWhere((c) => c.name == superConstructorName);
+
+        var args = last.argumentList.arguments;
+        var i = 0;
+        for (var arg in args) {
+          if (arg is SimpleIdentifier) {
+            if (arg.name == param.name) {
+              return superConstructor.parameters[i];
+            }
+          } else if (arg is NamedExpression) {
+            var exp = arg.expression;
+            if (exp is SimpleIdentifier) {
+              if (exp.name == param.name) {
+                var superName = arg.name.label.name;
+                return superConstructor.parameters
+                    .firstWhere((p) => p.isNamed && p.name == superName);
+              }
+            }
+          }
+          i++;
+        }
+      }
+    }
+    return null;
   }
 
   ConstructorElement? get constructor =>

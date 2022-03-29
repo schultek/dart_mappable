@@ -16,24 +16,9 @@ class ToStringGenerator {
   String _generateStringParams(ClassMapperConfig config) {
     List<String> params = [];
 
-    void addFieldsForMapper(ClassMapperConfig config) {
-      if (config.superConfig != null) {
-        addFieldsForMapper(config.superConfig!);
-      }
-
-      for (var field in config.element.fields) {
-        if (!field.isStatic &&
-            !field.isPrivate &&
-            (field.getter?.isSynthetic ?? false)) {
-          var str = '';
-          str = '${field.name}: ';
-          str += '\${Mapper.asString(self.${field.name})}';
-          params.add(str);
-        }
-      }
+    for (var field in config.allPublicFields) {
+      params.add('${field.name}: \${Mapper.asString(self.${field.name})}');
     }
-
-    addFieldsForMapper(config);
 
     return params.join(', ');
   }
