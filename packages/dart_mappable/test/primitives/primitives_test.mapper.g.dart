@@ -128,7 +128,7 @@ class Mapper {
   static List<BaseMapper> getAll() => i.getAll();
 }
 
-mixin Mappable {
+mixin Mappable implements MappableMixin {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 
@@ -153,7 +153,7 @@ mixin Mappable {
     try {
       return fn();
     } on MapperException catch (e) {
-      if (e.isUnsupported()) {
+      if (e.isUnsupportedOrUnallowed()) {
         return fallback();
       } else {
         rethrow;

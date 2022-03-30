@@ -4,6 +4,8 @@ import 'package:test/test.dart';
 import '../utils.dart';
 import 'mapper_test.mapper.g.dart';
 
+class Item with Mappable {}
+
 void main() {
   group('Mapper utils', () {
     test('Use and unuse Mapper', () {
@@ -21,6 +23,12 @@ void main() {
       Mapper.use(mapper);
 
       expect(() => Mapper.fromValue<int>('2'), returnsNormally);
+    });
+
+    test('Unallowed mappable', () {
+      expect(Item().toString(), equals('Instance of \'Item\''));
+      expect(() => Mapper.asString(Item()),
+          throwsMapperException(MapperException.unallowedMappable()));
     });
   });
 }

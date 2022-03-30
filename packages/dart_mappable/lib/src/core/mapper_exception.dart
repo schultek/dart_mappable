@@ -67,8 +67,16 @@ class MapperException implements Exception {
         'annotation by using the GenerateMethods flag.');
   }
 
+  factory MapperException.unallowedMappable() {
+    return MapperException._('The Mappable mixin was used on a type that does '
+        'not have a registered mapper. Did you forgot to annotate the class '
+        'or register a custom mapper?');
+  }
+
   /// Checks if this is an unsupported operation exception
-  bool isUnsupported() => message.startsWith('Unsupported operation');
+  bool isUnsupportedOrUnallowed() =>
+      message.startsWith('Unsupported operation') ||
+      message.startsWith('The Mappable mixin');
 }
 
 /// Method indicator used for exceptions
@@ -82,8 +90,8 @@ class _ChainedMapperException implements MapperException {
   final Object error;
 
   @override
-  bool isUnsupported() => error is MapperException
-      ? (error as MapperException).isUnsupported()
+  bool isUnsupportedOrUnallowed() => error is MapperException
+      ? (error as MapperException).isUnsupportedOrUnallowed()
       : false;
 
   String get chainedMessage {

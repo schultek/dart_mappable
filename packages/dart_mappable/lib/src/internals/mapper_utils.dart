@@ -108,3 +108,5 @@ class BaseCopyWith<$T, $R> {
   /// Applies any transformer function on the value
   $R apply($T Function($T) transform) => $then(transform($value));
 }
+
+abstract class MappableMixin {}

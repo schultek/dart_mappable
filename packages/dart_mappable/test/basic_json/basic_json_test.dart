@@ -73,6 +73,12 @@ void main() {
       );
     });
 
+    test('Should stringify person', () {
+      person = person.copyWith(car: null);
+      expect(
+          person.toString(), equals('Person(name: Max, age: 18, car: null)'));
+    });
+
     test('Should use default enum value', () {
       Car car = Mapper.fromJson('{"driven_km": 1000, "brand": "some"}');
       expect(car.brand, equals(Brand.Audi));
