@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+// ignore: implementation_imports
+import 'package:type_plus/src/types_registry.dart' show TypeRegistry;
 import 'package:type_plus/type_plus.dart' hide typeOf;
 
 import '../../dart_mappable.dart';
@@ -31,6 +33,7 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
   final Map<String, BaseMapper> _mappers = {};
 
   _MapperContainerImpl(Set<BaseMapper> mappers) {
+    TypePlus.register(this);
     useAll([
       PrimitiveMapper((v) => v),
       PrimitiveMapper<String>((v) => v.toString()),
@@ -44,7 +47,6 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
       MapMapper<Map>(<K, V>(map) => map, <K, V>(f) => f<Map<K, V>>(), this),
       ...mappers,
     ]);
-    TypePlus.register(this);
   }
 
   BaseMapper? _mapperFor(dynamic value) {
@@ -214,17 +216,22 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
   }
 
   @override
-  void use<T>(BaseMapper<T> mapper) => _mappers[idOf(T)] = mapper;
+  void use<T>(BaseMapper<T> mapper) => useAll([mapper]);
+
   @override
   BaseMapper<T>? unuse<T>() => _mappers.remove(T.baseId) as BaseMapper<T>?;
+
   @override
-  void useAll(List<BaseMapper> mappers) => _mappers.addEntries(mappers.map((m) {
-        return MapEntry(idOf(m.type), m);
-      }));
+  void useAll(List<BaseMapper> mappers) {
+    _mappers.addEntries(mappers.map((m) {
+      return MapEntry(TypeRegistry.instance.idOf(m.type)!, m);
+    }));
+  }
 
   @override
   BaseMapper<T>? get<T>([Type? type]) =>
       _mappers[(type ?? T).baseId] as BaseMapper<T>?;
+
   @override
   List<BaseMapper> getAll() => [..._mappers.values];
 }

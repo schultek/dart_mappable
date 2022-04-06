@@ -1,3 +1,7 @@
+# 1.0.3
+
+- Fixed issue with minified standard types on web
+
 # 1.0.2
 
 - Fixed unrecognized type issue for `equals`, `hashCode` and `toString` methods
