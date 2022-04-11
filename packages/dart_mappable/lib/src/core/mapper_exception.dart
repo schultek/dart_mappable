@@ -52,12 +52,12 @@ class MapperException implements Exception {
   }
 
   /// Exception when an encoded enum value has no match
-  factory MapperException.unknownEnumValue(String value) {
+  factory MapperException.unknownEnumValue(dynamic value) {
     return MapperException.chain(
         MapperMethod.decode,
         '[$value]',
         MapperException._("No enum value matches '$value', did you use the "
-            'correct case-style or forgot to specify a default value?'));
+            'correct mode or case-style or forgot to specify a default value?'));
   }
 
   /// Exception when a method is called that was not specified for generation

@@ -4,11 +4,13 @@ import 'package:dart_mappable/dart_mappable.dart';
 class EnumMapperConfig {
   final ClassElement element;
 
+  final ValuesMode mode;
   final CaseStyle? caseStyle;
   final int? defaultValue;
 
   EnumMapperConfig({
     required this.element,
+    required this.mode,
     required this.caseStyle,
     required this.defaultValue,
   });

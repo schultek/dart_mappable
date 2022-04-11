@@ -25,6 +25,7 @@ Sounds too good to be true? Not anymore.
   - [Generation Methods](#generation-methods)
   - [Utilize Constructors](#utilize-constructors)
   - [Case Styles](#case-styles)
+  - [Custom Enum Values](#custom-enum-values)
 - [Lists, Sets and Maps](#lists-sets-and-maps)
   - [Non-Trivial Maps](#non-trivial-maps)
 - [Copy With](#copywith)
@@ -171,14 +172,15 @@ Lastly, you can define [custom mappers](#custom-mappers) using the '@CustomMappe
 
 ---
 
-Here are again all **six** annotations that you can use in your code:
+Here are again all **seven** annotations that you can use in your code:
 
 1. `@MappableClass()` can be used on a class to specify options like the `caseStyle` of the json keys, whether to ignore null values, or [hooks](#encoding--decoding-hooks).
-2. `@MappableEnum()` can be used on an enum to specify the `caseStyle` of the stringified enum values, or the `defaultValue`.
-3. `@MappableConstructor()` can be used on a constructor to mark this to be used for decoding. It has no properties.
-4. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name, or [hooks](#encoding--decoding-hooks).
-5. `@MappableLib()` can be used on a library statement or import / export statement to set a default configuration for the annotated library or include / exclude classes.
-6. `@CustomMapper()` can be used to specify a custom mapper, used alongside the generated mappers. See [Custom Mappers](#custom-mappers) for a details explanation.
+2. `@MappableConstructor()` can be used on a constructor to mark this to be used for decoding. It has no properties.
+3. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name, or [hooks](#encoding--decoding-hooks).
+4. `@MappableEnum()` can be used on an enum to specify the `mode` or `caseStyle` of the encoded enum values, or the `defaultValue`.
+5. `@MappableValue()` can be used on an enum value to specify a custom encoded value to use.
+6. `@MappableLib()` can be used on a library statement or import / export statement to set a default configuration for the annotated library or include / exclude classes.
+7. `@CustomMapper()` can be used to specify a custom mapper, used alongside the generated mappers. See [Custom Mappers](#custom-mappers) for a details explanation.
 
 For an overview of all the annotation properties, head to the [Api Documentation](https://pub.dev/documentation/dart_mappable/latest/dart_mappable/dart_mappable-library.html).
 
@@ -312,6 +314,25 @@ Here are some examples that can be achieved using this syntax:
 custom(u,_): myFieldName -> MY_FIELD_NAME
 custom(uc,+): myFieldName -> MY+Field+Name
 custom(cl,): myFieldName -> Myfieldname
+```
+
+### Custom Enum Values
+
+When using the `@MappableEnum()` annotation you can set the `mode` property to one of two `ValuesMode`s for the encoding of enum values:
+
+- `ValuesMode.named` is the default and will encode all values to their respective names as `String`s, after applying the optional `caseStyle`.
+- `ValuesMode.indexed` will encode all values to their respective index as `int`s.
+
+You can also specify a custom encoded value for each enum value using the `@MappableValue(myCustomValue)` annotation. 
+It is possible to mix the encoding mode with custom values, and use values of different types.
+
+```dart
+@MappableEnum(mode: ValuesMode.indexed)
+enum Status {
+  zero,                         // encodes to 0
+  @MappableValue(200) success,  // encodes to 200
+  @MappableValue('error') error // encodes to 'error'
+}
 ```
 
 ## Lists, Sets and Maps

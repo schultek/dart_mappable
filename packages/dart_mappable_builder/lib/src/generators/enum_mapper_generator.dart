@@ -1,6 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/enum_mapper_config.dart';
+import '../utils.dart';
 
 /// Generates code for a specific enum
 class EnumMapperGenerator {
@@ -9,29 +11,42 @@ class EnumMapperGenerator {
   EnumMapperGenerator(this.config);
 
   String generate() {
-    var values = config.element.fields
-        .where((f) => f.isEnumConstant)
-        .map((f) => MapEntry(f.name, config.caseStyle.transform(f.name)));
+    bool hasAllStringValues = config.mode == ValuesMode.named;
+    var values =
+        config.element.fields.where((f) => f.isEnumConstant).mapIndexed((i, f) {
+      if (valueChecker.hasAnnotationOf(f)) {
+        hasAllStringValues = false;
+        return MapEntry(f.name, getAnnotationCode(f, MappableValue, 0)!);
+      } else {
+        if (config.mode == ValuesMode.named) {
+          return MapEntry(f.name, "'${config.caseStyle.transform(f.name)}'");
+        } else {
+          return MapEntry(f.name, i);
+        }
+      }
+    });
 
     return ''
         'class ${config.mapperName} extends EnumMapper<${config.className}> {\n'
         '  ${config.mapperName}._();\n\n'
         '  @override'
-        '  ${config.className} fromString(String value) {\n'
+        '  ${config.className} decode(dynamic value) {\n'
         '    switch (value) {\n'
-        '      ${values.map((v) => "case '${v.value}': return ${config.className}.${v.key};").join("\n      ")}\n'
+        '      ${values.map((v) => "case ${v.value}: return ${config.className}.${v.key};").join("\n      ")}\n'
         '      default: ${_generateDefaultCase()}\n'
         '    }\n'
         '  }\n\n'
         '  @override'
-        '  String toStringValue(${config.className} value) {\n'
+        '  dynamic encode(${config.className} value) {\n'
         '    switch (value) {\n'
-        '      ${values.map((v) => "case ${config.className}.${v.key}: return '${v.value}';").join("\n      ")}\n'
+        '      ${values.map((v) => "case ${config.className}.${v.key}: return ${v.value};").join("\n      ")}\n'
         '    }\n'
         '  }\n'
         '}\n\n'
         'extension ${config.mapperName}Extension on ${config.className} {\n'
-        '  String toStringValue() => Mapper.toValue(this) as String;\n'
+        '  dynamic toValue() => Mapper.toValue(this);\n'
+        '${hasAllStringValues ? '  @Deprecated(\'Use \\\'toValue\\\' instead\')\n'
+            '  String toStringValue() => Mapper.toValue(this) as String;\n' : ''}'
         '}';
   }
 

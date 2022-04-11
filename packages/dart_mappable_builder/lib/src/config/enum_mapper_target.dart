@@ -15,6 +15,7 @@ class EnumMapperTarget extends MapperTarget {
   EnumMapperConfig _buildConfig() {
     return EnumMapperConfig(
       element: element,
+      mode: mode,
       caseStyle: caseStyle,
       defaultValue: defaultValue,
     );
@@ -23,6 +24,11 @@ class EnumMapperTarget extends MapperTarget {
   @override
   DartObject? getAnnotation() =>
       enumChecker.firstAnnotationOf(annotatedElement);
+
+  ValuesMode get mode => annotation != null
+      ? ValuesMode.values[
+          annotation?.getField('mode')?.getField('index')?.toIntValue() ?? 0]
+      : ValuesMode.named;
 
   CaseStyle? get caseStyle =>
       annotation != null && !annotation!.getField('caseStyle')!.isNull

@@ -172,7 +172,7 @@ class _ConfettiCopyWithImpl<$R> extends BaseCopyWith<Confetti, $R> implements Co
 class BrandMapper extends EnumMapper<Brand> {
   BrandMapper._();
 
-  @override  Brand fromString(String value) {
+  @override  Brand decode(dynamic value) {
     switch (value) {
       case 'toyota': return Brand.Toyota;
       case 'audi': return Brand.Audi;
@@ -181,7 +181,7 @@ class BrandMapper extends EnumMapper<Brand> {
     }
   }
 
-  @override  String toStringValue(Brand value) {
+  @override  dynamic encode(Brand value) {
     switch (value) {
       case Brand.Toyota: return 'toyota';
       case Brand.Audi: return 'audi';
@@ -191,6 +191,8 @@ class BrandMapper extends EnumMapper<Brand> {
 }
 
 extension BrandMapperExtension on Brand {
+  dynamic toValue() => Mapper.toValue(this);
+  @Deprecated('Use \'toValue\' instead')
   String toStringValue() => Mapper.toValue(this) as String;
 }
 

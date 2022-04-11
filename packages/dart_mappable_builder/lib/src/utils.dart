@@ -8,6 +8,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:source_gen/source_gen.dart';
 
 const enumChecker = TypeChecker.fromRuntime(MappableEnum);
+const valueChecker = TypeChecker.fromRuntime(MappableValue);
 const constructorChecker = TypeChecker.fromRuntime(MappableConstructor);
 const classChecker = TypeChecker.fromRuntime(MappableClass);
 const fieldChecker = TypeChecker.fromRuntime(MappableField);
@@ -27,35 +28,40 @@ extension GetNode on Element {
 }
 
 String? getAnnotationCode(
-    Element annotatedElement, Type annotationType, String property) {
+    Element annotatedElement, Type annotationType, dynamic property) {
   var node = annotatedElement.getNode();
 
-  NodeList<Annotation> annotations;
+  NodeList<Annotation>? annotations;
 
   if (node is VariableDeclaration) {
     var parent = node.parent?.parent;
     if (parent is FieldDeclaration) {
       annotations = parent.metadata;
-    } else {
-      return null;
     }
   } else if (node is FormalParameter) {
     annotations = node.metadata;
   } else if (node is Declaration) {
     annotations = node.metadata;
-  } else {
+  }
+
+  if (annotations == null) {
     print('Unknown node type: ${node.runtimeType} $node');
     return null;
   }
 
   for (var annotation in annotations) {
     if (annotation.name.name == annotationType.toString()) {
-      var props = annotation.arguments!.arguments
-          .whereType<NamedExpression>()
-          .where((e) => e.name.label.name == property);
-
-      if (props.isNotEmpty) {
-        return props.first.expression.toSource();
+      for (var i = 0; i < annotation.arguments!.arguments.length; i++) {
+        var arg = annotation.arguments!.arguments[i];
+        if (arg is NamedExpression && property is String) {
+          if (arg.name.label.name == property) {
+            return arg.expression.toSource();
+          }
+        } else if (arg is Literal && property is int) {
+          if (i == property) {
+            return arg.toSource();
+          }
+        }
       }
     }
   }

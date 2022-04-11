@@ -86,13 +86,24 @@ class GenerateMethods {
   }
 }
 
+/// The mode used for encoding the enum values.
+/// Can be [ValuesMode.named] to map each enum value to its name as [String]
+/// or [ValuesMode.indexed] to map each enum value to its index as [int]
+enum ValuesMode { named, indexed }
+
 /// Used to annotate an enum
 /// in order to generate mapping code
 class MappableEnum {
   const MappableEnum({
+    this.mode = ValuesMode.named,
     this.caseStyle,
     this.defaultValue,
   });
+
+  /// The mode used for encoding the enum values.
+  /// Can be [ValuesMode.named] to map each enum value to its name as [String]
+  /// or [ValuesMode.indexed] to map each enum value to its index as [int]
+  final ValuesMode mode;
 
   /// The case style for the stringified enum values
   final CaseStyle? caseStyle;
@@ -100,6 +111,15 @@ class MappableEnum {
   /// The default value when decoding a string.
   /// Must be a value of the annotated enum
   final Object? defaultValue;
+}
+
+/// Used to annotate an enum value
+/// in order to define a custom encoded value
+class MappableValue {
+  const MappableValue(this.value);
+
+  /// The target value this enum value should be encoded to
+  final dynamic value;
 }
 
 /// Used to annotate a constructor

@@ -22,14 +22,6 @@ class PrimitiveMapper<T> extends BaseMapper<T> with PrimitiveMethodsMixin<T> {
 abstract class EnumMapper<T> extends SimpleMapper<T>
     with PrimitiveMethodsMixin<T> {
   EnumMapper();
-
-  T fromString(String value);
-  String toStringValue(T value);
-
-  @override
-  T decode(dynamic value) => checked(value, fromString);
-  @override
-  dynamic encode(T self) => toStringValue(self);
 }
 
 class DateTimeMapper extends SimpleMapper<DateTime>
