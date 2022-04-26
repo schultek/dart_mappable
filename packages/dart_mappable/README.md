@@ -16,6 +16,10 @@ Sounds too good to be true? Not anymore.
 
 # Dart Mappable
 
+`dart_mappable` is an improved json serialization and data-class package that can replace `json_serializable`
+or other similar packages. It covers all basic features *(from/to json, == override, toString() override, ...)* 
+while adding new or improved support for advances use-cases like generics, inheritance and customization.
+
 > Have a look at the example!
 
 - [Get Started](#get-started)

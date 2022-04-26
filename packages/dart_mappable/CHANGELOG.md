@@ -1,3 +1,7 @@
+# 1.1.1
+
+- Updated description
+
 # 1.1.0
 
 - Added support for custom enum values
