@@ -246,12 +246,23 @@ When using **annotations**, you can specify multiple methods using the *bitwise-
 
 ### Utilize Constructors
 
-There exist a lot of custom use cases, when it comes to mapping any object. Common ones include renaming fields, ignoring fields, computing values, or custom date or number formats.
-Instead of providing custom tailored serialization options for each use-case, this package utilizes the power of constructor arguments to cover all of them. Thereby, you keep full control
+There exist a lot of custom use cases, when it comes to mapping json to an object. Common ones include:
+
+- providing **default values** to optional fields,
+- **renaming** fields,
+- **ignoring** fields, 
+- **custom formats** for dates or numbers,
+- **computing values**,
+- ... and lots more.
+
+Instead of providing custom tailored serialization options for some selected use-cases, this package 
+utilizes the power of constructor arguments to cover all of them. Thereby, you keep full control
 over your models, while writing pure and easy dart code.
 
-How does that work exactly: When analysing your code, `dart_mappable` **never looks at the fields** of your model, but rather only at the **constructor arguments**; 
-What you do with them - writing to fields, renaming, etc. - is up to your model's implementation. To illustrate this, here are some examples for the above mentioned use cases:
+*How does that work exactly:* When analysing your code, `dart_mappable` **never looks at the fields** 
+of your model, but rather only at the **constructor arguments**; What you do with them - writing to 
+fields, renaming, etc. - is up to your model's implementation. To illustrate this, here are some 
+examples for the above mentioned use cases:
 
 ```dart
 class Person {
@@ -260,10 +271,13 @@ class Person {
     
   // basic example, nothing special going on
   Person.base(this.name, this.age);
+  
+  // setting default values for some parameters
+  Person.opt(this.name, [this.age = 18]);
 
   // renamed argument, will be 'years': ... in json
   Person.renamed(this.name, int years) : age = years;
-  // when renaming arguments, make sure to always have a matching getter for serialization *
+  // IMPORTANT: when renaming arguments, make sure to always have a matching getter for serialization (*)
   int get years => age;
   
   // ignores the age field completely
@@ -271,7 +285,7 @@ class Person {
  
   // computed name value
   Person.computed(String firstName, String lastName, this.age) : name = '$firstName $lastName';
-  // again: have matching getters for all arguments, reversing the computed value *
+  // IMPORTANT (again): have matching getters for all arguments, reversing the computed value (*)
   String get firstName => name.split(' ')[0];
   String get lastName => name.split(' ')[1];
 }
@@ -285,16 +299,18 @@ class Event {
 }
 ```
 
-**\* Regarding the matching getters:** Not-having them won't break your code. 
+**(\*) Regarding the matching getters:** Not-having them won't break your code. 
 However this will lead to desynched serialization (keys missing in your json) and eventually to 
 errors when trying to deserialize back. You will also get a warning in the builder output to know 
 when this happens.
 
-*Remember: dart_mappable will always use the first constructor it sees, but you can use a specific constructor using the `@MappableConstructor()` annotation.*
+*Remember: dart_mappable will always use the first constructor it sees, but you can use a specific 
+constructor using the `@MappableConstructor()` annotation.*
 
 ### Case Styles
 
-You can specify the case style for the json keys and your stringified enum values. Choose one of the existing styles or specify a custom one.
+You can specify the case style for the json keys and your stringified enum values. Choose one of the 
+existing styles or specify a custom one.
 
 Currently supported are:
 ```yaml
@@ -308,10 +324,13 @@ upperCase: myFieldName -> MYFIELDNAME
 ```
 
 You can also specify a custom case style using the `custom(ab,c)` syntax. 
-- The letters before the comma define how to transform each word of a field name. They can be either `l` for `lowerCase`, `u` for `upperCase`, or `c` for `capitalCase`.
-When using only one letter, it is applied to all words. When using two letters, the first one is applied to only the first word and the second one to all 
-remaining words.
-- The one letter after the comma defines the separator between each word, like `_` or `-`. This can be any character or empty.
+
+- The letters before the comma define how to transform each word of a field name. They can be either 
+  `l` for `lowerCase`, `u` for `upperCase`, or `c` for `capitalCase`. When using only one letter, 
+  it is applied to all words. When using two letters, the first one is applied to only the first word 
+  and the second one to all remaining words.
+- The one letter after the comma defines the separator between each word, like `_` or `-`. This can 
+  be any character or empty.
 
 Here are some examples that can be achieved using this syntax:
 ```yaml

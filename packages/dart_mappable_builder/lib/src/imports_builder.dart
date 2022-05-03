@@ -1,4 +1,3 @@
-import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:path/path.dart' as path;
 
@@ -6,10 +5,20 @@ class ImportsBuilder {
   final Set<Uri> _imports = {};
   final AssetId _input;
 
-  ImportsBuilder(this._input);
+  ImportsBuilder(this._input) {
+    _imports.add(Uri.parse('package:dart_mappable/dart_mappable.dart'));
+    _imports.add(Uri.parse('package:dart_mappable/internals.dart'));
+  }
 
-  void add(Uri import) => _imports.add(import);
-  void addLibrary(LibraryElement library) => add(library.source.uri);
+  void add(Uri import) {
+    if (import.scheme == 'package' &&
+        import.pathSegments.first == 'dart_mappable') {
+      return;
+    }
+    _imports.add(import);
+  }
+
+  void addAll(Iterable<Uri> imports) => imports.forEach(add);
 
   String write() {
     List<String> sdk = [], package = [], relative = [];

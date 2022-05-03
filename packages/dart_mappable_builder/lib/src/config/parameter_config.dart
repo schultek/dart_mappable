@@ -11,9 +11,22 @@ abstract class ParameterConfig {
 
   String? get hook => _hookFor(parameter);
 
+  Iterable<Uri>? get imports => _importsFor(parameter);
+
   String? _hookFor(Element element) {
     if (fieldChecker.hasAnnotationOf(element)) {
       return getAnnotationCode(element, MappableField, 'hooks');
+    }
+    return null;
+  }
+
+  Iterable<Uri>? _importsFor(Element element) {
+    if (fieldChecker.hasAnnotationOf(element)) {
+      var hooks = fieldChecker.firstAnnotationOf(element)?.getField('hooks');
+      if (hooks != null && !hooks.isNull) {
+        var uri = hooks.type?.element?.library?.source.uri;
+        return uri != null ? [uri] : null;
+      }
     }
     return null;
   }
@@ -42,6 +55,9 @@ class FieldParameterConfig extends ParameterConfig {
 
   @override
   String? get hook => _hookFor(field) ?? super.hook;
+
+  @override
+  Iterable<Uri>? get imports => _importsFor(field) ?? super.imports;
 
   @override
   String? get _paramKey => _keyFor(field) ?? super._paramKey;

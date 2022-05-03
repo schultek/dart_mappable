@@ -54,8 +54,13 @@ class MappableBuilder implements Builder {
       targets.addElementsFromLibrary(entry.key, entry.value);
     }
 
-    var classMappers =
-        targets.classes.values.map((c) => ClassMapperGenerator(c.config));
+    var classMappers = <ClassMapperGenerator>[];
+
+    for (var target in targets.classes.values) {
+      targets.imports.addAll(target.config.imports);
+      classMappers.add(ClassMapperGenerator(target.config));
+    }
+
     var enumMappers =
         targets.enums.values.map((c) => EnumMapperGenerator(c.config));
     var customMappers = targets.customMappers.values;

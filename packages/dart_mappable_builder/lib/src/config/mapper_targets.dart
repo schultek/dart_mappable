@@ -11,10 +11,7 @@ import 'enum_mapper_target.dart';
 
 class MapperTargets {
   final ImportsBuilder imports;
-  MapperTargets(AssetId inputId)
-      : imports = ImportsBuilder(inputId)
-          ..add(Uri.parse('package:dart_mappable/dart_mappable.dart'))
-          ..add(Uri.parse('package:dart_mappable/internals.dart'));
+  MapperTargets(AssetId inputId) : imports = ImportsBuilder(inputId);
 
   Map<ClassElement, EnumMapperTarget> enums = {};
   Map<ClassElement, ClassMapperTarget> classes = {};
@@ -33,13 +30,13 @@ class MapperTargets {
         }
         var type = element.allSupertypes[mapperIndex].typeArguments[0];
         customMappers[type.element!.name!] = element;
-        imports.addLibrary(library);
-        imports.addLibrary(type.element!.library!);
+        imports.add(library.source.uri);
+        imports.add(type.element!.librarySource!.uri);
       } else if (options.shouldGenerateFor(element) ||
           (!element.isEnum && classChecker.hasAnnotationOf(element)) ||
           (element.isEnum && enumChecker.hasAnnotationOf(element))) {
         addElement(element, options);
-        imports.addLibrary(library);
+        imports.add(library.source.uri);
       }
     }
   }
@@ -52,14 +49,14 @@ class MapperTargets {
       }
 
       enums[element] = EnumMapperTarget(element, options);
-      imports.addLibrary(element.library);
+      imports.add(element.librarySource.uri);
     } else {
       if (classes.containsKey(element)) {
         return;
       }
 
       addClassTarget(ClassMapperTarget(element, options));
-      imports.addLibrary(element.library);
+      imports.add(element.librarySource.uri);
 
       for (var c in element.constructors) {
         if (c.isFactory &&

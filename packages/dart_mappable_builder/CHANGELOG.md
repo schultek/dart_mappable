@@ -1,3 +1,8 @@
+# 1.1.2
+
+- Improved Readme for constructor utilization
+- Fixed missing imports for custom hooks
+
 # 1.1.1
 
 - Updated description

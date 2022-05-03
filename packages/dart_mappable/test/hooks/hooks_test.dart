@@ -2,6 +2,8 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
 import 'hooks_test.mapper.g.dart';
+import 'more_hooks.dart';
+import 'other_hooks.dart';
 
 class PlayerHooks extends MappingHooks {
   const PlayerHooks();
@@ -23,23 +25,12 @@ class PlayerHooks extends MappingHooks {
   }
 }
 
-@MappableClass()
+@MappableClass(hooks: GameHooks())
 class Game {
   @MappableField(hooks: PlayerHooks())
   Player player;
 
   Game(this.player);
-}
-
-class CardPlayerHooks extends MappingHooks {
-  const CardPlayerHooks();
-
-  @override
-  beforeDecode(value) {
-    return value is Map<String, dynamic>
-        ? {'id': value['id'] + '-card'}
-        : value;
-  }
 }
 
 @MappableClass()

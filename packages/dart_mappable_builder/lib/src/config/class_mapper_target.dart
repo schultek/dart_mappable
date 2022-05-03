@@ -51,6 +51,7 @@ class ClassMapperTarget extends MapperTarget {
       superConfig: superTarget?.config,
       subConfigs: [],
       params: analyzeParams(),
+      requiredImports: requiredImports,
     );
     config.superConfig?.subConfigs.add(config);
     return config;
@@ -201,6 +202,15 @@ class ClassMapperTarget extends MapperTarget {
     return annotation?.getField('generateMethods')!.toIntValue() ??
         options.generateMethods ??
         GenerateMethods.all;
+  }
+
+  List<Uri> get requiredImports {
+    var hooks = annotation?.getField('hooks');
+    if (hooks != null && !hooks.isNull) {
+      var uri = hooks.type?.element?.library?.source.uri;
+      return uri != null ? [uri] : [];
+    }
+    return [];
   }
 }
 

@@ -2,6 +2,8 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
 import 'hooks_test.dart';
+import 'more_hooks.dart';
+import 'other_hooks.dart';
 
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
@@ -24,14 +26,14 @@ class GameMapper extends BaseMapper<Game> {
   GameMapper._();
 
   @override Function get decoder => decode;
-  Game decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Game decode(dynamic v) => const GameHooks().decode(v, (v) => checked(v, (Map<String, dynamic> map) => fromMap(map)));
   Game fromMap(Map<String, dynamic> map) => Game(Mapper.i.$get(map, 'player', const PlayerHooks()));
 
   @override Function get encoder => (Game v) => encode(v);
-  dynamic encode(Game v) {
+  dynamic encode(Game v) => const GameHooks().encode<Game>(v, (v) {
     if (v is CardGame) { return CardGameMapper._().encode(v); }
     else { return toMap(v); }
-  }
+  });
   Map<String, dynamic> toMap(Game g) => {'player': Mapper.i.$enc(g.player, 'player', const PlayerHooks())};
 
   @override String stringify(Game self) => 'Game(player: ${Mapper.asString(self.player)})';
@@ -64,11 +66,11 @@ class _GameCopyWithImpl<$R> extends BaseCopyWith<Game, $R> implements GameCopyWi
 class CardGameMapper extends BaseMapper<CardGame> {
   CardGameMapper._();
 
-  @override Function get decoder => decode;
+  @override Function get decoder => (v) => const GameHooks().decode(v, decode);
   CardGame decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   CardGame fromMap(Map<String, dynamic> map) => CardGame(Mapper.i.$get(map, 'player', const ChainedHooks([PlayerHooks(), CardPlayerHooks()])));
 
-  @override Function get encoder => (CardGame v) => encode(v);
+  @override Function get encoder => (CardGame v) => const GameHooks().encode<CardGame>(v, (v) => encode(v));
   dynamic encode(CardGame v) => toMap(v);
   Map<String, dynamic> toMap(CardGame c) => {'player': Mapper.i.$enc(c.player, 'player', const ChainedHooks([PlayerHooks(), CardPlayerHooks()]))};
 
