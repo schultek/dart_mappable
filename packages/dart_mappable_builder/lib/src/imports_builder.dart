@@ -1,5 +1,7 @@
 import 'package:build/build.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as _path;
+
+final path = _path.posix;
 
 class ImportsBuilder {
   final Set<Uri> _imports = {};
@@ -38,6 +40,7 @@ class ImportsBuilder {
         var inputPath = _input.uri
             .replace(pathSegments: _input.uri.pathSegments.skip(1))
             .path;
+
         var relativePath =
             path.relative(libPath, from: path.dirname(inputPath));
 
