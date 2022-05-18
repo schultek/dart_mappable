@@ -1,3 +1,7 @@
+# 1.1.3
+
+- Fixed import paths on windows
+
 # 1.1.2
 
 - Improved Readme for constructor utilization
