@@ -1,7 +1,7 @@
 import 'package:build/build.dart';
-import 'package:path/path.dart' as _path;
+import 'package:path/path.dart' as p;
 
-final path = _path.posix;
+final path = p.posix;
 
 class ImportsBuilder {
   final Set<Uri> _imports = {};

@@ -36,8 +36,8 @@ class StateMapper extends EnumMapper<State> {
     }
   }
 
-  @override  dynamic encode(State value) {
-    switch (value) {
+  @override  dynamic encode(State self) {
+    switch (self) {
       case State.On: return 'on';
       case State.off: return 'off';
       case State.itsCOMPLICATED: return 'itsComplicated';
@@ -63,8 +63,8 @@ class ColorMapper extends EnumMapper<Color> {
     }
   }
 
-  @override  dynamic encode(Color value) {
-    switch (value) {
+  @override  dynamic encode(Color self) {
+    switch (self) {
       case Color.Green: return 'green';
       case Color.BLUE: return 'blue';
       case Color.bloodRED: return 'blood-red';
@@ -90,8 +90,8 @@ class ItemsMapper extends EnumMapper<Items> {
     }
   }
 
-  @override  dynamic encode(Items value) {
-    switch (value) {
+  @override  dynamic encode(Items self) {
+    switch (self) {
       case Items.first: return 0;
       case Items.second: return 1;
       case Items.third: return 2;
@@ -115,8 +115,8 @@ class StatusMapper extends EnumMapper<Status> {
     }
   }
 
-  @override  dynamic encode(Status value) {
-    switch (value) {
+  @override  dynamic encode(Status self) {
+    switch (self) {
       case Status.zero: return 0;
       case Status.success: return 200;
       case Status.error: return 'error';
@@ -134,7 +134,7 @@ extension StatusMapperExtension on Status {
 class Mapper {
   Mapper._();
 
-  static late MapperContainer i = MapperContainer(_mappers);
+  static MapperContainer i = MapperContainer(_mappers);
 
   static T fromValue<T>(dynamic value) => i.fromValue<T>(value);
   static T fromMap<T>(Map<String, dynamic> map) => i.fromMap<T>(map);

@@ -1,11 +1,10 @@
+import 'list_copy_with.dart' show ItemCopyWith;
 import 'mapper_utils.dart';
-
-typedef _ItemCopyWith<$C, $V, $R> = $C Function($V a, Then<$V, $R> b);
 
 /// Interface used for [Map]s in chained copyWith methods
 /// All methods return a new modified map and do not modify the original map
 abstract class MapCopyWith<$R, $K, $V, $C> {
-  factory MapCopyWith(Map<$K, $V> value, _ItemCopyWith<$C, $V, $R> item,
+  factory MapCopyWith(Map<$K, $V> value, ItemCopyWith<$C, $V, $R> item,
       Then<Map<$K, $V>, $R> then) = _MapCopyWith;
 
   /// Access the copyWith interface for the value of [key]
@@ -31,11 +30,12 @@ class _MapCopyWith<$R, $K, $V, $C> extends BaseCopyWith<Map<$K, $V>, $R>
     implements MapCopyWith<$R, $K, $V, $C> {
   _MapCopyWith(Map<$K, $V> value, this._item, Then<Map<$K, $V>, $R> then)
       : super(value, then);
-  final _ItemCopyWith<$C, $V, $R> _item;
+  final ItemCopyWith<$C, $V, $R> _item;
 
   @override
-  $C? get($K key) =>
-      $value[key] != null ? _item($value[key]!, (v) => replace(key, v)) : null;
+  $C? get($K key) => $value[key] is $V
+      ? _item($value[key] as $V, (v) => replace(key, v))
+      : null;
 
   @override
   $R put($K key, $V v) => putAll({key: v});

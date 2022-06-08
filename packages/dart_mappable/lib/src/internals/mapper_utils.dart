@@ -103,7 +103,7 @@ class BaseCopyWith<$T, $R> {
   final $T $value;
   final Then<$T, $R> $then;
 
-  T or<T>(Object? _v, T v) => _v == $none ? v : _v as T;
+  T or<T>(Object? v, T t) => v == $none ? t : v as T;
 
   /// Applies any transformer function on the value
   $R apply($T Function($T) transform) => $then(transform($value));

@@ -24,7 +24,7 @@ class CopyWithGenerator {
       ClassMapperConfig config, GetConfig getConfig) {
     if (config.hasCallableConstructor &&
         config.shouldGenerate(GenerateMethods.copy)) {
-      return '\n\n' + _generateCopyWithClasses(config, getConfig);
+      return '\n\n${_generateCopyWithClasses(config, getConfig)}';
     } else {
       return '';
     }

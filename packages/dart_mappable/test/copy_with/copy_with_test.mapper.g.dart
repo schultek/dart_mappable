@@ -261,7 +261,7 @@ class _BrandListCopyWithImpl<$R> extends BaseCopyWith<BrandList, $R> implements 
 class Mapper {
   Mapper._();
 
-  static late MapperContainer i = MapperContainer(_mappers);
+  static MapperContainer i = MapperContainer(_mappers);
 
   static T fromValue<T>(dynamic value) => i.fromValue<T>(value);
   static T fromMap<T>(Map<String, dynamic> map) => i.fromMap<T>(map);

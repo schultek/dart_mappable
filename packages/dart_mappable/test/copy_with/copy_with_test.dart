@@ -70,7 +70,7 @@ void main() {
       expect(p2.car.brand, equals(null));
 
       Person p3 =
-          person.copyWith.car.apply((c) => Car(c.brand, c.model + '_xx'));
+          person.copyWith.car.apply((c) => Car(c.brand, '${c.model}_xx'));
       expect(p3.car.brand, equals(person.car.brand));
       expect(p3.car.model, equals('A8_xx'));
     });

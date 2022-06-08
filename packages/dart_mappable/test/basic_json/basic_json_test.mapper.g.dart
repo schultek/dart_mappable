@@ -107,8 +107,8 @@ class BrandMapper extends EnumMapper<Brand> {
     }
   }
 
-  @override  dynamic encode(Brand value) {
-    switch (value) {
+  @override  dynamic encode(Brand self) {
+    switch (self) {
       case Brand.Toyota: return 'toyota';
       case Brand.Audi: return 'audi';
       case Brand.BMW: return 'bmw';
@@ -128,7 +128,7 @@ extension BrandMapperExtension on Brand {
 class Mapper {
   Mapper._();
 
-  static late MapperContainer i = MapperContainer(_mappers);
+  static MapperContainer i = MapperContainer(_mappers);
 
   static T fromValue<T>(dynamic value) => i.fromValue<T>(value);
   static T fromMap<T>(Map<String, dynamic> map) => i.fromMap<T>(map);

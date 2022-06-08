@@ -1,13 +1,13 @@
 import 'mapper_utils.dart';
 
-typedef _ItemCopyWith<$C, $E, $R> = $C Function($E a, Then<$E, $R> b);
+typedef ItemCopyWith<$C, $E, $R> = $C Function($E a, Then<$E, $R> b);
 
 /// Interface used for [List]s in chained copyWith methods
 /// All methods return a new modified list and do not modify the original list
 abstract class ListCopyWith<$R, $E, $C> {
   factory ListCopyWith(
     List<$E> value,
-    _ItemCopyWith<$C, $E, $R> item,
+    ItemCopyWith<$C, $E, $R> item,
     Then<List<$E>, $R> then,
   ) = _ListCopyWith;
 
@@ -55,7 +55,7 @@ class _ListCopyWith<$R, $E, $C> extends BaseCopyWith<List<$E>, $R>
     implements ListCopyWith<$R, $E, $C> {
   _ListCopyWith(List<$E> value, this._item, Then<List<$E>, $R> then)
       : super(value, then);
-  final _ItemCopyWith<$C, $E, $R> _item;
+  final ItemCopyWith<$C, $E, $R> _item;
 
   @override
   $C at(int index) => _item($value[index], (v) => replace(index, v));

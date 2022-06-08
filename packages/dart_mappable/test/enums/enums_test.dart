@@ -28,9 +28,9 @@ void main() {
   group('Enum Mappers', () {
     test('Should encode enums', () {
       expect(Mapper.toValue(State.On), equals('on'));
-      expect(State.itsCOMPLICATED.toStringValue(), equals('itsComplicated'));
+      expect(State.itsCOMPLICATED.toValue(), equals('itsComplicated'));
       expect(Mapper.toValue(Color.BLUE), equals('blue'));
-      expect(Color.bloodRED.toStringValue(), equals('blood-red'));
+      expect(Color.bloodRED.toValue(), equals('blood-red'));
     });
 
     test('Should decode enums', () {
