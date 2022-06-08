@@ -78,7 +78,7 @@ class ClassMapperConfig {
           'break your code, but make lead to unexpected behaviour when '
           'serializing this class. Also \'.copyWith()\' won\'t work on these '
           'parameters.\n\nThe following problematic parameters were detected:\n'
-          '${unresolved.map((p) => '- ${p.parameter.name}: ${p.message}').join('\n\n')}\n\n'
+          '${unresolved.map((p) => '- ${p.parameter.name}: ${p.message}').join('\n')}\n\n'
           'Please make sure every constructor parameter can be resolved to a '
           'field or getter.\nIf you think this is a bug with dart_mappable '
           'and the listed parameters should be resolved correctly, please file '
