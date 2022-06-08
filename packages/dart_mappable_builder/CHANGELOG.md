@@ -1,3 +1,7 @@
+# 1.2.0
+
+- Added support for `2.17` super parameters
+
 # 1.1.3
 
 - Fixed import paths on windows
