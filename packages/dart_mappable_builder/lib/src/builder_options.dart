@@ -13,14 +13,16 @@ class MappableOptions {
   final bool? ignoreNull;
   final String? discriminatorKey;
   final int? generateMethods;
+  final bool ignoreAnnotated;
 
   MappableOptions({
     required this.types,
-    this.caseStyle,
-    this.enumCaseStyle,
-    this.ignoreNull,
-    this.discriminatorKey,
-    this.generateMethods,
+    required this.caseStyle,
+    required this.enumCaseStyle,
+    required this.ignoreNull,
+    required this.discriminatorKey,
+    required this.generateMethods,
+    required this.ignoreAnnotated,
   });
 
   MappableOptions.parse(Map options)
@@ -31,7 +33,8 @@ class MappableOptions {
         ignoreNull = options['ignoreNull'] as bool?,
         discriminatorKey = options['discriminatorKey'] as String?,
         generateMethods =
-            GenerateMethods.parse(toList(options['generateMethods']));
+            GenerateMethods.parse(toList(options['generateMethods'])),
+        ignoreAnnotated = false;
 
   bool shouldGenerateFor(ClassElement element) {
     return types.shouldGenerateFor(element);
@@ -46,6 +49,7 @@ class MappableOptions {
       ignoreNull: options.ignoreNull ?? ignoreNull,
       discriminatorKey: options.discriminatorKey ?? discriminatorKey,
       generateMethods: options.generateMethods ?? generateMethods,
+      ignoreAnnotated: options.ignoreAnnotated || ignoreAnnotated,
     );
   }
 
@@ -57,6 +61,7 @@ class MappableOptions {
       ignoreNull: options.ignoreNull ?? ignoreNull,
       discriminatorKey: options.discriminatorKey ?? discriminatorKey,
       generateMethods: options.generateMethods ?? generateMethods,
+      ignoreAnnotated: options.ignoreAnnotated || ignoreAnnotated,
     );
   }
 
@@ -68,6 +73,8 @@ class MappableOptions {
       ignoreNull: object.getField('ignoreNull')?.toBoolValue(),
       discriminatorKey: object.getField('discriminatorKey')?.toStringValue(),
       generateMethods: object.getField('generateMethods')?.toIntValue(),
+      ignoreAnnotated:
+          object.getField('ignoreAnnotated')?.toBoolValue() ?? false,
     );
   }
 }
