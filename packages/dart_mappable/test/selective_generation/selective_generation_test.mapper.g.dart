@@ -1,8 +1,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
-import 'other/models.dart';
-import 'selective_generation_test.dart';
+import 'other/models.dart' as p1;
+import 'selective_generation_test.dart' as p0;
 
 
 // === ALL STATICALLY REGISTERED MAPPERS ===

@@ -1,8 +1,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
-import 'lib_mapping_test.dart';
-import 'other/models.dart';
+import 'lib_mapping_test.dart' as p0;
+import 'other/models.dart' as p1;
 
 
 // === ALL STATICALLY REGISTERED MAPPERS ===

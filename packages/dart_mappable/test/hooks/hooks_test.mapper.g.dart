@@ -1,9 +1,9 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
-import 'hooks_test.dart';
-import 'more_hooks.dart';
-import 'other_hooks.dart';
+import 'hooks_test.dart' as p0;
+import 'more_hooks.dart' as p1;
+import 'other_hooks.dart' as p2;
 
 
 // === ALL STATICALLY REGISTERED MAPPERS ===

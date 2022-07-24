@@ -16,6 +16,3 @@ dev_dependencies:
   dart_mappable_builder: ^1.2.0
   lints: ^2.0.0
   test: ^1.20.1
-dependency_overrides:
-  dart_mappable_builder:
-    path: ../dart_mappable_builder

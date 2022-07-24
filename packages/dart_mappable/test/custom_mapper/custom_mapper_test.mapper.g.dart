@@ -3,7 +3,7 @@ import 'dart:core';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
-import 'custom_mapper_test.dart';
+import 'custom_mapper_test.dart' as p0;
 
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
@@ -13,9 +13,9 @@ var _mappers = <BaseMapper>{
   GenericBoxMapper._(),
   // enum mappers
   // custom mappers
-  PrivateClassMapper(),
-  CustomGenericMapper(),
-  UriMapper(),
+  p0.PrivateClassMapper(),
+  p0.CustomGenericMapper(),
+  p0.UriMapper(),
 };
 
 

@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
-import 'generics_test.dart';
+import 'generics_test.dart' as p0;
 
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
