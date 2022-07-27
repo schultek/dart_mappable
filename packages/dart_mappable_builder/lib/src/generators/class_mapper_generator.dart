@@ -12,13 +12,13 @@ class ClassMapperGenerator {
   ImportsBuilder imports;
   ClassMapperGenerator(this.config, this.imports);
 
-  String generate(GetConfig getConfig) {
+  Future<String> generate(GetConfig getConfig) async {
     var classSnippets = [
-      DecoderGenerator().generateDecoderMethods(config),
+      await DecoderGenerator(config, imports).generateDecoderMethods(),
       EncoderGenerator().generateEncoderMethods(config),
       ToStringGenerator().generateToStringMethods(config),
       EqualsGenerator().generateEqualsMethods(config),
-      DecoderGenerator().generateTypeFactory(config),
+      DecoderGenerator(config, imports).generateTypeFactory(),
     ];
 
     var copyGen = CopyWithGenerator(config, imports);
@@ -37,7 +37,7 @@ class ClassMapperGenerator {
         '  ${config.mapperName}._();\n'
         '${classSnippets.join()}'
         '}\n\n'
-        'extension ${config.mapperName}Extension ${config.typeParamsDeclaration} on ${config.prefixedClassName}${config.typeParams} {\n'
+        'extension ${config.mapperName}Extension${config.typeParamsDeclaration} on ${config.prefixedClassName}${config.typeParams} {\n'
         '${extensionSnippets.join()}'
         '}'
         '${additionSnippets.join()}';

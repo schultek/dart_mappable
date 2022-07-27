@@ -109,7 +109,7 @@ class MapperTargets {
 abstract class MapperTarget {
   ClassElement element;
   MappableOptions options;
-  String? prefix;
+  int? prefix;
 
   MapperTarget(this.element, this.options, this.prefix);
 

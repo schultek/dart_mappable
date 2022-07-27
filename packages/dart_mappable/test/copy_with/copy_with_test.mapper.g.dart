@@ -41,7 +41,7 @@ class PersonMapper extends BaseMapper<p0.Person> {
   @override Function get typeFactory => (f) => f<p0.Person>();
 }
 
-extension PersonMapperExtension  on p0.Person {
+extension PersonMapperExtension on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   PersonCopyWith<p0.Person> get copyWith => PersonCopyWith(this, $identity);
@@ -79,7 +79,7 @@ class CarMapper extends BaseMapper<p0.Car> {
   @override Function get typeFactory => (f) => f<p0.Car>();
 }
 
-extension CarMapperExtension  on p0.Car {
+extension CarMapperExtension on p0.Car {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   CarCopyWith<p0.Car> get copyWith => CarCopyWith(this, $identity);
@@ -117,7 +117,7 @@ class BrandMapper extends BaseMapper<p0.Brand> {
   @override Function get typeFactory => (f) => f<p0.Brand>();
 }
 
-extension BrandMapperExtension  on p0.Brand {
+extension BrandMapperExtension on p0.Brand {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   BrandCopyWith<p0.Brand> get copyWith => BrandCopyWith(this, $identity);
@@ -153,7 +153,7 @@ class DealershipMapper extends BaseMapper<p0.Dealership> {
   @override Function get typeFactory => (f) => f<p0.Dealership>();
 }
 
-extension DealershipMapperExtension  on p0.Dealership {
+extension DealershipMapperExtension on p0.Dealership {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   DealershipCopyWith<p0.Dealership> get copyWith => DealershipCopyWith(this, $identity);
@@ -196,7 +196,7 @@ class ItemListMapper extends BaseMapper<p0.ItemList> {
   @override Function get typeFactory => <T>(f) => f<p0.ItemList<T>>();
 }
 
-extension ItemListMapperExtension <T> on p0.ItemList<T> {
+extension ItemListMapperExtension<T> on p0.ItemList<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   ItemListCopyWith<p0.ItemList<T>, T> get copyWith => ItemListCopyWith(this, $identity);
@@ -232,7 +232,7 @@ class BrandListMapper extends BaseMapper<p0.BrandList> {
   @override Function get typeFactory => (f) => f<p0.BrandList>();
 }
 
-extension BrandListMapperExtension  on p0.BrandList {
+extension BrandListMapperExtension on p0.BrandList {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   BrandListCopyWith<p0.BrandList> get copyWith => BrandListCopyWith(this, $identity);

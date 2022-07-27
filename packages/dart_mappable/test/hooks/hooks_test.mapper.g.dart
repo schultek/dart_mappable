@@ -45,7 +45,7 @@ class GameMapper extends BaseMapper<p0.Game> {
   @override Function get typeFactory => (f) => f<p0.Game>();
 }
 
-extension GameMapperExtension  on p0.Game {
+extension GameMapperExtension on p0.Game {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   GameCopyWith<p0.Game> get copyWith => GameCopyWith(this, $identity);
@@ -83,7 +83,7 @@ class CardGameMapper extends BaseMapper<p0.CardGame> {
   @override Function get typeFactory => (f) => f<p0.CardGame>();
 }
 
-extension CardGameMapperExtension  on p0.CardGame {
+extension CardGameMapperExtension on p0.CardGame {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   CardGameCopyWith<p0.CardGame> get copyWith => CardGameCopyWith(this, $identity);
@@ -121,7 +121,7 @@ class PlayerMapper extends BaseMapper<p0.Player> {
   @override Function get typeFactory => (f) => f<p0.Player>();
 }
 
-extension PlayerMapperExtension  on p0.Player {
+extension PlayerMapperExtension on p0.Player {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   PlayerCopyWith<p0.Player> get copyWith => PlayerCopyWith(this, $identity);
@@ -157,7 +157,7 @@ class ClothesMapper extends BaseMapper<p0.Clothes> {
   @override Function get typeFactory => (f) => f<p0.Clothes>();
 }
 
-extension ClothesMapperExtension  on p0.Clothes {
+extension ClothesMapperExtension on p0.Clothes {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   ClothesCopyWith<p0.Clothes> get copyWith => ClothesCopyWith(this, $identity);
@@ -193,7 +193,7 @@ class ComponentMapper extends BaseMapper<p0.Component> {
   @override Function get typeFactory => (f) => f<p0.Component>();
 }
 
-extension ComponentMapperExtension  on p0.Component {
+extension ComponentMapperExtension on p0.Component {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   ComponentCopyWith<p0.Component> get copyWith => ComponentCopyWith(this, $identity);

@@ -6,27 +6,27 @@ import 'package:path/path.dart' as p;
 final path = p.posix;
 
 class ImportsBuilder {
-  final Map<Uri, String> _imports = {};
+  final Map<Uri, int?> _imports = {};
   final AssetId _input;
 
   ImportsBuilder(this._input) {
-    _imports[Uri.parse('package:dart_mappable/dart_mappable.dart')] = '';
-    _imports[Uri.parse('package:dart_mappable/internals.dart')] = '';
+    _imports[Uri.parse('package:dart_mappable/dart_mappable.dart')] = null;
+    _imports[Uri.parse('package:dart_mappable/internals.dart')] = null;
   }
 
-  String _nextPrefix() {
-    var l = _imports.values.where((s) => s.isNotEmpty).length;
-    return 'p$l';
+  int _nextPrefix() {
+    var l = _imports.values.where((s) => s != null).length;
+    return l;
   }
 
-  String? add(Uri? import) {
+  int? add(Uri? import) {
     if (import == null) return null;
     if (import.scheme == 'package' &&
         import.pathSegments.first == 'dart_mappable') {
       return null;
     }
     if (import.scheme == 'dart') {
-      _imports[import] = '';
+      _imports[import] = null;
       return null;
     }
     if (_imports.containsKey(import)) {
@@ -38,7 +38,7 @@ class ImportsBuilder {
 
   String write() {
     List<String> sdk = [], package = [], relative = [];
-    var prefixes = <String, String>{};
+    var prefixes = <String, int?>{};
 
     for (var import in _imports.keys) {
       if (import.isScheme('asset')) {
@@ -46,7 +46,7 @@ class ImportsBuilder {
             path.relative(import.path, from: path.dirname(_input.uri.path));
 
         relative.add(relativePath);
-        prefixes[relativePath] = _imports[import]!;
+        prefixes[relativePath] = _imports[import];
       } else if (import.isScheme('package') &&
           import.pathSegments.first == _input.package &&
           _input.pathSegments.first == 'lib') {
@@ -61,16 +61,16 @@ class ImportsBuilder {
             path.relative(libPath, from: path.dirname(inputPath));
 
         relative.add(relativePath);
-        prefixes[relativePath] = _imports[import]!;
+        prefixes[relativePath] = _imports[import];
       } else if (import.scheme == 'dart') {
         sdk.add(import.toString());
-        prefixes[import.toString()] = _imports[import]!;
+        prefixes[import.toString()] = _imports[import];
       } else if (import.scheme == 'package') {
         package.add(import.toString());
-        prefixes[import.toString()] = _imports[import]!;
+        prefixes[import.toString()] = _imports[import];
       } else {
         relative.add(import.toString()); // TODO: is this correct?
-        prefixes[import.toString()] = _imports[import]!;
+        prefixes[import.toString()] = _imports[import];
       }
     }
 
@@ -79,7 +79,7 @@ class ImportsBuilder {
     relative.sort();
 
     String joined(List<String> s) => s.isNotEmpty
-        ? '${s.map((s) => "import '$s'${prefixes[s]!.isNotEmpty ? ' as ${prefixes[s]}' : ''};").join('\n')}\n\n'
+        ? '${s.map((s) => "import '$s'${prefixes[s] != null ? ' as p${prefixes[s]}' : ''};").join('\n')}\n\n'
         : '';
 
     return joined(sdk) + joined(package) + joined(relative);
@@ -102,6 +102,6 @@ class ImportsBuilder {
     }
 
     var prefix = add(t.element?.librarySource?.uri);
-    return (prefix != null ? '$prefix.' : '') + type;
+    return (prefix != null ? 'p$prefix.' : '') + type;
   }
 }

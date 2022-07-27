@@ -2,23 +2,30 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/class_mapper_config.dart';
+import '../imports_builder.dart';
 import '../utils.dart';
 
 class DecoderGenerator {
-  String generateDecoderMethods(ClassMapperConfig config) {
+  final ClassMapperConfig config;
+  final ImportsBuilder imports;
+
+  DecoderGenerator(this.config, this.imports);
+
+  Future<String> generateDecoderMethods() async {
     if (config.shouldGenerate(GenerateMethods.decode)) {
       return '\n'
           '  @override Function get decoder => ${_generateDecoder(config)};\n'
-          '  ${config.prefixedClassName}${config.typeParams} decode${config.typeParamsDeclaration}(dynamic v) => ${_generateFromMapCall(config)};\n'
-          '  ${config.prefixedClassName}${config.typeParams} fromMap${config.typeParamsDeclaration}(Map<String, dynamic> map) => ${_generateFromMap(config)}\n';
+          '  ${config.prefixedClassName}${config.typeParams} decode${config.typeParamsDeclaration}(dynamic v) => ${_generateFromMapCall()};\n'
+          '  ${config.prefixedClassName}${config.typeParams} fromMap${config.typeParamsDeclaration}(Map<String, dynamic> map) => ${await _generateFromMap()}\n';
     } else {
       return '';
     }
   }
 
-  String generateTypeFactory(ClassMapperConfig config) {
+  String generateTypeFactory() {
     if (config.shouldGenerate(GenerateMethods.decode)) {
       return '\n'
+          '${config.className != config.uniqueClassName ? '  @override String get id => \'${config.uniqueClassName}\';\n' : ''}'
           '  @override Function get typeFactory => ${config.typeParamsDeclaration}(f) => f<${config.prefixedClassName}${config.typeParams}>();\n';
     } else {
       return '';
@@ -38,7 +45,7 @@ class DecoderGenerator {
     return wrapped;
   }
 
-  String _generateFromMapCall(ClassMapperConfig config) {
+  String _generateFromMapCall() {
     var call = '';
 
     if (config.subConfigs.isEmpty || config.discriminatorKey == null) {
@@ -46,7 +53,7 @@ class DecoderGenerator {
     } else {
       call = '{\n'
           "    switch(map['${config.discriminatorKey}']) {\n"
-          '      ${_generateTypeCases(config).join('\n      ')}\n'
+          '      ${_generateTypeCases().join('\n      ')}\n'
           '    }\n'
           '  }';
     }
@@ -58,7 +65,7 @@ class DecoderGenerator {
     return call;
   }
 
-  List<String> _generateTypeCases(ClassMapperConfig config) {
+  List<String> _generateTypeCases() {
     var cases = _getDiscriminatorCases(config);
 
     String? defaultCase;
@@ -122,7 +129,7 @@ class DecoderGenerator {
     return cases;
   }
 
-  String _generateFromMap(ClassMapperConfig config) {
+  Future<String> _generateFromMap() async {
     if (!config.hasCallableConstructor) {
       if (config.subConfigs.isNotEmpty && config.discriminatorKey != null) {
         return "throw MapperException.missingSubclass('${config.className}', '${config.discriminatorKey}', '\${map['${config.discriminatorKey}']}');";
@@ -130,11 +137,11 @@ class DecoderGenerator {
         return "throw MapperException.missingConstructor('${config.className}');";
       }
     } else {
-      return '${config.prefixedClassName}${config.constructor!.name != '' ? '.${config.constructor!.name}' : ''}(${_generateConstructorParams(config)});';
+      return '${config.prefixedClassName}${config.constructor!.name != '' ? '.${config.constructor!.name}' : ''}(${await _generateConstructorParams()});';
     }
   }
 
-  String _generateConstructorParams(ClassMapperConfig config) {
+  Future<String> _generateConstructorParams() async {
     List<String> params = [];
     for (var param in config.params) {
       var str = '';
@@ -159,7 +166,7 @@ class DecoderGenerator {
       str += "(${args.join(', ')})";
 
       if (p.hasDefaultValue && p.defaultValueCode != 'null') {
-        str += ' ?? ${p.defaultValueCode}';
+        str += ' ?? ${await getPrefixedDefaultValue(p, imports)}';
       } else {
         var node = p.getNode();
         if (node is DefaultFormalParameter &&

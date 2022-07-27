@@ -37,7 +37,7 @@ class ItemsMapper extends BaseMapper<p0.Items> {
   @override Function get typeFactory => (f) => f<p0.Items>();
 }
 
-extension ItemsMapperExtension  on p0.Items {
+extension ItemsMapperExtension on p0.Items {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   ItemsCopyWith<p0.Items> get copyWith => ItemsCopyWith(this, $identity);
@@ -77,7 +77,7 @@ class ItemMapper extends BaseMapper<p0.Item> {
   @override Function get typeFactory => (f) => f<p0.Item>();
 }
 
-extension ItemMapperExtension  on p0.Item {
+extension ItemMapperExtension on p0.Item {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   ItemCopyWith<p0.Item> get copyWith => ItemCopyWith(this, $identity);

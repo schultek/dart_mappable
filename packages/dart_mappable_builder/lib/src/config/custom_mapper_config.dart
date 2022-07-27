@@ -3,7 +3,7 @@ import 'package:analyzer/dart/element/element.dart';
 class CustomMapperConfig {
   final ClassElement element;
 
-  final String? prefix;
+  final int? prefix;
 
   CustomMapperConfig({
     required this.element,
@@ -11,5 +11,5 @@ class CustomMapperConfig {
   });
 
   get prefixedMapperName =>
-      '${prefix != null ? '$prefix.' : ''}${element.name}';
+      '${prefix != null ? 'p$prefix.' : ''}${element.name}';
 }

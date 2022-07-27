@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../builder_options.dart';
@@ -14,8 +15,7 @@ class ClassMapperTarget extends MapperTarget {
   List<ClassMapperTarget> subTargets = [];
   ClassMapperTarget? superTarget;
 
-  ClassMapperTarget(
-      ClassElement element, MappableOptions options, String? prefix)
+  ClassMapperTarget(ClassElement element, MappableOptions options, int? prefix)
       : super(element, options, prefix);
 
   @override
@@ -212,7 +212,7 @@ class ClassMapperTarget extends MapperTarget {
         var prefix = imports.add(uri);
 
         if (prefix != null) {
-          hook = '$prefix.$hook';
+          hook = 'p$prefix.$hook';
         }
       }
       return hook;
@@ -247,7 +247,7 @@ class FactoryConstructorMapperTarget extends ClassMapperTarget {
   ConstructorElement factoryConstructor;
 
   FactoryConstructorMapperTarget(
-      this.factoryConstructor, MappableOptions options, String? prefix)
+      this.factoryConstructor, MappableOptions options, int? prefix)
       : super(factoryConstructor.redirectedConstructor!.returnType.element,
             options, prefix);
 

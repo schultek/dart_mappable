@@ -38,7 +38,7 @@ class CopyWithGenerator {
         ? ', ${config.element.typeParameters.map((p) => p.name).join(', ')}'
         : '';
 
-    return '${config.className}CopyWith<${config.prefixedClassName}${config.typeParams}$classTypeParams> get copyWith => ${config.className}CopyWith(this, \$identity);';
+    return '${config.uniqueClassName}CopyWith<${config.prefixedClassName}${config.typeParams}$classTypeParams> get copyWith => ${config.uniqueClassName}CopyWith(this, \$identity);';
   }
 
   String _generateCopyWithClasses(GetConfig getConfig) {
@@ -51,8 +51,8 @@ class CopyWithGenerator {
     var snippets = <String>[];
 
     snippets.add(''
-        'abstract class ${config.className}CopyWith<\$R$classTypeParamsDef> {\n'
-        '  factory ${config.className}CopyWith(${config.prefixedClassName}${config.typeParams} value, Then<${config.prefixedClassName}${config.typeParams}, \$R> then) = _${config.className}CopyWithImpl<\$R$classTypeParams>;\n');
+        'abstract class ${config.uniqueClassName}CopyWith<\$R$classTypeParamsDef> {\n'
+        '  factory ${config.uniqueClassName}CopyWith(${config.prefixedClassName}${config.typeParams} value, Then<${config.prefixedClassName}${config.typeParams}, \$R> then) = _${config.uniqueClassName}CopyWithImpl<\$R$classTypeParams>;\n');
 
     var copyParams = <ParameterConfig, ClassMapperConfig?>{};
 
@@ -92,7 +92,7 @@ class CopyWithGenerator {
               .join()
           : '';
 
-      var copyWithName = '${classConfig.className}CopyWith';
+      var copyWithName = '${classConfig.uniqueClassName}CopyWith';
 
       if (p.type.isDartCoreList) {
         var typeArg = (p.type as InterfaceType).typeArguments.first;
@@ -124,8 +124,8 @@ class CopyWithGenerator {
     snippets.add('  \$R call(${_generateCopyWithParams()});\n'
         '  \$R apply(${config.prefixedClassName}${config.typeParams} Function(${config.prefixedClassName}${config.typeParams}) transform);\n'
         '}\n\n'
-        'class _${config.className}CopyWithImpl<\$R$classTypeParamsDef> extends BaseCopyWith<${config.prefixedClassName}${config.typeParams}, \$R> implements ${config.className}CopyWith<\$R$classTypeParams> {\n'
-        '  _${config.className}CopyWithImpl(${config.prefixedClassName}${config.typeParams} value, Then<${config.prefixedClassName}${config.typeParams}, \$R> then) : super(value, then);\n'
+        'class _${config.uniqueClassName}CopyWithImpl<\$R$classTypeParamsDef> extends BaseCopyWith<${config.prefixedClassName}${config.typeParams}, \$R> implements ${config.uniqueClassName}CopyWith<\$R$classTypeParams> {\n'
+        '  _${config.uniqueClassName}CopyWithImpl(${config.prefixedClassName}${config.typeParams} value, Then<${config.prefixedClassName}${config.typeParams}, \$R> then) : super(value, then);\n'
         '\n');
 
     for (var param in copyParams.keys) {
@@ -139,7 +139,7 @@ class CopyWithGenerator {
               .map((t) => ', ${imports.prefixedType(t)}')
               .join()
           : '';
-      var copyWithName = '${classConfig.className}CopyWith';
+      var copyWithName = '${classConfig.uniqueClassName}CopyWith';
       var params = ', (v) => call(${p.name}: v)';
 
       if (p.type.isDartCoreList) {

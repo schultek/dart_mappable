@@ -31,6 +31,7 @@ abstract class MapperContainer {
 
 class _MapperContainerImpl implements MapperContainer, TypeProvider {
   final Map<String, BaseMapper> _mappers = {};
+  final Map<Type, String> _typeIds = {};
 
   _MapperContainerImpl(Set<BaseMapper> mappers) {
     TypePlus.register(this);
@@ -73,7 +74,7 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
 
   @override
   String idOf(Type type) {
-    return type.name; // TODO support non-unique names
+    return _typeIds[type] ?? type.name;
   }
 
   @override
@@ -223,6 +224,7 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
 
   @override
   void useAll(List<BaseMapper> mappers) {
+    _typeIds.addEntries(mappers.map((m) => MapEntry(m.type, m.id)));
     _mappers.addEntries(mappers.map((m) {
       return MapEntry(TypeRegistry.instance.idOf(m.type)!, m);
     }));

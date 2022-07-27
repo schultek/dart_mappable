@@ -121,7 +121,7 @@ String? _hookFor(Element element, ImportsBuilder imports) {
         var prefix = imports.add(uri);
 
         if (prefix != null) {
-          hook = '$prefix.$hook';
+          hook = 'p$prefix.$hook';
         }
       }
     }

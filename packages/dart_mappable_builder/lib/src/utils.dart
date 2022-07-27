@@ -1,11 +1,15 @@
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:source_gen/source_gen.dart';
+
+import 'imports_builder.dart';
 
 const enumChecker = TypeChecker.fromRuntime(MappableEnum);
 const valueChecker = TypeChecker.fromRuntime(MappableValue);
@@ -69,6 +73,55 @@ String? getAnnotationCode(
   return null;
 }
 
+Future<String> getPrefixedDefaultValue(
+    ParameterElement p, ImportsBuilder imports) async {
+  var result = await p.session?.getResolvedLibraryByElement(p.library!);
+
+  if (result is ResolvedLibraryResult) {
+    var node = result.getElementDeclaration(p)?.node;
+
+    if (node is DefaultFormalParameter) {
+      var visitor = PrefixVisitor(imports);
+      node.visitChildren(visitor);
+
+      var str = node.defaultValue!.toSource();
+
+      for (var e
+          in visitor.prefixes.keys.cast<num>().sortedBy((i) => i).reversed) {
+        var offset = e - node.defaultValue!.offset as int;
+
+        str = str.substring(0, offset) +
+            'p${visitor.prefixes[e]}.' +
+            str.substring(offset);
+      }
+
+      return str;
+    }
+  }
+
+  return p.defaultValueCode!;
+}
+
+class PrefixVisitor extends RecursiveAstVisitor {
+  final ImportsBuilder imports;
+  Map<int, int?> prefixes = {};
+
+  PrefixVisitor(this.imports);
+
+  @override
+  visitSimpleIdentifier(SimpleIdentifier node) {
+    if (node.staticElement is ClassElement) {
+      prefixes[node.offset] =
+          imports.add(node.staticElement!.librarySource?.uri);
+    } else if (node.staticElement is PropertyAccessorElement) {
+      prefixes[node.offset] =
+          imports.add(node.staticElement!.librarySource?.uri);
+    }
+
+    return super.visitSimpleIdentifier(node);
+  }
+}
+
 Map<String, T> toMap<T>(dynamic value, T Function(Map m) fn) {
   if (value is Map) {
     return value.map((k, dynamic v) => MapEntry(k as String, fn(v as Map)));
@@ -111,8 +164,4 @@ TextTransform? textTransformFromAnnotation(DartObject obj) {
 
 extension NullableType on DartType {
   bool get isNullable => nullabilitySuffix == NullabilitySuffix.question;
-}
-
-extension IterableExt<T> on Iterable<T> {
-  T? get firstOrNull => isEmpty ? null : first;
 }

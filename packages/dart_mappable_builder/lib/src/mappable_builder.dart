@@ -65,10 +65,9 @@ class MappableBuilder implements Builder {
         targets.enums.values.map((c) => EnumMapperGenerator(c.config));
     var customMappers = targets.customMappers.values;
 
-    var genClasses = classMappers
-        .map((om) =>
-            om.generate((e) => targets.classes[e]?.getConfig(targets.imports)))
-        .join('\n\n');
+    var genClasses = await Future.wait(classMappers.map((om) =>
+            om.generate((e) => targets.classes[e]?.getConfig(targets.imports))))
+        .then((l) => l.join('\n\n'));
 
     return ''
         '${targets.imports.write()}\n'

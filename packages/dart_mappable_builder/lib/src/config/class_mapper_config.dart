@@ -21,7 +21,7 @@ class ClassMapperConfig {
   final List<ParameterConfig> params;
   final String typeParamsDeclaration;
 
-  final String? prefix;
+  final int? prefix;
 
   ClassMapperConfig({
     required this.element,
@@ -43,8 +43,11 @@ class ClassMapperConfig {
 
   String get className => element.name;
   String get prefixedClassName =>
-      '${prefix != null ? '$prefix.' : ''}$className';
-  String get mapperName => '${className}Mapper';
+      '${prefix != null ? 'p$prefix.' : ''}$className';
+  String get uniqueClassName =>
+      '$className${prefix != null && prefix != 0 ? '$prefix' : ''}';
+  String get mapperName =>
+      '$className${prefix != null && prefix != 0 ? prefix : ''}Mapper';
 
   Iterable<FieldElement> get allPublicFields sync* {
     yield* superConfig?.allPublicFields ?? [];

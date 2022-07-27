@@ -53,7 +53,7 @@ class AnimalMapper extends BaseMapper<p0.Animal> {
   @override Function get typeFactory => (f) => f<p0.Animal>();
 }
 
-extension AnimalMapperExtension  on p0.Animal {
+extension AnimalMapperExtension on p0.Animal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 }
@@ -76,7 +76,7 @@ class CatMapper extends BaseMapper<p0.Cat> {
   @override Function get typeFactory => (f) => f<p0.Cat>();
 }
 
-extension CatMapperExtension  on p0.Cat {
+extension CatMapperExtension on p0.Cat {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   CatCopyWith<p0.Cat> get copyWith => CatCopyWith(this, $identity);
@@ -112,7 +112,7 @@ class DogMapper extends BaseMapper<p0.Dog> {
   @override Function get typeFactory => (f) => f<p0.Dog>();
 }
 
-extension DogMapperExtension  on p0.Dog {
+extension DogMapperExtension on p0.Dog {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   DogCopyWith<p0.Dog> get copyWith => DogCopyWith(this, $identity);
@@ -148,7 +148,7 @@ class NullAnimalMapper extends BaseMapper<p0.NullAnimal> {
   @override Function get typeFactory => (f) => f<p0.NullAnimal>();
 }
 
-extension NullAnimalMapperExtension  on p0.NullAnimal {
+extension NullAnimalMapperExtension on p0.NullAnimal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   NullAnimalCopyWith<p0.NullAnimal> get copyWith => NullAnimalCopyWith(this, $identity);
@@ -184,7 +184,7 @@ class DefaultAnimalMapper extends BaseMapper<p0.DefaultAnimal> {
   @override Function get typeFactory => (f) => f<p0.DefaultAnimal>();
 }
 
-extension DefaultAnimalMapperExtension  on p0.DefaultAnimal {
+extension DefaultAnimalMapperExtension on p0.DefaultAnimal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   DefaultAnimalCopyWith<p0.DefaultAnimal> get copyWith => DefaultAnimalCopyWith(this, $identity);

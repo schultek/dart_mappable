@@ -12,7 +12,7 @@ import 'selective_generation_test.dart' as p0;
 var _mappers = <BaseMapper>{
   // class mappers
   PersonMapper._(),
-  CarMapper._(),
+  Car1Mapper._(),
   // enum mappers
   // custom mappers
 };
@@ -28,7 +28,7 @@ class PersonMapper extends BaseMapper<p0.Person> {
   Map<String, dynamic> toMap(p0.Person p) => {'name': Mapper.i.$enc(p.name, 'name')};
 }
 
-extension PersonMapperExtension  on p0.Person {
+extension PersonMapperExtension on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   PersonCopyWith<p0.Person> get copyWith => PersonCopyWith(this, $identity);
@@ -46,15 +46,15 @@ class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements Per
   @override $R call({String? name}) => $then(p0.Person(name ?? $value.name));
 }
 
-class CarMapper extends BaseMapper<p1.Car> {
-  CarMapper._();
+class Car1Mapper extends BaseMapper<p1.Car> {
+  Car1Mapper._();
 
   @override String stringify(p1.Car self) => 'Car(brand: ${Mapper.asString(self.brand)})';
   @override int hash(p1.Car self) => Mapper.hash(self.brand);
   @override bool equals(p1.Car self, p1.Car other) => Mapper.isEqual(self.brand, other.brand);
 }
 
-extension CarMapperExtension  on p1.Car {
+extension Car1MapperExtension on p1.Car {
 }
 
 

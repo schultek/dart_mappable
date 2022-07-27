@@ -8,7 +8,7 @@ class EnumMapperConfig {
   final CaseStyle? caseStyle;
   final int? defaultValue;
 
-  final String? prefix;
+  final int? prefix;
 
   EnumMapperConfig({
     required this.element,
@@ -20,7 +20,7 @@ class EnumMapperConfig {
 
   String get className => element.name;
   String get prefixedClassName =>
-      '${prefix != null ? '$prefix.' : ''}$className';
+      '${prefix != null ? 'p$prefix.' : ''}$className';
   String get mapperName => '${className}Mapper';
   String get paramName => className[0].toLowerCase();
 }
