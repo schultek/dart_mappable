@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
@@ -18,41 +20,41 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class PersonMapper extends BaseMapper<Person> {
+class PersonMapper extends BaseMapper<p0.Person> {
   PersonMapper._();
 
-  @override Function get encoder => (Person v) => encode(v);
-  dynamic encode(Person v) => toMap(v);
-  Map<String, dynamic> toMap(Person p) => {'name': Mapper.i.$enc(p.name, 'name')};
+  @override Function get encoder => (p0.Person v) => encode(v);
+  dynamic encode(p0.Person v) => toMap(v);
+  Map<String, dynamic> toMap(p0.Person p) => {'name': Mapper.i.$enc(p.name, 'name')};
 }
 
-extension PersonMapperExtension  on Person {
+extension PersonMapperExtension  on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<Person> get copyWith => PersonCopyWith(this, $identity);
+  PersonCopyWith<p0.Person> get copyWith => PersonCopyWith(this, $identity);
 }
 
 abstract class PersonCopyWith<$R> {
-  factory PersonCopyWith(Person value, Then<Person, $R> then) = _PersonCopyWithImpl<$R>;
+  factory PersonCopyWith(p0.Person value, Then<p0.Person, $R> then) = _PersonCopyWithImpl<$R>;
   $R call({String? name});
-  $R apply(Person Function(Person) transform);
+  $R apply(p0.Person Function(p0.Person) transform);
 }
 
-class _PersonCopyWithImpl<$R> extends BaseCopyWith<Person, $R> implements PersonCopyWith<$R> {
-  _PersonCopyWithImpl(Person value, Then<Person, $R> then) : super(value, then);
+class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements PersonCopyWith<$R> {
+  _PersonCopyWithImpl(p0.Person value, Then<p0.Person, $R> then) : super(value, then);
 
-  @override $R call({String? name}) => $then(Person(name ?? $value.name));
+  @override $R call({String? name}) => $then(p0.Person(name ?? $value.name));
 }
 
-class CarMapper extends BaseMapper<Car> {
+class CarMapper extends BaseMapper<p1.Car> {
   CarMapper._();
 
-  @override String stringify(Car self) => 'Car(brand: ${Mapper.asString(self.brand)})';
-  @override int hash(Car self) => Mapper.hash(self.brand);
-  @override bool equals(Car self, Car other) => Mapper.isEqual(self.brand, other.brand);
+  @override String stringify(p1.Car self) => 'Car(brand: ${Mapper.asString(self.brand)})';
+  @override int hash(p1.Car self) => Mapper.hash(self.brand);
+  @override bool equals(p1.Car self, p1.Car other) => Mapper.isEqual(self.brand, other.brand);
 }
 
-extension CarMapperExtension  on Car {
+extension CarMapperExtension  on p1.Car {
 }
 
 

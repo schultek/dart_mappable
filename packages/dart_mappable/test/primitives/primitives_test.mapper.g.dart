@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
@@ -17,80 +19,80 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class ItemsMapper extends BaseMapper<Items> {
+class ItemsMapper extends BaseMapper<p0.Items> {
   ItemsMapper._();
 
   @override Function get decoder => decode;
-  Items decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Items fromMap(Map<String, dynamic> map) => Items(Mapper.i.$get(map, 'items'), Mapper.i.$get(map, 'items2'));
+  p0.Items decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p0.Items fromMap(Map<String, dynamic> map) => p0.Items(Mapper.i.$get(map, 'items'), Mapper.i.$get(map, 'items2'));
 
-  @override Function get encoder => (Items v) => encode(v);
-  dynamic encode(Items v) => toMap(v);
-  Map<String, dynamic> toMap(Items i) => {'items': Mapper.i.$enc(i.items, 'items'), 'items2': Mapper.i.$enc(i.items2, 'items2')};
+  @override Function get encoder => (p0.Items v) => encode(v);
+  dynamic encode(p0.Items v) => toMap(v);
+  Map<String, dynamic> toMap(p0.Items i) => {'items': Mapper.i.$enc(i.items, 'items'), 'items2': Mapper.i.$enc(i.items2, 'items2')};
 
-  @override String stringify(Items self) => 'Items(items: ${Mapper.asString(self.items)}, items2: ${Mapper.asString(self.items2)})';
-  @override int hash(Items self) => Mapper.hash(self.items) ^ Mapper.hash(self.items2);
-  @override bool equals(Items self, Items other) => Mapper.isEqual(self.items, other.items) && Mapper.isEqual(self.items2, other.items2);
+  @override String stringify(p0.Items self) => 'Items(items: ${Mapper.asString(self.items)}, items2: ${Mapper.asString(self.items2)})';
+  @override int hash(p0.Items self) => Mapper.hash(self.items) ^ Mapper.hash(self.items2);
+  @override bool equals(p0.Items self, p0.Items other) => Mapper.isEqual(self.items, other.items) && Mapper.isEqual(self.items2, other.items2);
 
-  @override Function get typeFactory => (f) => f<Items>();
+  @override Function get typeFactory => (f) => f<p0.Items>();
 }
 
-extension ItemsMapperExtension  on Items {
+extension ItemsMapperExtension  on p0.Items {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ItemsCopyWith<Items> get copyWith => ItemsCopyWith(this, $identity);
+  ItemsCopyWith<p0.Items> get copyWith => ItemsCopyWith(this, $identity);
 }
 
 abstract class ItemsCopyWith<$R> {
-  factory ItemsCopyWith(Items value, Then<Items, $R> then) = _ItemsCopyWithImpl<$R>;
-  ListCopyWith<$R, Item, ItemCopyWith<$R>> get items;
-  MapCopyWith<$R, int, Item, ItemCopyWith<$R>> get items2;
-  $R call({List<Item>? items, Map<int, Item>? items2});
-  $R apply(Items Function(Items) transform);
+  factory ItemsCopyWith(p0.Items value, Then<p0.Items, $R> then) = _ItemsCopyWithImpl<$R>;
+  ListCopyWith<$R, p0.Item, ItemCopyWith<$R>> get items;
+  MapCopyWith<$R, int, p0.Item, ItemCopyWith<$R>> get items2;
+  $R call({List<p0.Item>? items, Map<int, p0.Item>? items2});
+  $R apply(p0.Items Function(p0.Items) transform);
 }
 
-class _ItemsCopyWithImpl<$R> extends BaseCopyWith<Items, $R> implements ItemsCopyWith<$R> {
-  _ItemsCopyWithImpl(Items value, Then<Items, $R> then) : super(value, then);
+class _ItemsCopyWithImpl<$R> extends BaseCopyWith<p0.Items, $R> implements ItemsCopyWith<$R> {
+  _ItemsCopyWithImpl(p0.Items value, Then<p0.Items, $R> then) : super(value, then);
 
-  @override ListCopyWith<$R, Item, ItemCopyWith<$R>> get items => ListCopyWith($value.items, (v, t) => ItemCopyWith(v, t), (v) => call(items: v));
-  @override MapCopyWith<$R, int, Item, ItemCopyWith<$R>> get items2 => MapCopyWith($value.items2, (v, t) => ItemCopyWith(v, t), (v) => call(items2: v));
-  @override $R call({List<Item>? items, Map<int, Item>? items2}) => $then(Items(items ?? $value.items, items2 ?? $value.items2));
+  @override ListCopyWith<$R, p0.Item, ItemCopyWith<$R>> get items => ListCopyWith($value.items, (v, t) => ItemCopyWith(v, t), (v) => call(items: v));
+  @override MapCopyWith<$R, int, p0.Item, ItemCopyWith<$R>> get items2 => MapCopyWith($value.items2, (v, t) => ItemCopyWith(v, t), (v) => call(items2: v));
+  @override $R call({List<p0.Item>? items, Map<int, p0.Item>? items2}) => $then(p0.Items(items ?? $value.items, items2 ?? $value.items2));
 }
 
-class ItemMapper extends BaseMapper<Item> {
+class ItemMapper extends BaseMapper<p0.Item> {
   ItemMapper._();
 
   @override Function get decoder => decode;
-  Item decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Item fromMap(Map<String, dynamic> map) => Item(Mapper.i.$get(map, 'index'));
+  p0.Item decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p0.Item fromMap(Map<String, dynamic> map) => p0.Item(Mapper.i.$get(map, 'index'));
 
-  @override Function get encoder => (Item v) => encode(v);
-  dynamic encode(Item v) => toMap(v);
-  Map<String, dynamic> toMap(Item i) => {'index': Mapper.i.$enc(i.index, 'index')};
+  @override Function get encoder => (p0.Item v) => encode(v);
+  dynamic encode(p0.Item v) => toMap(v);
+  Map<String, dynamic> toMap(p0.Item i) => {'index': Mapper.i.$enc(i.index, 'index')};
 
-  @override String stringify(Item self) => 'Item(index: ${Mapper.asString(self.index)})';
-  @override int hash(Item self) => Mapper.hash(self.index);
-  @override bool equals(Item self, Item other) => Mapper.isEqual(self.index, other.index);
+  @override String stringify(p0.Item self) => 'Item(index: ${Mapper.asString(self.index)})';
+  @override int hash(p0.Item self) => Mapper.hash(self.index);
+  @override bool equals(p0.Item self, p0.Item other) => Mapper.isEqual(self.index, other.index);
 
-  @override Function get typeFactory => (f) => f<Item>();
+  @override Function get typeFactory => (f) => f<p0.Item>();
 }
 
-extension ItemMapperExtension  on Item {
+extension ItemMapperExtension  on p0.Item {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ItemCopyWith<Item> get copyWith => ItemCopyWith(this, $identity);
+  ItemCopyWith<p0.Item> get copyWith => ItemCopyWith(this, $identity);
 }
 
 abstract class ItemCopyWith<$R> {
-  factory ItemCopyWith(Item value, Then<Item, $R> then) = _ItemCopyWithImpl<$R>;
+  factory ItemCopyWith(p0.Item value, Then<p0.Item, $R> then) = _ItemCopyWithImpl<$R>;
   $R call({int? index});
-  $R apply(Item Function(Item) transform);
+  $R apply(p0.Item Function(p0.Item) transform);
 }
 
-class _ItemCopyWithImpl<$R> extends BaseCopyWith<Item, $R> implements ItemCopyWith<$R> {
-  _ItemCopyWithImpl(Item value, Then<Item, $R> then) : super(value, then);
+class _ItemCopyWithImpl<$R> extends BaseCopyWith<p0.Item, $R> implements ItemCopyWith<$R> {
+  _ItemCopyWithImpl(p0.Item value, Then<p0.Item, $R> then) : super(value, then);
 
-  @override $R call({int? index}) => $then(Item(index ?? $value.index));
+  @override $R call({int? index}) => $then(p0.Item(index ?? $value.index));
 }
 
 

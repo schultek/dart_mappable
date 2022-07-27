@@ -4,6 +4,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../builder_options.dart';
+import '../imports_builder.dart';
 import '../utils.dart';
 import 'class_mapper_config.dart';
 import 'mapper_targets.dart';
@@ -13,8 +14,9 @@ class ClassMapperTarget extends MapperTarget {
   List<ClassMapperTarget> subTargets = [];
   ClassMapperTarget? superTarget;
 
-  ClassMapperTarget(ClassElement element, MappableOptions options)
-      : super(element, options);
+  ClassMapperTarget(
+      ClassElement element, MappableOptions options, String? prefix)
+      : super(element, options, prefix);
 
   @override
   DartObject? getAnnotation() =>
@@ -37,41 +39,43 @@ class ClassMapperTarget extends MapperTarget {
     target.subTargets.add(this);
   }
 
-  late ClassMapperConfig config = _buildConfig();
-  ClassMapperConfig _buildConfig() {
-    config = ClassMapperConfig(
+  ClassMapperConfig? _config;
+  ClassMapperConfig getConfig(ImportsBuilder imports) {
+    if (_config != null) return _config!;
+    _config = ClassMapperConfig(
       element: element,
       constructor: constructor,
       discriminatorKey: discriminatorKey,
       discriminatorValueCode: discriminatorValueCode,
-      hookForClass: hookForClass,
+      hookForClass: hookForClass(imports),
       caseStyle: caseStyle,
       ignoreNull: ignoreNull,
       generateMethods: generateMethods,
-      superConfig: superTarget?.config,
+      superConfig: superTarget?.getConfig(imports),
       subConfigs: [],
-      params: analyzeParams(),
-      requiredImports: requiredImports,
+      params: analyzeParams(imports),
+      prefix: prefix,
     );
-    config.superConfig?.subConfigs.add(config);
-    return config;
+    _config!.superConfig?.subConfigs.add(_config!);
+    return _config!;
   }
 
-  List<ParameterConfig> analyzeParams() {
+  List<ParameterConfig> analyzeParams(ImportsBuilder imports) {
     var params = <ParameterConfig>[];
 
     if (constructor == null) return params;
 
     for (var param in constructor!.parameters) {
-      params.add(getParameterConfig(param));
+      params.add(getParameterConfig(param, imports));
     }
 
     return params;
   }
 
-  ParameterConfig getParameterConfig(ParameterElement param) {
+  ParameterConfig getParameterConfig(
+      ParameterElement param, ImportsBuilder imports) {
     if (param is FieldFormalParameterElement) {
-      return FieldParameterConfig(param, param.field!);
+      return FieldParameterConfig.from(param, param.field!, imports);
     }
 
     if (param is SuperFormalParameterElement) {
@@ -81,9 +85,11 @@ class ClassMapperTarget extends MapperTarget {
           'Cannot resolve formal super parameter',
         );
       }
-      return SuperParameterConfig(
+      return SuperParameterConfig.from(
         param,
-        superTarget!.getParameterConfig(param.superConstructorParameter!),
+        superTarget!
+            .getParameterConfig(param.superConstructorParameter!, imports),
+        imports,
       );
     }
 
@@ -91,14 +97,14 @@ class ClassMapperTarget extends MapperTarget {
     if (getter != null) {
       var getterType = getter.type.returnType;
       if (getterType == param.type) {
-        return FieldParameterConfig(param, getter.variable);
+        return FieldParameterConfig.from(param, getter.variable, imports);
       }
 
       if (!getterType.isNullable &&
           param.type.isNullable &&
           getterType.getDisplayString(withNullability: false) ==
               param.type.getDisplayString(withNullability: false)) {
-        return FieldParameterConfig(param, getter.variable);
+        return FieldParameterConfig.from(param, getter.variable, imports);
       }
 
       return UnresolvedParameterConfig(
@@ -108,16 +114,17 @@ class ClassMapperTarget extends MapperTarget {
       );
     }
 
-    ParameterElement? superParameter = _findSuperParameter(param);
+    ParameterElement? superParameter = _findSuperParameter(param, imports);
     if (superParameter != null) {
-      var superConfig = superTarget!.getParameterConfig(superParameter);
+      var superConfig =
+          superTarget!.getParameterConfig(superParameter, imports);
       if (superConfig is UnresolvedParameterConfig) {
         return UnresolvedParameterConfig(
           param,
           'Problem in super constructor: ${superConfig.message}',
         );
       } else {
-        return SuperParameterConfig(param, superConfig);
+        return SuperParameterConfig.from(param, superConfig, imports);
       }
     }
 
@@ -127,8 +134,9 @@ class ClassMapperTarget extends MapperTarget {
     );
   }
 
-  ParameterElement? _findSuperParameter(ParameterElement param) {
-    var superConfig = superTarget?.config;
+  ParameterElement? _findSuperParameter(
+      ParameterElement param, ImportsBuilder imports) {
+    var superConfig = superTarget?.getConfig(imports);
     if (superConfig == null) return null;
 
     var node = constructor!.getNode();
@@ -194,9 +202,19 @@ class ClassMapperTarget extends MapperTarget {
     return code;
   }
 
-  String? get hookForClass {
-    if (annotation != null && !annotation!.getField('hooks')!.isNull) {
-      return readAnnotation('hooks');
+  String? hookForClass(ImportsBuilder imports) {
+    var hooks = annotation?.getField('hooks');
+    if (hooks != null && !hooks.isNull) {
+      var hook = readAnnotation('hooks');
+      if (hook != null) {
+        var uri = hooks.type?.element?.library?.source.uri;
+        var prefix = imports.add(uri);
+
+        if (prefix != null) {
+          hook = '$prefix.$hook';
+        }
+      }
+      return hook;
     }
     return null;
   }
@@ -216,24 +234,15 @@ class ClassMapperTarget extends MapperTarget {
         options.generateMethods ??
         GenerateMethods.all;
   }
-
-  List<Uri> get requiredImports {
-    var hooks = annotation?.getField('hooks');
-    if (hooks != null && !hooks.isNull) {
-      var uri = hooks.type?.element?.library?.source.uri;
-      return uri != null ? [uri] : [];
-    }
-    return [];
-  }
 }
 
 class FactoryConstructorMapperTarget extends ClassMapperTarget {
   ConstructorElement factoryConstructor;
 
   FactoryConstructorMapperTarget(
-      this.factoryConstructor, MappableOptions options)
+      this.factoryConstructor, MappableOptions options, String? prefix)
       : super(factoryConstructor.redirectedConstructor!.returnType.element,
-            options);
+            options, prefix);
 
   @override
   Element get annotatedElement => factoryConstructor;

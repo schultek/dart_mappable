@@ -57,13 +57,18 @@ class MappableBuilder implements Builder {
     var classMappers = <ClassMapperGenerator>[];
 
     for (var target in targets.classes.values) {
-      targets.imports.addAll(target.config.imports);
-      classMappers.add(ClassMapperGenerator(target.config));
+      var config = target.getConfig(targets.imports);
+      classMappers.add(ClassMapperGenerator(config, targets.imports));
     }
 
     var enumMappers =
         targets.enums.values.map((c) => EnumMapperGenerator(c.config));
     var customMappers = targets.customMappers.values;
+
+    var genClasses = classMappers
+        .map((om) =>
+            om.generate((e) => targets.classes[e]?.getConfig(targets.imports)))
+        .join('\n\n');
 
     return ''
         '${targets.imports.write()}\n'
@@ -74,11 +79,11 @@ class MappableBuilder implements Builder {
         '  // enum mappers\n'
         '${enumMappers.map((em) => '  ${em.config.mapperName}._(),\n').join()}'
         '  // custom mappers\n'
-        '${customMappers.map((e) => '  ${targets.imports.prefix(e)}.${e.name}(),\n').join()}'
+        '${customMappers.map((e) => '  ${e.prefixedMapperName}(),\n').join()}'
         '};\n'
         '\n\n'
         '// === GENERATED CLASS MAPPERS AND EXTENSIONS ===\n\n'
-        '${classMappers.map((om) => om.generate((e) => targets.classes[e]?.config)).join('\n\n')}\n'
+        '$genClasses\n'
         '\n\n'
         '// === GENERATED ENUM MAPPERS AND EXTENSIONS ===\n\n'
         '${enumMappers.map((em) => em.generate()).join('\n\n')}\n'

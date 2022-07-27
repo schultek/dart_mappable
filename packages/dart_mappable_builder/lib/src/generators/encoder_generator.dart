@@ -9,9 +9,9 @@ class EncoderGenerator {
     if (config.shouldGenerate(GenerateMethods.encode)) {
       var paramName = config.className[0].toLowerCase();
       return '\n'
-          '  @override Function get encoder => (${config.className} v) => ${_generateEncodeCall(config, 'encode(v)')};\n'
-          '  dynamic encode(${config.className} v) ${_generateEncode(config)}\n'
-          '  Map<String, dynamic> toMap(${config.className} $paramName) => {${_generateMappingEntries(config)}};\n'
+          '  @override Function get encoder => (${config.prefixedClassName} v) => ${_generateEncodeCall(config, 'encode(v)')};\n'
+          '  dynamic encode(${config.prefixedClassName} v) ${_generateEncode(config)}\n'
+          '  Map<String, dynamic> toMap(${config.prefixedClassName} $paramName) => {${_generateMappingEntries(config)}};\n'
           '';
     } else {
       return '';
@@ -31,11 +31,11 @@ class EncoderGenerator {
     if (config.superConfig != null &&
         config.superConfig!.hookForClass != null) {
       wrapped =
-          'const ${config.superConfig!.hookForClass}.encode<${name ?? config.className}>(v, (v) => $wrapped)';
+          'const ${config.superConfig!.hookForClass}.encode<${name ?? config.prefixedClassName}>(v, (v) => $wrapped)';
     }
     if (config.superConfig != null) {
       wrapped = _generateEncodeCall(
-          config.superConfig!, wrapped, name ?? config.className);
+          config.superConfig!, wrapped, name ?? config.prefixedClassName);
     }
     return wrapped;
   }
@@ -49,7 +49,7 @@ class EncoderGenerator {
 
       for (var subMapper in config.subConfigs) {
         subEncode.add(
-            'if (v is ${subMapper.className}) { return ${subMapper.mapperName}._().encode(v); }\n');
+            'if (v is ${subMapper.prefixedClassName}) { return ${subMapper.mapperName}._().encode(v); }\n');
       }
 
       call = '{\n'
@@ -60,7 +60,7 @@ class EncoderGenerator {
 
     if (config.hookForClass != null) {
       call =
-          '=> const ${config.hookForClass}.encode<${config.className}>(v, (v) $call)';
+          '=> const ${config.hookForClass}.encode<${config.prefixedClassName}>(v, (v) $call)';
     }
     return call + (call.endsWith('}') ? '' : ';');
   }

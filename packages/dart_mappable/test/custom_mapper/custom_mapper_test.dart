@@ -28,7 +28,6 @@ class PrivateClassMapper extends SimpleMapper<MyPrivateClass> {
       self.value == other.value;
 }
 
-@MappableClass()
 class GenericBox<T> {
   T content;
   GenericBox(this.content);
@@ -81,7 +80,7 @@ void main() {
       GenericBox<int> box = Mapper.fromValue('2');
       expect(box.content, equals(2));
 
-      var json = box.toJson();
+      var json = Mapper.toJson(box);
       expect(json, equals('2'));
     });
 

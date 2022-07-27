@@ -9,8 +9,8 @@ class DecoderGenerator {
     if (config.shouldGenerate(GenerateMethods.decode)) {
       return '\n'
           '  @override Function get decoder => ${_generateDecoder(config)};\n'
-          '  ${config.className}${config.typeParams} decode${config.typeParamsDeclaration}(dynamic v) => ${_generateFromMapCall(config)};\n'
-          '  ${config.className}${config.typeParams} fromMap${config.typeParamsDeclaration}(Map<String, dynamic> map) => ${_generateFromMap(config)}\n';
+          '  ${config.prefixedClassName}${config.typeParams} decode${config.typeParamsDeclaration}(dynamic v) => ${_generateFromMapCall(config)};\n'
+          '  ${config.prefixedClassName}${config.typeParams} fromMap${config.typeParamsDeclaration}(Map<String, dynamic> map) => ${_generateFromMap(config)}\n';
     } else {
       return '';
     }
@@ -19,7 +19,7 @@ class DecoderGenerator {
   String generateTypeFactory(ClassMapperConfig config) {
     if (config.shouldGenerate(GenerateMethods.decode)) {
       return '\n'
-          '  @override Function get typeFactory => ${config.typeParamsDeclaration}(f) => f<${config.className}${config.typeParams}>();\n';
+          '  @override Function get typeFactory => ${config.typeParamsDeclaration}(f) => f<${config.prefixedClassName}${config.typeParams}>();\n';
     } else {
       return '';
     }
@@ -79,11 +79,11 @@ class DecoderGenerator {
     for (var c in sortedCases) {
       c.key.take(c.key.length - 1).forEach((s) => statements.add('case $s:'));
       statements.add(
-          'case ${c.key.last}: return ${c.value}._().decode(map)${config.typeParams.isNotEmpty ? ' as ${config.className}${config.typeParams}' : ''};');
+          'case ${c.key.last}: return ${c.value}._().decode(map)${config.typeParams.isNotEmpty ? ' as ${config.prefixedClassName}${config.typeParams}' : ''};');
     }
     if (defaultCase != null) {
       statements.add(
-          'default: return $defaultCase._().decode(map)${config.typeParams.isNotEmpty ? ' as ${config.className}${config.typeParams}' : ''};');
+          'default: return $defaultCase._().decode(map)${config.typeParams.isNotEmpty ? ' as ${config.prefixedClassName}${config.typeParams}' : ''};');
     } else {
       statements.add('default: return fromMap${config.typeParams}(map);');
     }
@@ -130,7 +130,7 @@ class DecoderGenerator {
         return "throw MapperException.missingConstructor('${config.className}');";
       }
     } else {
-      return '${config.className}${config.constructor!.name != '' ? '.${config.constructor!.name}' : ''}(${_generateConstructorParams(config)});';
+      return '${config.prefixedClassName}${config.constructor!.name != '' ? '.${config.constructor!.name}' : ''}(${_generateConstructorParams(config)});';
     }
   }
 

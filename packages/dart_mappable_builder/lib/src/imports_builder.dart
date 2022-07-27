@@ -18,7 +18,8 @@ class ImportsBuilder {
     return 'p$l';
   }
 
-  String? add(Uri import) {
+  String? add(Uri? import) {
+    if (import == null) return null;
     if (import.scheme == 'package' &&
         import.pathSegments.first == 'dart_mappable') {
       return null;
@@ -34,10 +35,8 @@ class ImportsBuilder {
     }
   }
 
-  void addAll(Iterable<Uri> imports) => imports.forEach(add);
-
-  String prefix(Element e) {
-    return _imports[e.librarySource?.uri] ?? '__';
+  String? prefix(Element e) {
+    return _imports[e.librarySource?.uri];
   }
 
   String write() {

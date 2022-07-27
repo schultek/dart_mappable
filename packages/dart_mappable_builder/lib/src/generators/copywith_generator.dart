@@ -1,45 +1,48 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/class_mapper_config.dart';
 import '../config/parameter_config.dart';
+import '../imports_builder.dart';
 import '../utils.dart';
 
 typedef GetConfig = ClassMapperConfig? Function(Element? e);
 
 class CopyWithGenerator {
-  String generateCopyWithExtension(
-    ClassMapperConfig config,
-  ) {
+  final ClassMapperConfig config;
+  final ImportsBuilder imports;
+
+  CopyWithGenerator(this.config, this.imports);
+
+  String generateCopyWithExtension() {
     if (config.hasCallableConstructor &&
         config.shouldGenerate(GenerateMethods.copy)) {
-      return '  ${_generateCopyWith(config)}\n';
+      return '  ${_generateCopyWith()}\n';
     } else {
       return '';
     }
   }
 
-  String generateCopyWithClasses(
-      ClassMapperConfig config, GetConfig getConfig) {
+  String generateCopyWithClasses(GetConfig getConfig) {
     if (config.hasCallableConstructor &&
         config.shouldGenerate(GenerateMethods.copy)) {
-      return '\n\n${_generateCopyWithClasses(config, getConfig)}';
+      return '\n\n${_generateCopyWithClasses(getConfig)}';
     } else {
       return '';
     }
   }
 
-  String _generateCopyWith(ClassMapperConfig config) {
+  String _generateCopyWith() {
     var classTypeParams = config.element.typeParameters.isNotEmpty
         ? ', ${config.element.typeParameters.map((p) => p.name).join(', ')}'
         : '';
 
-    return '${config.className}CopyWith<${config.className}${config.typeParams}$classTypeParams> get copyWith => ${config.className}CopyWith(this, \$identity);';
+    return '${config.className}CopyWith<${config.prefixedClassName}${config.typeParams}$classTypeParams> get copyWith => ${config.className}CopyWith(this, \$identity);';
   }
 
-  String _generateCopyWithClasses(
-      ClassMapperConfig config, GetConfig getConfig) {
+  String _generateCopyWithClasses(GetConfig getConfig) {
     var classTypeParamsDef = config.element.typeParameters
         .map((p) => ', ${p.getDisplayString(withNullability: true)}')
         .join();
@@ -50,7 +53,7 @@ class CopyWithGenerator {
 
     snippets.add(''
         'abstract class ${config.className}CopyWith<\$R$classTypeParamsDef> {\n'
-        '  factory ${config.className}CopyWith(${config.className}${config.typeParams} value, Then<${config.className}${config.typeParams}, \$R> then) = _${config.className}CopyWithImpl<\$R$classTypeParams>;\n');
+        '  factory ${config.className}CopyWith(${config.prefixedClassName}${config.typeParams} value, Then<${config.prefixedClassName}${config.typeParams}, \$R> then) = _${config.className}CopyWithImpl<\$R$classTypeParams>;\n');
 
     var copyParams = <ParameterConfig, ClassMapperConfig?>{};
 
@@ -86,7 +89,7 @@ class CopyWithGenerator {
       var fieldTypeParams = p.type is InterfaceType
           ? (p.type as InterfaceType)
               .typeArguments
-              .map((t) => ', ${t.getDisplayString(withNullability: true)}')
+              .map((t) => ', ${prefixedType(t)}')
               .join()
           : '';
 
@@ -95,9 +98,7 @@ class CopyWithGenerator {
       if (p.type.isDartCoreList) {
         var typeArg = (p.type as InterfaceType).typeArguments.first;
         var typeParams = typeArg is InterfaceType
-            ? typeArg.typeArguments
-                .map((t) => ', ${t.getDisplayString(withNullability: true)}')
-                .join()
+            ? typeArg.typeArguments.map((t) => ', ${prefixedType(t)}').join()
             : '';
 
         fieldTypeParams += ', $copyWithName<\$R$typeParams>';
@@ -108,7 +109,7 @@ class CopyWithGenerator {
         var valueTypeArg = it.typeArguments[1];
         var typeParams = valueTypeArg is InterfaceType
             ? valueTypeArg.typeArguments
-                .map((t) => ', ${t.getDisplayString(withNullability: true)}')
+                .map((t) => ', ${prefixedType(t)}')
                 .join()
             : '';
 
@@ -119,11 +120,11 @@ class CopyWithGenerator {
           '  $copyWithName<\$R$fieldTypeParams>${a.type.isNullable ? '?' : ''} get ${a.name};\n');
     }
 
-    snippets.add('  \$R call(${_generateCopyWithParams(config)});\n'
-        '  \$R apply(${config.className}${config.typeParams} Function(${config.className}${config.typeParams}) transform);\n'
+    snippets.add('  \$R call(${_generateCopyWithParams()});\n'
+        '  \$R apply(${config.prefixedClassName}${config.typeParams} Function(${config.prefixedClassName}${config.typeParams}) transform);\n'
         '}\n\n'
-        'class _${config.className}CopyWithImpl<\$R$classTypeParamsDef> extends BaseCopyWith<${config.className}${config.typeParams}, \$R> implements ${config.className}CopyWith<\$R$classTypeParams> {\n'
-        '  _${config.className}CopyWithImpl(${config.className}${config.typeParams} value, Then<${config.className}${config.typeParams}, \$R> then) : super(value, then);\n'
+        'class _${config.className}CopyWithImpl<\$R$classTypeParamsDef> extends BaseCopyWith<${config.prefixedClassName}${config.typeParams}, \$R> implements ${config.className}CopyWith<\$R$classTypeParams> {\n'
+        '  _${config.className}CopyWithImpl(${config.prefixedClassName}${config.typeParams} value, Then<${config.prefixedClassName}${config.typeParams}, \$R> then) : super(value, then);\n'
         '\n');
 
     for (var param in copyParams.keys) {
@@ -134,7 +135,7 @@ class CopyWithGenerator {
       var fieldTypeParams = p.type is InterfaceType
           ? (p.type as InterfaceType)
               .typeArguments
-              .map((t) => ', ${t.getDisplayString(withNullability: true)}')
+              .map((t) => ', ${prefixedType(t)}')
               .join()
           : '';
       var copyWithName = '${classConfig.className}CopyWith';
@@ -145,9 +146,7 @@ class CopyWithGenerator {
 
         var typeArg = (p.type as InterfaceType).typeArguments.first;
         var typeParams = typeArg is InterfaceType
-            ? typeArg.typeArguments
-                .map((t) => ', ${t.getDisplayString(withNullability: true)}')
-                .join()
+            ? typeArg.typeArguments.map((t) => ', ${prefixedType(t)}').join()
             : '';
 
         fieldTypeParams += ', $copyWithName<\$R$typeParams>';
@@ -157,9 +156,7 @@ class CopyWithGenerator {
 
         var typeArg = (p.type as InterfaceType).typeArguments[1];
         var typeParams = typeArg is InterfaceType
-            ? typeArg.typeArguments
-                .map((t) => ', ${t.getDisplayString(withNullability: true)}')
-                .join()
+            ? typeArg.typeArguments.map((t) => ', ${prefixedType(t)}').join()
             : '';
 
         fieldTypeParams += ', $copyWithName<\$R$typeParams>';
@@ -178,21 +175,20 @@ class CopyWithGenerator {
     }
 
     snippets.add(
-        '  @override \$R call(${_generateCopyWithParams(config, implVersion: true)}) => \$then(${config.element.name}${config.constructor!.name != '' ? '.${config.constructor!.name}' : ''}(${_generateCopyWithConstructorParams(config)}));\n'
+        '  @override \$R call(${_generateCopyWithParams(implVersion: true)}) => \$then(${config.prefixedClassName}${config.constructor!.name != '' ? '.${config.constructor!.name}' : ''}(${_generateCopyWithConstructorParams()}));\n'
         '}');
 
     return snippets.join();
   }
 
-  String _generateCopyWithParams(ClassMapperConfig config,
-      {bool implVersion = false}) {
+  String _generateCopyWithParams({bool implVersion = false}) {
     if (config.params.isEmpty) return '';
 
     List<String> params = [];
     for (var param in config.params) {
       var p = param.parameter;
 
-      var type = p.type.getDisplayString(withNullability: false);
+      var type = prefixedType(p.type, withNullability: false);
 
       if (param is UnresolvedParameterConfig) {
         if (p.type.isNullable) {
@@ -214,7 +210,7 @@ class CopyWithGenerator {
     return '{${params.join(', ')}}';
   }
 
-  String _generateCopyWithConstructorParams(ClassMapperConfig config) {
+  String _generateCopyWithConstructorParams() {
     List<String> params = [];
     for (var param in config.params) {
       var p = param.parameter;
@@ -238,5 +234,25 @@ class CopyWithGenerator {
       params.add(str);
     }
     return params.join(', ');
+  }
+
+  String prefixedType(DartType t, {bool withNullability = true}) {
+    if (t is TypeParameterType) {
+      return t.getDisplayString(withNullability: withNullability);
+    }
+
+    var typeArgs = '';
+    if (t is InterfaceType && t.typeArguments.isNotEmpty) {
+      typeArgs = '<${t.typeArguments.map(prefixedType).join(', ')}>';
+    }
+
+    var type = '${t.element?.name}$typeArgs';
+
+    if (withNullability && t.nullabilitySuffix == NullabilitySuffix.question) {
+      type += '?';
+    }
+
+    var prefix = imports.add(t.element?.librarySource?.uri);
+    return (prefix != null ? '$prefix.' : '') + type;
   }
 }
