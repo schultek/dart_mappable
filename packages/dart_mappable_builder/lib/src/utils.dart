@@ -82,7 +82,7 @@ Future<String> getPrefixedDefaultValue(
 
     if (node is DefaultFormalParameter) {
       var visitor = PrefixVisitor(imports);
-      node.visitChildren(visitor);
+      node.defaultValue!.accept(visitor);
 
       var str = node.defaultValue!.toSource();
 
@@ -114,8 +114,11 @@ class PrefixVisitor extends RecursiveAstVisitor {
       prefixes[node.offset] =
           imports.add(node.staticElement!.librarySource?.uri);
     } else if (node.staticElement is PropertyAccessorElement) {
-      prefixes[node.offset] =
-          imports.add(node.staticElement!.librarySource?.uri);
+      if ((node.staticElement as PropertyAccessorElement).enclosingElement
+          is CompilationUnitElement) {
+        prefixes[node.offset] =
+            imports.add(node.staticElement!.librarySource?.uri);
+      }
     }
 
     return super.visitSimpleIdentifier(node);

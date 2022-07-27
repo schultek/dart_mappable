@@ -8,7 +8,7 @@ import 'otherlib.dart' as other;
 class A with Mappable {
   final B b;
 
-  const A({this.b = const B(c: C(def))});
+  const A({this.b = const B(c: C(C.def))});
 }
 
 @MappableClass()
@@ -23,9 +23,9 @@ class C with Mappable {
   final String d;
 
   const C(this.d);
-}
 
-const def = 'default';
+  static const def = 'default';
+}
 
 void main() {
   group('Default values', () {

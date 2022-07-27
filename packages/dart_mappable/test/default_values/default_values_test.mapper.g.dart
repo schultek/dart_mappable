@@ -29,7 +29,7 @@ class AMapper extends BaseMapper<p0.A> {
 
   @override Function get decoder => decode;
   p0.A decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  p0.A fromMap(Map<String, dynamic> map) => p0.A(b: Mapper.i.$getOpt(map, 'b') ?? const p0.B(c: p0.C(p0.def)));
+  p0.A fromMap(Map<String, dynamic> map) => p0.A(b: Mapper.i.$getOpt(map, 'b') ?? const p0.B(c: p0.C(p0.C.def)));
 
   @override Function get encoder => (p0.A v) => encode(v);
   dynamic encode(p0.A v) => toMap(v);
