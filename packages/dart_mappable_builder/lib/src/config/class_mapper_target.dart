@@ -39,44 +39,46 @@ class ClassMapperTarget extends MapperTarget {
     target.subTargets.add(this);
   }
 
-  ClassMapperConfig? _config;
-  ClassMapperConfig getConfig(ImportsBuilder imports) {
+  Future<ClassMapperConfig>? _config;
+  Future<ClassMapperConfig> getConfig(ImportsBuilder imports) async {
     if (_config != null) return _config!;
-    _config = ClassMapperConfig(
-      element: element,
-      constructor: constructor,
-      discriminatorKey: discriminatorKey,
-      discriminatorValueCode: discriminatorValueCode,
-      hookForClass: hookForClass(imports),
-      caseStyle: caseStyle,
-      ignoreNull: ignoreNull,
-      generateMethods: generateMethods,
-      superConfig: superTarget?.getConfig(imports),
-      subConfigs: [],
-      params: analyzeParams(imports),
-      typeParamsDeclaration: typeParamsDeclaration(imports),
-      prefix: prefix,
-    );
-    _config!.superConfig?.subConfigs.add(_config!);
-    return _config!;
+    return _config = Future.sync(() async {
+      var config = ClassMapperConfig(
+        element: element,
+        constructor: constructor,
+        discriminatorKey: discriminatorKey,
+        discriminatorValueCode: discriminatorValueCode,
+        hookForClass: await hookForClass(imports),
+        caseStyle: caseStyle,
+        ignoreNull: ignoreNull,
+        generateMethods: generateMethods,
+        superConfig: await superTarget?.getConfig(imports),
+        subConfigs: [],
+        params: await analyzeParams(imports),
+        typeParamsDeclaration: typeParamsDeclaration(imports),
+        prefix: prefix,
+      );
+      config.superConfig?.subConfigs.add(config);
+      return config;
+    });
   }
 
-  List<ParameterConfig> analyzeParams(ImportsBuilder imports) {
+  Future<List<ParameterConfig>> analyzeParams(ImportsBuilder imports) async {
     var params = <ParameterConfig>[];
 
     if (constructor == null) return params;
 
     for (var param in constructor!.parameters) {
-      params.add(getParameterConfig(param, imports));
+      params.add(await getParameterConfig(param, imports));
     }
 
     return params;
   }
 
-  ParameterConfig getParameterConfig(
-      ParameterElement param, ImportsBuilder imports) {
+  Future<ParameterConfig> getParameterConfig(
+      ParameterElement param, ImportsBuilder imports) async {
     if (param is FieldFormalParameterElement) {
-      return FieldParameterConfig.from(param, param.field!, imports);
+      return FieldParameterConfig(param, param.field!);
     }
 
     if (param is SuperFormalParameterElement) {
@@ -86,11 +88,10 @@ class ClassMapperTarget extends MapperTarget {
           'Cannot resolve formal super parameter',
         );
       }
-      return SuperParameterConfig.from(
+      return SuperParameterConfig(
         param,
-        superTarget!
+        await superTarget!
             .getParameterConfig(param.superConstructorParameter!, imports),
-        imports,
       );
     }
 
@@ -98,14 +99,14 @@ class ClassMapperTarget extends MapperTarget {
     if (getter != null) {
       var getterType = getter.type.returnType;
       if (getterType == param.type) {
-        return FieldParameterConfig.from(param, getter.variable, imports);
+        return FieldParameterConfig(param, getter.variable);
       }
 
       if (!getterType.isNullable &&
           param.type.isNullable &&
           getterType.getDisplayString(withNullability: false) ==
               param.type.getDisplayString(withNullability: false)) {
-        return FieldParameterConfig.from(param, getter.variable, imports);
+        return FieldParameterConfig(param, getter.variable);
       }
 
       return UnresolvedParameterConfig(
@@ -115,17 +116,18 @@ class ClassMapperTarget extends MapperTarget {
       );
     }
 
-    ParameterElement? superParameter = _findSuperParameter(param, imports);
+    ParameterElement? superParameter =
+        await _findSuperParameter(param, imports);
     if (superParameter != null) {
       var superConfig =
-          superTarget!.getParameterConfig(superParameter, imports);
+          await superTarget!.getParameterConfig(superParameter, imports);
       if (superConfig is UnresolvedParameterConfig) {
         return UnresolvedParameterConfig(
           param,
           'Problem in super constructor: ${superConfig.message}',
         );
       } else {
-        return SuperParameterConfig.from(param, superConfig, imports);
+        return SuperParameterConfig(param, superConfig);
       }
     }
 
@@ -135,9 +137,9 @@ class ClassMapperTarget extends MapperTarget {
     );
   }
 
-  ParameterElement? _findSuperParameter(
-      ParameterElement param, ImportsBuilder imports) {
-    var superConfig = superTarget?.getConfig(imports);
+  Future<ParameterElement?> _findSuperParameter(
+      ParameterElement param, ImportsBuilder imports) async {
+    var superConfig = await superTarget?.getConfig(imports);
     if (superConfig == null) return null;
 
     var node = constructor!.getNode();
@@ -194,7 +196,9 @@ class ClassMapperTarget extends MapperTarget {
           discriminatorValueField.getField('index')!.toIntValue() == 0) {
         return 'default';
       } else {
-        code = readAnnotation('discriminatorValue');
+        code = getAnnotationNode(
+                annotatedElement, MappableClass, 'discriminatorValue')
+            ?.toSource();
       }
     }
     if (code == null && superTarget != null && !element.isAbstract) {
@@ -203,19 +207,14 @@ class ClassMapperTarget extends MapperTarget {
     return code;
   }
 
-  String? hookForClass(ImportsBuilder imports) {
+  Future<String?> hookForClass(ImportsBuilder imports) async {
     var hooks = annotation?.getField('hooks');
     if (hooks != null && !hooks.isNull) {
-      var hook = readAnnotation('hooks');
-      if (hook != null) {
-        var uri = hooks.type?.element?.library?.source.uri;
-        var prefix = imports.add(uri);
-
-        if (prefix != null) {
-          hook = 'p$prefix.$hook';
-        }
+      var node = await getResolvedAnnotationNode(
+          annotatedElement, MappableClass, 'hooks');
+      if (node != null) {
+        return getPrefixedNodeSource(node, imports);
       }
-      return hook;
     }
     return null;
   }

@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/class_mapper_config.dart';
@@ -158,7 +159,7 @@ class DecoderGenerator {
 
       var args = ['map', "'${param.jsonKey(config.caseStyle)}'"];
 
-      var hook = param.hook;
+      var hook = await param.getHook(imports);
       if (hook != null) {
         args.add('const $hook');
       }
@@ -178,5 +179,15 @@ class DecoderGenerator {
       params.add(str);
     }
     return params.join(', ');
+  }
+
+  Future<String> getPrefixedDefaultValue(
+      ParameterElement p, ImportsBuilder imports) async {
+    var node = await p.getResolvedNode();
+    if (node is DefaultFormalParameter) {
+      return getPrefixedNodeSource(node.defaultValue!, imports);
+    }
+
+    return p.defaultValueCode!;
   }
 }

@@ -29,14 +29,14 @@ class GameMapper extends BaseMapper<p0.Game> {
 
   @override Function get decoder => decode;
   p0.Game decode(dynamic v) => const p1.GameHooks().decode(v, (v) => checked(v, (Map<String, dynamic> map) => fromMap(map)));
-  p0.Game fromMap(Map<String, dynamic> map) => p0.Game(Mapper.i.$get(map, 'player', const p0.PlayerHooks()));
+  p0.Game fromMap(Map<String, dynamic> map) => p0.Game(Mapper.i.$get(map, 'player', const ChainedHooks( [p0.PlayerHooks(), UnmappedPropertiesHooks('unmapped_props')])));
 
   @override Function get encoder => (p0.Game v) => encode(v);
   dynamic encode(p0.Game v) => const p1.GameHooks().encode<p0.Game>(v, (v) {
     if (v is p0.CardGame) { return CardGameMapper._().encode(v); }
     else { return toMap(v); }
   });
-  Map<String, dynamic> toMap(p0.Game g) => {'player': Mapper.i.$enc(g.player, 'player', const p0.PlayerHooks())};
+  Map<String, dynamic> toMap(p0.Game g) => {'player': Mapper.i.$enc(g.player, 'player', const ChainedHooks( [p0.PlayerHooks(), UnmappedPropertiesHooks('unmapped_props')]))};
 
   @override String stringify(p0.Game self) => 'Game(player: ${Mapper.asString(self.player)})';
   @override int hash(p0.Game self) => Mapper.hash(self.player);
@@ -70,11 +70,11 @@ class CardGameMapper extends BaseMapper<p0.CardGame> {
 
   @override Function get decoder => (v) => const p1.GameHooks().decode(v, decode);
   p0.CardGame decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  p0.CardGame fromMap(Map<String, dynamic> map) => p0.CardGame(Mapper.i.$get(map, 'player', const ChainedHooks([p0.PlayerHooks(), p2.CardPlayerHooks()])));
+  p0.CardGame fromMap(Map<String, dynamic> map) => p0.CardGame(Mapper.i.$get(map, 'player', const ChainedHooks([p0.PlayerHooks(), UnmappedPropertiesHooks('unmapped_props'), p2.CardPlayerHooks()])));
 
   @override Function get encoder => (p0.CardGame v) => const p1.GameHooks().encode<p0.CardGame>(v, (v) => encode(v));
   dynamic encode(p0.CardGame v) => toMap(v);
-  Map<String, dynamic> toMap(p0.CardGame c) => {'player': Mapper.i.$enc(c.player, 'player', const ChainedHooks([p0.PlayerHooks(), p2.CardPlayerHooks()]))};
+  Map<String, dynamic> toMap(p0.CardGame c) => {'player': Mapper.i.$enc(c.player, 'player', const ChainedHooks([p0.PlayerHooks(), UnmappedPropertiesHooks('unmapped_props'), p2.CardPlayerHooks()]))};
 
   @override String stringify(p0.CardGame self) => 'CardGame(player: ${Mapper.asString(self.player)})';
   @override int hash(p0.CardGame self) => Mapper.hash(self.player);

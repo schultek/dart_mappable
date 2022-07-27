@@ -1,22 +1,26 @@
+import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/enum_mapper_config.dart';
+import '../imports_builder.dart';
 import '../utils.dart';
 
 /// Generates code for a specific enum
 class EnumMapperGenerator {
-  EnumMapperConfig config;
+  final EnumMapperConfig config;
+  final ImportsBuilder imports;
 
-  EnumMapperGenerator(this.config);
+  EnumMapperGenerator(this.config, this.imports);
 
-  String generate() {
+  Future<String> generate() async {
     bool hasAllStringValues = config.mode == ValuesMode.named;
-    var values =
-        config.element.fields.where((f) => f.isEnumConstant).mapIndexed((i, f) {
+    var values = await Future.wait(config.element.fields //
+        .where((f) => f.isEnumConstant)
+        .mapIndexed((i, f) async {
       if (valueChecker.hasAnnotationOf(f)) {
         hasAllStringValues = false;
-        return MapEntry(f.name, getAnnotationCode(f, MappableValue, 0)!);
+        return MapEntry(f.name, await getAnnotatedValue(f));
       } else {
         if (config.mode == ValuesMode.named) {
           return MapEntry(f.name, "'${config.caseStyle.transform(f.name)}'");
@@ -24,7 +28,7 @@ class EnumMapperGenerator {
           return MapEntry(f.name, i);
         }
       }
-    });
+    }));
 
     return ''
         'class ${config.mapperName} extends EnumMapper<${config.prefixedClassName}> {\n'
@@ -55,5 +59,10 @@ class EnumMapperGenerator {
       return 'return ${config.prefixedClassName}.values[${config.defaultValue}];';
     }
     return 'throw MapperException.unknownEnumValue(value);';
+  }
+
+  Future<String> getAnnotatedValue(FieldElement f) async {
+    var node = await getResolvedAnnotationNode(f, MappableValue, 0);
+    return getPrefixedNodeSource(node!, imports);
   }
 }

@@ -38,9 +38,9 @@ class AnimalMapper extends BaseMapper<p0.Animal> {
 
   @override Function get encoder => (p0.Animal v) => encode(v);
   dynamic encode(p0.Animal v) {
-    if (v is p0.Cat) { return CatMapper._().encode(v); }
+    if (v is p0.NullAnimal) { return NullAnimalMapper._().encode(v); }
+    else if (v is p0.Cat) { return CatMapper._().encode(v); }
     else if (v is p0.Dog) { return DogMapper._().encode(v); }
-    else if (v is p0.NullAnimal) { return NullAnimalMapper._().encode(v); }
     else if (v is p0.DefaultAnimal) { return DefaultAnimalMapper._().encode(v); }
     else { return toMap(v); }
   }

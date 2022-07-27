@@ -54,20 +54,24 @@ class MappableBuilder implements Builder {
       targets.addElementsFromLibrary(entry.key, entry.value);
     }
 
-    var classMappers = <ClassMapperGenerator>[];
+    var classConfigs = Map.fromEntries(await Future.wait(targets.classes.entries
+        .map((e) async =>
+            MapEntry(e.key, await e.value.getConfig(targets.imports)))));
 
-    for (var target in targets.classes.values) {
-      var config = target.getConfig(targets.imports);
-      classMappers.add(ClassMapperGenerator(config, targets.imports));
-    }
+    var classMappers = targets.classes.keys
+        .map((k) => ClassMapperGenerator(classConfigs[k]!, targets.imports))
+        .toList();
 
-    var enumMappers =
-        targets.enums.values.map((c) => EnumMapperGenerator(c.config));
+    var enumMappers = targets.enums.values
+        .map((c) => EnumMapperGenerator(c.config, targets.imports))
+        .toList();
+
     var customMappers = targets.customMappers.values;
 
-    var genClasses = await Future.wait(classMappers.map((om) =>
-            om.generate((e) => targets.classes[e]?.getConfig(targets.imports))))
-        .then((l) => l.join('\n\n'));
+    var genClasses = await Future.wait(
+        classMappers.map((om) => om.generate((e) => classConfigs[e])));
+
+    var genEnums = await Future.wait(enumMappers.map((em) => em.generate()));
 
     return ''
         '${targets.imports.write()}\n'
@@ -82,10 +86,10 @@ class MappableBuilder implements Builder {
         '};\n'
         '\n\n'
         '// === GENERATED CLASS MAPPERS AND EXTENSIONS ===\n\n'
-        '$genClasses\n'
+        '${genClasses.join('\n\n')}\n'
         '\n\n'
         '// === GENERATED ENUM MAPPERS AND EXTENSIONS ===\n\n'
-        '${enumMappers.map((em) => em.generate()).join('\n\n')}\n'
+        '${genEnums.join('\n\n')}\n'
         '\n\n'
         '// === GENERATED UTILITY CODE ===\n\n'
         '$mapperCode';

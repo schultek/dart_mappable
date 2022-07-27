@@ -15,7 +15,7 @@ class ClassMapperGenerator {
   Future<String> generate(GetConfig getConfig) async {
     var classSnippets = [
       await DecoderGenerator(config, imports).generateDecoderMethods(),
-      EncoderGenerator().generateEncoderMethods(config),
+      await EncoderGenerator(config, imports).generateEncoderMethods(),
       ToStringGenerator().generateToStringMethods(config),
       EqualsGenerator().generateEqualsMethods(config),
       DecoderGenerator(config, imports).generateTypeFactory(),
@@ -24,7 +24,7 @@ class ClassMapperGenerator {
     var copyGen = CopyWithGenerator(config, imports);
 
     var extensionSnippets = [
-      EncoderGenerator().generateEncoderExtensions(config),
+      EncoderGenerator(config, imports).generateEncoderExtensions(),
       copyGen.generateCopyWithExtension(),
     ];
 

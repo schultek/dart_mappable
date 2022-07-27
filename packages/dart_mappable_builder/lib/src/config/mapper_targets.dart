@@ -1,7 +1,6 @@
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:dart_mappable/dart_mappable.dart';
 
 import '../builder_options.dart';
 import '../imports_builder.dart';
@@ -117,7 +116,4 @@ abstract class MapperTarget {
 
   late DartObject? annotation = getAnnotation();
   DartObject? getAnnotation();
-
-  String? readAnnotation(String key) =>
-      getAnnotationCode(annotatedElement, MappableClass, key);
 }

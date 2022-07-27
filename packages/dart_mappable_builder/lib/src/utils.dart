@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
@@ -29,12 +30,19 @@ extension GetNode on Element {
       return null;
     }
   }
+
+  Future<AstNode?> getResolvedNode() async {
+    var result = await session?.getResolvedLibraryByElement(library!);
+    if (result is ResolvedLibraryResult) {
+      return result.getElementDeclaration(this)?.node;
+    } else {
+      return null;
+    }
+  }
 }
 
-String? getAnnotationCode(
-    Element annotatedElement, Type annotationType, dynamic property) {
-  var node = annotatedElement.getNode();
-
+AstNode? _getAnnotationNode(
+    AstNode? node, Type annotationType, dynamic property) {
   NodeList<Annotation>? annotations;
 
   if (node is VariableDeclaration) {
@@ -59,11 +67,11 @@ String? getAnnotationCode(
         var arg = annotation.arguments!.arguments[i];
         if (arg is NamedExpression && property is String) {
           if (arg.name.label.name == property) {
-            return arg.expression.toSource();
+            return arg.expression;
           }
         } else if (arg is Literal && property is int) {
           if (i == property) {
-            return arg.toSource();
+            return arg;
           }
         }
       }
@@ -73,55 +81,93 @@ String? getAnnotationCode(
   return null;
 }
 
-Future<String> getPrefixedDefaultValue(
-    ParameterElement p, ImportsBuilder imports) async {
-  var result = await p.session?.getResolvedLibraryByElement(p.library!);
+AstNode? getAnnotationNode(
+    Element annotatedElement, Type annotationType, dynamic property) {
+  var node = annotatedElement.getNode();
+  return _getAnnotationNode(node, annotationType, property);
+}
 
-  if (result is ResolvedLibraryResult) {
-    var node = result.getElementDeclaration(p)?.node;
+Future<AstNode?> getResolvedAnnotationNode(
+    Element annotatedElement, Type annotationType, dynamic property) async {
+  var node = await annotatedElement.getResolvedNode();
+  return _getAnnotationNode(node, annotationType, property);
+}
 
-    if (node is DefaultFormalParameter) {
-      var visitor = PrefixVisitor(imports);
-      node.defaultValue!.accept(visitor);
+class Prefix {
+  int offset;
+  int delta;
+  int prefix;
 
-      var str = node.defaultValue!.toSource();
+  Prefix(this.offset, this.delta, this.prefix);
 
-      for (var e
-          in visitor.prefixes.keys.cast<num>().sortedBy((i) => i).reversed) {
-        var offset = e - node.defaultValue!.offset as int;
+  @override
+  String toString() {
+    return 'Prefix{offset: $offset, delta: $delta, prefix: $prefix}';
+  }
+}
 
-        str = str.substring(0, offset) +
-            'p${visitor.prefixes[e]}.' +
-            str.substring(offset);
-      }
+Future<String> getPrefixedNodeSource(
+    AstNode node, ImportsBuilder imports) async {
+  var visitor = PrefixVisitor(imports);
+  node.accept(visitor);
 
-      return str;
+  var prefixOffsets = visitor.prefixes.entries
+      // ignore: unnecessary_cast
+      .sortedBy((i) => i.key as num)
+      .fold<List<Prefix>>([Prefix(node.offset, 0, 0)],
+          (l, i) => [...l, Prefix(i.key, i.key - l.last.offset, i.value)])
+      .skip(1)
+      .toList();
+
+  var source = '';
+  Token? token = node.beginToken;
+
+  while (token != null && token.offset <= node.endToken.offset) {
+    if (prefixOffsets.isNotEmpty && prefixOffsets.first.delta <= 0) {
+      source += 'p${prefixOffsets.first.prefix}.';
+      prefixOffsets.removeAt(0);
     }
+
+    source += token.lexeme;
+    prefixOffsets.firstOrNull?.delta -= token.length;
+
+    var next = token.next;
+    if (next != null && next.offset > token.end) {
+      var delta = next.offset - token.end;
+      source += ' ';
+      prefixOffsets.firstOrNull?.delta -= delta;
+    }
+    token = next;
   }
 
-  return p.defaultValueCode!;
+  return source;
 }
 
 class PrefixVisitor extends RecursiveAstVisitor {
   final ImportsBuilder imports;
-  Map<int, int?> prefixes = {};
+  Map<int, int> prefixes = {};
 
   PrefixVisitor(this.imports);
 
   @override
   visitSimpleIdentifier(SimpleIdentifier node) {
     if (node.staticElement is ClassElement) {
-      prefixes[node.offset] =
-          imports.add(node.staticElement!.librarySource?.uri);
+      addPrefixFor(node);
     } else if (node.staticElement is PropertyAccessorElement) {
       if ((node.staticElement as PropertyAccessorElement).enclosingElement
           is CompilationUnitElement) {
-        prefixes[node.offset] =
-            imports.add(node.staticElement!.librarySource?.uri);
+        addPrefixFor(node);
       }
     }
 
     return super.visitSimpleIdentifier(node);
+  }
+
+  void addPrefixFor(SimpleIdentifier node) {
+    var prefix = imports.add(node.staticElement!.librarySource?.uri);
+    if (prefix != null) {
+      prefixes[node.offset] = prefix;
+    }
   }
 }
 
