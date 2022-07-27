@@ -17,7 +17,4 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.1.11
-  lints: ^2.0.0
-dependency_overrides:
-  dart_mappable:
-    path: ../dart_mappable
+  lints: '>=1.0.0 <3.0.0'

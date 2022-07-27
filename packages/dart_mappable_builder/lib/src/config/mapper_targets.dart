@@ -32,11 +32,17 @@ class MapperTargets {
         customMappers[type.element!.name!] = element;
         imports.add(library.source.uri);
         imports.add(type.element!.librarySource!.uri);
-      } else if (options.shouldGenerateFor(element) ||
-          (!element.isEnum && classChecker.hasAnnotationOf(element)) ||
-          (element.isEnum && enumChecker.hasAnnotationOf(element))) {
-        addElement(element, options);
-        imports.add(library.source.uri);
+      } else {
+        var shouldGenerate = options.shouldGenerateFor(element);
+        if (!shouldGenerate && !options.ignoreAnnotated) {
+          shouldGenerate =
+              (!element.isEnum && classChecker.hasAnnotationOf(element)) ||
+                  (element.isEnum && enumChecker.hasAnnotationOf(element));
+        }
+        if (shouldGenerate) {
+          addElement(element, options);
+          imports.add(library.source.uri);
+        }
       }
     }
   }
