@@ -2,7 +2,9 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
 import 'lib_mapping_test.dart';
+import 'other/food.dart';
 import 'other/models.dart';
+import 'other/other.dart';
 
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
@@ -10,7 +12,10 @@ import 'other/models.dart';
 var _mappers = <BaseMapper>{
   // class mappers
   PersonMapper._(),
+  AppleMapper._(),
+  CakeMapper._(),
   CarMapper._(),
+  AnimalMapper._(),
   // enum mappers
   // custom mappers
 };
@@ -54,6 +59,78 @@ class _PersonCopyWithImpl<$R> extends BaseCopyWith<Person, $R> implements Person
   @override $R call({String? firstName}) => $then(Person(firstName ?? $value.firstName));
 }
 
+class AppleMapper extends BaseMapper<Apple> {
+  AppleMapper._();
+
+  @override Function get decoder => decode;
+  Apple decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Apple fromMap(Map<String, dynamic> map) => Apple(Mapper.i.$get(map, 'is_red'));
+
+  @override Function get encoder => (Apple v) => encode(v);
+  dynamic encode(Apple v) => toMap(v);
+  Map<String, dynamic> toMap(Apple a) => {'is_red': Mapper.i.$enc(a.isRed, 'isRed')};
+
+  @override String stringify(Apple self) => 'Apple(isRed: ${Mapper.asString(self.isRed)})';
+  @override int hash(Apple self) => Mapper.hash(self.isRed);
+  @override bool equals(Apple self, Apple other) => Mapper.isEqual(self.isRed, other.isRed);
+
+  @override Function get typeFactory => (f) => f<Apple>();
+}
+
+extension AppleMapperExtension  on Apple {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  AppleCopyWith<Apple> get copyWith => AppleCopyWith(this, $identity);
+}
+
+abstract class AppleCopyWith<$R> {
+  factory AppleCopyWith(Apple value, Then<Apple, $R> then) = _AppleCopyWithImpl<$R>;
+  $R call({bool? isRed});
+  $R apply(Apple Function(Apple) transform);
+}
+
+class _AppleCopyWithImpl<$R> extends BaseCopyWith<Apple, $R> implements AppleCopyWith<$R> {
+  _AppleCopyWithImpl(Apple value, Then<Apple, $R> then) : super(value, then);
+
+  @override $R call({bool? isRed}) => $then(Apple(isRed ?? $value.isRed));
+}
+
+class CakeMapper extends BaseMapper<Cake> {
+  CakeMapper._();
+
+  @override Function get decoder => decode;
+  Cake decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Cake fromMap(Map<String, dynamic> map) => Cake(Mapper.i.$get(map, 'type'));
+
+  @override Function get encoder => (Cake v) => encode(v);
+  dynamic encode(Cake v) => toMap(v);
+  Map<String, dynamic> toMap(Cake c) => {'type': Mapper.i.$enc(c.type, 'type')};
+
+  @override String stringify(Cake self) => 'Cake(type: ${Mapper.asString(self.type)})';
+  @override int hash(Cake self) => Mapper.hash(self.type);
+  @override bool equals(Cake self, Cake other) => Mapper.isEqual(self.type, other.type);
+
+  @override Function get typeFactory => (f) => f<Cake>();
+}
+
+extension CakeMapperExtension  on Cake {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  CakeCopyWith<Cake> get copyWith => CakeCopyWith(this, $identity);
+}
+
+abstract class CakeCopyWith<$R> {
+  factory CakeCopyWith(Cake value, Then<Cake, $R> then) = _CakeCopyWithImpl<$R>;
+  $R call({String? type});
+  $R apply(Cake Function(Cake) transform);
+}
+
+class _CakeCopyWithImpl<$R> extends BaseCopyWith<Cake, $R> implements CakeCopyWith<$R> {
+  _CakeCopyWithImpl(Cake value, Then<Cake, $R> then) : super(value, then);
+
+  @override $R call({String? type}) => $then(Cake(type ?? $value.type));
+}
+
 class CarMapper extends BaseMapper<Car> {
   CarMapper._();
 
@@ -88,6 +165,42 @@ class _CarCopyWithImpl<$R> extends BaseCopyWith<Car, $R> implements CarCopyWith<
   _CarCopyWithImpl(Car value, Then<Car, $R> then) : super(value, then);
 
   @override $R call({String? brandName}) => $then(Car(brandName ?? $value.brandName));
+}
+
+class AnimalMapper extends BaseMapper<Animal> {
+  AnimalMapper._();
+
+  @override Function get decoder => decode;
+  Animal decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Animal fromMap(Map<String, dynamic> map) => Animal(Mapper.i.$get(map, 'color'));
+
+  @override Function get encoder => (Animal v) => encode(v);
+  dynamic encode(Animal v) => toMap(v);
+  Map<String, dynamic> toMap(Animal a) => {'color': Mapper.i.$enc(a.color, 'color')};
+
+  @override String stringify(Animal self) => 'Animal(color: ${Mapper.asString(self.color)})';
+  @override int hash(Animal self) => Mapper.hash(self.color);
+  @override bool equals(Animal self, Animal other) => Mapper.isEqual(self.color, other.color);
+
+  @override Function get typeFactory => (f) => f<Animal>();
+}
+
+extension AnimalMapperExtension  on Animal {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  AnimalCopyWith<Animal> get copyWith => AnimalCopyWith(this, $identity);
+}
+
+abstract class AnimalCopyWith<$R> {
+  factory AnimalCopyWith(Animal value, Then<Animal, $R> then) = _AnimalCopyWithImpl<$R>;
+  $R call({String? color});
+  $R apply(Animal Function(Animal) transform);
+}
+
+class _AnimalCopyWithImpl<$R> extends BaseCopyWith<Animal, $R> implements AnimalCopyWith<$R> {
+  _AnimalCopyWithImpl(Animal value, Then<Animal, $R> then) : super(value, then);
+
+  @override $R call({String? color}) => $then(Animal(color ?? $value.color));
 }
 
 

@@ -151,6 +151,7 @@ class MappableLib {
     this.generateMethods,
     this.include,
     this.exclude,
+    this.ignoreAnnotated,
   }) : assert(include == null || exclude == null);
 
   /// The case style for the map keys
@@ -173,6 +174,9 @@ class MappableLib {
 
   /// Specify which classes to exclude
   final List<Type>? exclude;
+
+  /// Whether to ignore annotated members
+  final bool? ignoreAnnotated;
 }
 
 /// Extend this class to define custom [MappingHooks] for a class or field
