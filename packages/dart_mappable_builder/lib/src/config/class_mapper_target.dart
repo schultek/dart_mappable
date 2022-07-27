@@ -54,6 +54,7 @@ class ClassMapperTarget extends MapperTarget {
       superConfig: superTarget?.getConfig(imports),
       subConfigs: [],
       params: analyzeParams(imports),
+      typeParamsDeclaration: typeParamsDeclaration(imports),
       prefix: prefix,
     );
     _config!.superConfig?.subConfigs.add(_config!);
@@ -217,6 +218,12 @@ class ClassMapperTarget extends MapperTarget {
       return hook;
     }
     return null;
+  }
+
+  String typeParamsDeclaration(ImportsBuilder imports) {
+    return element.typeParameters.isNotEmpty
+        ? '<${element.typeParameters.map((p) => '${p.displayName}${p.bound != null ? ' extends ${imports.prefixedType(p.bound!)}' : ''}').join(', ')}>'
+        : '';
   }
 
   CaseStyle? get caseStyle =>

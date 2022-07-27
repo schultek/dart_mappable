@@ -1,4 +1,5 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:path/path.dart' as p;
 
@@ -33,10 +34,6 @@ class ImportsBuilder {
     } else {
       return _imports[import] = _nextPrefix();
     }
-  }
-
-  String? prefix(Element e) {
-    return _imports[e.librarySource?.uri];
   }
 
   String write() {
@@ -86,5 +83,25 @@ class ImportsBuilder {
         : '';
 
     return joined(sdk) + joined(package) + joined(relative);
+  }
+
+  String prefixedType(DartType t, {bool withNullability = true}) {
+    if (t is TypeParameterType) {
+      return t.getDisplayString(withNullability: withNullability);
+    }
+
+    var typeArgs = '';
+    if (t is InterfaceType && t.typeArguments.isNotEmpty) {
+      typeArgs = '<${t.typeArguments.map(prefixedType).join(', ')}>';
+    }
+
+    var type = '${t.element?.name}$typeArgs';
+
+    if (withNullability && t.nullabilitySuffix == NullabilitySuffix.question) {
+      type += '?';
+    }
+
+    var prefix = add(t.element?.librarySource?.uri);
+    return (prefix != null ? '$prefix.' : '') + type;
   }
 }

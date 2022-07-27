@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
@@ -89,7 +88,7 @@ class CopyWithGenerator {
       var fieldTypeParams = p.type is InterfaceType
           ? (p.type as InterfaceType)
               .typeArguments
-              .map((t) => ', ${prefixedType(t)}')
+              .map((t) => ', ${imports.prefixedType(t)}')
               .join()
           : '';
 
@@ -98,7 +97,9 @@ class CopyWithGenerator {
       if (p.type.isDartCoreList) {
         var typeArg = (p.type as InterfaceType).typeArguments.first;
         var typeParams = typeArg is InterfaceType
-            ? typeArg.typeArguments.map((t) => ', ${prefixedType(t)}').join()
+            ? typeArg.typeArguments
+                .map((t) => ', ${imports.prefixedType(t)}')
+                .join()
             : '';
 
         fieldTypeParams += ', $copyWithName<\$R$typeParams>';
@@ -109,7 +110,7 @@ class CopyWithGenerator {
         var valueTypeArg = it.typeArguments[1];
         var typeParams = valueTypeArg is InterfaceType
             ? valueTypeArg.typeArguments
-                .map((t) => ', ${prefixedType(t)}')
+                .map((t) => ', ${imports.prefixedType(t)}')
                 .join()
             : '';
 
@@ -135,7 +136,7 @@ class CopyWithGenerator {
       var fieldTypeParams = p.type is InterfaceType
           ? (p.type as InterfaceType)
               .typeArguments
-              .map((t) => ', ${prefixedType(t)}')
+              .map((t) => ', ${imports.prefixedType(t)}')
               .join()
           : '';
       var copyWithName = '${classConfig.className}CopyWith';
@@ -146,7 +147,9 @@ class CopyWithGenerator {
 
         var typeArg = (p.type as InterfaceType).typeArguments.first;
         var typeParams = typeArg is InterfaceType
-            ? typeArg.typeArguments.map((t) => ', ${prefixedType(t)}').join()
+            ? typeArg.typeArguments
+                .map((t) => ', ${imports.prefixedType(t)}')
+                .join()
             : '';
 
         fieldTypeParams += ', $copyWithName<\$R$typeParams>';
@@ -156,7 +159,9 @@ class CopyWithGenerator {
 
         var typeArg = (p.type as InterfaceType).typeArguments[1];
         var typeParams = typeArg is InterfaceType
-            ? typeArg.typeArguments.map((t) => ', ${prefixedType(t)}').join()
+            ? typeArg.typeArguments
+                .map((t) => ', ${imports.prefixedType(t)}')
+                .join()
             : '';
 
         fieldTypeParams += ', $copyWithName<\$R$typeParams>';
@@ -188,7 +193,7 @@ class CopyWithGenerator {
     for (var param in config.params) {
       var p = param.parameter;
 
-      var type = prefixedType(p.type, withNullability: false);
+      var type = imports.prefixedType(p.type, withNullability: false);
 
       if (param is UnresolvedParameterConfig) {
         if (p.type.isNullable) {
@@ -234,25 +239,5 @@ class CopyWithGenerator {
       params.add(str);
     }
     return params.join(', ');
-  }
-
-  String prefixedType(DartType t, {bool withNullability = true}) {
-    if (t is TypeParameterType) {
-      return t.getDisplayString(withNullability: withNullability);
-    }
-
-    var typeArgs = '';
-    if (t is InterfaceType && t.typeArguments.isNotEmpty) {
-      typeArgs = '<${t.typeArguments.map(prefixedType).join(', ')}>';
-    }
-
-    var type = '${t.element?.name}$typeArgs';
-
-    if (withNullability && t.nullabilitySuffix == NullabilitySuffix.question) {
-      type += '?';
-    }
-
-    var prefix = imports.add(t.element?.librarySource?.uri);
-    return (prefix != null ? '$prefix.' : '') + type;
   }
 }
