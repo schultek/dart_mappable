@@ -188,6 +188,7 @@ class ExcludeTypeOptions extends TypeOptions {
 
   @override
   bool shouldGenerateFor(ClassElement element) {
-    return !exclude.contains(element.thisType) && !element.isDartCoreObject;
+    return exclude.every((t) => t.element != element) &&
+        !element.isDartCoreObject;
   }
 }
