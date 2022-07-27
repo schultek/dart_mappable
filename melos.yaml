@@ -1,0 +1,17 @@
+name: dart_mappable
+
+packages:
+  - packages/*/*
+  - examples/**
+
+command:
+  bootstrap:
+    usePubspecOverrides: true
+
+scripts:
+  test:
+    run: melos exec -- 'dart test'
+    select-package:
+      scope: dart_mappable
+  analyze:
+    run: melos exec -- 'dart analyze .'
