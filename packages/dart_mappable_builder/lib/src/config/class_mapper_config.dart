@@ -75,7 +75,7 @@ class ClassMapperConfig {
     if (unresolved.isNotEmpty) {
       print('\nClass $className defines constructor parameters that could not '
           'be resolved against any field or getter in the class.\nThis won\'t '
-          'break your code, but make lead to unexpected behaviour when '
+          'break your code, but may lead to unexpected behaviour when '
           'serializing this class. Also \'.copyWith()\' won\'t work on these '
           'parameters.\n\nThe following problematic parameters were detected:\n'
           '${unresolved.map((p) => '- ${p.parameter.name}: ${p.message}').join('\n')}\n\n'
