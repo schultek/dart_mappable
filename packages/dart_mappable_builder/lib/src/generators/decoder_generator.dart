@@ -1,25 +1,33 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/class_mapper_config.dart';
+import '../imports_builder.dart';
 import '../utils.dart';
 
 class DecoderGenerator {
-  String generateDecoderMethods(ClassMapperConfig config) {
+  final ClassMapperConfig config;
+  final ImportsBuilder imports;
+
+  DecoderGenerator(this.config, this.imports);
+
+  Future<String> generateDecoderMethods() async {
     if (config.shouldGenerate(GenerateMethods.decode)) {
       return '\n'
           '  @override Function get decoder => ${_generateDecoder(config)};\n'
-          '  ${config.className}${config.typeParams} decode${config.typeParamsDeclaration}(dynamic v) => ${_generateFromMapCall(config)};\n'
-          '  ${config.className}${config.typeParams} fromMap${config.typeParamsDeclaration}(Map<String, dynamic> map) => ${_generateFromMap(config)}\n';
+          '  ${config.prefixedClassName}${config.typeParams} decode${config.typeParamsDeclaration}(dynamic v) => ${_generateFromMapCall()};\n'
+          '  ${config.prefixedClassName}${config.typeParams} fromMap${config.typeParamsDeclaration}(Map<String, dynamic> map) => ${await _generateFromMap()}\n';
     } else {
       return '';
     }
   }
 
-  String generateTypeFactory(ClassMapperConfig config) {
+  String generateTypeFactory() {
     if (config.shouldGenerate(GenerateMethods.decode)) {
       return '\n'
-          '  @override Function get typeFactory => ${config.typeParamsDeclaration}(f) => f<${config.className}${config.typeParams}>();\n';
+          '${config.className != config.uniqueClassName ? '  @override String get id => \'${config.uniqueClassName}\';\n' : ''}'
+          '  @override Function get typeFactory => ${config.typeParamsDeclaration}(f) => f<${config.prefixedClassName}${config.typeParams}>();\n';
     } else {
       return '';
     }
@@ -38,7 +46,7 @@ class DecoderGenerator {
     return wrapped;
   }
 
-  String _generateFromMapCall(ClassMapperConfig config) {
+  String _generateFromMapCall() {
     var call = '';
 
     if (config.subConfigs.isEmpty || config.discriminatorKey == null) {
@@ -46,7 +54,7 @@ class DecoderGenerator {
     } else {
       call = '{\n'
           "    switch(map['${config.discriminatorKey}']) {\n"
-          '      ${_generateTypeCases(config).join('\n      ')}\n'
+          '      ${_generateTypeCases().join('\n      ')}\n'
           '    }\n'
           '  }';
     }
@@ -58,7 +66,7 @@ class DecoderGenerator {
     return call;
   }
 
-  List<String> _generateTypeCases(ClassMapperConfig config) {
+  List<String> _generateTypeCases() {
     var cases = _getDiscriminatorCases(config);
 
     String? defaultCase;
@@ -79,11 +87,11 @@ class DecoderGenerator {
     for (var c in sortedCases) {
       c.key.take(c.key.length - 1).forEach((s) => statements.add('case $s:'));
       statements.add(
-          'case ${c.key.last}: return ${c.value}._().decode(map)${config.typeParams.isNotEmpty ? ' as ${config.className}${config.typeParams}' : ''};');
+          'case ${c.key.last}: return ${c.value}._().decode(map)${config.typeParams.isNotEmpty ? ' as ${config.prefixedClassName}${config.typeParams}' : ''};');
     }
     if (defaultCase != null) {
       statements.add(
-          'default: return $defaultCase._().decode(map)${config.typeParams.isNotEmpty ? ' as ${config.className}${config.typeParams}' : ''};');
+          'default: return $defaultCase._().decode(map)${config.typeParams.isNotEmpty ? ' as ${config.prefixedClassName}${config.typeParams}' : ''};');
     } else {
       statements.add('default: return fromMap${config.typeParams}(map);');
     }
@@ -122,7 +130,7 @@ class DecoderGenerator {
     return cases;
   }
 
-  String _generateFromMap(ClassMapperConfig config) {
+  Future<String> _generateFromMap() async {
     if (!config.hasCallableConstructor) {
       if (config.subConfigs.isNotEmpty && config.discriminatorKey != null) {
         return "throw MapperException.missingSubclass('${config.className}', '${config.discriminatorKey}', '\${map['${config.discriminatorKey}']}');";
@@ -130,11 +138,11 @@ class DecoderGenerator {
         return "throw MapperException.missingConstructor('${config.className}');";
       }
     } else {
-      return '${config.className}${config.constructor!.name != '' ? '.${config.constructor!.name}' : ''}(${_generateConstructorParams(config)});';
+      return '${config.prefixedClassName}${config.constructor!.name != '' ? '.${config.constructor!.name}' : ''}(${await _generateConstructorParams()});';
     }
   }
 
-  String _generateConstructorParams(ClassMapperConfig config) {
+  Future<String> _generateConstructorParams() async {
     List<String> params = [];
     for (var param in config.params) {
       var str = '';
@@ -151,7 +159,7 @@ class DecoderGenerator {
 
       var args = ['map', "'${param.jsonKey(config.caseStyle)}'"];
 
-      var hook = param.hook;
+      var hook = await param.getHook(imports);
       if (hook != null) {
         args.add('const $hook');
       }
@@ -159,7 +167,7 @@ class DecoderGenerator {
       str += "(${args.join(', ')})";
 
       if (p.hasDefaultValue && p.defaultValueCode != 'null') {
-        str += ' ?? ${p.defaultValueCode}';
+        str += ' ?? ${await getPrefixedDefaultValue(p, imports)}';
       } else {
         var node = p.getNode();
         if (node is DefaultFormalParameter &&
@@ -171,5 +179,15 @@ class DecoderGenerator {
       params.add(str);
     }
     return params.join(', ');
+  }
+
+  Future<String> getPrefixedDefaultValue(
+      ParameterElement p, ImportsBuilder imports) async {
+    var node = await p.getResolvedNode();
+    if (node is DefaultFormalParameter) {
+      return getPrefixedNodeSource(node.defaultValue!, imports);
+    }
+
+    return p.defaultValueCode!;
   }
 }

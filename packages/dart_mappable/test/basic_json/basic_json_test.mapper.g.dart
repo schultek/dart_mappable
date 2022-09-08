@@ -1,7 +1,9 @@
+import 'dart:core';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
-import 'basic_json_test.dart';
+import 'basic_json_test.dart' as p0;
 
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
@@ -18,105 +20,105 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class PersonMapper extends BaseMapper<Person> {
+class PersonMapper extends BaseMapper<p0.Person> {
   PersonMapper._();
 
   @override Function get decoder => decode;
-  Person decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Person fromMap(Map<String, dynamic> map) => Person(Mapper.i.$get(map, 'name'), age: Mapper.i.$getOpt(map, 'age') ?? 18, car: Mapper.i.$getOpt(map, 'car'));
+  p0.Person decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p0.Person fromMap(Map<String, dynamic> map) => p0.Person(Mapper.i.$get(map, 'name'), age: Mapper.i.$getOpt(map, 'age') ?? 18, car: Mapper.i.$getOpt(map, 'car'));
 
-  @override Function get encoder => (Person v) => encode(v);
-  dynamic encode(Person v) => toMap(v);
-  Map<String, dynamic> toMap(Person p) => {'name': Mapper.i.$enc(p.name, 'name'), 'age': Mapper.i.$enc(p.age, 'age'), 'car': Mapper.i.$enc(p.car, 'car')};
+  @override Function get encoder => (p0.Person v) => encode(v);
+  dynamic encode(p0.Person v) => toMap(v);
+  Map<String, dynamic> toMap(p0.Person p) => {'name': Mapper.i.$enc(p.name, 'name'), 'age': Mapper.i.$enc(p.age, 'age'), 'car': Mapper.i.$enc(p.car, 'car')};
 
-  @override String stringify(Person self) => 'Person(name: ${Mapper.asString(self.name)}, age: ${Mapper.asString(self.age)}, car: ${Mapper.asString(self.car)})';
-  @override int hash(Person self) => Mapper.hash(self.name) ^ Mapper.hash(self.age) ^ Mapper.hash(self.car);
-  @override bool equals(Person self, Person other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.age, other.age) && Mapper.isEqual(self.car, other.car);
+  @override String stringify(p0.Person self) => 'Person(name: ${Mapper.asString(self.name)}, age: ${Mapper.asString(self.age)}, car: ${Mapper.asString(self.car)})';
+  @override int hash(p0.Person self) => Mapper.hash(self.name) ^ Mapper.hash(self.age) ^ Mapper.hash(self.car);
+  @override bool equals(p0.Person self, p0.Person other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.age, other.age) && Mapper.isEqual(self.car, other.car);
 
-  @override Function get typeFactory => (f) => f<Person>();
+  @override Function get typeFactory => (f) => f<p0.Person>();
 }
 
-extension PersonMapperExtension  on Person {
+extension PersonMapperExtension on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<Person> get copyWith => PersonCopyWith(this, $identity);
+  PersonCopyWith<p0.Person> get copyWith => PersonCopyWith(this, $identity);
 }
 
 abstract class PersonCopyWith<$R> {
-  factory PersonCopyWith(Person value, Then<Person, $R> then) = _PersonCopyWithImpl<$R>;
+  factory PersonCopyWith(p0.Person value, Then<p0.Person, $R> then) = _PersonCopyWithImpl<$R>;
   CarCopyWith<$R>? get car;
-  $R call({String? name, int? age, Car? car});
-  $R apply(Person Function(Person) transform);
+  $R call({String? name, int? age, p0.Car? car});
+  $R apply(p0.Person Function(p0.Person) transform);
 }
 
-class _PersonCopyWithImpl<$R> extends BaseCopyWith<Person, $R> implements PersonCopyWith<$R> {
-  _PersonCopyWithImpl(Person value, Then<Person, $R> then) : super(value, then);
+class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements PersonCopyWith<$R> {
+  _PersonCopyWithImpl(p0.Person value, Then<p0.Person, $R> then) : super(value, then);
 
   @override CarCopyWith<$R>? get car => $value.car != null ? CarCopyWith($value.car!, (v) => call(car: v)) : null;
-  @override $R call({String? name, int? age, Object? car = $none}) => $then(Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
+  @override $R call({String? name, int? age, Object? car = $none}) => $then(p0.Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
 }
 
-class CarMapper extends BaseMapper<Car> {
+class CarMapper extends BaseMapper<p0.Car> {
   CarMapper._();
 
   @override Function get decoder => decode;
-  Car decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Car fromMap(Map<String, dynamic> map) => Car(Mapper.i.$get(map, 'driven_km'), Mapper.i.$get(map, 'brand'));
+  p0.Car decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p0.Car fromMap(Map<String, dynamic> map) => p0.Car(Mapper.i.$get(map, 'driven_km'), Mapper.i.$get(map, 'brand'));
 
-  @override Function get encoder => (Car v) => encode(v);
-  dynamic encode(Car v) => toMap(v);
-  Map<String, dynamic> toMap(Car c) => {'driven_km': Mapper.i.$enc(c.drivenKm, 'drivenKm'), 'brand': Mapper.i.$enc(c.brand, 'brand')};
+  @override Function get encoder => (p0.Car v) => encode(v);
+  dynamic encode(p0.Car v) => toMap(v);
+  Map<String, dynamic> toMap(p0.Car c) => {'driven_km': Mapper.i.$enc(c.drivenKm, 'drivenKm'), 'brand': Mapper.i.$enc(c.brand, 'brand')};
 
-  @override String stringify(Car self) => 'Car(miles: ${Mapper.asString(self.miles)}, brand: ${Mapper.asString(self.brand)})';
-  @override int hash(Car self) => Mapper.hash(self.miles) ^ Mapper.hash(self.brand);
-  @override bool equals(Car self, Car other) => Mapper.isEqual(self.miles, other.miles) && Mapper.isEqual(self.brand, other.brand);
+  @override String stringify(p0.Car self) => 'Car(miles: ${Mapper.asString(self.miles)}, brand: ${Mapper.asString(self.brand)})';
+  @override int hash(p0.Car self) => Mapper.hash(self.miles) ^ Mapper.hash(self.brand);
+  @override bool equals(p0.Car self, p0.Car other) => Mapper.isEqual(self.miles, other.miles) && Mapper.isEqual(self.brand, other.brand);
 
-  @override Function get typeFactory => (f) => f<Car>();
+  @override Function get typeFactory => (f) => f<p0.Car>();
 }
 
-extension CarMapperExtension  on Car {
+extension CarMapperExtension on p0.Car {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CarCopyWith<Car> get copyWith => CarCopyWith(this, $identity);
+  CarCopyWith<p0.Car> get copyWith => CarCopyWith(this, $identity);
 }
 
 abstract class CarCopyWith<$R> {
-  factory CarCopyWith(Car value, Then<Car, $R> then) = _CarCopyWithImpl<$R>;
-  $R call({int? drivenKm, Brand? brand});
-  $R apply(Car Function(Car) transform);
+  factory CarCopyWith(p0.Car value, Then<p0.Car, $R> then) = _CarCopyWithImpl<$R>;
+  $R call({int? drivenKm, p0.Brand? brand});
+  $R apply(p0.Car Function(p0.Car) transform);
 }
 
-class _CarCopyWithImpl<$R> extends BaseCopyWith<Car, $R> implements CarCopyWith<$R> {
-  _CarCopyWithImpl(Car value, Then<Car, $R> then) : super(value, then);
+class _CarCopyWithImpl<$R> extends BaseCopyWith<p0.Car, $R> implements CarCopyWith<$R> {
+  _CarCopyWithImpl(p0.Car value, Then<p0.Car, $R> then) : super(value, then);
 
-  @override $R call({int? drivenKm, Brand? brand}) => $then(Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
+  @override $R call({int? drivenKm, p0.Brand? brand}) => $then(p0.Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
 }
 
 
 // === GENERATED ENUM MAPPERS AND EXTENSIONS ===
 
-class BrandMapper extends EnumMapper<Brand> {
+class BrandMapper extends EnumMapper<p0.Brand> {
   BrandMapper._();
 
-  @override  Brand decode(dynamic value) {
+  @override  p0.Brand decode(dynamic value) {
     switch (value) {
-      case 'toyota': return Brand.Toyota;
-      case 'audi': return Brand.Audi;
-      case 'bmw': return Brand.BMW;
-      default: return Brand.values[1];
+      case 'toyota': return p0.Brand.Toyota;
+      case 'audi': return p0.Brand.Audi;
+      case 'bmw': return p0.Brand.BMW;
+      default: return p0.Brand.values[1];
     }
   }
 
-  @override  dynamic encode(Brand self) {
+  @override  dynamic encode(p0.Brand self) {
     switch (self) {
-      case Brand.Toyota: return 'toyota';
-      case Brand.Audi: return 'audi';
-      case Brand.BMW: return 'bmw';
+      case p0.Brand.Toyota: return 'toyota';
+      case p0.Brand.Audi: return 'audi';
+      case p0.Brand.BMW: return 'bmw';
     }
   }
 }
 
-extension BrandMapperExtension on Brand {
+extension BrandMapperExtension on p0.Brand {
   dynamic toValue() => Mapper.toValue(this);
   @Deprecated('Use \'toValue\' instead')
   String toStringValue() => Mapper.toValue(this) as String;

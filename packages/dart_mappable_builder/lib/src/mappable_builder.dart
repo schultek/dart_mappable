@@ -54,16 +54,24 @@ class MappableBuilder implements Builder {
       targets.addElementsFromLibrary(entry.key, entry.value);
     }
 
-    var classMappers = <ClassMapperGenerator>[];
+    var classConfigs = Map.fromEntries(await Future.wait(targets.classes.entries
+        .map((e) async =>
+            MapEntry(e.key, await e.value.getConfig(targets.imports)))));
 
-    for (var target in targets.classes.values) {
-      targets.imports.addAll(target.config.imports);
-      classMappers.add(ClassMapperGenerator(target.config));
-    }
+    var classMappers = targets.classes.keys
+        .map((k) => ClassMapperGenerator(classConfigs[k]!, targets.imports))
+        .toList();
 
-    var enumMappers =
-        targets.enums.values.map((c) => EnumMapperGenerator(c.config));
+    var enumMappers = targets.enums.values
+        .map((c) => EnumMapperGenerator(c.config, targets.imports))
+        .toList();
+
     var customMappers = targets.customMappers.values;
+
+    var genClasses = await Future.wait(
+        classMappers.map((om) => om.generate((e) => classConfigs[e])));
+
+    var genEnums = await Future.wait(enumMappers.map((em) => em.generate()));
 
     return ''
         '${targets.imports.write()}\n'
@@ -74,14 +82,14 @@ class MappableBuilder implements Builder {
         '  // enum mappers\n'
         '${enumMappers.map((em) => '  ${em.config.mapperName}._(),\n').join()}'
         '  // custom mappers\n'
-        '${customMappers.map((e) => '  ${e.name}(),\n').join()}'
+        '${customMappers.map((e) => '  ${e.prefixedMapperName}(),\n').join()}'
         '};\n'
         '\n\n'
         '// === GENERATED CLASS MAPPERS AND EXTENSIONS ===\n\n'
-        '${classMappers.map((om) => om.generate((e) => targets.classes[e]?.config)).join('\n\n')}\n'
+        '${genClasses.join('\n\n')}\n'
         '\n\n'
         '// === GENERATED ENUM MAPPERS AND EXTENSIONS ===\n\n'
-        '${enumMappers.map((em) => em.generate()).join('\n\n')}\n'
+        '${genEnums.join('\n\n')}\n'
         '\n\n'
         '// === GENERATED UTILITY CODE ===\n\n'
         '$mapperCode';

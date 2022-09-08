@@ -1,9 +1,11 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../builder_options.dart';
+import '../imports_builder.dart';
 import '../utils.dart';
 import 'class_mapper_config.dart';
 import 'mapper_targets.dart';
@@ -13,8 +15,8 @@ class ClassMapperTarget extends MapperTarget {
   List<ClassMapperTarget> subTargets = [];
   ClassMapperTarget? superTarget;
 
-  ClassMapperTarget(ClassElement element, MappableOptions options)
-      : super(element, options);
+  ClassMapperTarget(ClassElement element, MappableOptions options, int? prefix)
+      : super(element, options, prefix);
 
   @override
   DartObject? getAnnotation() =>
@@ -37,39 +39,44 @@ class ClassMapperTarget extends MapperTarget {
     target.subTargets.add(this);
   }
 
-  late ClassMapperConfig config = _buildConfig();
-  ClassMapperConfig _buildConfig() {
-    config = ClassMapperConfig(
-      element: element,
-      constructor: constructor,
-      discriminatorKey: discriminatorKey,
-      discriminatorValueCode: discriminatorValueCode,
-      hookForClass: hookForClass,
-      caseStyle: caseStyle,
-      ignoreNull: ignoreNull,
-      generateMethods: generateMethods,
-      superConfig: superTarget?.config,
-      subConfigs: [],
-      params: analyzeParams(),
-      requiredImports: requiredImports,
-    );
-    config.superConfig?.subConfigs.add(config);
-    return config;
+  Future<ClassMapperConfig>? _config;
+  Future<ClassMapperConfig> getConfig(ImportsBuilder imports) async {
+    if (_config != null) return _config!;
+    return _config = Future.sync(() async {
+      var config = ClassMapperConfig(
+        element: element,
+        constructor: constructor,
+        discriminatorKey: discriminatorKey,
+        discriminatorValueCode: discriminatorValueCode,
+        hookForClass: await hookForClass(imports),
+        caseStyle: caseStyle,
+        ignoreNull: ignoreNull,
+        generateMethods: generateMethods,
+        superConfig: await superTarget?.getConfig(imports),
+        subConfigs: [],
+        params: await analyzeParams(imports),
+        typeParamsDeclaration: typeParamsDeclaration(imports),
+        prefix: prefix,
+      );
+      config.superConfig?.subConfigs.add(config);
+      return config;
+    });
   }
 
-  List<ParameterConfig> analyzeParams() {
+  Future<List<ParameterConfig>> analyzeParams(ImportsBuilder imports) async {
     var params = <ParameterConfig>[];
 
     if (constructor == null) return params;
 
     for (var param in constructor!.parameters) {
-      params.add(getParameterConfig(param));
+      params.add(await getParameterConfig(param, imports));
     }
 
     return params;
   }
 
-  ParameterConfig getParameterConfig(ParameterElement param) {
+  Future<ParameterConfig> getParameterConfig(
+      ParameterElement param, ImportsBuilder imports) async {
     if (param is FieldFormalParameterElement) {
       return FieldParameterConfig(param, param.field!);
     }
@@ -83,7 +90,8 @@ class ClassMapperTarget extends MapperTarget {
       }
       return SuperParameterConfig(
         param,
-        superTarget!.getParameterConfig(param.superConstructorParameter!),
+        await superTarget!
+            .getParameterConfig(param.superConstructorParameter!, imports),
       );
     }
 
@@ -108,9 +116,11 @@ class ClassMapperTarget extends MapperTarget {
       );
     }
 
-    ParameterElement? superParameter = _findSuperParameter(param);
+    ParameterElement? superParameter =
+        await _findSuperParameter(param, imports);
     if (superParameter != null) {
-      var superConfig = superTarget!.getParameterConfig(superParameter);
+      var superConfig =
+          await superTarget!.getParameterConfig(superParameter, imports);
       if (superConfig is UnresolvedParameterConfig) {
         return UnresolvedParameterConfig(
           param,
@@ -127,8 +137,9 @@ class ClassMapperTarget extends MapperTarget {
     );
   }
 
-  ParameterElement? _findSuperParameter(ParameterElement param) {
-    var superConfig = superTarget?.config;
+  Future<ParameterElement?> _findSuperParameter(
+      ParameterElement param, ImportsBuilder imports) async {
+    var superConfig = await superTarget?.getConfig(imports);
     if (superConfig == null) return null;
 
     var node = constructor!.getNode();
@@ -185,7 +196,9 @@ class ClassMapperTarget extends MapperTarget {
           discriminatorValueField.getField('index')!.toIntValue() == 0) {
         return 'default';
       } else {
-        code = readAnnotation('discriminatorValue');
+        code = getAnnotationNode(
+                annotatedElement, MappableClass, 'discriminatorValue')
+            ?.toSource();
       }
     }
     if (code == null && superTarget != null && !element.isAbstract) {
@@ -194,11 +207,22 @@ class ClassMapperTarget extends MapperTarget {
     return code;
   }
 
-  String? get hookForClass {
-    if (annotation != null && !annotation!.getField('hooks')!.isNull) {
-      return readAnnotation('hooks');
+  Future<String?> hookForClass(ImportsBuilder imports) async {
+    var hooks = annotation?.getField('hooks');
+    if (hooks != null && !hooks.isNull) {
+      var node = await getResolvedAnnotationNode(
+          annotatedElement, MappableClass, 'hooks');
+      if (node != null) {
+        return getPrefixedNodeSource(node, imports);
+      }
     }
     return null;
+  }
+
+  String typeParamsDeclaration(ImportsBuilder imports) {
+    return element.typeParameters.isNotEmpty
+        ? '<${element.typeParameters.map((p) => '${p.displayName}${p.bound != null ? ' extends ${imports.prefixedType(p.bound!)}' : ''}').join(', ')}>'
+        : '';
   }
 
   CaseStyle? get caseStyle =>
@@ -216,24 +240,15 @@ class ClassMapperTarget extends MapperTarget {
         options.generateMethods ??
         GenerateMethods.all;
   }
-
-  List<Uri> get requiredImports {
-    var hooks = annotation?.getField('hooks');
-    if (hooks != null && !hooks.isNull) {
-      var uri = hooks.type?.element?.library?.source.uri;
-      return uri != null ? [uri] : [];
-    }
-    return [];
-  }
 }
 
 class FactoryConstructorMapperTarget extends ClassMapperTarget {
   ConstructorElement factoryConstructor;
 
   FactoryConstructorMapperTarget(
-      this.factoryConstructor, MappableOptions options)
+      this.factoryConstructor, MappableOptions options, int? prefix)
       : super(factoryConstructor.redirectedConstructor!.returnType.element,
-            options);
+            options, prefix);
 
   @override
   Element get annotatedElement => factoryConstructor;

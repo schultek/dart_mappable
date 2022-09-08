@@ -1,7 +1,9 @@
+import 'dart:core';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
-import 'polymorphism_test.dart';
+import 'polymorphism_test.dart' as p0;
 
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
@@ -20,11 +22,11 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class AnimalMapper extends BaseMapper<Animal> {
+class AnimalMapper extends BaseMapper<p0.Animal> {
   AnimalMapper._();
 
   @override Function get decoder => decode;
-  Animal decode(dynamic v) => checked(v, (Map<String, dynamic> map) {
+  p0.Animal decode(dynamic v) => checked(v, (Map<String, dynamic> map) {
     switch(map['type']) {
       case 'Cat': return CatMapper._().decode(map);
       case 1: return DogMapper._().decode(map);
@@ -32,172 +34,172 @@ class AnimalMapper extends BaseMapper<Animal> {
       default: return DefaultAnimalMapper._().decode(map);
     }
   });
-  Animal fromMap(Map<String, dynamic> map) => throw MapperException.missingSubclass('Animal', 'type', '${map['type']}');
+  p0.Animal fromMap(Map<String, dynamic> map) => throw MapperException.missingSubclass('Animal', 'type', '${map['type']}');
 
-  @override Function get encoder => (Animal v) => encode(v);
-  dynamic encode(Animal v) {
-    if (v is Cat) { return CatMapper._().encode(v); }
-    else if (v is Dog) { return DogMapper._().encode(v); }
-    else if (v is NullAnimal) { return NullAnimalMapper._().encode(v); }
-    else if (v is DefaultAnimal) { return DefaultAnimalMapper._().encode(v); }
+  @override Function get encoder => (p0.Animal v) => encode(v);
+  dynamic encode(p0.Animal v) {
+    if (v is p0.NullAnimal) { return NullAnimalMapper._().encode(v); }
+    else if (v is p0.Cat) { return CatMapper._().encode(v); }
+    else if (v is p0.Dog) { return DogMapper._().encode(v); }
+    else if (v is p0.DefaultAnimal) { return DefaultAnimalMapper._().encode(v); }
     else { return toMap(v); }
   }
-  Map<String, dynamic> toMap(Animal a) => {'name': Mapper.i.$enc(a.name, 'name')};
+  Map<String, dynamic> toMap(p0.Animal a) => {'name': Mapper.i.$enc(a.name, 'name')};
 
-  @override String stringify(Animal self) => 'Animal(name: ${Mapper.asString(self.name)})';
-  @override int hash(Animal self) => Mapper.hash(self.name);
-  @override bool equals(Animal self, Animal other) => Mapper.isEqual(self.name, other.name);
+  @override String stringify(p0.Animal self) => 'Animal(name: ${Mapper.asString(self.name)})';
+  @override int hash(p0.Animal self) => Mapper.hash(self.name);
+  @override bool equals(p0.Animal self, p0.Animal other) => Mapper.isEqual(self.name, other.name);
 
-  @override Function get typeFactory => (f) => f<Animal>();
+  @override Function get typeFactory => (f) => f<p0.Animal>();
 }
 
-extension AnimalMapperExtension  on Animal {
+extension AnimalMapperExtension on p0.Animal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 }
 
-class CatMapper extends BaseMapper<Cat> {
+class CatMapper extends BaseMapper<p0.Cat> {
   CatMapper._();
 
   @override Function get decoder => decode;
-  Cat decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Cat fromMap(Map<String, dynamic> map) => Cat(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'color'));
+  p0.Cat decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p0.Cat fromMap(Map<String, dynamic> map) => p0.Cat(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'color'));
 
-  @override Function get encoder => (Cat v) => encode(v);
-  dynamic encode(Cat v) => toMap(v);
-  Map<String, dynamic> toMap(Cat c) => {'name': Mapper.i.$enc(c.name, 'name'), 'color': Mapper.i.$enc(c.color, 'color'), 'type': 'Cat'};
+  @override Function get encoder => (p0.Cat v) => encode(v);
+  dynamic encode(p0.Cat v) => toMap(v);
+  Map<String, dynamic> toMap(p0.Cat c) => {'name': Mapper.i.$enc(c.name, 'name'), 'color': Mapper.i.$enc(c.color, 'color'), 'type': 'Cat'};
 
-  @override String stringify(Cat self) => 'Cat(name: ${Mapper.asString(self.name)}, color: ${Mapper.asString(self.color)})';
-  @override int hash(Cat self) => Mapper.hash(self.name) ^ Mapper.hash(self.color);
-  @override bool equals(Cat self, Cat other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.color, other.color);
+  @override String stringify(p0.Cat self) => 'Cat(name: ${Mapper.asString(self.name)}, color: ${Mapper.asString(self.color)})';
+  @override int hash(p0.Cat self) => Mapper.hash(self.name) ^ Mapper.hash(self.color);
+  @override bool equals(p0.Cat self, p0.Cat other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.color, other.color);
 
-  @override Function get typeFactory => (f) => f<Cat>();
+  @override Function get typeFactory => (f) => f<p0.Cat>();
 }
 
-extension CatMapperExtension  on Cat {
+extension CatMapperExtension on p0.Cat {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CatCopyWith<Cat> get copyWith => CatCopyWith(this, $identity);
+  CatCopyWith<p0.Cat> get copyWith => CatCopyWith(this, $identity);
 }
 
 abstract class CatCopyWith<$R> {
-  factory CatCopyWith(Cat value, Then<Cat, $R> then) = _CatCopyWithImpl<$R>;
+  factory CatCopyWith(p0.Cat value, Then<p0.Cat, $R> then) = _CatCopyWithImpl<$R>;
   $R call({String? name, String? color});
-  $R apply(Cat Function(Cat) transform);
+  $R apply(p0.Cat Function(p0.Cat) transform);
 }
 
-class _CatCopyWithImpl<$R> extends BaseCopyWith<Cat, $R> implements CatCopyWith<$R> {
-  _CatCopyWithImpl(Cat value, Then<Cat, $R> then) : super(value, then);
+class _CatCopyWithImpl<$R> extends BaseCopyWith<p0.Cat, $R> implements CatCopyWith<$R> {
+  _CatCopyWithImpl(p0.Cat value, Then<p0.Cat, $R> then) : super(value, then);
 
-  @override $R call({String? name, String? color}) => $then(Cat(name ?? $value.name, color ?? $value.color));
+  @override $R call({String? name, String? color}) => $then(p0.Cat(name ?? $value.name, color ?? $value.color));
 }
 
-class DogMapper extends BaseMapper<Dog> {
+class DogMapper extends BaseMapper<p0.Dog> {
   DogMapper._();
 
   @override Function get decoder => decode;
-  Dog decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  Dog fromMap(Map<String, dynamic> map) => Dog(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'age'));
+  p0.Dog decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p0.Dog fromMap(Map<String, dynamic> map) => p0.Dog(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'age'));
 
-  @override Function get encoder => (Dog v) => encode(v);
-  dynamic encode(Dog v) => toMap(v);
-  Map<String, dynamic> toMap(Dog d) => {'name': Mapper.i.$enc(d.name, 'name'), 'age': Mapper.i.$enc(d.age, 'age'), 'type': 1};
+  @override Function get encoder => (p0.Dog v) => encode(v);
+  dynamic encode(p0.Dog v) => toMap(v);
+  Map<String, dynamic> toMap(p0.Dog d) => {'name': Mapper.i.$enc(d.name, 'name'), 'age': Mapper.i.$enc(d.age, 'age'), 'type': 1};
 
-  @override String stringify(Dog self) => 'Dog(name: ${Mapper.asString(self.name)}, age: ${Mapper.asString(self.age)})';
-  @override int hash(Dog self) => Mapper.hash(self.name) ^ Mapper.hash(self.age);
-  @override bool equals(Dog self, Dog other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.age, other.age);
+  @override String stringify(p0.Dog self) => 'Dog(name: ${Mapper.asString(self.name)}, age: ${Mapper.asString(self.age)})';
+  @override int hash(p0.Dog self) => Mapper.hash(self.name) ^ Mapper.hash(self.age);
+  @override bool equals(p0.Dog self, p0.Dog other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.age, other.age);
 
-  @override Function get typeFactory => (f) => f<Dog>();
+  @override Function get typeFactory => (f) => f<p0.Dog>();
 }
 
-extension DogMapperExtension  on Dog {
+extension DogMapperExtension on p0.Dog {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DogCopyWith<Dog> get copyWith => DogCopyWith(this, $identity);
+  DogCopyWith<p0.Dog> get copyWith => DogCopyWith(this, $identity);
 }
 
 abstract class DogCopyWith<$R> {
-  factory DogCopyWith(Dog value, Then<Dog, $R> then) = _DogCopyWithImpl<$R>;
+  factory DogCopyWith(p0.Dog value, Then<p0.Dog, $R> then) = _DogCopyWithImpl<$R>;
   $R call({String? name, int? age});
-  $R apply(Dog Function(Dog) transform);
+  $R apply(p0.Dog Function(p0.Dog) transform);
 }
 
-class _DogCopyWithImpl<$R> extends BaseCopyWith<Dog, $R> implements DogCopyWith<$R> {
-  _DogCopyWithImpl(Dog value, Then<Dog, $R> then) : super(value, then);
+class _DogCopyWithImpl<$R> extends BaseCopyWith<p0.Dog, $R> implements DogCopyWith<$R> {
+  _DogCopyWithImpl(p0.Dog value, Then<p0.Dog, $R> then) : super(value, then);
 
-  @override $R call({String? name, int? age}) => $then(Dog(name ?? $value.name, age ?? $value.age));
+  @override $R call({String? name, int? age}) => $then(p0.Dog(name ?? $value.name, age ?? $value.age));
 }
 
-class NullAnimalMapper extends BaseMapper<NullAnimal> {
+class NullAnimalMapper extends BaseMapper<p0.NullAnimal> {
   NullAnimalMapper._();
 
   @override Function get decoder => decode;
-  NullAnimal decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  NullAnimal fromMap(Map<String, dynamic> map) => NullAnimal(Mapper.i.$get(map, 'name'));
+  p0.NullAnimal decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p0.NullAnimal fromMap(Map<String, dynamic> map) => p0.NullAnimal(Mapper.i.$get(map, 'name'));
 
-  @override Function get encoder => (NullAnimal v) => encode(v);
-  dynamic encode(NullAnimal v) => toMap(v);
-  Map<String, dynamic> toMap(NullAnimal n) => {'name': Mapper.i.$enc(n.name, 'name'), 'type': null};
+  @override Function get encoder => (p0.NullAnimal v) => encode(v);
+  dynamic encode(p0.NullAnimal v) => toMap(v);
+  Map<String, dynamic> toMap(p0.NullAnimal n) => {'name': Mapper.i.$enc(n.name, 'name'), 'type': null};
 
-  @override String stringify(NullAnimal self) => 'NullAnimal(name: ${Mapper.asString(self.name)})';
-  @override int hash(NullAnimal self) => Mapper.hash(self.name);
-  @override bool equals(NullAnimal self, NullAnimal other) => Mapper.isEqual(self.name, other.name);
+  @override String stringify(p0.NullAnimal self) => 'NullAnimal(name: ${Mapper.asString(self.name)})';
+  @override int hash(p0.NullAnimal self) => Mapper.hash(self.name);
+  @override bool equals(p0.NullAnimal self, p0.NullAnimal other) => Mapper.isEqual(self.name, other.name);
 
-  @override Function get typeFactory => (f) => f<NullAnimal>();
+  @override Function get typeFactory => (f) => f<p0.NullAnimal>();
 }
 
-extension NullAnimalMapperExtension  on NullAnimal {
+extension NullAnimalMapperExtension on p0.NullAnimal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  NullAnimalCopyWith<NullAnimal> get copyWith => NullAnimalCopyWith(this, $identity);
+  NullAnimalCopyWith<p0.NullAnimal> get copyWith => NullAnimalCopyWith(this, $identity);
 }
 
 abstract class NullAnimalCopyWith<$R> {
-  factory NullAnimalCopyWith(NullAnimal value, Then<NullAnimal, $R> then) = _NullAnimalCopyWithImpl<$R>;
+  factory NullAnimalCopyWith(p0.NullAnimal value, Then<p0.NullAnimal, $R> then) = _NullAnimalCopyWithImpl<$R>;
   $R call({String? name});
-  $R apply(NullAnimal Function(NullAnimal) transform);
+  $R apply(p0.NullAnimal Function(p0.NullAnimal) transform);
 }
 
-class _NullAnimalCopyWithImpl<$R> extends BaseCopyWith<NullAnimal, $R> implements NullAnimalCopyWith<$R> {
-  _NullAnimalCopyWithImpl(NullAnimal value, Then<NullAnimal, $R> then) : super(value, then);
+class _NullAnimalCopyWithImpl<$R> extends BaseCopyWith<p0.NullAnimal, $R> implements NullAnimalCopyWith<$R> {
+  _NullAnimalCopyWithImpl(p0.NullAnimal value, Then<p0.NullAnimal, $R> then) : super(value, then);
 
-  @override $R call({String? name}) => $then(NullAnimal(name ?? $value.name));
+  @override $R call({String? name}) => $then(p0.NullAnimal(name ?? $value.name));
 }
 
-class DefaultAnimalMapper extends BaseMapper<DefaultAnimal> {
+class DefaultAnimalMapper extends BaseMapper<p0.DefaultAnimal> {
   DefaultAnimalMapper._();
 
   @override Function get decoder => decode;
-  DefaultAnimal decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  DefaultAnimal fromMap(Map<String, dynamic> map) => DefaultAnimal(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'type'));
+  p0.DefaultAnimal decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p0.DefaultAnimal fromMap(Map<String, dynamic> map) => p0.DefaultAnimal(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'type'));
 
-  @override Function get encoder => (DefaultAnimal v) => encode(v);
-  dynamic encode(DefaultAnimal v) => toMap(v);
-  Map<String, dynamic> toMap(DefaultAnimal d) => {'name': Mapper.i.$enc(d.name, 'name'), 'type': Mapper.i.$enc(d.type, 'type')};
+  @override Function get encoder => (p0.DefaultAnimal v) => encode(v);
+  dynamic encode(p0.DefaultAnimal v) => toMap(v);
+  Map<String, dynamic> toMap(p0.DefaultAnimal d) => {'name': Mapper.i.$enc(d.name, 'name'), 'type': Mapper.i.$enc(d.type, 'type')};
 
-  @override String stringify(DefaultAnimal self) => 'DefaultAnimal(name: ${Mapper.asString(self.name)}, type: ${Mapper.asString(self.type)})';
-  @override int hash(DefaultAnimal self) => Mapper.hash(self.name) ^ Mapper.hash(self.type);
-  @override bool equals(DefaultAnimal self, DefaultAnimal other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.type, other.type);
+  @override String stringify(p0.DefaultAnimal self) => 'DefaultAnimal(name: ${Mapper.asString(self.name)}, type: ${Mapper.asString(self.type)})';
+  @override int hash(p0.DefaultAnimal self) => Mapper.hash(self.name) ^ Mapper.hash(self.type);
+  @override bool equals(p0.DefaultAnimal self, p0.DefaultAnimal other) => Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.type, other.type);
 
-  @override Function get typeFactory => (f) => f<DefaultAnimal>();
+  @override Function get typeFactory => (f) => f<p0.DefaultAnimal>();
 }
 
-extension DefaultAnimalMapperExtension  on DefaultAnimal {
+extension DefaultAnimalMapperExtension on p0.DefaultAnimal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DefaultAnimalCopyWith<DefaultAnimal> get copyWith => DefaultAnimalCopyWith(this, $identity);
+  DefaultAnimalCopyWith<p0.DefaultAnimal> get copyWith => DefaultAnimalCopyWith(this, $identity);
 }
 
 abstract class DefaultAnimalCopyWith<$R> {
-  factory DefaultAnimalCopyWith(DefaultAnimal value, Then<DefaultAnimal, $R> then) = _DefaultAnimalCopyWithImpl<$R>;
+  factory DefaultAnimalCopyWith(p0.DefaultAnimal value, Then<p0.DefaultAnimal, $R> then) = _DefaultAnimalCopyWithImpl<$R>;
   $R call({String? name, String? type});
-  $R apply(DefaultAnimal Function(DefaultAnimal) transform);
+  $R apply(p0.DefaultAnimal Function(p0.DefaultAnimal) transform);
 }
 
-class _DefaultAnimalCopyWithImpl<$R> extends BaseCopyWith<DefaultAnimal, $R> implements DefaultAnimalCopyWith<$R> {
-  _DefaultAnimalCopyWithImpl(DefaultAnimal value, Then<DefaultAnimal, $R> then) : super(value, then);
+class _DefaultAnimalCopyWithImpl<$R> extends BaseCopyWith<p0.DefaultAnimal, $R> implements DefaultAnimalCopyWith<$R> {
+  _DefaultAnimalCopyWithImpl(p0.DefaultAnimal value, Then<p0.DefaultAnimal, $R> then) : super(value, then);
 
-  @override $R call({String? name, String? type}) => $then(DefaultAnimal(name ?? $value.name, type ?? $value.type));
+  @override $R call({String? name, String? type}) => $then(p0.DefaultAnimal(name ?? $value.name, type ?? $value.type));
 }
 
 

@@ -1,22 +1,26 @@
+import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/enum_mapper_config.dart';
+import '../imports_builder.dart';
 import '../utils.dart';
 
 /// Generates code for a specific enum
 class EnumMapperGenerator {
-  EnumMapperConfig config;
+  final EnumMapperConfig config;
+  final ImportsBuilder imports;
 
-  EnumMapperGenerator(this.config);
+  EnumMapperGenerator(this.config, this.imports);
 
-  String generate() {
+  Future<String> generate() async {
     bool hasAllStringValues = config.mode == ValuesMode.named;
-    var values =
-        config.element.fields.where((f) => f.isEnumConstant).mapIndexed((i, f) {
+    var values = await Future.wait(config.element.fields //
+        .where((f) => f.isEnumConstant)
+        .mapIndexed((i, f) async {
       if (valueChecker.hasAnnotationOf(f)) {
         hasAllStringValues = false;
-        return MapEntry(f.name, getAnnotationCode(f, MappableValue, 0)!);
+        return MapEntry(f.name, await getAnnotatedValue(f));
       } else {
         if (config.mode == ValuesMode.named) {
           return MapEntry(f.name, "'${config.caseStyle.transform(f.name)}'");
@@ -24,26 +28,26 @@ class EnumMapperGenerator {
           return MapEntry(f.name, i);
         }
       }
-    });
+    }));
 
     return ''
-        'class ${config.mapperName} extends EnumMapper<${config.className}> {\n'
+        'class ${config.mapperName} extends EnumMapper<${config.prefixedClassName}> {\n'
         '  ${config.mapperName}._();\n\n'
         '  @override'
-        '  ${config.className} decode(dynamic value) {\n'
+        '  ${config.prefixedClassName} decode(dynamic value) {\n'
         '    switch (value) {\n'
-        '      ${values.map((v) => "case ${v.value}: return ${config.className}.${v.key};").join("\n      ")}\n'
+        '      ${values.map((v) => "case ${v.value}: return ${config.prefixedClassName}.${v.key};").join("\n      ")}\n'
         '      default: ${_generateDefaultCase()}\n'
         '    }\n'
         '  }\n\n'
         '  @override'
-        '  dynamic encode(${config.className} self) {\n'
+        '  dynamic encode(${config.prefixedClassName} self) {\n'
         '    switch (self) {\n'
-        '      ${values.map((v) => "case ${config.className}.${v.key}: return ${v.value};").join("\n      ")}\n'
+        '      ${values.map((v) => "case ${config.prefixedClassName}.${v.key}: return ${v.value};").join("\n      ")}\n'
         '    }\n'
         '  }\n'
         '}\n\n'
-        'extension ${config.mapperName}Extension on ${config.className} {\n'
+        'extension ${config.mapperName}Extension on ${config.prefixedClassName} {\n'
         '  dynamic toValue() => Mapper.toValue(this);\n'
         '${hasAllStringValues ? '  @Deprecated(\'Use \\\'toValue\\\' instead\')\n'
             '  String toStringValue() => Mapper.toValue(this) as String;\n' : ''}'
@@ -52,8 +56,13 @@ class EnumMapperGenerator {
 
   String _generateDefaultCase() {
     if (config.defaultValue != null) {
-      return 'return ${config.className}.values[${config.defaultValue}];';
+      return 'return ${config.prefixedClassName}.values[${config.defaultValue}];';
     }
     return 'throw MapperException.unknownEnumValue(value);';
+  }
+
+  Future<String> getAnnotatedValue(FieldElement f) async {
+    var node = await getResolvedAnnotationNode(f, MappableValue, 0);
+    return getPrefixedNodeSource(node!, imports);
   }
 }

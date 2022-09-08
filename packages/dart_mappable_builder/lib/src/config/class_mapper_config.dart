@@ -19,7 +19,9 @@ class ClassMapperConfig {
   final ClassMapperConfig? superConfig;
   final List<ClassMapperConfig> subConfigs;
   final List<ParameterConfig> params;
-  final List<Uri> requiredImports;
+  final String typeParamsDeclaration;
+
+  final int? prefix;
 
   ClassMapperConfig({
     required this.element,
@@ -33,13 +35,19 @@ class ClassMapperConfig {
     required this.superConfig,
     required this.subConfigs,
     required this.params,
-    required this.requiredImports,
+    required this.typeParamsDeclaration,
+    required this.prefix,
   }) {
     checkUnresolvedParameters();
   }
 
   String get className => element.name;
-  String get mapperName => '${className}Mapper';
+  String get prefixedClassName =>
+      '${prefix != null ? 'p$prefix.' : ''}$className';
+  String get uniqueClassName =>
+      '$className${prefix != null && prefix != 0 ? '$prefix' : ''}';
+  String get mapperName =>
+      '$className${prefix != null && prefix != 0 ? prefix : ''}Mapper';
 
   Iterable<FieldElement> get allPublicFields sync* {
     yield* superConfig?.allPublicFields ?? [];
@@ -62,13 +70,6 @@ class ClassMapperConfig {
   late String typeParams = element.typeParameters.isNotEmpty
       ? '<${element.typeParameters.map((p) => p.name).join(', ')}>'
       : '';
-
-  late String typeParamsDeclaration = element.typeParameters.isNotEmpty
-      ? '<${element.typeParameters.map((p) => p.getDisplayString(withNullability: false)).join(', ')}>'
-      : '';
-
-  Iterable<Uri> get imports =>
-      [...requiredImports, ...params.expand((p) => p.imports ?? [])];
 
   void checkUnresolvedParameters() {
     var unresolved = params.whereType<UnresolvedParameterConfig>();

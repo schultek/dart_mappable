@@ -3,22 +3,28 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/class_mapper_config.dart';
 import '../config/parameter_config.dart';
+import '../imports_builder.dart';
 
 class EncoderGenerator {
-  String generateEncoderMethods(ClassMapperConfig config) {
+  final ClassMapperConfig config;
+  final ImportsBuilder imports;
+
+  EncoderGenerator(this.config, this.imports);
+
+  Future<String> generateEncoderMethods() async {
     if (config.shouldGenerate(GenerateMethods.encode)) {
       var paramName = config.className[0].toLowerCase();
       return '\n'
-          '  @override Function get encoder => (${config.className} v) => ${_generateEncodeCall(config, 'encode(v)')};\n'
-          '  dynamic encode(${config.className} v) ${_generateEncode(config)}\n'
-          '  Map<String, dynamic> toMap(${config.className} $paramName) => {${_generateMappingEntries(config)}};\n'
+          '  @override Function get encoder => (${config.prefixedClassName} v) => ${_generateEncodeCall(config, 'encode(v)')};\n'
+          '  dynamic encode(${config.prefixedClassName} v) ${_generateEncode()}\n'
+          '  Map<String, dynamic> toMap(${config.prefixedClassName} $paramName) => {${await _generateMappingEntries()}};\n'
           '';
     } else {
       return '';
     }
   }
 
-  String generateEncoderExtensions(ClassMapperConfig config) {
+  String generateEncoderExtensions() {
     return config.shouldGenerate(GenerateMethods.encode)
         ? '  String toJson() => Mapper.toJson(this);\n'
             '  Map<String, dynamic> toMap() => Mapper.toMap(this);\n'
@@ -31,16 +37,16 @@ class EncoderGenerator {
     if (config.superConfig != null &&
         config.superConfig!.hookForClass != null) {
       wrapped =
-          'const ${config.superConfig!.hookForClass}.encode<${name ?? config.className}>(v, (v) => $wrapped)';
+          'const ${config.superConfig!.hookForClass}.encode<${name ?? config.prefixedClassName}>(v, (v) => $wrapped)';
     }
     if (config.superConfig != null) {
       wrapped = _generateEncodeCall(
-          config.superConfig!, wrapped, name ?? config.className);
+          config.superConfig!, wrapped, name ?? config.prefixedClassName);
     }
     return wrapped;
   }
 
-  String _generateEncode(ClassMapperConfig config) {
+  String _generateEncode() {
     String call;
     if (config.subConfigs.isEmpty) {
       call = '=> toMap(v)';
@@ -49,7 +55,7 @@ class EncoderGenerator {
 
       for (var subMapper in config.subConfigs) {
         subEncode.add(
-            'if (v is ${subMapper.className}) { return ${subMapper.mapperName}._().encode(v); }\n');
+            'if (v is ${subMapper.prefixedClassName}) { return ${subMapper.mapperName}._().encode(v); }\n');
       }
 
       call = '{\n'
@@ -60,12 +66,12 @@ class EncoderGenerator {
 
     if (config.hookForClass != null) {
       call =
-          '=> const ${config.hookForClass}.encode<${config.className}>(v, (v) $call)';
+          '=> const ${config.hookForClass}.encode<${config.prefixedClassName}>(v, (v) $call)';
     }
     return call + (call.endsWith('}') ? '' : ';');
   }
 
-  String _generateMappingEntries(ClassMapperConfig config) {
+  Future<String> _generateMappingEntries() async {
     List<String> params = [];
 
     for (var param in config.params) {
@@ -81,7 +87,7 @@ class EncoderGenerator {
       String exp;
       var paramName = config.className[0].toLowerCase();
 
-      var hook = param.hook;
+      var hook = await param.getHook(imports);
       if (hook != null) {
         exp = 'Mapper.i.\$enc($paramName.$name, \'$name\', const $hook)';
       } else {

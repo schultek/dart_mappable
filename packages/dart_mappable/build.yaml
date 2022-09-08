@@ -3,18 +3,7 @@ targets:
     builders:
       dart_mappable_builder:
         generate_for:
-          - test/test.dart
-          - test/basic_json/basic_json_test.dart
-          - test/primitives/primitives_test.dart
-          - test/selective_generation/selective_generation_test.dart
-          - test/copy_with/copy_with_test.dart
-          - test/enums/enums_test.dart
-          - test/generics/generics_test.dart
-          - test/polymorphism/polymorphism_test.dart
-          - test/hooks/hooks_test.dart
-          - test/custom_mapper/custom_mapper_test.dart
-          - test/mapper/mapper_test.dart
-          - test/lib_mapping/lib_mapping_test.dart
+          - test/*/*_test.dart
         options:
           caseStyle: snakeCase
           enumCaseStyle: camelCase

@@ -1,3 +1,5 @@
+import 'package:type_plus/type_plus.dart';
+
 import 'mapper_exception.dart';
 
 /// This class needs to be implemented by all mappers.
@@ -10,6 +12,9 @@ abstract class BaseMapper<T> {
   Function get encoder =>
       (_) => throw MapperException.unsupportedMethod(MapperMethod.encode, type);
 
+  /// A unique id for this type, defaults to the name of the type.
+  /// Override this if you have two types with the same name.
+  String get id => T.name;
   Function get typeFactory => (f) => f<T>();
 
   bool equals(T self, T other) =>

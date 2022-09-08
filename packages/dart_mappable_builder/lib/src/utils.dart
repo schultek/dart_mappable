@@ -1,11 +1,16 @@
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:source_gen/source_gen.dart';
+
+import 'imports_builder.dart';
 
 const enumChecker = TypeChecker.fromRuntime(MappableEnum);
 const valueChecker = TypeChecker.fromRuntime(MappableValue);
@@ -25,12 +30,19 @@ extension GetNode on Element {
       return null;
     }
   }
+
+  Future<AstNode?> getResolvedNode() async {
+    var result = await session?.getResolvedLibraryByElement(library!);
+    if (result is ResolvedLibraryResult) {
+      return result.getElementDeclaration(this)?.node;
+    } else {
+      return null;
+    }
+  }
 }
 
-String? getAnnotationCode(
-    Element annotatedElement, Type annotationType, dynamic property) {
-  var node = annotatedElement.getNode();
-
+AstNode? _getAnnotationNode(
+    AstNode? node, Type annotationType, dynamic property) {
   NodeList<Annotation>? annotations;
 
   if (node is VariableDeclaration) {
@@ -55,11 +67,11 @@ String? getAnnotationCode(
         var arg = annotation.arguments!.arguments[i];
         if (arg is NamedExpression && property is String) {
           if (arg.name.label.name == property) {
-            return arg.expression.toSource();
+            return arg.expression;
           }
         } else if (arg is Literal && property is int) {
           if (i == property) {
-            return arg.toSource();
+            return arg;
           }
         }
       }
@@ -67,6 +79,96 @@ String? getAnnotationCode(
   }
 
   return null;
+}
+
+AstNode? getAnnotationNode(
+    Element annotatedElement, Type annotationType, dynamic property) {
+  var node = annotatedElement.getNode();
+  return _getAnnotationNode(node, annotationType, property);
+}
+
+Future<AstNode?> getResolvedAnnotationNode(
+    Element annotatedElement, Type annotationType, dynamic property) async {
+  var node = await annotatedElement.getResolvedNode();
+  return _getAnnotationNode(node, annotationType, property);
+}
+
+class Prefix {
+  int offset;
+  int delta;
+  int prefix;
+
+  Prefix(this.offset, this.delta, this.prefix);
+
+  @override
+  String toString() {
+    return 'Prefix{offset: $offset, delta: $delta, prefix: $prefix}';
+  }
+}
+
+Future<String> getPrefixedNodeSource(
+    AstNode node, ImportsBuilder imports) async {
+  var visitor = PrefixVisitor(imports);
+  node.accept(visitor);
+
+  var prefixOffsets = visitor.prefixes.entries
+      // ignore: unnecessary_cast
+      .sortedBy((i) => i.key as num)
+      .fold<List<Prefix>>([Prefix(node.offset, 0, 0)],
+          (l, i) => [...l, Prefix(i.key, i.key - l.last.offset, i.value)])
+      .skip(1)
+      .toList();
+
+  var source = '';
+  Token? token = node.beginToken;
+
+  while (token != null && token.offset <= node.endToken.offset) {
+    if (prefixOffsets.isNotEmpty && prefixOffsets.first.delta <= 0) {
+      source += 'p${prefixOffsets.first.prefix}.';
+      prefixOffsets.removeAt(0);
+    }
+
+    source += token.lexeme;
+    prefixOffsets.firstOrNull?.delta -= token.length;
+
+    var next = token.next;
+    if (next != null && next.offset > token.end) {
+      var delta = next.offset - token.end;
+      source += ' ';
+      prefixOffsets.firstOrNull?.delta -= delta;
+    }
+    token = next;
+  }
+
+  return source;
+}
+
+class PrefixVisitor extends RecursiveAstVisitor {
+  final ImportsBuilder imports;
+  Map<int, int> prefixes = {};
+
+  PrefixVisitor(this.imports);
+
+  @override
+  visitSimpleIdentifier(SimpleIdentifier node) {
+    if (node.staticElement is ClassElement) {
+      addPrefixFor(node);
+    } else if (node.staticElement is PropertyAccessorElement) {
+      if ((node.staticElement as PropertyAccessorElement).enclosingElement
+          is CompilationUnitElement) {
+        addPrefixFor(node);
+      }
+    }
+
+    return super.visitSimpleIdentifier(node);
+  }
+
+  void addPrefixFor(SimpleIdentifier node) {
+    var prefix = imports.add(node.staticElement!.librarySource?.uri);
+    if (prefix != null) {
+      prefixes[node.offset] = prefix;
+    }
+  }
 }
 
 Map<String, T> toMap<T>(dynamic value, T Function(Map m) fn) {
@@ -111,8 +213,4 @@ TextTransform? textTransformFromAnnotation(DartObject obj) {
 
 extension NullableType on DartType {
   bool get isNullable => nullabilitySuffix == NullabilitySuffix.question;
-}
-
-extension IterableExt<T> on Iterable<T> {
-  T? get firstOrNull => isEmpty ? null : first;
 }

@@ -1,61 +1,24 @@
-import 'dart:core';
-
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
-import 'custom_mapper_test.dart';
+import 'custom_mapper_test.dart' as p0;
 
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
 
 var _mappers = <BaseMapper>{
   // class mappers
-  GenericBoxMapper._(),
   // enum mappers
   // custom mappers
-  PrivateClassMapper(),
-  CustomGenericMapper(),
-  UriMapper(),
+  p0.PrivateClassMapper(),
+  p0.CustomGenericMapper(),
+  p0.UriMapper(),
 };
 
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class GenericBoxMapper extends BaseMapper<GenericBox> {
-  GenericBoxMapper._();
 
-  @override Function get decoder => decode;
-  GenericBox<T> decode<T>(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
-  GenericBox<T> fromMap<T>(Map<String, dynamic> map) => GenericBox(Mapper.i.$get(map, 'content'));
-
-  @override Function get encoder => (GenericBox v) => encode(v);
-  dynamic encode(GenericBox v) => toMap(v);
-  Map<String, dynamic> toMap(GenericBox g) => {'content': Mapper.i.$enc(g.content, 'content')};
-
-  @override String stringify(GenericBox self) => 'GenericBox(content: ${Mapper.asString(self.content)})';
-  @override int hash(GenericBox self) => Mapper.hash(self.content);
-  @override bool equals(GenericBox self, GenericBox other) => Mapper.isEqual(self.content, other.content);
-
-  @override Function get typeFactory => <T>(f) => f<GenericBox<T>>();
-}
-
-extension GenericBoxMapperExtension <T> on GenericBox<T> {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  GenericBoxCopyWith<GenericBox<T>, T> get copyWith => GenericBoxCopyWith(this, $identity);
-}
-
-abstract class GenericBoxCopyWith<$R, T> {
-  factory GenericBoxCopyWith(GenericBox<T> value, Then<GenericBox<T>, $R> then) = _GenericBoxCopyWithImpl<$R, T>;
-  $R call({T? content});
-  $R apply(GenericBox<T> Function(GenericBox<T>) transform);
-}
-
-class _GenericBoxCopyWithImpl<$R, T> extends BaseCopyWith<GenericBox<T>, $R> implements GenericBoxCopyWith<$R, T> {
-  _GenericBoxCopyWithImpl(GenericBox<T> value, Then<GenericBox<T>, $R> then) : super(value, then);
-
-  @override $R call({T? content}) => $then(GenericBox(content ?? $value.content));
-}
 
 
 // === GENERATED ENUM MAPPERS AND EXTENSIONS ===

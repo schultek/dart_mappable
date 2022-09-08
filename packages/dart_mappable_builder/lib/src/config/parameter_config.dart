@@ -1,35 +1,19 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
+import '../imports_builder.dart';
 import '../utils.dart';
 
 abstract class ParameterConfig {
   final ParameterElement parameter;
+
   ParameterConfig(this.parameter);
 
+  Future<String?> getHook(ImportsBuilder imports) {
+    return _hookFor(parameter, imports);
+  }
+
   PropertyInducingElement get accessor;
-
-  String? get hook => _hookFor(parameter);
-
-  Iterable<Uri>? get imports => _importsFor(parameter);
-
-  String? _hookFor(Element element) {
-    if (fieldChecker.hasAnnotationOf(element)) {
-      return getAnnotationCode(element, MappableField, 'hooks');
-    }
-    return null;
-  }
-
-  Iterable<Uri>? _importsFor(Element element) {
-    if (fieldChecker.hasAnnotationOf(element)) {
-      var hooks = fieldChecker.firstAnnotationOf(element)?.getField('hooks');
-      if (hooks != null && !hooks.isNull) {
-        var uri = hooks.type?.element?.library?.source.uri;
-        return uri != null ? [uri] : null;
-      }
-    }
-    return null;
-  }
 
   String? _keyFor(Element element) {
     return fieldChecker
@@ -51,13 +35,12 @@ class FieldParameterConfig extends ParameterConfig {
       : super(parameter);
 
   @override
+  Future<String?> getHook(ImportsBuilder imports) async {
+    return (await _hookFor(field, imports)) ?? await super.getHook(imports);
+  }
+
+  @override
   PropertyInducingElement get accessor => field;
-
-  @override
-  String? get hook => _hookFor(field) ?? super.hook;
-
-  @override
-  Iterable<Uri>? get imports => _importsFor(field) ?? super.imports;
 
   @override
   String? get _paramKey => _keyFor(field) ?? super._paramKey;
@@ -65,6 +48,7 @@ class FieldParameterConfig extends ParameterConfig {
 
 class SuperParameterConfig extends ParameterConfig {
   final ParameterConfig superParameter;
+
   SuperParameterConfig(ParameterElement parameter, this.superParameter)
       : super(parameter);
 
@@ -75,13 +59,13 @@ class SuperParameterConfig extends ParameterConfig {
   String? get _paramKey => super._paramKey ?? superParameter._paramKey;
 
   @override
-  String? get hook {
-    var thisHook = super.hook;
-    var superHook = superParameter.hook;
+  Future<String?> getHook(ImportsBuilder imports) async {
+    var thisHook = await super.getHook(imports);
+    var superHook = await superParameter.getHook(imports);
     if (thisHook != null && superHook != null) {
       var childHooks = <String>[];
 
-      var multiRegex = RegExp(r'^ChainedHooks(\[(.*)\])$');
+      var multiRegex = RegExp(r'^ChainedHooks\(\s*\[(.*)\]\s*\)$');
 
       if (multiRegex.hasMatch(superHook)) {
         var match = multiRegex.firstMatch(superHook)!.group(1)!;
@@ -113,4 +97,14 @@ class UnresolvedParameterConfig extends ParameterConfig {
   @override
   PropertyInducingElement get accessor => throw UnimplementedError(
       'Tried to call .accessor on unresolved parameter.');
+}
+
+Future<String?> _hookFor(Element element, ImportsBuilder imports) async {
+  if (fieldChecker.hasAnnotationOf(element)) {
+    var node = await getResolvedAnnotationNode(element, MappableField, 'hooks');
+    if (node != null) {
+      return getPrefixedNodeSource(node, imports);
+    }
+  }
+  return null;
 }
