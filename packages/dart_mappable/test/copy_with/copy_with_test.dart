@@ -29,7 +29,7 @@ class Brand with Mappable {
 @MappableClass()
 class Dealership with Mappable {
   final List<Car> cars;
-  final Map<Brand, Person> salesRep;
+  final Map<Brand, Person?> salesRep;
 
   Dealership(this.cars, this.salesRep);
 }
@@ -42,8 +42,8 @@ class ItemList<T> {
 }
 
 @MappableClass()
-class BrandList extends ItemList<Brand> {
-  BrandList(List<Brand>? brands) : super(brands);
+class BrandList extends ItemList<Brand?> {
+  BrandList(List<Brand?>? brands) : super(brands);
 }
 
 void main() {

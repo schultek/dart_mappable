@@ -162,8 +162,8 @@ extension DealershipMapperExtension on p0.Dealership {
 abstract class DealershipCopyWith<$R> {
   factory DealershipCopyWith(p0.Dealership value, Then<p0.Dealership, $R> then) = _DealershipCopyWithImpl<$R>;
   ListCopyWith<$R, p0.Car, CarCopyWith<$R>> get cars;
-  MapCopyWith<$R, p0.Brand, p0.Person, PersonCopyWith<$R>> get salesRep;
-  $R call({List<p0.Car>? cars, Map<p0.Brand, p0.Person>? salesRep});
+  MapCopyWith<$R, p0.Brand, p0.Person?, PersonCopyWith<$R>?> get salesRep;
+  $R call({List<p0.Car>? cars, Map<p0.Brand, p0.Person?>? salesRep});
   $R apply(p0.Dealership Function(p0.Dealership) transform);
 }
 
@@ -171,8 +171,8 @@ class _DealershipCopyWithImpl<$R> extends BaseCopyWith<p0.Dealership, $R> implem
   _DealershipCopyWithImpl(p0.Dealership value, Then<p0.Dealership, $R> then) : super(value, then);
 
   @override ListCopyWith<$R, p0.Car, CarCopyWith<$R>> get cars => ListCopyWith($value.cars, (v, t) => CarCopyWith(v, t), (v) => call(cars: v));
-  @override MapCopyWith<$R, p0.Brand, p0.Person, PersonCopyWith<$R>> get salesRep => MapCopyWith($value.salesRep, (v, t) => PersonCopyWith(v, t), (v) => call(salesRep: v));
-  @override $R call({List<p0.Car>? cars, Map<p0.Brand, p0.Person>? salesRep}) => $then(p0.Dealership(cars ?? $value.cars, salesRep ?? $value.salesRep));
+  @override MapCopyWith<$R, p0.Brand, p0.Person?, PersonCopyWith<$R>?> get salesRep => MapCopyWith($value.salesRep, (v, t) => v == null ? null : PersonCopyWith(v, t), (v) => call(salesRep: v));
+  @override $R call({List<p0.Car>? cars, Map<p0.Brand, p0.Person?>? salesRep}) => $then(p0.Dealership(cars ?? $value.cars, salesRep ?? $value.salesRep));
 }
 
 class ItemListMapper extends BaseMapper<p0.ItemList> {
@@ -240,15 +240,15 @@ extension BrandListMapperExtension on p0.BrandList {
 
 abstract class BrandListCopyWith<$R> {
   factory BrandListCopyWith(p0.BrandList value, Then<p0.BrandList, $R> then) = _BrandListCopyWithImpl<$R>;
-  ListCopyWith<$R, p0.Brand, BrandCopyWith<$R>> get items;
-  $R call({List<p0.Brand>? brands});
+  ListCopyWith<$R, p0.Brand?, BrandCopyWith<$R>?> get items;
+  $R call({List<p0.Brand?>? brands});
   $R apply(p0.BrandList Function(p0.BrandList) transform);
 }
 
 class _BrandListCopyWithImpl<$R> extends BaseCopyWith<p0.BrandList, $R> implements BrandListCopyWith<$R> {
   _BrandListCopyWithImpl(p0.BrandList value, Then<p0.BrandList, $R> then) : super(value, then);
 
-  @override ListCopyWith<$R, p0.Brand, BrandCopyWith<$R>> get items => ListCopyWith($value.items, (v, t) => BrandCopyWith(v, t), (v) => call(brands: v));
+  @override ListCopyWith<$R, p0.Brand?, BrandCopyWith<$R>?> get items => ListCopyWith($value.items, (v, t) => v == null ? null : BrandCopyWith(v, t), (v) => call(brands: v));
   @override $R call({Object? brands = $none}) => $then(p0.BrandList(or(brands, $value.items)));
 }
 

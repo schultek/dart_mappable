@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
@@ -101,8 +102,9 @@ class CopyWithGenerator {
                 .map((t) => ', ${imports.prefixedType(t)}')
                 .join()
             : '';
+        var typeArgNullable = typeArg.nullabilitySuffix == NullabilitySuffix.question;
 
-        fieldTypeParams += ', $copyWithName<\$R$typeParams>';
+        fieldTypeParams += ', $copyWithName<\$R$typeParams>${typeArgNullable ? '?' : ''}';
         copyWithName = 'ListCopyWith';
       } else if (p.type.isDartCoreMap) {
         var it = p.type as InterfaceType;
@@ -113,8 +115,9 @@ class CopyWithGenerator {
                 .map((t) => ', ${imports.prefixedType(t)}')
                 .join()
             : '';
+        var typeArgNullable = valueTypeArg.nullabilitySuffix == NullabilitySuffix.question;
 
-        fieldTypeParams += ', $copyWithName<\$R$typeParams>';
+        fieldTypeParams += ', $copyWithName<\$R$typeParams>${typeArgNullable ? '?' : ''}';
         copyWithName = 'MapCopyWith';
       }
       snippets.add(
@@ -143,28 +146,28 @@ class CopyWithGenerator {
       var params = ', (v) => call(${p.name}: v)';
 
       if (p.type.isDartCoreList) {
-        params = ', (v, t) => $copyWithName(v, t)$params';
-
         var typeArg = (p.type as InterfaceType).typeArguments.first;
         var typeParams = typeArg is InterfaceType
             ? typeArg.typeArguments
                 .map((t) => ', ${imports.prefixedType(t)}')
                 .join()
             : '';
+        var typeArgNullable = typeArg.nullabilitySuffix == NullabilitySuffix.question;
 
-        fieldTypeParams += ', $copyWithName<\$R$typeParams>';
+        params = ', (v, t) => ${typeArgNullable ? 'v == null ? null : ' : ''}$copyWithName(v, t)$params';
+        fieldTypeParams += ', $copyWithName<\$R$typeParams>${typeArgNullable ? '?' : ''}';
         copyWithName = 'ListCopyWith';
       } else if (p.type.isDartCoreMap) {
-        params = ', (v, t) => $copyWithName(v, t)$params';
-
-        var typeArg = (p.type as InterfaceType).typeArguments[1];
-        var typeParams = typeArg is InterfaceType
-            ? typeArg.typeArguments
+        var valueTypeArg = (p.type as InterfaceType).typeArguments[1];
+        var typeParams = valueTypeArg is InterfaceType
+            ? valueTypeArg.typeArguments
                 .map((t) => ', ${imports.prefixedType(t)}')
                 .join()
             : '';
+        var typeArgNullable = valueTypeArg.nullabilitySuffix == NullabilitySuffix.question;
 
-        fieldTypeParams += ', $copyWithName<\$R$typeParams>';
+        params = ', (v, t) => ${typeArgNullable ? 'v == null ? null : ' : ''}$copyWithName(v, t)$params';
+        fieldTypeParams += ', $copyWithName<\$R$typeParams>${typeArgNullable ? '?' : ''}';
         copyWithName = 'MapCopyWith';
       }
 
