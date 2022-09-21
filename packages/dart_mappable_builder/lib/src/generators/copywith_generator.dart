@@ -43,8 +43,8 @@ class CopyWithGenerator {
   }
 
   String _generateCopyWithClasses(GetConfig getConfig) {
-    var classTypeParamsDef = config.element.typeParameters
-        .map((p) => ', ${p.getDisplayString(withNullability: true)}')
+    var classTypeParamsDef = config.typeParamsList
+        .map((p) => ', $p')
         .join();
     var classTypeParams =
         config.element.typeParameters.map((p) => ', ${p.name}').join();

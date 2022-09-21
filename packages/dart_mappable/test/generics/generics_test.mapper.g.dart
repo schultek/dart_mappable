@@ -12,6 +12,7 @@ var _mappers = <BaseMapper>{
   // class mappers
   BoxMapper._(),
   ConfettiMapper._(),
+  ContentMapper._(),
   // enum mappers
   // custom mappers
 };
@@ -23,8 +24,8 @@ class BoxMapper extends BaseMapper<p0.Box> {
   BoxMapper._();
 
   @override Function get decoder => decode;
-  p0.Box<T> decode<T extends Object>(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
-  p0.Box<T> fromMap<T extends Object>(Map<String, dynamic> map) => p0.Box(Mapper.i.$get(map, 'size'), contents: Mapper.i.$get(map, 'contents'));
+  p0.Box<T> decode<T extends p0.Content>(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
+  p0.Box<T> fromMap<T extends p0.Content>(Map<String, dynamic> map) => p0.Box(Mapper.i.$get(map, 'size'), contents: Mapper.i.$get(map, 'contents'));
 
   @override Function get encoder => (p0.Box v) => encode(v);
   dynamic encode(p0.Box v) => toMap(v);
@@ -34,22 +35,22 @@ class BoxMapper extends BaseMapper<p0.Box> {
   @override int hash(p0.Box self) => Mapper.hash(self.size) ^ Mapper.hash(self.contents);
   @override bool equals(p0.Box self, p0.Box other) => Mapper.isEqual(self.size, other.size) && Mapper.isEqual(self.contents, other.contents);
 
-  @override Function get typeFactory => <T extends Object>(f) => f<p0.Box<T>>();
+  @override Function get typeFactory => <T extends p0.Content>(f) => f<p0.Box<T>>();
 }
 
-extension BoxMapperExtension<T extends Object> on p0.Box<T> {
+extension BoxMapperExtension<T extends p0.Content> on p0.Box<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   BoxCopyWith<p0.Box<T>, T> get copyWith => BoxCopyWith(this, $identity);
 }
 
-abstract class BoxCopyWith<$R, T extends Object> {
+abstract class BoxCopyWith<$R, T extends p0.Content> {
   factory BoxCopyWith(p0.Box<T> value, Then<p0.Box<T>, $R> then) = _BoxCopyWithImpl<$R, T>;
   $R call({int? size, List<T>? contents});
   $R apply(p0.Box<T> Function(p0.Box<T>) transform);
 }
 
-class _BoxCopyWithImpl<$R, T extends Object> extends BaseCopyWith<p0.Box<T>, $R> implements BoxCopyWith<$R, T> {
+class _BoxCopyWithImpl<$R, T extends p0.Content> extends BaseCopyWith<p0.Box<T>, $R> implements BoxCopyWith<$R, T> {
   _BoxCopyWithImpl(p0.Box<T> value, Then<p0.Box<T>, $R> then) : super(value, then);
 
   @override $R call({int? size, List<T>? contents}) => $then(p0.Box(size ?? $value.size, contents: contents ?? $value.contents));
@@ -89,6 +90,45 @@ class _ConfettiCopyWithImpl<$R> extends BaseCopyWith<p0.Confetti, $R> implements
   _ConfettiCopyWithImpl(p0.Confetti value, Then<p0.Confetti, $R> then) : super(value, then);
 
   @override $R call({String? color}) => $then(p0.Confetti(color ?? $value.color));
+}
+
+class ContentMapper extends BaseMapper<p0.Content> {
+  ContentMapper._();
+
+  @override Function get decoder => decode;
+  p0.Content decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p0.Content fromMap(Map<String, dynamic> map) => p0.Content();
+
+  @override Function get encoder => (p0.Content v) => encode(v);
+  dynamic encode(p0.Content v) {
+    if (v is p0.Confetti) { return ConfettiMapper._().encode(v); }
+    else { return toMap(v); }
+  }
+  Map<String, dynamic> toMap(p0.Content c) => {};
+
+  @override String stringify(p0.Content self) => 'Content()';
+  @override int hash(p0.Content self) => 0;
+  @override bool equals(p0.Content self, p0.Content other) => true;
+
+  @override Function get typeFactory => (f) => f<p0.Content>();
+}
+
+extension ContentMapperExtension on p0.Content {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  ContentCopyWith<p0.Content> get copyWith => ContentCopyWith(this, $identity);
+}
+
+abstract class ContentCopyWith<$R> {
+  factory ContentCopyWith(p0.Content value, Then<p0.Content, $R> then) = _ContentCopyWithImpl<$R>;
+  $R call();
+  $R apply(p0.Content Function(p0.Content) transform);
+}
+
+class _ContentCopyWithImpl<$R> extends BaseCopyWith<p0.Content, $R> implements ContentCopyWith<$R> {
+  _ContentCopyWithImpl(p0.Content value, Then<p0.Content, $R> then) : super(value, then);
+
+  @override $R call() => $then(p0.Content());
 }
 
 

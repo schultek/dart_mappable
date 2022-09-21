@@ -19,7 +19,7 @@ class ClassMapperConfig {
   final ClassMapperConfig? superConfig;
   final List<ClassMapperConfig> subConfigs;
   final List<ParameterConfig> params;
-  final String typeParamsDeclaration;
+  final List<String> typeParamsList;
 
   final int? prefix;
 
@@ -35,7 +35,7 @@ class ClassMapperConfig {
     required this.superConfig,
     required this.subConfigs,
     required this.params,
-    required this.typeParamsDeclaration,
+    required this.typeParamsList,
     required this.prefix,
   }) {
     checkUnresolvedParameters();
@@ -70,6 +70,9 @@ class ClassMapperConfig {
   late String typeParams = element.typeParameters.isNotEmpty
       ? '<${element.typeParameters.map((p) => p.name).join(', ')}>'
       : '';
+
+  late String typeParamsDeclaration =
+      typeParamsList.isNotEmpty ? '<${typeParamsList.join(', ')}>' : '';
 
   void checkUnresolvedParameters() {
     var unresolved = params.whereType<UnresolvedParameterConfig>();

@@ -5,7 +5,7 @@ import '../utils.dart';
 import 'generics_test.mapper.g.dart';
 
 @MappableClass()
-class Box<T extends Object> {
+class Box<T extends Content> {
   int size;
   List<T> contents;
 
@@ -13,10 +13,13 @@ class Box<T extends Object> {
 }
 
 @MappableClass()
-class Confetti {
+class Confetti extends Content {
   String color;
   Confetti(this.color);
 }
+
+@MappableClass()
+class Content {}
 
 void main() {
   group('Generic classes', () {
