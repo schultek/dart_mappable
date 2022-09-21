@@ -80,7 +80,7 @@ class MapperException implements Exception {
 }
 
 /// Method indicator used for exceptions
-enum MapperMethod { decode, encode, stringify, equals, hash }
+enum MapperMethod { decode, encode, stringify, equals, hash, copy }
 
 class _ChainedMapperException implements MapperException {
   _ChainedMapperException(this.method, this.hint, this.error);

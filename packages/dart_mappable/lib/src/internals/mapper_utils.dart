@@ -97,6 +97,7 @@ const $none = _None();
 T $identity<T>(T value) => value;
 typedef Then<$T, $R> = $R Function($T);
 
+
 class BaseCopyWith<$T, $R> {
   BaseCopyWith(this.$value, this.$then);
 

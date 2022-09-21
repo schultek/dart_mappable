@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'parameter_config.dart';
@@ -20,6 +21,7 @@ class ClassMapperConfig {
   final List<ClassMapperConfig> subConfigs;
   final List<ParameterConfig> params;
   final String typeParamsDeclaration;
+  final List<String> superTypeArgs;
 
   final int? prefix;
 
@@ -36,6 +38,7 @@ class ClassMapperConfig {
     required this.subConfigs,
     required this.params,
     required this.typeParamsDeclaration,
+    required this.superTypeArgs,
     required this.prefix,
   }) {
     checkUnresolvedParameters();
@@ -69,6 +72,10 @@ class ClassMapperConfig {
 
   late String typeParams = element.typeParameters.isNotEmpty
       ? '<${element.typeParameters.map((p) => p.name).join(', ')}>'
+      : '';
+
+  late String superTypeParams = element.typeParameters.isNotEmpty
+      ? '<${element.typeParameters.map((p) => element.supertype!.typeArguments.any((t) => t is TypeParameterType && t.element == p) ? p.name : 'dynamic').join(', ')}>'
       : '';
 
   void checkUnresolvedParameters() {

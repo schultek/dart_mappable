@@ -52,10 +52,12 @@ extension GameMapperExtension on p0.Game {
 }
 
 abstract class GameCopyWith<$R> {
-  factory GameCopyWith(p0.Game value, Then<p0.Game, $R> then) = _GameCopyWithImpl<$R>;
+  factory GameCopyWith(p0.Game value, Then<p0.Game, $R> then) {
+    if (value is p0.CardGame) { return CardGameCopyWith(value, then); }
+    else { return _GameCopyWithImpl<$R>(value, then); }
+  }
   PlayerCopyWith<$R> get player;
   $R call({p0.Player? player});
-  $R apply(p0.Game Function(p0.Game) transform);
 }
 
 class _GameCopyWithImpl<$R> extends BaseCopyWith<p0.Game, $R> implements GameCopyWith<$R> {
@@ -89,10 +91,10 @@ extension CardGameMapperExtension on p0.CardGame {
   CardGameCopyWith<p0.CardGame> get copyWith => CardGameCopyWith(this, $identity);
 }
 
-abstract class CardGameCopyWith<$R> {
+abstract class CardGameCopyWith<$R> implements GameCopyWith<$R> {
   factory CardGameCopyWith(p0.CardGame value, Then<p0.CardGame, $R> then) = _CardGameCopyWithImpl<$R>;
   PlayerCopyWith<$R> get player;
-  $R call({p0.Player? player});
+  @override $R call({p0.Player? player});
   $R apply(p0.CardGame Function(p0.CardGame) transform);
 }
 

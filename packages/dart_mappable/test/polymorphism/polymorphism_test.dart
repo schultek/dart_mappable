@@ -33,6 +33,13 @@ class DefaultAnimal extends Animal {
   DefaultAnimal(String name, this.type) : super(name);
 }
 
+@MappableClass()
+class Zoo {
+  Animal animal;
+
+  Zoo(this.animal);
+}
+
 void main() {
   group('Polymorphism', () {
     test('Encode object', () {
@@ -58,6 +65,13 @@ void main() {
       Animal myPet = Mapper.fromJson('{"name":"Kobi","type":"Bear"}');
       expect(myPet, isA<DefaultAnimal>());
       expect((myPet as DefaultAnimal).type, equals('Bear'));
+    });
+
+    test('Generic copyWith', () {
+
+      Animal myPet = Mapper.fromJson('{"name":"Kobi","age": 4,"type":1}');
+
+      //myPet.copyWith.(name: 'test');
     });
   });
 }
