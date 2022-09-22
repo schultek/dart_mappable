@@ -85,6 +85,10 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
       var type = T;
       if (value is Map<String, dynamic> && value['__type'] != null) {
         type = TypePlus.fromId(value['__type'] as String);
+        if (type == UnresolvedType) {
+          var e = MapperException.unresolvedType(value['__type'] as String);
+          throw MapperException.chain(MapperMethod.decode, '($T)', e);
+        }
       }
       var mapper = _mappers[type.baseId];
       if (mapper != null) {

@@ -73,6 +73,11 @@ class MapperException implements Exception {
         'or register a custom mapper?');
   }
 
+  factory MapperException.unresolvedType(String type) {
+    return MapperException._('Cannot resolve type from property "$type". '
+        'Invalid or unregistered type.');
+  }
+
   /// Checks if this is an unsupported operation exception
   bool isUnsupportedOrUnallowed() =>
       message.startsWith('Unsupported operation') ||
