@@ -218,9 +218,9 @@ targets:
 `dart_mappable` will generate a main `Mapper` class that provides access to all important methods:
 
 - `Mapper.fromValue<T>(encoded)` will take an encoded object and return a decoded object of type `T`.
-- `Mapper.fromMap<T>(encoded)` and `Mapper.fromJson<T>(encoded)` internally use `fromValue` but expect a `Map<String, dynamic` or `String` respectively.
-- `Mapper.toValue(decoded)` will take any object and return an encoded object of type `dynamic` (usually a `Map<String, dynamic` for custom classes).
-- `Mapper.toMap(decoded)` and `Mapper.toJson(encoded)` internally use `toValue` but will return a `Map<String, dynamic>` or `String` respectively.
+- `Mapper.fromMap<T>(encoded)` and `Mapper.fromJson<T>(encoded)` internally use `fromValue` but expect a `Map<String, dynamic>` or `String` respectively.
+- `Mapper.toValue<T>(T decoded)` will take any object and return an encoded object of type `dynamic` (usually a `Map<String, dynamic>` for custom classes).
+- `Mapper.toMap<T>(T decoded)` and `Mapper.toJson<T>(T encoded)` internally use `toValue` but will return a `Map<String, dynamic>` or `String` respectively.
 - `Mapper.isEqual(a, b)` will compare two objects for equality.
 - `Mapper.asString(o)` will return a string representation of an object.
 
@@ -733,8 +733,8 @@ class CustomGenericMapper extends BaseMapper<GenericBox> { // only use the base 
   };
   
   @override
-  Function encoder = (GenericBox self) { // no need for type parameters here
-    return Mapper.toValue(self.content);
+  Function encoder = <T>(GenericBox<T> self) { // specify as generic function similar to [decoder]
+    return Mapper.toValue<T>(self.content); // use the type parameter in your encoding logic
   };
 
   // in case of generic types, we also must specify a type factory. This is a special type of 

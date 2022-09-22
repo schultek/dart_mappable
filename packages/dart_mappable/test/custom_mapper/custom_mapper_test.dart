@@ -43,8 +43,8 @@ class CustomGenericMapper extends BaseMapper<GenericBox> {
   };
 
   @override
-  Function encoder = (GenericBox self) {
-    return Mapper.toValue(self.content);
+  Function encoder = <T>(GenericBox<T> self) {
+    return Mapper.toValue<T>(self.content);
   };
 
   @override

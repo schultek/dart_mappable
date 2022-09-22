@@ -27,7 +27,7 @@ class PersonMapper extends BaseMapper<p0.Person> {
   p0.Person decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Person fromMap(Map<String, dynamic> map) => p0.Person(Mapper.i.$get(map, 'name'), age: Mapper.i.$getOpt(map, 'age') ?? 18, car: Mapper.i.$getOpt(map, 'car'));
 
-  @override Function get encoder => (p0.Person v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Person v) => toMap(v);
   Map<String, dynamic> toMap(p0.Person p) => {'name': Mapper.i.$enc(p.name, 'name'), 'age': Mapper.i.$enc(p.age, 'age'), 'car': Mapper.i.$enc(p.car, 'car')};
 
@@ -65,7 +65,7 @@ class CarMapper extends BaseMapper<p0.Car> {
   p0.Car decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Car fromMap(Map<String, dynamic> map) => p0.Car(Mapper.i.$get(map, 'driven_km'), Mapper.i.$get(map, 'brand'));
 
-  @override Function get encoder => (p0.Car v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Car v) => toMap(v);
   Map<String, dynamic> toMap(p0.Car c) => {'driven_km': Mapper.i.$enc(c.drivenKm, 'drivenKm'), 'brand': Mapper.i.$enc(c.brand, 'brand')};
 
@@ -137,10 +137,10 @@ class Mapper {
   static T fromIterable<T>(Iterable<dynamic> iterable) => i.fromIterable<T>(iterable);
   static T fromJson<T>(String json) => i.fromJson<T>(json);
 
-  static dynamic toValue(dynamic value) => i.toValue(value);
-  static Map<String, dynamic> toMap(dynamic object) => i.toMap(object);
-  static Iterable<dynamic> toIterable(dynamic object) => i.toIterable(object);
-  static String toJson(dynamic object) => i.toJson(object);
+  static dynamic toValue<T>(T value) => i.toValue<T>(value);
+  static Map<String, dynamic> toMap<T>(T object) => i.toMap<T>(object);
+  static Iterable<dynamic> toIterable<T>(T object) => i.toIterable<T>(object);
+  static String toJson<T>(T object) => i.toJson<T>(object);
 
   static bool isEqual(dynamic value, Object? other) => i.isEqual(value, other);
   static int hash(dynamic value) => i.hash(value);

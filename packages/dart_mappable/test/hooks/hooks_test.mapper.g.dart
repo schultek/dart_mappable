@@ -31,11 +31,8 @@ class GameMapper extends BaseMapper<p0.Game> {
   p0.Game decode(dynamic v) => const p1.GameHooks().decode(v, (v) => checked(v, (Map<String, dynamic> map) => fromMap(map)));
   p0.Game fromMap(Map<String, dynamic> map) => p0.Game(Mapper.i.$get(map, 'player', const ChainedHooks( [p0.PlayerHooks(), UnmappedPropertiesHooks('unmapped_props')])));
 
-  @override Function get encoder => (p0.Game v) => encode(v);
-  dynamic encode(p0.Game v) => const p1.GameHooks().encode<p0.Game>(v, (v) {
-    if (v is p0.CardGame) { return CardGameMapper._().encode(v); }
-    else { return toMap(v); }
-  });
+  @override Function get encoder => encode;
+  dynamic encode(p0.Game v) => const p1.GameHooks().encode<p0.Game>(v, (v) => toMap(v));
   Map<String, dynamic> toMap(p0.Game g) => {'player': Mapper.i.$enc(g.player, 'player', const ChainedHooks( [p0.PlayerHooks(), UnmappedPropertiesHooks('unmapped_props')]))};
 
   @override String stringify(p0.Game self) => 'Game(player: ${Mapper.asString(self.player)})';
@@ -72,7 +69,7 @@ class CardGameMapper extends BaseMapper<p0.CardGame> {
   p0.CardGame decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.CardGame fromMap(Map<String, dynamic> map) => p0.CardGame(Mapper.i.$get(map, 'player', const ChainedHooks([p0.PlayerHooks(), UnmappedPropertiesHooks('unmapped_props'), p2.CardPlayerHooks()])));
 
-  @override Function get encoder => (p0.CardGame v) => const p1.GameHooks().encode<p0.CardGame>(v, (v) => encode(v));
+  @override Function get encoder => (p0.CardGame v) => const p1.GameHooks().encode<p0.CardGame>(v, (v) => encode);
   dynamic encode(p0.CardGame v) => toMap(v);
   Map<String, dynamic> toMap(p0.CardGame c) => {'player': Mapper.i.$enc(c.player, 'player', const ChainedHooks([p0.PlayerHooks(), UnmappedPropertiesHooks('unmapped_props'), p2.CardPlayerHooks()]))};
 
@@ -110,7 +107,7 @@ class PlayerMapper extends BaseMapper<p0.Player> {
   p0.Player decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Player fromMap(Map<String, dynamic> map) => p0.Player(Mapper.i.$get(map, 'id'));
 
-  @override Function get encoder => (p0.Player v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Player v) => toMap(v);
   Map<String, dynamic> toMap(p0.Player p) => {'id': Mapper.i.$enc(p.id, 'id')};
 
@@ -146,7 +143,7 @@ class ClothesMapper extends BaseMapper<p0.Clothes> {
   p0.Clothes decode(dynamic v) => const UnmappedPropertiesHooks('unmapped_props').decode(v, (v) => checked(v, (Map<String, dynamic> map) => fromMap(map)));
   p0.Clothes fromMap(Map<String, dynamic> map) => p0.Clothes(Mapper.i.$get(map, 'size'), unmappedProps: Mapper.i.$getOpt(map, 'unmapped_props') ?? const {});
 
-  @override Function get encoder => (p0.Clothes v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Clothes v) => const UnmappedPropertiesHooks('unmapped_props').encode<p0.Clothes>(v, (v) => toMap(v));
   Map<String, dynamic> toMap(p0.Clothes c) => {'size': Mapper.i.$enc(c.size, 'size'), 'unmapped_props': Mapper.i.$enc(c.unmappedProps, 'unmappedProps')};
 
@@ -182,7 +179,7 @@ class ComponentMapper extends BaseMapper<p0.Component> {
   p0.Component decode(dynamic v) => const UnmappedPropertiesHooks('unmapped_props').decode(v, (v) => checked(v, (Map<String, dynamic> map) => fromMap(map)));
   p0.Component fromMap(Map<String, dynamic> map) => p0.Component(Mapper.i.$get(map, 'id'), Mapper.i.$getOpt(map, 'unmapped_props'), Mapper.i.$get(map, 'name'));
 
-  @override Function get encoder => (p0.Component v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Component v) => const UnmappedPropertiesHooks('unmapped_props').encode<p0.Component>(v, (v) => toMap(v));
   Map<String, dynamic> toMap(p0.Component c) => {'id': Mapper.i.$enc(c.id, 'id'), 'unmapped_props': Mapper.i.$enc(c.unmappedProps, 'unmappedProps'), 'name': Mapper.i.$enc(c.name, 'name')};
 
@@ -229,10 +226,10 @@ class Mapper {
   static T fromIterable<T>(Iterable<dynamic> iterable) => i.fromIterable<T>(iterable);
   static T fromJson<T>(String json) => i.fromJson<T>(json);
 
-  static dynamic toValue(dynamic value) => i.toValue(value);
-  static Map<String, dynamic> toMap(dynamic object) => i.toMap(object);
-  static Iterable<dynamic> toIterable(dynamic object) => i.toIterable(object);
-  static String toJson(dynamic object) => i.toJson(object);
+  static dynamic toValue<T>(T value) => i.toValue<T>(value);
+  static Map<String, dynamic> toMap<T>(T object) => i.toMap<T>(object);
+  static Iterable<dynamic> toIterable<T>(T object) => i.toIterable<T>(object);
+  static String toJson<T>(T object) => i.toJson<T>(object);
 
   static bool isEqual(dynamic value, Object? other) => i.isEqual(value, other);
   static int hash(dynamic value) => i.hash(value);

@@ -1,3 +1,5 @@
+import 'package:type_plus/type_plus.dart';
+
 import '../core/annotations.dart';
 import '../core/mapper_exception.dart';
 import 'mapper_container.dart';
@@ -39,8 +41,16 @@ extension GuardedUtils on MapperContainer {
     return guard(
       MapperMethod.encode,
       '.$key',
-      () => hooks.encode<T>(value, toValue),
+      () => hooks.encode<T>(value, toValue<T>),
     );
+  }
+
+  Map<String, dynamic> $type<T>(T value) {
+    if (value.runtimeType == T) {
+      return {};
+    } else {
+      return {'__type': value.runtimeType.id};
+    }
   }
 }
 

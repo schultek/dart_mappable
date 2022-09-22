@@ -30,7 +30,7 @@ class PersonMapper extends BaseMapper<p0.Person> {
   p0.Person decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Person fromMap(Map<String, dynamic> map) => p0.Person(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'car'));
 
-  @override Function get encoder => (p0.Person v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Person v) => toMap(v);
   Map<String, dynamic> toMap(p0.Person p) => {'name': Mapper.i.$enc(p.name, 'name'), 'car': Mapper.i.$enc(p.car, 'car')};
 
@@ -68,7 +68,7 @@ class CarMapper extends BaseMapper<p0.Car> {
   p0.Car decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Car fromMap(Map<String, dynamic> map) => p0.Car(Mapper.i.$getOpt(map, 'brand'), Mapper.i.$get(map, 'model'));
 
-  @override Function get encoder => (p0.Car v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Car v) => toMap(v);
   Map<String, dynamic> toMap(p0.Car c) => {'brand': Mapper.i.$enc(c.brand, 'brand'), 'model': Mapper.i.$enc(c.model, 'model')};
 
@@ -106,7 +106,7 @@ class BrandMapper extends BaseMapper<p0.Brand> {
   p0.Brand decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Brand fromMap(Map<String, dynamic> map) => p0.Brand(Mapper.i.$getOpt(map, 'name'));
 
-  @override Function get encoder => (p0.Brand v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Brand v) => toMap(v);
   Map<String, dynamic> toMap(p0.Brand b) => {'name': Mapper.i.$enc(b.name, 'name')};
 
@@ -142,7 +142,7 @@ class DealershipMapper extends BaseMapper<p0.Dealership> {
   p0.Dealership decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Dealership fromMap(Map<String, dynamic> map) => p0.Dealership(Mapper.i.$get(map, 'cars'), Mapper.i.$get(map, 'sales_rep'));
 
-  @override Function get encoder => (p0.Dealership v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Dealership v) => toMap(v);
   Map<String, dynamic> toMap(p0.Dealership d) => {'cars': Mapper.i.$enc(d.cars, 'cars'), 'sales_rep': Mapper.i.$enc(d.salesRep, 'salesRep')};
 
@@ -182,12 +182,9 @@ class ItemListMapper extends BaseMapper<p0.ItemList> {
   p0.ItemList<T> decode<T>(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
   p0.ItemList<T> fromMap<T>(Map<String, dynamic> map) => p0.ItemList(Mapper.i.$getOpt(map, 'items'));
 
-  @override Function get encoder => (p0.ItemList v) => encode(v);
-  dynamic encode(p0.ItemList v) {
-    if (v is p0.BrandList) { return BrandListMapper._().encode(v); }
-    else { return toMap(v); }
-  }
-  Map<String, dynamic> toMap(p0.ItemList i) => {'items': Mapper.i.$enc(i.items, 'items')};
+  @override Function get encoder => encode;
+  dynamic encode<T>(p0.ItemList<T> v) => toMap<T>(v);
+  Map<String, dynamic> toMap<T>(p0.ItemList<T> i) => {'items': Mapper.i.$enc(i.items, 'items'), ...Mapper.i.$type<p0.ItemList<T>>(i)};
 
   @override String stringify(p0.ItemList self) => 'ItemList(items: ${Mapper.asString(self.items)})';
   @override int hash(p0.ItemList self) => Mapper.hash(self.items);
@@ -221,7 +218,7 @@ class BrandListMapper extends BaseMapper<p0.BrandList> {
   p0.BrandList decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.BrandList fromMap(Map<String, dynamic> map) => p0.BrandList(Mapper.i.$getOpt(map, 'brands'));
 
-  @override Function get encoder => (p0.BrandList v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.BrandList v) => toMap(v);
   Map<String, dynamic> toMap(p0.BrandList b) => {'brands': Mapper.i.$enc(b.items, 'items')};
 
@@ -270,10 +267,10 @@ class Mapper {
   static T fromIterable<T>(Iterable<dynamic> iterable) => i.fromIterable<T>(iterable);
   static T fromJson<T>(String json) => i.fromJson<T>(json);
 
-  static dynamic toValue(dynamic value) => i.toValue(value);
-  static Map<String, dynamic> toMap(dynamic object) => i.toMap(object);
-  static Iterable<dynamic> toIterable(dynamic object) => i.toIterable(object);
-  static String toJson(dynamic object) => i.toJson(object);
+  static dynamic toValue<T>(T value) => i.toValue<T>(value);
+  static Map<String, dynamic> toMap<T>(T object) => i.toMap<T>(object);
+  static Iterable<dynamic> toIterable<T>(T object) => i.toIterable<T>(object);
+  static String toJson<T>(T object) => i.toJson<T>(object);
 
   static bool isEqual(dynamic value, Object? other) => i.isEqual(value, other);
   static int hash(dynamic value) => i.hash(value);

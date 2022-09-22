@@ -36,14 +36,8 @@ class AnimalMapper extends BaseMapper<p0.Animal> {
   });
   p0.Animal fromMap(Map<String, dynamic> map) => throw MapperException.missingSubclass('Animal', 'type', '${map['type']}');
 
-  @override Function get encoder => (p0.Animal v) => encode(v);
-  dynamic encode(p0.Animal v) {
-    if (v is p0.NullAnimal) { return NullAnimalMapper._().encode(v); }
-    else if (v is p0.Cat) { return CatMapper._().encode(v); }
-    else if (v is p0.Dog) { return DogMapper._().encode(v); }
-    else if (v is p0.DefaultAnimal) { return DefaultAnimalMapper._().encode(v); }
-    else { return toMap(v); }
-  }
+  @override Function get encoder => encode;
+  dynamic encode(p0.Animal v) => toMap(v);
   Map<String, dynamic> toMap(p0.Animal a) => {'name': Mapper.i.$enc(a.name, 'name')};
 
   @override String stringify(p0.Animal self) => 'Animal(name: ${Mapper.asString(self.name)})';
@@ -65,7 +59,7 @@ class CatMapper extends BaseMapper<p0.Cat> {
   p0.Cat decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Cat fromMap(Map<String, dynamic> map) => p0.Cat(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'color'));
 
-  @override Function get encoder => (p0.Cat v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Cat v) => toMap(v);
   Map<String, dynamic> toMap(p0.Cat c) => {'name': Mapper.i.$enc(c.name, 'name'), 'color': Mapper.i.$enc(c.color, 'color'), 'type': 'Cat'};
 
@@ -101,7 +95,7 @@ class DogMapper extends BaseMapper<p0.Dog> {
   p0.Dog decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Dog fromMap(Map<String, dynamic> map) => p0.Dog(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'age'));
 
-  @override Function get encoder => (p0.Dog v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Dog v) => toMap(v);
   Map<String, dynamic> toMap(p0.Dog d) => {'name': Mapper.i.$enc(d.name, 'name'), 'age': Mapper.i.$enc(d.age, 'age'), 'type': 1};
 
@@ -137,7 +131,7 @@ class NullAnimalMapper extends BaseMapper<p0.NullAnimal> {
   p0.NullAnimal decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.NullAnimal fromMap(Map<String, dynamic> map) => p0.NullAnimal(Mapper.i.$get(map, 'name'));
 
-  @override Function get encoder => (p0.NullAnimal v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.NullAnimal v) => toMap(v);
   Map<String, dynamic> toMap(p0.NullAnimal n) => {'name': Mapper.i.$enc(n.name, 'name'), 'type': null};
 
@@ -173,7 +167,7 @@ class DefaultAnimalMapper extends BaseMapper<p0.DefaultAnimal> {
   p0.DefaultAnimal decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.DefaultAnimal fromMap(Map<String, dynamic> map) => p0.DefaultAnimal(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'type'));
 
-  @override Function get encoder => (p0.DefaultAnimal v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.DefaultAnimal v) => toMap(v);
   Map<String, dynamic> toMap(p0.DefaultAnimal d) => {'name': Mapper.i.$enc(d.name, 'name'), 'type': Mapper.i.$enc(d.type, 'type')};
 
@@ -220,10 +214,10 @@ class Mapper {
   static T fromIterable<T>(Iterable<dynamic> iterable) => i.fromIterable<T>(iterable);
   static T fromJson<T>(String json) => i.fromJson<T>(json);
 
-  static dynamic toValue(dynamic value) => i.toValue(value);
-  static Map<String, dynamic> toMap(dynamic object) => i.toMap(object);
-  static Iterable<dynamic> toIterable(dynamic object) => i.toIterable(object);
-  static String toJson(dynamic object) => i.toJson(object);
+  static dynamic toValue<T>(T value) => i.toValue<T>(value);
+  static Map<String, dynamic> toMap<T>(T object) => i.toMap<T>(object);
+  static Iterable<dynamic> toIterable<T>(T object) => i.toIterable<T>(object);
+  static String toJson<T>(T object) => i.toJson<T>(object);
 
   static bool isEqual(dynamic value, Object? other) => i.isEqual(value, other);
   static int hash(dynamic value) => i.hash(value);
