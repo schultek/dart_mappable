@@ -2,7 +2,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 class EnumMapperConfig {
-  final ClassElement element;
+  final EnumElement element;
 
   final ValuesMode mode;
   final CaseStyle? caseStyle;

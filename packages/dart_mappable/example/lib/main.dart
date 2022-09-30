@@ -71,7 +71,7 @@ void main() {
 
   // use generic objects
   Box<Confetti> box = Box(10, content: Confetti('Rainbow'));
-  String boxJson = box.toJson();
+  String boxJson = Mapper.toJson<Box>(box);
   print(boxJson);
   // {"size":10,"content":{"color":"Rainbow"},"_type":"Box<Confetti>"}
 

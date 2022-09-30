@@ -11,7 +11,7 @@ import 'class_mapper_config.dart';
 import 'mapper_targets.dart';
 import 'parameter_config.dart';
 
-class ClassMapperTarget extends MapperTarget {
+class ClassMapperTarget extends MapperTarget<ClassElement> {
   List<ClassMapperTarget> subTargets = [];
   ClassMapperTarget? superTarget;
 
@@ -29,7 +29,8 @@ class ClassMapperTarget extends MapperTarget {
     }
 
     if (supertype != null && !supertype.isDartCoreObject) {
-      return supertype.element;
+      var element = supertype.element2;
+      if (element is ClassElement) return element;
     }
     return null;
   }
@@ -191,7 +192,7 @@ class ClassMapperTarget extends MapperTarget {
     var discriminatorValueField = annotation?.getField('discriminatorValue');
     String? code;
     if (discriminatorValueField != null) {
-      if (discriminatorValueField.type?.element?.name ==
+      if (discriminatorValueField.type?.element2?.name ==
               MappingFlags.useAsDefault.runtimeType.toString() &&
           discriminatorValueField.getField('index')!.toIntValue() == 0) {
         return 'default';
@@ -245,7 +246,7 @@ class FactoryConstructorMapperTarget extends ClassMapperTarget {
 
   FactoryConstructorMapperTarget(
       this.factoryConstructor, MappableOptions options, int? prefix)
-      : super(factoryConstructor.redirectedConstructor!.returnType.element,
+      : super(factoryConstructor.redirectedConstructor!.returnType.element2 as ClassElement,
             options, prefix);
 
   @override

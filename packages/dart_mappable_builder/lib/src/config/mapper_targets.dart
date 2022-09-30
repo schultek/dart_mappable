@@ -13,7 +13,7 @@ class MapperTargets {
   final ImportsBuilder imports;
   MapperTargets(AssetId inputId) : imports = ImportsBuilder(inputId);
 
-  Map<ClassElement, EnumMapperTarget> enums = {};
+  Map<EnumElement, EnumMapperTarget> enums = {};
   Map<ClassElement, ClassMapperTarget> classes = {};
   Map<Element, CustomMapperConfig> customMappers = {};
 
@@ -21,7 +21,7 @@ class MapperTargets {
     var elements = elementsOf(library);
 
     for (var element in elements) {
-      if (customMapperChecker.hasAnnotationOf(element)) {
+      if (element is ClassElement && customMapperChecker.hasAnnotationOf(element)) {
         var mapperIndex = element.allSupertypes
             .indexWhere((t) => mapperChecker.isExactlyType(t));
         if (mapperIndex == -1) {
@@ -31,7 +31,7 @@ class MapperTargets {
         var type = element.allSupertypes[mapperIndex].typeArguments[0];
         var libPrefix = imports.add(library.source.uri);
 
-        customMappers[type.element!] = CustomMapperConfig(
+        customMappers[type.element2!] = CustomMapperConfig(
           element: element,
           prefix: libPrefix,
         );
@@ -39,8 +39,8 @@ class MapperTargets {
         var shouldGenerate = options.shouldGenerateFor(element);
         if (!shouldGenerate && !options.ignoreAnnotated) {
           shouldGenerate =
-              (!element.isEnum && classChecker.hasAnnotationOf(element)) ||
-                  (element.isEnum && enumChecker.hasAnnotationOf(element));
+              (element is ClassElement && classChecker.hasAnnotationOf(element)) ||
+                  (element is EnumElement && enumChecker.hasAnnotationOf(element));
         }
         if (shouldGenerate) {
           addElement(element, options);
@@ -49,16 +49,16 @@ class MapperTargets {
     }
   }
 
-  void addElement(ClassElement element, MappableOptions options) {
+  void addElement(InterfaceElement element, MappableOptions options) {
     if (element.isPrivate) return;
-    if (element.isEnum) {
+    if (element is EnumElement) {
       if (enums.containsKey(element)) {
         return;
       }
 
       var prefix = imports.add(element.librarySource.uri);
       enums[element] = EnumMapperTarget(element, options, prefix);
-    } else {
+    } else if (element is ClassElement) {
       if (classes.containsKey(element)) {
         return;
       }
@@ -97,16 +97,16 @@ class MapperTargets {
   }
 
   /// All of the declared classes and enums in this library.
-  Iterable<ClassElement> elementsOf(LibraryElement element) sync* {
+  Iterable<InterfaceElement> elementsOf(LibraryElement element) sync* {
     for (var cu in element.units) {
-      yield* cu.enums;
+      yield* cu.enums2;
       yield* cu.classes;
     }
   }
 }
 
-abstract class MapperTarget {
-  ClassElement element;
+abstract class MapperTarget<T extends InterfaceElement> {
+  T element;
   MappableOptions options;
   int? prefix;
 
