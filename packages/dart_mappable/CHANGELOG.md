@@ -1,3 +1,25 @@
+# 2.0.0-dev.0
+
+- Improved encoding of generic instances.
+
+  Any encoding method (Mapper.toValue, Mapper.toMap, Mapper.toJson) now also takes a
+  generic type argument `T`, which must be an assignable type for the passed value.
+  When `T` and the values `runtimeType` match exactly, it is encoded as normal. If not, a `__type`
+  property is added with the specific type of `value`. This can then be used to decode the value
+  without specifying a target type.
+
+  ```dart
+    // this will encode normal without '__type'
+    Mapper.toValue<MyClass>>(myClassInstance);
+    Mapper.toValue(MyClass()); // works because of type inference
+    Mapper.toValue<MyGenericClass<int>>(myGenericClassInstance);
+  
+    // this will add the '__type' property
+    Mapper.toValue<dynamic>(myClassInstance);
+    Mapper.toValue(someDynamicVariable); // where type inference does not work
+    Mapper.toValue<MyGenericClass>(myGenericClassInstance); // because the instance has a specific type
+  ```
+
 # 1.2.0
 
 - Added support for `2.17` super parameters
