@@ -43,8 +43,8 @@ class CopyWithGenerator {
   }
 
   String _generateCopyWithClasses(GetConfig getConfig) {
-    var classTypeParamsDef = config.element.typeParameters
-        .map((p) => ', ${p.getDisplayString(withNullability: true)}')
+    var classTypeParamsDef = config.typeParamsList
+        .map((p) => ', $p')
         .join();
     var classTypeParams =
         config.element.typeParameters.map((p) => ', ${p.name}').join();
@@ -95,12 +95,12 @@ class CopyWithGenerator {
       Element? classElement;
       if (param.parameter.type.isDartCoreList) {
         var it = param.parameter.type as InterfaceType;
-        classElement = it.typeArguments.first.element;
+        classElement = it.typeArguments.first.element2;
       } else if (param.parameter.type.isDartCoreMap) {
         var it = param.parameter.type as InterfaceType;
-        classElement = it.typeArguments[1].element;
+        classElement = it.typeArguments[1].element2;
       } else {
-        classElement = param.parameter.type.element;
+        classElement = param.parameter.type.element2;
       }
 
       var classConfig = getConfig(classElement);

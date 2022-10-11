@@ -154,7 +154,7 @@ class PrefixVisitor extends RecursiveAstVisitor {
     if (node.staticElement is ClassElement) {
       addPrefixFor(node);
     } else if (node.staticElement is PropertyAccessorElement) {
-      if ((node.staticElement as PropertyAccessorElement).enclosingElement
+      if ((node.staticElement as PropertyAccessorElement).enclosingElement3
           is CompilationUnitElement) {
         addPrefixFor(node);
       }

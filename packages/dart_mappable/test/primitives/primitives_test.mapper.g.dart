@@ -26,7 +26,7 @@ class ItemsMapper extends BaseMapper<p0.Items> {
   p0.Items decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Items fromMap(Map<String, dynamic> map) => p0.Items(Mapper.i.$get(map, 'items'), Mapper.i.$get(map, 'items2'));
 
-  @override Function get encoder => (p0.Items v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Items v) => toMap(v);
   Map<String, dynamic> toMap(p0.Items i) => {'items': Mapper.i.$enc(i.items, 'items'), 'items2': Mapper.i.$enc(i.items2, 'items2')};
 
@@ -66,7 +66,7 @@ class ItemMapper extends BaseMapper<p0.Item> {
   p0.Item decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Item fromMap(Map<String, dynamic> map) => p0.Item(Mapper.i.$get(map, 'index'));
 
-  @override Function get encoder => (p0.Item v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Item v) => toMap(v);
   Map<String, dynamic> toMap(p0.Item i) => {'index': Mapper.i.$enc(i.index, 'index')};
 
@@ -113,10 +113,10 @@ class Mapper {
   static T fromIterable<T>(Iterable<dynamic> iterable) => i.fromIterable<T>(iterable);
   static T fromJson<T>(String json) => i.fromJson<T>(json);
 
-  static dynamic toValue(dynamic value) => i.toValue(value);
-  static Map<String, dynamic> toMap(dynamic object) => i.toMap(object);
-  static Iterable<dynamic> toIterable(dynamic object) => i.toIterable(object);
-  static String toJson(dynamic object) => i.toJson(object);
+  static dynamic toValue<T>(T value) => i.toValue<T>(value);
+  static Map<String, dynamic> toMap<T>(T object) => i.toMap<T>(object);
+  static Iterable<dynamic> toIterable<T>(T object) => i.toIterable<T>(object);
+  static String toJson<T>(T object) => i.toJson<T>(object);
 
   static bool isEqual(dynamic value, Object? other) => i.isEqual(value, other);
   static int hash(dynamic value) => i.hash(value);

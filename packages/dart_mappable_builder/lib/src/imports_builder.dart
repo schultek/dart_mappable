@@ -95,13 +95,13 @@ class ImportsBuilder {
       typeArgs = '<${t.typeArguments.map(prefixedType).join(', ')}>';
     }
 
-    var type = '${t.element?.name}$typeArgs';
+    var type = '${t.element2?.name}$typeArgs';
 
     if (withNullability && t.nullabilitySuffix == NullabilitySuffix.question) {
       type += '?';
     }
 
-    var prefix = add(t.element?.librarySource?.uri);
+    var prefix = add(t.element2?.librarySource?.uri);
     return (prefix != null ? 'p$prefix.' : '') + type;
   }
 }

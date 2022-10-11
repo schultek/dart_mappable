@@ -35,7 +35,7 @@ class Dealership with Mappable {
 }
 
 @MappableClass(discriminatorKey: 'type')
-class ItemList<T> {
+class ItemList<T> with Mappable, Copyable<T> {
   final List<T> items;
 
   ItemList(List<T>? items) : items = items ?? [];
@@ -53,7 +53,7 @@ class NamedItemList<T> extends ItemList<T> {
 }
 
 @MappableClass()
-class KeyedItemList<K, T> extends ItemList<T> {
+class KeyedItemList<K, T> extends ItemList<T> with KeyedItemListMixin<K, T> {
   K key;
   KeyedItemList(this.key, List<T>? items): super(items);
 }
@@ -137,7 +137,7 @@ void main() {
       expect(list.items.length, equals(2));
       list = list.copyWith.items.add(Brand('Skoda'));
       expect(list.items.length, equals(3));
-      list = list.copyWith(brands: null);
+      list = list.copyWith(items: null);
       expect(list.items.length, equals(0));
     });
 

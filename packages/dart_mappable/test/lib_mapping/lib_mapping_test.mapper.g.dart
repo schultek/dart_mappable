@@ -32,7 +32,7 @@ class PersonMapper extends BaseMapper<p0.Person> {
   p0.Person decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Person fromMap(Map<String, dynamic> map) => p0.Person(Mapper.i.$get(map, 'first_name'));
 
-  @override Function get encoder => (p0.Person v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Person v) => toMap(v);
   Map<String, dynamic> toMap(p0.Person p) => {'first_name': Mapper.i.$enc(p.firstName, 'firstName')};
 
@@ -68,7 +68,7 @@ class Apple1Mapper extends BaseMapper<p1.Apple> {
   p1.Apple decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p1.Apple fromMap(Map<String, dynamic> map) => p1.Apple(Mapper.i.$get(map, 'is_red'));
 
-  @override Function get encoder => (p1.Apple v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p1.Apple v) => toMap(v);
   Map<String, dynamic> toMap(p1.Apple a) => {'is_red': Mapper.i.$enc(a.isRed, 'isRed')};
 
@@ -105,7 +105,7 @@ class Cake1Mapper extends BaseMapper<p1.Cake> {
   p1.Cake decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p1.Cake fromMap(Map<String, dynamic> map) => p1.Cake(Mapper.i.$get(map, 'type'));
 
-  @override Function get encoder => (p1.Cake v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p1.Cake v) => toMap(v);
   Map<String, dynamic> toMap(p1.Cake c) => {'type': Mapper.i.$enc(c.type, 'type')};
 
@@ -142,7 +142,7 @@ class Car2Mapper extends BaseMapper<p2.Car> {
   p2.Car decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p2.Car fromMap(Map<String, dynamic> map) => p2.Car(Mapper.i.$get(map, 'brand_name'));
 
-  @override Function get encoder => (p2.Car v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p2.Car v) => toMap(v);
   Map<String, dynamic> toMap(p2.Car c) => {'brand_name': Mapper.i.$enc(c.brandName, 'brandName')};
 
@@ -179,7 +179,7 @@ class Animal3Mapper extends BaseMapper<p3.Animal> {
   p3.Animal decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p3.Animal fromMap(Map<String, dynamic> map) => p3.Animal(Mapper.i.$get(map, 'color'));
 
-  @override Function get encoder => (p3.Animal v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p3.Animal v) => toMap(v);
   Map<String, dynamic> toMap(p3.Animal a) => {'color': Mapper.i.$enc(a.color, 'color')};
 
@@ -227,10 +227,10 @@ class Mapper {
   static T fromIterable<T>(Iterable<dynamic> iterable) => i.fromIterable<T>(iterable);
   static T fromJson<T>(String json) => i.fromJson<T>(json);
 
-  static dynamic toValue(dynamic value) => i.toValue(value);
-  static Map<String, dynamic> toMap(dynamic object) => i.toMap(object);
-  static Iterable<dynamic> toIterable(dynamic object) => i.toIterable(object);
-  static String toJson(dynamic object) => i.toJson(object);
+  static dynamic toValue<T>(T value) => i.toValue<T>(value);
+  static Map<String, dynamic> toMap<T>(T object) => i.toMap<T>(object);
+  static Iterable<dynamic> toIterable<T>(T object) => i.toIterable<T>(object);
+  static String toJson<T>(T object) => i.toJson<T>(object);
 
   static bool isEqual(dynamic value, Object? other) => i.isEqual(value, other);
   static int hash(dynamic value) => i.hash(value);

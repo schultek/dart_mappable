@@ -12,13 +12,13 @@ abstract class MapperContainer {
   factory MapperContainer(Set<BaseMapper> mappers) = _MapperContainerImpl;
 
   T fromValue<T>(dynamic value);
-  dynamic toValue(dynamic value);
+  dynamic toValue<T>(T value);
   T fromMap<T>(Map<String, dynamic> map);
-  Map<String, dynamic> toMap(dynamic object);
+  Map<String, dynamic> toMap<T>(T object);
   T fromIterable<T>(Iterable<dynamic> iterable);
-  Iterable<dynamic> toIterable(dynamic object);
+  Iterable<dynamic> toIterable<T>(T object);
   T fromJson<T>(String json);
-  String toJson(dynamic object);
+  String toJson<T>(T object);
   bool isEqual(dynamic value, Object? other);
   int hash(dynamic value);
   String asString(dynamic value);
@@ -85,12 +85,21 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
       var type = T;
       if (value is Map<String, dynamic> && value['__type'] != null) {
         type = TypePlus.fromId(value['__type'] as String);
+        if (type == UnresolvedType) {
+          var e = MapperException.unresolvedType(value['__type'] as String);
+          throw MapperException.chain(MapperMethod.decode, '($T)', e);
+        }
       }
       var mapper = _mappers[type.baseId];
       if (mapper != null) {
         try {
-          return mapper.decoder
-              .callWith(parameters: [value], typeArguments: type.args) as T;
+          try {
+            return mapper.decoder
+                .callWith(parameters: [value], typeArguments: type.args) as T;
+          } on ArgumentError catch (e) {
+            throw ArgumentError(
+                'Failed to call [decoder] function of ${mapper.runtimeType}: ${e.message}');
+          }
         } catch (e) {
           throw MapperException.chain(MapperMethod.decode, '($type)', e);
         }
@@ -102,20 +111,25 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
   }
 
   @override
-  dynamic toValue(dynamic value) {
+  dynamic toValue<T>(T value) {
     if (value == null) return null;
     var type = value.runtimeType;
     var mapper = _mapperFor(value);
     if (mapper != null) {
       try {
-        var encoded = mapper.encoder.call(value);
-        if (encoded is Map<String, dynamic>) {
-          clearType(encoded);
-          if (type.args.isNotEmpty) {
-            encoded['__type'] = type.id;
+        try {
+          var typeArgs = T.args;
+          // in case T is dynamic
+          var fallback = mapper.type.base.args;
+          if (typeArgs.length != fallback.length) {
+            typeArgs = fallback;
           }
+          return mapper.encoder
+              .callWith(parameters: [value], typeArguments: typeArgs);
+        } on ArgumentError catch (e) {
+          throw ArgumentError(
+              'Failed to call [encoder] function of ${mapper.runtimeType}: ${e.message}');
         }
-        return encoded;
       } catch (e) {
         throw MapperException.chain(MapperMethod.encode, '($type)', e);
       }
@@ -132,8 +146,8 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
   T fromMap<T>(Map<String, dynamic> map) => fromValue<T>(map);
 
   @override
-  Map<String, dynamic> toMap(dynamic object) {
-    var value = toValue(object);
+  Map<String, dynamic> toMap<T>(T object) {
+    var value = toValue<T>(object);
     if (value is Map<String, dynamic>) {
       return value;
     } else {
@@ -146,8 +160,8 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
   T fromIterable<T>(Iterable<dynamic> iterable) => fromValue<T>(iterable);
 
   @override
-  Iterable<dynamic> toIterable(dynamic object) {
-    var value = toValue(object);
+  Iterable<dynamic> toIterable<T>(T object) {
+    var value = toValue<T>(object);
     if (value is Iterable<dynamic>) {
       return value;
     } else {
@@ -162,18 +176,17 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
   }
 
   @override
-  String toJson(dynamic object) {
-    return jsonEncode(toValue(object));
+  String toJson<T>(T object) {
+    return jsonEncode(toValue<T>(object));
   }
 
   @override
   bool isEqual(dynamic value, Object? other) {
     if (value == null) {
       return other == null;
-    } else if (value.runtimeType != other.runtimeType) {
-      return false;
     }
-    return guardMappable(value, (m) => m.equals(value, other),
+
+    return guardMappable(value, (m) => m.isFor(other) && m.equals(value, other),
         () => value == other, MapperMethod.equals, () => '[$value]');
   }
 

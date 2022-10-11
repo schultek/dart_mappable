@@ -23,6 +23,16 @@ var _mappers = <BaseMapper>{
   // custom mappers
 };
 
+mixin Copyable<A> on Object {
+  R apply<R>(R Function<T extends A>() fn) => fn<A>();
+}
+
+mixin Copyable2<A, B> on Object {
+  R apply<R>(R Function<T>() fn) {
+    fn<A>();
+    return fn<B>();
+  }
+}
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
@@ -33,7 +43,7 @@ class PersonMapper extends BaseMapper<p0.Person> {
   p0.Person decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Person fromMap(Map<String, dynamic> map) => p0.Person(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'car'));
 
-  @override Function get encoder => (p0.Person v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Person v) => toMap(v);
   Map<String, dynamic> toMap(p0.Person p) => {'name': Mapper.i.$enc(p.name, 'name'), 'car': Mapper.i.$enc(p.car, 'car')};
 
@@ -71,7 +81,7 @@ class CarMapper extends BaseMapper<p0.Car> {
   p0.Car decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Car fromMap(Map<String, dynamic> map) => p0.Car(Mapper.i.$getOpt(map, 'brand'), Mapper.i.$get(map, 'model'));
 
-  @override Function get encoder => (p0.Car v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Car v) => toMap(v);
   Map<String, dynamic> toMap(p0.Car c) => {'brand': Mapper.i.$enc(c.brand, 'brand'), 'model': Mapper.i.$enc(c.model, 'model')};
 
@@ -109,7 +119,7 @@ class BrandMapper extends BaseMapper<p0.Brand> {
   p0.Brand decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Brand fromMap(Map<String, dynamic> map) => p0.Brand(Mapper.i.$getOpt(map, 'name'));
 
-  @override Function get encoder => (p0.Brand v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Brand v) => toMap(v);
   Map<String, dynamic> toMap(p0.Brand b) => {'name': Mapper.i.$enc(b.name, 'name')};
 
@@ -145,7 +155,7 @@ class DealershipMapper extends BaseMapper<p0.Dealership> {
   p0.Dealership decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Dealership fromMap(Map<String, dynamic> map) => p0.Dealership(Mapper.i.$get(map, 'cars'), Mapper.i.$get(map, 'sales_rep'));
 
-  @override Function get encoder => (p0.Dealership v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Dealership v) => toMap(v);
   Map<String, dynamic> toMap(p0.Dealership d) => {'cars': Mapper.i.$enc(d.cars, 'cars'), 'sales_rep': Mapper.i.$enc(d.salesRep, 'salesRep')};
 
@@ -193,15 +203,9 @@ class ItemListMapper extends BaseMapper<p0.ItemList> {
   });
   p0.ItemList<T> fromMap<T>(Map<String, dynamic> map) => p0.ItemList(Mapper.i.$getOpt(map, 'items'));
 
-  @override Function get encoder => (p0.ItemList v) => encode(v);
-  dynamic encode(p0.ItemList v) {
-    if (v is p0.BrandList) { return BrandListMapper._().encode(v); }
-    else if (v is p0.ComparableItemList) { return ComparableItemListMapper._().encode(v); }
-    else if (v is p0.NamedItemList) { return NamedItemListMapper._().encode(v); }
-    else if (v is p0.KeyedItemList) { return KeyedItemListMapper._().encode(v); }
-    else { return toMap(v); }
-  }
-  Map<String, dynamic> toMap(p0.ItemList i) => {'items': Mapper.i.$enc(i.items, 'items')};
+  @override Function get encoder => encode;
+  dynamic encode<T>(p0.ItemList<T> v) => toMap<T>(v);
+  Map<String, dynamic> toMap<T>(p0.ItemList<T> i) => {'items': Mapper.i.$enc(i.items, 'items'), ...Mapper.i.$type<p0.ItemList<T>>(i)};
 
   @override String stringify(p0.ItemList self) => 'ItemList(items: ${Mapper.asString(self.items)})';
   @override int hash(p0.ItemList self) => Mapper.hash(self.items);
@@ -218,14 +222,93 @@ extension ItemListMapperExtension<T> on p0.ItemList<T> {
 
 abstract class ItemListCopyWith<$R, T> {
   factory ItemListCopyWith(p0.ItemList<T> value, Then<p0.ItemList<T>, $R> then) {
-    if (T >: p0.BrandList) { return BrandListCopyWith<$R>(value as p0.BrandList, then as Then<p0.BrandList, $R>) as ItemListCopyWith<$R, T>; }
-    else if (value is p0.ComparableItemList<Comparable>) { return ComparableItemListCopyWith<$R, T>(value, then); }
-    else if (value is p0.NamedItemList<T>) { return NamedItemListCopyWith(value, then); }
-    else if (value is p0.KeyedItemList<dynamic, T>) { return KeyedItemListCopyWith(value, then); }
-    else { return _ItemListCopyWithImpl<$R, T>(value, then); }
+    return genericSwitch([
+      copy<$R, p0.BrandList, p0.Brand?>((v, t) => BrandListCopyWith(v, t)),
+      copy1<$R, p0.ComparableItemList, Comparable<dynamic>>(<TT extends Comparable<dynamic>>(fn) => fn<p0.ComparableItemList<TT>>((v, t) => ComparableItemListCopyWith(v, t))),
+      copy1<$R, p0.NamedItemList<T>, T>(<TT extends T>(fn) => fn<p0.NamedItemList<TT>>((v, t) => NamedItemListCopyWith(v, t))),
+      copy2<$R, p0.KeyedItemList<dynamic, T>, T>(<TT extends T, K>(fn) => fn<p0.KeyedItemList<K, TT>>((v, t) => KeyedItemListCopyWith(v, t))),
+      copy1<$R, p0.ItemList<T>, T>(<TT extends T>(fn) => fn<p0.ItemList<TT>>((v, t) => _ItemListCopyWithImpl(v, t))),
+    ], value, then);
   }
   $R call({List<T>? items});
 }
+
+ItemListCopyWith<$R, T> genericSwitch<$R, T>(List<GenericCase<$R, dynamic, p0.ItemList>> cases, p0.ItemList<T> value, Then<p0.ItemList<T>, $R> then) {
+  for (var item in cases) {
+    if (item.matches<T>(value)) {
+      return item.apply<T>(value, then);
+    }
+  }
+}
+
+typedef CopyBuilder<$R, TT extends T, T, VV extends V, V extends p0.ItemList<T>> = ItemListCopyWith<$R, TT> Function(VV value, Then<V, $R> then);
+typedef GenericCopyBuilder<$R, TT extends T, T, V extends p0.ItemList<T>> = ItemListCopyWith<$R, TT> Function<VV extends V>(CopyBuilder<$R, TT, T, VV, V> fn);
+
+typedef Generic1CopyBuilder<$R, T, V extends p0.ItemList<T>> = ItemListCopyWith<$R, T> Function<TT extends T>(GenericCopyBuilder<$R, TT, T, V> fn);
+typedef Generic2CopyBuilder<$R, T, V extends p0.ItemList<T>> = ItemListCopyWith<$R, T> Function<TT extends T, A>(GenericCopyBuilder<$R, TT, T, V> fn);
+
+GenericCase<$R, T, V> copy<$R, V extends p0.ItemList<T>, T>(CopyBuilder<$R, T, T, V, V> fn) {
+  return GenericCase.simple(fn);
+}
+
+GenericCase<$R, T, V> copy1<$R, V extends p0.ItemList<T>, T>(Generic1CopyBuilder<$R, T, V> fn) {
+  return GenericCase.gen1(fn);
+}
+
+GenericCase<$R, T, V> copy2<$R, V extends p0.ItemList<T>, T>(Generic2CopyBuilder<$R, T, V> fn) {
+
+}
+
+abstract class GenericCase<$R, T, V extends p0.ItemList<T>> {
+  factory GenericCase.simple(CopyBuilder<$R, T, T, V, V> fn) = _SimpleGenericCase;
+  factory GenericCase.gen1(Generic1CopyBuilder<$R, T, V> fn) = _GenericCase1;
+
+  bool matches<$T>(p0.ItemList<$T> value);
+  ItemListCopyWith<$R, $T> apply<$T>(p0.ItemList<$T> value, Then<p0.ItemList<$T>, $R> then);
+}
+
+class _SimpleGenericCase<$R, T, V extends p0.ItemList<T>> implements GenericCase<$R, T, V> {
+
+  _SimpleGenericCase(this.fn);
+
+  final CopyBuilder<$R, T, T, V, V> fn;
+
+  @override
+  bool matches<$T>(p0.ItemList<$T> value) {
+    return value is V;
+  }
+
+  @override
+  ItemListCopyWith<$R, $T> apply<$T>(p0.ItemList<$T> value, Then<p0.ItemList<$T>, $R> then) {
+    return fn(value as V, (v) => then(v as p0.ItemList<$T>)) as ItemListCopyWith<$R, $T>;
+  }
+}
+
+
+
+class _GenericCase1<$R, T, V extends p0.ItemList<T>> implements GenericCase<$R, T, V> {
+
+  _GenericCase1(this.fn);
+
+  final Generic1CopyBuilder<$R, T, V> fn;
+
+  @override
+  bool matches<$T>(p0.ItemList<$T> value) {
+    return value is V;
+  }
+
+  @override
+  ItemListCopyWith<$R, $T> apply<$T>(p0.ItemList<$T> value, Then<p0.ItemList<$T>, $R> then) {
+    return value.apply(<TT extends $T>() {
+      return fn<TT>((<VV extends V>(fnn) {
+        return fnn(value as VV, (v) => then(v as p0.ItemList<$T>)) as ItemListCopyWith<$R, $T>;
+      } ));
+    });
+  }
+}
+
+
+
 
 class _ItemListCopyWithImpl<$R, T> extends BaseCopyWith<p0.ItemList<T>, $R> implements ItemListCopyWith<$R, T> {
   _ItemListCopyWithImpl(p0.ItemList<T> value, Then<p0.ItemList<T>, $R> then) : super(value, then);
@@ -240,7 +323,7 @@ class BrandListMapper extends BaseMapper<p0.BrandList> {
   p0.BrandList decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.BrandList fromMap(Map<String, dynamic> map) => p0.BrandList(Mapper.i.$getOpt(map, 'brands'));
 
-  @override Function get encoder => (p0.BrandList v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.BrandList v) => toMap(v);
   Map<String, dynamic> toMap(p0.BrandList b) => {'brands': Mapper.i.$enc(b.items, 'items'), 'type': 'BrandList'};
 
@@ -254,21 +337,21 @@ class BrandListMapper extends BaseMapper<p0.BrandList> {
 extension BrandListMapperExtension on p0.BrandList {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  BrandListCopyWith<p0.BrandList> get copyWith => BrandListCopyWith(this, $identity);
+  BrandListCopyWith<p0.BrandList, p0.Brand?> get copyWith => BrandListCopyWith(this, $identity);
 }
 
-abstract class BrandListCopyWith<$R> implements ItemListCopyWith<$R, p0.Brand?> {
-  factory BrandListCopyWith(p0.BrandList value, Then<p0.BrandList, $R> then) = _BrandListCopyWithImpl<$R>;
+abstract class BrandListCopyWith<$R, T extends p0.Brand?> implements ItemListCopyWith<$R, T> {
+  factory BrandListCopyWith(p0.BrandList value, Then<p0.BrandList, $R> then) = _BrandListCopyWithImpl<$R, T>;
   ListCopyWith<$R, p0.Brand?, BrandCopyWith<$R>?> get items;
-  @override $R call({List<p0.Brand?>? brands});
+  @override $R call({List<p0.Brand?>? items});
   $R apply(p0.BrandList Function(p0.BrandList) transform);
 }
 
-class _BrandListCopyWithImpl<$R> extends BaseCopyWith<p0.BrandList, $R> implements BrandListCopyWith<$R> {
+class _BrandListCopyWithImpl<$R, T extends p0.Brand?> extends BaseCopyWith<p0.BrandList, $R> implements BrandListCopyWith<$R, T> {
   _BrandListCopyWithImpl(p0.BrandList value, Then<p0.BrandList, $R> then) : super(value, then);
 
-  @override ListCopyWith<$R, p0.Brand?, BrandCopyWith<$R>?> get items => ListCopyWith($value.items, (v, t) => v == null ? null : BrandCopyWith(v, t), (v) => call(brands: v));
-  @override $R call({Object? brands = $none}) => $then(p0.BrandList(or(brands, $value.items)));
+  @override ListCopyWith<$R, p0.Brand?, BrandCopyWith<$R>?> get items => ListCopyWith($value.items, (v, t) => v == null ? null : BrandCopyWith(v, t), (v) => call(items: v));
+  @override $R call({Object? items = $none}) => $then(p0.BrandList(or(items, $value.items)));
 }
 
 class NamedItemListMapper extends BaseMapper<p0.NamedItemList> {
@@ -278,9 +361,9 @@ class NamedItemListMapper extends BaseMapper<p0.NamedItemList> {
   p0.NamedItemList<T> decode<T>(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
   p0.NamedItemList<T> fromMap<T>(Map<String, dynamic> map) => p0.NamedItemList(Mapper.i.$get(map, 'name'), Mapper.i.$getOpt(map, 'items'));
 
-  @override Function get encoder => (p0.NamedItemList v) => encode(v);
-  dynamic encode(p0.NamedItemList v) => toMap(v);
-  Map<String, dynamic> toMap(p0.NamedItemList n) => {'name': Mapper.i.$enc(n.name, 'name'), 'items': Mapper.i.$enc(n.items, 'items'), 'type': 'NamedItemList'};
+  @override Function get encoder => encode;
+  dynamic encode<T>(p0.NamedItemList<T> v) => toMap<T>(v);
+  Map<String, dynamic> toMap<T>(p0.NamedItemList<T> n) => {'name': Mapper.i.$enc(n.name, 'name'), 'items': Mapper.i.$enc(n.items, 'items'), 'type': 'NamedItemList', ...Mapper.i.$type<p0.NamedItemList<T>>(n)};
 
   @override String stringify(p0.NamedItemList self) => 'NamedItemList(items: ${Mapper.asString(self.items)}, name: ${Mapper.asString(self.name)})';
   @override int hash(p0.NamedItemList self) => Mapper.hash(self.items) ^ Mapper.hash(self.name);
@@ -314,9 +397,9 @@ class KeyedItemListMapper extends BaseMapper<p0.KeyedItemList> {
   p0.KeyedItemList<K, T> decode<K, T>(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap<K, T>(map));
   p0.KeyedItemList<K, T> fromMap<K, T>(Map<String, dynamic> map) => p0.KeyedItemList(Mapper.i.$get(map, 'key'), Mapper.i.$getOpt(map, 'items'));
 
-  @override Function get encoder => (p0.KeyedItemList v) => encode(v);
-  dynamic encode(p0.KeyedItemList v) => toMap(v);
-  Map<String, dynamic> toMap(p0.KeyedItemList k) => {'key': Mapper.i.$enc(k.key, 'key'), 'items': Mapper.i.$enc(k.items, 'items'), 'type': 'KeyedItemList'};
+  @override Function get encoder => encode;
+  dynamic encode<K, T>(p0.KeyedItemList<K, T> v) => toMap<K, T>(v);
+  Map<String, dynamic> toMap<K, T>(p0.KeyedItemList<K, T> k) => {'key': Mapper.i.$enc(k.key, 'key'), 'items': Mapper.i.$enc(k.items, 'items'), 'type': 'KeyedItemList', ...Mapper.i.$type<p0.KeyedItemList<K, T>>(k)};
 
   @override String stringify(p0.KeyedItemList self) => 'KeyedItemList(items: ${Mapper.asString(self.items)}, key: ${Mapper.asString(self.key)})';
   @override int hash(p0.KeyedItemList self) => Mapper.hash(self.items) ^ Mapper.hash(self.key);
@@ -329,6 +412,13 @@ extension KeyedItemListMapperExtension<K, T> on p0.KeyedItemList<K, T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
   KeyedItemListCopyWith<p0.KeyedItemList<K, T>, K, T> get copyWith => KeyedItemListCopyWith(this, $identity);
+}
+
+
+mixin KeyedItemListMixin<K, T> {
+  KeyedItemListCopyWith<p0.KeyedItemList<K, T>, K, T> get copyWith {
+    return KeyedItemListCopyWith(this as p0.KeyedItemList<K, T>, $identity);
+  }
 }
 
 abstract class KeyedItemListCopyWith<$R, K, T> implements ItemListCopyWith<$R, T> {
@@ -350,9 +440,9 @@ class ComparableItemListMapper extends BaseMapper<p0.ComparableItemList> {
   p0.ComparableItemList<T> decode<T extends Comparable<dynamic>>(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
   p0.ComparableItemList<T> fromMap<T extends Comparable<dynamic>>(Map<String, dynamic> map) => p0.ComparableItemList(Mapper.i.$getOpt(map, 'items'));
 
-  @override Function get encoder => (p0.ComparableItemList v) => encode(v);
-  dynamic encode(p0.ComparableItemList v) => toMap(v);
-  Map<String, dynamic> toMap(p0.ComparableItemList c) => {'items': Mapper.i.$enc(c.items, 'items'), 'type': 'ComparableItemList'};
+  @override Function get encoder => encode;
+  dynamic encode<T extends Comparable<dynamic>>(p0.ComparableItemList<T> v) => toMap<T>(v);
+  Map<String, dynamic> toMap<T extends Comparable<dynamic>>(p0.ComparableItemList<T> c) => {'items': Mapper.i.$enc(c.items, 'items'), 'type': 'ComparableItemList', ...Mapper.i.$type<p0.ComparableItemList<T>>(c)};
 
   @override String stringify(p0.ComparableItemList self) => 'ComparableItemList(items: ${Mapper.asString(self.items)})';
   @override int hash(p0.ComparableItemList self) => Mapper.hash(self.items);
@@ -397,10 +487,10 @@ class Mapper {
   static T fromIterable<T>(Iterable<dynamic> iterable) => i.fromIterable<T>(iterable);
   static T fromJson<T>(String json) => i.fromJson<T>(json);
 
-  static dynamic toValue(dynamic value) => i.toValue(value);
-  static Map<String, dynamic> toMap(dynamic object) => i.toMap(object);
-  static Iterable<dynamic> toIterable(dynamic object) => i.toIterable(object);
-  static String toJson(dynamic object) => i.toJson(object);
+  static dynamic toValue<T>(T value) => i.toValue<T>(value);
+  static Map<String, dynamic> toMap<T>(T object) => i.toMap<T>(object);
+  static Iterable<dynamic> toIterable<T>(T object) => i.toIterable<T>(object);
+  static String toJson<T>(T object) => i.toJson<T>(object);
 
   static bool isEqual(dynamic value, Object? other) => i.isEqual(value, other);
   static int hash(dynamic value) => i.hash(value);

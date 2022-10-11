@@ -23,7 +23,7 @@ var _mappers = <BaseMapper>{
 class PersonMapper extends BaseMapper<p0.Person> {
   PersonMapper._();
 
-  @override Function get encoder => (p0.Person v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Person v) => toMap(v);
   Map<String, dynamic> toMap(p0.Person p) => {'name': Mapper.i.$enc(p.name, 'name')};
 }
@@ -75,10 +75,10 @@ class Mapper {
   static T fromIterable<T>(Iterable<dynamic> iterable) => i.fromIterable<T>(iterable);
   static T fromJson<T>(String json) => i.fromJson<T>(json);
 
-  static dynamic toValue(dynamic value) => i.toValue(value);
-  static Map<String, dynamic> toMap(dynamic object) => i.toMap(object);
-  static Iterable<dynamic> toIterable(dynamic object) => i.toIterable(object);
-  static String toJson(dynamic object) => i.toJson(object);
+  static dynamic toValue<T>(T value) => i.toValue<T>(value);
+  static Map<String, dynamic> toMap<T>(T object) => i.toMap<T>(object);
+  static Iterable<dynamic> toIterable<T>(T object) => i.toIterable<T>(object);
+  static String toJson<T>(T object) => i.toJson<T>(object);
 
   static bool isEqual(dynamic value, Object? other) => i.isEqual(value, other);
   static int hash(dynamic value) => i.hash(value);

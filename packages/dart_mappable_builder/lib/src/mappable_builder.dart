@@ -137,10 +137,10 @@ class MappableBuilder implements Builder {
 
       libraries[library] = parentOptions.apply(options);
 
-      for (var import in library.imports) {
+      for (var import in library.libraryImports) {
         visitDirective(import, import.importedLibrary, parentOptions, options);
       }
-      for (var export in library.exports) {
+      for (var export in library.libraryExports) {
         visitDirective(export, export.exportedLibrary, parentOptions, options);
       }
     }
