@@ -40,22 +40,24 @@ class ItemsMapper extends BaseMapper<p0.Items> {
 extension ItemsMapperExtension on p0.Items {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ItemsCopyWith<p0.Items> get copyWith => ItemsCopyWith(this, $identity);
+  ItemsCopyWith<p0.Items> get copyWith => _ItemsCopyWithImpl(this, $identity);
 }
 
-abstract class ItemsCopyWith<$R> {
-  factory ItemsCopyWith(p0.Items value, Then<p0.Items, $R> then) = _ItemsCopyWithImpl<$R>;
+extension ItemsObjectCopy<$R> on ObjectCopyWith<$R, p0.Items> {
+  ItemsCopyWith<$R> get items => chain(_ItemsCopyWithImpl.new);
+}
+
+abstract class ItemsCopyWith<$R> implements ObjectCopyWith<$R, p0.Items> {
   ListCopyWith<$R, p0.Item, ItemCopyWith<$R>> get items;
   MapCopyWith<$R, int, p0.Item, ItemCopyWith<$R>> get items2;
   $R call({List<p0.Item>? items, Map<int, p0.Item>? items2});
-  $R apply(p0.Items Function(p0.Items) transform);
 }
 
 class _ItemsCopyWithImpl<$R> extends BaseCopyWith<p0.Items, $R> implements ItemsCopyWith<$R> {
-  _ItemsCopyWithImpl(p0.Items value, Then<p0.Items, $R> then) : super(value, then);
+  _ItemsCopyWithImpl(super.value, super.then);
 
-  @override ListCopyWith<$R, p0.Item, ItemCopyWith<$R>> get items => ListCopyWith($value.items, (v, t) => ItemCopyWith(v, t), (v) => call(items: v));
-  @override MapCopyWith<$R, int, p0.Item, ItemCopyWith<$R>> get items2 => MapCopyWith($value.items2, (v, t) => ItemCopyWith(v, t), (v) => call(items2: v));
+  @override ListCopyWith<$R, p0.Item, ItemCopyWith<$R>> get items => ListCopyWith($value.items, (v, t) => _ItemCopyWithImpl(v, t), (v) => call(items: v));
+  @override MapCopyWith<$R, int, p0.Item, ItemCopyWith<$R>> get items2 => MapCopyWith($value.items2, (v, t) => _ItemCopyWithImpl(v, t), (v) => call(items2: v));
   @override $R call({List<p0.Item>? items, Map<int, p0.Item>? items2}) => $then(p0.Items(items ?? $value.items, items2 ?? $value.items2));
 }
 
@@ -80,17 +82,19 @@ class ItemMapper extends BaseMapper<p0.Item> {
 extension ItemMapperExtension on p0.Item {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ItemCopyWith<p0.Item> get copyWith => ItemCopyWith(this, $identity);
+  ItemCopyWith<p0.Item> get copyWith => _ItemCopyWithImpl(this, $identity);
 }
 
-abstract class ItemCopyWith<$R> {
-  factory ItemCopyWith(p0.Item value, Then<p0.Item, $R> then) = _ItemCopyWithImpl<$R>;
+extension ItemObjectCopy<$R> on ObjectCopyWith<$R, p0.Item> {
+  ItemCopyWith<$R> get item => chain(_ItemCopyWithImpl.new);
+}
+
+abstract class ItemCopyWith<$R> implements ObjectCopyWith<$R, p0.Item> {
   $R call({int? index});
-  $R apply(p0.Item Function(p0.Item) transform);
 }
 
 class _ItemCopyWithImpl<$R> extends BaseCopyWith<p0.Item, $R> implements ItemCopyWith<$R> {
-  _ItemCopyWithImpl(p0.Item value, Then<p0.Item, $R> then) : super(value, then);
+  _ItemCopyWithImpl(super.value, super.then);
 
   @override $R call({int? index}) => $then(p0.Item(index ?? $value.index));
 }

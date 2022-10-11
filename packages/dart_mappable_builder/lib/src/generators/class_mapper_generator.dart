@@ -29,6 +29,7 @@ class ClassMapperGenerator {
     ];
 
     var additionSnippets = [
+      copyGen.generateCopyWithMixin(getConfig),
       copyGen.generateCopyWithClasses(getConfig),
     ];
 

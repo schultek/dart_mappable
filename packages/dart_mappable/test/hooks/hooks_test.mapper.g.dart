@@ -45,22 +45,25 @@ class GameMapper extends BaseMapper<p0.Game> {
 extension GameMapperExtension on p0.Game {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  GameCopyWith<p0.Game> get copyWith => GameCopyWith(this, $identity);
 }
 
-abstract class GameCopyWith<$R> {
-  factory GameCopyWith(p0.Game value, Then<p0.Game, $R> then) {
-    if (value is p0.CardGame) { return CardGameCopyWith(value, then); }
-    else { return _GameCopyWithImpl<$R>(value, then); }
-  }
+mixin GameMixin {
+  GameCopyWith<p0.Game, p0.Game> get copyWith => _GameCopyWithImpl(this as p0.Game, $identity);
+}
+
+extension GameObjectCopy<$R> on ObjectCopyWith<$R, p0.Game> {
+  GameCopyWith<$R, p0.Game> get game => chain(_GameCopyWithImpl.new);
+}
+
+abstract class GameCopyWith<$R, $V extends p0.Game> implements ObjectCopyWith<$R, $V> {
   PlayerCopyWith<$R> get player;
   $R call({p0.Player? player});
 }
 
-class _GameCopyWithImpl<$R> extends BaseCopyWith<p0.Game, $R> implements GameCopyWith<$R> {
-  _GameCopyWithImpl(p0.Game value, Then<p0.Game, $R> then) : super(value, then);
+class _GameCopyWithImpl<$R> extends BaseCopyWith<p0.Game, $R> implements GameCopyWith<$R, p0.Game> {
+  _GameCopyWithImpl(super.value, super.then);
 
-  @override PlayerCopyWith<$R> get player => PlayerCopyWith($value.player, (v) => call(player: v));
+  @override PlayerCopyWith<$R> get player => _PlayerCopyWithImpl($value.player, (v) => call(player: v));
   @override $R call({p0.Player? player}) => $then(p0.Game(player ?? $value.player));
 }
 
@@ -85,20 +88,25 @@ class CardGameMapper extends BaseMapper<p0.CardGame> {
 extension CardGameMapperExtension on p0.CardGame {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CardGameCopyWith<p0.CardGame> get copyWith => CardGameCopyWith(this, $identity);
 }
 
-abstract class CardGameCopyWith<$R> implements GameCopyWith<$R> {
-  factory CardGameCopyWith(p0.CardGame value, Then<p0.CardGame, $R> then) = _CardGameCopyWithImpl<$R>;
-  PlayerCopyWith<$R> get player;
+mixin CardGameMixin {
+  CardGameCopyWith<p0.CardGame> get copyWith => _CardGameCopyWithImpl(this as p0.CardGame, $identity);
+}
+
+extension CardGameObjectCopy<$R> on ObjectCopyWith<$R, p0.CardGame> {
+  CardGameCopyWith<$R> get cardGame => chain(_CardGameCopyWithImpl.new);
+}
+
+abstract class CardGameCopyWith<$R> implements GameCopyWith<$R, p0.CardGame> {
+  @override PlayerCopyWith<$R> get player;
   @override $R call({p0.Player? player});
-  $R apply(p0.CardGame Function(p0.CardGame) transform);
 }
 
 class _CardGameCopyWithImpl<$R> extends BaseCopyWith<p0.CardGame, $R> implements CardGameCopyWith<$R> {
-  _CardGameCopyWithImpl(p0.CardGame value, Then<p0.CardGame, $R> then) : super(value, then);
+  _CardGameCopyWithImpl(super.value, super.then);
 
-  @override PlayerCopyWith<$R> get player => PlayerCopyWith($value.player, (v) => call(player: v));
+  @override PlayerCopyWith<$R> get player => _PlayerCopyWithImpl($value.player, (v) => call(player: v));
   @override $R call({p0.Player? player}) => $then(p0.CardGame(player ?? $value.player));
 }
 
@@ -123,17 +131,19 @@ class PlayerMapper extends BaseMapper<p0.Player> {
 extension PlayerMapperExtension on p0.Player {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PlayerCopyWith<p0.Player> get copyWith => PlayerCopyWith(this, $identity);
+  PlayerCopyWith<p0.Player> get copyWith => _PlayerCopyWithImpl(this, $identity);
 }
 
-abstract class PlayerCopyWith<$R> {
-  factory PlayerCopyWith(p0.Player value, Then<p0.Player, $R> then) = _PlayerCopyWithImpl<$R>;
+extension PlayerObjectCopy<$R> on ObjectCopyWith<$R, p0.Player> {
+  PlayerCopyWith<$R> get player => chain(_PlayerCopyWithImpl.new);
+}
+
+abstract class PlayerCopyWith<$R> implements ObjectCopyWith<$R, p0.Player> {
   $R call({String? id});
-  $R apply(p0.Player Function(p0.Player) transform);
 }
 
 class _PlayerCopyWithImpl<$R> extends BaseCopyWith<p0.Player, $R> implements PlayerCopyWith<$R> {
-  _PlayerCopyWithImpl(p0.Player value, Then<p0.Player, $R> then) : super(value, then);
+  _PlayerCopyWithImpl(super.value, super.then);
 
   @override $R call({String? id}) => $then(p0.Player(id ?? $value.id));
 }
@@ -159,18 +169,22 @@ class ClothesMapper extends BaseMapper<p0.Clothes> {
 extension ClothesMapperExtension on p0.Clothes {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ClothesCopyWith<p0.Clothes> get copyWith => ClothesCopyWith(this, $identity);
+  ClothesCopyWith<p0.Clothes> get copyWith => _ClothesCopyWithImpl(this, $identity);
 }
 
-abstract class ClothesCopyWith<$R> {
-  factory ClothesCopyWith(p0.Clothes value, Then<p0.Clothes, $R> then) = _ClothesCopyWithImpl<$R>;
+extension ClothesObjectCopy<$R> on ObjectCopyWith<$R, p0.Clothes> {
+  ClothesCopyWith<$R> get clothes => chain(_ClothesCopyWithImpl.new);
+}
+
+abstract class ClothesCopyWith<$R> implements ObjectCopyWith<$R, p0.Clothes> {
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic>> get unmappedProps;
   $R call({int? size, Map<String, dynamic>? unmappedProps});
-  $R apply(p0.Clothes Function(p0.Clothes) transform);
 }
 
 class _ClothesCopyWithImpl<$R> extends BaseCopyWith<p0.Clothes, $R> implements ClothesCopyWith<$R> {
-  _ClothesCopyWithImpl(p0.Clothes value, Then<p0.Clothes, $R> then) : super(value, then);
+  _ClothesCopyWithImpl(super.value, super.then);
 
+  @override MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic>> get unmappedProps => MapCopyWith($value.unmappedProps, (v, t) => ObjectCopyWith(v, t), (v) => call(unmappedProps: v));
   @override $R call({int? size, Map<String, dynamic>? unmappedProps}) => $then(p0.Clothes(size ?? $value.size, unmappedProps: unmappedProps ?? $value.unmappedProps));
 }
 
@@ -195,18 +209,22 @@ class ComponentMapper extends BaseMapper<p0.Component> {
 extension ComponentMapperExtension on p0.Component {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ComponentCopyWith<p0.Component> get copyWith => ComponentCopyWith(this, $identity);
+  ComponentCopyWith<p0.Component> get copyWith => _ComponentCopyWithImpl(this, $identity);
 }
 
-abstract class ComponentCopyWith<$R> {
-  factory ComponentCopyWith(p0.Component value, Then<p0.Component, $R> then) = _ComponentCopyWithImpl<$R>;
+extension ComponentObjectCopy<$R> on ObjectCopyWith<$R, p0.Component> {
+  ComponentCopyWith<$R> get component => chain(_ComponentCopyWithImpl.new);
+}
+
+abstract class ComponentCopyWith<$R> implements ObjectCopyWith<$R, p0.Component> {
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic>>? get unmappedProps;
   $R call({String? id, Map<String, dynamic>? unmappedProps, String? name});
-  $R apply(p0.Component Function(p0.Component) transform);
 }
 
 class _ComponentCopyWithImpl<$R> extends BaseCopyWith<p0.Component, $R> implements ComponentCopyWith<$R> {
-  _ComponentCopyWithImpl(p0.Component value, Then<p0.Component, $R> then) : super(value, then);
+  _ComponentCopyWithImpl(super.value, super.then);
 
+  @override MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic>>? get unmappedProps => $value.unmappedProps != null ? MapCopyWith($value.unmappedProps!, (v, t) => ObjectCopyWith(v, t), (v) => call(unmappedProps: v)) : null;
   @override $R call({String? id, Object? unmappedProps = $none, String? name}) => $then(p0.Component(id ?? $value.id, or(unmappedProps, $value.unmappedProps), name ?? $value.name));
 }
 

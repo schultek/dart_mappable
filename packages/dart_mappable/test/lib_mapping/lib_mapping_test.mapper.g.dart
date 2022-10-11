@@ -46,17 +46,19 @@ class PersonMapper extends BaseMapper<p0.Person> {
 extension PersonMapperExtension on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<p0.Person> get copyWith => PersonCopyWith(this, $identity);
+  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity);
 }
 
-abstract class PersonCopyWith<$R> {
-  factory PersonCopyWith(p0.Person value, Then<p0.Person, $R> then) = _PersonCopyWithImpl<$R>;
+extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
+  PersonCopyWith<$R> get person => chain(_PersonCopyWithImpl.new);
+}
+
+abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
   $R call({String? firstName});
-  $R apply(p0.Person Function(p0.Person) transform);
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements PersonCopyWith<$R> {
-  _PersonCopyWithImpl(p0.Person value, Then<p0.Person, $R> then) : super(value, then);
+  _PersonCopyWithImpl(super.value, super.then);
 
   @override $R call({String? firstName}) => $then(p0.Person(firstName ?? $value.firstName));
 }
@@ -83,17 +85,19 @@ class Apple1Mapper extends BaseMapper<p1.Apple> {
 extension Apple1MapperExtension on p1.Apple {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  Apple1CopyWith<p1.Apple> get copyWith => Apple1CopyWith(this, $identity);
+  Apple1CopyWith<p1.Apple> get copyWith => _Apple1CopyWithImpl(this, $identity);
 }
 
-abstract class Apple1CopyWith<$R> {
-  factory Apple1CopyWith(p1.Apple value, Then<p1.Apple, $R> then) = _Apple1CopyWithImpl<$R>;
+extension Apple1ObjectCopy<$R> on ObjectCopyWith<$R, p1.Apple> {
+  Apple1CopyWith<$R> get apple => chain(_Apple1CopyWithImpl.new);
+}
+
+abstract class Apple1CopyWith<$R> implements ObjectCopyWith<$R, p1.Apple> {
   $R call({bool? isRed});
-  $R apply(p1.Apple Function(p1.Apple) transform);
 }
 
 class _Apple1CopyWithImpl<$R> extends BaseCopyWith<p1.Apple, $R> implements Apple1CopyWith<$R> {
-  _Apple1CopyWithImpl(p1.Apple value, Then<p1.Apple, $R> then) : super(value, then);
+  _Apple1CopyWithImpl(super.value, super.then);
 
   @override $R call({bool? isRed}) => $then(p1.Apple(isRed ?? $value.isRed));
 }
@@ -120,17 +124,19 @@ class Cake1Mapper extends BaseMapper<p1.Cake> {
 extension Cake1MapperExtension on p1.Cake {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  Cake1CopyWith<p1.Cake> get copyWith => Cake1CopyWith(this, $identity);
+  Cake1CopyWith<p1.Cake> get copyWith => _Cake1CopyWithImpl(this, $identity);
 }
 
-abstract class Cake1CopyWith<$R> {
-  factory Cake1CopyWith(p1.Cake value, Then<p1.Cake, $R> then) = _Cake1CopyWithImpl<$R>;
+extension Cake1ObjectCopy<$R> on ObjectCopyWith<$R, p1.Cake> {
+  Cake1CopyWith<$R> get cake => chain(_Cake1CopyWithImpl.new);
+}
+
+abstract class Cake1CopyWith<$R> implements ObjectCopyWith<$R, p1.Cake> {
   $R call({String? type});
-  $R apply(p1.Cake Function(p1.Cake) transform);
 }
 
 class _Cake1CopyWithImpl<$R> extends BaseCopyWith<p1.Cake, $R> implements Cake1CopyWith<$R> {
-  _Cake1CopyWithImpl(p1.Cake value, Then<p1.Cake, $R> then) : super(value, then);
+  _Cake1CopyWithImpl(super.value, super.then);
 
   @override $R call({String? type}) => $then(p1.Cake(type ?? $value.type));
 }
@@ -157,17 +163,19 @@ class Car2Mapper extends BaseMapper<p2.Car> {
 extension Car2MapperExtension on p2.Car {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  Car2CopyWith<p2.Car> get copyWith => Car2CopyWith(this, $identity);
+  Car2CopyWith<p2.Car> get copyWith => _Car2CopyWithImpl(this, $identity);
 }
 
-abstract class Car2CopyWith<$R> {
-  factory Car2CopyWith(p2.Car value, Then<p2.Car, $R> then) = _Car2CopyWithImpl<$R>;
+extension Car2ObjectCopy<$R> on ObjectCopyWith<$R, p2.Car> {
+  Car2CopyWith<$R> get car => chain(_Car2CopyWithImpl.new);
+}
+
+abstract class Car2CopyWith<$R> implements ObjectCopyWith<$R, p2.Car> {
   $R call({String? brandName});
-  $R apply(p2.Car Function(p2.Car) transform);
 }
 
 class _Car2CopyWithImpl<$R> extends BaseCopyWith<p2.Car, $R> implements Car2CopyWith<$R> {
-  _Car2CopyWithImpl(p2.Car value, Then<p2.Car, $R> then) : super(value, then);
+  _Car2CopyWithImpl(super.value, super.then);
 
   @override $R call({String? brandName}) => $then(p2.Car(brandName ?? $value.brandName));
 }
@@ -194,17 +202,19 @@ class Animal3Mapper extends BaseMapper<p3.Animal> {
 extension Animal3MapperExtension on p3.Animal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  Animal3CopyWith<p3.Animal> get copyWith => Animal3CopyWith(this, $identity);
+  Animal3CopyWith<p3.Animal> get copyWith => _Animal3CopyWithImpl(this, $identity);
 }
 
-abstract class Animal3CopyWith<$R> {
-  factory Animal3CopyWith(p3.Animal value, Then<p3.Animal, $R> then) = _Animal3CopyWithImpl<$R>;
+extension Animal3ObjectCopy<$R> on ObjectCopyWith<$R, p3.Animal> {
+  Animal3CopyWith<$R> get animal => chain(_Animal3CopyWithImpl.new);
+}
+
+abstract class Animal3CopyWith<$R> implements ObjectCopyWith<$R, p3.Animal> {
   $R call({String? color});
-  $R apply(p3.Animal Function(p3.Animal) transform);
 }
 
 class _Animal3CopyWithImpl<$R> extends BaseCopyWith<p3.Animal, $R> implements Animal3CopyWith<$R> {
-  _Animal3CopyWithImpl(p3.Animal value, Then<p3.Animal, $R> then) : super(value, then);
+  _Animal3CopyWithImpl(super.value, super.then);
 
   @override $R call({String? color}) => $then(p3.Animal(color ?? $value.color));
 }

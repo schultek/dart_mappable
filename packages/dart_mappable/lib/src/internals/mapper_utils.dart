@@ -1,5 +1,6 @@
 import 'package:type_plus/type_plus.dart';
 
+import '../../internals.dart';
 import '../core/annotations.dart';
 import '../core/mapper_exception.dart';
 import 'mapper_container.dart';
@@ -108,15 +109,27 @@ T $identity<T>(T value) => value;
 typedef Then<$T, $R> = $R Function($T);
 
 
-class BaseCopyWith<$T, $R> {
-  BaseCopyWith(this.$value, this.$then);
+abstract class ObjectCopyWith<$R, T> {
+  const factory ObjectCopyWith(T value, Then<T, $R> then) = BaseCopyWith;
+  $R apply(T Function(T) transform);
+  $C chain<$C>($C Function(T value, Then<T, $R> then) copy);
+}
+
+class BaseCopyWith<$T, $R> implements ObjectCopyWith<$R, $T> {
+  const BaseCopyWith(this.$value, this.$then);
 
   final $T $value;
   final Then<$T, $R> $then;
 
   T or<T>(Object? v, T t) => v == $none ? t : v as T;
 
+  @override
+  $C chain<$C>($C Function($T value, Then<$T, $R> then) copy) {
+    return copy($value, $then);
+  }
+
   /// Applies any transformer function on the value
+  @override
   $R apply($T Function($T) transform) => $then(transform($value));
 }
 

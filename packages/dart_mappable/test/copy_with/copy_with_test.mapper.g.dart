@@ -23,16 +23,6 @@ var _mappers = <BaseMapper>{
   // custom mappers
 };
 
-mixin Copyable<A> on Object {
-  R apply<R>(R Function<T extends A>() fn) => fn<A>();
-}
-
-mixin Copyable2<A, B> on Object {
-  R apply<R>(R Function<T>() fn) {
-    fn<A>();
-    return fn<B>();
-  }
-}
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
@@ -57,20 +47,22 @@ class PersonMapper extends BaseMapper<p0.Person> {
 extension PersonMapperExtension on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<p0.Person> get copyWith => PersonCopyWith(this, $identity);
+  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity);
 }
 
-abstract class PersonCopyWith<$R> {
-  factory PersonCopyWith(p0.Person value, Then<p0.Person, $R> then) = _PersonCopyWithImpl<$R>;
+extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
+  PersonCopyWith<$R> get person => chain(_PersonCopyWithImpl.new);
+}
+
+abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
   CarCopyWith<$R> get car;
   $R call({String? name, p0.Car? car});
-  $R apply(p0.Person Function(p0.Person) transform);
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements PersonCopyWith<$R> {
-  _PersonCopyWithImpl(p0.Person value, Then<p0.Person, $R> then) : super(value, then);
+  _PersonCopyWithImpl(super.value, super.then);
 
-  @override CarCopyWith<$R> get car => CarCopyWith($value.car, (v) => call(car: v));
+  @override CarCopyWith<$R> get car => _CarCopyWithImpl($value.car, (v) => call(car: v));
   @override $R call({String? name, p0.Car? car}) => $then(p0.Person(name ?? $value.name, car ?? $value.car));
 }
 
@@ -95,20 +87,22 @@ class CarMapper extends BaseMapper<p0.Car> {
 extension CarMapperExtension on p0.Car {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CarCopyWith<p0.Car> get copyWith => CarCopyWith(this, $identity);
+  CarCopyWith<p0.Car> get copyWith => _CarCopyWithImpl(this, $identity);
 }
 
-abstract class CarCopyWith<$R> {
-  factory CarCopyWith(p0.Car value, Then<p0.Car, $R> then) = _CarCopyWithImpl<$R>;
+extension CarObjectCopy<$R> on ObjectCopyWith<$R, p0.Car> {
+  CarCopyWith<$R> get car => chain(_CarCopyWithImpl.new);
+}
+
+abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car> {
   BrandCopyWith<$R>? get brand;
   $R call({p0.Brand? brand, String? model});
-  $R apply(p0.Car Function(p0.Car) transform);
 }
 
 class _CarCopyWithImpl<$R> extends BaseCopyWith<p0.Car, $R> implements CarCopyWith<$R> {
-  _CarCopyWithImpl(p0.Car value, Then<p0.Car, $R> then) : super(value, then);
+  _CarCopyWithImpl(super.value, super.then);
 
-  @override BrandCopyWith<$R>? get brand => $value.brand != null ? BrandCopyWith($value.brand!, (v) => call(brand: v)) : null;
+  @override BrandCopyWith<$R>? get brand => $value.brand != null ? _BrandCopyWithImpl($value.brand!, (v) => call(brand: v)) : null;
   @override $R call({Object? brand = $none, String? model}) => $then(p0.Car(or(brand, $value.brand), model ?? $value.model));
 }
 
@@ -133,17 +127,19 @@ class BrandMapper extends BaseMapper<p0.Brand> {
 extension BrandMapperExtension on p0.Brand {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  BrandCopyWith<p0.Brand> get copyWith => BrandCopyWith(this, $identity);
+  BrandCopyWith<p0.Brand> get copyWith => _BrandCopyWithImpl(this, $identity);
 }
 
-abstract class BrandCopyWith<$R> {
-  factory BrandCopyWith(p0.Brand value, Then<p0.Brand, $R> then) = _BrandCopyWithImpl<$R>;
+extension BrandObjectCopy<$R> on ObjectCopyWith<$R, p0.Brand> {
+  BrandCopyWith<$R> get brand => chain(_BrandCopyWithImpl.new);
+}
+
+abstract class BrandCopyWith<$R> implements ObjectCopyWith<$R, p0.Brand> {
   $R call({dynamic name});
-  $R apply(p0.Brand Function(p0.Brand) transform);
 }
 
 class _BrandCopyWithImpl<$R> extends BaseCopyWith<p0.Brand, $R> implements BrandCopyWith<$R> {
-  _BrandCopyWithImpl(p0.Brand value, Then<p0.Brand, $R> then) : super(value, then);
+  _BrandCopyWithImpl(super.value, super.then);
 
   @override $R call({Object? name = $none}) => $then(p0.Brand(or(name, $value.name)));
 }
@@ -169,22 +165,24 @@ class DealershipMapper extends BaseMapper<p0.Dealership> {
 extension DealershipMapperExtension on p0.Dealership {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DealershipCopyWith<p0.Dealership> get copyWith => DealershipCopyWith(this, $identity);
+  DealershipCopyWith<p0.Dealership> get copyWith => _DealershipCopyWithImpl(this, $identity);
 }
 
-abstract class DealershipCopyWith<$R> {
-  factory DealershipCopyWith(p0.Dealership value, Then<p0.Dealership, $R> then) = _DealershipCopyWithImpl<$R>;
+extension DealershipObjectCopy<$R> on ObjectCopyWith<$R, p0.Dealership> {
+  DealershipCopyWith<$R> get dealership => chain(_DealershipCopyWithImpl.new);
+}
+
+abstract class DealershipCopyWith<$R> implements ObjectCopyWith<$R, p0.Dealership> {
   ListCopyWith<$R, p0.Car, CarCopyWith<$R>> get cars;
   MapCopyWith<$R, p0.Brand, p0.Person?, PersonCopyWith<$R>?> get salesRep;
   $R call({List<p0.Car>? cars, Map<p0.Brand, p0.Person?>? salesRep});
-  $R apply(p0.Dealership Function(p0.Dealership) transform);
 }
 
 class _DealershipCopyWithImpl<$R> extends BaseCopyWith<p0.Dealership, $R> implements DealershipCopyWith<$R> {
-  _DealershipCopyWithImpl(p0.Dealership value, Then<p0.Dealership, $R> then) : super(value, then);
+  _DealershipCopyWithImpl(super.value, super.then);
 
-  @override ListCopyWith<$R, p0.Car, CarCopyWith<$R>> get cars => ListCopyWith($value.cars, (v, t) => CarCopyWith(v, t), (v) => call(cars: v));
-  @override MapCopyWith<$R, p0.Brand, p0.Person?, PersonCopyWith<$R>?> get salesRep => MapCopyWith($value.salesRep, (v, t) => v == null ? null : PersonCopyWith(v, t), (v) => call(salesRep: v));
+  @override ListCopyWith<$R, p0.Car, CarCopyWith<$R>> get cars => ListCopyWith($value.cars, (v, t) => _CarCopyWithImpl(v, t), (v) => call(cars: v));
+  @override MapCopyWith<$R, p0.Brand, p0.Person?, PersonCopyWith<$R>?> get salesRep => MapCopyWith($value.salesRep, (v, t) => v == null ? null : _PersonCopyWithImpl(v, t), (v) => call(salesRep: v));
   @override $R call({List<p0.Car>? cars, Map<p0.Brand, p0.Person?>? salesRep}) => $then(p0.Dealership(cars ?? $value.cars, salesRep ?? $value.salesRep));
 }
 
@@ -201,7 +199,7 @@ class ItemListMapper extends BaseMapper<p0.ItemList> {
       default: return fromMap<T>(map);
     }
   });
-  p0.ItemList<T> fromMap<T>(Map<String, dynamic> map) => p0.ItemList(Mapper.i.$getOpt(map, 'items'));
+  p0.ItemList<T> fromMap<T>(Map<String, dynamic> map) => throw MapperException.missingSubclass('ItemList', 'type', '${map['type']}');
 
   @override Function get encoder => encode;
   dynamic encode<T>(p0.ItemList<T> v) => toMap<T>(v);
@@ -217,104 +215,17 @@ class ItemListMapper extends BaseMapper<p0.ItemList> {
 extension ItemListMapperExtension<T> on p0.ItemList<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ItemListCopyWith<p0.ItemList<T>, T> get copyWith => ItemListCopyWith(this, $identity);
 }
 
-abstract class ItemListCopyWith<$R, T> {
-  factory ItemListCopyWith(p0.ItemList<T> value, Then<p0.ItemList<T>, $R> then) {
-    return genericSwitch([
-      copy<$R, p0.BrandList, p0.Brand?>((v, t) => BrandListCopyWith(v, t)),
-      copy1<$R, p0.ComparableItemList, Comparable<dynamic>>(<TT extends Comparable<dynamic>>(fn) => fn<p0.ComparableItemList<TT>>((v, t) => ComparableItemListCopyWith(v, t))),
-      copy1<$R, p0.NamedItemList<T>, T>(<TT extends T>(fn) => fn<p0.NamedItemList<TT>>((v, t) => NamedItemListCopyWith(v, t))),
-      copy2<$R, p0.KeyedItemList<dynamic, T>, T>(<TT extends T, K>(fn) => fn<p0.KeyedItemList<K, TT>>((v, t) => KeyedItemListCopyWith(v, t))),
-      copy1<$R, p0.ItemList<T>, T>(<TT extends T>(fn) => fn<p0.ItemList<TT>>((v, t) => _ItemListCopyWithImpl(v, t))),
-    ], value, then);
-  }
+mixin ItemListMixin<T> {
+  ItemListCopyWith<p0.ItemList<T>, p0.ItemList<T>, T> get copyWith;
+}
+
+abstract class ItemListCopyWith<$R, $V extends p0.ItemList<T>, T> implements ObjectCopyWith<$R, $V> {
+  ListCopyWith<$R, T, ObjectCopyWith<$R, T>?> get items;
   $R call({List<T>? items});
 }
 
-ItemListCopyWith<$R, T> genericSwitch<$R, T>(List<GenericCase<$R, dynamic, p0.ItemList>> cases, p0.ItemList<T> value, Then<p0.ItemList<T>, $R> then) {
-  for (var item in cases) {
-    if (item.matches<T>(value)) {
-      return item.apply<T>(value, then);
-    }
-  }
-}
-
-typedef CopyBuilder<$R, TT extends T, T, VV extends V, V extends p0.ItemList<T>> = ItemListCopyWith<$R, TT> Function(VV value, Then<V, $R> then);
-typedef GenericCopyBuilder<$R, TT extends T, T, V extends p0.ItemList<T>> = ItemListCopyWith<$R, TT> Function<VV extends V>(CopyBuilder<$R, TT, T, VV, V> fn);
-
-typedef Generic1CopyBuilder<$R, T, V extends p0.ItemList<T>> = ItemListCopyWith<$R, T> Function<TT extends T>(GenericCopyBuilder<$R, TT, T, V> fn);
-typedef Generic2CopyBuilder<$R, T, V extends p0.ItemList<T>> = ItemListCopyWith<$R, T> Function<TT extends T, A>(GenericCopyBuilder<$R, TT, T, V> fn);
-
-GenericCase<$R, T, V> copy<$R, V extends p0.ItemList<T>, T>(CopyBuilder<$R, T, T, V, V> fn) {
-  return GenericCase.simple(fn);
-}
-
-GenericCase<$R, T, V> copy1<$R, V extends p0.ItemList<T>, T>(Generic1CopyBuilder<$R, T, V> fn) {
-  return GenericCase.gen1(fn);
-}
-
-GenericCase<$R, T, V> copy2<$R, V extends p0.ItemList<T>, T>(Generic2CopyBuilder<$R, T, V> fn) {
-
-}
-
-abstract class GenericCase<$R, T, V extends p0.ItemList<T>> {
-  factory GenericCase.simple(CopyBuilder<$R, T, T, V, V> fn) = _SimpleGenericCase;
-  factory GenericCase.gen1(Generic1CopyBuilder<$R, T, V> fn) = _GenericCase1;
-
-  bool matches<$T>(p0.ItemList<$T> value);
-  ItemListCopyWith<$R, $T> apply<$T>(p0.ItemList<$T> value, Then<p0.ItemList<$T>, $R> then);
-}
-
-class _SimpleGenericCase<$R, T, V extends p0.ItemList<T>> implements GenericCase<$R, T, V> {
-
-  _SimpleGenericCase(this.fn);
-
-  final CopyBuilder<$R, T, T, V, V> fn;
-
-  @override
-  bool matches<$T>(p0.ItemList<$T> value) {
-    return value is V;
-  }
-
-  @override
-  ItemListCopyWith<$R, $T> apply<$T>(p0.ItemList<$T> value, Then<p0.ItemList<$T>, $R> then) {
-    return fn(value as V, (v) => then(v as p0.ItemList<$T>)) as ItemListCopyWith<$R, $T>;
-  }
-}
-
-
-
-class _GenericCase1<$R, T, V extends p0.ItemList<T>> implements GenericCase<$R, T, V> {
-
-  _GenericCase1(this.fn);
-
-  final Generic1CopyBuilder<$R, T, V> fn;
-
-  @override
-  bool matches<$T>(p0.ItemList<$T> value) {
-    return value is V;
-  }
-
-  @override
-  ItemListCopyWith<$R, $T> apply<$T>(p0.ItemList<$T> value, Then<p0.ItemList<$T>, $R> then) {
-    return value.apply(<TT extends $T>() {
-      return fn<TT>((<VV extends V>(fnn) {
-        return fnn(value as VV, (v) => then(v as p0.ItemList<$T>)) as ItemListCopyWith<$R, $T>;
-      } ));
-    });
-  }
-}
-
-
-
-
-class _ItemListCopyWithImpl<$R, T> extends BaseCopyWith<p0.ItemList<T>, $R> implements ItemListCopyWith<$R, T> {
-  _ItemListCopyWithImpl(p0.ItemList<T> value, Then<p0.ItemList<T>, $R> then) : super(value, then);
-
-  @override $R call({Object? items = $none}) => $then(p0.ItemList(or(items, $value.items)));
-}
 
 class BrandListMapper extends BaseMapper<p0.BrandList> {
   BrandListMapper._();
@@ -337,20 +248,25 @@ class BrandListMapper extends BaseMapper<p0.BrandList> {
 extension BrandListMapperExtension on p0.BrandList {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  BrandListCopyWith<p0.BrandList, p0.Brand?> get copyWith => BrandListCopyWith(this, $identity);
 }
 
-abstract class BrandListCopyWith<$R, T extends p0.Brand?> implements ItemListCopyWith<$R, T> {
-  factory BrandListCopyWith(p0.BrandList value, Then<p0.BrandList, $R> then) = _BrandListCopyWithImpl<$R, T>;
-  ListCopyWith<$R, p0.Brand?, BrandCopyWith<$R>?> get items;
+mixin BrandListMixin {
+  BrandListCopyWith<p0.BrandList> get copyWith => _BrandListCopyWithImpl(this as p0.BrandList, $identity);
+}
+
+extension BrandListObjectCopy<$R> on ObjectCopyWith<$R, p0.BrandList> {
+  BrandListCopyWith<$R> get brandList => chain(_BrandListCopyWithImpl.new);
+}
+
+abstract class BrandListCopyWith<$R> implements ItemListCopyWith<$R, p0.BrandList, p0.Brand?> {
+  @override ListCopyWith<$R, p0.Brand?, BrandCopyWith<$R>?> get items;
   @override $R call({List<p0.Brand?>? items});
-  $R apply(p0.BrandList Function(p0.BrandList) transform);
 }
 
-class _BrandListCopyWithImpl<$R, T extends p0.Brand?> extends BaseCopyWith<p0.BrandList, $R> implements BrandListCopyWith<$R, T> {
-  _BrandListCopyWithImpl(p0.BrandList value, Then<p0.BrandList, $R> then) : super(value, then);
+class _BrandListCopyWithImpl<$R> extends BaseCopyWith<p0.BrandList, $R> implements BrandListCopyWith<$R> {
+  _BrandListCopyWithImpl(super.value, super.then);
 
-  @override ListCopyWith<$R, p0.Brand?, BrandCopyWith<$R>?> get items => ListCopyWith($value.items, (v, t) => v == null ? null : BrandCopyWith(v, t), (v) => call(items: v));
+  @override ListCopyWith<$R, p0.Brand?, BrandCopyWith<$R>?> get items => ListCopyWith($value.items, (v, t) => v == null ? null : _BrandCopyWithImpl(v, t), (v) => call(items: v));
   @override $R call({Object? items = $none}) => $then(p0.BrandList(or(items, $value.items)));
 }
 
@@ -375,18 +291,25 @@ class NamedItemListMapper extends BaseMapper<p0.NamedItemList> {
 extension NamedItemListMapperExtension<T> on p0.NamedItemList<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  NamedItemListCopyWith<p0.NamedItemList<T>, T> get copyWith => NamedItemListCopyWith(this, $identity);
 }
 
-abstract class NamedItemListCopyWith<$R, T> implements ItemListCopyWith<$R, T> {
-  factory NamedItemListCopyWith(p0.NamedItemList<T> value, Then<p0.NamedItemList<T>, $R> then) = _NamedItemListCopyWithImpl<$R, T>;
+mixin NamedItemListMixin<T> {
+  NamedItemListCopyWith<p0.NamedItemList<T>, T> get copyWith => _NamedItemListCopyWithImpl(this as p0.NamedItemList<T>, $identity);
+}
+
+extension NamedItemListObjectCopy<$R, T> on ObjectCopyWith<$R, p0.NamedItemList<T>> {
+  NamedItemListCopyWith<$R, T> get namedItemList => chain(_NamedItemListCopyWithImpl.new);
+}
+
+abstract class NamedItemListCopyWith<$R, T> implements ItemListCopyWith<$R, p0.NamedItemList<T>, T> {
+  @override ListCopyWith<$R, T, ObjectCopyWith<$R, T>> get items;
   @override $R call({String? name, List<T>? items});
-  $R apply(p0.NamedItemList<T> Function(p0.NamedItemList<T>) transform);
 }
 
 class _NamedItemListCopyWithImpl<$R, T> extends BaseCopyWith<p0.NamedItemList<T>, $R> implements NamedItemListCopyWith<$R, T> {
-  _NamedItemListCopyWithImpl(p0.NamedItemList<T> value, Then<p0.NamedItemList<T>, $R> then) : super(value, then);
+  _NamedItemListCopyWithImpl(super.value, super.then);
 
+  @override ListCopyWith<$R, T, ObjectCopyWith<$R, T>> get items => ListCopyWith($value.items, (v, t) => ObjectCopyWith(v, t), (v) => call(items: v));
   @override $R call({String? name, Object? items = $none}) => $then(p0.NamedItemList(name ?? $value.name, or(items, $value.items)));
 }
 
@@ -411,25 +334,25 @@ class KeyedItemListMapper extends BaseMapper<p0.KeyedItemList> {
 extension KeyedItemListMapperExtension<K, T> on p0.KeyedItemList<K, T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  KeyedItemListCopyWith<p0.KeyedItemList<K, T>, K, T> get copyWith => KeyedItemListCopyWith(this, $identity);
 }
-
 
 mixin KeyedItemListMixin<K, T> {
-  KeyedItemListCopyWith<p0.KeyedItemList<K, T>, K, T> get copyWith {
-    return KeyedItemListCopyWith(this as p0.KeyedItemList<K, T>, $identity);
-  }
+  KeyedItemListCopyWith<p0.KeyedItemList<K, T>, K, T> get copyWith => _KeyedItemListCopyWithImpl(this as p0.KeyedItemList<K, T>, $identity);
 }
 
-abstract class KeyedItemListCopyWith<$R, K, T> implements ItemListCopyWith<$R, T> {
-  factory KeyedItemListCopyWith(p0.KeyedItemList<K, T> value, Then<p0.KeyedItemList<K, T>, $R> then) = _KeyedItemListCopyWithImpl<$R, K, T>;
+extension KeyedItemListObjectCopy<$R, K, T> on ObjectCopyWith<$R, p0.KeyedItemList<K, T>> {
+  KeyedItemListCopyWith<$R, K, T> get keyedItemList => chain(_KeyedItemListCopyWithImpl.new);
+}
+
+abstract class KeyedItemListCopyWith<$R, K, T> implements ItemListCopyWith<$R, p0.KeyedItemList<K, T>, T> {
+  @override ListCopyWith<$R, T, ObjectCopyWith<$R, T>> get items;
   @override $R call({K? key, List<T>? items});
-  $R apply(p0.KeyedItemList<K, T> Function(p0.KeyedItemList<K, T>) transform);
 }
 
 class _KeyedItemListCopyWithImpl<$R, K, T> extends BaseCopyWith<p0.KeyedItemList<K, T>, $R> implements KeyedItemListCopyWith<$R, K, T> {
-  _KeyedItemListCopyWithImpl(p0.KeyedItemList<K, T> value, Then<p0.KeyedItemList<K, T>, $R> then) : super(value, then);
+  _KeyedItemListCopyWithImpl(super.value, super.then);
 
+  @override ListCopyWith<$R, T, ObjectCopyWith<$R, T>> get items => ListCopyWith($value.items, (v, t) => ObjectCopyWith(v, t), (v) => call(items: v));
   @override $R call({K? key, Object? items = $none}) => $then(p0.KeyedItemList(key ?? $value.key, or(items, $value.items)));
 }
 
@@ -454,18 +377,25 @@ class ComparableItemListMapper extends BaseMapper<p0.ComparableItemList> {
 extension ComparableItemListMapperExtension<T extends Comparable<dynamic>> on p0.ComparableItemList<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ComparableItemListCopyWith<p0.ComparableItemList<T>, T> get copyWith => ComparableItemListCopyWith(this, $identity);
 }
 
-abstract class ComparableItemListCopyWith<$R, T extends Comparable<dynamic>> implements ItemListCopyWith<$R, T> {
-  factory ComparableItemListCopyWith(p0.ComparableItemList<T> value, Then<p0.ComparableItemList<T>, $R> then) = _ComparableItemListCopyWithImpl<$R, T>;
+mixin ComparableItemListMixin<T extends Comparable<dynamic>> {
+  ComparableItemListCopyWith<p0.ComparableItemList<T>, T> get copyWith => _ComparableItemListCopyWithImpl(this as p0.ComparableItemList<T>, $identity);
+}
+
+extension ComparableItemListObjectCopy<$R, T extends Comparable<dynamic>> on ObjectCopyWith<$R, p0.ComparableItemList<T>> {
+  ComparableItemListCopyWith<$R, T> get comparableItemList => chain(_ComparableItemListCopyWithImpl.new);
+}
+
+abstract class ComparableItemListCopyWith<$R, T extends Comparable<dynamic>> implements ItemListCopyWith<$R, p0.ComparableItemList<T>, T> {
+  @override ListCopyWith<$R, T, ObjectCopyWith<$R, T>> get items;
   @override $R call({List<T>? items});
-  $R apply(p0.ComparableItemList<T> Function(p0.ComparableItemList<T>) transform);
 }
 
 class _ComparableItemListCopyWithImpl<$R, T extends Comparable<dynamic>> extends BaseCopyWith<p0.ComparableItemList<T>, $R> implements ComparableItemListCopyWith<$R, T> {
-  _ComparableItemListCopyWithImpl(p0.ComparableItemList<T> value, Then<p0.ComparableItemList<T>, $R> then) : super(value, then);
+  _ComparableItemListCopyWithImpl(super.value, super.then);
 
+  @override ListCopyWith<$R, T, ObjectCopyWith<$R, T>> get items => ListCopyWith($value.items, (v, t) => ObjectCopyWith(v, t), (v) => call(items: v));
   @override $R call({Object? items = $none}) => $then(p0.ComparableItemList(or(items, $value.items)));
 }
 

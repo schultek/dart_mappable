@@ -10,6 +10,114 @@ import '../utils.dart';
 
 typedef GetConfig = ClassMapperConfig? Function(Element? e);
 
+class CopyParamConfig {
+  CopyParamConfig(this.param, this.name, this.imports);
+
+  final ParameterConfig param;
+  final String name;
+  final ImportsBuilder imports;
+
+  String get implName => '_${name}CopyWithImpl';
+
+  ParameterElement get p => param.parameter;
+  PropertyInducingElement get a => param.accessor;
+
+  String get fieldTypeParams => p.type is InterfaceType
+      ? (p.type as InterfaceType)
+          .typeArguments
+          .map((t) => ', ${imports.prefixedType(t)}')
+          .join()
+      : '';
+
+  String get invocation => ', (v) => call(${param.superName}: v)';
+}
+
+class ListCopyParamConfig extends CopyParamConfig {
+  ListCopyParamConfig(ParameterConfig param, this.itemName,
+      ImportsBuilder imports, this.forceNullable)
+      : super(param, 'List', imports);
+
+  final String itemName;
+  final bool forceNullable;
+
+  @override
+  String get implName => '${name}CopyWith';
+
+  String get itemImplName => itemName == 'Object' ? 'ObjectCopyWith' : '_${itemName}CopyWithImpl';
+
+  @override
+  String get fieldTypeParams {
+    var typeArg = (p.type as InterfaceType).typeArguments.first;
+    var typeArgNullable =
+        typeArg.nullabilitySuffix == NullabilitySuffix.question;
+
+    if (itemName == 'Object') {
+      return super.fieldTypeParams +
+          ', ${itemName}CopyWith<\$R${super.fieldTypeParams}>${typeArgNullable || forceNullable ? '?' : ''}';
+    }
+
+    var typeParams = typeArg is InterfaceType
+        ? typeArg.typeArguments
+            .map((t) => ', ${imports.prefixedType(t)}')
+            .join()
+        : '';
+    return super.fieldTypeParams +
+        ', ${itemName}CopyWith<\$R$typeParams>${typeArgNullable ? '?' : ''}';
+  }
+
+  @override
+  String get invocation {
+    var typeArg = (p.type as InterfaceType).typeArguments.first;
+    var typeArgNullable =
+        typeArg.nullabilitySuffix == NullabilitySuffix.question;
+
+    return ', (v, t) => ${typeArgNullable ? 'v == null ? null : ' : ''}$itemImplName(v, t)${super.invocation}';
+  }
+}
+
+class MapCopyParamConfig extends CopyParamConfig {
+  MapCopyParamConfig(ParameterConfig param, this.valueName,
+      ImportsBuilder imports, this.forceNullable)
+      : super(param, 'Map', imports);
+
+  final String valueName;
+  final bool forceNullable;
+
+  @override
+  String get implName => '${name}CopyWith';
+
+  String get valueImplName => valueName == 'Object' ? 'ObjectCopyWith' : '_${valueName}CopyWithImpl';
+
+  @override
+  String get fieldTypeParams {
+    var valueTypeArg = (p.type as InterfaceType).typeArguments[1];
+    var typeArgNullable =
+        valueTypeArg.nullabilitySuffix == NullabilitySuffix.question;
+
+    if (valueName == 'Object') {
+      return super.fieldTypeParams +
+          ', ${valueName}CopyWith<\$R, ${imports.prefixedType(valueTypeArg)}>${typeArgNullable || forceNullable ? '?' : ''}';
+    }
+
+    var typeParams = valueTypeArg is InterfaceType
+        ? valueTypeArg.typeArguments
+            .map((t) => ', ${imports.prefixedType(t)}')
+            .join()
+        : '';
+    return super.fieldTypeParams +
+        ', ${valueName}CopyWith<\$R$typeParams>${typeArgNullable ? '?' : ''}';
+  }
+
+  @override
+  String get invocation {
+    var typeArg = (p.type as InterfaceType).typeArguments[1];
+    var typeArgNullable =
+        typeArg.nullabilitySuffix == NullabilitySuffix.question;
+
+    return ', (v, t) => ${typeArgNullable ? 'v == null ? null : ' : ''}$valueImplName(v, t)${super.invocation}';
+  }
+}
+
 class CopyWithGenerator {
   final ClassMapperConfig config;
   final ImportsBuilder imports;
@@ -17,17 +125,28 @@ class CopyWithGenerator {
   CopyWithGenerator(this.config, this.imports);
 
   String generateCopyWithExtension() {
-    if ((config.hasCallableConstructor || config.subConfigs.isNotEmpty) &&
-        config.shouldGenerate(GenerateMethods.copy)) {
+    if (!config.shouldGenerate(GenerateMethods.copy)) return '';
+    if (config.hasCallableConstructor &&
+        config.superConfig == null &&
+        config.subConfigs.isEmpty) {
       return '  ${_generateCopyWith()}\n';
     } else {
       return '';
     }
   }
 
+  String generateCopyWithMixin(GetConfig getConfig) {
+    if (!config.shouldGenerate(GenerateMethods.copy)) return '';
+    if (config.superConfig != null || config.subConfigs.isNotEmpty) {
+      return '\n\n${_generateCopyWithMixin(getConfig)}';
+    } else {
+      return '';
+    }
+  }
+
   String generateCopyWithClasses(GetConfig getConfig) {
-    if ((config.hasCallableConstructor || config.subConfigs.isNotEmpty) &&
-        config.shouldGenerate(GenerateMethods.copy)) {
+    if (!config.shouldGenerate(GenerateMethods.copy)) return '';
+    if (config.hasCallableConstructor || config.subConfigs.isNotEmpty) {
       return '\n\n${_generateCopyWithClasses(getConfig)}';
     } else {
       return '';
@@ -39,194 +158,153 @@ class CopyWithGenerator {
         ? ', ${config.element.typeParameters.map((p) => p.name).join(', ')}'
         : '';
 
-    return '${config.uniqueClassName}CopyWith<${config.prefixedClassName}${config.typeParams}$classTypeParams> get copyWith => ${config.uniqueClassName}CopyWith(this, \$identity);';
+    return '${config.uniqueClassName}CopyWith<${config.prefixedClassName}${config.typeParams}$classTypeParams> get copyWith => _${config.uniqueClassName}CopyWithImpl(this, \$identity);';
+  }
+
+  String _generateCopyWithMixin(GetConfig getConfig) {
+    var classTypeParams = config.element.typeParameters.isNotEmpty
+        ? ', ${config.element.typeParameters.map((p) => p.name).join(', ')}'
+        : '';
+
+    var valueTypeParam = config.subConfigs.isNotEmpty
+        ? ', ${config.prefixedClassName}${config.typeParams}'
+        : '';
+
+    var snippet =
+        '${config.uniqueClassName}CopyWith<${config.prefixedClassName}${config.typeParams}$valueTypeParam$classTypeParams> get copyWith';
+
+    if (config.hasCallableConstructor) {
+      snippet +=
+          ' => _${config.uniqueClassName}CopyWithImpl(this as ${config.prefixedClassName}${config.typeParams}, \$identity);';
+    } else {
+      snippet += ';';
+    }
+
+    return 'mixin ${config.uniqueClassName}Mixin${config.typeParamsDeclaration} {\n'
+        '  $snippet\n'
+        '}';
   }
 
   String _generateCopyWithClasses(GetConfig getConfig) {
-    var classTypeParamsDef = config.typeParamsList
-        .map((p) => ', $p')
-        .join();
+    var classTypeParamsDef = config.typeParamsList.map((p) => ', $p').join();
     var classTypeParams =
         config.element.typeParameters.map((p) => ', ${p.name}').join();
 
-    var implementsStmt = '';
-
-    var isSubCopyWith = config.superConfig != null /*&& config.element.supertype!.typeArguments
-        .every((e) => e is TypeParameterType && e.element.bound == null)*/;
-
-    if (isSubCopyWith) {
-      var superClassTypeParams = config.superTypeArgs.map((a) => ', $a').join();
-      implementsStmt =
-          ' implements ${config.superConfig!.uniqueClassName}CopyWith<\$R$superClassTypeParams>';
-    }
-
     var snippets = <String>[];
 
-    snippets.add(''
-        'abstract class ${config.uniqueClassName}CopyWith<\$R$classTypeParamsDef>$implementsStmt {\n'
-        '  factory ${config.uniqueClassName}CopyWith(${config.prefixedClassName}${config.typeParams} value, Then<${config.prefixedClassName}${config.typeParams}, \$R> then)');
+    var selfTypeParam = '${config.prefixedClassName}${config.typeParams}';
+    var valueTypeParam = config.subConfigs.isNotEmpty ? ', $selfTypeParam' : '';
 
-    if (config.subConfigs.isEmpty) {
+    if (config.hasCallableConstructor) {
       snippets.add(
-          ' = _${config.uniqueClassName}CopyWithImpl<\$R$classTypeParams>;\n');
-    } else {
-      var subCopyWithConfigs = <ClassMapperConfig>[];
-
-      for (var c in config.subConfigs) {
-        //if (c.element.supertype!.typeArguments
-         //   .every((e) => e is TypeParameterType && e.element.bound == null)) {
-          subCopyWithConfigs.add(c);
-        //}
-      }
-
-      snippets.add(' {\n'
-          '    ${subCopyWithConfigs.map((c) => 'if (value is ${c.prefixedClassName}${c.superTypeParams}) { return ${c.uniqueClassName}CopyWith(value, then); }').join('\n    else ')}\n'
-          '    else { ${config.hasCallableConstructor ? 'return _${config.uniqueClassName}CopyWithImpl<\$R$classTypeParams>(value, then);' : 'throw MapperException.unsupportedMethod(MapperMethod.copy, value.runtimeType);'} }\n'
-          '  }\n');
+          'extension ${config.uniqueClassName}ObjectCopy<\$R$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam> {\n'
+          '  ${config.uniqueClassName}CopyWith<\$R$valueTypeParam$classTypeParams> get ${CaseStyle.camelCase.transform(config.className)} => chain(_${config.uniqueClassName}CopyWithImpl.new);\n'
+          '}\n\n');
     }
 
-    var copyParams = <ParameterConfig, ClassMapperConfig?>{};
+    var implementsStmt = '';
+    var objTypeParamDef = '';
+    var objTypeParam = '';
+
+    if (config.superConfig != null) {
+      var superClassTypeParams = config.superTypeArgs.map((a) => ', $a').join();
+      implementsStmt =
+          ' implements ${config.superConfig!.uniqueClassName}CopyWith<\$R, $selfTypeParam$superClassTypeParams>';
+    } else {
+      objTypeParamDef =
+          config.subConfigs.isNotEmpty ? ', \$V extends $selfTypeParam' : '';
+      objTypeParam =
+          config.subConfigs.isNotEmpty ? ', \$V' : ', $selfTypeParam';
+      implementsStmt = ' implements ObjectCopyWith<\$R$objTypeParam>';
+    }
+
+    snippets.add(''
+        'abstract class ${config.uniqueClassName}CopyWith<\$R$objTypeParamDef$classTypeParamsDef>$implementsStmt {\n');
+
+    var copyParams = <CopyParamConfig>[];
 
     for (var param in config.params) {
       if (param is UnresolvedParameterConfig) {
         continue;
       }
 
-      Element? classElement;
-      if (param.parameter.type.isDartCoreList) {
-        var it = param.parameter.type as InterfaceType;
-        classElement = it.typeArguments.first.element2;
-      } else if (param.parameter.type.isDartCoreMap) {
-        var it = param.parameter.type as InterfaceType;
-        classElement = it.typeArguments[1].element2;
-      } else {
-        classElement = param.parameter.type.element2;
+      ClassMapperConfig? resolveElement(Element? element) {
+        var classConfig = getConfig(element);
+        if (classConfig != null &&
+            classConfig.hasCallableConstructor &&
+            classConfig.shouldGenerate(GenerateMethods.copy)) {
+          return classConfig;
+        }
+        return null;
       }
 
-      var classConfig = getConfig(classElement);
-      if (classConfig != null &&
-          classConfig.hasCallableConstructor &&
-          classConfig.shouldGenerate(GenerateMethods.copy)) {
-        copyParams[param] = classConfig;
+      if (param.parameter.type.isDartCoreList) {
+        var it = param.parameter.type as InterfaceType;
+        var itemElement = it.typeArguments.first.element2;
+        var itemConfig = resolveElement(itemElement);
+
+        var hasSubConfigs = config.subConfigs.isNotEmpty;
+
+        copyParams.add(ListCopyParamConfig(
+          param,
+          itemConfig?.uniqueClassName ?? 'Object',
+          imports,
+          hasSubConfigs,
+        ));
+      } else if (param.parameter.type.isDartCoreMap) {
+        var it = param.parameter.type as InterfaceType;
+        var valueElement = it.typeArguments[1].element2;
+        var valueConfig = resolveElement(valueElement);
+
+        var hasSubConfigs = config.subConfigs.isNotEmpty;
+
+        copyParams.add(MapCopyParamConfig(
+          param,
+          valueConfig?.uniqueClassName ?? 'Object',
+          imports,
+          hasSubConfigs,
+        ));
+      } else {
+        var classElement = param.parameter.type.element2;
+        var classConfig = resolveElement(classElement);
+
+        if (classConfig != null) {
+          copyParams.add(
+              CopyParamConfig(param, classConfig.uniqueClassName, imports));
+        }
       }
     }
 
-    for (var param in copyParams.keys) {
-      var p = param.parameter;
-      var a = param.accessor;
-      var classConfig = copyParams[param]!;
-
-      var fieldTypeParams = p.type is InterfaceType
-          ? (p.type as InterfaceType)
-              .typeArguments
-              .map((t) => ', ${imports.prefixedType(t)}')
-              .join()
-          : '';
-
-      var copyWithName = '${classConfig.uniqueClassName}CopyWith';
-
-      if (p.type.isDartCoreList) {
-        var typeArg = (p.type as InterfaceType).typeArguments.first;
-        var typeParams = typeArg is InterfaceType
-            ? typeArg.typeArguments
-                .map((t) => ', ${imports.prefixedType(t)}')
-                .join()
-            : '';
-        var typeArgNullable =
-            typeArg.nullabilitySuffix == NullabilitySuffix.question;
-
-        fieldTypeParams +=
-            ', $copyWithName<\$R$typeParams>${typeArgNullable ? '?' : ''}';
-        copyWithName = 'ListCopyWith';
-      } else if (p.type.isDartCoreMap) {
-        var it = p.type as InterfaceType;
-
-        var valueTypeArg = it.typeArguments[1];
-        var typeParams = valueTypeArg is InterfaceType
-            ? valueTypeArg.typeArguments
-                .map((t) => ', ${imports.prefixedType(t)}')
-                .join()
-            : '';
-        var typeArgNullable =
-            valueTypeArg.nullabilitySuffix == NullabilitySuffix.question;
-
-        fieldTypeParams +=
-            ', $copyWithName<\$R$typeParams>${typeArgNullable ? '?' : ''}';
-        copyWithName = 'MapCopyWith';
-      }
+    for (var param in copyParams) {
+      var isOverridden =
+          config.superConfig != null && param.param is SuperParameterConfig;
       snippets.add(
-          '  $copyWithName<\$R$fieldTypeParams>${a.type.isNullable ? '?' : ''} get ${a.name};\n');
+          '  ${isOverridden ? '@override ' : ''}${param.name}CopyWith<\$R${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name};\n');
     }
 
     snippets.add(
-        '  ${isSubCopyWith ? '@override ' : ''}\$R call(${_generateCopyWithParams()});\n');
+        '  ${config.superConfig != null ? '@override ' : ''}\$R call(${_generateCopyWithParams()});\n');
 
-    if (config.hasCallableConstructor && config.subConfigs.isEmpty) {
-      snippets.add(
-          '  \$R apply(${config.prefixedClassName}${config.typeParams} Function(${config.prefixedClassName}${config.typeParams}) transform);\n');
-    }
     snippets.add('}\n');
 
     if (config.hasCallableConstructor) {
       snippets.add('\n'
-          'class _${config.uniqueClassName}CopyWithImpl<\$R$classTypeParamsDef> extends BaseCopyWith<${config.prefixedClassName}${config.typeParams}, \$R> implements ${config.uniqueClassName}CopyWith<\$R$classTypeParams> {\n'
-          '  _${config.uniqueClassName}CopyWithImpl(${config.prefixedClassName}${config.typeParams} value, Then<${config.prefixedClassName}${config.typeParams}, \$R> then) : super(value, then);\n'
+          'class _${config.uniqueClassName}CopyWithImpl<\$R$classTypeParamsDef> '
+          'extends BaseCopyWith<$selfTypeParam, \$R> implements ${config.uniqueClassName}CopyWith'
+          '<\$R${objTypeParamDef.isNotEmpty ? ', $selfTypeParam' : ''}$classTypeParams> {\n'
+          '  _${config.uniqueClassName}CopyWithImpl(super.value, super.then);\n'
           '\n');
 
-      for (var param in copyParams.keys) {
-        var p = param.parameter;
-        var a = param.accessor;
-        var classConfig = copyParams[param]!;
-
-        var fieldTypeParams = p.type is InterfaceType
-            ? (p.type as InterfaceType)
-                .typeArguments
-                .map((t) => ', ${imports.prefixedType(t)}')
-                .join()
-            : '';
-        var copyWithName = '${classConfig.uniqueClassName}CopyWith';
-        var params = ', (v) => call(${p.name}: v)';
-
-        if (p.type.isDartCoreList) {
-          var typeArg = (p.type as InterfaceType).typeArguments.first;
-          var typeParams = typeArg is InterfaceType
-              ? typeArg.typeArguments
-                  .map((t) => ', ${imports.prefixedType(t)}')
-                  .join()
-              : '';
-          var typeArgNullable =
-              typeArg.nullabilitySuffix == NullabilitySuffix.question;
-
-          params =
-              ', (v, t) => ${typeArgNullable ? 'v == null ? null : ' : ''}$copyWithName(v, t)$params';
-          fieldTypeParams +=
-              ', $copyWithName<\$R$typeParams>${typeArgNullable ? '?' : ''}';
-          copyWithName = 'ListCopyWith';
-        } else if (p.type.isDartCoreMap) {
-          var valueTypeArg = (p.type as InterfaceType).typeArguments[1];
-          var typeParams = valueTypeArg is InterfaceType
-              ? valueTypeArg.typeArguments
-                  .map((t) => ', ${imports.prefixedType(t)}')
-                  .join()
-              : '';
-          var typeArgNullable =
-              valueTypeArg.nullabilitySuffix == NullabilitySuffix.question;
-
-          params =
-              ', (v, t) => ${typeArgNullable ? 'v == null ? null : ' : ''}$copyWithName(v, t)$params';
-          fieldTypeParams +=
-              ', $copyWithName<\$R$typeParams>${typeArgNullable ? '?' : ''}';
-          copyWithName = 'MapCopyWith';
-        }
-
+      for (var param in copyParams) {
         snippets.add(
-            '  @override $copyWithName<\$R$fieldTypeParams>${a.type.isNullable ? '?' : ''} get ${a.name} => ');
+            '  @override ${param.name}CopyWith<\$R${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name} => ');
 
-        if (a.type.isNullable) {
+        if (param.a.type.isNullable) {
           snippets.add(
-              '\$value.${a.name} != null ? $copyWithName(\$value.${a.name}!$params) : null;\n');
+              '\$value.${param.a.name} != null ? ${param.implName}(\$value.${param.a.name}!${param.invocation}) : null;\n');
         } else {
-          snippets.add('$copyWithName(\$value.${a.name}$params);\n');
+          snippets.add(
+              '${param.implName}(\$value.${param.a.name}${param.invocation});\n');
         }
       }
 
@@ -255,11 +333,12 @@ class CopyWithGenerator {
           params.add('required $type ${p.name}');
         }
       } else {
+        var name = param.superName;
         var isDynamic = p.type.isDynamic;
         if (implVersion && (p.type.isNullable || isDynamic)) {
-          params.add('Object? ${p.name} = \$none');
+          params.add('Object? $name = \$none');
         } else {
-          params.add('$type${isDynamic ? '' : '?'} ${p.name}');
+          params.add('$type${isDynamic ? '' : '?'} $name');
         }
       }
     }
@@ -280,11 +359,12 @@ class CopyWithGenerator {
       if (param is UnresolvedParameterConfig) {
         str += p.name;
       } else {
+        var name = param.superName;
         var a = param.accessor;
         if (p.type.isNullable || p.type.isDynamic) {
-          str += 'or(${p.name}, \$value.${a.name})';
+          str += 'or($name, \$value.${a.name})';
         } else {
-          str += '${p.name} ?? \$value.${a.name}';
+          str += '$name ?? \$value.${a.name}';
         }
       }
 

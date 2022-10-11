@@ -9,6 +9,8 @@ abstract class ParameterConfig {
 
   ParameterConfig(this.parameter);
 
+  String get superName => parameter.name;
+
   Future<String?> getHook(ImportsBuilder imports) {
     return _hookFor(parameter, imports);
   }
@@ -51,6 +53,9 @@ class SuperParameterConfig extends ParameterConfig {
 
   SuperParameterConfig(ParameterElement parameter, this.superParameter)
       : super(parameter);
+
+  @override
+  String get superName => superParameter.superName;
 
   @override
   PropertyInducingElement get accessor => superParameter.accessor;

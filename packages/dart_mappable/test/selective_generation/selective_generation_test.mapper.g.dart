@@ -31,17 +31,19 @@ class PersonMapper extends BaseMapper<p0.Person> {
 extension PersonMapperExtension on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<p0.Person> get copyWith => PersonCopyWith(this, $identity);
+  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity);
 }
 
-abstract class PersonCopyWith<$R> {
-  factory PersonCopyWith(p0.Person value, Then<p0.Person, $R> then) = _PersonCopyWithImpl<$R>;
+extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
+  PersonCopyWith<$R> get person => chain(_PersonCopyWithImpl.new);
+}
+
+abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
   $R call({String? name});
-  $R apply(p0.Person Function(p0.Person) transform);
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements PersonCopyWith<$R> {
-  _PersonCopyWithImpl(p0.Person value, Then<p0.Person, $R> then) : super(value, then);
+  _PersonCopyWithImpl(super.value, super.then);
 
   @override $R call({String? name}) => $then(p0.Person(name ?? $value.name));
 }

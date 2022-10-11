@@ -44,18 +44,22 @@ class BoxMapper extends BaseMapper<p0.Box> {
 extension BoxMapperExtension<T extends p0.Content> on p0.Box<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  BoxCopyWith<p0.Box<T>, T> get copyWith => BoxCopyWith(this, $identity);
+  BoxCopyWith<p0.Box<T>, T> get copyWith => _BoxCopyWithImpl(this, $identity);
 }
 
-abstract class BoxCopyWith<$R, T extends p0.Content> {
-  factory BoxCopyWith(p0.Box<T> value, Then<p0.Box<T>, $R> then) = _BoxCopyWithImpl<$R, T>;
+extension BoxObjectCopy<$R, T extends p0.Content> on ObjectCopyWith<$R, p0.Box<T>> {
+  BoxCopyWith<$R, T> get box => chain(_BoxCopyWithImpl.new);
+}
+
+abstract class BoxCopyWith<$R, T extends p0.Content> implements ObjectCopyWith<$R, p0.Box<T>> {
+  ListCopyWith<$R, T, ObjectCopyWith<$R, T>> get contents;
   $R call({int? size, List<T>? contents});
-  $R apply(p0.Box<T> Function(p0.Box<T>) transform);
 }
 
 class _BoxCopyWithImpl<$R, T extends p0.Content> extends BaseCopyWith<p0.Box<T>, $R> implements BoxCopyWith<$R, T> {
-  _BoxCopyWithImpl(p0.Box<T> value, Then<p0.Box<T>, $R> then) : super(value, then);
+  _BoxCopyWithImpl(super.value, super.then);
 
+  @override ListCopyWith<$R, T, ObjectCopyWith<$R, T>> get contents => ListCopyWith($value.contents, (v, t) => ObjectCopyWith(v, t), (v) => call(contents: v));
   @override $R call({int? size, List<T>? contents}) => $then(p0.Box(size ?? $value.size, contents: contents ?? $value.contents));
 }
 
@@ -80,17 +84,22 @@ class ConfettiMapper extends BaseMapper<p0.Confetti> {
 extension ConfettiMapperExtension on p0.Confetti {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ConfettiCopyWith<p0.Confetti> get copyWith => ConfettiCopyWith(this, $identity);
 }
 
-abstract class ConfettiCopyWith<$R> implements ContentCopyWith<$R> {
-  factory ConfettiCopyWith(p0.Confetti value, Then<p0.Confetti, $R> then) = _ConfettiCopyWithImpl<$R>;
+mixin ConfettiMixin {
+  ConfettiCopyWith<p0.Confetti> get copyWith => _ConfettiCopyWithImpl(this as p0.Confetti, $identity);
+}
+
+extension ConfettiObjectCopy<$R> on ObjectCopyWith<$R, p0.Confetti> {
+  ConfettiCopyWith<$R> get confetti => chain(_ConfettiCopyWithImpl.new);
+}
+
+abstract class ConfettiCopyWith<$R> implements ContentCopyWith<$R, p0.Confetti> {
   @override $R call({String? color});
-  $R apply(p0.Confetti Function(p0.Confetti) transform);
 }
 
 class _ConfettiCopyWithImpl<$R> extends BaseCopyWith<p0.Confetti, $R> implements ConfettiCopyWith<$R> {
-  _ConfettiCopyWithImpl(p0.Confetti value, Then<p0.Confetti, $R> then) : super(value, then);
+  _ConfettiCopyWithImpl(super.value, super.then);
 
   @override $R call({String? color}) => $then(p0.Confetti(color ?? $value.color));
 }
@@ -116,19 +125,22 @@ class ContentMapper extends BaseMapper<p0.Content> {
 extension ContentMapperExtension on p0.Content {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ContentCopyWith<p0.Content> get copyWith => ContentCopyWith(this, $identity);
 }
 
-abstract class ContentCopyWith<$R> {
-  factory ContentCopyWith(p0.Content value, Then<p0.Content, $R> then) {
-    if (value is p0.Confetti) { return ConfettiCopyWith(value, then); }
-    else { return _ContentCopyWithImpl<$R>(value, then); }
-  }
+mixin ContentMixin {
+  ContentCopyWith<p0.Content, p0.Content> get copyWith => _ContentCopyWithImpl(this as p0.Content, $identity);
+}
+
+extension ContentObjectCopy<$R> on ObjectCopyWith<$R, p0.Content> {
+  ContentCopyWith<$R, p0.Content> get content => chain(_ContentCopyWithImpl.new);
+}
+
+abstract class ContentCopyWith<$R, $V extends p0.Content> implements ObjectCopyWith<$R, $V> {
   $R call();
 }
 
-class _ContentCopyWithImpl<$R> extends BaseCopyWith<p0.Content, $R> implements ContentCopyWith<$R> {
-  _ContentCopyWithImpl(p0.Content value, Then<p0.Content, $R> then) : super(value, then);
+class _ContentCopyWithImpl<$R> extends BaseCopyWith<p0.Content, $R> implements ContentCopyWith<$R, p0.Content> {
+  _ContentCopyWithImpl(super.value, super.then);
 
   @override $R call() => $then(p0.Content());
 }
@@ -154,17 +166,19 @@ class DataMapper extends BaseMapper<p0.Data> {
 extension DataMapperExtension on p0.Data {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DataCopyWith<p0.Data> get copyWith => DataCopyWith(this, $identity);
+  DataCopyWith<p0.Data> get copyWith => _DataCopyWithImpl(this, $identity);
 }
 
-abstract class DataCopyWith<$R> {
-  factory DataCopyWith(p0.Data value, Then<p0.Data, $R> then) = _DataCopyWithImpl<$R>;
+extension DataObjectCopy<$R> on ObjectCopyWith<$R, p0.Data> {
+  DataCopyWith<$R> get data => chain(_DataCopyWithImpl.new);
+}
+
+abstract class DataCopyWith<$R> implements ObjectCopyWith<$R, p0.Data> {
   $R call({String? data});
-  $R apply(p0.Data Function(p0.Data) transform);
 }
 
 class _DataCopyWithImpl<$R> extends BaseCopyWith<p0.Data, $R> implements DataCopyWith<$R> {
-  _DataCopyWithImpl(p0.Data value, Then<p0.Data, $R> then) : super(value, then);
+  _DataCopyWithImpl(super.value, super.then);
 
   @override $R call({String? data}) => $then(p0.Data(data ?? $value.data));
 }
@@ -190,18 +204,22 @@ class SingleSettingMapper extends BaseMapper<p0.SingleSetting> {
 extension SingleSettingMapperExtension<T> on p0.SingleSetting<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  SingleSettingCopyWith<p0.SingleSetting<T>, T> get copyWith => SingleSettingCopyWith(this, $identity);
+  SingleSettingCopyWith<p0.SingleSetting<T>, T> get copyWith => _SingleSettingCopyWithImpl(this, $identity);
 }
 
-abstract class SingleSettingCopyWith<$R, T> {
-  factory SingleSettingCopyWith(p0.SingleSetting<T> value, Then<p0.SingleSetting<T>, $R> then) = _SingleSettingCopyWithImpl<$R, T>;
+extension SingleSettingObjectCopy<$R, T> on ObjectCopyWith<$R, p0.SingleSetting<T>> {
+  SingleSettingCopyWith<$R, T> get singleSetting => chain(_SingleSettingCopyWithImpl.new);
+}
+
+abstract class SingleSettingCopyWith<$R, T> implements ObjectCopyWith<$R, p0.SingleSetting<T>> {
+  ListCopyWith<$R, T, ObjectCopyWith<$R, T>>? get properties;
   $R call({List<T>? properties});
-  $R apply(p0.SingleSetting<T> Function(p0.SingleSetting<T>) transform);
 }
 
 class _SingleSettingCopyWithImpl<$R, T> extends BaseCopyWith<p0.SingleSetting<T>, $R> implements SingleSettingCopyWith<$R, T> {
-  _SingleSettingCopyWithImpl(p0.SingleSetting<T> value, Then<p0.SingleSetting<T>, $R> then) : super(value, then);
+  _SingleSettingCopyWithImpl(super.value, super.then);
 
+  @override ListCopyWith<$R, T, ObjectCopyWith<$R, T>>? get properties => $value.properties != null ? ListCopyWith($value.properties!, (v, t) => ObjectCopyWith(v, t), (v) => call(properties: v)) : null;
   @override $R call({Object? properties = $none}) => $then(p0.SingleSetting(properties: or(properties, $value.properties)));
 }
 
@@ -226,20 +244,22 @@ class SettingsMapper extends BaseMapper<p0.Settings> {
 extension SettingsMapperExtension on p0.Settings {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  SettingsCopyWith<p0.Settings> get copyWith => SettingsCopyWith(this, $identity);
+  SettingsCopyWith<p0.Settings> get copyWith => _SettingsCopyWithImpl(this, $identity);
 }
 
-abstract class SettingsCopyWith<$R> {
-  factory SettingsCopyWith(p0.Settings value, Then<p0.Settings, $R> then) = _SettingsCopyWithImpl<$R>;
+extension SettingsObjectCopy<$R> on ObjectCopyWith<$R, p0.Settings> {
+  SettingsCopyWith<$R> get settings => chain(_SettingsCopyWithImpl.new);
+}
+
+abstract class SettingsCopyWith<$R> implements ObjectCopyWith<$R, p0.Settings> {
   MapCopyWith<$R, String, p0.SingleSetting<dynamic>, SingleSettingCopyWith<$R, dynamic>>? get settings;
   $R call({Map<String, p0.SingleSetting<dynamic>>? settings});
-  $R apply(p0.Settings Function(p0.Settings) transform);
 }
 
 class _SettingsCopyWithImpl<$R> extends BaseCopyWith<p0.Settings, $R> implements SettingsCopyWith<$R> {
-  _SettingsCopyWithImpl(p0.Settings value, Then<p0.Settings, $R> then) : super(value, then);
+  _SettingsCopyWithImpl(super.value, super.then);
 
-  @override MapCopyWith<$R, String, p0.SingleSetting<dynamic>, SingleSettingCopyWith<$R, dynamic>>? get settings => $value.settings != null ? MapCopyWith($value.settings!, (v, t) => SingleSettingCopyWith(v, t), (v) => call(settings: v)) : null;
+  @override MapCopyWith<$R, String, p0.SingleSetting<dynamic>, SingleSettingCopyWith<$R, dynamic>>? get settings => $value.settings != null ? MapCopyWith($value.settings!, (v, t) => _SingleSettingCopyWithImpl(v, t), (v) => call(settings: v)) : null;
   @override $R call({Object? settings = $none}) => $then(p0.Settings(settings: or(settings, $value.settings)));
 }
 

@@ -51,17 +51,13 @@ class AnimalMapper extends BaseMapper<p0.Animal> {
 extension AnimalMapperExtension on p0.Animal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  AnimalCopyWith<p0.Animal> get copyWith => AnimalCopyWith(this, $identity);
 }
 
-abstract class AnimalCopyWith<$R> {
-  factory AnimalCopyWith(p0.Animal value, Then<p0.Animal, $R> then) {
-    if (value is p0.NullAnimal) { return NullAnimalCopyWith(value, then); }
-    else if (value is p0.Cat) { return CatCopyWith(value, then); }
-    else if (value is p0.Dog) { return DogCopyWith(value, then); }
-    else if (value is p0.DefaultAnimal) { return DefaultAnimalCopyWith(value, then); }
-    else { throw MapperException.unsupportedMethod(MapperMethod.copy, value.runtimeType); }
-  }
+mixin AnimalMixin {
+  AnimalCopyWith<p0.Animal, p0.Animal> get copyWith;
+}
+
+abstract class AnimalCopyWith<$R, $V extends p0.Animal> implements ObjectCopyWith<$R, $V> {
   $R call({String? name});
 }
 
@@ -87,17 +83,22 @@ class CatMapper extends BaseMapper<p0.Cat> {
 extension CatMapperExtension on p0.Cat {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CatCopyWith<p0.Cat> get copyWith => CatCopyWith(this, $identity);
 }
 
-abstract class CatCopyWith<$R> implements AnimalCopyWith<$R> {
-  factory CatCopyWith(p0.Cat value, Then<p0.Cat, $R> then) = _CatCopyWithImpl<$R>;
+mixin CatMixin {
+  CatCopyWith<p0.Cat> get copyWith => _CatCopyWithImpl(this as p0.Cat, $identity);
+}
+
+extension CatObjectCopy<$R> on ObjectCopyWith<$R, p0.Cat> {
+  CatCopyWith<$R> get cat => chain(_CatCopyWithImpl.new);
+}
+
+abstract class CatCopyWith<$R> implements AnimalCopyWith<$R, p0.Cat> {
   @override $R call({String? name, String? color});
-  $R apply(p0.Cat Function(p0.Cat) transform);
 }
 
 class _CatCopyWithImpl<$R> extends BaseCopyWith<p0.Cat, $R> implements CatCopyWith<$R> {
-  _CatCopyWithImpl(p0.Cat value, Then<p0.Cat, $R> then) : super(value, then);
+  _CatCopyWithImpl(super.value, super.then);
 
   @override $R call({String? name, String? color}) => $then(p0.Cat(name ?? $value.name, color ?? $value.color));
 }
@@ -123,17 +124,22 @@ class DogMapper extends BaseMapper<p0.Dog> {
 extension DogMapperExtension on p0.Dog {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DogCopyWith<p0.Dog> get copyWith => DogCopyWith(this, $identity);
 }
 
-abstract class DogCopyWith<$R> implements AnimalCopyWith<$R> {
-  factory DogCopyWith(p0.Dog value, Then<p0.Dog, $R> then) = _DogCopyWithImpl<$R>;
+mixin DogMixin {
+  DogCopyWith<p0.Dog> get copyWith => _DogCopyWithImpl(this as p0.Dog, $identity);
+}
+
+extension DogObjectCopy<$R> on ObjectCopyWith<$R, p0.Dog> {
+  DogCopyWith<$R> get dog => chain(_DogCopyWithImpl.new);
+}
+
+abstract class DogCopyWith<$R> implements AnimalCopyWith<$R, p0.Dog> {
   @override $R call({String? name, int? age});
-  $R apply(p0.Dog Function(p0.Dog) transform);
 }
 
 class _DogCopyWithImpl<$R> extends BaseCopyWith<p0.Dog, $R> implements DogCopyWith<$R> {
-  _DogCopyWithImpl(p0.Dog value, Then<p0.Dog, $R> then) : super(value, then);
+  _DogCopyWithImpl(super.value, super.then);
 
   @override $R call({String? name, int? age}) => $then(p0.Dog(name ?? $value.name, age ?? $value.age));
 }
@@ -159,17 +165,22 @@ class NullAnimalMapper extends BaseMapper<p0.NullAnimal> {
 extension NullAnimalMapperExtension on p0.NullAnimal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  NullAnimalCopyWith<p0.NullAnimal> get copyWith => NullAnimalCopyWith(this, $identity);
 }
 
-abstract class NullAnimalCopyWith<$R> implements AnimalCopyWith<$R> {
-  factory NullAnimalCopyWith(p0.NullAnimal value, Then<p0.NullAnimal, $R> then) = _NullAnimalCopyWithImpl<$R>;
+mixin NullAnimalMixin {
+  NullAnimalCopyWith<p0.NullAnimal> get copyWith => _NullAnimalCopyWithImpl(this as p0.NullAnimal, $identity);
+}
+
+extension NullAnimalObjectCopy<$R> on ObjectCopyWith<$R, p0.NullAnimal> {
+  NullAnimalCopyWith<$R> get nullAnimal => chain(_NullAnimalCopyWithImpl.new);
+}
+
+abstract class NullAnimalCopyWith<$R> implements AnimalCopyWith<$R, p0.NullAnimal> {
   @override $R call({String? name});
-  $R apply(p0.NullAnimal Function(p0.NullAnimal) transform);
 }
 
 class _NullAnimalCopyWithImpl<$R> extends BaseCopyWith<p0.NullAnimal, $R> implements NullAnimalCopyWith<$R> {
-  _NullAnimalCopyWithImpl(p0.NullAnimal value, Then<p0.NullAnimal, $R> then) : super(value, then);
+  _NullAnimalCopyWithImpl(super.value, super.then);
 
   @override $R call({String? name}) => $then(p0.NullAnimal(name ?? $value.name));
 }
@@ -195,17 +206,22 @@ class DefaultAnimalMapper extends BaseMapper<p0.DefaultAnimal> {
 extension DefaultAnimalMapperExtension on p0.DefaultAnimal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DefaultAnimalCopyWith<p0.DefaultAnimal> get copyWith => DefaultAnimalCopyWith(this, $identity);
 }
 
-abstract class DefaultAnimalCopyWith<$R> implements AnimalCopyWith<$R> {
-  factory DefaultAnimalCopyWith(p0.DefaultAnimal value, Then<p0.DefaultAnimal, $R> then) = _DefaultAnimalCopyWithImpl<$R>;
+mixin DefaultAnimalMixin {
+  DefaultAnimalCopyWith<p0.DefaultAnimal> get copyWith => _DefaultAnimalCopyWithImpl(this as p0.DefaultAnimal, $identity);
+}
+
+extension DefaultAnimalObjectCopy<$R> on ObjectCopyWith<$R, p0.DefaultAnimal> {
+  DefaultAnimalCopyWith<$R> get defaultAnimal => chain(_DefaultAnimalCopyWithImpl.new);
+}
+
+abstract class DefaultAnimalCopyWith<$R> implements AnimalCopyWith<$R, p0.DefaultAnimal> {
   @override $R call({String? name, String? type});
-  $R apply(p0.DefaultAnimal Function(p0.DefaultAnimal) transform);
 }
 
 class _DefaultAnimalCopyWithImpl<$R> extends BaseCopyWith<p0.DefaultAnimal, $R> implements DefaultAnimalCopyWith<$R> {
-  _DefaultAnimalCopyWithImpl(p0.DefaultAnimal value, Then<p0.DefaultAnimal, $R> then) : super(value, then);
+  _DefaultAnimalCopyWithImpl(super.value, super.then);
 
   @override $R call({String? name, String? type}) => $then(p0.DefaultAnimal(name ?? $value.name, type ?? $value.type));
 }
@@ -231,17 +247,19 @@ class ZooMapper extends BaseMapper<p0.Zoo> {
 extension ZooMapperExtension on p0.Zoo {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ZooCopyWith<p0.Zoo> get copyWith => ZooCopyWith(this, $identity);
+  ZooCopyWith<p0.Zoo> get copyWith => _ZooCopyWithImpl(this, $identity);
 }
 
-abstract class ZooCopyWith<$R> {
-  factory ZooCopyWith(p0.Zoo value, Then<p0.Zoo, $R> then) = _ZooCopyWithImpl<$R>;
+extension ZooObjectCopy<$R> on ObjectCopyWith<$R, p0.Zoo> {
+  ZooCopyWith<$R> get zoo => chain(_ZooCopyWithImpl.new);
+}
+
+abstract class ZooCopyWith<$R> implements ObjectCopyWith<$R, p0.Zoo> {
   $R call({p0.Animal? animal});
-  $R apply(p0.Zoo Function(p0.Zoo) transform);
 }
 
 class _ZooCopyWithImpl<$R> extends BaseCopyWith<p0.Zoo, $R> implements ZooCopyWith<$R> {
-  _ZooCopyWithImpl(p0.Zoo value, Then<p0.Zoo, $R> then) : super(value, then);
+  _ZooCopyWithImpl(super.value, super.then);
 
   @override $R call({p0.Animal? animal}) => $then(p0.Zoo(animal ?? $value.animal));
 }

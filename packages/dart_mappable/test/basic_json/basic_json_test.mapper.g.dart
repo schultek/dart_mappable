@@ -41,20 +41,22 @@ class PersonMapper extends BaseMapper<p0.Person> {
 extension PersonMapperExtension on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<p0.Person> get copyWith => PersonCopyWith(this, $identity);
+  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity);
 }
 
-abstract class PersonCopyWith<$R> {
-  factory PersonCopyWith(p0.Person value, Then<p0.Person, $R> then) = _PersonCopyWithImpl<$R>;
+extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
+  PersonCopyWith<$R> get person => chain(_PersonCopyWithImpl.new);
+}
+
+abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
   CarCopyWith<$R>? get car;
   $R call({String? name, int? age, p0.Car? car});
-  $R apply(p0.Person Function(p0.Person) transform);
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements PersonCopyWith<$R> {
-  _PersonCopyWithImpl(p0.Person value, Then<p0.Person, $R> then) : super(value, then);
+  _PersonCopyWithImpl(super.value, super.then);
 
-  @override CarCopyWith<$R>? get car => $value.car != null ? CarCopyWith($value.car!, (v) => call(car: v)) : null;
+  @override CarCopyWith<$R>? get car => $value.car != null ? _CarCopyWithImpl($value.car!, (v) => call(car: v)) : null;
   @override $R call({String? name, int? age, Object? car = $none}) => $then(p0.Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
 }
 
@@ -79,17 +81,19 @@ class CarMapper extends BaseMapper<p0.Car> {
 extension CarMapperExtension on p0.Car {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CarCopyWith<p0.Car> get copyWith => CarCopyWith(this, $identity);
+  CarCopyWith<p0.Car> get copyWith => _CarCopyWithImpl(this, $identity);
 }
 
-abstract class CarCopyWith<$R> {
-  factory CarCopyWith(p0.Car value, Then<p0.Car, $R> then) = _CarCopyWithImpl<$R>;
+extension CarObjectCopy<$R> on ObjectCopyWith<$R, p0.Car> {
+  CarCopyWith<$R> get car => chain(_CarCopyWithImpl.new);
+}
+
+abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car> {
   $R call({int? drivenKm, p0.Brand? brand});
-  $R apply(p0.Car Function(p0.Car) transform);
 }
 
 class _CarCopyWithImpl<$R> extends BaseCopyWith<p0.Car, $R> implements CarCopyWith<$R> {
-  _CarCopyWithImpl(p0.Car value, Then<p0.Car, $R> then) : super(value, then);
+  _CarCopyWithImpl(super.value, super.then);
 
   @override $R call({int? drivenKm, p0.Brand? brand}) => $then(p0.Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
 }

@@ -35,19 +35,19 @@ class Dealership with Mappable {
 }
 
 @MappableClass(discriminatorKey: 'type')
-class ItemList<T> with Mappable, Copyable<T> {
+abstract class ItemList<T> with Mappable, ItemListMixin<T> {
   final List<T> items;
 
   ItemList(List<T>? items) : items = items ?? [];
 }
 
 @MappableClass()
-class BrandList extends ItemList<Brand?> {
+class BrandList extends ItemList<Brand?> with BrandListMixin {
   BrandList(List<Brand?>? brands) : super(brands);
 }
 
 @MappableClass()
-class NamedItemList<T> extends ItemList<T> {
+class NamedItemList<T> extends ItemList<T> with NamedItemListMixin<T> {
   String name;
   NamedItemList(this.name, List<T>? items): super(items);
 }
@@ -59,7 +59,7 @@ class KeyedItemList<K, T> extends ItemList<T> with KeyedItemListMixin<K, T> {
 }
 
 @MappableClass()
-class ComparableItemList<T extends Comparable> extends ItemList<T> {
+class ComparableItemList<T extends Comparable> extends ItemList<T> with ComparableItemListMixin<T> {
   ComparableItemList(List<T>? items): super(items);
 }
 
@@ -142,7 +142,6 @@ void main() {
     });
 
     test('Should use generic copyWith', () {
-
       ItemList<int> list = NamedItemList('Test', [1, 2]);
       var list2 = list.copyWith(items: [3]);
       expect(list2, isA<NamedItemList<int>>());
@@ -150,12 +149,15 @@ void main() {
 
       list = KeyedItemList<String, int>('key', [4, 2]);
       list2 = list.copyWith(items: [1]);
-      expect(list2, isA<KeyedItemList<dynamic, int>>());
+      expect(list2, isA<KeyedItemList<String, int>>());
       expect((list2 as KeyedItemList).key, equals('key'));
 
-      list = ComparableItemList([2]);
+      list = ComparableItemList([2, 5]);
       list2 = list.copyWith(items: [1]);
       expect(list2, isA<ComparableItemList<int>>());
+
+      var list3 = list.copyWith.items.at(0)!.apply((v) => v+1);
+      expect(list3, equals(ComparableItemList([3, 5])));
     });
   });
 }
