@@ -1,3 +1,26 @@
+# 2.0.0-dev.1
+
+- Added support for inherited copyWith implementations.
+
+  When using polymorphism or any inheritance, you will now be able to call
+  `.copyWith` on the superclass to change any field that is inherited by all
+  sub-classes. The concrete subclass types will be retained through such a
+  `.copyWith` call and also respects generics.
+
+  ```dart
+    // with `class A` and `class B extends A`
+    A a = B(); // static type A, dynamic type B
+  
+    // signature will be `A copyWith()`, so static type A
+    A a2 = a.copyWith(); 
+  
+    // this will still resolve to a dynamic type of B
+    assert(a2 is B);
+  ```
+
+  Classes using this must mixin the newly generated `<MyClass>Mixin`. More details
+  [here](https://pub.dev/packages/dart_mappable/versions/2.0.0-dev.1#copywith-and-polymorphism).
+
 # 2.0.0-dev.0
 
 - Depend on `analyzer: ^5.0.0`
