@@ -32,10 +32,11 @@ while adding new or improved support for advances use-cases like generics, inher
   - [Custom Enum Values](#custom-enum-values)
 - [Lists, Sets and Maps](#lists-sets-and-maps)
   - [Non-Trivial Maps](#non-trivial-maps)
-- [Copy With](#copywith)
+- [CopyWith](#copywith)
   - [Deep Copy](#deep-copy)
 - [Polymorphism and Discriminators](#polymorphism-and-discriminators)
   - [Null and Default Values](#null-and-default-values)
+  - [CopyWith and Polymorphism](#copywith-and-polymorphism)
 - [Encoding / Decoding Hooks](#encoding--decoding-hooks)
   - [Unmapped Properties](#unmapped-properties)
 - [Custom Mappers](#custom-mappers)
@@ -565,6 +566,22 @@ void main() {
   print(animal2.type); // Bear
 }
 ```
+
+### CopyWith and Polymorphism
+
+To use the `.copyWith` feature on classes that use polymorphism (or any inheritance), a small
+additional setup is required. 
+
+Each class that is either a superclass or subclass will generate an additional `MyClassMixin` that
+you should apply to your class. So in our above example we would change the class signatures to:
+
+- `class Animal with Mappable, AnimalMixin`
+- `class Cat extends Animal with CatMixin`
+- `class Dog extends Animal with DogMixin`
+- ...
+
+> Don't worry if the mixins don't exist at first, just run code-generation once an they will be created.
+> The builder will also warn you if you use polymorphism without using the generated mixins.
 
 ## Encoding / Decoding Hooks
 

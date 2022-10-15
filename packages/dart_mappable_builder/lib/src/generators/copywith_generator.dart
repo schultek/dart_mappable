@@ -1,122 +1,14 @@
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/class_mapper_config.dart';
+import '../config/copy_param_config.dart';
 import '../config/parameter_config.dart';
 import '../imports_builder.dart';
 import '../utils.dart';
-
-typedef GetConfig = ClassMapperConfig? Function(Element? e);
-
-class CopyParamConfig {
-  CopyParamConfig(this.param, this.name, this.imports);
-
-  final ParameterConfig param;
-  final String name;
-  final ImportsBuilder imports;
-
-  String get implName => '_${name}CopyWithImpl';
-
-  ParameterElement get p => param.parameter;
-  PropertyInducingElement get a => param.accessor;
-
-  String get fieldTypeParams => p.type is InterfaceType
-      ? (p.type as InterfaceType)
-          .typeArguments
-          .map((t) => ', ${imports.prefixedType(t)}')
-          .join()
-      : '';
-
-  String get invocation => ', (v) => call(${param.superName}: v)';
-}
-
-class ListCopyParamConfig extends CopyParamConfig {
-  ListCopyParamConfig(ParameterConfig param, this.itemName,
-      ImportsBuilder imports, this.forceNullable)
-      : super(param, 'List', imports);
-
-  final String itemName;
-  final bool forceNullable;
-
-  @override
-  String get implName => '${name}CopyWith';
-
-  String get itemImplName => itemName == 'Object' ? 'ObjectCopyWith' : '_${itemName}CopyWithImpl';
-
-  @override
-  String get fieldTypeParams {
-    var typeArg = (p.type as InterfaceType).typeArguments.first;
-    var typeArgNullable =
-        typeArg.nullabilitySuffix == NullabilitySuffix.question;
-
-    if (itemName == 'Object') {
-      return super.fieldTypeParams +
-          ', ${itemName}CopyWith<\$R${super.fieldTypeParams}>${typeArgNullable || forceNullable ? '?' : ''}';
-    }
-
-    var typeParams = typeArg is InterfaceType
-        ? typeArg.typeArguments
-            .map((t) => ', ${imports.prefixedType(t)}')
-            .join()
-        : '';
-    return super.fieldTypeParams +
-        ', ${itemName}CopyWith<\$R$typeParams>${typeArgNullable ? '?' : ''}';
-  }
-
-  @override
-  String get invocation {
-    var typeArg = (p.type as InterfaceType).typeArguments.first;
-    var typeArgNullable =
-        typeArg.nullabilitySuffix == NullabilitySuffix.question;
-
-    return ', (v, t) => ${typeArgNullable ? 'v == null ? null : ' : ''}$itemImplName(v, t)${super.invocation}';
-  }
-}
-
-class MapCopyParamConfig extends CopyParamConfig {
-  MapCopyParamConfig(ParameterConfig param, this.valueName,
-      ImportsBuilder imports, this.forceNullable)
-      : super(param, 'Map', imports);
-
-  final String valueName;
-  final bool forceNullable;
-
-  @override
-  String get implName => '${name}CopyWith';
-
-  String get valueImplName => valueName == 'Object' ? 'ObjectCopyWith' : '_${valueName}CopyWithImpl';
-
-  @override
-  String get fieldTypeParams {
-    var valueTypeArg = (p.type as InterfaceType).typeArguments[1];
-    var typeArgNullable =
-        valueTypeArg.nullabilitySuffix == NullabilitySuffix.question;
-
-    if (valueName == 'Object') {
-      return super.fieldTypeParams +
-          ', ${valueName}CopyWith<\$R, ${imports.prefixedType(valueTypeArg)}>${typeArgNullable || forceNullable ? '?' : ''}';
-    }
-
-    var typeParams = valueTypeArg is InterfaceType
-        ? valueTypeArg.typeArguments
-            .map((t) => ', ${imports.prefixedType(t)}')
-            .join()
-        : '';
-    return super.fieldTypeParams +
-        ', ${valueName}CopyWith<\$R$typeParams>${typeArgNullable ? '?' : ''}';
-  }
-
-  @override
-  String get invocation {
-    var typeArg = (p.type as InterfaceType).typeArguments[1];
-    var typeArgNullable =
-        typeArg.nullabilitySuffix == NullabilitySuffix.question;
-
-    return ', (v, t) => ${typeArgNullable ? 'v == null ? null : ' : ''}$valueImplName(v, t)${super.invocation}';
-  }
-}
 
 class CopyWithGenerator {
   final ClassMapperConfig config;
@@ -138,6 +30,7 @@ class CopyWithGenerator {
   String generateCopyWithMixin(GetConfig getConfig) {
     if (!config.shouldGenerate(GenerateMethods.copy)) return '';
     if (config.superConfig != null || config.subConfigs.isNotEmpty) {
+      _checkCopyWithMixinUsed();
       return '\n\n${_generateCopyWithMixin(getConfig)}';
     } else {
       return '';
@@ -159,6 +52,44 @@ class CopyWithGenerator {
         : '';
 
     return '${config.uniqueClassName}CopyWith<${config.prefixedClassName}${config.typeParams}$classTypeParams> get copyWith => _${config.uniqueClassName}CopyWithImpl(this, \$identity);';
+  }
+
+  void _checkCopyWithMixinUsed() {
+    var node = config.element.getNode()! as ClassDeclaration;
+    var className = config.className;
+    var mixinName = '${config.uniqueClassName}Mixin';
+
+    var hasCopyWithMixin = node.withClause?.mixinTypes.any((t) => t.name.name == mixinName) ?? false;
+
+    if (!hasCopyWithMixin) {
+      var classDeclarationSource = 'class $className';
+      if (node.abstractKeyword != null) {
+        classDeclarationSource = 'abstract $classDeclarationSource';
+      }
+      if (node.extendsClause != null) {
+        classDeclarationSource += ' ' + node.extendsClause!.toSource();
+      }
+      if (node.withClause != null) {
+        classDeclarationSource += ' ' + node.withClause!.toSource().replaceFirst('with', 'with $mixinName,');
+      } else {
+        classDeclarationSource += ' with $mixinName';
+      }
+      if (node.implementsClause != null) {
+        classDeclarationSource += ' ' + node.implementsClause!.toSource();
+      }
+
+      print('\nClass $className is configured to generate a \'.copyWith()\' '
+          ' extension while being part of a inherited class structure (either '
+          'as superclass or as subclass).\nIn such a case it is required that '
+          'you use the generated \'$mixinName\' on this class.\nOtherwise your '
+          'code might behave faulty or won\'t compile.\n\n'
+          'To solve this, change your class signature to:\n'
+          '$classDeclarationSource\n\n'
+          'Alternatively you can also disable the generation of a \`.copyWith()\` '
+          'extension by using the \`generateMethods\` option\n'
+          '(see https://pub.dev/packages/dart_mappable#generation-methods).\n');
+
+    }
   }
 
   String _generateCopyWithMixin(GetConfig getConfig) {
@@ -221,59 +152,7 @@ class CopyWithGenerator {
     snippets.add(''
         'abstract class ${config.uniqueClassName}CopyWith<\$R$objTypeParamDef$classTypeParamsDef>$implementsStmt {\n');
 
-    var copyParams = <CopyParamConfig>[];
-
-    for (var param in config.params) {
-      if (param is UnresolvedParameterConfig) {
-        continue;
-      }
-
-      ClassMapperConfig? resolveElement(Element? element) {
-        var classConfig = getConfig(element);
-        if (classConfig != null &&
-            classConfig.hasCallableConstructor &&
-            classConfig.shouldGenerate(GenerateMethods.copy)) {
-          return classConfig;
-        }
-        return null;
-      }
-
-      if (param.parameter.type.isDartCoreList) {
-        var it = param.parameter.type as InterfaceType;
-        var itemElement = it.typeArguments.first.element2;
-        var itemConfig = resolveElement(itemElement);
-
-        var hasSubConfigs = config.subConfigs.isNotEmpty;
-
-        copyParams.add(ListCopyParamConfig(
-          param,
-          itemConfig?.uniqueClassName ?? 'Object',
-          imports,
-          hasSubConfigs,
-        ));
-      } else if (param.parameter.type.isDartCoreMap) {
-        var it = param.parameter.type as InterfaceType;
-        var valueElement = it.typeArguments[1].element2;
-        var valueConfig = resolveElement(valueElement);
-
-        var hasSubConfigs = config.subConfigs.isNotEmpty;
-
-        copyParams.add(MapCopyParamConfig(
-          param,
-          valueConfig?.uniqueClassName ?? 'Object',
-          imports,
-          hasSubConfigs,
-        ));
-      } else {
-        var classElement = param.parameter.type.element2;
-        var classConfig = resolveElement(classElement);
-
-        if (classConfig != null) {
-          copyParams.add(
-              CopyParamConfig(param, classConfig.uniqueClassName, imports));
-        }
-      }
-    }
+    var copyParams = CopyParamConfig.collectFrom(config.params, config, imports, getConfig);
 
     for (var param in copyParams) {
       var isOverridden =

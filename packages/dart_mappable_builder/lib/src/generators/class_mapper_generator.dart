@@ -1,4 +1,5 @@
 import '../config/class_mapper_config.dart';
+import '../config/copy_param_config.dart';
 import '../imports_builder.dart';
 import 'copywith_generator.dart';
 import 'decoder_generator.dart';
