@@ -85,8 +85,8 @@ class CopyWithGenerator {
           'code might behave faulty or won\'t compile.\n\n'
           'To solve this, change your class signature to:\n'
           '$classDeclarationSource\n\n'
-          'Alternatively you can also disable the generation of a \`.copyWith()\` '
-          'extension by using the \`generateMethods\` option\n'
+          'Alternatively you can also disable the generation of a \'.copyWith()\' '
+          'extension by using the \'generateMethods\' option\n'
           '(see https://pub.dev/packages/dart_mappable#generation-methods).\n');
 
     }
@@ -134,18 +134,15 @@ class CopyWithGenerator {
     }
 
     var implementsStmt = '';
-    var objTypeParamDef = '';
-    var objTypeParam = '';
+    var objTypeParamDef = config.subConfigs.isNotEmpty ? ', \$V extends $selfTypeParam' : '';
+    var objTypeParam =
+    config.subConfigs.isNotEmpty ? ', \$V' : ', $selfTypeParam';
 
     if (config.superConfig != null) {
       var superClassTypeParams = config.superTypeArgs.map((a) => ', $a').join();
       implementsStmt =
-          ' implements ${config.superConfig!.uniqueClassName}CopyWith<\$R, $selfTypeParam$superClassTypeParams>';
+          ' implements ${config.superConfig!.uniqueClassName}CopyWith<\$R$objTypeParam$superClassTypeParams>';
     } else {
-      objTypeParamDef =
-          config.subConfigs.isNotEmpty ? ', \$V extends $selfTypeParam' : '';
-      objTypeParam =
-          config.subConfigs.isNotEmpty ? ', \$V' : ', $selfTypeParam';
       implementsStmt = ' implements ObjectCopyWith<\$R$objTypeParam>';
     }
 
@@ -170,7 +167,7 @@ class CopyWithGenerator {
       snippets.add('\n'
           'class _${config.uniqueClassName}CopyWithImpl<\$R$classTypeParamsDef> '
           'extends BaseCopyWith<$selfTypeParam, \$R> implements ${config.uniqueClassName}CopyWith'
-          '<\$R${objTypeParamDef.isNotEmpty ? ', $selfTypeParam' : ''}$classTypeParams> {\n'
+          '<\$R${config.subConfigs.isNotEmpty ? ', $selfTypeParam' : ''}$classTypeParams> {\n'
           '  _${config.uniqueClassName}CopyWithImpl(super.value, super.then);\n'
           '\n');
 
