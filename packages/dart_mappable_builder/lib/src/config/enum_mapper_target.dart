@@ -8,8 +8,8 @@ import 'enum_mapper_config.dart';
 import 'mapper_targets.dart';
 
 class EnumMapperTarget extends MapperTarget<EnumElement> {
-  EnumMapperTarget(EnumElement element, MappableOptions options, int? prefix)
-      : super(element, options, prefix);
+  EnumMapperTarget(EnumElement element, MappableOptions options, int? prefix, int index)
+      : super(element, options, prefix, index);
 
   late EnumMapperConfig config = _buildConfig();
   EnumMapperConfig _buildConfig() {
@@ -18,7 +18,8 @@ class EnumMapperTarget extends MapperTarget<EnumElement> {
       mode: mode,
       caseStyle: caseStyle,
       defaultValue: defaultValue,
-      prefix: prefix,
+      importPrefix: importPrefix,
+      nameIndex: nameIndex,
     );
   }
 

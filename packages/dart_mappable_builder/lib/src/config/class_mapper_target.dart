@@ -15,8 +15,8 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
   List<ClassMapperTarget> subTargets = [];
   ClassMapperTarget? superTarget;
 
-  ClassMapperTarget(ClassElement element, MappableOptions options, int? prefix)
-      : super(element, options, prefix);
+  ClassMapperTarget(ClassElement element, MappableOptions options, int? prefix, int index)
+      : super(element, options, prefix, index);
 
   @override
   DartObject? getAnnotation() =>
@@ -58,7 +58,8 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
         params: await analyzeParams(imports),
         typeParamsList: typeParamsList(imports),
         superTypeArgs: superTypeArgs(imports),
-        prefix: prefix,
+        importPrefix: importPrefix,
+        nameIndex: nameIndex,
       );
       config.superConfig?.subConfigs.add(config);
       return config;
@@ -251,9 +252,9 @@ class FactoryConstructorMapperTarget extends ClassMapperTarget {
   ConstructorElement factoryConstructor;
 
   FactoryConstructorMapperTarget(
-      this.factoryConstructor, MappableOptions options, int? prefix)
+      this.factoryConstructor, MappableOptions options, int? prefix, int index)
       : super(factoryConstructor.redirectedConstructor!.returnType.element2 as ClassElement,
-            options, prefix);
+            options, prefix, index);
 
   @override
   Element get annotatedElement => factoryConstructor;

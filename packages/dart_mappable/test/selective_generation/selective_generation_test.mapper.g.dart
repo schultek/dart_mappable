@@ -12,7 +12,7 @@ import 'selective_generation_test.dart' as p0;
 var _mappers = <BaseMapper>{
   // class mappers
   PersonMapper._(),
-  Car1Mapper._(),
+  CarMapper._(),
   // enum mappers
   // custom mappers
 };
@@ -48,15 +48,15 @@ class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements Per
   @override $R call({String? name}) => $then(p0.Person(name ?? $value.name));
 }
 
-class Car1Mapper extends BaseMapper<p1.Car> {
-  Car1Mapper._();
+class CarMapper extends BaseMapper<p1.Car> {
+  CarMapper._();
 
   @override String stringify(p1.Car self) => 'Car(brand: ${Mapper.asString(self.brand)})';
   @override int hash(p1.Car self) => Mapper.hash(self.brand);
   @override bool equals(p1.Car self, p1.Car other) => Mapper.isEqual(self.brand, other.brand);
 }
 
-extension Car1MapperExtension on p1.Car {
+extension CarMapperExtension on p1.Car {
 }
 
 

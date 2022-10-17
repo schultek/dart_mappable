@@ -23,7 +23,8 @@ class ClassMapperConfig {
   final List<String> typeParamsList;
   final List<String> superTypeArgs;
 
-  final int? prefix;
+  final int? importPrefix;
+  final int nameIndex;
 
   ClassMapperConfig({
     required this.element,
@@ -39,18 +40,19 @@ class ClassMapperConfig {
     required this.params,
     required this.typeParamsList,
     required this.superTypeArgs,
-    required this.prefix,
+    required this.importPrefix,
+    required this.nameIndex,
   }) {
     checkUnresolvedParameters();
   }
 
   String get className => element.name;
   String get prefixedClassName =>
-      '${prefix != null ? 'p$prefix.' : ''}$className';
+      '${importPrefix != null ? 'p$importPrefix.' : ''}$className';
   String get uniqueClassName =>
-      '$className${prefix != null && prefix != 0 ? '$prefix' : ''}';
+      '$className${nameIndex != 0 ? '$nameIndex' : ''}';
   String get mapperName =>
-      '$className${prefix != null && prefix != 0 ? prefix : ''}Mapper';
+      '$className${nameIndex != 0 ? nameIndex : ''}Mapper';
 
   Iterable<FieldElement> get allPublicFields sync* {
     yield* superConfig?.allPublicFields ?? [];

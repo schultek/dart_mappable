@@ -17,11 +17,14 @@ class MapperTargets {
   Map<ClassElement, ClassMapperTarget> classes = {};
   Map<Element, CustomMapperConfig> customMappers = {};
 
+  Map<String, int> nameIndexes = {};
+
   void addElementsFromLibrary(LibraryElement library, MappableOptions options) {
     var elements = elementsOf(library);
 
     for (var element in elements) {
-      if (element is ClassElement && customMapperChecker.hasAnnotationOf(element)) {
+      if (element is ClassElement &&
+          customMapperChecker.hasAnnotationOf(element)) {
         var mapperIndex = element.allSupertypes
             .indexWhere((t) => mapperChecker.isExactlyType(t));
         if (mapperIndex == -1) {
@@ -38,9 +41,9 @@ class MapperTargets {
       } else {
         var shouldGenerate = options.shouldGenerateFor(element);
         if (!shouldGenerate && !options.ignoreAnnotated) {
-          shouldGenerate =
-              (element is ClassElement && classChecker.hasAnnotationOf(element)) ||
-                  (element is EnumElement && enumChecker.hasAnnotationOf(element));
+          shouldGenerate = (element is ClassElement &&
+                  classChecker.hasAnnotationOf(element)) ||
+              (element is EnumElement && enumChecker.hasAnnotationOf(element));
         }
         if (shouldGenerate) {
           addElement(element, options);
@@ -57,20 +60,24 @@ class MapperTargets {
       }
 
       var prefix = imports.add(element.librarySource.uri);
-      enums[element] = EnumMapperTarget(element, options, prefix);
+      var index = getNameIndex(element.name);
+      enums[element] = EnumMapperTarget(element, options, prefix, index);
     } else if (element is ClassElement) {
       if (classes.containsKey(element)) {
         return;
       }
 
       var prefix = imports.add(element.librarySource.uri);
-      addClassTarget(ClassMapperTarget(element, options, prefix));
+      var index = getNameIndex(element.name);
+      addClassTarget(ClassMapperTarget(element, options, prefix, index));
 
       for (var c in element.constructors) {
         if (c.isFactory &&
             c.redirectedConstructor != null &&
             classChecker.hasAnnotationOf(c)) {
-          addClassTarget(FactoryConstructorMapperTarget(c, options, prefix));
+          var index = getNameIndex(c.name);
+          addClassTarget(
+              FactoryConstructorMapperTarget(c, options, prefix, index));
         }
       }
     }
@@ -88,8 +95,12 @@ class MapperTargets {
         addElement(superElement, target.options);
         superTarget = classes[superElement]!;
       } else {
-        superTarget =
-            ClassMapperTarget(superElement, target.options, target.prefix);
+        superTarget = ClassMapperTarget(
+          superElement,
+          target.options,
+          target.importPrefix,
+          target.nameIndex,
+        );
       }
 
       target.setSuperTarget(superTarget);
@@ -103,14 +114,21 @@ class MapperTargets {
       yield* cu.classes;
     }
   }
+
+  int getNameIndex(String name) {
+    var index = nameIndexes[name] ?? 0;
+    nameIndexes[name] = index + 1;
+    return index;
+  }
 }
 
 abstract class MapperTarget<T extends InterfaceElement> {
   T element;
   MappableOptions options;
-  int? prefix;
+  int? importPrefix;
+  int nameIndex;
 
-  MapperTarget(this.element, this.options, this.prefix);
+  MapperTarget(this.element, this.options, this.importPrefix, this.nameIndex);
 
   Element get annotatedElement => element;
 
