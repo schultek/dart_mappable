@@ -3,7 +3,7 @@ import 'package:polymorphic_copywith/models/base.dart';
 import 'package:polymorphic_copywith/polymorphic_copywith.mapper.g.dart';
 
 @MappableClass()
-class One extends Base with OneMixin {
+class One extends BaseObject with OneMixin {
   One({
     required super.id,
     required super.name,

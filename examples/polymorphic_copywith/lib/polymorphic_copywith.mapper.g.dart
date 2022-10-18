@@ -14,7 +14,7 @@ import 'models/two.dart' as p3;
 var _mappers = <BaseMapper>{
   // class mappers
   OneMapper._(),
-  BaseMapper._(),
+  BaseObjectMapper._(),
   AbstractIdBaseMapper._(),
   TwoMapper._(),
   // enum mappers
@@ -55,7 +55,7 @@ extension OneObjectCopy<$R> on ObjectCopyWith<$R, p0.One> {
   OneCopyWith<$R> get one => chain(_OneCopyWithImpl.new);
 }
 
-abstract class OneCopyWith<$R> implements BaseCopyWith<$R, p0.One> {
+abstract class OneCopyWith<$R> implements BaseObjectCopyWith<$R, p0.One> {
   @override MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic>> get objects;
   @override $R call({String? id, String? name, Map<String, dynamic>? objects});
 }
@@ -67,34 +67,34 @@ class _OneCopyWithImpl<$R> extends BaseCopyWith<p0.One, $R> implements OneCopyWi
   @override $R call({String? id, String? name, Map<String, dynamic>? objects}) => $then(p0.One(id: id ?? $value.id, name: name ?? $value.name, objects: objects ?? $value.objects));
 }
 
-class BaseMapper extends BaseMapper<p1.Base> {
-  BaseMapper._();
+class BaseObjectMapper extends BaseMapper<p1.BaseObject> {
+  BaseObjectMapper._();
 
   @override Function get decoder => decode;
-  p1.Base decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  p1.Base fromMap(Map<String, dynamic> map) => throw MapperException.missingConstructor('Base');
+  p1.BaseObject decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p1.BaseObject fromMap(Map<String, dynamic> map) => throw MapperException.missingConstructor('BaseObject');
 
   @override Function get encoder => encode;
-  dynamic encode(p1.Base v) => toMap(v);
-  Map<String, dynamic> toMap(p1.Base b) => {'id': Mapper.i.$enc(b.id, 'id'), 'name': Mapper.i.$enc(b.name, 'name'), 'objects': Mapper.i.$enc(b.objects, 'objects')};
+  dynamic encode(p1.BaseObject v) => toMap(v);
+  Map<String, dynamic> toMap(p1.BaseObject b) => {'id': Mapper.i.$enc(b.id, 'id'), 'name': Mapper.i.$enc(b.name, 'name'), 'objects': Mapper.i.$enc(b.objects, 'objects')};
 
-  @override String stringify(p1.Base self) => 'Base(id: ${Mapper.asString(self.id)}, name: ${Mapper.asString(self.name)}, objects: ${Mapper.asString(self.objects)})';
-  @override int hash(p1.Base self) => Mapper.hash(self.id) ^ Mapper.hash(self.name) ^ Mapper.hash(self.objects);
-  @override bool equals(p1.Base self, p1.Base other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.objects, other.objects);
+  @override String stringify(p1.BaseObject self) => 'BaseObject(id: ${Mapper.asString(self.id)}, name: ${Mapper.asString(self.name)}, objects: ${Mapper.asString(self.objects)})';
+  @override int hash(p1.BaseObject self) => Mapper.hash(self.id) ^ Mapper.hash(self.name) ^ Mapper.hash(self.objects);
+  @override bool equals(p1.BaseObject self, p1.BaseObject other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.objects, other.objects);
 
-  @override Function get typeFactory => (f) => f<p1.Base>();
+  @override Function get typeFactory => (f) => f<p1.BaseObject>();
 }
 
-extension BaseMapperExtension on p1.Base {
+extension BaseObjectMapperExtension on p1.BaseObject {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 }
 
-mixin BaseMixin {
-  BaseCopyWith<p1.Base, p1.Base> get copyWith;
+mixin BaseObjectMixin {
+  BaseObjectCopyWith<p1.BaseObject, p1.BaseObject> get copyWith;
 }
 
-abstract class BaseCopyWith<$R, $V extends p1.Base> implements AbstractIdBaseCopyWith<$R, $V> {
+abstract class BaseObjectCopyWith<$R, $V extends p1.BaseObject> implements AbstractIdBaseCopyWith<$R, $V> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic>?> get objects;
   @override $R call({String? id, String? name, Map<String, dynamic>? objects});
 }
@@ -128,7 +128,7 @@ mixin AbstractIdBaseMixin {
 }
 
 abstract class AbstractIdBaseCopyWith<$R, $V extends p2.AbstractIdBase> implements ObjectCopyWith<$R, $V> {
-  $R call({String? id, String? name});
+  $R call({String? id});
 }
 
 
