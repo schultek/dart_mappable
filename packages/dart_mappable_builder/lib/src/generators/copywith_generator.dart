@@ -193,10 +193,10 @@ class CopyWithGenerator {
   }
 
   String _generateCopyWithParams({bool implVersion = false}) {
-    if (config.params.isEmpty) return '';
+    if (config.copySafeParams.isEmpty) return '';
 
     List<String> params = [];
-    for (var param in config.params) {
+    for (var param in config.copySafeParams) {
       var p = param.parameter;
 
       var type = imports.prefixedType(p.type, withNullability: false);
@@ -224,7 +224,7 @@ class CopyWithGenerator {
 
   String _generateCopyWithConstructorParams() {
     List<String> params = [];
-    for (var param in config.params) {
+    for (var param in config.copySafeParams) {
       var p = param.parameter;
       var str = '';
 

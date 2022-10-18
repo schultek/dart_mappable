@@ -51,8 +51,7 @@ class ClassMapperConfig {
       '${importPrefix != null ? 'p$importPrefix.' : ''}$className';
   String get uniqueClassName =>
       '$className${nameIndex != 0 ? '$nameIndex' : ''}';
-  String get mapperName =>
-      '$className${nameIndex != 0 ? nameIndex : ''}Mapper';
+  String get mapperName => '$className${nameIndex != 0 ? nameIndex : ''}Mapper';
 
   Iterable<FieldElement> get allPublicFields sync* {
     yield* superConfig?.allPublicFields ?? [];
@@ -82,6 +81,22 @@ class ClassMapperConfig {
 
   late String typeParamsDeclaration =
       typeParamsList.isNotEmpty ? '<${typeParamsList.join(', ')}>' : '';
+
+  late List<ParameterConfig> copySafeParams = (() {
+    if (subConfigs.isEmpty) return params;
+
+    var safeParams = <ParameterConfig>[];
+
+    for (var param in params) {
+      if (subConfigs.every((c) => c.copySafeParams
+          .whereType<SuperParameterConfig>()
+          .any((p) => p.superParameter.parameter == param.parameter))) {
+        safeParams.add(param);
+      }
+    }
+
+    return safeParams;
+  })();
 
   void checkUnresolvedParameters() {
     var unresolved = params.whereType<UnresolvedParameterConfig>();

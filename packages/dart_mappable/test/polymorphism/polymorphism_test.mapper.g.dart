@@ -58,7 +58,7 @@ mixin AnimalMixin {
 }
 
 abstract class AnimalCopyWith<$R, $V extends p0.Animal> implements ObjectCopyWith<$R, $V> {
-  $R call({String? name});
+  $R call();
 }
 
 
@@ -108,11 +108,11 @@ class DogMapper extends BaseMapper<p0.Dog> {
 
   @override Function get decoder => decode;
   p0.Dog decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  p0.Dog fromMap(Map<String, dynamic> map) => p0.Dog(Mapper.i.$get(map, 'name'), Mapper.i.$get(map, 'age'));
+  p0.Dog fromMap(Map<String, dynamic> map) => p0.Dog(Mapper.i.$get(map, 'age'));
 
   @override Function get encoder => encode;
   dynamic encode(p0.Dog v) => toMap(v);
-  Map<String, dynamic> toMap(p0.Dog d) => {'name': Mapper.i.$enc(d.name, 'name'), 'age': Mapper.i.$enc(d.age, 'age'), 'type': 1};
+  Map<String, dynamic> toMap(p0.Dog d) => {'age': Mapper.i.$enc(d.age, 'age'), 'type': 1};
 
   @override String stringify(p0.Dog self) => 'Dog(name: ${Mapper.asString(self.name)}, age: ${Mapper.asString(self.age)})';
   @override int hash(p0.Dog self) => Mapper.hash(self.name) ^ Mapper.hash(self.age);
@@ -135,13 +135,13 @@ extension DogObjectCopy<$R> on ObjectCopyWith<$R, p0.Dog> {
 }
 
 abstract class DogCopyWith<$R> implements AnimalCopyWith<$R, p0.Dog> {
-  @override $R call({String? name, int? age});
+  @override $R call({int? age});
 }
 
 class _DogCopyWithImpl<$R> extends BaseCopyWith<p0.Dog, $R> implements DogCopyWith<$R> {
   _DogCopyWithImpl(super.value, super.then);
 
-  @override $R call({String? name, int? age}) => $then(p0.Dog(name ?? $value.name, age ?? $value.age));
+  @override $R call({int? age}) => $then(p0.Dog(age ?? $value.age));
 }
 
 class NullAnimalMapper extends BaseMapper<p0.NullAnimal> {
