@@ -1,3 +1,7 @@
+# 2.0.0-dev.2
+
+- Fixed bug with missing copyWith parameters.
+
 # 2.0.0-dev.1
 
 - Added support for inherited copyWith implementations.
