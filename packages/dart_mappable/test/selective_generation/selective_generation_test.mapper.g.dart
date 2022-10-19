@@ -12,7 +12,7 @@ import 'selective_generation_test.dart' as p0;
 var _mappers = <BaseMapper>{
   // class mappers
   PersonMapper._(),
-  Car1Mapper._(),
+  CarMapper._(),
   // enum mappers
   // custom mappers
 };
@@ -23,7 +23,7 @@ var _mappers = <BaseMapper>{
 class PersonMapper extends BaseMapper<p0.Person> {
   PersonMapper._();
 
-  @override Function get encoder => (p0.Person v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Person v) => toMap(v);
   Map<String, dynamic> toMap(p0.Person p) => {'name': Mapper.i.$enc(p.name, 'name')};
 }
@@ -31,30 +31,32 @@ class PersonMapper extends BaseMapper<p0.Person> {
 extension PersonMapperExtension on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<p0.Person> get copyWith => PersonCopyWith(this, $identity);
+  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity);
 }
 
-abstract class PersonCopyWith<$R> {
-  factory PersonCopyWith(p0.Person value, Then<p0.Person, $R> then) = _PersonCopyWithImpl<$R>;
+extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
+  PersonCopyWith<$R> get person => chain(_PersonCopyWithImpl.new);
+}
+
+abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
   $R call({String? name});
-  $R apply(p0.Person Function(p0.Person) transform);
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements PersonCopyWith<$R> {
-  _PersonCopyWithImpl(p0.Person value, Then<p0.Person, $R> then) : super(value, then);
+  _PersonCopyWithImpl(super.value, super.then);
 
   @override $R call({String? name}) => $then(p0.Person(name ?? $value.name));
 }
 
-class Car1Mapper extends BaseMapper<p1.Car> {
-  Car1Mapper._();
+class CarMapper extends BaseMapper<p1.Car> {
+  CarMapper._();
 
   @override String stringify(p1.Car self) => 'Car(brand: ${Mapper.asString(self.brand)})';
   @override int hash(p1.Car self) => Mapper.hash(self.brand);
   @override bool equals(p1.Car self, p1.Car other) => Mapper.isEqual(self.brand, other.brand);
 }
 
-extension Car1MapperExtension on p1.Car {
+extension CarMapperExtension on p1.Car {
 }
 
 
@@ -75,10 +77,10 @@ class Mapper {
   static T fromIterable<T>(Iterable<dynamic> iterable) => i.fromIterable<T>(iterable);
   static T fromJson<T>(String json) => i.fromJson<T>(json);
 
-  static dynamic toValue(dynamic value) => i.toValue(value);
-  static Map<String, dynamic> toMap(dynamic object) => i.toMap(object);
-  static Iterable<dynamic> toIterable(dynamic object) => i.toIterable(object);
-  static String toJson(dynamic object) => i.toJson(object);
+  static dynamic toValue<T>(T value) => i.toValue<T>(value);
+  static Map<String, dynamic> toMap<T>(T object) => i.toMap<T>(object);
+  static Iterable<dynamic> toIterable<T>(T object) => i.toIterable<T>(object);
+  static String toJson<T>(T object) => i.toJson<T>(object);
 
   static bool isEqual(dynamic value, Object? other) => i.isEqual(value, other);
   static int hash(dynamic value) => i.hash(value);

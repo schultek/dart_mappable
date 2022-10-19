@@ -55,7 +55,7 @@ class IterableMapper<I extends Iterable> extends BaseMapper<I>
       l, (Iterable l) => fromIterable(l.map((v) => mapper.$dec<T>(v, 'item'))));
   @override
   Function get encoder =>
-      (I self) => self.map((v) => mapper.$enc(v, 'item')).toList();
+      <T>(Iterable<T> self) => self.map((v) => mapper.$enc<T>(v, 'item')).toList();
   @override
   Function typeFactory;
 
@@ -79,8 +79,8 @@ class MapMapper<M extends Map> extends BaseMapper<M>
       (Map m) => fromMap(m.map((key, value) => MapEntry(
           mapper.$dec<K>(key, 'key'), mapper.$dec<V>(value, 'value')))));
   @override
-  Function get encoder => (M self) => self.map(
-      (key, value) => MapEntry(mapper.toValue(key), mapper.toValue(value)));
+  Function get encoder => <K, V>(Map<K, V> self) => self.map(
+      (key, value) => MapEntry(mapper.toValue<K>(key), mapper.toValue<V>(value)));
   @override
   Function typeFactory;
 

@@ -34,16 +34,33 @@ class Dealership with Mappable {
   Dealership(this.cars, this.salesRep);
 }
 
-@MappableClass()
-class ItemList<T> {
+@MappableClass(discriminatorKey: 'type')
+abstract class ItemList<T> with Mappable, ItemListMixin<T> {
   final List<T> items;
 
   ItemList(List<T>? items) : items = items ?? [];
 }
 
 @MappableClass()
-class BrandList extends ItemList<Brand?> {
+class BrandList extends ItemList<Brand?> with BrandListMixin {
   BrandList(List<Brand?>? brands) : super(brands);
+}
+
+@MappableClass()
+class NamedItemList<T> extends ItemList<T> with NamedItemListMixin<T> {
+  String name;
+  NamedItemList(this.name, List<T>? items): super(items);
+}
+
+@MappableClass()
+class KeyedItemList<K, T> extends ItemList<T> with KeyedItemListMixin<K, T> {
+  K key;
+  KeyedItemList(this.key, List<T>? items): super(items);
+}
+
+@MappableClass()
+class ComparableItemList<T extends Comparable> extends ItemList<T> with ComparableItemListMixin<T> {
+  ComparableItemList(List<T>? items): super(items);
 }
 
 void main() {
@@ -120,8 +137,27 @@ void main() {
       expect(list.items.length, equals(2));
       list = list.copyWith.items.add(Brand('Skoda'));
       expect(list.items.length, equals(3));
-      list = list.copyWith(brands: null);
+      list = list.copyWith(items: null);
       expect(list.items.length, equals(0));
+    });
+
+    test('Should use generic copyWith', () {
+      ItemList<int> list = NamedItemList('Test', [1, 2]);
+      var list2 = list.copyWith(items: [3]);
+      expect(list2, isA<NamedItemList<int>>());
+      expect(list2.items, equals([3]));
+
+      list = KeyedItemList<String, int>('key', [4, 2]);
+      list2 = list.copyWith(items: [1]);
+      expect(list2, isA<KeyedItemList<String, int>>());
+      expect((list2 as KeyedItemList).key, equals('key'));
+
+      list = ComparableItemList([2, 5]);
+      list2 = list.copyWith(items: [1]);
+      expect(list2, isA<ComparableItemList<int>>());
+
+      var list3 = list.copyWith.items.at(0)!.apply((v) => v+1);
+      expect(list3, equals(ComparableItemList([3, 5])));
     });
   });
 }

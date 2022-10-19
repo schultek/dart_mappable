@@ -36,7 +36,7 @@ class MappableOptions {
             GenerateMethods.parse(toList(options['generateMethods'])),
         ignoreAnnotated = false;
 
-  bool shouldGenerateFor(ClassElement element) {
+  bool shouldGenerateFor(InterfaceElement element) {
     return types.shouldGenerateFor(element);
   }
 
@@ -100,7 +100,7 @@ abstract class TypeOptions {
   TypeOptions joinWith(TypeOptions types, bool forceJoin);
   TypeOptions unionWith(TypeOptions types);
 
-  bool shouldGenerateFor(ClassElement element);
+  bool shouldGenerateFor(InterfaceElement element);
 
   List<T> sub<T>(List<T> a, List<T> b) {
     return a.where((x) => !b.contains(x)).toList();
@@ -123,7 +123,7 @@ class AnyTypeOptions extends TypeOptions {
   TypeOptions unionWith(TypeOptions types) => types;
 
   @override
-  bool shouldGenerateFor(ClassElement element) => false;
+  bool shouldGenerateFor(InterfaceElement element) => false;
 }
 
 class IncludeTypeOptions extends TypeOptions {
@@ -155,8 +155,8 @@ class IncludeTypeOptions extends TypeOptions {
   }
 
   @override
-  bool shouldGenerateFor(ClassElement element) {
-    return include.any((t) => t.element == element);
+  bool shouldGenerateFor(InterfaceElement element) {
+    return include.any((t) => t.element2 == element);
   }
 }
 
@@ -187,8 +187,8 @@ class ExcludeTypeOptions extends TypeOptions {
   }
 
   @override
-  bool shouldGenerateFor(ClassElement element) {
-    return exclude.every((t) => t.element != element) &&
-        !element.isDartCoreObject;
+  bool shouldGenerateFor(InterfaceElement element) {
+    return exclude.every((t) => t.element2 != element) &&
+        !(element is ClassElement && element.isDartCoreObject);
   }
 }

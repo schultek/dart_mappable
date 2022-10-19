@@ -73,6 +73,11 @@ class MapperException implements Exception {
         'or register a custom mapper?');
   }
 
+  factory MapperException.unresolvedType(String type) {
+    return MapperException._('Cannot resolve type from property "$type". '
+        'Invalid or unregistered type.');
+  }
+
   /// Checks if this is an unsupported operation exception
   bool isUnsupportedOrUnallowed() =>
       message.startsWith('Unsupported operation') ||
@@ -80,7 +85,7 @@ class MapperException implements Exception {
 }
 
 /// Method indicator used for exceptions
-enum MapperMethod { decode, encode, stringify, equals, hash }
+enum MapperMethod { decode, encode, stringify, equals, hash, copy }
 
 class _ChainedMapperException implements MapperException {
   _ChainedMapperException(this.method, this.hint, this.error);

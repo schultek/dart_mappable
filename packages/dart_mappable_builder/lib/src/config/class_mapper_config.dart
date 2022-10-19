@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'parameter_config.dart';
@@ -19,9 +20,11 @@ class ClassMapperConfig {
   final ClassMapperConfig? superConfig;
   final List<ClassMapperConfig> subConfigs;
   final List<ParameterConfig> params;
-  final String typeParamsDeclaration;
+  final List<String> typeParamsList;
+  final List<String> superTypeArgs;
 
-  final int? prefix;
+  final int? importPrefix;
+  final int nameIndex;
 
   ClassMapperConfig({
     required this.element,
@@ -35,19 +38,20 @@ class ClassMapperConfig {
     required this.superConfig,
     required this.subConfigs,
     required this.params,
-    required this.typeParamsDeclaration,
-    required this.prefix,
+    required this.typeParamsList,
+    required this.superTypeArgs,
+    required this.importPrefix,
+    required this.nameIndex,
   }) {
     checkUnresolvedParameters();
   }
 
   String get className => element.name;
   String get prefixedClassName =>
-      '${prefix != null ? 'p$prefix.' : ''}$className';
+      '${importPrefix != null ? 'p$importPrefix.' : ''}$className';
   String get uniqueClassName =>
-      '$className${prefix != null && prefix != 0 ? '$prefix' : ''}';
-  String get mapperName =>
-      '$className${prefix != null && prefix != 0 ? prefix : ''}Mapper';
+      '$className${nameIndex != 0 ? '$nameIndex' : ''}';
+  String get mapperName => '$className${nameIndex != 0 ? nameIndex : ''}Mapper';
 
   Iterable<FieldElement> get allPublicFields sync* {
     yield* superConfig?.allPublicFields ?? [];
@@ -70,6 +74,29 @@ class ClassMapperConfig {
   late String typeParams = element.typeParameters.isNotEmpty
       ? '<${element.typeParameters.map((p) => p.name).join(', ')}>'
       : '';
+
+  late String superTypeParams = element.typeParameters.isNotEmpty
+      ? '<${element.typeParameters.map((p) => element.supertype!.typeArguments.any((t) => t is TypeParameterType && t.element2 == p) ? p.name : 'dynamic').join(', ')}>'
+      : '';
+
+  late String typeParamsDeclaration =
+      typeParamsList.isNotEmpty ? '<${typeParamsList.join(', ')}>' : '';
+
+  late List<ParameterConfig> copySafeParams = (() {
+    if (subConfigs.isEmpty) return params;
+
+    var safeParams = <ParameterConfig>[];
+
+    for (var param in params) {
+      if (subConfigs.every((c) => c.copySafeParams
+          .whereType<SuperParameterConfig>()
+          .any((p) => p.superParameter.parameter == param.parameter))) {
+        safeParams.add(param);
+      }
+    }
+
+    return safeParams;
+  })();
 
   void checkUnresolvedParameters() {
     var unresolved = params.whereType<UnresolvedParameterConfig>();

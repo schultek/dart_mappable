@@ -18,7 +18,7 @@ class Cat extends Animal {
 @MappableClass(discriminatorValue: 1)
 class Dog extends Animal {
   int age;
-  Dog(String name, this.age) : super(name);
+  Dog(this.age) : super('Good Boy');
 }
 
 @MappableClass(discriminatorValue: null)
@@ -31,6 +31,13 @@ class DefaultAnimal extends Animal {
   String type;
 
   DefaultAnimal(String name, this.type) : super(name);
+}
+
+@MappableClass()
+class Zoo {
+  Animal animal;
+
+  Zoo(this.animal);
 }
 
 void main() {
@@ -46,7 +53,7 @@ void main() {
     test('Decode object', () {
       Animal myPet = Mapper.fromJson('{"name":"Kobi","age": 4,"type":1}');
       expect(myPet, isA<Dog>());
-      expect(myPet.toMap(), equals({'name': 'Kobi', 'age': 4, 'type': 1}));
+      expect(myPet.toMap(), equals({'age': 4, 'type': 1}));
     });
 
     test('Decode fallback', () {

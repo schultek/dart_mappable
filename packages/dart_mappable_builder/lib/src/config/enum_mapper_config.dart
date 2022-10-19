@@ -2,25 +2,27 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 class EnumMapperConfig {
-  final ClassElement element;
+  final EnumElement element;
 
   final ValuesMode mode;
   final CaseStyle? caseStyle;
   final int? defaultValue;
 
-  final int? prefix;
+  final int? importPrefix;
+  final int nameIndex;
 
   EnumMapperConfig({
     required this.element,
     required this.mode,
     required this.caseStyle,
     required this.defaultValue,
-    required this.prefix,
+    required this.importPrefix,
+    required this.nameIndex,
   });
 
   String get className => element.name;
   String get prefixedClassName =>
-      '${prefix != null ? 'p$prefix.' : ''}$className';
-  String get mapperName => '${className}Mapper';
+      '${importPrefix != null ? 'p$importPrefix.' : ''}$className';
+  String get mapperName => '$className${nameIndex != 0 ? '$nameIndex' : ''}Mapper';
   String get paramName => className[0].toLowerCase();
 }

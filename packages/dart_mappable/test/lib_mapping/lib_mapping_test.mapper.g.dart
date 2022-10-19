@@ -14,10 +14,11 @@ import 'other/other.dart' as p3;
 var _mappers = <BaseMapper>{
   // class mappers
   PersonMapper._(),
-  Apple1Mapper._(),
-  Cake1Mapper._(),
-  Car2Mapper._(),
-  Animal3Mapper._(),
+  AppleMapper._(),
+  CakeMapper._(),
+  CarMapper._(),
+  Person1Mapper._(),
+  AnimalMapper._(),
   // enum mappers
   // custom mappers
 };
@@ -32,7 +33,7 @@ class PersonMapper extends BaseMapper<p0.Person> {
   p0.Person decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Person fromMap(Map<String, dynamic> map) => p0.Person(Mapper.i.$get(map, 'first_name'));
 
-  @override Function get encoder => (p0.Person v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Person v) => toMap(v);
   Map<String, dynamic> toMap(p0.Person p) => {'first_name': Mapper.i.$enc(p.firstName, 'firstName')};
 
@@ -46,29 +47,31 @@ class PersonMapper extends BaseMapper<p0.Person> {
 extension PersonMapperExtension on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<p0.Person> get copyWith => PersonCopyWith(this, $identity);
+  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity);
 }
 
-abstract class PersonCopyWith<$R> {
-  factory PersonCopyWith(p0.Person value, Then<p0.Person, $R> then) = _PersonCopyWithImpl<$R>;
+extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
+  PersonCopyWith<$R> get person => chain(_PersonCopyWithImpl.new);
+}
+
+abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
   $R call({String? firstName});
-  $R apply(p0.Person Function(p0.Person) transform);
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements PersonCopyWith<$R> {
-  _PersonCopyWithImpl(p0.Person value, Then<p0.Person, $R> then) : super(value, then);
+  _PersonCopyWithImpl(super.value, super.then);
 
   @override $R call({String? firstName}) => $then(p0.Person(firstName ?? $value.firstName));
 }
 
-class Apple1Mapper extends BaseMapper<p1.Apple> {
-  Apple1Mapper._();
+class AppleMapper extends BaseMapper<p1.Apple> {
+  AppleMapper._();
 
   @override Function get decoder => decode;
   p1.Apple decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p1.Apple fromMap(Map<String, dynamic> map) => p1.Apple(Mapper.i.$get(map, 'is_red'));
 
-  @override Function get encoder => (p1.Apple v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p1.Apple v) => toMap(v);
   Map<String, dynamic> toMap(p1.Apple a) => {'is_red': Mapper.i.$enc(a.isRed, 'isRed')};
 
@@ -76,36 +79,37 @@ class Apple1Mapper extends BaseMapper<p1.Apple> {
   @override int hash(p1.Apple self) => Mapper.hash(self.isRed);
   @override bool equals(p1.Apple self, p1.Apple other) => Mapper.isEqual(self.isRed, other.isRed);
 
-  @override String get id => 'Apple1';
   @override Function get typeFactory => (f) => f<p1.Apple>();
 }
 
-extension Apple1MapperExtension on p1.Apple {
+extension AppleMapperExtension on p1.Apple {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  Apple1CopyWith<p1.Apple> get copyWith => Apple1CopyWith(this, $identity);
+  AppleCopyWith<p1.Apple> get copyWith => _AppleCopyWithImpl(this, $identity);
 }
 
-abstract class Apple1CopyWith<$R> {
-  factory Apple1CopyWith(p1.Apple value, Then<p1.Apple, $R> then) = _Apple1CopyWithImpl<$R>;
+extension AppleObjectCopy<$R> on ObjectCopyWith<$R, p1.Apple> {
+  AppleCopyWith<$R> get apple => chain(_AppleCopyWithImpl.new);
+}
+
+abstract class AppleCopyWith<$R> implements ObjectCopyWith<$R, p1.Apple> {
   $R call({bool? isRed});
-  $R apply(p1.Apple Function(p1.Apple) transform);
 }
 
-class _Apple1CopyWithImpl<$R> extends BaseCopyWith<p1.Apple, $R> implements Apple1CopyWith<$R> {
-  _Apple1CopyWithImpl(p1.Apple value, Then<p1.Apple, $R> then) : super(value, then);
+class _AppleCopyWithImpl<$R> extends BaseCopyWith<p1.Apple, $R> implements AppleCopyWith<$R> {
+  _AppleCopyWithImpl(super.value, super.then);
 
   @override $R call({bool? isRed}) => $then(p1.Apple(isRed ?? $value.isRed));
 }
 
-class Cake1Mapper extends BaseMapper<p1.Cake> {
-  Cake1Mapper._();
+class CakeMapper extends BaseMapper<p1.Cake> {
+  CakeMapper._();
 
   @override Function get decoder => decode;
   p1.Cake decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p1.Cake fromMap(Map<String, dynamic> map) => p1.Cake(Mapper.i.$get(map, 'type'));
 
-  @override Function get encoder => (p1.Cake v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p1.Cake v) => toMap(v);
   Map<String, dynamic> toMap(p1.Cake c) => {'type': Mapper.i.$enc(c.type, 'type')};
 
@@ -113,36 +117,37 @@ class Cake1Mapper extends BaseMapper<p1.Cake> {
   @override int hash(p1.Cake self) => Mapper.hash(self.type);
   @override bool equals(p1.Cake self, p1.Cake other) => Mapper.isEqual(self.type, other.type);
 
-  @override String get id => 'Cake1';
   @override Function get typeFactory => (f) => f<p1.Cake>();
 }
 
-extension Cake1MapperExtension on p1.Cake {
+extension CakeMapperExtension on p1.Cake {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  Cake1CopyWith<p1.Cake> get copyWith => Cake1CopyWith(this, $identity);
+  CakeCopyWith<p1.Cake> get copyWith => _CakeCopyWithImpl(this, $identity);
 }
 
-abstract class Cake1CopyWith<$R> {
-  factory Cake1CopyWith(p1.Cake value, Then<p1.Cake, $R> then) = _Cake1CopyWithImpl<$R>;
+extension CakeObjectCopy<$R> on ObjectCopyWith<$R, p1.Cake> {
+  CakeCopyWith<$R> get cake => chain(_CakeCopyWithImpl.new);
+}
+
+abstract class CakeCopyWith<$R> implements ObjectCopyWith<$R, p1.Cake> {
   $R call({String? type});
-  $R apply(p1.Cake Function(p1.Cake) transform);
 }
 
-class _Cake1CopyWithImpl<$R> extends BaseCopyWith<p1.Cake, $R> implements Cake1CopyWith<$R> {
-  _Cake1CopyWithImpl(p1.Cake value, Then<p1.Cake, $R> then) : super(value, then);
+class _CakeCopyWithImpl<$R> extends BaseCopyWith<p1.Cake, $R> implements CakeCopyWith<$R> {
+  _CakeCopyWithImpl(super.value, super.then);
 
   @override $R call({String? type}) => $then(p1.Cake(type ?? $value.type));
 }
 
-class Car2Mapper extends BaseMapper<p2.Car> {
-  Car2Mapper._();
+class CarMapper extends BaseMapper<p2.Car> {
+  CarMapper._();
 
   @override Function get decoder => decode;
   p2.Car decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p2.Car fromMap(Map<String, dynamic> map) => p2.Car(Mapper.i.$get(map, 'brand_name'));
 
-  @override Function get encoder => (p2.Car v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p2.Car v) => toMap(v);
   Map<String, dynamic> toMap(p2.Car c) => {'brand_name': Mapper.i.$enc(c.brandName, 'brandName')};
 
@@ -150,36 +155,76 @@ class Car2Mapper extends BaseMapper<p2.Car> {
   @override int hash(p2.Car self) => Mapper.hash(self.brandName);
   @override bool equals(p2.Car self, p2.Car other) => Mapper.isEqual(self.brandName, other.brandName);
 
-  @override String get id => 'Car2';
   @override Function get typeFactory => (f) => f<p2.Car>();
 }
 
-extension Car2MapperExtension on p2.Car {
+extension CarMapperExtension on p2.Car {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  Car2CopyWith<p2.Car> get copyWith => Car2CopyWith(this, $identity);
+  CarCopyWith<p2.Car> get copyWith => _CarCopyWithImpl(this, $identity);
 }
 
-abstract class Car2CopyWith<$R> {
-  factory Car2CopyWith(p2.Car value, Then<p2.Car, $R> then) = _Car2CopyWithImpl<$R>;
+extension CarObjectCopy<$R> on ObjectCopyWith<$R, p2.Car> {
+  CarCopyWith<$R> get car => chain(_CarCopyWithImpl.new);
+}
+
+abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p2.Car> {
   $R call({String? brandName});
-  $R apply(p2.Car Function(p2.Car) transform);
 }
 
-class _Car2CopyWithImpl<$R> extends BaseCopyWith<p2.Car, $R> implements Car2CopyWith<$R> {
-  _Car2CopyWithImpl(p2.Car value, Then<p2.Car, $R> then) : super(value, then);
+class _CarCopyWithImpl<$R> extends BaseCopyWith<p2.Car, $R> implements CarCopyWith<$R> {
+  _CarCopyWithImpl(super.value, super.then);
 
   @override $R call({String? brandName}) => $then(p2.Car(brandName ?? $value.brandName));
 }
 
-class Animal3Mapper extends BaseMapper<p3.Animal> {
-  Animal3Mapper._();
+class Person1Mapper extends BaseMapper<p2.Person> {
+  Person1Mapper._();
+
+  @override Function get decoder => decode;
+  p2.Person decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p2.Person fromMap(Map<String, dynamic> map) => p2.Person(Mapper.i.$get(map, 'first_name'));
+
+  @override Function get encoder => encode;
+  dynamic encode(p2.Person v) => toMap(v);
+  Map<String, dynamic> toMap(p2.Person p) => {'first_name': Mapper.i.$enc(p.firstName, 'firstName')};
+
+  @override String stringify(p2.Person self) => 'Person(firstName: ${Mapper.asString(self.firstName)})';
+  @override int hash(p2.Person self) => Mapper.hash(self.firstName);
+  @override bool equals(p2.Person self, p2.Person other) => Mapper.isEqual(self.firstName, other.firstName);
+
+  @override String get id => 'Person1';
+  @override Function get typeFactory => (f) => f<p2.Person>();
+}
+
+extension Person1MapperExtension on p2.Person {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  Person1CopyWith<p2.Person> get copyWith => _Person1CopyWithImpl(this, $identity);
+}
+
+extension Person1ObjectCopy<$R> on ObjectCopyWith<$R, p2.Person> {
+  Person1CopyWith<$R> get person => chain(_Person1CopyWithImpl.new);
+}
+
+abstract class Person1CopyWith<$R> implements ObjectCopyWith<$R, p2.Person> {
+  $R call({String? firstName});
+}
+
+class _Person1CopyWithImpl<$R> extends BaseCopyWith<p2.Person, $R> implements Person1CopyWith<$R> {
+  _Person1CopyWithImpl(super.value, super.then);
+
+  @override $R call({String? firstName}) => $then(p2.Person(firstName ?? $value.firstName));
+}
+
+class AnimalMapper extends BaseMapper<p3.Animal> {
+  AnimalMapper._();
 
   @override Function get decoder => decode;
   p3.Animal decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p3.Animal fromMap(Map<String, dynamic> map) => p3.Animal(Mapper.i.$get(map, 'color'));
 
-  @override Function get encoder => (p3.Animal v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p3.Animal v) => toMap(v);
   Map<String, dynamic> toMap(p3.Animal a) => {'color': Mapper.i.$enc(a.color, 'color')};
 
@@ -187,24 +232,25 @@ class Animal3Mapper extends BaseMapper<p3.Animal> {
   @override int hash(p3.Animal self) => Mapper.hash(self.color);
   @override bool equals(p3.Animal self, p3.Animal other) => Mapper.isEqual(self.color, other.color);
 
-  @override String get id => 'Animal3';
   @override Function get typeFactory => (f) => f<p3.Animal>();
 }
 
-extension Animal3MapperExtension on p3.Animal {
+extension AnimalMapperExtension on p3.Animal {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  Animal3CopyWith<p3.Animal> get copyWith => Animal3CopyWith(this, $identity);
+  AnimalCopyWith<p3.Animal> get copyWith => _AnimalCopyWithImpl(this, $identity);
 }
 
-abstract class Animal3CopyWith<$R> {
-  factory Animal3CopyWith(p3.Animal value, Then<p3.Animal, $R> then) = _Animal3CopyWithImpl<$R>;
+extension AnimalObjectCopy<$R> on ObjectCopyWith<$R, p3.Animal> {
+  AnimalCopyWith<$R> get animal => chain(_AnimalCopyWithImpl.new);
+}
+
+abstract class AnimalCopyWith<$R> implements ObjectCopyWith<$R, p3.Animal> {
   $R call({String? color});
-  $R apply(p3.Animal Function(p3.Animal) transform);
 }
 
-class _Animal3CopyWithImpl<$R> extends BaseCopyWith<p3.Animal, $R> implements Animal3CopyWith<$R> {
-  _Animal3CopyWithImpl(p3.Animal value, Then<p3.Animal, $R> then) : super(value, then);
+class _AnimalCopyWithImpl<$R> extends BaseCopyWith<p3.Animal, $R> implements AnimalCopyWith<$R> {
+  _AnimalCopyWithImpl(super.value, super.then);
 
   @override $R call({String? color}) => $then(p3.Animal(color ?? $value.color));
 }
@@ -227,10 +273,10 @@ class Mapper {
   static T fromIterable<T>(Iterable<dynamic> iterable) => i.fromIterable<T>(iterable);
   static T fromJson<T>(String json) => i.fromJson<T>(json);
 
-  static dynamic toValue(dynamic value) => i.toValue(value);
-  static Map<String, dynamic> toMap(dynamic object) => i.toMap(object);
-  static Iterable<dynamic> toIterable(dynamic object) => i.toIterable(object);
-  static String toJson(dynamic object) => i.toJson(object);
+  static dynamic toValue<T>(T value) => i.toValue<T>(value);
+  static Map<String, dynamic> toMap<T>(T object) => i.toMap<T>(object);
+  static Iterable<dynamic> toIterable<T>(T object) => i.toIterable<T>(object);
+  static String toJson<T>(T object) => i.toJson<T>(object);
 
   static bool isEqual(dynamic value, Object? other) => i.isEqual(value, other);
   static int hash(dynamic value) => i.hash(value);
