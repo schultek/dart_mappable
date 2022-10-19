@@ -82,7 +82,7 @@ class MappableBuilder implements Builder {
         '  // enum mappers\n'
         '${enumMappers.map((em) => '  ${em.config.mapperName}._(),\n').join()}'
         '  // custom mappers\n'
-        '${customMappers.map((e) => '  ${e.prefixedMapperName}(),\n').join()}'
+        '${customMappers.map((e) => '  ${e.prefixedMapperName}${e.isClass ? '()' : ''},\n').join()}'
         '};\n'
         '\n\n'
         '// === GENERATED CLASS MAPPERS AND EXTENSIONS ===\n\n'

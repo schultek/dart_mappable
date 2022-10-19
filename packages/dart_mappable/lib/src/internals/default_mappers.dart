@@ -54,8 +54,8 @@ class IterableMapper<I extends Iterable> extends BaseMapper<I>
   Function get decoder => <T>(dynamic l) => checked(
       l, (Iterable l) => fromIterable(l.map((v) => mapper.$dec<T>(v, 'item'))));
   @override
-  Function get encoder =>
-      <T>(Iterable<T> self) => self.map((v) => mapper.$enc<T>(v, 'item')).toList();
+  Function get encoder => <T>(Iterable<T> self) =>
+      self.map((v) => mapper.$enc<T>(v, 'item')).toList();
   @override
   Function typeFactory;
 
@@ -79,8 +79,8 @@ class MapMapper<M extends Map> extends BaseMapper<M>
       (Map m) => fromMap(m.map((key, value) => MapEntry(
           mapper.$dec<K>(key, 'key'), mapper.$dec<V>(value, 'value')))));
   @override
-  Function get encoder => <K, V>(Map<K, V> self) => self.map(
-      (key, value) => MapEntry(mapper.toValue<K>(key), mapper.toValue<V>(value)));
+  Function get encoder => <K, V>(Map<K, V> self) => self.map((key, value) =>
+      MapEntry(mapper.toValue<K>(key), mapper.toValue<V>(value)));
   @override
   Function typeFactory;
 
@@ -122,4 +122,83 @@ class MapperEquality implements Equality {
   int hash(dynamic e) => mapper.hash(e);
   @override
   bool isValidKey(Object? o) => true;
+}
+
+typedef SerializableDecoder1<T> = T Function<A>(
+    Map<String, dynamic>, A Function(Object?));
+typedef SerializableEncoder1<T> = Object Function(Object? Function(dynamic))
+    Function(T);
+typedef TypeFactory1<T> = Object? Function<A>(
+    Object? Function<V extends T>() f);
+
+typedef SerializableDecoder2<T> = T Function<A, B>(
+    Map<String, dynamic>, A Function(Object?), B Function(Object?));
+typedef SerializableEncoder2<T> = Object Function(
+        Object? Function(dynamic), Object? Function(dynamic))
+    Function(T);
+typedef TypeFactory2<T> = Object? Function<A, B>(
+    Object? Function<V extends T>() f);
+
+class SerializableMapper<T> extends BaseMapper<T> {
+  factory SerializableMapper({
+    required T Function(Map<String, dynamic>) decode,
+    required Object Function() Function(T) encode,
+    required Object Function(Object Function<V extends T>() f) type,
+    required MapperContainer mapper,
+  }) {
+    return SerializableMapper._(
+      decoder: (v) => checked<T, Map<String, dynamic>>(v, decode),
+      encoder: (T value) => encode(value)(),
+      typeFactory: type,
+    );
+  }
+
+  factory SerializableMapper.arg1({
+    required SerializableDecoder1<T> decode,
+    required SerializableEncoder1<T> encode,
+    required TypeFactory1<T> type,
+    required MapperContainer mapper,
+  }) {
+    d<V>(dynamic v) => mapper.fromValue<V>(v);
+    e<V>(dynamic v) => mapper.toValue<V>(v as V);
+    return SerializableMapper._(
+      decoder: <A>(v) =>
+          checked<T, Map<String, dynamic>>(v, (m) => decode<A>(m, d)),
+      encoder: <A>(T v) => type<A>(
+          <V extends T>() => checked<Object?, V>(v, (d) => encode(d)(e<A>))),
+      typeFactory: type,
+    );
+  }
+
+  factory SerializableMapper.arg2({
+    required SerializableDecoder2<T> decode,
+    required SerializableEncoder2<T> encode,
+    required TypeFactory2<T> type,
+    required MapperContainer mapper,
+  }) {
+    d<V>(dynamic v) => mapper.fromValue<V>(v);
+    e<V>(dynamic v) => mapper.toValue<V>(v as V);
+    return SerializableMapper._(
+      decoder: <A, B>(v) =>
+          checked<T, Map<String, dynamic>>(v, (m) => decode<A, B>(m, d, d)),
+      encoder: <A, B>(T v) => type<A, B>(<V extends T>() =>
+          checked<Object?, V>(v, (x) => encode(x)(e<A>, e<B>))),
+      typeFactory: type,
+    );
+  }
+
+  SerializableMapper._({
+    required this.decoder,
+    required this.encoder,
+    required this.typeFactory,
+  });
+
+  @override
+  late Function decoder;
+
+  @override
+  late Function encoder;
+
+  @override
+  late Function typeFactory;
 }

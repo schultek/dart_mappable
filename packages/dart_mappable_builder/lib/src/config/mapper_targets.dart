@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 
 import '../builder_options.dart';
@@ -23,22 +24,41 @@ class MapperTargets {
     var elements = elementsOf(library);
 
     for (var element in elements) {
-      if (element is ClassElement &&
-          customMapperChecker.hasAnnotationOf(element)) {
-        var mapperIndex = element.allSupertypes
+      if (customMapperChecker.hasAnnotationOf(element)) {
+        InterfaceType type;
+        if (element is ClassElement) {
+          type = element.thisType;
+          if (!mapperChecker.isAssignableFromType(type)) {
+            throw UnsupportedError(
+                'Classes marked with @CustomMapper must extend the BaseMapper class.');
+          }
+        } else if (element is TopLevelVariableElement) {
+          var t = element.type;
+          if (t is! InterfaceType || !mapperChecker.isAssignableFromType(t)) {
+            throw UnsupportedError(
+                'Variables marked with @CustomMapper must be of type BaseMapper.');
+          }
+          type = t;
+        } else {
+          throw UnsupportedError('The @CustomMapper annotation can only be '
+              'applied to classes and top level variables.');
+        }
+
+        var mapperIndex = type.allSupertypes
             .indexWhere((t) => mapperChecker.isExactlyType(t));
         if (mapperIndex == -1) {
           throw UnsupportedError(
-              'Classes marked with @CustomMapper must extend the BaseMapper class');
+              'Elements marked with @CustomMapper must extend the BaseMapper class.');
         }
-        var type = element.allSupertypes[mapperIndex].typeArguments[0];
+        var targetType = type.allSupertypes[mapperIndex].typeArguments[0];
         var libPrefix = imports.add(library.source.uri);
 
-        customMappers[type.element2!] = CustomMapperConfig(
-          element: element,
+        customMappers[targetType.element2!] = CustomMapperConfig(
+          name: element.name!,
+          isClass: element is ClassElement,
           prefix: libPrefix,
         );
-      } else {
+      } else if (element is InterfaceElement) {
         var shouldGenerate = options.shouldGenerateFor(element);
         if (!shouldGenerate && !options.ignoreAnnotated) {
           shouldGenerate = (element is ClassElement &&
@@ -108,10 +128,11 @@ class MapperTargets {
   }
 
   /// All of the declared classes and enums in this library.
-  Iterable<InterfaceElement> elementsOf(LibraryElement element) sync* {
+  Iterable<Element> elementsOf(LibraryElement element) sync* {
     for (var cu in element.units) {
       yield* cu.enums2;
       yield* cu.classes;
+      yield* cu.topLevelVariables;
     }
   }
 
