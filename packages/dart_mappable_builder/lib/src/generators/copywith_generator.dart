@@ -129,7 +129,7 @@ class CopyWithGenerator {
     if (config.hasCallableConstructor) {
       snippets.add(
           'extension ${config.uniqueClassName}ObjectCopy<\$R$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam> {\n'
-          '  ${config.uniqueClassName}CopyWith<\$R$valueTypeParam$classTypeParams> get ${CaseStyle.camelCase.transform(config.className)} => chain(_${config.uniqueClassName}CopyWithImpl.new);\n'
+          '  ${config.uniqueClassName}CopyWith<\$R$valueTypeParam$classTypeParams> get ${CaseStyle.camelCase.transform(config.className)} => chain((v, t) => _${config.uniqueClassName}CopyWithImpl(v, t));\n'
           '}\n\n');
     }
 

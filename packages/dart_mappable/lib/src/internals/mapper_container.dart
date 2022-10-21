@@ -241,6 +241,7 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
     _mappers.addEntries(mappers.map((m) {
       return MapEntry(TypeRegistry.instance.idOf(m.type)!, m);
     }));
+    mappers.whereType<NeedsMapperContainer>().forEach((m) => m.mapper = this);
   }
 
   @override
