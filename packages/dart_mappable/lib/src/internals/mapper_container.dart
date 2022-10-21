@@ -43,9 +43,9 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
       PrimitiveMapper<num>((v) => num.parse(v.toString())),
       PrimitiveMapper<bool>((v) => v is num ? v != 0 : v.toString() == 'true'),
       DateTimeMapper(),
-      IterableMapper<List>(<T>(i) => i.toList(), <T>(f) => f<List<T>>(), this),
-      IterableMapper<Set>(<T>(i) => i.toSet(), <T>(f) => f<Set<T>>(), this),
-      MapMapper<Map>(<K, V>(map) => map, <K, V>(f) => f<Map<K, V>>(), this),
+      IterableMapper<List>(<T>(i) => i.toList(), <T>(f) => f<List<T>>()),
+      IterableMapper<Set>(<T>(i) => i.toSet(), <T>(f) => f<Set<T>>()),
+      MapMapper<Map>(<K, V>(map) => map, <K, V>(f) => f<Map<K, V>>()),
       ...mappers,
     ]);
   }

@@ -15,7 +15,7 @@ var _mappers = <BaseMapper>{
   BMapper._(),
   // enum mappers
   // custom mappers
-  p0.iMapMapper,
+  p0.IMapMapper(),
   p0.iListMapper,
 };
 

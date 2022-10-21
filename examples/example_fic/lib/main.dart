@@ -6,11 +6,14 @@ import 'ilist_copy_with.dart';
 import 'main.mapper.g.dart';
 
 @CustomMapper()
-final iMapMapper = SerializableMapper<IMap>.arg2(
-  decode: IMap.fromJson,
-  encode: (map) => map.toJson,
-  type: <Key, Val>(f) => f<IMap<Key, Val>>(),
-);
+class IMapMapper extends SerializableMapper<IMap> {
+  IMapMapper()
+      : super.arg2(
+          decode: IMap.fromJson,
+          encode: (map) => map.toJson,
+          type: <Key, Val>(f) => f<IMap<Key, Val>>(),
+        );
+}
 
 @CustomMapper()
 final iListMapper = SerializableMapper<IList>.arg1(

@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 
+import '../../internals.dart';
 import '../core/mapper_exception.dart';
 import '../core/mappers.dart';
 import 'mapper_container.dart';
@@ -49,10 +50,10 @@ class DateTimeMapper extends SimpleMapper<DateTime>
 }
 
 class IterableMapper<I extends Iterable> extends BaseMapper<I>
-    with MapperEqualityMixin<I> {
+    with MapperEqualityMixin<I>, NeedsMapperContainer {
   Iterable<U> Function<U>(Iterable<U> iterable) fromIterable;
-  final MapperContainer mapper;
-  IterableMapper(this.fromIterable, this.typeFactory, this.mapper);
+
+  IterableMapper(this.fromIterable, this.typeFactory);
 
   @override
   Function get decoder => <T>(dynamic l) => checked(
@@ -64,7 +65,7 @@ class IterableMapper<I extends Iterable> extends BaseMapper<I>
   Function typeFactory;
 
   @override
-  late Equality equality = IterableEquality(MapperEquality(mapper));
+  Equality get equality => IterableEquality(MapperEquality(mapper));
 
   @override
   String stringify(I self) =>
@@ -72,10 +73,10 @@ class IterableMapper<I extends Iterable> extends BaseMapper<I>
 }
 
 class MapMapper<M extends Map> extends BaseMapper<M>
-    with MapperEqualityMixin<M> {
+    with MapperEqualityMixin<M>, NeedsMapperContainer {
   Map<K, V> Function<K, V>(Map<K, V> map) fromMap;
-  final MapperContainer mapper;
-  MapMapper(this.fromMap, this.typeFactory, this.mapper);
+
+  MapMapper(this.fromMap, this.typeFactory);
 
   @override
   Function get decoder => <K, V>(dynamic m) => checked(
@@ -89,7 +90,7 @@ class MapMapper<M extends Map> extends BaseMapper<M>
   Function typeFactory;
 
   @override
-  late Equality equality =
+  Equality get equality =>
       MapEquality(keys: MapperEquality(mapper), values: MapperEquality(mapper));
 
   @override
@@ -142,8 +143,6 @@ typedef SerializableEncoder2<T> = Object Function(
 typedef TypeFactory2 = Object? Function<A, B>(Object? Function<V>() f);
 
 class SerializableMapper<T> extends BaseMapper<T> with NeedsMapperContainer {
-  SerializableMapper._();
-
   @override
   late Function decoder;
 
@@ -153,36 +152,15 @@ class SerializableMapper<T> extends BaseMapper<T> with NeedsMapperContainer {
   @override
   late Function typeFactory;
 
-  factory SerializableMapper({
+  SerializableMapper({
     required T Function(Map<String, dynamic>) decode,
     required Object Function() Function(T) encode,
     required Object Function(Object Function<V>() f) type,
-  }) {
-    return SerializableMapper._()
-      ..decoder = ((v) => checked<T, Map<String, dynamic>>(v, decode))
-      ..encoder = ((T value) => encode(value)())
-      ..typeFactory = (f) => f<T>();
-  }
+  })  : decoder = ((v) => checked<T, Map<String, dynamic>>(v, decode)),
+        encoder = ((T value) => encode(value)()),
+        typeFactory = ((f) => f<T>());
 
-  factory SerializableMapper.arg1({
-    required SerializableDecoder1<T> decode,
-    required SerializableEncoder1<T> encode,
-    required TypeFactory1 type,
-  }) {
-    return SerializableMapper._()
-      .._initArg1(decode: decode, encode: encode, type: type);
-  }
-
-  factory SerializableMapper.arg2({
-    required SerializableDecoder2<T> decode,
-    required SerializableEncoder2<T> encode,
-    required TypeFactory2 type,
-  }) {
-    return SerializableMapper._()
-      .._initArg2(decode: decode, encode: encode, type: type);
-  }
-
-  void _initArg1({
+  SerializableMapper.arg1({
     required SerializableDecoder1<T> decode,
     required SerializableEncoder1<T> encode,
     required TypeFactory1 type,
@@ -196,7 +174,7 @@ class SerializableMapper<T> extends BaseMapper<T> with NeedsMapperContainer {
     typeFactory = type;
   }
 
-  void _initArg2({
+  SerializableMapper.arg2({
     required SerializableDecoder2<T> decode,
     required SerializableEncoder2<T> encode,
     required TypeFactory2 type,
