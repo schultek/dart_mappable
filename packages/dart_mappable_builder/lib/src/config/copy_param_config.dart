@@ -4,6 +4,7 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../imports_builder.dart';
+import '../utils.dart';
 import 'class_mapper_config.dart';
 import 'parameter_config.dart';
 
@@ -32,16 +33,12 @@ class CopyParamConfig {
         return null;
       }
 
-      CopyParamConfig makeCollectionConfig(
-        int valueIndex,
-          String name
-      ) {
+      CopyParamConfig makeCollectionConfig(int valueIndex, String name) {
         var it = param.parameter.type as InterfaceType;
         var itemElement = it.typeArguments[valueIndex].element2;
         var itemConfig = resolveElement(itemElement);
 
         var forceNullable = config.subConfigs.isNotEmpty;
-
 
         var itemHasSubConfigs = itemConfig?.subConfigs.isNotEmpty ?? false;
         var itemSelfTypeParam = itemHasSubConfigs
@@ -49,13 +46,13 @@ class CopyParamConfig {
             : null;
 
         return CollectionCopyParamConfig(
-            param: param,
-            name: name,
-            itemName: itemConfig?.uniqueClassName ?? 'Object',
-            itemSelfTypeParam: itemSelfTypeParam,
-            imports: imports,
-            forceNullable: forceNullable,
-            valueIndex: valueIndex,
+          param: param,
+          name: name,
+          itemName: itemConfig?.uniqueClassName ?? 'Object',
+          itemSelfTypeParam: itemSelfTypeParam,
+          imports: imports,
+          forceNullable: forceNullable,
+          valueIndex: valueIndex,
         );
       }
 
@@ -94,8 +91,6 @@ class CopyParamConfig {
   final String? selfTypeName;
   final ImportsBuilder imports;
 
-  String get implName => '_${name}CopyWithImpl';
-
   ParameterElement get p => param.parameter;
   PropertyInducingElement get a => param.accessor;
 
@@ -106,9 +101,13 @@ class CopyParamConfig {
           .join()
       : '';
 
-  String get invocation => ', (v) => call(${param.superName}: v)';
+  String get invocationThen => '(v) => call(${param.superName}: v)';
 
   String get optSubTypeParam => selfTypeName != null ? ', $selfTypeName' : '';
+
+  String get invocation {
+    return '\$value.${a.name}${a.type.isNullable ? '?' : ''}.copyWith._chain($invocationThen)';
+  }
 }
 
 class CollectionCopyParamConfig extends CopyParamConfig {
@@ -127,13 +126,11 @@ class CollectionCopyParamConfig extends CopyParamConfig {
   final bool forceNullable;
   final int valueIndex;
 
-  @override
-  String get implName => '${name}CopyWith';
-
   String get itemImplName =>
       itemName == 'Object' ? 'ObjectCopyWith' : '_${itemName}CopyWithImpl';
 
-  String get itemOptSubTypeParam => itemSelfTypeParam != null ? ', $itemSelfTypeParam' : '';
+  String get itemOptSubTypeParam =>
+      itemSelfTypeParam != null ? ', $itemSelfTypeParam' : '';
 
   @override
   String get fieldTypeParams {
@@ -143,7 +140,7 @@ class CollectionCopyParamConfig extends CopyParamConfig {
 
     if (itemName == 'Object') {
       return super.fieldTypeParams +
-          ', ${itemName}CopyWith<\$R$itemOptSubTypeParam, ${imports.prefixedType(itemTypeArg)}>${typeArgNullable || forceNullable ? '?' : ''}';
+          ', ObjectCopyWith<\$R$itemOptSubTypeParam, ${imports.prefixedType(itemTypeArg)}>${typeArgNullable || forceNullable ? '?' : ''}';
     }
 
     var typeParams = itemTypeArg is InterfaceType
@@ -162,7 +159,18 @@ class CollectionCopyParamConfig extends CopyParamConfig {
     var typeArgNullable =
         typeArg.nullabilitySuffix == NullabilitySuffix.question;
 
-    return ', (v, t) => ${typeArgNullable ? 'v == null ? null : ' : ''}$itemImplName(v, t)${super.invocation}';
+    String itemInvocation;
+    if (itemName == 'Object') {
+      itemInvocation = '(v, t) => ObjectCopyWith(v, t)';
+    } else {
+      itemInvocation = '(v, t) => v${typeArgNullable ? '?' : ''}.copyWith._chain(t)';
+    }
+
+    var result = '${name}CopyWith(\$value.${a.name}${a.type.isNullable ? '!' : ''}, $itemInvocation, $invocationThen)';
+    if (a.type.isNullable) {
+      result = '\$value.${a.name} != null ? $result : null';
+    }
+    return result;
   }
 }
 

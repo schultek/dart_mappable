@@ -108,11 +108,9 @@ const $none = _None();
 T $identity<T>(T value) => value;
 typedef Then<$T, $R> = $R Function($T);
 
-
 abstract class ObjectCopyWith<$R, $T> {
   const factory ObjectCopyWith($T value, Then<$T, $R> then) = BaseCopyWith;
   $R apply($T Function($T) transform);
-  $C chain<$C>($C Function($T value, Then<$T, $R> then) copy);
 }
 
 class BaseCopyWith<$R, $T> implements ObjectCopyWith<$R, $T> {
@@ -123,10 +121,7 @@ class BaseCopyWith<$R, $T> implements ObjectCopyWith<$R, $T> {
 
   T or<T>(Object? v, T t) => v == $none ? t : v as T;
 
-  @override
-  $C chain<$C>($C Function($T value, Then<$T, $R> then) copy) {
-    return copy($value, $then);
-  }
+  $C as<$C>($C Function($T, Then<$T, $R>) copy) => copy($value, $then);
 
   /// Applies any transformer function on the value
   @override

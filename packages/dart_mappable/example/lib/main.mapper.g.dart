@@ -43,20 +43,22 @@ class PersonMapper extends BaseMapper<p0.Person> {
 extension PersonMapperExtension on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<p0.Person> get copyWith => PersonCopyWith(this, $identity);
+  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity);
 }
 
-abstract class PersonCopyWith<$R> {
-  factory PersonCopyWith(p0.Person value, Then<p0.Person, $R> then) = _PersonCopyWithImpl<$R>;
+extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
+  PersonCopyWith<$R> get asPerson => base.as((v, t) => _PersonCopyWithImpl(v, t));
+}
+
+abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
   CarCopyWith<$R>? get car;
   $R call({String? name, int? age, p0.Car? car});
-  $R apply(p0.Person Function(p0.Person) transform);
 }
 
-class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements PersonCopyWith<$R> {
-  _PersonCopyWithImpl(p0.Person value, Then<p0.Person, $R> then) : super(value, then);
+class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person> implements PersonCopyWith<$R> {
+  _PersonCopyWithImpl(super.value, super.then);
 
-  @override CarCopyWith<$R>? get car => $value.car != null ? CarCopyWith($value.car!, (v) => call(car: v)) : null;
+  @override CarCopyWith<$R>? get car => $value.car != null ? _CarCopyWithImpl($value.car!, (v) => call(car: v)) : null;
   @override $R call({String? name, int? age, Object? car = $none}) => $then(p0.Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
 }
 
@@ -81,17 +83,19 @@ class CarMapper extends BaseMapper<p0.Car> {
 extension CarMapperExtension on p0.Car {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CarCopyWith<p0.Car> get copyWith => CarCopyWith(this, $identity);
+  CarCopyWith<p0.Car> get copyWith => _CarCopyWithImpl(this, $identity);
 }
 
-abstract class CarCopyWith<$R> {
-  factory CarCopyWith(p0.Car value, Then<p0.Car, $R> then) = _CarCopyWithImpl<$R>;
+extension CarObjectCopy<$R> on ObjectCopyWith<$R, p0.Car> {
+  CarCopyWith<$R> get asCar => base.as((v, t) => _CarCopyWithImpl(v, t));
+}
+
+abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car> {
   $R call({int? drivenKm, p0.Brand? brand});
-  $R apply(p0.Car Function(p0.Car) transform);
 }
 
-class _CarCopyWithImpl<$R> extends BaseCopyWith<p0.Car, $R> implements CarCopyWith<$R> {
-  _CarCopyWithImpl(p0.Car value, Then<p0.Car, $R> then) : super(value, then);
+class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Car> implements CarCopyWith<$R> {
+  _CarCopyWithImpl(super.value, super.then);
 
   @override $R call({int? drivenKm, p0.Brand? brand}) => $then(p0.Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
 }
@@ -117,17 +121,19 @@ class BoxMapper extends BaseMapper<p0.Box> {
 extension BoxMapperExtension<T> on p0.Box<T> {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  BoxCopyWith<p0.Box<T>, T> get copyWith => BoxCopyWith(this, $identity);
+  BoxCopyWith<p0.Box<T>, T> get copyWith => _BoxCopyWithImpl(this, $identity);
 }
 
-abstract class BoxCopyWith<$R, T> {
-  factory BoxCopyWith(p0.Box<T> value, Then<p0.Box<T>, $R> then) = _BoxCopyWithImpl<$R, T>;
+extension BoxObjectCopy<$R, T> on ObjectCopyWith<$R, p0.Box<T>> {
+  BoxCopyWith<$R, T> get asBox => base.as((v, t) => _BoxCopyWithImpl(v, t));
+}
+
+abstract class BoxCopyWith<$R, T> implements ObjectCopyWith<$R, p0.Box<T>> {
   $R call({int? size, T? content});
-  $R apply(p0.Box<T> Function(p0.Box<T>) transform);
 }
 
-class _BoxCopyWithImpl<$R, T> extends BaseCopyWith<p0.Box<T>, $R> implements BoxCopyWith<$R, T> {
-  _BoxCopyWithImpl(p0.Box<T> value, Then<p0.Box<T>, $R> then) : super(value, then);
+class _BoxCopyWithImpl<$R, T> extends BaseCopyWith<$R, p0.Box<T>> implements BoxCopyWith<$R, T> {
+  _BoxCopyWithImpl(super.value, super.then);
 
   @override $R call({int? size, T? content}) => $then(p0.Box(size ?? $value.size, content: content ?? $value.content));
 }
@@ -153,17 +159,19 @@ class ConfettiMapper extends BaseMapper<p0.Confetti> {
 extension ConfettiMapperExtension on p0.Confetti {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ConfettiCopyWith<p0.Confetti> get copyWith => ConfettiCopyWith(this, $identity);
+  ConfettiCopyWith<p0.Confetti> get copyWith => _ConfettiCopyWithImpl(this, $identity);
 }
 
-abstract class ConfettiCopyWith<$R> {
-  factory ConfettiCopyWith(p0.Confetti value, Then<p0.Confetti, $R> then) = _ConfettiCopyWithImpl<$R>;
+extension ConfettiObjectCopy<$R> on ObjectCopyWith<$R, p0.Confetti> {
+  ConfettiCopyWith<$R> get asConfetti => base.as((v, t) => _ConfettiCopyWithImpl(v, t));
+}
+
+abstract class ConfettiCopyWith<$R> implements ObjectCopyWith<$R, p0.Confetti> {
   $R call({String? color});
-  $R apply(p0.Confetti Function(p0.Confetti) transform);
 }
 
-class _ConfettiCopyWithImpl<$R> extends BaseCopyWith<p0.Confetti, $R> implements ConfettiCopyWith<$R> {
-  _ConfettiCopyWithImpl(p0.Confetti value, Then<p0.Confetti, $R> then) : super(value, then);
+class _ConfettiCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Confetti> implements ConfettiCopyWith<$R> {
+  _ConfettiCopyWithImpl(super.value, super.then);
 
   @override $R call({String? color}) => $then(p0.Confetti(color ?? $value.color));
 }
@@ -260,4 +268,8 @@ mixin Mappable implements MappableMixin {
       }
     }
   }
+}
+
+extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
+  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
 }

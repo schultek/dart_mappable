@@ -26,7 +26,9 @@ class ImportsBuilder {
       return null;
     }
     if (import.scheme == 'dart') {
-      _imports[import] = null;
+      if (import.path != 'core') {
+        _imports[import] = null;
+      }
       return null;
     }
     if (_imports.containsKey(import)) {

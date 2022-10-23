@@ -159,5 +159,13 @@ void main() {
       var list3 = list.copyWith.items.at(0)!.apply((v) => v+1);
       expect(list3, equals(ComparableItemList([3, 5])));
     });
+
+    test('Should cast copyWith', () {
+      ItemList<Brand> list = NamedItemList('Test', [Brand('Audi')]);
+
+      var l2 = list.copyWith.items.at(0)!.asBrand(name: 'BMW');
+
+      expect(l2.items.first.name, equals('BMW'));
+    });
   });
 }

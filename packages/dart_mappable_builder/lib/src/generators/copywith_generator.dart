@@ -1,7 +1,4 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/class_mapper_config.dart';
@@ -59,7 +56,9 @@ class CopyWithGenerator {
     var className = config.className;
     var mixinName = '${config.uniqueClassName}Mixin';
 
-    var hasCopyWithMixin = node.withClause?.mixinTypes.any((t) => t.name.name == mixinName) ?? false;
+    var hasCopyWithMixin =
+        node.withClause?.mixinTypes.any((t) => t.name.name == mixinName) ??
+            false;
 
     if (!hasCopyWithMixin) {
       var classDeclarationSource = 'class $className';
@@ -70,7 +69,10 @@ class CopyWithGenerator {
         classDeclarationSource += ' ' + node.extendsClause!.toSource();
       }
       if (node.withClause != null) {
-        classDeclarationSource += ' ' + node.withClause!.toSource().replaceFirst('with', 'with $mixinName,');
+        classDeclarationSource += ' ' +
+            node.withClause!
+                .toSource()
+                .replaceFirst('with', 'with $mixinName,');
       } else {
         classDeclarationSource += ' with $mixinName';
       }
@@ -88,7 +90,6 @@ class CopyWithGenerator {
           'Alternatively you can also disable the generation of a \'.copyWith()\' '
           'extension by using the \'generateMethods\' option\n'
           '(see https://pub.dev/packages/dart_mappable#generation-methods).\n');
-
     }
   }
 
@@ -129,14 +130,15 @@ class CopyWithGenerator {
     if (config.hasCallableConstructor) {
       snippets.add(
           'extension ${config.uniqueClassName}ObjectCopy<\$R$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam> {\n'
-          '  ${config.uniqueClassName}CopyWith<\$R$valueTypeParam$classTypeParams> get as${config.className} => chain(_${config.uniqueClassName}CopyWithImpl.new);\n'
+          '  ${config.uniqueClassName}CopyWith<\$R$valueTypeParam$classTypeParams> get as${config.className} => base.as((v, t) => _${config.uniqueClassName}CopyWithImpl(v, t));\n'
           '}\n\n');
     }
 
     var implementsStmt = '';
-    var objTypeParamDef = config.subConfigs.isNotEmpty ? ', \$V extends $selfTypeParam' : '';
+    var objTypeParamDef =
+        config.subConfigs.isNotEmpty ? ', \$V extends $selfTypeParam' : '';
     var objTypeParam =
-    config.subConfigs.isNotEmpty ? ', \$V' : ', $selfTypeParam';
+        config.subConfigs.isNotEmpty ? ', \$V' : ', $selfTypeParam';
 
     if (config.superConfig != null) {
       var superClassTypeParams = config.superTypeArgs.map((a) => ', $a').join();
@@ -149,7 +151,14 @@ class CopyWithGenerator {
     snippets.add(''
         'abstract class ${config.uniqueClassName}CopyWith<\$R$objTypeParamDef$classTypeParamsDef>$implementsStmt {\n');
 
-    var copyParams = CopyParamConfig.collectFrom(config.params, config, imports, getConfig);
+    if (config.superConfig == null) {
+      var optObjTypeParam = config.subConfigs.isNotEmpty ? ', \$V' : '';
+      snippets.add(
+          '  ${config.uniqueClassName}CopyWith<\$R2$optObjTypeParam$classTypeParams> _chain<\$R2>(Then<\$R, \$R2> then);\n');
+    }
+
+    var copyParams =
+        CopyParamConfig.collectFrom(config.params, config, imports, getConfig);
 
     for (var param in copyParams) {
       var isOverridden =
@@ -169,19 +178,15 @@ class CopyWithGenerator {
           'extends BaseCopyWith<\$R, $selfTypeParam> implements ${config.uniqueClassName}CopyWith'
           '<\$R${config.subConfigs.isNotEmpty ? ', $selfTypeParam' : ''}$classTypeParams> {\n'
           '  _${config.uniqueClassName}CopyWithImpl(super.value, super.then);\n'
+          '  @override ${config.uniqueClassName}CopyWith<\$R2${config.subConfigs.isNotEmpty ? ', $selfTypeParam' : ''}$classTypeParams> '
+          '_chain<\$R2>(Then<\$R, \$R2> then) => _${config.uniqueClassName}CopyWithImpl(\$value, (v) => then(\$then(v)));\n'
           '\n');
 
       for (var param in copyParams) {
         snippets.add(
             '  @override ${param.name}CopyWith<\$R${param.optSubTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name} => ');
 
-        if (param.a.type.isNullable) {
-          snippets.add(
-              '\$value.${param.a.name} != null ? ${param.implName}(\$value.${param.a.name}!${param.invocation}) : null;\n');
-        } else {
-          snippets.add(
-              '${param.implName}(\$value.${param.a.name}${param.invocation});\n');
-        }
+        snippets.add('${param.invocation};\n');
       }
 
       snippets.add(

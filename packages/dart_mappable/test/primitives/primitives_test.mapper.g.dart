@@ -1,5 +1,4 @@
-import 'dart:core';
-
+// ignore_for_file: unused_element
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
@@ -44,10 +43,11 @@ extension ItemsMapperExtension on p0.Items {
 }
 
 extension ItemsObjectCopy<$R> on ObjectCopyWith<$R, p0.Items> {
-  ItemsCopyWith<$R> get asItems => chain(_ItemsCopyWithImpl.new);
+  ItemsCopyWith<$R> get asItems => base.as((v, t) => _ItemsCopyWithImpl(v, t));
 }
 
 abstract class ItemsCopyWith<$R> implements ObjectCopyWith<$R, p0.Items> {
+  ItemsCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   ListCopyWith<$R, p0.Item, ItemCopyWith<$R>> get items;
   MapCopyWith<$R, int, p0.Item, ItemCopyWith<$R>> get items2;
   $R call({List<p0.Item>? items, Map<int, p0.Item>? items2});
@@ -55,9 +55,10 @@ abstract class ItemsCopyWith<$R> implements ObjectCopyWith<$R, p0.Items> {
 
 class _ItemsCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Items> implements ItemsCopyWith<$R> {
   _ItemsCopyWithImpl(super.value, super.then);
+  @override ItemsCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _ItemsCopyWithImpl($value, (v) => then($then(v)));
 
-  @override ListCopyWith<$R, p0.Item, ItemCopyWith<$R>> get items => ListCopyWith($value.items, (v, t) => _ItemCopyWithImpl(v, t), (v) => call(items: v));
-  @override MapCopyWith<$R, int, p0.Item, ItemCopyWith<$R>> get items2 => MapCopyWith($value.items2, (v, t) => _ItemCopyWithImpl(v, t), (v) => call(items2: v));
+  @override ListCopyWith<$R, p0.Item, ItemCopyWith<$R>> get items => ListCopyWith($value.items, (v, t) => v.copyWith._chain(t), (v) => call(items: v));
+  @override MapCopyWith<$R, int, p0.Item, ItemCopyWith<$R>> get items2 => MapCopyWith($value.items2, (v, t) => v.copyWith._chain(t), (v) => call(items2: v));
   @override $R call({List<p0.Item>? items, Map<int, p0.Item>? items2}) => $then(p0.Items(items ?? $value.items, items2 ?? $value.items2));
 }
 
@@ -86,15 +87,17 @@ extension ItemMapperExtension on p0.Item {
 }
 
 extension ItemObjectCopy<$R> on ObjectCopyWith<$R, p0.Item> {
-  ItemCopyWith<$R> get asItem => chain(_ItemCopyWithImpl.new);
+  ItemCopyWith<$R> get asItem => base.as((v, t) => _ItemCopyWithImpl(v, t));
 }
 
 abstract class ItemCopyWith<$R> implements ObjectCopyWith<$R, p0.Item> {
+  ItemCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   $R call({int? index});
 }
 
 class _ItemCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Item> implements ItemCopyWith<$R> {
   _ItemCopyWithImpl(super.value, super.then);
+  @override ItemCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _ItemCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({int? index}) => $then(p0.Item(index ?? $value.index));
 }
@@ -166,4 +169,8 @@ mixin Mappable implements MappableMixin {
       }
     }
   }
+}
+
+extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
+  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
 }

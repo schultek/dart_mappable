@@ -1,5 +1,4 @@
-import 'dart:core';
-
+// ignore_for_file: unused_element
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
@@ -49,18 +48,20 @@ extension AMapperExtension on p0.A {
 }
 
 extension AObjectCopy<$R> on ObjectCopyWith<$R, p0.A> {
-  ACopyWith<$R> get asA => chain(_ACopyWithImpl.new);
+  ACopyWith<$R> get asA => base.as((v, t) => _ACopyWithImpl(v, t));
 }
 
 abstract class ACopyWith<$R> implements ObjectCopyWith<$R, p0.A> {
+  ACopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   BCopyWith<$R> get b;
   $R call({p0.B? b});
 }
 
 class _ACopyWithImpl<$R> extends BaseCopyWith<$R, p0.A> implements ACopyWith<$R> {
   _ACopyWithImpl(super.value, super.then);
+  @override ACopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _ACopyWithImpl($value, (v) => then($then(v)));
 
-  @override BCopyWith<$R> get b => _BCopyWithImpl($value.b, (v) => call(b: v));
+  @override BCopyWith<$R> get b => $value.b.copyWith._chain((v) => call(b: v));
   @override $R call({p0.B? b}) => $then(p0.A(b: b ?? $value.b));
 }
 
@@ -89,18 +90,20 @@ extension BMapperExtension on p0.B {
 }
 
 extension BObjectCopy<$R> on ObjectCopyWith<$R, p0.B> {
-  BCopyWith<$R> get asB => chain(_BCopyWithImpl.new);
+  BCopyWith<$R> get asB => base.as((v, t) => _BCopyWithImpl(v, t));
 }
 
 abstract class BCopyWith<$R> implements ObjectCopyWith<$R, p0.B> {
+  BCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   CCopyWith<$R> get c;
   $R call({p0.C? c});
 }
 
 class _BCopyWithImpl<$R> extends BaseCopyWith<$R, p0.B> implements BCopyWith<$R> {
   _BCopyWithImpl(super.value, super.then);
+  @override BCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _BCopyWithImpl($value, (v) => then($then(v)));
 
-  @override CCopyWith<$R> get c => _CCopyWithImpl($value.c, (v) => call(c: v));
+  @override CCopyWith<$R> get c => $value.c.copyWith._chain((v) => call(c: v));
   @override $R call({p0.C? c}) => $then(p0.B(c: c ?? $value.c));
 }
 
@@ -129,15 +132,17 @@ extension CMapperExtension on p0.C {
 }
 
 extension CObjectCopy<$R> on ObjectCopyWith<$R, p0.C> {
-  CCopyWith<$R> get asC => chain(_CCopyWithImpl.new);
+  CCopyWith<$R> get asC => base.as((v, t) => _CCopyWithImpl(v, t));
 }
 
 abstract class CCopyWith<$R> implements ObjectCopyWith<$R, p0.C> {
+  CCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   $R call({String? d});
 }
 
 class _CCopyWithImpl<$R> extends BaseCopyWith<$R, p0.C> implements CCopyWith<$R> {
   _CCopyWithImpl(super.value, super.then);
+  @override CCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _CCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({String? d}) => $then(p0.C(d ?? $value.d));
 }
@@ -168,18 +173,20 @@ extension A1MapperExtension on p1.A {
 }
 
 extension A1ObjectCopy<$R> on ObjectCopyWith<$R, p1.A> {
-  A1CopyWith<$R> get asA => chain(_A1CopyWithImpl.new);
+  A1CopyWith<$R> get asA => base.as((v, t) => _A1CopyWithImpl(v, t));
 }
 
 abstract class A1CopyWith<$R> implements ObjectCopyWith<$R, p1.A> {
+  A1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   B1CopyWith<$R> get b;
   $R call({p1.B? b});
 }
 
 class _A1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.A> implements A1CopyWith<$R> {
   _A1CopyWithImpl(super.value, super.then);
+  @override A1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _A1CopyWithImpl($value, (v) => then($then(v)));
 
-  @override B1CopyWith<$R> get b => _B1CopyWithImpl($value.b, (v) => call(b: v));
+  @override B1CopyWith<$R> get b => $value.b.copyWith._chain((v) => call(b: v));
   @override $R call({p1.B? b}) => $then(p1.A(b: b ?? $value.b));
 }
 
@@ -209,18 +216,20 @@ extension B1MapperExtension on p1.B {
 }
 
 extension B1ObjectCopy<$R> on ObjectCopyWith<$R, p1.B> {
-  B1CopyWith<$R> get asB => chain(_B1CopyWithImpl.new);
+  B1CopyWith<$R> get asB => base.as((v, t) => _B1CopyWithImpl(v, t));
 }
 
 abstract class B1CopyWith<$R> implements ObjectCopyWith<$R, p1.B> {
+  B1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   C1CopyWith<$R> get c;
   $R call({p1.C? c});
 }
 
 class _B1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.B> implements B1CopyWith<$R> {
   _B1CopyWithImpl(super.value, super.then);
+  @override B1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _B1CopyWithImpl($value, (v) => then($then(v)));
 
-  @override C1CopyWith<$R> get c => _C1CopyWithImpl($value.c, (v) => call(c: v));
+  @override C1CopyWith<$R> get c => $value.c.copyWith._chain((v) => call(c: v));
   @override $R call({p1.C? c}) => $then(p1.B(c: c ?? $value.c));
 }
 
@@ -250,15 +259,17 @@ extension C1MapperExtension on p1.C {
 }
 
 extension C1ObjectCopy<$R> on ObjectCopyWith<$R, p1.C> {
-  C1CopyWith<$R> get asC => chain(_C1CopyWithImpl.new);
+  C1CopyWith<$R> get asC => base.as((v, t) => _C1CopyWithImpl(v, t));
 }
 
 abstract class C1CopyWith<$R> implements ObjectCopyWith<$R, p1.C> {
+  C1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   $R call({String? d});
 }
 
 class _C1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.C> implements C1CopyWith<$R> {
   _C1CopyWithImpl(super.value, super.then);
+  @override C1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _C1CopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({String? d}) => $then(p1.C(d ?? $value.d));
 }
@@ -330,4 +341,8 @@ mixin Mappable implements MappableMixin {
       }
     }
   }
+}
+
+extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
+  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
 }

@@ -1,5 +1,4 @@
-import 'dart:core';
-
+// ignore_for_file: unused_element
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
@@ -45,18 +44,20 @@ extension PersonMapperExtension on p0.Person {
 }
 
 extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
-  PersonCopyWith<$R> get asPerson => chain(_PersonCopyWithImpl.new);
+  PersonCopyWith<$R> get asPerson => base.as((v, t) => _PersonCopyWithImpl(v, t));
 }
 
 abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
+  PersonCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   CarCopyWith<$R>? get car;
   $R call({String? name, int? age, p0.Car? car});
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(super.value, super.then);
+  @override PersonCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _PersonCopyWithImpl($value, (v) => then($then(v)));
 
-  @override CarCopyWith<$R>? get car => $value.car != null ? _CarCopyWithImpl($value.car!, (v) => call(car: v)) : null;
+  @override CarCopyWith<$R>? get car => $value.car?.copyWith._chain((v) => call(car: v));
   @override $R call({String? name, int? age, Object? car = $none}) => $then(p0.Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
 }
 
@@ -85,15 +86,17 @@ extension CarMapperExtension on p0.Car {
 }
 
 extension CarObjectCopy<$R> on ObjectCopyWith<$R, p0.Car> {
-  CarCopyWith<$R> get asCar => chain(_CarCopyWithImpl.new);
+  CarCopyWith<$R> get asCar => base.as((v, t) => _CarCopyWithImpl(v, t));
 }
 
 abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car> {
+  CarCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   $R call({int? drivenKm, p0.Brand? brand});
 }
 
 class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Car> implements CarCopyWith<$R> {
   _CarCopyWithImpl(super.value, super.then);
+  @override CarCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _CarCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({int? drivenKm, p0.Brand? brand}) => $then(p0.Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
 }
@@ -190,4 +193,8 @@ mixin Mappable implements MappableMixin {
       }
     }
   }
+}
+
+extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
+  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
 }

@@ -1,5 +1,4 @@
-import 'dart:core';
-
+// ignore_for_file: unused_element
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
@@ -35,13 +34,8 @@ class UnionMapper extends BaseMapper<p0.Union> {
   });
   p0.Union fromMap(Map<String, dynamic> map) => throw MapperException.missingSubclass('Union', 'type', '${map['type']}');
 
-  @override Function get encoder => (p0.Union v) => encode(v);
-  dynamic encode(p0.Union v) {
-    if (v is p0.Data) { return DataMapper._().encode(v); }
-    else if (v is p0.Loading) { return LoadingMapper._().encode(v); }
-    else if (v is p0.ErrorDetails) { return ErrorDetailsMapper._().encode(v); }
-    else { return toMap(v); }
-  }
+  @override Function get encoder => encode;
+  dynamic encode(p0.Union v) => toMap(v);
   Map<String, dynamic> toMap(p0.Union u) => {};
 
   @override String stringify(p0.Union self) => 'Union()';
@@ -56,6 +50,16 @@ extension UnionMapperExtension on p0.Union {
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 }
 
+mixin UnionMixin {
+  UnionCopyWith<p0.Union, p0.Union> get copyWith;
+}
+
+abstract class UnionCopyWith<$R, $V extends p0.Union> implements ObjectCopyWith<$R, $V> {
+  UnionCopyWith<$R2, $V> _chain<$R2>(Then<$R, $R2> then);
+  $R call();
+}
+
+
 class DataMapper extends BaseMapper<p0.Data> {
   DataMapper._();
 
@@ -63,7 +67,7 @@ class DataMapper extends BaseMapper<p0.Data> {
   p0.Data decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Data fromMap(Map<String, dynamic> map) => p0.Data(Mapper.i.$get(map, 'mykey'));
 
-  @override Function get encoder => (p0.Data v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Data v) => toMap(v);
   Map<String, dynamic> toMap(p0.Data d) => {'mykey': Mapper.i.$enc(d.value, 'value'), 'type': 'data'};
 
@@ -77,17 +81,23 @@ class DataMapper extends BaseMapper<p0.Data> {
 extension DataMapperExtension on p0.Data {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DataCopyWith<p0.Data> get copyWith => DataCopyWith(this, $identity);
 }
 
-abstract class DataCopyWith<$R> {
-  factory DataCopyWith(p0.Data value, Then<p0.Data, $R> then) = _DataCopyWithImpl<$R>;
-  $R call({int? value});
-  $R apply(p0.Data Function(p0.Data) transform);
+mixin DataMixin {
+  DataCopyWith<p0.Data> get copyWith => _DataCopyWithImpl(this as p0.Data, $identity);
 }
 
-class _DataCopyWithImpl<$R> extends BaseCopyWith<p0.Data, $R> implements DataCopyWith<$R> {
-  _DataCopyWithImpl(p0.Data value, Then<p0.Data, $R> then) : super(value, then);
+extension DataObjectCopy<$R> on ObjectCopyWith<$R, p0.Data> {
+  DataCopyWith<$R> get asData => base.as((v, t) => _DataCopyWithImpl(v, t));
+}
+
+abstract class DataCopyWith<$R> implements UnionCopyWith<$R, p0.Data> {
+  @override $R call({int? value});
+}
+
+class _DataCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Data> implements DataCopyWith<$R> {
+  _DataCopyWithImpl(super.value, super.then);
+  @override DataCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _DataCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({int? value}) => $then(p0.Data(value ?? $value.value));
 }
@@ -99,7 +109,7 @@ class LoadingMapper extends BaseMapper<p0.Loading> {
   p0.Loading decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.Loading fromMap(Map<String, dynamic> map) => p0.Loading();
 
-  @override Function get encoder => (p0.Loading v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.Loading v) => toMap(v);
   Map<String, dynamic> toMap(p0.Loading l) => {'type': 'loading'};
 
@@ -113,17 +123,23 @@ class LoadingMapper extends BaseMapper<p0.Loading> {
 extension LoadingMapperExtension on p0.Loading {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  LoadingCopyWith<p0.Loading> get copyWith => LoadingCopyWith(this, $identity);
 }
 
-abstract class LoadingCopyWith<$R> {
-  factory LoadingCopyWith(p0.Loading value, Then<p0.Loading, $R> then) = _LoadingCopyWithImpl<$R>;
-  $R call();
-  $R apply(p0.Loading Function(p0.Loading) transform);
+mixin LoadingMixin {
+  LoadingCopyWith<p0.Loading> get copyWith => _LoadingCopyWithImpl(this as p0.Loading, $identity);
 }
 
-class _LoadingCopyWithImpl<$R> extends BaseCopyWith<p0.Loading, $R> implements LoadingCopyWith<$R> {
-  _LoadingCopyWithImpl(p0.Loading value, Then<p0.Loading, $R> then) : super(value, then);
+extension LoadingObjectCopy<$R> on ObjectCopyWith<$R, p0.Loading> {
+  LoadingCopyWith<$R> get asLoading => base.as((v, t) => _LoadingCopyWithImpl(v, t));
+}
+
+abstract class LoadingCopyWith<$R> implements UnionCopyWith<$R, p0.Loading> {
+  @override $R call();
+}
+
+class _LoadingCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Loading> implements LoadingCopyWith<$R> {
+  _LoadingCopyWithImpl(super.value, super.then);
+  @override LoadingCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _LoadingCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call() => $then(p0.Loading());
 }
@@ -135,7 +151,7 @@ class ErrorDetailsMapper extends BaseMapper<p0.ErrorDetails> {
   p0.ErrorDetails decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
   p0.ErrorDetails fromMap(Map<String, dynamic> map) => p0.ErrorDetails(Mapper.i.$getOpt(map, 'message'));
 
-  @override Function get encoder => (p0.ErrorDetails v) => encode(v);
+  @override Function get encoder => encode;
   dynamic encode(p0.ErrorDetails v) => toMap(v);
   Map<String, dynamic> toMap(p0.ErrorDetails e) => {'message': Mapper.i.$enc(e.message, 'message'), 'type': 'error'};
 
@@ -149,17 +165,23 @@ class ErrorDetailsMapper extends BaseMapper<p0.ErrorDetails> {
 extension ErrorDetailsMapperExtension on p0.ErrorDetails {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ErrorDetailsCopyWith<p0.ErrorDetails> get copyWith => ErrorDetailsCopyWith(this, $identity);
 }
 
-abstract class ErrorDetailsCopyWith<$R> {
-  factory ErrorDetailsCopyWith(p0.ErrorDetails value, Then<p0.ErrorDetails, $R> then) = _ErrorDetailsCopyWithImpl<$R>;
-  $R call({String? message});
-  $R apply(p0.ErrorDetails Function(p0.ErrorDetails) transform);
+mixin ErrorDetailsMixin {
+  ErrorDetailsCopyWith<p0.ErrorDetails> get copyWith => _ErrorDetailsCopyWithImpl(this as p0.ErrorDetails, $identity);
 }
 
-class _ErrorDetailsCopyWithImpl<$R> extends BaseCopyWith<p0.ErrorDetails, $R> implements ErrorDetailsCopyWith<$R> {
-  _ErrorDetailsCopyWithImpl(p0.ErrorDetails value, Then<p0.ErrorDetails, $R> then) : super(value, then);
+extension ErrorDetailsObjectCopy<$R> on ObjectCopyWith<$R, p0.ErrorDetails> {
+  ErrorDetailsCopyWith<$R> get asErrorDetails => base.as((v, t) => _ErrorDetailsCopyWithImpl(v, t));
+}
+
+abstract class ErrorDetailsCopyWith<$R> implements UnionCopyWith<$R, p0.ErrorDetails> {
+  @override $R call({String? message});
+}
+
+class _ErrorDetailsCopyWithImpl<$R> extends BaseCopyWith<$R, p0.ErrorDetails> implements ErrorDetailsCopyWith<$R> {
+  _ErrorDetailsCopyWithImpl(super.value, super.then);
+  @override ErrorDetailsCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _ErrorDetailsCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({Object? message = $none}) => $then(p0.ErrorDetails(or(message, $value.message)));
 }
@@ -182,10 +204,10 @@ class Mapper {
   static T fromIterable<T>(Iterable<dynamic> iterable) => i.fromIterable<T>(iterable);
   static T fromJson<T>(String json) => i.fromJson<T>(json);
 
-  static dynamic toValue(dynamic value) => i.toValue(value);
-  static Map<String, dynamic> toMap(dynamic object) => i.toMap(object);
-  static Iterable<dynamic> toIterable(dynamic object) => i.toIterable(object);
-  static String toJson(dynamic object) => i.toJson(object);
+  static dynamic toValue<T>(T value) => i.toValue<T>(value);
+  static Map<String, dynamic> toMap<T>(T object) => i.toMap<T>(object);
+  static Iterable<dynamic> toIterable<T>(T object) => i.toIterable<T>(object);
+  static String toJson<T>(T object) => i.toJson<T>(object);
 
   static bool isEqual(dynamic value, Object? other) => i.isEqual(value, other);
   static int hash(dynamic value) => i.hash(value);
@@ -231,4 +253,8 @@ mixin Mappable implements MappableMixin {
       }
     }
   }
+}
+
+extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
+  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
 }

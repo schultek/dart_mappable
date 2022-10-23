@@ -26,7 +26,7 @@ abstract class MapCopyWith<$R, $K, $V, $C> {
   $R apply(Map<$K, $V> Function(Map<$K, $V>) transform);
 }
 
-class _MapCopyWith<$R, $K, $V, $C> extends BaseCopyWith<Map<$K, $V>, $R>
+class _MapCopyWith<$R, $K, $V, $C> extends BaseCopyWith<$R, Map<$K, $V>>
     implements MapCopyWith<$R, $K, $V, $C> {
   _MapCopyWith(Map<$K, $V> value, this._item, Then<Map<$K, $V>, $R> then)
       : super(value, then);

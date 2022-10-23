@@ -74,6 +74,7 @@ class MappableBuilder implements Builder {
     var genEnums = await Future.wait(enumMappers.map((em) => em.generate()));
 
     return ''
+        '// ignore_for_file: unused_element\n'
         '${targets.imports.write()}\n'
         '// === ALL STATICALLY REGISTERED MAPPERS ===\n\n'
         'var _mappers = <BaseMapper>{\n'

@@ -1,5 +1,4 @@
-import 'dart:core';
-
+// ignore_for_file: unused_element
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
@@ -58,6 +57,7 @@ mixin AnimalMixin {
 }
 
 abstract class AnimalCopyWith<$R, $V extends p0.Animal> implements ObjectCopyWith<$R, $V> {
+  AnimalCopyWith<$R2, $V> _chain<$R2>(Then<$R, $R2> then);
   $R call();
 }
 
@@ -90,7 +90,7 @@ mixin CatMixin {
 }
 
 extension CatObjectCopy<$R> on ObjectCopyWith<$R, p0.Cat> {
-  CatCopyWith<$R> get asCat => chain(_CatCopyWithImpl.new);
+  CatCopyWith<$R> get asCat => base.as((v, t) => _CatCopyWithImpl(v, t));
 }
 
 abstract class CatCopyWith<$R> implements AnimalCopyWith<$R, p0.Cat> {
@@ -99,6 +99,7 @@ abstract class CatCopyWith<$R> implements AnimalCopyWith<$R, p0.Cat> {
 
 class _CatCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Cat> implements CatCopyWith<$R> {
   _CatCopyWithImpl(super.value, super.then);
+  @override CatCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _CatCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({String? name, String? color}) => $then(p0.Cat(name ?? $value.name, color ?? $value.color));
 }
@@ -131,7 +132,7 @@ mixin DogMixin {
 }
 
 extension DogObjectCopy<$R> on ObjectCopyWith<$R, p0.Dog> {
-  DogCopyWith<$R> get asDog => chain(_DogCopyWithImpl.new);
+  DogCopyWith<$R> get asDog => base.as((v, t) => _DogCopyWithImpl(v, t));
 }
 
 abstract class DogCopyWith<$R> implements AnimalCopyWith<$R, p0.Dog> {
@@ -140,6 +141,7 @@ abstract class DogCopyWith<$R> implements AnimalCopyWith<$R, p0.Dog> {
 
 class _DogCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Dog> implements DogCopyWith<$R> {
   _DogCopyWithImpl(super.value, super.then);
+  @override DogCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _DogCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({int? age}) => $then(p0.Dog(age ?? $value.age));
 }
@@ -172,7 +174,7 @@ mixin NullAnimalMixin {
 }
 
 extension NullAnimalObjectCopy<$R> on ObjectCopyWith<$R, p0.NullAnimal> {
-  NullAnimalCopyWith<$R> get asNullAnimal => chain(_NullAnimalCopyWithImpl.new);
+  NullAnimalCopyWith<$R> get asNullAnimal => base.as((v, t) => _NullAnimalCopyWithImpl(v, t));
 }
 
 abstract class NullAnimalCopyWith<$R> implements AnimalCopyWith<$R, p0.NullAnimal> {
@@ -181,6 +183,7 @@ abstract class NullAnimalCopyWith<$R> implements AnimalCopyWith<$R, p0.NullAnima
 
 class _NullAnimalCopyWithImpl<$R> extends BaseCopyWith<$R, p0.NullAnimal> implements NullAnimalCopyWith<$R> {
   _NullAnimalCopyWithImpl(super.value, super.then);
+  @override NullAnimalCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _NullAnimalCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({String? name}) => $then(p0.NullAnimal(name ?? $value.name));
 }
@@ -213,7 +216,7 @@ mixin DefaultAnimalMixin {
 }
 
 extension DefaultAnimalObjectCopy<$R> on ObjectCopyWith<$R, p0.DefaultAnimal> {
-  DefaultAnimalCopyWith<$R> get asDefaultAnimal => chain(_DefaultAnimalCopyWithImpl.new);
+  DefaultAnimalCopyWith<$R> get asDefaultAnimal => base.as((v, t) => _DefaultAnimalCopyWithImpl(v, t));
 }
 
 abstract class DefaultAnimalCopyWith<$R> implements AnimalCopyWith<$R, p0.DefaultAnimal> {
@@ -222,6 +225,7 @@ abstract class DefaultAnimalCopyWith<$R> implements AnimalCopyWith<$R, p0.Defaul
 
 class _DefaultAnimalCopyWithImpl<$R> extends BaseCopyWith<$R, p0.DefaultAnimal> implements DefaultAnimalCopyWith<$R> {
   _DefaultAnimalCopyWithImpl(super.value, super.then);
+  @override DefaultAnimalCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _DefaultAnimalCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({String? name, String? type}) => $then(p0.DefaultAnimal(name ?? $value.name, type ?? $value.type));
 }
@@ -251,10 +255,11 @@ extension ZooMapperExtension on p0.Zoo {
 }
 
 extension ZooObjectCopy<$R> on ObjectCopyWith<$R, p0.Zoo> {
-  ZooCopyWith<$R> get asZoo => chain(_ZooCopyWithImpl.new);
+  ZooCopyWith<$R> get asZoo => base.as((v, t) => _ZooCopyWithImpl(v, t));
 }
 
 abstract class ZooCopyWith<$R> implements ObjectCopyWith<$R, p0.Zoo> {
+  ZooCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   AnimalCopyWith<$R, p0.Animal> get animal;
   ListCopyWith<$R, p0.Animal, AnimalCopyWith<$R, p0.Animal>> get animals;
   MapCopyWith<$R, String, p0.Animal, AnimalCopyWith<$R, p0.Animal>> get animals2;
@@ -263,10 +268,11 @@ abstract class ZooCopyWith<$R> implements ObjectCopyWith<$R, p0.Zoo> {
 
 class _ZooCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Zoo> implements ZooCopyWith<$R> {
   _ZooCopyWithImpl(super.value, super.then);
+  @override ZooCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _ZooCopyWithImpl($value, (v) => then($then(v)));
 
-  @override AnimalCopyWith<$R, p0.Animal> get animal => _AnimalCopyWithImpl($value.animal, (v) => call(animal: v));
-  @override ListCopyWith<$R, p0.Animal, AnimalCopyWith<$R, p0.Animal>> get animals => ListCopyWith($value.animals, (v, t) => _AnimalCopyWithImpl(v, t), (v) => call(animals: v));
-  @override MapCopyWith<$R, String, p0.Animal, AnimalCopyWith<$R, p0.Animal>> get animals2 => MapCopyWith($value.animals2, (v, t) => _AnimalCopyWithImpl(v, t), (v) => call(animals2: v));
+  @override AnimalCopyWith<$R, p0.Animal> get animal => $value.animal.copyWith._chain((v) => call(animal: v));
+  @override ListCopyWith<$R, p0.Animal, AnimalCopyWith<$R, p0.Animal>> get animals => ListCopyWith($value.animals, (v, t) => v.copyWith._chain(t), (v) => call(animals: v));
+  @override MapCopyWith<$R, String, p0.Animal, AnimalCopyWith<$R, p0.Animal>> get animals2 => MapCopyWith($value.animals2, (v, t) => v.copyWith._chain(t), (v) => call(animals2: v));
   @override $R call({p0.Animal? animal, List<p0.Animal>? animals, Map<String, p0.Animal>? animals2}) => $then(p0.Zoo(animal ?? $value.animal, animals ?? $value.animals, animals2 ?? $value.animals2));
 }
 
@@ -337,4 +343,8 @@ mixin Mappable implements MappableMixin {
       }
     }
   }
+}
+
+extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
+  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
 }

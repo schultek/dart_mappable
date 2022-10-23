@@ -1,5 +1,4 @@
-import 'dart:core';
-
+// ignore_for_file: unused_element
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
@@ -35,15 +34,17 @@ extension PersonMapperExtension on p0.Person {
 }
 
 extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
-  PersonCopyWith<$R> get asPerson => chain(_PersonCopyWithImpl.new);
+  PersonCopyWith<$R> get asPerson => base.as((v, t) => _PersonCopyWithImpl(v, t));
 }
 
 abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
+  PersonCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   $R call({String? name});
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(super.value, super.then);
+  @override PersonCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _PersonCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({String? name}) => $then(p0.Person(name ?? $value.name));
 }
@@ -126,4 +127,8 @@ mixin Mappable implements MappableMixin {
       }
     }
   }
+}
+
+extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
+  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
 }

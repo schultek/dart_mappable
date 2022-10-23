@@ -1,5 +1,4 @@
-import 'dart:core';
-
+// ignore_for_file: unused_element
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
@@ -52,7 +51,7 @@ mixin OneMixin {
 }
 
 extension OneObjectCopy<$R> on ObjectCopyWith<$R, p0.One> {
-  OneCopyWith<$R> get one => chain(_OneCopyWithImpl.new);
+  OneCopyWith<$R> get asOne => base.as((v, t) => _OneCopyWithImpl(v, t));
 }
 
 abstract class OneCopyWith<$R> implements BaseObjectCopyWith<$R, p0.One> {
@@ -60,8 +59,9 @@ abstract class OneCopyWith<$R> implements BaseObjectCopyWith<$R, p0.One> {
   @override $R call({String? id, String? name, Map<String, dynamic>? objects});
 }
 
-class _OneCopyWithImpl<$R> extends BaseCopyWith<p0.One, $R> implements OneCopyWith<$R> {
+class _OneCopyWithImpl<$R> extends BaseCopyWith<$R, p0.One> implements OneCopyWith<$R> {
   _OneCopyWithImpl(super.value, super.then);
+  @override OneCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _OneCopyWithImpl($value, (v) => then($then(v)));
 
   @override MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic>> get objects => MapCopyWith($value.objects, (v, t) => ObjectCopyWith(v, t), (v) => call(objects: v));
   @override $R call({String? id, String? name, Map<String, dynamic>? objects}) => $then(p0.One(id: id ?? $value.id, name: name ?? $value.name, objects: objects ?? $value.objects));
@@ -128,6 +128,7 @@ mixin AbstractIdBaseMixin {
 }
 
 abstract class AbstractIdBaseCopyWith<$R, $V extends p2.AbstractIdBase> implements ObjectCopyWith<$R, $V> {
+  AbstractIdBaseCopyWith<$R2, $V> _chain<$R2>(Then<$R, $R2> then);
   $R call({String? id});
 }
 
@@ -160,15 +161,16 @@ mixin TwoMixin {
 }
 
 extension TwoObjectCopy<$R> on ObjectCopyWith<$R, p3.Two> {
-  TwoCopyWith<$R> get two => chain(_TwoCopyWithImpl.new);
+  TwoCopyWith<$R> get asTwo => base.as((v, t) => _TwoCopyWithImpl(v, t));
 }
 
 abstract class TwoCopyWith<$R> implements AbstractIdBaseCopyWith<$R, p3.Two> {
   @override $R call({String? id});
 }
 
-class _TwoCopyWithImpl<$R> extends BaseCopyWith<p3.Two, $R> implements TwoCopyWith<$R> {
+class _TwoCopyWithImpl<$R> extends BaseCopyWith<$R, p3.Two> implements TwoCopyWith<$R> {
   _TwoCopyWithImpl(super.value, super.then);
+  @override TwoCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _TwoCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({String? id}) => $then(p3.Two(id: id ?? $value.id));
 }
@@ -240,4 +242,8 @@ mixin Mappable implements MappableMixin {
       }
     }
   }
+}
+
+extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
+  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
 }

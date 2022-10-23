@@ -60,4 +60,8 @@ mixin Mappable implements MappableMixin {
     }
   }
 }
+
+extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
+  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
+}
 ''';

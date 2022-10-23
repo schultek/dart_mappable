@@ -1,5 +1,4 @@
-import 'dart:core';
-
+// ignore_for_file: unused_element
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
@@ -51,15 +50,17 @@ extension PersonMapperExtension on p0.Person {
 }
 
 extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
-  PersonCopyWith<$R> get asPerson => chain(_PersonCopyWithImpl.new);
+  PersonCopyWith<$R> get asPerson => base.as((v, t) => _PersonCopyWithImpl(v, t));
 }
 
 abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
+  PersonCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   $R call({String? firstName});
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(super.value, super.then);
+  @override PersonCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _PersonCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({String? firstName}) => $then(p0.Person(firstName ?? $value.firstName));
 }
@@ -89,15 +90,17 @@ extension AppleMapperExtension on p1.Apple {
 }
 
 extension AppleObjectCopy<$R> on ObjectCopyWith<$R, p1.Apple> {
-  AppleCopyWith<$R> get asApple => chain(_AppleCopyWithImpl.new);
+  AppleCopyWith<$R> get asApple => base.as((v, t) => _AppleCopyWithImpl(v, t));
 }
 
 abstract class AppleCopyWith<$R> implements ObjectCopyWith<$R, p1.Apple> {
+  AppleCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   $R call({bool? isRed});
 }
 
 class _AppleCopyWithImpl<$R> extends BaseCopyWith<$R, p1.Apple> implements AppleCopyWith<$R> {
   _AppleCopyWithImpl(super.value, super.then);
+  @override AppleCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _AppleCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({bool? isRed}) => $then(p1.Apple(isRed ?? $value.isRed));
 }
@@ -127,15 +130,17 @@ extension CakeMapperExtension on p1.Cake {
 }
 
 extension CakeObjectCopy<$R> on ObjectCopyWith<$R, p1.Cake> {
-  CakeCopyWith<$R> get asCake => chain(_CakeCopyWithImpl.new);
+  CakeCopyWith<$R> get asCake => base.as((v, t) => _CakeCopyWithImpl(v, t));
 }
 
 abstract class CakeCopyWith<$R> implements ObjectCopyWith<$R, p1.Cake> {
+  CakeCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   $R call({String? type});
 }
 
 class _CakeCopyWithImpl<$R> extends BaseCopyWith<$R, p1.Cake> implements CakeCopyWith<$R> {
   _CakeCopyWithImpl(super.value, super.then);
+  @override CakeCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _CakeCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({String? type}) => $then(p1.Cake(type ?? $value.type));
 }
@@ -165,15 +170,17 @@ extension CarMapperExtension on p2.Car {
 }
 
 extension CarObjectCopy<$R> on ObjectCopyWith<$R, p2.Car> {
-  CarCopyWith<$R> get asCar => chain(_CarCopyWithImpl.new);
+  CarCopyWith<$R> get asCar => base.as((v, t) => _CarCopyWithImpl(v, t));
 }
 
 abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p2.Car> {
+  CarCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   $R call({String? brandName});
 }
 
 class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p2.Car> implements CarCopyWith<$R> {
   _CarCopyWithImpl(super.value, super.then);
+  @override CarCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _CarCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({String? brandName}) => $then(p2.Car(brandName ?? $value.brandName));
 }
@@ -204,15 +211,17 @@ extension Person1MapperExtension on p2.Person {
 }
 
 extension Person1ObjectCopy<$R> on ObjectCopyWith<$R, p2.Person> {
-  Person1CopyWith<$R> get asPerson => chain(_Person1CopyWithImpl.new);
+  Person1CopyWith<$R> get asPerson => base.as((v, t) => _Person1CopyWithImpl(v, t));
 }
 
 abstract class Person1CopyWith<$R> implements ObjectCopyWith<$R, p2.Person> {
+  Person1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   $R call({String? firstName});
 }
 
 class _Person1CopyWithImpl<$R> extends BaseCopyWith<$R, p2.Person> implements Person1CopyWith<$R> {
   _Person1CopyWithImpl(super.value, super.then);
+  @override Person1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _Person1CopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({String? firstName}) => $then(p2.Person(firstName ?? $value.firstName));
 }
@@ -242,15 +251,17 @@ extension AnimalMapperExtension on p3.Animal {
 }
 
 extension AnimalObjectCopy<$R> on ObjectCopyWith<$R, p3.Animal> {
-  AnimalCopyWith<$R> get asAnimal => chain(_AnimalCopyWithImpl.new);
+  AnimalCopyWith<$R> get asAnimal => base.as((v, t) => _AnimalCopyWithImpl(v, t));
 }
 
 abstract class AnimalCopyWith<$R> implements ObjectCopyWith<$R, p3.Animal> {
+  AnimalCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
   $R call({String? color});
 }
 
 class _AnimalCopyWithImpl<$R> extends BaseCopyWith<$R, p3.Animal> implements AnimalCopyWith<$R> {
   _AnimalCopyWithImpl(super.value, super.then);
+  @override AnimalCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _AnimalCopyWithImpl($value, (v) => then($then(v)));
 
   @override $R call({String? color}) => $then(p3.Animal(color ?? $value.color));
 }
@@ -322,4 +333,8 @@ mixin Mappable implements MappableMixin {
       }
     }
   }
+}
+
+extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
+  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
 }
