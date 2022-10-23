@@ -51,7 +51,7 @@ extension PersonMapperExtension on p0.Person {
 }
 
 extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
-  PersonCopyWith<$R> get person => chain(_PersonCopyWithImpl.new);
+  PersonCopyWith<$R> get asPerson => chain(_PersonCopyWithImpl.new);
 }
 
 abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
@@ -91,7 +91,7 @@ extension CarMapperExtension on p0.Car {
 }
 
 extension CarObjectCopy<$R> on ObjectCopyWith<$R, p0.Car> {
-  CarCopyWith<$R> get car => chain(_CarCopyWithImpl.new);
+  CarCopyWith<$R> get asCar => chain(_CarCopyWithImpl.new);
 }
 
 abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car> {
@@ -131,7 +131,7 @@ extension BrandMapperExtension on p0.Brand {
 }
 
 extension BrandObjectCopy<$R> on ObjectCopyWith<$R, p0.Brand> {
-  BrandCopyWith<$R> get brand => chain(_BrandCopyWithImpl.new);
+  BrandCopyWith<$R> get asBrand => chain(_BrandCopyWithImpl.new);
 }
 
 abstract class BrandCopyWith<$R> implements ObjectCopyWith<$R, p0.Brand> {
@@ -169,7 +169,7 @@ extension DealershipMapperExtension on p0.Dealership {
 }
 
 extension DealershipObjectCopy<$R> on ObjectCopyWith<$R, p0.Dealership> {
-  DealershipCopyWith<$R> get dealership => chain(_DealershipCopyWithImpl.new);
+  DealershipCopyWith<$R> get asDealership => chain(_DealershipCopyWithImpl.new);
 }
 
 abstract class DealershipCopyWith<$R> implements ObjectCopyWith<$R, p0.Dealership> {
@@ -255,7 +255,7 @@ mixin BrandListMixin {
 }
 
 extension BrandListObjectCopy<$R> on ObjectCopyWith<$R, p0.BrandList> {
-  BrandListCopyWith<$R> get brandList => chain(_BrandListCopyWithImpl.new);
+  BrandListCopyWith<$R> get asBrandList => chain(_BrandListCopyWithImpl.new);
 }
 
 abstract class BrandListCopyWith<$R> implements ItemListCopyWith<$R, p0.BrandList, p0.Brand?> {
@@ -298,7 +298,7 @@ mixin NamedItemListMixin<T> {
 }
 
 extension NamedItemListObjectCopy<$R, T> on ObjectCopyWith<$R, p0.NamedItemList<T>> {
-  NamedItemListCopyWith<$R, T> get namedItemList => chain(_NamedItemListCopyWithImpl.new);
+  NamedItemListCopyWith<$R, T> get asNamedItemList => chain(_NamedItemListCopyWithImpl.new);
 }
 
 abstract class NamedItemListCopyWith<$R, T> implements ItemListCopyWith<$R, p0.NamedItemList<T>, T> {
@@ -341,7 +341,7 @@ mixin KeyedItemListMixin<K, T> {
 }
 
 extension KeyedItemListObjectCopy<$R, K, T> on ObjectCopyWith<$R, p0.KeyedItemList<K, T>> {
-  KeyedItemListCopyWith<$R, K, T> get keyedItemList => chain(_KeyedItemListCopyWithImpl.new);
+  KeyedItemListCopyWith<$R, K, T> get asKeyedItemList => chain(_KeyedItemListCopyWithImpl.new);
 }
 
 abstract class KeyedItemListCopyWith<$R, K, T> implements ItemListCopyWith<$R, p0.KeyedItemList<K, T>, T> {
@@ -384,7 +384,7 @@ mixin ComparableItemListMixin<T extends Comparable<dynamic>> {
 }
 
 extension ComparableItemListObjectCopy<$R, T extends Comparable<dynamic>> on ObjectCopyWith<$R, p0.ComparableItemList<T>> {
-  ComparableItemListCopyWith<$R, T> get comparableItemList => chain(_ComparableItemListCopyWithImpl.new);
+  ComparableItemListCopyWith<$R, T> get asComparableItemList => chain(_ComparableItemListCopyWithImpl.new);
 }
 
 abstract class ComparableItemListCopyWith<$R, T extends Comparable<dynamic>> implements ItemListCopyWith<$R, p0.ComparableItemList<T>, T> {

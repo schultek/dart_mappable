@@ -129,7 +129,7 @@ class CopyWithGenerator {
     if (config.hasCallableConstructor) {
       snippets.add(
           'extension ${config.uniqueClassName}ObjectCopy<\$R$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam> {\n'
-          '  ${config.uniqueClassName}CopyWith<\$R$valueTypeParam$classTypeParams> get ${CaseStyle.camelCase.transform(config.className)} => chain(_${config.uniqueClassName}CopyWithImpl.new);\n'
+          '  ${config.uniqueClassName}CopyWith<\$R$valueTypeParam$classTypeParams> get as${config.className} => chain(_${config.uniqueClassName}CopyWithImpl.new);\n'
           '}\n\n');
     }
 
@@ -155,7 +155,7 @@ class CopyWithGenerator {
       var isOverridden =
           config.superConfig != null && param.param is SuperParameterConfig;
       snippets.add(
-          '  ${isOverridden ? '@override ' : ''}${param.name}CopyWith<\$R${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name};\n');
+          '  ${isOverridden ? '@override ' : ''}${param.name}CopyWith<\$R${param.optSubTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name};\n');
     }
 
     snippets.add(
@@ -173,7 +173,7 @@ class CopyWithGenerator {
 
       for (var param in copyParams) {
         snippets.add(
-            '  @override ${param.name}CopyWith<\$R${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name} => ');
+            '  @override ${param.name}CopyWith<\$R${param.optSubTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name} => ');
 
         if (param.a.type.isNullable) {
           snippets.add(

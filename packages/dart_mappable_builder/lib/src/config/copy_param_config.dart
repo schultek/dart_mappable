@@ -10,10 +10,88 @@ import 'parameter_config.dart';
 typedef GetConfig = ClassMapperConfig? Function(Element? e);
 
 class CopyParamConfig {
-  CopyParamConfig(this.param, this.name, this.imports);
+  static Iterable<CopyParamConfig> collectFrom(
+      List<ParameterConfig> params,
+      ClassMapperConfig config,
+      ImportsBuilder imports,
+      GetConfig getConfig) sync* {
+    for (var param in config.params) {
+      if (param is UnresolvedParameterConfig) {
+        continue;
+      }
+
+      ClassMapperConfig? resolveElement(Element? element) {
+        var classConfig = getConfig(element);
+        if (classConfig != null &&
+            classConfig.shouldGenerate(GenerateMethods.copy) &&
+            (classConfig.hasCallableConstructor ||
+                classConfig.superConfig != null ||
+                classConfig.subConfigs.isNotEmpty)) {
+          return classConfig;
+        }
+        return null;
+      }
+
+      CopyParamConfig makeCollectionConfig(
+        int valueIndex,
+          String name
+      ) {
+        var it = param.parameter.type as InterfaceType;
+        var itemElement = it.typeArguments[valueIndex].element2;
+        var itemConfig = resolveElement(itemElement);
+
+        var forceNullable = config.subConfigs.isNotEmpty;
+
+
+        var itemHasSubConfigs = itemConfig?.subConfigs.isNotEmpty ?? false;
+        var itemSelfTypeParam = itemHasSubConfigs
+            ? '${itemConfig!.prefixedClassName}${itemConfig.typeParams}'
+            : null;
+
+        return CollectionCopyParamConfig(
+            param: param,
+            name: name,
+            itemName: itemConfig?.uniqueClassName ?? 'Object',
+            itemSelfTypeParam: itemSelfTypeParam,
+            imports: imports,
+            forceNullable: forceNullable,
+            valueIndex: valueIndex,
+        );
+      }
+
+      if (param.parameter.type.isDartCoreList) {
+        yield makeCollectionConfig(0, 'List');
+      } else if (param.parameter.type.isDartCoreMap) {
+        yield makeCollectionConfig(1, 'Map');
+      } else {
+        var classElement = param.parameter.type.element2;
+        var classConfig = resolveElement(classElement);
+
+        if (classConfig != null) {
+          var hasSubConfigs = classConfig.subConfigs.isNotEmpty;
+          var selfTypeParam = hasSubConfigs
+              ? '${classConfig.prefixedClassName}${classConfig.typeParams}'
+              : null;
+          yield CopyParamConfig(
+            param: param,
+            name: classConfig.uniqueClassName,
+            selfTypeName: selfTypeParam,
+            imports: imports,
+          );
+        }
+      }
+    }
+  }
+
+  CopyParamConfig(
+      {required this.param,
+      required this.name,
+      this.selfTypeName,
+      required this.imports});
 
   final ParameterConfig param;
   final String name;
+  final String? selfTypeName;
   final ImportsBuilder imports;
 
   String get implName => '_${name}CopyWithImpl';
@@ -30,71 +108,24 @@ class CopyParamConfig {
 
   String get invocation => ', (v) => call(${param.superName}: v)';
 
-  static Iterable<CopyParamConfig> collectFrom(
-      List<ParameterConfig> params,
-      ClassMapperConfig config,
-      ImportsBuilder imports,
-      GetConfig getConfig) sync* {
-    for (var param in config.params) {
-      if (param is UnresolvedParameterConfig) {
-        continue;
-      }
-
-      ClassMapperConfig? resolveElement(Element? element) {
-        var classConfig = getConfig(element);
-        if (classConfig != null &&
-            classConfig.hasCallableConstructor &&
-            classConfig.shouldGenerate(GenerateMethods.copy)) {
-          return classConfig;
-        }
-        return null;
-      }
-
-      if (param.parameter.type.isDartCoreList) {
-        var it = param.parameter.type as InterfaceType;
-        var itemElement = it.typeArguments.first.element2;
-        var itemConfig = resolveElement(itemElement);
-
-        var hasSubConfigs = config.subConfigs.isNotEmpty;
-
-        yield ListCopyParamConfig(
-          param,
-          itemConfig?.uniqueClassName ?? 'Object',
-          imports,
-          hasSubConfigs,
-        );
-      } else if (param.parameter.type.isDartCoreMap) {
-        var it = param.parameter.type as InterfaceType;
-        var valueElement = it.typeArguments[1].element2;
-        var valueConfig = resolveElement(valueElement);
-
-        var hasSubConfigs = config.subConfigs.isNotEmpty;
-
-        yield MapCopyParamConfig(
-          param,
-          valueConfig?.uniqueClassName ?? 'Object',
-          imports,
-          hasSubConfigs,
-        );
-      } else {
-        var classElement = param.parameter.type.element2;
-        var classConfig = resolveElement(classElement);
-
-        if (classConfig != null) {
-          yield CopyParamConfig(param, classConfig.uniqueClassName, imports);
-        }
-      }
-    }
-  }
+  String get optSubTypeParam => selfTypeName != null ? ', $selfTypeName' : '';
 }
 
-class ListCopyParamConfig extends CopyParamConfig {
-  ListCopyParamConfig(ParameterConfig param, this.itemName,
-      ImportsBuilder imports, this.forceNullable)
-      : super(param, 'List', imports);
+class CollectionCopyParamConfig extends CopyParamConfig {
+  CollectionCopyParamConfig({
+    required super.param,
+    required super.name,
+    required this.itemName,
+    this.itemSelfTypeParam,
+    required super.imports,
+    required this.forceNullable,
+    required this.valueIndex,
+  });
 
   final String itemName;
+  final String? itemSelfTypeParam;
   final bool forceNullable;
+  final int valueIndex;
 
   @override
   String get implName => '${name}CopyWith';
@@ -102,29 +133,32 @@ class ListCopyParamConfig extends CopyParamConfig {
   String get itemImplName =>
       itemName == 'Object' ? 'ObjectCopyWith' : '_${itemName}CopyWithImpl';
 
+  String get itemOptSubTypeParam => itemSelfTypeParam != null ? ', $itemSelfTypeParam' : '';
+
   @override
   String get fieldTypeParams {
-    var typeArg = (p.type as InterfaceType).typeArguments.first;
+    var itemTypeArg = (p.type as InterfaceType).typeArguments[valueIndex];
     var typeArgNullable =
-        typeArg.nullabilitySuffix == NullabilitySuffix.question;
+        itemTypeArg.nullabilitySuffix == NullabilitySuffix.question;
 
     if (itemName == 'Object') {
       return super.fieldTypeParams +
-          ', ${itemName}CopyWith<\$R${super.fieldTypeParams}>${typeArgNullable || forceNullable ? '?' : ''}';
+          ', ${itemName}CopyWith<\$R$itemOptSubTypeParam, ${imports.prefixedType(itemTypeArg)}>${typeArgNullable || forceNullable ? '?' : ''}';
     }
 
-    var typeParams = typeArg is InterfaceType
-        ? typeArg.typeArguments
+    var typeParams = itemTypeArg is InterfaceType
+        ? itemTypeArg.typeArguments
             .map((t) => ', ${imports.prefixedType(t)}')
             .join()
         : '';
+
     return super.fieldTypeParams +
-        ', ${itemName}CopyWith<\$R$typeParams>${typeArgNullable ? '?' : ''}';
+        ', ${itemName}CopyWith<\$R$itemOptSubTypeParam$typeParams>${typeArgNullable ? '?' : ''}';
   }
 
   @override
   String get invocation {
-    var typeArg = (p.type as InterfaceType).typeArguments.first;
+    var typeArg = (p.type as InterfaceType).typeArguments[valueIndex];
     var typeArgNullable =
         typeArg.nullabilitySuffix == NullabilitySuffix.question;
 
@@ -132,46 +166,20 @@ class ListCopyParamConfig extends CopyParamConfig {
   }
 }
 
-class MapCopyParamConfig extends CopyParamConfig {
-  MapCopyParamConfig(ParameterConfig param, this.valueName,
-      ImportsBuilder imports, this.forceNullable)
-      : super(param, 'Map', imports);
+class ListCopyParamConfig extends CollectionCopyParamConfig {
+  ListCopyParamConfig({
+    required super.param,
+    required super.itemName,
+    required super.imports,
+    required super.forceNullable,
+  }) : super(name: 'List', valueIndex: 0);
+}
 
-  final String valueName;
-  final bool forceNullable;
-
-  @override
-  String get implName => '${name}CopyWith';
-
-  String get valueImplName =>
-      valueName == 'Object' ? 'ObjectCopyWith' : '_${valueName}CopyWithImpl';
-
-  @override
-  String get fieldTypeParams {
-    var valueTypeArg = (p.type as InterfaceType).typeArguments[1];
-    var typeArgNullable =
-        valueTypeArg.nullabilitySuffix == NullabilitySuffix.question;
-
-    if (valueName == 'Object') {
-      return super.fieldTypeParams +
-          ', ${valueName}CopyWith<\$R, ${imports.prefixedType(valueTypeArg)}>${typeArgNullable || forceNullable ? '?' : ''}';
-    }
-
-    var typeParams = valueTypeArg is InterfaceType
-        ? valueTypeArg.typeArguments
-            .map((t) => ', ${imports.prefixedType(t)}')
-            .join()
-        : '';
-    return super.fieldTypeParams +
-        ', ${valueName}CopyWith<\$R$typeParams>${typeArgNullable ? '?' : ''}';
-  }
-
-  @override
-  String get invocation {
-    var typeArg = (p.type as InterfaceType).typeArguments[1];
-    var typeArgNullable =
-        typeArg.nullabilitySuffix == NullabilitySuffix.question;
-
-    return ', (v, t) => ${typeArgNullable ? 'v == null ? null : ' : ''}$valueImplName(v, t)${super.invocation}';
-  }
+class MapCopyParamConfig extends CollectionCopyParamConfig {
+  MapCopyParamConfig({
+    required super.param,
+    required super.itemName,
+    required super.imports,
+    required super.forceNullable,
+  }) : super(name: 'Map', valueIndex: 1);
 }

@@ -49,7 +49,7 @@ extension AMapperExtension on p0.A {
 }
 
 extension AObjectCopy<$R> on ObjectCopyWith<$R, p0.A> {
-  ACopyWith<$R> get a => chain(_ACopyWithImpl.new);
+  ACopyWith<$R> get asA => chain(_ACopyWithImpl.new);
 }
 
 abstract class ACopyWith<$R> implements ObjectCopyWith<$R, p0.A> {
@@ -89,7 +89,7 @@ extension BMapperExtension on p0.B {
 }
 
 extension BObjectCopy<$R> on ObjectCopyWith<$R, p0.B> {
-  BCopyWith<$R> get b => chain(_BCopyWithImpl.new);
+  BCopyWith<$R> get asB => chain(_BCopyWithImpl.new);
 }
 
 abstract class BCopyWith<$R> implements ObjectCopyWith<$R, p0.B> {
@@ -129,7 +129,7 @@ extension CMapperExtension on p0.C {
 }
 
 extension CObjectCopy<$R> on ObjectCopyWith<$R, p0.C> {
-  CCopyWith<$R> get c => chain(_CCopyWithImpl.new);
+  CCopyWith<$R> get asC => chain(_CCopyWithImpl.new);
 }
 
 abstract class CCopyWith<$R> implements ObjectCopyWith<$R, p0.C> {
@@ -168,7 +168,7 @@ extension A1MapperExtension on p1.A {
 }
 
 extension A1ObjectCopy<$R> on ObjectCopyWith<$R, p1.A> {
-  A1CopyWith<$R> get a => chain(_A1CopyWithImpl.new);
+  A1CopyWith<$R> get asA => chain(_A1CopyWithImpl.new);
 }
 
 abstract class A1CopyWith<$R> implements ObjectCopyWith<$R, p1.A> {
@@ -209,7 +209,7 @@ extension B1MapperExtension on p1.B {
 }
 
 extension B1ObjectCopy<$R> on ObjectCopyWith<$R, p1.B> {
-  B1CopyWith<$R> get b => chain(_B1CopyWithImpl.new);
+  B1CopyWith<$R> get asB => chain(_B1CopyWithImpl.new);
 }
 
 abstract class B1CopyWith<$R> implements ObjectCopyWith<$R, p1.B> {
@@ -250,7 +250,7 @@ extension C1MapperExtension on p1.C {
 }
 
 extension C1ObjectCopy<$R> on ObjectCopyWith<$R, p1.C> {
-  C1CopyWith<$R> get c => chain(_C1CopyWithImpl.new);
+  C1CopyWith<$R> get asC => chain(_C1CopyWithImpl.new);
 }
 
 abstract class C1CopyWith<$R> implements ObjectCopyWith<$R, p1.C> {

@@ -51,7 +51,7 @@ extension PersonMapperExtension on p0.Person {
 }
 
 extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
-  PersonCopyWith<$R> get person => chain(_PersonCopyWithImpl.new);
+  PersonCopyWith<$R> get asPerson => chain(_PersonCopyWithImpl.new);
 }
 
 abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
@@ -89,7 +89,7 @@ extension AppleMapperExtension on p1.Apple {
 }
 
 extension AppleObjectCopy<$R> on ObjectCopyWith<$R, p1.Apple> {
-  AppleCopyWith<$R> get apple => chain(_AppleCopyWithImpl.new);
+  AppleCopyWith<$R> get asApple => chain(_AppleCopyWithImpl.new);
 }
 
 abstract class AppleCopyWith<$R> implements ObjectCopyWith<$R, p1.Apple> {
@@ -127,7 +127,7 @@ extension CakeMapperExtension on p1.Cake {
 }
 
 extension CakeObjectCopy<$R> on ObjectCopyWith<$R, p1.Cake> {
-  CakeCopyWith<$R> get cake => chain(_CakeCopyWithImpl.new);
+  CakeCopyWith<$R> get asCake => chain(_CakeCopyWithImpl.new);
 }
 
 abstract class CakeCopyWith<$R> implements ObjectCopyWith<$R, p1.Cake> {
@@ -165,7 +165,7 @@ extension CarMapperExtension on p2.Car {
 }
 
 extension CarObjectCopy<$R> on ObjectCopyWith<$R, p2.Car> {
-  CarCopyWith<$R> get car => chain(_CarCopyWithImpl.new);
+  CarCopyWith<$R> get asCar => chain(_CarCopyWithImpl.new);
 }
 
 abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p2.Car> {
@@ -204,7 +204,7 @@ extension Person1MapperExtension on p2.Person {
 }
 
 extension Person1ObjectCopy<$R> on ObjectCopyWith<$R, p2.Person> {
-  Person1CopyWith<$R> get person => chain(_Person1CopyWithImpl.new);
+  Person1CopyWith<$R> get asPerson => chain(_Person1CopyWithImpl.new);
 }
 
 abstract class Person1CopyWith<$R> implements ObjectCopyWith<$R, p2.Person> {
@@ -242,7 +242,7 @@ extension AnimalMapperExtension on p3.Animal {
 }
 
 extension AnimalObjectCopy<$R> on ObjectCopyWith<$R, p3.Animal> {
-  AnimalCopyWith<$R> get animal => chain(_AnimalCopyWithImpl.new);
+  AnimalCopyWith<$R> get asAnimal => chain(_AnimalCopyWithImpl.new);
 }
 
 abstract class AnimalCopyWith<$R> implements ObjectCopyWith<$R, p3.Animal> {

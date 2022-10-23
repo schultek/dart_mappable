@@ -45,7 +45,7 @@ extension PersonMapperExtension on p0.Person {
 }
 
 extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
-  PersonCopyWith<$R> get person => chain(_PersonCopyWithImpl.new);
+  PersonCopyWith<$R> get asPerson => chain(_PersonCopyWithImpl.new);
 }
 
 abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
@@ -85,7 +85,7 @@ extension CarMapperExtension on p0.Car {
 }
 
 extension CarObjectCopy<$R> on ObjectCopyWith<$R, p0.Car> {
-  CarCopyWith<$R> get car => chain(_CarCopyWithImpl.new);
+  CarCopyWith<$R> get asCar => chain(_CarCopyWithImpl.new);
 }
 
 abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car> {

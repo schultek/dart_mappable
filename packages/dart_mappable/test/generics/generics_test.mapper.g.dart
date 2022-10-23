@@ -48,7 +48,7 @@ extension BoxMapperExtension<T extends p0.Content> on p0.Box<T> {
 }
 
 extension BoxObjectCopy<$R, T extends p0.Content> on ObjectCopyWith<$R, p0.Box<T>> {
-  BoxCopyWith<$R, T> get box => chain(_BoxCopyWithImpl.new);
+  BoxCopyWith<$R, T> get asBox => chain(_BoxCopyWithImpl.new);
 }
 
 abstract class BoxCopyWith<$R, T extends p0.Content> implements ObjectCopyWith<$R, p0.Box<T>> {
@@ -91,7 +91,7 @@ mixin ConfettiMixin {
 }
 
 extension ConfettiObjectCopy<$R> on ObjectCopyWith<$R, p0.Confetti> {
-  ConfettiCopyWith<$R> get confetti => chain(_ConfettiCopyWithImpl.new);
+  ConfettiCopyWith<$R> get asConfetti => chain(_ConfettiCopyWithImpl.new);
 }
 
 abstract class ConfettiCopyWith<$R> implements ContentCopyWith<$R, p0.Confetti> {
@@ -132,7 +132,7 @@ mixin ContentMixin {
 }
 
 extension ContentObjectCopy<$R> on ObjectCopyWith<$R, p0.Content> {
-  ContentCopyWith<$R, p0.Content> get content => chain(_ContentCopyWithImpl.new);
+  ContentCopyWith<$R, p0.Content> get asContent => chain(_ContentCopyWithImpl.new);
 }
 
 abstract class ContentCopyWith<$R, $V extends p0.Content> implements ObjectCopyWith<$R, $V> {
@@ -170,7 +170,7 @@ extension DataMapperExtension on p0.Data {
 }
 
 extension DataObjectCopy<$R> on ObjectCopyWith<$R, p0.Data> {
-  DataCopyWith<$R> get data => chain(_DataCopyWithImpl.new);
+  DataCopyWith<$R> get asData => chain(_DataCopyWithImpl.new);
 }
 
 abstract class DataCopyWith<$R> implements ObjectCopyWith<$R, p0.Data> {
@@ -208,7 +208,7 @@ extension SingleSettingMapperExtension<T> on p0.SingleSetting<T> {
 }
 
 extension SingleSettingObjectCopy<$R, T> on ObjectCopyWith<$R, p0.SingleSetting<T>> {
-  SingleSettingCopyWith<$R, T> get singleSetting => chain(_SingleSettingCopyWithImpl.new);
+  SingleSettingCopyWith<$R, T> get asSingleSetting => chain(_SingleSettingCopyWithImpl.new);
 }
 
 abstract class SingleSettingCopyWith<$R, T> implements ObjectCopyWith<$R, p0.SingleSetting<T>> {
@@ -248,7 +248,7 @@ extension SettingsMapperExtension on p0.Settings {
 }
 
 extension SettingsObjectCopy<$R> on ObjectCopyWith<$R, p0.Settings> {
-  SettingsCopyWith<$R> get settings => chain(_SettingsCopyWithImpl.new);
+  SettingsCopyWith<$R> get asSettings => chain(_SettingsCopyWithImpl.new);
 }
 
 abstract class SettingsCopyWith<$R> implements ObjectCopyWith<$R, p0.Settings> {

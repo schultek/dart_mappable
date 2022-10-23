@@ -52,7 +52,7 @@ mixin GameMixin {
 }
 
 extension GameObjectCopy<$R> on ObjectCopyWith<$R, p0.Game> {
-  GameCopyWith<$R, p0.Game> get game => chain(_GameCopyWithImpl.new);
+  GameCopyWith<$R, p0.Game> get asGame => chain(_GameCopyWithImpl.new);
 }
 
 abstract class GameCopyWith<$R, $V extends p0.Game> implements ObjectCopyWith<$R, $V> {
@@ -95,7 +95,7 @@ mixin CardGameMixin {
 }
 
 extension CardGameObjectCopy<$R> on ObjectCopyWith<$R, p0.CardGame> {
-  CardGameCopyWith<$R> get cardGame => chain(_CardGameCopyWithImpl.new);
+  CardGameCopyWith<$R> get asCardGame => chain(_CardGameCopyWithImpl.new);
 }
 
 abstract class CardGameCopyWith<$R> implements GameCopyWith<$R, p0.CardGame> {
@@ -135,7 +135,7 @@ extension PlayerMapperExtension on p0.Player {
 }
 
 extension PlayerObjectCopy<$R> on ObjectCopyWith<$R, p0.Player> {
-  PlayerCopyWith<$R> get player => chain(_PlayerCopyWithImpl.new);
+  PlayerCopyWith<$R> get asPlayer => chain(_PlayerCopyWithImpl.new);
 }
 
 abstract class PlayerCopyWith<$R> implements ObjectCopyWith<$R, p0.Player> {
@@ -173,7 +173,7 @@ extension ClothesMapperExtension on p0.Clothes {
 }
 
 extension ClothesObjectCopy<$R> on ObjectCopyWith<$R, p0.Clothes> {
-  ClothesCopyWith<$R> get clothes => chain(_ClothesCopyWithImpl.new);
+  ClothesCopyWith<$R> get asClothes => chain(_ClothesCopyWithImpl.new);
 }
 
 abstract class ClothesCopyWith<$R> implements ObjectCopyWith<$R, p0.Clothes> {
@@ -213,7 +213,7 @@ extension ComponentMapperExtension on p0.Component {
 }
 
 extension ComponentObjectCopy<$R> on ObjectCopyWith<$R, p0.Component> {
-  ComponentCopyWith<$R> get component => chain(_ComponentCopyWithImpl.new);
+  ComponentCopyWith<$R> get asComponent => chain(_ComponentCopyWithImpl.new);
 }
 
 abstract class ComponentCopyWith<$R> implements ObjectCopyWith<$R, p0.Component> {

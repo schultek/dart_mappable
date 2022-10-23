@@ -44,7 +44,7 @@ extension ItemsMapperExtension on p0.Items {
 }
 
 extension ItemsObjectCopy<$R> on ObjectCopyWith<$R, p0.Items> {
-  ItemsCopyWith<$R> get items => chain(_ItemsCopyWithImpl.new);
+  ItemsCopyWith<$R> get asItems => chain(_ItemsCopyWithImpl.new);
 }
 
 abstract class ItemsCopyWith<$R> implements ObjectCopyWith<$R, p0.Items> {
@@ -86,7 +86,7 @@ extension ItemMapperExtension on p0.Item {
 }
 
 extension ItemObjectCopy<$R> on ObjectCopyWith<$R, p0.Item> {
-  ItemCopyWith<$R> get item => chain(_ItemCopyWithImpl.new);
+  ItemCopyWith<$R> get asItem => chain(_ItemCopyWithImpl.new);
 }
 
 abstract class ItemCopyWith<$R> implements ObjectCopyWith<$R, p0.Item> {

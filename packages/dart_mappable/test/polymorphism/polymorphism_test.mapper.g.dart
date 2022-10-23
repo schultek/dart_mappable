@@ -90,7 +90,7 @@ mixin CatMixin {
 }
 
 extension CatObjectCopy<$R> on ObjectCopyWith<$R, p0.Cat> {
-  CatCopyWith<$R> get cat => chain(_CatCopyWithImpl.new);
+  CatCopyWith<$R> get asCat => chain(_CatCopyWithImpl.new);
 }
 
 abstract class CatCopyWith<$R> implements AnimalCopyWith<$R, p0.Cat> {
@@ -131,7 +131,7 @@ mixin DogMixin {
 }
 
 extension DogObjectCopy<$R> on ObjectCopyWith<$R, p0.Dog> {
-  DogCopyWith<$R> get dog => chain(_DogCopyWithImpl.new);
+  DogCopyWith<$R> get asDog => chain(_DogCopyWithImpl.new);
 }
 
 abstract class DogCopyWith<$R> implements AnimalCopyWith<$R, p0.Dog> {
@@ -172,7 +172,7 @@ mixin NullAnimalMixin {
 }
 
 extension NullAnimalObjectCopy<$R> on ObjectCopyWith<$R, p0.NullAnimal> {
-  NullAnimalCopyWith<$R> get nullAnimal => chain(_NullAnimalCopyWithImpl.new);
+  NullAnimalCopyWith<$R> get asNullAnimal => chain(_NullAnimalCopyWithImpl.new);
 }
 
 abstract class NullAnimalCopyWith<$R> implements AnimalCopyWith<$R, p0.NullAnimal> {
@@ -213,7 +213,7 @@ mixin DefaultAnimalMixin {
 }
 
 extension DefaultAnimalObjectCopy<$R> on ObjectCopyWith<$R, p0.DefaultAnimal> {
-  DefaultAnimalCopyWith<$R> get defaultAnimal => chain(_DefaultAnimalCopyWithImpl.new);
+  DefaultAnimalCopyWith<$R> get asDefaultAnimal => chain(_DefaultAnimalCopyWithImpl.new);
 }
 
 abstract class DefaultAnimalCopyWith<$R> implements AnimalCopyWith<$R, p0.DefaultAnimal> {
@@ -231,15 +231,15 @@ class ZooMapper extends BaseMapper<p0.Zoo> {
 
   @override Function get decoder => decode;
   p0.Zoo decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  p0.Zoo fromMap(Map<String, dynamic> map) => p0.Zoo(Mapper.i.$get(map, 'animal'));
+  p0.Zoo fromMap(Map<String, dynamic> map) => p0.Zoo(Mapper.i.$get(map, 'animal'), Mapper.i.$get(map, 'animals'), Mapper.i.$get(map, 'animals2'));
 
   @override Function get encoder => encode;
   dynamic encode(p0.Zoo v) => toMap(v);
-  Map<String, dynamic> toMap(p0.Zoo z) => {'animal': Mapper.i.$enc(z.animal, 'animal')};
+  Map<String, dynamic> toMap(p0.Zoo z) => {'animal': Mapper.i.$enc(z.animal, 'animal'), 'animals': Mapper.i.$enc(z.animals, 'animals'), 'animals2': Mapper.i.$enc(z.animals2, 'animals2')};
 
-  @override String stringify(p0.Zoo self) => 'Zoo(animal: ${Mapper.asString(self.animal)})';
-  @override int hash(p0.Zoo self) => Mapper.hash(self.animal);
-  @override bool equals(p0.Zoo self, p0.Zoo other) => Mapper.isEqual(self.animal, other.animal);
+  @override String stringify(p0.Zoo self) => 'Zoo(animal: ${Mapper.asString(self.animal)}, animals: ${Mapper.asString(self.animals)}, animals2: ${Mapper.asString(self.animals2)})';
+  @override int hash(p0.Zoo self) => Mapper.hash(self.animal) ^ Mapper.hash(self.animals) ^ Mapper.hash(self.animals2);
+  @override bool equals(p0.Zoo self, p0.Zoo other) => Mapper.isEqual(self.animal, other.animal) && Mapper.isEqual(self.animals, other.animals) && Mapper.isEqual(self.animals2, other.animals2);
 
   @override Function get typeFactory => (f) => f<p0.Zoo>();
 }
@@ -251,17 +251,23 @@ extension ZooMapperExtension on p0.Zoo {
 }
 
 extension ZooObjectCopy<$R> on ObjectCopyWith<$R, p0.Zoo> {
-  ZooCopyWith<$R> get zoo => chain(_ZooCopyWithImpl.new);
+  ZooCopyWith<$R> get asZoo => chain(_ZooCopyWithImpl.new);
 }
 
 abstract class ZooCopyWith<$R> implements ObjectCopyWith<$R, p0.Zoo> {
-  $R call({p0.Animal? animal});
+  AnimalCopyWith<$R, p0.Animal> get animal;
+  ListCopyWith<$R, p0.Animal, AnimalCopyWith<$R, p0.Animal>> get animals;
+  MapCopyWith<$R, String, p0.Animal, AnimalCopyWith<$R, p0.Animal>> get animals2;
+  $R call({p0.Animal? animal, List<p0.Animal>? animals, Map<String, p0.Animal>? animals2});
 }
 
 class _ZooCopyWithImpl<$R> extends BaseCopyWith<p0.Zoo, $R> implements ZooCopyWith<$R> {
   _ZooCopyWithImpl(super.value, super.then);
 
-  @override $R call({p0.Animal? animal}) => $then(p0.Zoo(animal ?? $value.animal));
+  @override AnimalCopyWith<$R, p0.Animal> get animal => _AnimalCopyWithImpl($value.animal, (v) => call(animal: v));
+  @override ListCopyWith<$R, p0.Animal, AnimalCopyWith<$R, p0.Animal>> get animals => ListCopyWith($value.animals, (v, t) => _AnimalCopyWithImpl(v, t), (v) => call(animals: v));
+  @override MapCopyWith<$R, String, p0.Animal, AnimalCopyWith<$R, p0.Animal>> get animals2 => MapCopyWith($value.animals2, (v, t) => _AnimalCopyWithImpl(v, t), (v) => call(animals2: v));
+  @override $R call({p0.Animal? animal, List<p0.Animal>? animals, Map<String, p0.Animal>? animals2}) => $then(p0.Zoo(animal ?? $value.animal, animals ?? $value.animals, animals2 ?? $value.animals2));
 }
 
 
