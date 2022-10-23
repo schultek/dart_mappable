@@ -166,7 +166,7 @@ class CopyWithGenerator {
     if (config.hasCallableConstructor) {
       snippets.add('\n'
           'class _${config.uniqueClassName}CopyWithImpl<\$R$classTypeParamsDef> '
-          'extends BaseCopyWith<$selfTypeParam, \$R> implements ${config.uniqueClassName}CopyWith'
+          'extends BaseCopyWith<\$R, $selfTypeParam> implements ${config.uniqueClassName}CopyWith'
           '<\$R${config.subConfigs.isNotEmpty ? ', $selfTypeParam' : ''}$classTypeParams> {\n'
           '  _${config.uniqueClassName}CopyWithImpl(super.value, super.then);\n'
           '\n');

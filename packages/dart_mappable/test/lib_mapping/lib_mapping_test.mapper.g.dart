@@ -58,7 +58,7 @@ abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
   $R call({String? firstName});
 }
 
-class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements PersonCopyWith<$R> {
+class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(super.value, super.then);
 
   @override $R call({String? firstName}) => $then(p0.Person(firstName ?? $value.firstName));
@@ -96,7 +96,7 @@ abstract class AppleCopyWith<$R> implements ObjectCopyWith<$R, p1.Apple> {
   $R call({bool? isRed});
 }
 
-class _AppleCopyWithImpl<$R> extends BaseCopyWith<p1.Apple, $R> implements AppleCopyWith<$R> {
+class _AppleCopyWithImpl<$R> extends BaseCopyWith<$R, p1.Apple> implements AppleCopyWith<$R> {
   _AppleCopyWithImpl(super.value, super.then);
 
   @override $R call({bool? isRed}) => $then(p1.Apple(isRed ?? $value.isRed));
@@ -134,7 +134,7 @@ abstract class CakeCopyWith<$R> implements ObjectCopyWith<$R, p1.Cake> {
   $R call({String? type});
 }
 
-class _CakeCopyWithImpl<$R> extends BaseCopyWith<p1.Cake, $R> implements CakeCopyWith<$R> {
+class _CakeCopyWithImpl<$R> extends BaseCopyWith<$R, p1.Cake> implements CakeCopyWith<$R> {
   _CakeCopyWithImpl(super.value, super.then);
 
   @override $R call({String? type}) => $then(p1.Cake(type ?? $value.type));
@@ -172,7 +172,7 @@ abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p2.Car> {
   $R call({String? brandName});
 }
 
-class _CarCopyWithImpl<$R> extends BaseCopyWith<p2.Car, $R> implements CarCopyWith<$R> {
+class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p2.Car> implements CarCopyWith<$R> {
   _CarCopyWithImpl(super.value, super.then);
 
   @override $R call({String? brandName}) => $then(p2.Car(brandName ?? $value.brandName));
@@ -211,7 +211,7 @@ abstract class Person1CopyWith<$R> implements ObjectCopyWith<$R, p2.Person> {
   $R call({String? firstName});
 }
 
-class _Person1CopyWithImpl<$R> extends BaseCopyWith<p2.Person, $R> implements Person1CopyWith<$R> {
+class _Person1CopyWithImpl<$R> extends BaseCopyWith<$R, p2.Person> implements Person1CopyWith<$R> {
   _Person1CopyWithImpl(super.value, super.then);
 
   @override $R call({String? firstName}) => $then(p2.Person(firstName ?? $value.firstName));
@@ -249,7 +249,7 @@ abstract class AnimalCopyWith<$R> implements ObjectCopyWith<$R, p3.Animal> {
   $R call({String? color});
 }
 
-class _AnimalCopyWithImpl<$R> extends BaseCopyWith<p3.Animal, $R> implements AnimalCopyWith<$R> {
+class _AnimalCopyWithImpl<$R> extends BaseCopyWith<$R, p3.Animal> implements AnimalCopyWith<$R> {
   _AnimalCopyWithImpl(super.value, super.then);
 
   @override $R call({String? color}) => $then(p3.Animal(color ?? $value.color));

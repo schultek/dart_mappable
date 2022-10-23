@@ -53,7 +53,7 @@ abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
   $R call({String? name, int? age, p0.Car? car});
 }
 
-class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements PersonCopyWith<$R> {
+class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(super.value, super.then);
 
   @override CarCopyWith<$R>? get car => $value.car != null ? _CarCopyWithImpl($value.car!, (v) => call(car: v)) : null;
@@ -92,7 +92,7 @@ abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car> {
   $R call({int? drivenKm, p0.Brand? brand});
 }
 
-class _CarCopyWithImpl<$R> extends BaseCopyWith<p0.Car, $R> implements CarCopyWith<$R> {
+class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Car> implements CarCopyWith<$R> {
   _CarCopyWithImpl(super.value, super.then);
 
   @override $R call({int? drivenKm, p0.Brand? brand}) => $then(p0.Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));

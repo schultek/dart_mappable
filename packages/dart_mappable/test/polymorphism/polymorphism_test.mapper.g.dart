@@ -97,7 +97,7 @@ abstract class CatCopyWith<$R> implements AnimalCopyWith<$R, p0.Cat> {
   @override $R call({String? name, String? color});
 }
 
-class _CatCopyWithImpl<$R> extends BaseCopyWith<p0.Cat, $R> implements CatCopyWith<$R> {
+class _CatCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Cat> implements CatCopyWith<$R> {
   _CatCopyWithImpl(super.value, super.then);
 
   @override $R call({String? name, String? color}) => $then(p0.Cat(name ?? $value.name, color ?? $value.color));
@@ -138,7 +138,7 @@ abstract class DogCopyWith<$R> implements AnimalCopyWith<$R, p0.Dog> {
   @override $R call({int? age});
 }
 
-class _DogCopyWithImpl<$R> extends BaseCopyWith<p0.Dog, $R> implements DogCopyWith<$R> {
+class _DogCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Dog> implements DogCopyWith<$R> {
   _DogCopyWithImpl(super.value, super.then);
 
   @override $R call({int? age}) => $then(p0.Dog(age ?? $value.age));
@@ -179,7 +179,7 @@ abstract class NullAnimalCopyWith<$R> implements AnimalCopyWith<$R, p0.NullAnima
   @override $R call({String? name});
 }
 
-class _NullAnimalCopyWithImpl<$R> extends BaseCopyWith<p0.NullAnimal, $R> implements NullAnimalCopyWith<$R> {
+class _NullAnimalCopyWithImpl<$R> extends BaseCopyWith<$R, p0.NullAnimal> implements NullAnimalCopyWith<$R> {
   _NullAnimalCopyWithImpl(super.value, super.then);
 
   @override $R call({String? name}) => $then(p0.NullAnimal(name ?? $value.name));
@@ -220,7 +220,7 @@ abstract class DefaultAnimalCopyWith<$R> implements AnimalCopyWith<$R, p0.Defaul
   @override $R call({String? name, String? type});
 }
 
-class _DefaultAnimalCopyWithImpl<$R> extends BaseCopyWith<p0.DefaultAnimal, $R> implements DefaultAnimalCopyWith<$R> {
+class _DefaultAnimalCopyWithImpl<$R> extends BaseCopyWith<$R, p0.DefaultAnimal> implements DefaultAnimalCopyWith<$R> {
   _DefaultAnimalCopyWithImpl(super.value, super.then);
 
   @override $R call({String? name, String? type}) => $then(p0.DefaultAnimal(name ?? $value.name, type ?? $value.type));
@@ -261,7 +261,7 @@ abstract class ZooCopyWith<$R> implements ObjectCopyWith<$R, p0.Zoo> {
   $R call({p0.Animal? animal, List<p0.Animal>? animals, Map<String, p0.Animal>? animals2});
 }
 
-class _ZooCopyWithImpl<$R> extends BaseCopyWith<p0.Zoo, $R> implements ZooCopyWith<$R> {
+class _ZooCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Zoo> implements ZooCopyWith<$R> {
   _ZooCopyWithImpl(super.value, super.then);
 
   @override AnimalCopyWith<$R, p0.Animal> get animal => _AnimalCopyWithImpl($value.animal, (v) => call(animal: v));

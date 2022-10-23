@@ -56,7 +56,7 @@ abstract class BoxCopyWith<$R, T extends p0.Content> implements ObjectCopyWith<$
   $R call({int? size, List<T>? contents});
 }
 
-class _BoxCopyWithImpl<$R, T extends p0.Content> extends BaseCopyWith<p0.Box<T>, $R> implements BoxCopyWith<$R, T> {
+class _BoxCopyWithImpl<$R, T extends p0.Content> extends BaseCopyWith<$R, p0.Box<T>> implements BoxCopyWith<$R, T> {
   _BoxCopyWithImpl(super.value, super.then);
 
   @override ListCopyWith<$R, T, ObjectCopyWith<$R, T>> get contents => ListCopyWith($value.contents, (v, t) => ObjectCopyWith(v, t), (v) => call(contents: v));
@@ -98,7 +98,7 @@ abstract class ConfettiCopyWith<$R> implements ContentCopyWith<$R, p0.Confetti> 
   @override $R call({String? color});
 }
 
-class _ConfettiCopyWithImpl<$R> extends BaseCopyWith<p0.Confetti, $R> implements ConfettiCopyWith<$R> {
+class _ConfettiCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Confetti> implements ConfettiCopyWith<$R> {
   _ConfettiCopyWithImpl(super.value, super.then);
 
   @override $R call({String? color}) => $then(p0.Confetti(color ?? $value.color));
@@ -139,7 +139,7 @@ abstract class ContentCopyWith<$R, $V extends p0.Content> implements ObjectCopyW
   $R call();
 }
 
-class _ContentCopyWithImpl<$R> extends BaseCopyWith<p0.Content, $R> implements ContentCopyWith<$R, p0.Content> {
+class _ContentCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Content> implements ContentCopyWith<$R, p0.Content> {
   _ContentCopyWithImpl(super.value, super.then);
 
   @override $R call() => $then(p0.Content());
@@ -177,7 +177,7 @@ abstract class DataCopyWith<$R> implements ObjectCopyWith<$R, p0.Data> {
   $R call({String? data});
 }
 
-class _DataCopyWithImpl<$R> extends BaseCopyWith<p0.Data, $R> implements DataCopyWith<$R> {
+class _DataCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Data> implements DataCopyWith<$R> {
   _DataCopyWithImpl(super.value, super.then);
 
   @override $R call({String? data}) => $then(p0.Data(data ?? $value.data));
@@ -216,7 +216,7 @@ abstract class SingleSettingCopyWith<$R, T> implements ObjectCopyWith<$R, p0.Sin
   $R call({List<T>? properties});
 }
 
-class _SingleSettingCopyWithImpl<$R, T> extends BaseCopyWith<p0.SingleSetting<T>, $R> implements SingleSettingCopyWith<$R, T> {
+class _SingleSettingCopyWithImpl<$R, T> extends BaseCopyWith<$R, p0.SingleSetting<T>> implements SingleSettingCopyWith<$R, T> {
   _SingleSettingCopyWithImpl(super.value, super.then);
 
   @override ListCopyWith<$R, T, ObjectCopyWith<$R, T>>? get properties => $value.properties != null ? ListCopyWith($value.properties!, (v, t) => ObjectCopyWith(v, t), (v) => call(properties: v)) : null;
@@ -256,7 +256,7 @@ abstract class SettingsCopyWith<$R> implements ObjectCopyWith<$R, p0.Settings> {
   $R call({Map<String, p0.SingleSetting<dynamic>>? settings});
 }
 
-class _SettingsCopyWithImpl<$R> extends BaseCopyWith<p0.Settings, $R> implements SettingsCopyWith<$R> {
+class _SettingsCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Settings> implements SettingsCopyWith<$R> {
   _SettingsCopyWithImpl(super.value, super.then);
 
   @override MapCopyWith<$R, String, p0.SingleSetting<dynamic>, SingleSettingCopyWith<$R, dynamic>>? get settings => $value.settings != null ? MapCopyWith($value.settings!, (v, t) => _SingleSettingCopyWithImpl(v, t), (v) => call(settings: v)) : null;

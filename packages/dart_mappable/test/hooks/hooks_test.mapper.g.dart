@@ -60,7 +60,7 @@ abstract class GameCopyWith<$R, $V extends p0.Game> implements ObjectCopyWith<$R
   $R call({p0.Player? player});
 }
 
-class _GameCopyWithImpl<$R> extends BaseCopyWith<p0.Game, $R> implements GameCopyWith<$R, p0.Game> {
+class _GameCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Game> implements GameCopyWith<$R, p0.Game> {
   _GameCopyWithImpl(super.value, super.then);
 
   @override PlayerCopyWith<$R> get player => _PlayerCopyWithImpl($value.player, (v) => call(player: v));
@@ -103,7 +103,7 @@ abstract class CardGameCopyWith<$R> implements GameCopyWith<$R, p0.CardGame> {
   @override $R call({p0.Player? player});
 }
 
-class _CardGameCopyWithImpl<$R> extends BaseCopyWith<p0.CardGame, $R> implements CardGameCopyWith<$R> {
+class _CardGameCopyWithImpl<$R> extends BaseCopyWith<$R, p0.CardGame> implements CardGameCopyWith<$R> {
   _CardGameCopyWithImpl(super.value, super.then);
 
   @override PlayerCopyWith<$R> get player => _PlayerCopyWithImpl($value.player, (v) => call(player: v));
@@ -142,7 +142,7 @@ abstract class PlayerCopyWith<$R> implements ObjectCopyWith<$R, p0.Player> {
   $R call({String? id});
 }
 
-class _PlayerCopyWithImpl<$R> extends BaseCopyWith<p0.Player, $R> implements PlayerCopyWith<$R> {
+class _PlayerCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Player> implements PlayerCopyWith<$R> {
   _PlayerCopyWithImpl(super.value, super.then);
 
   @override $R call({String? id}) => $then(p0.Player(id ?? $value.id));
@@ -181,7 +181,7 @@ abstract class ClothesCopyWith<$R> implements ObjectCopyWith<$R, p0.Clothes> {
   $R call({int? size, Map<String, dynamic>? unmappedProps});
 }
 
-class _ClothesCopyWithImpl<$R> extends BaseCopyWith<p0.Clothes, $R> implements ClothesCopyWith<$R> {
+class _ClothesCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Clothes> implements ClothesCopyWith<$R> {
   _ClothesCopyWithImpl(super.value, super.then);
 
   @override MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic>> get unmappedProps => MapCopyWith($value.unmappedProps, (v, t) => ObjectCopyWith(v, t), (v) => call(unmappedProps: v));
@@ -221,7 +221,7 @@ abstract class ComponentCopyWith<$R> implements ObjectCopyWith<$R, p0.Component>
   $R call({String? id, Map<String, dynamic>? unmappedProps, String? name});
 }
 
-class _ComponentCopyWithImpl<$R> extends BaseCopyWith<p0.Component, $R> implements ComponentCopyWith<$R> {
+class _ComponentCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Component> implements ComponentCopyWith<$R> {
   _ComponentCopyWithImpl(super.value, super.then);
 
   @override MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic>>? get unmappedProps => $value.unmappedProps != null ? MapCopyWith($value.unmappedProps!, (v, t) => ObjectCopyWith(v, t), (v) => call(unmappedProps: v)) : null;

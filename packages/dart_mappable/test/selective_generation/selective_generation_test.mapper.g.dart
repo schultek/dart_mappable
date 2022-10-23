@@ -42,7 +42,7 @@ abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
   $R call({String? name});
 }
 
-class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements PersonCopyWith<$R> {
+class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(super.value, super.then);
 
   @override $R call({String? name}) => $then(p0.Person(name ?? $value.name));

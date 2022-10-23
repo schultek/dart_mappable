@@ -53,7 +53,7 @@ abstract class ItemsCopyWith<$R> implements ObjectCopyWith<$R, p0.Items> {
   $R call({List<p0.Item>? items, Map<int, p0.Item>? items2});
 }
 
-class _ItemsCopyWithImpl<$R> extends BaseCopyWith<p0.Items, $R> implements ItemsCopyWith<$R> {
+class _ItemsCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Items> implements ItemsCopyWith<$R> {
   _ItemsCopyWithImpl(super.value, super.then);
 
   @override ListCopyWith<$R, p0.Item, ItemCopyWith<$R>> get items => ListCopyWith($value.items, (v, t) => _ItemCopyWithImpl(v, t), (v) => call(items: v));
@@ -93,7 +93,7 @@ abstract class ItemCopyWith<$R> implements ObjectCopyWith<$R, p0.Item> {
   $R call({int? index});
 }
 
-class _ItemCopyWithImpl<$R> extends BaseCopyWith<p0.Item, $R> implements ItemCopyWith<$R> {
+class _ItemCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Item> implements ItemCopyWith<$R> {
   _ItemCopyWithImpl(super.value, super.then);
 
   @override $R call({int? index}) => $then(p0.Item(index ?? $value.index));

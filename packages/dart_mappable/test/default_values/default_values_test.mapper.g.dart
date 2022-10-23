@@ -57,7 +57,7 @@ abstract class ACopyWith<$R> implements ObjectCopyWith<$R, p0.A> {
   $R call({p0.B? b});
 }
 
-class _ACopyWithImpl<$R> extends BaseCopyWith<p0.A, $R> implements ACopyWith<$R> {
+class _ACopyWithImpl<$R> extends BaseCopyWith<$R, p0.A> implements ACopyWith<$R> {
   _ACopyWithImpl(super.value, super.then);
 
   @override BCopyWith<$R> get b => _BCopyWithImpl($value.b, (v) => call(b: v));
@@ -97,7 +97,7 @@ abstract class BCopyWith<$R> implements ObjectCopyWith<$R, p0.B> {
   $R call({p0.C? c});
 }
 
-class _BCopyWithImpl<$R> extends BaseCopyWith<p0.B, $R> implements BCopyWith<$R> {
+class _BCopyWithImpl<$R> extends BaseCopyWith<$R, p0.B> implements BCopyWith<$R> {
   _BCopyWithImpl(super.value, super.then);
 
   @override CCopyWith<$R> get c => _CCopyWithImpl($value.c, (v) => call(c: v));
@@ -136,7 +136,7 @@ abstract class CCopyWith<$R> implements ObjectCopyWith<$R, p0.C> {
   $R call({String? d});
 }
 
-class _CCopyWithImpl<$R> extends BaseCopyWith<p0.C, $R> implements CCopyWith<$R> {
+class _CCopyWithImpl<$R> extends BaseCopyWith<$R, p0.C> implements CCopyWith<$R> {
   _CCopyWithImpl(super.value, super.then);
 
   @override $R call({String? d}) => $then(p0.C(d ?? $value.d));
@@ -176,7 +176,7 @@ abstract class A1CopyWith<$R> implements ObjectCopyWith<$R, p1.A> {
   $R call({p1.B? b});
 }
 
-class _A1CopyWithImpl<$R> extends BaseCopyWith<p1.A, $R> implements A1CopyWith<$R> {
+class _A1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.A> implements A1CopyWith<$R> {
   _A1CopyWithImpl(super.value, super.then);
 
   @override B1CopyWith<$R> get b => _B1CopyWithImpl($value.b, (v) => call(b: v));
@@ -217,7 +217,7 @@ abstract class B1CopyWith<$R> implements ObjectCopyWith<$R, p1.B> {
   $R call({p1.C? c});
 }
 
-class _B1CopyWithImpl<$R> extends BaseCopyWith<p1.B, $R> implements B1CopyWith<$R> {
+class _B1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.B> implements B1CopyWith<$R> {
   _B1CopyWithImpl(super.value, super.then);
 
   @override C1CopyWith<$R> get c => _C1CopyWithImpl($value.c, (v) => call(c: v));
@@ -257,7 +257,7 @@ abstract class C1CopyWith<$R> implements ObjectCopyWith<$R, p1.C> {
   $R call({String? d});
 }
 
-class _C1CopyWithImpl<$R> extends BaseCopyWith<p1.C, $R> implements C1CopyWith<$R> {
+class _C1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.C> implements C1CopyWith<$R> {
   _C1CopyWithImpl(super.value, super.then);
 
   @override $R call({String? d}) => $then(p1.C(d ?? $value.d));
