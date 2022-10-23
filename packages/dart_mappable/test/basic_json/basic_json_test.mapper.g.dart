@@ -40,24 +40,24 @@ class PersonMapper extends BaseMapper<p0.Person> {
 extension PersonMapperExtension on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity);
+  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity, $identity);
 }
 
-extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
-  PersonCopyWith<$R> get asPerson => base.as((v, t) => _PersonCopyWithImpl(v, t));
+extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person, p0.Person> {
+  PersonCopyWith<$R> get asPerson => base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
 }
 
-abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
-  PersonCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
+abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person, p0.Person> {
+  PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, $R2> then, Then<p0.Person, p0.Person> then2);
   CarCopyWith<$R>? get car;
   $R call({String? name, int? age, p0.Car? car});
 }
 
-class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person> implements PersonCopyWith<$R> {
-  _PersonCopyWithImpl(super.value, super.then);
-  @override PersonCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _PersonCopyWithImpl($value, (v) => then($then(v)));
+class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person, p0.Person> implements PersonCopyWith<$R> {
+  _PersonCopyWithImpl(super.value, super.then, super.then2);
+  @override PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, $R2> then, Then<p0.Person, p0.Person> then2) => _PersonCopyWithImpl($value, then, then2);
 
-  @override CarCopyWith<$R>? get car => $value.car?.copyWith._chain((v) => call(car: v));
+  @override CarCopyWith<$R>? get car => $value.car?.copyWith._chain((v) => call(car: v), $identity);
   @override $R call({String? name, int? age, Object? car = $none}) => $then(p0.Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
 }
 
@@ -82,21 +82,21 @@ class CarMapper extends BaseMapper<p0.Car> {
 extension CarMapperExtension on p0.Car {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CarCopyWith<p0.Car> get copyWith => _CarCopyWithImpl(this, $identity);
+  CarCopyWith<p0.Car> get copyWith => _CarCopyWithImpl(this, $identity, $identity);
 }
 
-extension CarObjectCopy<$R> on ObjectCopyWith<$R, p0.Car> {
-  CarCopyWith<$R> get asCar => base.as((v, t) => _CarCopyWithImpl(v, t));
+extension CarObjectCopy<$R> on ObjectCopyWith<$R, p0.Car, p0.Car> {
+  CarCopyWith<$R> get asCar => base.as((v, t, t2) => _CarCopyWithImpl(v, t, t2));
 }
 
-abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car> {
-  CarCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
+abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car, p0.Car> {
+  CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, $R2> then, Then<p0.Car, p0.Car> then2);
   $R call({int? drivenKm, p0.Brand? brand});
 }
 
-class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Car> implements CarCopyWith<$R> {
-  _CarCopyWithImpl(super.value, super.then);
-  @override CarCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _CarCopyWithImpl($value, (v) => then($then(v)));
+class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Car, p0.Car> implements CarCopyWith<$R> {
+  _CarCopyWithImpl(super.value, super.then, super.then2);
+  @override CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, $R2> then, Then<p0.Car, p0.Car> then2) => _CarCopyWithImpl($value, then, then2);
 
   @override $R call({int? drivenKm, p0.Brand? brand}) => $then(p0.Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
 }
@@ -195,6 +195,6 @@ mixin Mappable implements MappableMixin {
   }
 }
 
-extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
-  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
+extension _ChainedCopyWith<$R, $T, $S> on ObjectCopyWith<$R, $T, $S> {
+  BaseCopyWith<$R, $T, $S> get base => this as BaseCopyWith<$R, $T, $S>;
 }

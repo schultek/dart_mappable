@@ -15,6 +15,5 @@ scripts:
       scope: dart_mappable
   build:
     run: melos exec -- 'dart run build_runner build'
-
   analyze:
     run: melos exec -- 'dart analyze .'

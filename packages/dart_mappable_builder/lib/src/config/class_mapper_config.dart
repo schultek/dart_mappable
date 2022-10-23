@@ -46,12 +46,15 @@ class ClassMapperConfig {
     checkUnresolvedParameters();
   }
 
-  String get className => element.name;
-  String get prefixedClassName =>
+  late String className = element.name;
+  late String prefixedClassName =
       '${importPrefix != null ? 'p$importPrefix.' : ''}$className';
-  String get uniqueClassName =>
+  late String uniqueClassName =
       '$className${nameIndex != 0 ? '$nameIndex' : ''}';
-  String get mapperName => '$className${nameIndex != 0 ? nameIndex : ''}Mapper';
+  late String mapperName = '$className${nameIndex != 0 ? nameIndex : ''}Mapper';
+
+  late String selfTypeParam = '$prefixedClassName$typeParams';
+  late String superPrefixedClassName = superConfig?.superPrefixedClassName ?? prefixedClassName;
 
   Iterable<FieldElement> get allPublicFields sync* {
     yield* superConfig?.allPublicFields ?? [];

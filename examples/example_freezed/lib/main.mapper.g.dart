@@ -51,11 +51,11 @@ extension UnionMapperExtension on p0.Union {
 }
 
 mixin UnionMixin {
-  UnionCopyWith<p0.Union, p0.Union> get copyWith;
+  UnionCopyWith<p0.Union, p0.Union, p0.Union> get copyWith;
 }
 
-abstract class UnionCopyWith<$R, $V extends p0.Union> implements ObjectCopyWith<$R, $V> {
-  UnionCopyWith<$R2, $V> _chain<$R2>(Then<$R, $R2> then);
+abstract class UnionCopyWith<$R, $T extends p0.Union, $S extends p0.Union> implements ObjectCopyWith<$R, $T, $S> {
+  UnionCopyWith<$R2, $T, $S2> _chain<$R2, $S2 extends p0.Union>(Then<$S2, $R2> then, Then<p0.Union, $S2> then2);
   $R call();
 }
 
@@ -84,20 +84,20 @@ extension DataMapperExtension on p0.Data {
 }
 
 mixin DataMixin {
-  DataCopyWith<p0.Data> get copyWith => _DataCopyWithImpl(this as p0.Data, $identity);
+  DataCopyWith<p0.Data, p0.Data> get copyWith => _DataCopyWithImpl(this as p0.Data, $identity, $identity);
 }
 
-extension DataObjectCopy<$R> on ObjectCopyWith<$R, p0.Data> {
-  DataCopyWith<$R> get asData => base.as((v, t) => _DataCopyWithImpl(v, t));
+extension DataObjectCopy<$R, $S extends p0.Union> on ObjectCopyWith<$R, p0.Data, $S> {
+  DataCopyWith<$R, $S> get asData => base.as((v, t, t2) => _DataCopyWithImpl(v, t, t2));
 }
 
-abstract class DataCopyWith<$R> implements UnionCopyWith<$R, p0.Data> {
+abstract class DataCopyWith<$R, $S extends p0.Union> implements UnionCopyWith<$R, p0.Data, $S> {
   @override $R call({int? value});
 }
 
-class _DataCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Data> implements DataCopyWith<$R> {
-  _DataCopyWithImpl(super.value, super.then);
-  @override DataCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _DataCopyWithImpl($value, (v) => then($then(v)));
+class _DataCopyWithImpl<$R, $S extends p0.Union> extends BaseCopyWith<$R, p0.Data, $S> implements DataCopyWith<$R, $S> {
+  _DataCopyWithImpl(super.value, super.then, super.then2);
+  @override DataCopyWith<$R2, $S2> _chain<$R2, $S2 extends p0.Union>(Then<$S2, $R2> then, Then<p0.Data, $S2> then2) => _DataCopyWithImpl($value, then, then2);
 
   @override $R call({int? value}) => $then(p0.Data(value ?? $value.value));
 }
@@ -126,20 +126,20 @@ extension LoadingMapperExtension on p0.Loading {
 }
 
 mixin LoadingMixin {
-  LoadingCopyWith<p0.Loading> get copyWith => _LoadingCopyWithImpl(this as p0.Loading, $identity);
+  LoadingCopyWith<p0.Loading, p0.Loading> get copyWith => _LoadingCopyWithImpl(this as p0.Loading, $identity, $identity);
 }
 
-extension LoadingObjectCopy<$R> on ObjectCopyWith<$R, p0.Loading> {
-  LoadingCopyWith<$R> get asLoading => base.as((v, t) => _LoadingCopyWithImpl(v, t));
+extension LoadingObjectCopy<$R, $S extends p0.Union> on ObjectCopyWith<$R, p0.Loading, $S> {
+  LoadingCopyWith<$R, $S> get asLoading => base.as((v, t, t2) => _LoadingCopyWithImpl(v, t, t2));
 }
 
-abstract class LoadingCopyWith<$R> implements UnionCopyWith<$R, p0.Loading> {
+abstract class LoadingCopyWith<$R, $S extends p0.Union> implements UnionCopyWith<$R, p0.Loading, $S> {
   @override $R call();
 }
 
-class _LoadingCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Loading> implements LoadingCopyWith<$R> {
-  _LoadingCopyWithImpl(super.value, super.then);
-  @override LoadingCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _LoadingCopyWithImpl($value, (v) => then($then(v)));
+class _LoadingCopyWithImpl<$R, $S extends p0.Union> extends BaseCopyWith<$R, p0.Loading, $S> implements LoadingCopyWith<$R, $S> {
+  _LoadingCopyWithImpl(super.value, super.then, super.then2);
+  @override LoadingCopyWith<$R2, $S2> _chain<$R2, $S2 extends p0.Union>(Then<$S2, $R2> then, Then<p0.Loading, $S2> then2) => _LoadingCopyWithImpl($value, then, then2);
 
   @override $R call() => $then(p0.Loading());
 }
@@ -168,20 +168,20 @@ extension ErrorDetailsMapperExtension on p0.ErrorDetails {
 }
 
 mixin ErrorDetailsMixin {
-  ErrorDetailsCopyWith<p0.ErrorDetails> get copyWith => _ErrorDetailsCopyWithImpl(this as p0.ErrorDetails, $identity);
+  ErrorDetailsCopyWith<p0.ErrorDetails, p0.ErrorDetails> get copyWith => _ErrorDetailsCopyWithImpl(this as p0.ErrorDetails, $identity, $identity);
 }
 
-extension ErrorDetailsObjectCopy<$R> on ObjectCopyWith<$R, p0.ErrorDetails> {
-  ErrorDetailsCopyWith<$R> get asErrorDetails => base.as((v, t) => _ErrorDetailsCopyWithImpl(v, t));
+extension ErrorDetailsObjectCopy<$R, $S extends p0.Union> on ObjectCopyWith<$R, p0.ErrorDetails, $S> {
+  ErrorDetailsCopyWith<$R, $S> get asErrorDetails => base.as((v, t, t2) => _ErrorDetailsCopyWithImpl(v, t, t2));
 }
 
-abstract class ErrorDetailsCopyWith<$R> implements UnionCopyWith<$R, p0.ErrorDetails> {
+abstract class ErrorDetailsCopyWith<$R, $S extends p0.Union> implements UnionCopyWith<$R, p0.ErrorDetails, $S> {
   @override $R call({String? message});
 }
 
-class _ErrorDetailsCopyWithImpl<$R> extends BaseCopyWith<$R, p0.ErrorDetails> implements ErrorDetailsCopyWith<$R> {
-  _ErrorDetailsCopyWithImpl(super.value, super.then);
-  @override ErrorDetailsCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _ErrorDetailsCopyWithImpl($value, (v) => then($then(v)));
+class _ErrorDetailsCopyWithImpl<$R, $S extends p0.Union> extends BaseCopyWith<$R, p0.ErrorDetails, $S> implements ErrorDetailsCopyWith<$R, $S> {
+  _ErrorDetailsCopyWithImpl(super.value, super.then, super.then2);
+  @override ErrorDetailsCopyWith<$R2, $S2> _chain<$R2, $S2 extends p0.Union>(Then<$S2, $R2> then, Then<p0.ErrorDetails, $S2> then2) => _ErrorDetailsCopyWithImpl($value, then, then2);
 
   @override $R call({Object? message = $none}) => $then(p0.ErrorDetails(or(message, $value.message)));
 }
@@ -255,6 +255,6 @@ mixin Mappable implements MappableMixin {
   }
 }
 
-extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
-  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
+extension _ChainedCopyWith<$R, $T, $S> on ObjectCopyWith<$R, $T, $S> {
+  BaseCopyWith<$R, $T, $S> get base => this as BaseCopyWith<$R, $T, $S>;
 }

@@ -13,11 +13,36 @@ class CopyWithGenerator {
 
   CopyWithGenerator(this.config, this.imports);
 
+  late String classTypeParamsDef =
+      config.typeParamsList.map((p) => ', $p').join();
+  late String classTypeParams =
+      config.element.typeParameters.map((p) => ', ${p.name}').join();
+
+  late bool hasSubConfigs = config.subConfigs.isNotEmpty;
+  late bool hasSuperConfig = config.superConfig != null;
+  late bool hasSubOrSuperConfigs = hasSubConfigs || hasSuperConfig;
+
+  late String selfTypeParam = config.selfTypeParam;
+  late String superPrefixedClassName = config.superPrefixedClassName;
+
+  late String selfSubTypeParam = hasSubConfigs ? ', $selfTypeParam' : '';
+  late String selfSuperTypeParam = hasSubOrSuperConfigs ? ', $selfTypeParam' : '';
+
+  late String subTypeParamDef =
+      hasSubConfigs ? ', \$T extends $selfTypeParam' : '';
+  late String subTypeParam = hasSubConfigs ? ', \$T' : '';
+  late String subOrSelfTypeParam = hasSubConfigs ? ', \$T' : ', $selfTypeParam';
+
+  late String superTypeParamDef = hasSubOrSuperConfigs ? ', \$S extends $superPrefixedClassName' : '';
+  late String superTypeParamDef2 = hasSubOrSuperConfigs ? ', \$S2 extends $superPrefixedClassName' : '';
+  late String superTypeParam = hasSubOrSuperConfigs ? ', \$S' : '';
+  late String superTypeParam2 = hasSubOrSuperConfigs ? ', \$S2' : '';
+  late String superOrSelfTypeParam = hasSubOrSuperConfigs ? ', \$S' : ', $selfTypeParam';
+  late String superOrSelfTypeParam2 = hasSubOrSuperConfigs ? '\$S2' : selfTypeParam;
+
   String generateCopyWithExtension() {
     if (!config.shouldGenerate(GenerateMethods.copy)) return '';
-    if (config.hasCallableConstructor &&
-        config.superConfig == null &&
-        config.subConfigs.isEmpty) {
+    if (config.hasCallableConstructor && !hasSubOrSuperConfigs) {
       return '  ${_generateCopyWith()}\n';
     } else {
       return '';
@@ -26,7 +51,7 @@ class CopyWithGenerator {
 
   String generateCopyWithMixin(GetConfig getConfig) {
     if (!config.shouldGenerate(GenerateMethods.copy)) return '';
-    if (config.superConfig != null || config.subConfigs.isNotEmpty) {
+    if (hasSubOrSuperConfigs) {
       _checkCopyWithMixinUsed();
       return '\n\n${_generateCopyWithMixin(getConfig)}';
     } else {
@@ -36,7 +61,7 @@ class CopyWithGenerator {
 
   String generateCopyWithClasses(GetConfig getConfig) {
     if (!config.shouldGenerate(GenerateMethods.copy)) return '';
-    if (config.hasCallableConstructor || config.subConfigs.isNotEmpty) {
+    if (config.hasCallableConstructor || hasSubConfigs) {
       return '\n\n${_generateCopyWithClasses(getConfig)}';
     } else {
       return '';
@@ -44,11 +69,7 @@ class CopyWithGenerator {
   }
 
   String _generateCopyWith() {
-    var classTypeParams = config.element.typeParameters.isNotEmpty
-        ? ', ${config.element.typeParameters.map((p) => p.name).join(', ')}'
-        : '';
-
-    return '${config.uniqueClassName}CopyWith<${config.prefixedClassName}${config.typeParams}$classTypeParams> get copyWith => _${config.uniqueClassName}CopyWithImpl(this, \$identity);';
+    return '${config.uniqueClassName}CopyWith<$selfTypeParam$classTypeParams> get copyWith => _${config.uniqueClassName}CopyWithImpl(this, \$identity, \$identity);';
   }
 
   void _checkCopyWithMixinUsed() {
@@ -94,20 +115,12 @@ class CopyWithGenerator {
   }
 
   String _generateCopyWithMixin(GetConfig getConfig) {
-    var classTypeParams = config.element.typeParameters.isNotEmpty
-        ? ', ${config.element.typeParameters.map((p) => p.name).join(', ')}'
-        : '';
-
-    var valueTypeParam = config.subConfigs.isNotEmpty
-        ? ', ${config.prefixedClassName}${config.typeParams}'
-        : '';
-
     var snippet =
-        '${config.uniqueClassName}CopyWith<${config.prefixedClassName}${config.typeParams}$valueTypeParam$classTypeParams> get copyWith';
+        '${config.uniqueClassName}CopyWith<$selfTypeParam$selfSubTypeParam$selfSuperTypeParam$classTypeParams> get copyWith';
 
     if (config.hasCallableConstructor) {
       snippet +=
-          ' => _${config.uniqueClassName}CopyWithImpl(this as ${config.prefixedClassName}${config.typeParams}, \$identity);';
+          ' => _${config.uniqueClassName}CopyWithImpl(this as $selfTypeParam, \$identity, \$identity);';
     } else {
       snippet += ';';
     }
@@ -118,74 +131,61 @@ class CopyWithGenerator {
   }
 
   String _generateCopyWithClasses(GetConfig getConfig) {
-    var classTypeParamsDef = config.typeParamsList.map((p) => ', $p').join();
-    var classTypeParams =
-        config.element.typeParameters.map((p) => ', ${p.name}').join();
-
     var snippets = <String>[];
-
-    var selfTypeParam = '${config.prefixedClassName}${config.typeParams}';
-    var valueTypeParam = config.subConfigs.isNotEmpty ? ', $selfTypeParam' : '';
 
     if (config.hasCallableConstructor) {
       snippets.add(
-          'extension ${config.uniqueClassName}ObjectCopy<\$R$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam> {\n'
-          '  ${config.uniqueClassName}CopyWith<\$R$valueTypeParam$classTypeParams> get as${config.className} => base.as((v, t) => _${config.uniqueClassName}CopyWithImpl(v, t));\n'
+          'extension ${config.uniqueClassName}ObjectCopy<\$R$superTypeParamDef$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam$superOrSelfTypeParam> {\n'
+          '  ${config.uniqueClassName}CopyWith<\$R$selfSubTypeParam$superTypeParam$classTypeParams> get as${config.className} => base.as((v, t, t2) => _${config.uniqueClassName}CopyWithImpl(v, t, t2));\n'
           '}\n\n');
     }
 
     var implementsStmt = '';
-    var objTypeParamDef =
-        config.subConfigs.isNotEmpty ? ', \$V extends $selfTypeParam' : '';
-    var objTypeParam =
-        config.subConfigs.isNotEmpty ? ', \$V' : ', $selfTypeParam';
 
-    if (config.superConfig != null) {
+    if (hasSuperConfig) {
       var superClassTypeParams = config.superTypeArgs.map((a) => ', $a').join();
       implementsStmt =
-          ' implements ${config.superConfig!.uniqueClassName}CopyWith<\$R$objTypeParam$superClassTypeParams>';
+          ' implements ${config.superConfig!.uniqueClassName}CopyWith<\$R$subOrSelfTypeParam$superTypeParam$superClassTypeParams>';
     } else {
-      implementsStmt = ' implements ObjectCopyWith<\$R$objTypeParam>';
+      implementsStmt = ' implements ObjectCopyWith<\$R$subOrSelfTypeParam$superOrSelfTypeParam>';
     }
 
     snippets.add(''
-        'abstract class ${config.uniqueClassName}CopyWith<\$R$objTypeParamDef$classTypeParamsDef>$implementsStmt {\n');
+        'abstract class ${config.uniqueClassName}CopyWith<\$R$subTypeParamDef$superTypeParamDef$classTypeParamsDef>$implementsStmt {\n');
 
     if (config.superConfig == null) {
-      var optObjTypeParam = config.subConfigs.isNotEmpty ? ', \$V' : '';
       snippets.add(
-          '  ${config.uniqueClassName}CopyWith<\$R2$optObjTypeParam$classTypeParams> _chain<\$R2>(Then<\$R, \$R2> then);\n');
+          '  ${config.uniqueClassName}CopyWith<\$R2$subTypeParam$superTypeParam2$classTypeParams> _chain<\$R2$superTypeParamDef2>(Then<$superOrSelfTypeParam2, \$R2> then, Then<$selfTypeParam, $superOrSelfTypeParam2> then2);\n');
     }
 
     var copyParams =
         CopyParamConfig.collectFrom(config.params, config, imports, getConfig);
 
     for (var param in copyParams) {
-      var isOverridden =
-          config.superConfig != null && param.param is SuperParameterConfig;
+      var isOverridden = hasSuperConfig && param.param is SuperParameterConfig;
       snippets.add(
-          '  ${isOverridden ? '@override ' : ''}${param.name}CopyWith<\$R${param.optSubTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name};\n');
+          '  ${isOverridden ? '@override ' : ''}${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name};\n');
     }
 
     snippets.add(
-        '  ${config.superConfig != null ? '@override ' : ''}\$R call(${_generateCopyWithParams()});\n');
+        '  ${hasSuperConfig ? '@override ' : ''}\$R call(${_generateCopyWithParams()});\n');
 
     snippets.add('}\n');
 
     if (config.hasCallableConstructor) {
       snippets.add('\n'
-          'class _${config.uniqueClassName}CopyWithImpl<\$R$classTypeParamsDef> '
-          'extends BaseCopyWith<\$R, $selfTypeParam> implements ${config.uniqueClassName}CopyWith'
-          '<\$R${config.subConfigs.isNotEmpty ? ', $selfTypeParam' : ''}$classTypeParams> {\n'
-          '  _${config.uniqueClassName}CopyWithImpl(super.value, super.then);\n'
-          '  @override ${config.uniqueClassName}CopyWith<\$R2${config.subConfigs.isNotEmpty ? ', $selfTypeParam' : ''}$classTypeParams> '
-          '_chain<\$R2>(Then<\$R, \$R2> then) => _${config.uniqueClassName}CopyWithImpl(\$value, (v) => then(\$then(v)));\n'
+          'class _${config.uniqueClassName}CopyWithImpl<\$R$superTypeParamDef$classTypeParamsDef> '
+          'extends BaseCopyWith<\$R, $selfTypeParam$superOrSelfTypeParam> implements ${config.uniqueClassName}CopyWith'
+          '<\$R$selfSubTypeParam$superTypeParam$classTypeParams> {\n'
+          '  _${config.uniqueClassName}CopyWithImpl(super.value, super.then, super.then2);\n'
+          '  @override ${config.uniqueClassName}CopyWith<\$R2$selfSubTypeParam$superTypeParam2$classTypeParams> '
+          '_chain<\$R2$superTypeParamDef2>(Then<$superOrSelfTypeParam2, \$R2> then, Then<$selfTypeParam, $superOrSelfTypeParam2> then2) '
+          '=> _${config.uniqueClassName}CopyWithImpl(\$value, then, then2);\n'
           '\n');
 
       for (var param in copyParams) {
         snippets.add(
-            '  @override ${param.name}CopyWith<\$R${param.optSubTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name} => ');
-
+            '  @override ${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name} => ');
         snippets.add('${param.invocation};\n');
       }
 

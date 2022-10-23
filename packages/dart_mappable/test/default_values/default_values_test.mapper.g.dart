@@ -44,24 +44,24 @@ class AMapper extends BaseMapper<p0.A> {
 extension AMapperExtension on p0.A {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ACopyWith<p0.A> get copyWith => _ACopyWithImpl(this, $identity);
+  ACopyWith<p0.A> get copyWith => _ACopyWithImpl(this, $identity, $identity);
 }
 
-extension AObjectCopy<$R> on ObjectCopyWith<$R, p0.A> {
-  ACopyWith<$R> get asA => base.as((v, t) => _ACopyWithImpl(v, t));
+extension AObjectCopy<$R> on ObjectCopyWith<$R, p0.A, p0.A> {
+  ACopyWith<$R> get asA => base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
 }
 
-abstract class ACopyWith<$R> implements ObjectCopyWith<$R, p0.A> {
-  ACopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
+abstract class ACopyWith<$R> implements ObjectCopyWith<$R, p0.A, p0.A> {
+  ACopyWith<$R2> _chain<$R2>(Then<p0.A, $R2> then, Then<p0.A, p0.A> then2);
   BCopyWith<$R> get b;
   $R call({p0.B? b});
 }
 
-class _ACopyWithImpl<$R> extends BaseCopyWith<$R, p0.A> implements ACopyWith<$R> {
-  _ACopyWithImpl(super.value, super.then);
-  @override ACopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _ACopyWithImpl($value, (v) => then($then(v)));
+class _ACopyWithImpl<$R> extends BaseCopyWith<$R, p0.A, p0.A> implements ACopyWith<$R> {
+  _ACopyWithImpl(super.value, super.then, super.then2);
+  @override ACopyWith<$R2> _chain<$R2>(Then<p0.A, $R2> then, Then<p0.A, p0.A> then2) => _ACopyWithImpl($value, then, then2);
 
-  @override BCopyWith<$R> get b => $value.b.copyWith._chain((v) => call(b: v));
+  @override BCopyWith<$R> get b => $value.b.copyWith._chain((v) => call(b: v), $identity);
   @override $R call({p0.B? b}) => $then(p0.A(b: b ?? $value.b));
 }
 
@@ -86,24 +86,24 @@ class BMapper extends BaseMapper<p0.B> {
 extension BMapperExtension on p0.B {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  BCopyWith<p0.B> get copyWith => _BCopyWithImpl(this, $identity);
+  BCopyWith<p0.B> get copyWith => _BCopyWithImpl(this, $identity, $identity);
 }
 
-extension BObjectCopy<$R> on ObjectCopyWith<$R, p0.B> {
-  BCopyWith<$R> get asB => base.as((v, t) => _BCopyWithImpl(v, t));
+extension BObjectCopy<$R> on ObjectCopyWith<$R, p0.B, p0.B> {
+  BCopyWith<$R> get asB => base.as((v, t, t2) => _BCopyWithImpl(v, t, t2));
 }
 
-abstract class BCopyWith<$R> implements ObjectCopyWith<$R, p0.B> {
-  BCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
+abstract class BCopyWith<$R> implements ObjectCopyWith<$R, p0.B, p0.B> {
+  BCopyWith<$R2> _chain<$R2>(Then<p0.B, $R2> then, Then<p0.B, p0.B> then2);
   CCopyWith<$R> get c;
   $R call({p0.C? c});
 }
 
-class _BCopyWithImpl<$R> extends BaseCopyWith<$R, p0.B> implements BCopyWith<$R> {
-  _BCopyWithImpl(super.value, super.then);
-  @override BCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _BCopyWithImpl($value, (v) => then($then(v)));
+class _BCopyWithImpl<$R> extends BaseCopyWith<$R, p0.B, p0.B> implements BCopyWith<$R> {
+  _BCopyWithImpl(super.value, super.then, super.then2);
+  @override BCopyWith<$R2> _chain<$R2>(Then<p0.B, $R2> then, Then<p0.B, p0.B> then2) => _BCopyWithImpl($value, then, then2);
 
-  @override CCopyWith<$R> get c => $value.c.copyWith._chain((v) => call(c: v));
+  @override CCopyWith<$R> get c => $value.c.copyWith._chain((v) => call(c: v), $identity);
   @override $R call({p0.C? c}) => $then(p0.B(c: c ?? $value.c));
 }
 
@@ -128,21 +128,21 @@ class CMapper extends BaseMapper<p0.C> {
 extension CMapperExtension on p0.C {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CCopyWith<p0.C> get copyWith => _CCopyWithImpl(this, $identity);
+  CCopyWith<p0.C> get copyWith => _CCopyWithImpl(this, $identity, $identity);
 }
 
-extension CObjectCopy<$R> on ObjectCopyWith<$R, p0.C> {
-  CCopyWith<$R> get asC => base.as((v, t) => _CCopyWithImpl(v, t));
+extension CObjectCopy<$R> on ObjectCopyWith<$R, p0.C, p0.C> {
+  CCopyWith<$R> get asC => base.as((v, t, t2) => _CCopyWithImpl(v, t, t2));
 }
 
-abstract class CCopyWith<$R> implements ObjectCopyWith<$R, p0.C> {
-  CCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
+abstract class CCopyWith<$R> implements ObjectCopyWith<$R, p0.C, p0.C> {
+  CCopyWith<$R2> _chain<$R2>(Then<p0.C, $R2> then, Then<p0.C, p0.C> then2);
   $R call({String? d});
 }
 
-class _CCopyWithImpl<$R> extends BaseCopyWith<$R, p0.C> implements CCopyWith<$R> {
-  _CCopyWithImpl(super.value, super.then);
-  @override CCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _CCopyWithImpl($value, (v) => then($then(v)));
+class _CCopyWithImpl<$R> extends BaseCopyWith<$R, p0.C, p0.C> implements CCopyWith<$R> {
+  _CCopyWithImpl(super.value, super.then, super.then2);
+  @override CCopyWith<$R2> _chain<$R2>(Then<p0.C, $R2> then, Then<p0.C, p0.C> then2) => _CCopyWithImpl($value, then, then2);
 
   @override $R call({String? d}) => $then(p0.C(d ?? $value.d));
 }
@@ -169,24 +169,24 @@ class A1Mapper extends BaseMapper<p1.A> {
 extension A1MapperExtension on p1.A {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  A1CopyWith<p1.A> get copyWith => _A1CopyWithImpl(this, $identity);
+  A1CopyWith<p1.A> get copyWith => _A1CopyWithImpl(this, $identity, $identity);
 }
 
-extension A1ObjectCopy<$R> on ObjectCopyWith<$R, p1.A> {
-  A1CopyWith<$R> get asA => base.as((v, t) => _A1CopyWithImpl(v, t));
+extension A1ObjectCopy<$R> on ObjectCopyWith<$R, p1.A, p1.A> {
+  A1CopyWith<$R> get asA => base.as((v, t, t2) => _A1CopyWithImpl(v, t, t2));
 }
 
-abstract class A1CopyWith<$R> implements ObjectCopyWith<$R, p1.A> {
-  A1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
+abstract class A1CopyWith<$R> implements ObjectCopyWith<$R, p1.A, p1.A> {
+  A1CopyWith<$R2> _chain<$R2>(Then<p1.A, $R2> then, Then<p1.A, p1.A> then2);
   B1CopyWith<$R> get b;
   $R call({p1.B? b});
 }
 
-class _A1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.A> implements A1CopyWith<$R> {
-  _A1CopyWithImpl(super.value, super.then);
-  @override A1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _A1CopyWithImpl($value, (v) => then($then(v)));
+class _A1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.A, p1.A> implements A1CopyWith<$R> {
+  _A1CopyWithImpl(super.value, super.then, super.then2);
+  @override A1CopyWith<$R2> _chain<$R2>(Then<p1.A, $R2> then, Then<p1.A, p1.A> then2) => _A1CopyWithImpl($value, then, then2);
 
-  @override B1CopyWith<$R> get b => $value.b.copyWith._chain((v) => call(b: v));
+  @override B1CopyWith<$R> get b => $value.b.copyWith._chain((v) => call(b: v), $identity);
   @override $R call({p1.B? b}) => $then(p1.A(b: b ?? $value.b));
 }
 
@@ -212,24 +212,24 @@ class B1Mapper extends BaseMapper<p1.B> {
 extension B1MapperExtension on p1.B {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  B1CopyWith<p1.B> get copyWith => _B1CopyWithImpl(this, $identity);
+  B1CopyWith<p1.B> get copyWith => _B1CopyWithImpl(this, $identity, $identity);
 }
 
-extension B1ObjectCopy<$R> on ObjectCopyWith<$R, p1.B> {
-  B1CopyWith<$R> get asB => base.as((v, t) => _B1CopyWithImpl(v, t));
+extension B1ObjectCopy<$R> on ObjectCopyWith<$R, p1.B, p1.B> {
+  B1CopyWith<$R> get asB => base.as((v, t, t2) => _B1CopyWithImpl(v, t, t2));
 }
 
-abstract class B1CopyWith<$R> implements ObjectCopyWith<$R, p1.B> {
-  B1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
+abstract class B1CopyWith<$R> implements ObjectCopyWith<$R, p1.B, p1.B> {
+  B1CopyWith<$R2> _chain<$R2>(Then<p1.B, $R2> then, Then<p1.B, p1.B> then2);
   C1CopyWith<$R> get c;
   $R call({p1.C? c});
 }
 
-class _B1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.B> implements B1CopyWith<$R> {
-  _B1CopyWithImpl(super.value, super.then);
-  @override B1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _B1CopyWithImpl($value, (v) => then($then(v)));
+class _B1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.B, p1.B> implements B1CopyWith<$R> {
+  _B1CopyWithImpl(super.value, super.then, super.then2);
+  @override B1CopyWith<$R2> _chain<$R2>(Then<p1.B, $R2> then, Then<p1.B, p1.B> then2) => _B1CopyWithImpl($value, then, then2);
 
-  @override C1CopyWith<$R> get c => $value.c.copyWith._chain((v) => call(c: v));
+  @override C1CopyWith<$R> get c => $value.c.copyWith._chain((v) => call(c: v), $identity);
   @override $R call({p1.C? c}) => $then(p1.B(c: c ?? $value.c));
 }
 
@@ -255,21 +255,21 @@ class C1Mapper extends BaseMapper<p1.C> {
 extension C1MapperExtension on p1.C {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  C1CopyWith<p1.C> get copyWith => _C1CopyWithImpl(this, $identity);
+  C1CopyWith<p1.C> get copyWith => _C1CopyWithImpl(this, $identity, $identity);
 }
 
-extension C1ObjectCopy<$R> on ObjectCopyWith<$R, p1.C> {
-  C1CopyWith<$R> get asC => base.as((v, t) => _C1CopyWithImpl(v, t));
+extension C1ObjectCopy<$R> on ObjectCopyWith<$R, p1.C, p1.C> {
+  C1CopyWith<$R> get asC => base.as((v, t, t2) => _C1CopyWithImpl(v, t, t2));
 }
 
-abstract class C1CopyWith<$R> implements ObjectCopyWith<$R, p1.C> {
-  C1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
+abstract class C1CopyWith<$R> implements ObjectCopyWith<$R, p1.C, p1.C> {
+  C1CopyWith<$R2> _chain<$R2>(Then<p1.C, $R2> then, Then<p1.C, p1.C> then2);
   $R call({String? d});
 }
 
-class _C1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.C> implements C1CopyWith<$R> {
-  _C1CopyWithImpl(super.value, super.then);
-  @override C1CopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _C1CopyWithImpl($value, (v) => then($then(v)));
+class _C1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.C, p1.C> implements C1CopyWith<$R> {
+  _C1CopyWithImpl(super.value, super.then, super.then2);
+  @override C1CopyWith<$R2> _chain<$R2>(Then<p1.C, $R2> then, Then<p1.C, p1.C> then2) => _C1CopyWithImpl($value, then, then2);
 
   @override $R call({String? d}) => $then(p1.C(d ?? $value.d));
 }
@@ -343,6 +343,6 @@ mixin Mappable implements MappableMixin {
   }
 }
 
-extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
-  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
+extension _ChainedCopyWith<$R, $T, $S> on ObjectCopyWith<$R, $T, $S> {
+  BaseCopyWith<$R, $T, $S> get base => this as BaseCopyWith<$R, $T, $S>;
 }

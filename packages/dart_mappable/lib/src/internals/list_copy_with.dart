@@ -51,10 +51,10 @@ abstract class ListCopyWith<$R, $E, $C> {
   $R apply(List<$E> Function(List<$E>) transform);
 }
 
-class _ListCopyWith<$R, $E, $C> extends BaseCopyWith<$R, List<$E>>
+class _ListCopyWith<$R, $E, $C> extends BaseCopyWith<$R, List<$E>, List<$E>>
     implements ListCopyWith<$R, $E, $C> {
   _ListCopyWith(List<$E> value, this._item, Then<List<$E>, $R> then)
-      : super(value, then);
+      : super(value, then, $identity);
   final ItemCopyWith<$C, $E, $R> _item;
 
   @override

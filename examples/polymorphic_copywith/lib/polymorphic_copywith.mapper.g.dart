@@ -47,23 +47,23 @@ extension OneMapperExtension on p0.One {
 }
 
 mixin OneMixin {
-  OneCopyWith<p0.One> get copyWith => _OneCopyWithImpl(this as p0.One, $identity);
+  OneCopyWith<p0.One, p0.One> get copyWith => _OneCopyWithImpl(this as p0.One, $identity, $identity);
 }
 
-extension OneObjectCopy<$R> on ObjectCopyWith<$R, p0.One> {
-  OneCopyWith<$R> get asOne => base.as((v, t) => _OneCopyWithImpl(v, t));
+extension OneObjectCopy<$R, $S extends p2.AbstractIdBase> on ObjectCopyWith<$R, p0.One, $S> {
+  OneCopyWith<$R, $S> get asOne => base.as((v, t, t2) => _OneCopyWithImpl(v, t, t2));
 }
 
-abstract class OneCopyWith<$R> implements BaseObjectCopyWith<$R, p0.One> {
-  @override MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic>> get objects;
+abstract class OneCopyWith<$R, $S extends p2.AbstractIdBase> implements BaseObjectCopyWith<$R, p0.One, $S> {
+  @override MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>> get objects;
   @override $R call({String? id, String? name, Map<String, dynamic>? objects});
 }
 
-class _OneCopyWithImpl<$R> extends BaseCopyWith<$R, p0.One> implements OneCopyWith<$R> {
-  _OneCopyWithImpl(super.value, super.then);
-  @override OneCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _OneCopyWithImpl($value, (v) => then($then(v)));
+class _OneCopyWithImpl<$R, $S extends p2.AbstractIdBase> extends BaseCopyWith<$R, p0.One, $S> implements OneCopyWith<$R, $S> {
+  _OneCopyWithImpl(super.value, super.then, super.then2);
+  @override OneCopyWith<$R2, $S2> _chain<$R2, $S2 extends p2.AbstractIdBase>(Then<$S2, $R2> then, Then<p0.One, $S2> then2) => _OneCopyWithImpl($value, then, then2);
 
-  @override MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic>> get objects => MapCopyWith($value.objects, (v, t) => ObjectCopyWith(v, t), (v) => call(objects: v));
+  @override MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>> get objects => MapCopyWith($value.objects, (v, t) => ObjectCopyWith(v, t, $identity), (v) => call(objects: v));
   @override $R call({String? id, String? name, Map<String, dynamic>? objects}) => $then(p0.One(id: id ?? $value.id, name: name ?? $value.name, objects: objects ?? $value.objects));
 }
 
@@ -91,11 +91,11 @@ extension BaseObjectMapperExtension on p1.BaseObject {
 }
 
 mixin BaseObjectMixin {
-  BaseObjectCopyWith<p1.BaseObject, p1.BaseObject> get copyWith;
+  BaseObjectCopyWith<p1.BaseObject, p1.BaseObject, p1.BaseObject> get copyWith;
 }
 
-abstract class BaseObjectCopyWith<$R, $V extends p1.BaseObject> implements AbstractIdBaseCopyWith<$R, $V> {
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic>?> get objects;
+abstract class BaseObjectCopyWith<$R, $T extends p1.BaseObject, $S extends p2.AbstractIdBase> implements AbstractIdBaseCopyWith<$R, $T, $S> {
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>?> get objects;
   @override $R call({String? id, String? name, Map<String, dynamic>? objects});
 }
 
@@ -124,11 +124,11 @@ extension AbstractIdBaseMapperExtension on p2.AbstractIdBase {
 }
 
 mixin AbstractIdBaseMixin {
-  AbstractIdBaseCopyWith<p2.AbstractIdBase, p2.AbstractIdBase> get copyWith;
+  AbstractIdBaseCopyWith<p2.AbstractIdBase, p2.AbstractIdBase, p2.AbstractIdBase> get copyWith;
 }
 
-abstract class AbstractIdBaseCopyWith<$R, $V extends p2.AbstractIdBase> implements ObjectCopyWith<$R, $V> {
-  AbstractIdBaseCopyWith<$R2, $V> _chain<$R2>(Then<$R, $R2> then);
+abstract class AbstractIdBaseCopyWith<$R, $T extends p2.AbstractIdBase, $S extends p2.AbstractIdBase> implements ObjectCopyWith<$R, $T, $S> {
+  AbstractIdBaseCopyWith<$R2, $T, $S2> _chain<$R2, $S2 extends p2.AbstractIdBase>(Then<$S2, $R2> then, Then<p2.AbstractIdBase, $S2> then2);
   $R call({String? id});
 }
 
@@ -157,20 +157,20 @@ extension TwoMapperExtension on p3.Two {
 }
 
 mixin TwoMixin {
-  TwoCopyWith<p3.Two> get copyWith => _TwoCopyWithImpl(this as p3.Two, $identity);
+  TwoCopyWith<p3.Two, p3.Two> get copyWith => _TwoCopyWithImpl(this as p3.Two, $identity, $identity);
 }
 
-extension TwoObjectCopy<$R> on ObjectCopyWith<$R, p3.Two> {
-  TwoCopyWith<$R> get asTwo => base.as((v, t) => _TwoCopyWithImpl(v, t));
+extension TwoObjectCopy<$R, $S extends p2.AbstractIdBase> on ObjectCopyWith<$R, p3.Two, $S> {
+  TwoCopyWith<$R, $S> get asTwo => base.as((v, t, t2) => _TwoCopyWithImpl(v, t, t2));
 }
 
-abstract class TwoCopyWith<$R> implements AbstractIdBaseCopyWith<$R, p3.Two> {
+abstract class TwoCopyWith<$R, $S extends p2.AbstractIdBase> implements AbstractIdBaseCopyWith<$R, p3.Two, $S> {
   @override $R call({String? id});
 }
 
-class _TwoCopyWithImpl<$R> extends BaseCopyWith<$R, p3.Two> implements TwoCopyWith<$R> {
-  _TwoCopyWithImpl(super.value, super.then);
-  @override TwoCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _TwoCopyWithImpl($value, (v) => then($then(v)));
+class _TwoCopyWithImpl<$R, $S extends p2.AbstractIdBase> extends BaseCopyWith<$R, p3.Two, $S> implements TwoCopyWith<$R, $S> {
+  _TwoCopyWithImpl(super.value, super.then, super.then2);
+  @override TwoCopyWith<$R2, $S2> _chain<$R2, $S2 extends p2.AbstractIdBase>(Then<$S2, $R2> then, Then<p3.Two, $S2> then2) => _TwoCopyWithImpl($value, then, then2);
 
   @override $R call({String? id}) => $then(p3.Two(id: id ?? $value.id));
 }
@@ -244,6 +244,6 @@ mixin Mappable implements MappableMixin {
   }
 }
 
-extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
-  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
+extension _ChainedCopyWith<$R, $T, $S> on ObjectCopyWith<$R, $T, $S> {
+  BaseCopyWith<$R, $T, $S> get base => this as BaseCopyWith<$R, $T, $S>;
 }

@@ -30,21 +30,21 @@ class PersonMapper extends BaseMapper<p0.Person> {
 extension PersonMapperExtension on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity);
+  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity, $identity);
 }
 
-extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
-  PersonCopyWith<$R> get asPerson => base.as((v, t) => _PersonCopyWithImpl(v, t));
+extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person, p0.Person> {
+  PersonCopyWith<$R> get asPerson => base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
 }
 
-abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
-  PersonCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then);
+abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person, p0.Person> {
+  PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, $R2> then, Then<p0.Person, p0.Person> then2);
   $R call({String? name});
 }
 
-class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person> implements PersonCopyWith<$R> {
-  _PersonCopyWithImpl(super.value, super.then);
-  @override PersonCopyWith<$R2> _chain<$R2>(Then<$R, $R2> then) => _PersonCopyWithImpl($value, (v) => then($then(v)));
+class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person, p0.Person> implements PersonCopyWith<$R> {
+  _PersonCopyWithImpl(super.value, super.then, super.then2);
+  @override PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, $R2> then, Then<p0.Person, p0.Person> then2) => _PersonCopyWithImpl($value, then, then2);
 
   @override $R call({String? name}) => $then(p0.Person(name ?? $value.name));
 }
@@ -129,6 +129,6 @@ mixin Mappable implements MappableMixin {
   }
 }
 
-extension _ChainedCopyWith<$R, $T> on ObjectCopyWith<$R, $T> {
-  BaseCopyWith<$R, $T> get base => this as BaseCopyWith<$R, $T>;
+extension _ChainedCopyWith<$R, $T, $S> on ObjectCopyWith<$R, $T, $S> {
+  BaseCopyWith<$R, $T, $S> get base => this as BaseCopyWith<$R, $T, $S>;
 }

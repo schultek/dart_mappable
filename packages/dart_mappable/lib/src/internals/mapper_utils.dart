@@ -108,24 +108,27 @@ const $none = _None();
 T $identity<T>(T value) => value;
 typedef Then<$T, $R> = $R Function($T);
 
-abstract class ObjectCopyWith<$R, $T> {
-  const factory ObjectCopyWith($T value, Then<$T, $R> then) = BaseCopyWith;
-  $R apply($T Function($T) transform);
+abstract class ObjectCopyWith<$R, $T, $S> {
+  const factory ObjectCopyWith($T value, Then<$S, $R> then, Then<$T, $S> then2) = BaseCopyWith;
+  $R apply($S Function($T) transform);
 }
 
-class BaseCopyWith<$R, $T> implements ObjectCopyWith<$R, $T> {
-  const BaseCopyWith(this.$value, this.$then);
+class BaseCopyWith<$R, $T, $S> implements ObjectCopyWith<$R, $T, $S> {
+  const BaseCopyWith(this.$value, this.$then1, this.$then2);
 
   final $T $value;
-  final Then<$T, $R> $then;
+  final Then<$S, $R> $then1;
+  final Then<$T, $S> $then2;
 
   T or<T>(Object? v, T t) => v == $none ? t : v as T;
 
-  $C as<$C>($C Function($T, Then<$T, $R>) copy) => copy($value, $then);
+  $C as<$C>($C Function($T, Then<$S, $R>, Then<$T, $S>) copy) => copy($value, $then1, $then2);
+
+  $R $then($T value) => $then1($then2(value));
 
   /// Applies any transformer function on the value
   @override
-  $R apply($T Function($T) transform) => $then(transform($value));
+  $R apply(Then<$T, $S> transform) => $then1(transform($value));
 }
 
 abstract class MappableMixin {}
