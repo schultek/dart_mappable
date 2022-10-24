@@ -3,49 +3,49 @@ import 'mapper_utils.dart';
 
 /// Interface used for [Map]s in chained copyWith methods
 /// All methods return a new modified map and do not modify the original map
-abstract class MapCopyWith<$R, $K, $V, $C> {
-  factory MapCopyWith(Map<$K, $V> value, ItemCopyWith<$C, $V, $R> item,
-      Then<Map<$K, $V>, $R> then) = _MapCopyWith;
+abstract class MapCopyWith<Result, Key, Value, Copy> {
+  factory MapCopyWith(Map<Key, Value> value, ItemCopyWith<Copy, Value, Result> item,
+      Then<Map<Key, Value>, Result> then) = _MapCopyWith;
 
   /// Access the copyWith interface for the value of [key]
-  $C? get($K key);
+  Copy? get(Key key);
 
   /// Returns a new map with [value] inserted at [key]
-  $R put($K key, $V v);
+  Result put(Key key, Value v);
 
   /// Returns a new map with all entries inserted to the map
-  $R putAll(Map<$K, $V> v);
+  Result putAll(Map<Key, Value> v);
 
   /// Returns a new map with the value at [key] replaced with a new value
-  $R replace($K key, $V v);
+  Result replace(Key key, Value v);
 
   /// Returns a new map without the value at [key]
-  $R removeAt($K key);
+  Result removeAt(Key key);
 
   /// Applies any transformer function on the value
-  $R apply(Map<$K, $V> Function(Map<$K, $V>) transform);
+  Result apply(Map<Key, Value> Function(Map<Key, Value>) transform);
 }
 
-class _MapCopyWith<$R, $K, $V, $C> extends BaseCopyWith<$R, Map<$K, $V>, Map<$K, $V>>
-    implements MapCopyWith<$R, $K, $V, $C> {
-  _MapCopyWith(Map<$K, $V> value, this._item, Then<Map<$K, $V>, $R> then)
-      : super(value, then, $identity);
-  final ItemCopyWith<$C, $V, $R> _item;
+class _MapCopyWith<Result, Key, Value, Copy> extends BaseCopyWith<Result, Map<Key, Value>, Map<Key, Value>>
+    implements MapCopyWith<Result, Key, Value, Copy> {
+  _MapCopyWith(Map<Key, Value> value, this._item, Then<Map<Key, Value>, Result> then)
+      : super(value, $identity, then);
+  final ItemCopyWith<Copy, Value, Result> _item;
 
   @override
-  $C? get($K key) => $value[key] is $V
-      ? _item($value[key] as $V, (v) => replace(key, v))
+  Copy? get(Key key) => $value[key] is Value
+      ? _item($value[key] as Value, (v) => replace(key, v))
       : null;
 
   @override
-  $R put($K key, $V v) => putAll({key: v});
+  Result put(Key key, Value v) => putAll({key: v});
 
   @override
-  $R putAll(Map<$K, $V> v) => $then({...$value, ...v});
+  Result putAll(Map<Key, Value> v) => $then({...$value, ...v});
 
   @override
-  $R replace($K key, $V v) => $then({...$value, key: v});
+  Result replace(Key key, Value v) => $then({...$value, key: v});
 
   @override
-  $R removeAt($K key) => $then({...$value}..remove(key));
+  Result removeAt(Key key) => $then({...$value}..remove(key));
 }

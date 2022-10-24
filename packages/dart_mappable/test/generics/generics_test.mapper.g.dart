@@ -51,16 +51,16 @@ extension BoxObjectCopy<$R, T extends p0.Content> on ObjectCopyWith<$R, p0.Box<T
 }
 
 abstract class BoxCopyWith<$R, T extends p0.Content> implements ObjectCopyWith<$R, p0.Box<T>, p0.Box<T>> {
-  BoxCopyWith<$R2, T> _chain<$R2>(Then<p0.Box<T>, $R2> then, Then<p0.Box<T>, p0.Box<T>> then2);
+  BoxCopyWith<$R2, T> _chain<$R2>(Then<p0.Box<T>, p0.Box<T>> t, Then<p0.Box<T>, $R2> t2);
   ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get contents;
   $R call({int? size, List<T>? contents});
 }
 
 class _BoxCopyWithImpl<$R, T extends p0.Content> extends BaseCopyWith<$R, p0.Box<T>, p0.Box<T>> implements BoxCopyWith<$R, T> {
   _BoxCopyWithImpl(super.value, super.then, super.then2);
-  @override BoxCopyWith<$R2, T> _chain<$R2>(Then<p0.Box<T>, $R2> then, Then<p0.Box<T>, p0.Box<T>> then2) => _BoxCopyWithImpl($value, then, then2);
+  @override BoxCopyWith<$R2, T> _chain<$R2>(Then<p0.Box<T>, p0.Box<T>> t, Then<p0.Box<T>, $R2> t2) => _BoxCopyWithImpl($value, t, t2);
 
-  @override ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get contents => ListCopyWith($value.contents, (v, t) => ObjectCopyWith(v, t, $identity), (v) => call(contents: v));
+  @override ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get contents => ListCopyWith($value.contents, (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(contents: v));
   @override $R call({int? size, List<T>? contents}) => $then(p0.Box(size ?? $value.size, contents: contents ?? $value.contents));
 }
 
@@ -91,17 +91,17 @@ mixin ConfettiMixin {
   ConfettiCopyWith<p0.Confetti, p0.Confetti> get copyWith => _ConfettiCopyWithImpl(this as p0.Confetti, $identity, $identity);
 }
 
-extension ConfettiObjectCopy<$R, $S extends p0.Content> on ObjectCopyWith<$R, p0.Confetti, $S> {
-  ConfettiCopyWith<$R, $S> get asConfetti => base.as((v, t, t2) => _ConfettiCopyWithImpl(v, t, t2));
+extension ConfettiObjectCopy<$R, $Out extends p0.Content> on ObjectCopyWith<$R, p0.Confetti, $Out> {
+  ConfettiCopyWith<$R, $Out> get asConfetti => base.as((v, t, t2) => _ConfettiCopyWithImpl(v, t, t2));
 }
 
-abstract class ConfettiCopyWith<$R, $S extends p0.Content> implements ContentCopyWith<$R, p0.Confetti, $S> {
+abstract class ConfettiCopyWith<$R, $Out extends p0.Content> implements ContentCopyWith<$R, p0.Confetti, $Out> {
   @override $R call({String? color});
 }
 
-class _ConfettiCopyWithImpl<$R, $S extends p0.Content> extends BaseCopyWith<$R, p0.Confetti, $S> implements ConfettiCopyWith<$R, $S> {
+class _ConfettiCopyWithImpl<$R, $Out extends p0.Content> extends BaseCopyWith<$R, p0.Confetti, $Out> implements ConfettiCopyWith<$R, $Out> {
   _ConfettiCopyWithImpl(super.value, super.then, super.then2);
-  @override ConfettiCopyWith<$R2, $S2> _chain<$R2, $S2 extends p0.Content>(Then<$S2, $R2> then, Then<p0.Confetti, $S2> then2) => _ConfettiCopyWithImpl($value, then, then2);
+  @override ConfettiCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.Content>(Then<p0.Confetti, $Out2> t, Then<$Out2, $R2> t2) => _ConfettiCopyWithImpl($value, t, t2);
 
   @override $R call({String? color}) => $then(p0.Confetti(color ?? $value.color));
 }
@@ -133,18 +133,18 @@ mixin ContentMixin {
   ContentCopyWith<p0.Content, p0.Content, p0.Content> get copyWith => _ContentCopyWithImpl(this as p0.Content, $identity, $identity);
 }
 
-extension ContentObjectCopy<$R, $S extends p0.Content> on ObjectCopyWith<$R, p0.Content, $S> {
-  ContentCopyWith<$R, p0.Content, $S> get asContent => base.as((v, t, t2) => _ContentCopyWithImpl(v, t, t2));
+extension ContentObjectCopy<$R, $Out extends p0.Content> on ObjectCopyWith<$R, p0.Content, $Out> {
+  ContentCopyWith<$R, p0.Content, $Out> get asContent => base.as((v, t, t2) => _ContentCopyWithImpl(v, t, t2));
 }
 
-abstract class ContentCopyWith<$R, $T extends p0.Content, $S extends p0.Content> implements ObjectCopyWith<$R, $T, $S> {
-  ContentCopyWith<$R2, $T, $S2> _chain<$R2, $S2 extends p0.Content>(Then<$S2, $R2> then, Then<p0.Content, $S2> then2);
+abstract class ContentCopyWith<$R, $In extends p0.Content, $Out extends p0.Content> implements ObjectCopyWith<$R, $In, $Out> {
+  ContentCopyWith<$R2, $In, $Out2> _chain<$R2, $Out2 extends p0.Content>(Then<p0.Content, $Out2> t, Then<$Out2, $R2> t2);
   $R call();
 }
 
-class _ContentCopyWithImpl<$R, $S extends p0.Content> extends BaseCopyWith<$R, p0.Content, $S> implements ContentCopyWith<$R, p0.Content, $S> {
+class _ContentCopyWithImpl<$R, $Out extends p0.Content> extends BaseCopyWith<$R, p0.Content, $Out> implements ContentCopyWith<$R, p0.Content, $Out> {
   _ContentCopyWithImpl(super.value, super.then, super.then2);
-  @override ContentCopyWith<$R2, p0.Content, $S2> _chain<$R2, $S2 extends p0.Content>(Then<$S2, $R2> then, Then<p0.Content, $S2> then2) => _ContentCopyWithImpl($value, then, then2);
+  @override ContentCopyWith<$R2, p0.Content, $Out2> _chain<$R2, $Out2 extends p0.Content>(Then<p0.Content, $Out2> t, Then<$Out2, $R2> t2) => _ContentCopyWithImpl($value, t, t2);
 
   @override $R call() => $then(p0.Content());
 }
@@ -178,13 +178,13 @@ extension DataObjectCopy<$R> on ObjectCopyWith<$R, p0.Data, p0.Data> {
 }
 
 abstract class DataCopyWith<$R> implements ObjectCopyWith<$R, p0.Data, p0.Data> {
-  DataCopyWith<$R2> _chain<$R2>(Then<p0.Data, $R2> then, Then<p0.Data, p0.Data> then2);
+  DataCopyWith<$R2> _chain<$R2>(Then<p0.Data, p0.Data> t, Then<p0.Data, $R2> t2);
   $R call({String? data});
 }
 
 class _DataCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Data, p0.Data> implements DataCopyWith<$R> {
   _DataCopyWithImpl(super.value, super.then, super.then2);
-  @override DataCopyWith<$R2> _chain<$R2>(Then<p0.Data, $R2> then, Then<p0.Data, p0.Data> then2) => _DataCopyWithImpl($value, then, then2);
+  @override DataCopyWith<$R2> _chain<$R2>(Then<p0.Data, p0.Data> t, Then<p0.Data, $R2> t2) => _DataCopyWithImpl($value, t, t2);
 
   @override $R call({String? data}) => $then(p0.Data(data ?? $value.data));
 }
@@ -218,16 +218,16 @@ extension SingleSettingObjectCopy<$R, T> on ObjectCopyWith<$R, p0.SingleSetting<
 }
 
 abstract class SingleSettingCopyWith<$R, T> implements ObjectCopyWith<$R, p0.SingleSetting<T>, p0.SingleSetting<T>> {
-  SingleSettingCopyWith<$R2, T> _chain<$R2>(Then<p0.SingleSetting<T>, $R2> then, Then<p0.SingleSetting<T>, p0.SingleSetting<T>> then2);
+  SingleSettingCopyWith<$R2, T> _chain<$R2>(Then<p0.SingleSetting<T>, p0.SingleSetting<T>> t, Then<p0.SingleSetting<T>, $R2> t2);
   ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>>? get properties;
   $R call({List<T>? properties});
 }
 
 class _SingleSettingCopyWithImpl<$R, T> extends BaseCopyWith<$R, p0.SingleSetting<T>, p0.SingleSetting<T>> implements SingleSettingCopyWith<$R, T> {
   _SingleSettingCopyWithImpl(super.value, super.then, super.then2);
-  @override SingleSettingCopyWith<$R2, T> _chain<$R2>(Then<p0.SingleSetting<T>, $R2> then, Then<p0.SingleSetting<T>, p0.SingleSetting<T>> then2) => _SingleSettingCopyWithImpl($value, then, then2);
+  @override SingleSettingCopyWith<$R2, T> _chain<$R2>(Then<p0.SingleSetting<T>, p0.SingleSetting<T>> t, Then<p0.SingleSetting<T>, $R2> t2) => _SingleSettingCopyWithImpl($value, t, t2);
 
-  @override ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>>? get properties => $value.properties != null ? ListCopyWith($value.properties!, (v, t) => ObjectCopyWith(v, t, $identity), (v) => call(properties: v)) : null;
+  @override ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>>? get properties => $value.properties != null ? ListCopyWith($value.properties!, (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(properties: v)) : null;
   @override $R call({Object? properties = $none}) => $then(p0.SingleSetting(properties: or(properties, $value.properties)));
 }
 
@@ -260,16 +260,16 @@ extension SettingsObjectCopy<$R> on ObjectCopyWith<$R, p0.Settings, p0.Settings>
 }
 
 abstract class SettingsCopyWith<$R> implements ObjectCopyWith<$R, p0.Settings, p0.Settings> {
-  SettingsCopyWith<$R2> _chain<$R2>(Then<p0.Settings, $R2> then, Then<p0.Settings, p0.Settings> then2);
+  SettingsCopyWith<$R2> _chain<$R2>(Then<p0.Settings, p0.Settings> t, Then<p0.Settings, $R2> t2);
   MapCopyWith<$R, String, p0.SingleSetting<dynamic>, SingleSettingCopyWith<$R, dynamic>>? get settings;
   $R call({Map<String, p0.SingleSetting<dynamic>>? settings});
 }
 
 class _SettingsCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Settings, p0.Settings> implements SettingsCopyWith<$R> {
   _SettingsCopyWithImpl(super.value, super.then, super.then2);
-  @override SettingsCopyWith<$R2> _chain<$R2>(Then<p0.Settings, $R2> then, Then<p0.Settings, p0.Settings> then2) => _SettingsCopyWithImpl($value, then, then2);
+  @override SettingsCopyWith<$R2> _chain<$R2>(Then<p0.Settings, p0.Settings> t, Then<p0.Settings, $R2> t2) => _SettingsCopyWithImpl($value, t, t2);
 
-  @override MapCopyWith<$R, String, p0.SingleSetting<dynamic>, SingleSettingCopyWith<$R, dynamic>>? get settings => $value.settings != null ? MapCopyWith($value.settings!, (v, t) => v.copyWith._chain(t, $identity), (v) => call(settings: v)) : null;
+  @override MapCopyWith<$R, String, p0.SingleSetting<dynamic>, SingleSettingCopyWith<$R, dynamic>>? get settings => $value.settings != null ? MapCopyWith($value.settings!, (v, t) => v.copyWith._chain($identity, t), (v) => call(settings: v)) : null;
   @override $R call({Object? settings = $none}) => $then(p0.Settings(settings: or(settings, $value.settings)));
 }
 
@@ -342,6 +342,6 @@ mixin Mappable implements MappableMixin {
   }
 }
 
-extension _ChainedCopyWith<$R, $T, $S> on ObjectCopyWith<$R, $T, $S> {
-  BaseCopyWith<$R, $T, $S> get base => this as BaseCopyWith<$R, $T, $S>;
+extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
+  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
 }

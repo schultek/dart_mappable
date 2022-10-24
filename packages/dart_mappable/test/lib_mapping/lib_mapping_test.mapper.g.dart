@@ -54,13 +54,13 @@ extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person, p0.Person> {
 }
 
 abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person, p0.Person> {
-  PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, $R2> then, Then<p0.Person, p0.Person> then2);
+  PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, p0.Person> t, Then<p0.Person, $R2> t2);
   $R call({String? firstName});
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person, p0.Person> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
-  @override PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, $R2> then, Then<p0.Person, p0.Person> then2) => _PersonCopyWithImpl($value, then, then2);
+  @override PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, p0.Person> t, Then<p0.Person, $R2> t2) => _PersonCopyWithImpl($value, t, t2);
 
   @override $R call({String? firstName}) => $then(p0.Person(firstName ?? $value.firstName));
 }
@@ -94,13 +94,13 @@ extension AppleObjectCopy<$R> on ObjectCopyWith<$R, p1.Apple, p1.Apple> {
 }
 
 abstract class AppleCopyWith<$R> implements ObjectCopyWith<$R, p1.Apple, p1.Apple> {
-  AppleCopyWith<$R2> _chain<$R2>(Then<p1.Apple, $R2> then, Then<p1.Apple, p1.Apple> then2);
+  AppleCopyWith<$R2> _chain<$R2>(Then<p1.Apple, p1.Apple> t, Then<p1.Apple, $R2> t2);
   $R call({bool? isRed});
 }
 
 class _AppleCopyWithImpl<$R> extends BaseCopyWith<$R, p1.Apple, p1.Apple> implements AppleCopyWith<$R> {
   _AppleCopyWithImpl(super.value, super.then, super.then2);
-  @override AppleCopyWith<$R2> _chain<$R2>(Then<p1.Apple, $R2> then, Then<p1.Apple, p1.Apple> then2) => _AppleCopyWithImpl($value, then, then2);
+  @override AppleCopyWith<$R2> _chain<$R2>(Then<p1.Apple, p1.Apple> t, Then<p1.Apple, $R2> t2) => _AppleCopyWithImpl($value, t, t2);
 
   @override $R call({bool? isRed}) => $then(p1.Apple(isRed ?? $value.isRed));
 }
@@ -134,13 +134,13 @@ extension CakeObjectCopy<$R> on ObjectCopyWith<$R, p1.Cake, p1.Cake> {
 }
 
 abstract class CakeCopyWith<$R> implements ObjectCopyWith<$R, p1.Cake, p1.Cake> {
-  CakeCopyWith<$R2> _chain<$R2>(Then<p1.Cake, $R2> then, Then<p1.Cake, p1.Cake> then2);
+  CakeCopyWith<$R2> _chain<$R2>(Then<p1.Cake, p1.Cake> t, Then<p1.Cake, $R2> t2);
   $R call({String? type});
 }
 
 class _CakeCopyWithImpl<$R> extends BaseCopyWith<$R, p1.Cake, p1.Cake> implements CakeCopyWith<$R> {
   _CakeCopyWithImpl(super.value, super.then, super.then2);
-  @override CakeCopyWith<$R2> _chain<$R2>(Then<p1.Cake, $R2> then, Then<p1.Cake, p1.Cake> then2) => _CakeCopyWithImpl($value, then, then2);
+  @override CakeCopyWith<$R2> _chain<$R2>(Then<p1.Cake, p1.Cake> t, Then<p1.Cake, $R2> t2) => _CakeCopyWithImpl($value, t, t2);
 
   @override $R call({String? type}) => $then(p1.Cake(type ?? $value.type));
 }
@@ -174,13 +174,13 @@ extension CarObjectCopy<$R> on ObjectCopyWith<$R, p2.Car, p2.Car> {
 }
 
 abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p2.Car, p2.Car> {
-  CarCopyWith<$R2> _chain<$R2>(Then<p2.Car, $R2> then, Then<p2.Car, p2.Car> then2);
+  CarCopyWith<$R2> _chain<$R2>(Then<p2.Car, p2.Car> t, Then<p2.Car, $R2> t2);
   $R call({String? brandName});
 }
 
 class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p2.Car, p2.Car> implements CarCopyWith<$R> {
   _CarCopyWithImpl(super.value, super.then, super.then2);
-  @override CarCopyWith<$R2> _chain<$R2>(Then<p2.Car, $R2> then, Then<p2.Car, p2.Car> then2) => _CarCopyWithImpl($value, then, then2);
+  @override CarCopyWith<$R2> _chain<$R2>(Then<p2.Car, p2.Car> t, Then<p2.Car, $R2> t2) => _CarCopyWithImpl($value, t, t2);
 
   @override $R call({String? brandName}) => $then(p2.Car(brandName ?? $value.brandName));
 }
@@ -215,13 +215,13 @@ extension Person1ObjectCopy<$R> on ObjectCopyWith<$R, p2.Person, p2.Person> {
 }
 
 abstract class Person1CopyWith<$R> implements ObjectCopyWith<$R, p2.Person, p2.Person> {
-  Person1CopyWith<$R2> _chain<$R2>(Then<p2.Person, $R2> then, Then<p2.Person, p2.Person> then2);
+  Person1CopyWith<$R2> _chain<$R2>(Then<p2.Person, p2.Person> t, Then<p2.Person, $R2> t2);
   $R call({String? firstName});
 }
 
 class _Person1CopyWithImpl<$R> extends BaseCopyWith<$R, p2.Person, p2.Person> implements Person1CopyWith<$R> {
   _Person1CopyWithImpl(super.value, super.then, super.then2);
-  @override Person1CopyWith<$R2> _chain<$R2>(Then<p2.Person, $R2> then, Then<p2.Person, p2.Person> then2) => _Person1CopyWithImpl($value, then, then2);
+  @override Person1CopyWith<$R2> _chain<$R2>(Then<p2.Person, p2.Person> t, Then<p2.Person, $R2> t2) => _Person1CopyWithImpl($value, t, t2);
 
   @override $R call({String? firstName}) => $then(p2.Person(firstName ?? $value.firstName));
 }
@@ -255,13 +255,13 @@ extension AnimalObjectCopy<$R> on ObjectCopyWith<$R, p3.Animal, p3.Animal> {
 }
 
 abstract class AnimalCopyWith<$R> implements ObjectCopyWith<$R, p3.Animal, p3.Animal> {
-  AnimalCopyWith<$R2> _chain<$R2>(Then<p3.Animal, $R2> then, Then<p3.Animal, p3.Animal> then2);
+  AnimalCopyWith<$R2> _chain<$R2>(Then<p3.Animal, p3.Animal> t, Then<p3.Animal, $R2> t2);
   $R call({String? color});
 }
 
 class _AnimalCopyWithImpl<$R> extends BaseCopyWith<$R, p3.Animal, p3.Animal> implements AnimalCopyWith<$R> {
   _AnimalCopyWithImpl(super.value, super.then, super.then2);
-  @override AnimalCopyWith<$R2> _chain<$R2>(Then<p3.Animal, $R2> then, Then<p3.Animal, p3.Animal> then2) => _AnimalCopyWithImpl($value, then, then2);
+  @override AnimalCopyWith<$R2> _chain<$R2>(Then<p3.Animal, p3.Animal> t, Then<p3.Animal, $R2> t2) => _AnimalCopyWithImpl($value, t, t2);
 
   @override $R call({String? color}) => $then(p3.Animal(color ?? $value.color));
 }
@@ -335,6 +335,6 @@ mixin Mappable implements MappableMixin {
   }
 }
 
-extension _ChainedCopyWith<$R, $T, $S> on ObjectCopyWith<$R, $T, $S> {
-  BaseCopyWith<$R, $T, $S> get base => this as BaseCopyWith<$R, $T, $S>;
+extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
+  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
 }

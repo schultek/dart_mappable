@@ -48,16 +48,16 @@ extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person, p0.Person> {
 }
 
 abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person, p0.Person> {
-  PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, $R2> then, Then<p0.Person, p0.Person> then2);
+  PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, p0.Person> t, Then<p0.Person, $R2> t2);
   CarCopyWith<$R>? get car;
   $R call({String? name, int? age, p0.Car? car});
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person, p0.Person> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
-  @override PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, $R2> then, Then<p0.Person, p0.Person> then2) => _PersonCopyWithImpl($value, then, then2);
+  @override PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, p0.Person> t, Then<p0.Person, $R2> t2) => _PersonCopyWithImpl($value, t, t2);
 
-  @override CarCopyWith<$R>? get car => $value.car?.copyWith._chain((v) => call(car: v), $identity);
+  @override CarCopyWith<$R>? get car => $value.car?.copyWith._chain($identity, (v) => call(car: v));
   @override $R call({String? name, int? age, Object? car = $none}) => $then(p0.Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
 }
 
@@ -90,13 +90,13 @@ extension CarObjectCopy<$R> on ObjectCopyWith<$R, p0.Car, p0.Car> {
 }
 
 abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car, p0.Car> {
-  CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, $R2> then, Then<p0.Car, p0.Car> then2);
+  CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, p0.Car> t, Then<p0.Car, $R2> t2);
   $R call({int? drivenKm, p0.Brand? brand});
 }
 
 class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Car, p0.Car> implements CarCopyWith<$R> {
   _CarCopyWithImpl(super.value, super.then, super.then2);
-  @override CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, $R2> then, Then<p0.Car, p0.Car> then2) => _CarCopyWithImpl($value, then, then2);
+  @override CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, p0.Car> t, Then<p0.Car, $R2> t2) => _CarCopyWithImpl($value, t, t2);
 
   @override $R call({int? drivenKm, p0.Brand? brand}) => $then(p0.Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
 }
@@ -195,6 +195,6 @@ mixin Mappable implements MappableMixin {
   }
 }
 
-extension _ChainedCopyWith<$R, $T, $S> on ObjectCopyWith<$R, $T, $S> {
-  BaseCopyWith<$R, $T, $S> get base => this as BaseCopyWith<$R, $T, $S>;
+extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
+  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
 }

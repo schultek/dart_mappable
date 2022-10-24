@@ -50,16 +50,16 @@ extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person, p0.Person> {
 }
 
 abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person, p0.Person> {
-  PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, $R2> then, Then<p0.Person, p0.Person> then2);
+  PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, p0.Person> t, Then<p0.Person, $R2> t2);
   CarCopyWith<$R>? get car;
   $R call({String? name, int? age, p0.Car? car});
 }
 
 class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person, p0.Person> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
-  @override PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, $R2> then, Then<p0.Person, p0.Person> then2) => _PersonCopyWithImpl($value, then, then2);
+  @override PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, p0.Person> t, Then<p0.Person, $R2> t2) => _PersonCopyWithImpl($value, t, t2);
 
-  @override CarCopyWith<$R>? get car => $value.car?.copyWith._chain((v) => call(car: v), $identity);
+  @override CarCopyWith<$R>? get car => $value.car?.copyWith._chain($identity, (v) => call(car: v));
   @override $R call({String? name, int? age, Object? car = $none}) => $then(p0.Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
 }
 
@@ -92,13 +92,13 @@ extension CarObjectCopy<$R> on ObjectCopyWith<$R, p0.Car, p0.Car> {
 }
 
 abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car, p0.Car> {
-  CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, $R2> then, Then<p0.Car, p0.Car> then2);
+  CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, p0.Car> t, Then<p0.Car, $R2> t2);
   $R call({int? drivenKm, p0.Brand? brand});
 }
 
 class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Car, p0.Car> implements CarCopyWith<$R> {
   _CarCopyWithImpl(super.value, super.then, super.then2);
-  @override CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, $R2> then, Then<p0.Car, p0.Car> then2) => _CarCopyWithImpl($value, then, then2);
+  @override CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, p0.Car> t, Then<p0.Car, $R2> t2) => _CarCopyWithImpl($value, t, t2);
 
   @override $R call({int? drivenKm, p0.Brand? brand}) => $then(p0.Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
 }
@@ -132,13 +132,13 @@ extension BoxObjectCopy<$R, T> on ObjectCopyWith<$R, p0.Box<T>, p0.Box<T>> {
 }
 
 abstract class BoxCopyWith<$R, T> implements ObjectCopyWith<$R, p0.Box<T>, p0.Box<T>> {
-  BoxCopyWith<$R2, T> _chain<$R2>(Then<p0.Box<T>, $R2> then, Then<p0.Box<T>, p0.Box<T>> then2);
+  BoxCopyWith<$R2, T> _chain<$R2>(Then<p0.Box<T>, p0.Box<T>> t, Then<p0.Box<T>, $R2> t2);
   $R call({int? size, T? content});
 }
 
 class _BoxCopyWithImpl<$R, T> extends BaseCopyWith<$R, p0.Box<T>, p0.Box<T>> implements BoxCopyWith<$R, T> {
   _BoxCopyWithImpl(super.value, super.then, super.then2);
-  @override BoxCopyWith<$R2, T> _chain<$R2>(Then<p0.Box<T>, $R2> then, Then<p0.Box<T>, p0.Box<T>> then2) => _BoxCopyWithImpl($value, then, then2);
+  @override BoxCopyWith<$R2, T> _chain<$R2>(Then<p0.Box<T>, p0.Box<T>> t, Then<p0.Box<T>, $R2> t2) => _BoxCopyWithImpl($value, t, t2);
 
   @override $R call({int? size, T? content}) => $then(p0.Box(size ?? $value.size, content: content ?? $value.content));
 }
@@ -172,13 +172,13 @@ extension ConfettiObjectCopy<$R> on ObjectCopyWith<$R, p0.Confetti, p0.Confetti>
 }
 
 abstract class ConfettiCopyWith<$R> implements ObjectCopyWith<$R, p0.Confetti, p0.Confetti> {
-  ConfettiCopyWith<$R2> _chain<$R2>(Then<p0.Confetti, $R2> then, Then<p0.Confetti, p0.Confetti> then2);
+  ConfettiCopyWith<$R2> _chain<$R2>(Then<p0.Confetti, p0.Confetti> t, Then<p0.Confetti, $R2> t2);
   $R call({String? color});
 }
 
 class _ConfettiCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Confetti, p0.Confetti> implements ConfettiCopyWith<$R> {
   _ConfettiCopyWithImpl(super.value, super.then, super.then2);
-  @override ConfettiCopyWith<$R2> _chain<$R2>(Then<p0.Confetti, $R2> then, Then<p0.Confetti, p0.Confetti> then2) => _ConfettiCopyWithImpl($value, then, then2);
+  @override ConfettiCopyWith<$R2> _chain<$R2>(Then<p0.Confetti, p0.Confetti> t, Then<p0.Confetti, $R2> t2) => _ConfettiCopyWithImpl($value, t, t2);
 
   @override $R call({String? color}) => $then(p0.Confetti(color ?? $value.color));
 }

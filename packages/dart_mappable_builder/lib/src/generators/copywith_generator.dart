@@ -29,16 +29,16 @@ class CopyWithGenerator {
   late String selfSuperTypeParam = hasSubOrSuperConfigs ? ', $selfTypeParam' : '';
 
   late String subTypeParamDef =
-      hasSubConfigs ? ', \$T extends $selfTypeParam' : '';
-  late String subTypeParam = hasSubConfigs ? ', \$T' : '';
-  late String subOrSelfTypeParam = hasSubConfigs ? ', \$T' : ', $selfTypeParam';
+      hasSubConfigs ? ', \$In extends $selfTypeParam' : '';
+  late String subTypeParam = hasSubConfigs ? ', \$In' : '';
+  late String subOrSelfTypeParam = hasSubConfigs ? ', \$In' : ', $selfTypeParam';
 
-  late String superTypeParamDef = hasSubOrSuperConfigs ? ', \$S extends $superPrefixedClassName' : '';
-  late String superTypeParamDef2 = hasSubOrSuperConfigs ? ', \$S2 extends $superPrefixedClassName' : '';
-  late String superTypeParam = hasSubOrSuperConfigs ? ', \$S' : '';
-  late String superTypeParam2 = hasSubOrSuperConfigs ? ', \$S2' : '';
-  late String superOrSelfTypeParam = hasSubOrSuperConfigs ? ', \$S' : ', $selfTypeParam';
-  late String superOrSelfTypeParam2 = hasSubOrSuperConfigs ? '\$S2' : selfTypeParam;
+  late String superTypeParamDef = hasSubOrSuperConfigs ? ', \$Out extends $superPrefixedClassName' : '';
+  late String superTypeParamDef2 = hasSubOrSuperConfigs ? ', \$Out2 extends $superPrefixedClassName' : '';
+  late String superTypeParam = hasSubOrSuperConfigs ? ', \$Out' : '';
+  late String superTypeParam2 = hasSubOrSuperConfigs ? ', \$Out2' : '';
+  late String superOrSelfTypeParam = hasSubOrSuperConfigs ? ', \$Out' : ', $selfTypeParam';
+  late String superOrSelfTypeParam2 = hasSubOrSuperConfigs ? '\$Out2' : selfTypeParam;
 
   String generateCopyWithExtension() {
     if (!config.shouldGenerate(GenerateMethods.copy)) return '';
@@ -155,7 +155,7 @@ class CopyWithGenerator {
 
     if (config.superConfig == null) {
       snippets.add(
-          '  ${config.uniqueClassName}CopyWith<\$R2$subTypeParam$superTypeParam2$classTypeParams> _chain<\$R2$superTypeParamDef2>(Then<$superOrSelfTypeParam2, \$R2> then, Then<$selfTypeParam, $superOrSelfTypeParam2> then2);\n');
+          '  ${config.uniqueClassName}CopyWith<\$R2$subTypeParam$superTypeParam2$classTypeParams> _chain<\$R2$superTypeParamDef2>(Then<$selfTypeParam, $superOrSelfTypeParam2> t, Then<$superOrSelfTypeParam2, \$R2> t2);\n');
     }
 
     var copyParams =
@@ -179,8 +179,8 @@ class CopyWithGenerator {
           '<\$R$selfSubTypeParam$superTypeParam$classTypeParams> {\n'
           '  _${config.uniqueClassName}CopyWithImpl(super.value, super.then, super.then2);\n'
           '  @override ${config.uniqueClassName}CopyWith<\$R2$selfSubTypeParam$superTypeParam2$classTypeParams> '
-          '_chain<\$R2$superTypeParamDef2>(Then<$superOrSelfTypeParam2, \$R2> then, Then<$selfTypeParam, $superOrSelfTypeParam2> then2) '
-          '=> _${config.uniqueClassName}CopyWithImpl(\$value, then, then2);\n'
+          '_chain<\$R2$superTypeParamDef2>(Then<$selfTypeParam, $superOrSelfTypeParam2> t, Then<$superOrSelfTypeParam2, \$R2> t2) '
+          '=> _${config.uniqueClassName}CopyWithImpl(\$value, t, t2);\n'
           '\n');
 
       for (var param in copyParams) {

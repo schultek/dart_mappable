@@ -122,7 +122,7 @@ class CopyParamConfig {
   String get superTypeParam => selfSuperTypeParam != null ? ', $selfSuperTypeParam' : '';
 
   String get invocation {
-    return '\$value.${a.name}${a.type.isNullable ? '?' : ''}.copyWith._chain($invocationThen, \$identity)';
+    return '\$value.${a.name}${a.type.isNullable ? '?' : ''}.copyWith._chain(\$identity, $invocationThen)';
   }
 }
 
@@ -182,9 +182,9 @@ class CollectionCopyParamConfig extends CopyParamConfig {
 
     String itemInvocation;
     if (itemName == 'Object') {
-      itemInvocation = '(v, t) => ObjectCopyWith(v, t, \$identity)';
+      itemInvocation = '(v, t) => ObjectCopyWith(v, \$identity, t)';
     } else {
-      itemInvocation = '(v, t) => v${typeArgNullable ? '?' : ''}.copyWith._chain(t, \$identity)';
+      itemInvocation = '(v, t) => v${typeArgNullable ? '?' : ''}.copyWith._chain(\$identity, t)';
     }
 
     var result = '${name}CopyWith(\$value.${a.name}${a.type.isNullable ? '!' : ''}, $itemInvocation, $invocationThen)';
