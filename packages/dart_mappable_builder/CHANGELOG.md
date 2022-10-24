@@ -1,3 +1,7 @@
+# 2.0.0-dev.4
+
+- Fixed bug with incorrect type args in copyWith
+
 # 2.0.0-dev.3
 
 - Fixed various issues with the copyWith implementation for inherited classes.
