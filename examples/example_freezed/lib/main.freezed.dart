@@ -12,31 +12,7 @@ part of 'main.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$UnionTearOff {
-  const _$UnionTearOff();
-
-  Data data(@MappableField(key: 'mykey') int value) {
-    return Data(
-      value,
-    );
-  }
-
-  Loading loading() {
-    return const Loading();
-  }
-
-  ErrorDetails error([String? message]) {
-    return ErrorDetails(
-      message,
-    );
-  }
-}
-
-/// @nodoc
-const $Union = _$UnionTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$Union {
@@ -49,9 +25,9 @@ mixin _$Union {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(@MappableField(key: 'mykey') int value)? data,
-    TResult Function()? loading,
-    TResult Function(String? message)? error,
+    TResult? Function(@MappableField(key: 'mykey') int value)? data,
+    TResult? Function()? loading,
+    TResult? Function(String? message)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -71,9 +47,9 @@ mixin _$Union {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(Data value)? data,
-    TResult Function(Loading value)? loading,
-    TResult Function(ErrorDetails value)? error,
+    TResult? Function(Data value)? data,
+    TResult? Function(Loading value)? loading,
+    TResult? Function(ErrorDetails value)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -89,40 +65,41 @@ mixin _$Union {
 /// @nodoc
 abstract class $UnionCopyWith<$Res> {
   factory $UnionCopyWith(Union value, $Res Function(Union) then) =
-      _$UnionCopyWithImpl<$Res>;
+      _$UnionCopyWithImpl<$Res, Union>;
 }
 
 /// @nodoc
-class _$UnionCopyWithImpl<$Res> implements $UnionCopyWith<$Res> {
+class _$UnionCopyWithImpl<$Res, $Val extends Union>
+    implements $UnionCopyWith<$Res> {
   _$UnionCopyWithImpl(this._value, this._then);
 
-  final Union _value;
   // ignore: unused_field
-  final $Res Function(Union) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class $DataCopyWith<$Res> {
-  factory $DataCopyWith(Data value, $Res Function(Data) then) =
-      _$DataCopyWithImpl<$Res>;
+abstract class _$$DataCopyWith<$Res> {
+  factory _$$DataCopyWith(_$Data value, $Res Function(_$Data) then) =
+      __$$DataCopyWithImpl<$Res>;
+  @useResult
   $Res call({@MappableField(key: 'mykey') int value});
 }
 
 /// @nodoc
-class _$DataCopyWithImpl<$Res> extends _$UnionCopyWithImpl<$Res>
-    implements $DataCopyWith<$Res> {
-  _$DataCopyWithImpl(Data _value, $Res Function(Data) _then)
-      : super(_value, (v) => _then(v as Data));
+class __$$DataCopyWithImpl<$Res> extends _$UnionCopyWithImpl<$Res, _$Data>
+    implements _$$DataCopyWith<$Res> {
+  __$$DataCopyWithImpl(_$Data _value, $Res Function(_$Data) _then)
+      : super(_value, _then);
 
-  @override
-  Data get _value => super._value as Data;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? value = freezed,
+    Object? value = null,
   }) {
-    return _then(Data(
-      value == freezed
+    return _then(_$Data(
+      null == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
               as int,
@@ -149,18 +126,18 @@ class _$Data implements Data {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is Data &&
-            const DeepCollectionEquality().equals(other.value, value));
+            other is _$Data &&
+            (identical(other.value, value) || other.value == value));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(value));
+  int get hashCode => Object.hash(runtimeType, value);
 
   @JsonKey(ignore: true)
   @override
-  $DataCopyWith<Data> get copyWith =>
-      _$DataCopyWithImpl<Data>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$DataCopyWith<_$Data> get copyWith =>
+      __$$DataCopyWithImpl<_$Data>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -175,9 +152,9 @@ class _$Data implements Data {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(@MappableField(key: 'mykey') int value)? data,
-    TResult Function()? loading,
-    TResult Function(String? message)? error,
+    TResult? Function(@MappableField(key: 'mykey') int value)? data,
+    TResult? Function()? loading,
+    TResult? Function(String? message)? error,
   }) {
     return data?.call(value);
   }
@@ -209,9 +186,9 @@ class _$Data implements Data {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(Data value)? data,
-    TResult Function(Loading value)? loading,
-    TResult Function(ErrorDetails value)? error,
+    TResult? Function(Data value)? data,
+    TResult? Function(Loading value)? loading,
+    TResult? Function(ErrorDetails value)? error,
   }) {
     return data?.call(this);
   }
@@ -232,28 +209,25 @@ class _$Data implements Data {
 }
 
 abstract class Data implements Union {
-  const factory Data(@MappableField(key: 'mykey') int value) = _$Data;
+  const factory Data(@MappableField(key: 'mykey') final int value) = _$Data;
 
   @MappableField(key: 'mykey')
   int get value;
   @JsonKey(ignore: true)
-  $DataCopyWith<Data> get copyWith => throw _privateConstructorUsedError;
+  _$$DataCopyWith<_$Data> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $LoadingCopyWith<$Res> {
-  factory $LoadingCopyWith(Loading value, $Res Function(Loading) then) =
-      _$LoadingCopyWithImpl<$Res>;
+abstract class _$$LoadingCopyWith<$Res> {
+  factory _$$LoadingCopyWith(_$Loading value, $Res Function(_$Loading) then) =
+      __$$LoadingCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$LoadingCopyWithImpl<$Res> extends _$UnionCopyWithImpl<$Res>
-    implements $LoadingCopyWith<$Res> {
-  _$LoadingCopyWithImpl(Loading _value, $Res Function(Loading) _then)
-      : super(_value, (v) => _then(v as Loading));
-
-  @override
-  Loading get _value => super._value as Loading;
+class __$$LoadingCopyWithImpl<$Res> extends _$UnionCopyWithImpl<$Res, _$Loading>
+    implements _$$LoadingCopyWith<$Res> {
+  __$$LoadingCopyWithImpl(_$Loading _value, $Res Function(_$Loading) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
@@ -270,7 +244,7 @@ class _$Loading implements Loading {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is Loading);
+        (other.runtimeType == runtimeType && other is _$Loading);
   }
 
   @override
@@ -289,9 +263,9 @@ class _$Loading implements Loading {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(@MappableField(key: 'mykey') int value)? data,
-    TResult Function()? loading,
-    TResult Function(String? message)? error,
+    TResult? Function(@MappableField(key: 'mykey') int value)? data,
+    TResult? Function()? loading,
+    TResult? Function(String? message)? error,
   }) {
     return loading?.call();
   }
@@ -323,9 +297,9 @@ class _$Loading implements Loading {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(Data value)? data,
-    TResult Function(Loading value)? loading,
-    TResult Function(ErrorDetails value)? error,
+    TResult? Function(Data value)? data,
+    TResult? Function(Loading value)? loading,
+    TResult? Function(ErrorDetails value)? error,
   }) {
     return loading?.call(this);
   }
@@ -350,29 +324,29 @@ abstract class Loading implements Union {
 }
 
 /// @nodoc
-abstract class $ErrorDetailsCopyWith<$Res> {
-  factory $ErrorDetailsCopyWith(
-          ErrorDetails value, $Res Function(ErrorDetails) then) =
-      _$ErrorDetailsCopyWithImpl<$Res>;
+abstract class _$$ErrorDetailsCopyWith<$Res> {
+  factory _$$ErrorDetailsCopyWith(
+          _$ErrorDetails value, $Res Function(_$ErrorDetails) then) =
+      __$$ErrorDetailsCopyWithImpl<$Res>;
+  @useResult
   $Res call({String? message});
 }
 
 /// @nodoc
-class _$ErrorDetailsCopyWithImpl<$Res> extends _$UnionCopyWithImpl<$Res>
-    implements $ErrorDetailsCopyWith<$Res> {
-  _$ErrorDetailsCopyWithImpl(
-      ErrorDetails _value, $Res Function(ErrorDetails) _then)
-      : super(_value, (v) => _then(v as ErrorDetails));
+class __$$ErrorDetailsCopyWithImpl<$Res>
+    extends _$UnionCopyWithImpl<$Res, _$ErrorDetails>
+    implements _$$ErrorDetailsCopyWith<$Res> {
+  __$$ErrorDetailsCopyWithImpl(
+      _$ErrorDetails _value, $Res Function(_$ErrorDetails) _then)
+      : super(_value, _then);
 
-  @override
-  ErrorDetails get _value => super._value as ErrorDetails;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? message = freezed,
   }) {
-    return _then(ErrorDetails(
-      message == freezed
+    return _then(_$ErrorDetails(
+      freezed == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String?,
@@ -398,18 +372,18 @@ class _$ErrorDetails implements ErrorDetails {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is ErrorDetails &&
-            const DeepCollectionEquality().equals(other.message, message));
+            other is _$ErrorDetails &&
+            (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(message));
+  int get hashCode => Object.hash(runtimeType, message);
 
   @JsonKey(ignore: true)
   @override
-  $ErrorDetailsCopyWith<ErrorDetails> get copyWith =>
-      _$ErrorDetailsCopyWithImpl<ErrorDetails>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$ErrorDetailsCopyWith<_$ErrorDetails> get copyWith =>
+      __$$ErrorDetailsCopyWithImpl<_$ErrorDetails>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -424,9 +398,9 @@ class _$ErrorDetails implements ErrorDetails {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(@MappableField(key: 'mykey') int value)? data,
-    TResult Function()? loading,
-    TResult Function(String? message)? error,
+    TResult? Function(@MappableField(key: 'mykey') int value)? data,
+    TResult? Function()? loading,
+    TResult? Function(String? message)? error,
   }) {
     return error?.call(message);
   }
@@ -458,9 +432,9 @@ class _$ErrorDetails implements ErrorDetails {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(Data value)? data,
-    TResult Function(Loading value)? loading,
-    TResult Function(ErrorDetails value)? error,
+    TResult? Function(Data value)? data,
+    TResult? Function(Loading value)? loading,
+    TResult? Function(ErrorDetails value)? error,
   }) {
     return error?.call(this);
   }
@@ -481,10 +455,10 @@ class _$ErrorDetails implements ErrorDetails {
 }
 
 abstract class ErrorDetails implements Union {
-  const factory ErrorDetails([String? message]) = _$ErrorDetails;
+  const factory ErrorDetails([final String? message]) = _$ErrorDetails;
 
   String? get message;
   @JsonKey(ignore: true)
-  $ErrorDetailsCopyWith<ErrorDetails> get copyWith =>
+  _$$ErrorDetailsCopyWith<_$ErrorDetails> get copyWith =>
       throw _privateConstructorUsedError;
 }

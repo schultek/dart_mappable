@@ -444,7 +444,8 @@ void main() {
 
 ### Deep Copy
 
-When having complex nested classes, this syntax can get quite verbose. Therefore this package provides a special syntax for nested classes, similar to [freezed](https://pub.dev/packages/freezed#deep-copy).
+When having complex nested classes, this syntax can get quite verbose. 
+Therefore this package provides a special syntax for nested classes, similar to [freezed](https://pub.dev/packages/freezed#deep-copy).
 
 Consider the following classes:
 
@@ -468,13 +469,13 @@ void main() {
   print(company.copyWith.manager(name: 'Laura')); 
   // prints: Company(manager: Person(name: 'Laura'), ...)
   
-  // this also works with lists
+  // this also works with lists or maps
   print(company.copyWith.employees.at(0)(name: 'John')); 
   // prints: Company(..., employees: [Person(name: 'John), Person(name: 'Tom')])
   
   // you can also use 'apply' with a custom function to transform a value
   print(company.copyWith.manager.apply((manager) => Person(manager.name.toUpperCase())));
-  // prints: Company(manager: Person(name: 'LAURA'), ...)
+  // prints: Company(manager: Person(name: 'ANNA'), ...)
 }
 ```
 
@@ -483,6 +484,14 @@ The complete interfaces are documented
 
 - [here](https://pub.dev/documentation/dart_mappable/latest/internals/ListCopyWith-class.html) for Lists
 - [here](https://pub.dev/documentation/dart_mappable/latest/internals/MapCopyWith-class.html) for Maps
+
+### CopyWith for Inheritance, Polymorphism and Generics
+
+CopyWith works not only for simple use-cases, but also supports complex class structures with 
+inheritance or generics.
+
+For details on how to use `.copyWith` with inheritance and polymorphism, read on to the 
+[CopyWith and Polymorphism](#copywith-and-polymorphism) section.
 
 ## Polymorphism and Discriminators
 
@@ -582,6 +591,11 @@ you should apply to your class. So in our above example we would change the clas
 
 > Don't worry if the mixins don't exist at first, just run code-generation once an they will be created.
 > The builder will also warn you if you use polymorphism without using the generated mixins.
+
+With this setup, you cannot only use `.copyWith` on `Cat` or `Dog`, but also on any parameter of type
+`Animal`. In those cases, the `.copyWith` implementation is completely subtype-safe, meaning if you
+have a parameter of static type `Animal`, but concrete runtime type `Cat`, calling `.copyWith` will
+correctly result in a new instance of `Cat`.
 
 ## Encoding / Decoding Hooks
 

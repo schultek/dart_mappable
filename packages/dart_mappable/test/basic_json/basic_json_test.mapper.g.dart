@@ -1,5 +1,4 @@
-import 'dart:core';
-
+// ignore_for_file: unused_element
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
@@ -41,22 +40,24 @@ class PersonMapper extends BaseMapper<p0.Person> {
 extension PersonMapperExtension on p0.Person {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity);
+  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity, $identity);
 }
 
-extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person> {
-  PersonCopyWith<$R> get person => chain(_PersonCopyWithImpl.new);
+extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person, p0.Person> {
+  PersonCopyWith<$R> get asPerson => base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
 }
 
-abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person> {
+abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person, p0.Person> {
+  PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, p0.Person> t, Then<p0.Person, $R2> t2);
   CarCopyWith<$R>? get car;
   $R call({String? name, int? age, p0.Car? car});
 }
 
-class _PersonCopyWithImpl<$R> extends BaseCopyWith<p0.Person, $R> implements PersonCopyWith<$R> {
-  _PersonCopyWithImpl(super.value, super.then);
+class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person, p0.Person> implements PersonCopyWith<$R> {
+  _PersonCopyWithImpl(super.value, super.then, super.then2);
+  @override PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, p0.Person> t, Then<p0.Person, $R2> t2) => _PersonCopyWithImpl($value, t, t2);
 
-  @override CarCopyWith<$R>? get car => $value.car != null ? _CarCopyWithImpl($value.car!, (v) => call(car: v)) : null;
+  @override CarCopyWith<$R>? get car => $value.car?.copyWith._chain($identity, (v) => call(car: v));
   @override $R call({String? name, int? age, Object? car = $none}) => $then(p0.Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
 }
 
@@ -81,19 +82,21 @@ class CarMapper extends BaseMapper<p0.Car> {
 extension CarMapperExtension on p0.Car {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CarCopyWith<p0.Car> get copyWith => _CarCopyWithImpl(this, $identity);
+  CarCopyWith<p0.Car> get copyWith => _CarCopyWithImpl(this, $identity, $identity);
 }
 
-extension CarObjectCopy<$R> on ObjectCopyWith<$R, p0.Car> {
-  CarCopyWith<$R> get car => chain(_CarCopyWithImpl.new);
+extension CarObjectCopy<$R> on ObjectCopyWith<$R, p0.Car, p0.Car> {
+  CarCopyWith<$R> get asCar => base.as((v, t, t2) => _CarCopyWithImpl(v, t, t2));
 }
 
-abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car> {
+abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car, p0.Car> {
+  CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, p0.Car> t, Then<p0.Car, $R2> t2);
   $R call({int? drivenKm, p0.Brand? brand});
 }
 
-class _CarCopyWithImpl<$R> extends BaseCopyWith<p0.Car, $R> implements CarCopyWith<$R> {
-  _CarCopyWithImpl(super.value, super.then);
+class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Car, p0.Car> implements CarCopyWith<$R> {
+  _CarCopyWithImpl(super.value, super.then, super.then2);
+  @override CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, p0.Car> t, Then<p0.Car, $R2> t2) => _CarCopyWithImpl($value, t, t2);
 
   @override $R call({int? drivenKm, p0.Brand? brand}) => $then(p0.Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
 }
@@ -190,4 +193,8 @@ mixin Mappable implements MappableMixin {
       }
     }
   }
+}
+
+extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
+  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
 }

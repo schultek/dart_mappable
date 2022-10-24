@@ -1,3 +1,11 @@
+# 2.0.0-dev.3
+
+- Fixed various issues with the copyWith implementation for inherited classes.
+
+  CopyWith now works on a wider range of parameters and is completely subtype-safe. 
+  Specifically a parameter of static type `A` but concrete type `B extends A` keeps
+  it concrete type through any `.copyWith` call, including lists and maps.
+
 # 2.0.0-dev.2
 
 - Fixed bug with missing copyWith parameters.

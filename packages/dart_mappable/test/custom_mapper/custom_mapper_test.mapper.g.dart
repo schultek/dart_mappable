@@ -1,3 +1,4 @@
+// ignore_for_file: unused_element
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
@@ -87,4 +88,8 @@ mixin Mappable implements MappableMixin {
       }
     }
   }
+}
+
+extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
+  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
 }

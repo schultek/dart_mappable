@@ -1,5 +1,4 @@
-import 'dart:core';
-
+// ignore_for_file: unused_element
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 import 'package:fast_immutable_collections/src/ilist/ilist.dart' as p1;
@@ -15,8 +14,9 @@ var _mappers = <BaseMapper>{
   BMapper._(),
   // enum mappers
   // custom mappers
-  p0.IMapMapper(),
   p0.iListMapper,
+  p0.iMapMapper,
+  p0.iSetMapper,
 };
 
 
@@ -43,19 +43,21 @@ class AMapper extends BaseMapper<p0.A> {
 extension AMapperExtension on p0.A {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ACopyWith<p0.A> get copyWith => _ACopyWithImpl(this, $identity);
+  ACopyWith<p0.A> get copyWith => _ACopyWithImpl(this, $identity, $identity);
 }
 
-extension AObjectCopy<$R> on ObjectCopyWith<$R, p0.A> {
-  ACopyWith<$R> get a => chain((v, t) => _ACopyWithImpl(v, t));
+extension AObjectCopy<$R> on ObjectCopyWith<$R, p0.A, p0.A> {
+  ACopyWith<$R> get asA => base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
 }
 
-abstract class ACopyWith<$R> implements ObjectCopyWith<$R, p0.A> {
+abstract class ACopyWith<$R> implements ObjectCopyWith<$R, p0.A, p0.A> {
+  ACopyWith<$R2> _chain<$R2>(Then<p0.A, p0.A> t, Then<p0.A, $R2> t2);
   $R call({p1.IList<p0.B>? list});
 }
 
-class _ACopyWithImpl<$R> extends BaseCopyWith<p0.A, $R> implements ACopyWith<$R> {
-  _ACopyWithImpl(super.value, super.then);
+class _ACopyWithImpl<$R> extends BaseCopyWith<$R, p0.A, p0.A> implements ACopyWith<$R> {
+  _ACopyWithImpl(super.value, super.then, super.then2);
+  @override ACopyWith<$R2> _chain<$R2>(Then<p0.A, p0.A> t, Then<p0.A, $R2> t2) => _ACopyWithImpl($value, t, t2);
 
   @override $R call({p1.IList<p0.B>? list}) => $then(p0.A(list ?? $value.list));
 }
@@ -81,19 +83,21 @@ class BMapper extends BaseMapper<p0.B> {
 extension BMapperExtension on p0.B {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-  BCopyWith<p0.B> get copyWith => _BCopyWithImpl(this, $identity);
+  BCopyWith<p0.B> get copyWith => _BCopyWithImpl(this, $identity, $identity);
 }
 
-extension BObjectCopy<$R> on ObjectCopyWith<$R, p0.B> {
-  BCopyWith<$R> get b => chain((v, t) => _BCopyWithImpl(v, t));
+extension BObjectCopy<$R> on ObjectCopyWith<$R, p0.B, p0.B> {
+  BCopyWith<$R> get asB => base.as((v, t, t2) => _BCopyWithImpl(v, t, t2));
 }
 
-abstract class BCopyWith<$R> implements ObjectCopyWith<$R, p0.B> {
+abstract class BCopyWith<$R> implements ObjectCopyWith<$R, p0.B, p0.B> {
+  BCopyWith<$R2> _chain<$R2>(Then<p0.B, p0.B> t, Then<p0.B, $R2> t2);
   $R call({String? str});
 }
 
-class _BCopyWithImpl<$R> extends BaseCopyWith<p0.B, $R> implements BCopyWith<$R> {
-  _BCopyWithImpl(super.value, super.then);
+class _BCopyWithImpl<$R> extends BaseCopyWith<$R, p0.B, p0.B> implements BCopyWith<$R> {
+  _BCopyWithImpl(super.value, super.then, super.then2);
+  @override BCopyWith<$R2> _chain<$R2>(Then<p0.B, p0.B> t, Then<p0.B, $R2> t2) => _BCopyWithImpl($value, t, t2);
 
   @override $R call({String? str}) => $then(p0.B(str ?? $value.str));
 }
@@ -165,4 +169,8 @@ mixin Mappable implements MappableMixin {
       }
     }
   }
+}
+
+extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
+  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
 }

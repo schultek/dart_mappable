@@ -26,10 +26,10 @@ final iSetMapper = SerializableMapper<ISet>.arg1(
   type: <E>(f) => f<ISet<E>>(),
 );
 
-extension DataList<$R> on ACopyWith<$R> {
-  ImmutableListCopyWith<$R, B> get list => chain((v, then) =>
-      ImmutableListCopyWith(v.list, (l) => then(v.copyWith(list: l))));
-}
+// extension DataList<$R> on ACopyWith<$R> {
+//   ImmutableListCopyWith<$R, B> get list => chain((v, then) =>
+//       ImmutableListCopyWith(v.list, (l) => then(v.copyWith(list: l))));
+// }
 
 @MappableClass()
 class A with Mappable {
@@ -48,10 +48,10 @@ class B with Mappable {
 void main() {
   var a = A(IList([B('hello'), B('world')]));
 
-  var a2 = a.copyWith.list.add(B('test'));
-  var a3 = a.copyWith.list.at(1).b(str: 'tom');
+  //var a2 = a.copyWith.list.add(B('test'));
+  //var a3 = a.copyWith.list.at(1).b(str: 'tom');
 
   print(a);
-  print(a2);
-  print(a3);
+  // print(a2);
+  // print(a3);
 }
