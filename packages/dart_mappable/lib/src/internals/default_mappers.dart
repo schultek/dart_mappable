@@ -155,7 +155,6 @@ class SerializableMapper<T> extends BaseMapper<T> with NeedsMapperContainer {
   SerializableMapper({
     required T Function(Map<String, dynamic>) decode,
     required Object Function() Function(T) encode,
-    required Object Function(Object Function<V>() f) type,
   })  : decoder = ((v) => checked<T, Map<String, dynamic>>(v, decode)),
         encoder = ((T value) => encode(value)()),
         typeFactory = ((f) => f<T>());

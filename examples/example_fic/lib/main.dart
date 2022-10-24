@@ -6,20 +6,24 @@ import 'ilist_copy_with.dart';
 import 'main.mapper.g.dart';
 
 @CustomMapper()
-class IMapMapper extends SerializableMapper<IMap> {
-  IMapMapper()
-      : super.arg2(
-          decode: IMap.fromJson,
-          encode: (map) => map.toJson,
-          type: <Key, Val>(f) => f<IMap<Key, Val>>(),
-        );
-}
-
-@CustomMapper()
 final iListMapper = SerializableMapper<IList>.arg1(
   decode: IList.fromJson,
   encode: (list) => list.toJson,
   type: <E>(f) => f<IList<E>>(),
+);
+
+@CustomMapper()
+final iMapMapper = SerializableMapper<IMap>.arg2(
+  decode: IMap.fromJson,
+  encode: (map) => map.toJson,
+  type: <Key, Val>(f) => f<IMap<Key, Val>>(),
+);
+
+@CustomMapper()
+final iSetMapper = SerializableMapper<ISet>.arg1(
+  decode: ISet.fromJson,
+  encode: (set) => set.toJson,
+  type: <E>(f) => f<ISet<E>>(),
 );
 
 extension DataList<$R> on ACopyWith<$R> {

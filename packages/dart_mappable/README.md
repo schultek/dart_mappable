@@ -838,3 +838,50 @@ void main() {
 ```
 
 For the full example and generated files, check out the `examples/example_freezed` directory.
+
+### json_serializable
+
+[json_serializable](https://pub.dev/packages/json_serializable) is a popular serialization package
+for simple applications. While this package was designed as a replacement / alternative for 
+json_serializable, you may come across situations where you need to deal with classes that either 
+use this package directly, or are designed to be compatible with it.
+
+These classes always have the same structure:
+
+1. A factory constructor `MyClass.fromJson(Map<String, Object?> json)` to decode json to an instance of the class, and
+2. A `myClass.toJson()` method to encode an instance to json.
+
+To use these classes with `dart_mappable`, you can use the `SerializableMapper` like this:
+
+```dart
+@CustomMapper()
+final myClassMapper = SerializableMapper<MyClass>(
+  decode: MyClass.fromJson,
+  encode: (myClass) => myClass.toJson,
+);
+```
+
+For generic classes with one or two type parameters, use the `SerializableMapper.arg1` or
+`SerializableMapper.arg2` constructors respectively.
+
+### fast_immutable_collections
+
+[fast_immutable_collections](https://pub.dev/packages/fast_immutable_collections) adds immutable
+variants for the standard collections types (`List`, `Map`, `Set`). These types are compatible with 
+`json_serializable`, so we can use the `SerializableMapper` from above as follows:
+
+```dart
+@CustomMapper()
+final iListMapper = SerializableMapper<IList>.arg1(
+  decode: IList.fromJson,
+  encode: (list) => list.toJson,
+  type: <E>(f) => f<IList<E>>(),
+);
+
+@CustomMapper()
+final iMapMapper = SerializableMapper<IMap>.arg2(
+  decode: IMap.fromJson,
+  encode: (map) => map.toJson,
+  type: <Key, Val>(f) => f<IMap<Key, Val>>(),
+);
+```
