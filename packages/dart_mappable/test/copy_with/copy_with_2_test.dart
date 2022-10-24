@@ -28,6 +28,19 @@ class Zoo with Mappable {
   Zoo(this.animal);
 }
 
+@MappableClass()
+class A<T> with AMixin<T> {}
+
+@MappableClass()
+class C<T> extends A<T> with CMixin<T> {}
+
+@MappableClass()
+class B {
+  List<A> list;
+  A a;
+  B(this.list, this.a);
+}
+
 void main() {
   test('Copies subtype', () {
     var zoo = Zoo(Cat('Mauzi', 'Black'));

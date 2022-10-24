@@ -13,6 +13,9 @@ var _mappers = <BaseMapper>{
   CatMapper._(),
   DogMapper._(),
   ZooMapper._(),
+  AMapper._(),
+  CMapper._(),
+  BMapper._(),
   // enum mappers
   // custom mappers
 };
@@ -121,6 +124,135 @@ class _ZooCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Zoo, p0.Zoo> implements Z
 
   @override AnimalCopyWith<$R, p0.Animal, p0.Animal> get animal => $value.animal.copyWith._chain($identity, (v) => call(animal: v));
   @override $R call({p0.Animal? animal}) => $then(p0.Zoo(animal ?? $value.animal));
+}
+
+class AMapper extends BaseMapper<p0.A> {
+  AMapper._();
+
+  @override Function get decoder => decode;
+  p0.A<T> decode<T>(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
+  p0.A<T> fromMap<T>(Map<String, dynamic> map) => p0.A();
+
+  @override Function get encoder => encode;
+  dynamic encode<T>(p0.A<T> v) => toMap<T>(v);
+  Map<String, dynamic> toMap<T>(p0.A<T> a) => {...Mapper.i.$type<p0.A<T>>(a)};
+
+  @override String stringify(p0.A self) => 'A()';
+  @override int hash(p0.A self) => 0;
+  @override bool equals(p0.A self, p0.A other) => true;
+
+  @override Function get typeFactory => <T>(f) => f<p0.A<T>>();
+}
+
+extension AMapperExtension<T> on p0.A<T> {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+}
+
+mixin AMixin<T> {
+  ACopyWith<p0.A<T>, p0.A<T>, p0.A<T>, T> get copyWith => _ACopyWithImpl(this as p0.A<T>, $identity, $identity);
+}
+
+extension AObjectCopy<$R, $Out extends p0.A, T> on ObjectCopyWith<$R, p0.A<T>, $Out> {
+  ACopyWith<$R, p0.A<T>, $Out, T> get asA => base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
+}
+
+abstract class ACopyWith<$R, $In extends p0.A<T>, $Out extends p0.A, T> implements ObjectCopyWith<$R, $In, $Out> {
+  ACopyWith<$R2, $In, $Out2, T> _chain<$R2, $Out2 extends p0.A>(Then<p0.A<T>, $Out2> t, Then<$Out2, $R2> t2);
+  $R call();
+}
+
+class _ACopyWithImpl<$R, $Out extends p0.A, T> extends BaseCopyWith<$R, p0.A<T>, $Out> implements ACopyWith<$R, p0.A<T>, $Out, T> {
+  _ACopyWithImpl(super.value, super.then, super.then2);
+  @override ACopyWith<$R2, p0.A<T>, $Out2, T> _chain<$R2, $Out2 extends p0.A>(Then<p0.A<T>, $Out2> t, Then<$Out2, $R2> t2) => _ACopyWithImpl($value, t, t2);
+
+  @override $R call() => $then(p0.A());
+}
+
+class CMapper extends BaseMapper<p0.C> {
+  CMapper._();
+
+  @override Function get decoder => decode;
+  p0.C<T> decode<T>(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
+  p0.C<T> fromMap<T>(Map<String, dynamic> map) => p0.C();
+
+  @override Function get encoder => encode;
+  dynamic encode<T>(p0.C<T> v) => toMap<T>(v);
+  Map<String, dynamic> toMap<T>(p0.C<T> c) => {...Mapper.i.$type<p0.C<T>>(c)};
+
+  @override String stringify(p0.C self) => 'C()';
+  @override int hash(p0.C self) => 0;
+  @override bool equals(p0.C self, p0.C other) => true;
+
+  @override Function get typeFactory => <T>(f) => f<p0.C<T>>();
+}
+
+extension CMapperExtension<T> on p0.C<T> {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+}
+
+mixin CMixin<T> {
+  CCopyWith<p0.C<T>, p0.C<T>, T> get copyWith => _CCopyWithImpl(this as p0.C<T>, $identity, $identity);
+}
+
+extension CObjectCopy<$R, $Out extends p0.A, T> on ObjectCopyWith<$R, p0.C<T>, $Out> {
+  CCopyWith<$R, $Out, T> get asC => base.as((v, t, t2) => _CCopyWithImpl(v, t, t2));
+}
+
+abstract class CCopyWith<$R, $Out extends p0.A, T> implements ACopyWith<$R, p0.C<T>, $Out, T> {
+  @override $R call();
+}
+
+class _CCopyWithImpl<$R, $Out extends p0.A, T> extends BaseCopyWith<$R, p0.C<T>, $Out> implements CCopyWith<$R, $Out, T> {
+  _CCopyWithImpl(super.value, super.then, super.then2);
+  @override CCopyWith<$R2, $Out2, T> _chain<$R2, $Out2 extends p0.A>(Then<p0.C<T>, $Out2> t, Then<$Out2, $R2> t2) => _CCopyWithImpl($value, t, t2);
+
+  @override $R call() => $then(p0.C());
+}
+
+class BMapper extends BaseMapper<p0.B> {
+  BMapper._();
+
+  @override Function get decoder => decode;
+  p0.B decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p0.B fromMap(Map<String, dynamic> map) => p0.B(Mapper.i.$get(map, 'list'), Mapper.i.$get(map, 'a'));
+
+  @override Function get encoder => encode;
+  dynamic encode(p0.B v) => toMap(v);
+  Map<String, dynamic> toMap(p0.B b) => {'list': Mapper.i.$enc(b.list, 'list'), 'a': Mapper.i.$enc(b.a, 'a')};
+
+  @override String stringify(p0.B self) => 'B(list: ${Mapper.asString(self.list)}, a: ${Mapper.asString(self.a)})';
+  @override int hash(p0.B self) => Mapper.hash(self.list) ^ Mapper.hash(self.a);
+  @override bool equals(p0.B self, p0.B other) => Mapper.isEqual(self.list, other.list) && Mapper.isEqual(self.a, other.a);
+
+  @override Function get typeFactory => (f) => f<p0.B>();
+}
+
+extension BMapperExtension on p0.B {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  BCopyWith<p0.B> get copyWith => _BCopyWithImpl(this, $identity, $identity);
+}
+
+extension BObjectCopy<$R> on ObjectCopyWith<$R, p0.B, p0.B> {
+  BCopyWith<$R> get asB => base.as((v, t, t2) => _BCopyWithImpl(v, t, t2));
+}
+
+abstract class BCopyWith<$R> implements ObjectCopyWith<$R, p0.B, p0.B> {
+  BCopyWith<$R2> _chain<$R2>(Then<p0.B, p0.B> t, Then<p0.B, $R2> t2);
+  ListCopyWith<$R, p0.A<dynamic>, ACopyWith<$R, p0.A<dynamic>, p0.A<dynamic>, dynamic>> get list;
+  ACopyWith<$R, p0.A<dynamic>, p0.A<dynamic>, dynamic> get a;
+  $R call({List<p0.A<dynamic>>? list, p0.A<dynamic>? a});
+}
+
+class _BCopyWithImpl<$R> extends BaseCopyWith<$R, p0.B, p0.B> implements BCopyWith<$R> {
+  _BCopyWithImpl(super.value, super.then, super.then2);
+  @override BCopyWith<$R2> _chain<$R2>(Then<p0.B, p0.B> t, Then<p0.B, $R2> t2) => _BCopyWithImpl($value, t, t2);
+
+  @override ListCopyWith<$R, p0.A<dynamic>, ACopyWith<$R, p0.A<dynamic>, p0.A<dynamic>, dynamic>> get list => ListCopyWith($value.list, (v, t) => v.copyWith._chain($identity, t), (v) => call(list: v));
+  @override ACopyWith<$R, p0.A<dynamic>, p0.A<dynamic>, dynamic> get a => $value.a.copyWith._chain($identity, (v) => call(a: v));
+  @override $R call({List<p0.A<dynamic>>? list, p0.A<dynamic>? a}) => $then(p0.B(list ?? $value.list, a ?? $value.a));
 }
 
 

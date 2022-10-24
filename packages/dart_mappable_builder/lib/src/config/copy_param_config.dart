@@ -42,19 +42,13 @@ class CopyParamConfig {
 
         var itemHasSubConfigs = itemConfig?.subConfigs.isNotEmpty ?? false;
         var itemHasSuperConfig = itemConfig?.superConfig != null;
-        var itemSubTypeParam = itemHasSubConfigs
-            ? '${itemConfig!.prefixedClassName}${itemConfig.typeParams}'
-            : null;
-        var itemSuperTypeParam = itemHasSubConfigs || itemHasSuperConfig
-            ? '${itemConfig!.prefixedClassName}${itemConfig.typeParams}'
-            : null;
 
         return CollectionCopyParamConfig(
           param: param,
           name: name,
           itemName: itemConfig?.uniqueClassName ?? 'Object',
-          itemSubTypeParam: itemSubTypeParam,
-          itemSuperTypeParam: itemSuperTypeParam,
+          itemHasSubConfigs: itemHasSubConfigs,
+          itemHasSuperConfig: itemHasSuperConfig,
           imports: imports,
           forceNullable: forceNullable,
           valueIndex: valueIndex,
@@ -73,19 +67,11 @@ class CopyParamConfig {
           var hasSubConfigs = classConfig.subConfigs.isNotEmpty;
           var hasSuperConfig = classConfig.superConfig != null;
 
-          var selfSubTypeParam = hasSubConfigs
-              ? '${classConfig.prefixedClassName}${classConfig.typeParams}'
-              : null;
-          var selfSuperTypeParam = hasSubConfigs || hasSuperConfig
-              ? '${classConfig.prefixedClassName}${classConfig.typeParams}'
-              : null;
-
-
           yield CopyParamConfig(
             param: param,
             name: classConfig.uniqueClassName,
-            selfSubTypeParam: selfSubTypeParam,
-            selfSuperTypeParam: selfSuperTypeParam,
+            hasSubConfigs: hasSubConfigs,
+            hasSuperConfig: hasSuperConfig,
             imports: imports,
           );
         }
@@ -93,21 +79,22 @@ class CopyParamConfig {
     }
   }
 
-  CopyParamConfig(
-      {required this.param,
-      required this.name,
-        this.selfSubTypeParam,
-      this.selfSuperTypeParam,
-      required this.imports});
+  CopyParamConfig({
+    required this.param,
+    required this.name,
+    this.hasSubConfigs = false,
+    this.hasSuperConfig = false,
+    required this.imports,
+  });
 
   final ParameterConfig param;
   final String name;
-  final String? selfSubTypeParam;
-  final String? selfSuperTypeParam;
+  final bool hasSubConfigs;
+  final bool hasSuperConfig;
   final ImportsBuilder imports;
 
-  ParameterElement get p => param.parameter;
-  PropertyInducingElement get a => param.accessor;
+  late ParameterElement p = param.parameter;
+  late PropertyInducingElement a = param.accessor;
 
   String get fieldTypeParams => p.type is InterfaceType
       ? (p.type as InterfaceType)
@@ -118,8 +105,11 @@ class CopyParamConfig {
 
   String get invocationThen => '(v) => call(${param.superName}: v)';
 
-  String get subTypeParam => selfSubTypeParam != null ? ', $selfSubTypeParam' : '';
-  String get superTypeParam => selfSuperTypeParam != null ? ', $selfSuperTypeParam' : '';
+  String get subTypeParam =>
+      hasSubConfigs ? ', ${imports.prefixedType(p.type)}' : '';
+  String get superTypeParam => hasSubConfigs || hasSuperConfig
+      ? ', ${imports.prefixedType(p.type)}'
+      : '';
 
   String get invocation {
     return '\$value.${a.name}${a.type.isNullable ? '?' : ''}.copyWith._chain(\$identity, $invocationThen)';
@@ -131,84 +121,66 @@ class CollectionCopyParamConfig extends CopyParamConfig {
     required super.param,
     required super.name,
     required this.itemName,
-    this.itemSubTypeParam,
-    this.itemSuperTypeParam,
+    required this.itemHasSubConfigs,
+    required this.itemHasSuperConfig,
     required super.imports,
     required this.forceNullable,
     required this.valueIndex,
   });
 
   final String itemName;
-  final String? itemSubTypeParam;
-  final String? itemSuperTypeParam;
+  final bool itemHasSubConfigs;
+  final bool itemHasSuperConfig;
   final bool forceNullable;
   final int valueIndex;
 
-  String get itemImplName =>
+  late String itemImplName =
       itemName == 'Object' ? 'ObjectCopyWith' : '_${itemName}CopyWithImpl';
 
-  String get itemOptSubTypeParam =>
-      itemSubTypeParam != null ? ', $itemSubTypeParam' : '';
-  String get itemOptSuperTypeParam =>
-      itemSuperTypeParam != null ? ', $itemSuperTypeParam' : '';
+  late DartType itemType = (p.type as InterfaceType).typeArguments[valueIndex];
+  late bool itemTypeNullable =
+      itemType.nullabilitySuffix == NullabilitySuffix.question;
+
+  late String itemOptSubTypeParam =
+      itemHasSubConfigs ? ', ${imports.prefixedType(itemType)}' : '';
+  late String itemOptSuperTypeParam = itemHasSubConfigs || itemHasSuperConfig
+      ? ', ${imports.prefixedType(itemType)}'
+      : '';
 
   @override
   String get fieldTypeParams {
-    var itemTypeArg = (p.type as InterfaceType).typeArguments[valueIndex];
-    var typeArgNullable =
-        itemTypeArg.nullabilitySuffix == NullabilitySuffix.question;
-
     if (itemName == 'Object') {
-      var objectTypeParam = ', ${imports.prefixedType(itemTypeArg)}';
+      var objectTypeParam = ', ${imports.prefixedType(itemType)}';
       return super.fieldTypeParams +
-          ', ObjectCopyWith<\$R$objectTypeParam$objectTypeParam>${typeArgNullable || forceNullable ? '?' : ''}';
+          ', ObjectCopyWith<\$R$objectTypeParam$objectTypeParam>${itemTypeNullable || forceNullable ? '?' : ''}';
     }
 
-    var typeParams = itemTypeArg is InterfaceType
-        ? itemTypeArg.typeArguments
+    var typeParams = itemType is InterfaceType
+        ? (itemType as InterfaceType)
+            .typeArguments
             .map((t) => ', ${imports.prefixedType(t)}')
             .join()
         : '';
 
     return super.fieldTypeParams +
-        ', ${itemName}CopyWith<\$R$itemOptSubTypeParam$itemOptSuperTypeParam$typeParams>${typeArgNullable ? '?' : ''}';
+        ', ${itemName}CopyWith<\$R$itemOptSubTypeParam$itemOptSuperTypeParam$typeParams>${itemTypeNullable ? '?' : ''}';
   }
 
   @override
   String get invocation {
-    var typeArg = (p.type as InterfaceType).typeArguments[valueIndex];
-    var typeArgNullable =
-        typeArg.nullabilitySuffix == NullabilitySuffix.question;
-
     String itemInvocation;
     if (itemName == 'Object') {
       itemInvocation = '(v, t) => ObjectCopyWith(v, \$identity, t)';
     } else {
-      itemInvocation = '(v, t) => v${typeArgNullable ? '?' : ''}.copyWith._chain(\$identity, t)';
+      itemInvocation =
+          '(v, t) => v${itemTypeNullable ? '?' : ''}.copyWith._chain(\$identity, t)';
     }
 
-    var result = '${name}CopyWith(\$value.${a.name}${a.type.isNullable ? '!' : ''}, $itemInvocation, $invocationThen)';
+    var result =
+        '${name}CopyWith(\$value.${a.name}${a.type.isNullable ? '!' : ''}, $itemInvocation, $invocationThen)';
     if (a.type.isNullable) {
       result = '\$value.${a.name} != null ? $result : null';
     }
     return result;
   }
-}
-
-class ListCopyParamConfig extends CollectionCopyParamConfig {
-  ListCopyParamConfig({
-    required super.param,
-    required super.itemName,
-    required super.imports,
-    required super.forceNullable,
-  }) : super(name: 'List', valueIndex: 0);
-}
-
-class MapCopyParamConfig extends CollectionCopyParamConfig {
-  MapCopyParamConfig({
-    required super.param,
-    required super.itemName,
-    required super.imports,
-    required super.forceNullable,
-  }) : super(name: 'Map', valueIndex: 1);
 }
