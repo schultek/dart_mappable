@@ -105,10 +105,11 @@ class CopyParamConfig {
 
   String get invocationThen => '(v) => call(${param.superName}: v)';
 
-  String get subTypeParam =>
-      hasSubConfigs ? ', ${imports.prefixedType(p.type)}' : '';
+  String get subTypeParam => hasSubConfigs
+      ? ', ${imports.prefixedType(p.type, withNullability: false)}'
+      : '';
   String get superTypeParam => hasSubConfigs || hasSuperConfig
-      ? ', ${imports.prefixedType(p.type)}'
+      ? ', ${imports.prefixedType(p.type, withNullability: false)}'
       : '';
 
   String get invocation {
@@ -141,10 +142,11 @@ class CollectionCopyParamConfig extends CopyParamConfig {
   late bool itemTypeNullable =
       itemType.nullabilitySuffix == NullabilitySuffix.question;
 
-  late String itemOptSubTypeParam =
-      itemHasSubConfigs ? ', ${imports.prefixedType(itemType)}' : '';
+  late String itemOptSubTypeParam = itemHasSubConfigs
+      ? ', ${imports.prefixedType(itemType, withNullability: false)}'
+      : '';
   late String itemOptSuperTypeParam = itemHasSubConfigs || itemHasSuperConfig
-      ? ', ${imports.prefixedType(itemType)}'
+      ? ', ${imports.prefixedType(itemType, withNullability: false)}'
       : '';
 
   @override

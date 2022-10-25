@@ -216,7 +216,7 @@ class BMapper extends BaseMapper<p0.B> {
 
   @override Function get decoder => decode;
   p0.B decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  p0.B fromMap(Map<String, dynamic> map) => p0.B(Mapper.i.$get(map, 'list'), Mapper.i.$get(map, 'a'));
+  p0.B fromMap(Map<String, dynamic> map) => p0.B(Mapper.i.$get(map, 'list'), Mapper.i.$getOpt(map, 'a'));
 
   @override Function get encoder => encode;
   dynamic encode(p0.B v) => toMap(v);
@@ -241,18 +241,18 @@ extension BObjectCopy<$R> on ObjectCopyWith<$R, p0.B, p0.B> {
 
 abstract class BCopyWith<$R> implements ObjectCopyWith<$R, p0.B, p0.B> {
   BCopyWith<$R2> _chain<$R2>(Then<p0.B, p0.B> t, Then<p0.B, $R2> t2);
-  ListCopyWith<$R, p0.A<dynamic>, ACopyWith<$R, p0.A<dynamic>, p0.A<dynamic>, dynamic>> get list;
-  ACopyWith<$R, p0.A<dynamic>, p0.A<dynamic>, dynamic> get a;
-  $R call({List<p0.A<dynamic>>? list, p0.A<dynamic>? a});
+  ListCopyWith<$R, p0.A<dynamic>?, ACopyWith<$R, p0.A<dynamic>, p0.A<dynamic>, dynamic>?> get list;
+  ACopyWith<$R, p0.A<dynamic>, p0.A<dynamic>, dynamic>? get a;
+  $R call({List<p0.A<dynamic>?>? list, p0.A<dynamic>? a});
 }
 
 class _BCopyWithImpl<$R> extends BaseCopyWith<$R, p0.B, p0.B> implements BCopyWith<$R> {
   _BCopyWithImpl(super.value, super.then, super.then2);
   @override BCopyWith<$R2> _chain<$R2>(Then<p0.B, p0.B> t, Then<p0.B, $R2> t2) => _BCopyWithImpl($value, t, t2);
 
-  @override ListCopyWith<$R, p0.A<dynamic>, ACopyWith<$R, p0.A<dynamic>, p0.A<dynamic>, dynamic>> get list => ListCopyWith($value.list, (v, t) => v.copyWith._chain($identity, t), (v) => call(list: v));
-  @override ACopyWith<$R, p0.A<dynamic>, p0.A<dynamic>, dynamic> get a => $value.a.copyWith._chain($identity, (v) => call(a: v));
-  @override $R call({List<p0.A<dynamic>>? list, p0.A<dynamic>? a}) => $then(p0.B(list ?? $value.list, a ?? $value.a));
+  @override ListCopyWith<$R, p0.A<dynamic>?, ACopyWith<$R, p0.A<dynamic>, p0.A<dynamic>, dynamic>?> get list => ListCopyWith($value.list, (v, t) => v?.copyWith._chain($identity, t), (v) => call(list: v));
+  @override ACopyWith<$R, p0.A<dynamic>, p0.A<dynamic>, dynamic>? get a => $value.a?.copyWith._chain($identity, (v) => call(a: v));
+  @override $R call({List<p0.A<dynamic>?>? list, Object? a = $none}) => $then(p0.B(list ?? $value.list, or(a, $value.a)));
 }
 
 

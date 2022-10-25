@@ -36,8 +36,8 @@ class C<T> extends A<T> with CMixin<T> {}
 
 @MappableClass()
 class B {
-  List<A> list;
-  A a;
+  List<A?> list;
+  A? a;
   B(this.list, this.a);
 }
 
