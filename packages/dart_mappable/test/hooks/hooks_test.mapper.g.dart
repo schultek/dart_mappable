@@ -100,6 +100,7 @@ extension CardGameObjectCopy<$R, $Out extends p0.Game> on ObjectCopyWith<$R, p0.
 }
 
 abstract class CardGameCopyWith<$R, $Out extends p0.Game> implements GameCopyWith<$R, p0.CardGame, $Out> {
+  CardGameCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.Game>(Then<p0.CardGame, $Out2> t, Then<$Out2, $R2> t2);
   @override PlayerCopyWith<$R> get player;
   @override $R call({p0.Player? player});
 }

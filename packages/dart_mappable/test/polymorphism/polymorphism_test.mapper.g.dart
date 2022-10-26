@@ -94,6 +94,7 @@ extension CatObjectCopy<$R, $Out extends p0.Animal> on ObjectCopyWith<$R, p0.Cat
 }
 
 abstract class CatCopyWith<$R, $Out extends p0.Animal> implements AnimalCopyWith<$R, p0.Cat, $Out> {
+  CatCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.Animal>(Then<p0.Cat, $Out2> t, Then<$Out2, $R2> t2);
   @override $R call({String? name, String? color});
 }
 
@@ -136,6 +137,7 @@ extension DogObjectCopy<$R, $Out extends p0.Animal> on ObjectCopyWith<$R, p0.Dog
 }
 
 abstract class DogCopyWith<$R, $Out extends p0.Animal> implements AnimalCopyWith<$R, p0.Dog, $Out> {
+  DogCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.Animal>(Then<p0.Dog, $Out2> t, Then<$Out2, $R2> t2);
   @override $R call({int? age});
 }
 
@@ -178,6 +180,7 @@ extension NullAnimalObjectCopy<$R, $Out extends p0.Animal> on ObjectCopyWith<$R,
 }
 
 abstract class NullAnimalCopyWith<$R, $Out extends p0.Animal> implements AnimalCopyWith<$R, p0.NullAnimal, $Out> {
+  NullAnimalCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.Animal>(Then<p0.NullAnimal, $Out2> t, Then<$Out2, $R2> t2);
   @override $R call({String? name});
 }
 
@@ -220,6 +223,7 @@ extension DefaultAnimalObjectCopy<$R, $Out extends p0.Animal> on ObjectCopyWith<
 }
 
 abstract class DefaultAnimalCopyWith<$R, $Out extends p0.Animal> implements AnimalCopyWith<$R, p0.DefaultAnimal, $Out> {
+  DefaultAnimalCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.Animal>(Then<p0.DefaultAnimal, $Out2> t, Then<$Out2, $R2> t2);
   @override $R call({String? name, String? type});
 }
 

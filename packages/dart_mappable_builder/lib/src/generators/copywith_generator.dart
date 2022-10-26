@@ -153,10 +153,8 @@ class CopyWithGenerator {
     snippets.add(''
         'abstract class ${config.uniqueClassName}CopyWith<\$R$subTypeParamDef$superTypeParamDef$classTypeParamsDef>$implementsStmt {\n');
 
-    if (config.superConfig == null) {
-      snippets.add(
+    snippets.add(
           '  ${config.uniqueClassName}CopyWith<\$R2$subTypeParam$superTypeParam2$classTypeParams> _chain<\$R2$superTypeParamDef2>(Then<$selfTypeParam, $superOrSelfTypeParam2> t, Then<$superOrSelfTypeParam2, \$R2> t2);\n');
-    }
 
     var copyParams =
         CopyParamConfig.collectFrom(config.params, config, imports, getConfig);

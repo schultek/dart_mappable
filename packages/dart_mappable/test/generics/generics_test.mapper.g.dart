@@ -96,6 +96,7 @@ extension ConfettiObjectCopy<$R, $Out extends p0.Content> on ObjectCopyWith<$R, 
 }
 
 abstract class ConfettiCopyWith<$R, $Out extends p0.Content> implements ContentCopyWith<$R, p0.Confetti, $Out> {
+  ConfettiCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.Content>(Then<p0.Confetti, $Out2> t, Then<$Out2, $R2> t2);
   @override $R call({String? color});
 }
 

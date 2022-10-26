@@ -92,6 +92,7 @@ extension DataObjectCopy<$R, $Out extends p0.Union> on ObjectCopyWith<$R, p0.Dat
 }
 
 abstract class DataCopyWith<$R, $Out extends p0.Union> implements UnionCopyWith<$R, p0.Data, $Out> {
+  DataCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.Union>(Then<p0.Data, $Out2> t, Then<$Out2, $R2> t2);
   @override $R call({int? value});
 }
 
@@ -134,6 +135,7 @@ extension LoadingObjectCopy<$R, $Out extends p0.Union> on ObjectCopyWith<$R, p0.
 }
 
 abstract class LoadingCopyWith<$R, $Out extends p0.Union> implements UnionCopyWith<$R, p0.Loading, $Out> {
+  LoadingCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.Union>(Then<p0.Loading, $Out2> t, Then<$Out2, $R2> t2);
   @override $R call();
 }
 
@@ -176,6 +178,7 @@ extension ErrorDetailsObjectCopy<$R, $Out extends p0.Union> on ObjectCopyWith<$R
 }
 
 abstract class ErrorDetailsCopyWith<$R, $Out extends p0.Union> implements UnionCopyWith<$R, p0.ErrorDetails, $Out> {
+  ErrorDetailsCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.Union>(Then<p0.ErrorDetails, $Out2> t, Then<$Out2, $R2> t2);
   @override $R call({String? message});
 }
 

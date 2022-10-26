@@ -267,6 +267,7 @@ extension BrandListObjectCopy<$R, $Out extends p0.ItemList> on ObjectCopyWith<$R
 }
 
 abstract class BrandListCopyWith<$R, $Out extends p0.ItemList> implements ItemListCopyWith<$R, p0.BrandList, $Out, p0.Brand?> {
+  BrandListCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.ItemList>(Then<p0.BrandList, $Out2> t, Then<$Out2, $R2> t2);
   @override ListCopyWith<$R, p0.Brand?, BrandCopyWith<$R>?> get items;
   @override $R call({List<p0.Brand?>? items});
 }
@@ -311,6 +312,7 @@ extension NamedItemListObjectCopy<$R, $Out extends p0.ItemList, T> on ObjectCopy
 }
 
 abstract class NamedItemListCopyWith<$R, $Out extends p0.ItemList, T> implements ItemListCopyWith<$R, p0.NamedItemList<T>, $Out, T> {
+  NamedItemListCopyWith<$R2, $Out2, T> _chain<$R2, $Out2 extends p0.ItemList>(Then<p0.NamedItemList<T>, $Out2> t, Then<$Out2, $R2> t2);
   @override ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get items;
   @override $R call({String? name, List<T>? items});
 }
@@ -355,6 +357,7 @@ extension KeyedItemListObjectCopy<$R, $Out extends p0.ItemList, K, T> on ObjectC
 }
 
 abstract class KeyedItemListCopyWith<$R, $Out extends p0.ItemList, K, T> implements ItemListCopyWith<$R, p0.KeyedItemList<K, T>, $Out, T> {
+  KeyedItemListCopyWith<$R2, $Out2, K, T> _chain<$R2, $Out2 extends p0.ItemList>(Then<p0.KeyedItemList<K, T>, $Out2> t, Then<$Out2, $R2> t2);
   @override ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get items;
   @override $R call({K? key, List<T>? items});
 }
@@ -399,6 +402,7 @@ extension ComparableItemListObjectCopy<$R, $Out extends p0.ItemList, T extends C
 }
 
 abstract class ComparableItemListCopyWith<$R, $Out extends p0.ItemList, T extends Comparable<dynamic>> implements ItemListCopyWith<$R, p0.ComparableItemList<T>, $Out, T> {
+  ComparableItemListCopyWith<$R2, $Out2, T> _chain<$R2, $Out2 extends p0.ItemList>(Then<p0.ComparableItemList<T>, $Out2> t, Then<$Out2, $R2> t2);
   @override ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get items;
   @override $R call({List<T>? items});
 }

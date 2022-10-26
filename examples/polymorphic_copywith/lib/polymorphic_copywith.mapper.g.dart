@@ -55,6 +55,7 @@ extension OneObjectCopy<$R, $Out extends p2.AbstractIdBase> on ObjectCopyWith<$R
 }
 
 abstract class OneCopyWith<$R, $Out extends p2.AbstractIdBase> implements BaseObjectCopyWith<$R, p0.One, $Out> {
+  OneCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p2.AbstractIdBase>(Then<p0.One, $Out2> t, Then<$Out2, $R2> t2);
   @override MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>> get objects;
   @override $R call({String? id, String? name, Map<String, dynamic>? objects});
 }
@@ -95,6 +96,7 @@ mixin BaseObjectMixin {
 }
 
 abstract class BaseObjectCopyWith<$R, $In extends p1.BaseObject, $Out extends p2.AbstractIdBase> implements AbstractIdBaseCopyWith<$R, $In, $Out> {
+  BaseObjectCopyWith<$R2, $In, $Out2> _chain<$R2, $Out2 extends p2.AbstractIdBase>(Then<p1.BaseObject, $Out2> t, Then<$Out2, $R2> t2);
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>?> get objects;
   @override $R call({String? id, String? name, Map<String, dynamic>? objects});
 }
@@ -165,6 +167,7 @@ extension TwoObjectCopy<$R, $Out extends p2.AbstractIdBase> on ObjectCopyWith<$R
 }
 
 abstract class TwoCopyWith<$R, $Out extends p2.AbstractIdBase> implements AbstractIdBaseCopyWith<$R, p3.Two, $Out> {
+  TwoCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p2.AbstractIdBase>(Then<p3.Two, $Out2> t, Then<$Out2, $R2> t2);
   @override $R call({String? id});
 }
 
