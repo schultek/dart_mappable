@@ -4,37 +4,37 @@ import 'package:test/test.dart';
 import 'polymorphism_test.mapper.g.dart';
 
 @MappableClass(discriminatorKey: 'type')
-abstract class Animal with Mappable, AnimalMixin {
+abstract class Animal with AnimalMappable {
   String name;
   Animal(this.name);
 }
 
 @MappableClass()
-class Cat extends Animal with CatMixin {
+class Cat extends Animal with CatMappable {
   String color;
   Cat(String name, this.color) : super(name);
 }
 
 @MappableClass(discriminatorValue: 1)
-class Dog extends Animal with DogMixin {
+class Dog extends Animal with DogMappable {
   int age;
   Dog(this.age) : super('Good Boy');
 }
 
 @MappableClass(discriminatorValue: null)
-class NullAnimal extends Animal with NullAnimalMixin {
+class NullAnimal extends Animal with NullAnimalMappable {
   NullAnimal(String name) : super(name);
 }
 
 @MappableClass(discriminatorValue: MappableClass.useAsDefault)
-class DefaultAnimal extends Animal with DefaultAnimalMixin {
+class DefaultAnimal extends Animal with DefaultAnimalMappable {
   String type;
 
   DefaultAnimal(String name, this.type) : super(name);
 }
 
 @MappableClass()
-class Zoo {
+class Zoo with ZooMappable {
   Animal animal;
   List<Animal> animals;
   Map<String, Animal> animals2;

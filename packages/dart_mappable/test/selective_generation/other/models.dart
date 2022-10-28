@@ -5,7 +5,7 @@ import '../selective_generation_test.mapper.g.dart';
 @MappableClass(
   generateMethods: GenerateMethods.equals | GenerateMethods.stringify,
 )
-class Car with Mappable {
+class Car with CarMappable {
   final String brand;
 
   Car(this.brand);

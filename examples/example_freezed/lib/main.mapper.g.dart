@@ -50,10 +50,6 @@ extension UnionMapperExtension on p0.Union {
   Map<String, dynamic> toMap() => Mapper.toMap(this);
 }
 
-mixin UnionMixin {
-  UnionCopyWith<p0.Union, p0.Union, p0.Union> get copyWith;
-}
-
 abstract class UnionCopyWith<$R, $In extends p0.Union, $Out extends p0.Union> implements ObjectCopyWith<$R, $In, $Out> {
   UnionCopyWith<$R2, $In, $Out2> _chain<$R2, $Out2 extends p0.Union>(Then<p0.Union, $Out2> t, Then<$Out2, $R2> t2);
   $R call();
@@ -81,10 +77,7 @@ class DataMapper extends BaseMapper<p0.Data> {
 extension DataMapperExtension on p0.Data {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin DataMixin {
-  DataCopyWith<p0.Data, p0.Data> get copyWith => _DataCopyWithImpl(this as p0.Data, $identity, $identity);
+  DataCopyWith<p0.Data, p0.Data> get copyWith => _DataCopyWithImpl(this, $identity, $identity);
 }
 
 extension DataObjectCopy<$R, $Out extends p0.Union> on ObjectCopyWith<$R, p0.Data, $Out> {
@@ -124,10 +117,7 @@ class LoadingMapper extends BaseMapper<p0.Loading> {
 extension LoadingMapperExtension on p0.Loading {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin LoadingMixin {
-  LoadingCopyWith<p0.Loading, p0.Loading> get copyWith => _LoadingCopyWithImpl(this as p0.Loading, $identity, $identity);
+  LoadingCopyWith<p0.Loading, p0.Loading> get copyWith => _LoadingCopyWithImpl(this, $identity, $identity);
 }
 
 extension LoadingObjectCopy<$R, $Out extends p0.Union> on ObjectCopyWith<$R, p0.Loading, $Out> {
@@ -167,10 +157,7 @@ class ErrorDetailsMapper extends BaseMapper<p0.ErrorDetails> {
 extension ErrorDetailsMapperExtension on p0.ErrorDetails {
   String toJson() => Mapper.toJson(this);
   Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin ErrorDetailsMixin {
-  ErrorDetailsCopyWith<p0.ErrorDetails, p0.ErrorDetails> get copyWith => _ErrorDetailsCopyWithImpl(this as p0.ErrorDetails, $identity, $identity);
+  ErrorDetailsCopyWith<p0.ErrorDetails, p0.ErrorDetails> get copyWith => _ErrorDetailsCopyWithImpl(this, $identity, $identity);
 }
 
 extension ErrorDetailsObjectCopy<$R, $Out extends p0.Union> on ObjectCopyWith<$R, p0.ErrorDetails, $Out> {
@@ -222,40 +209,6 @@ class Mapper {
 
   static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
   static List<BaseMapper> getAll() => i.getAll();
-}
-
-mixin Mappable implements MappableMixin {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-
-  @override
-  String toString() {
-    return _guard(() => Mapper.asString(this), super.toString);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            _guard(() => Mapper.isEqual(this, other), () => super == other));
-  }
-
-  @override
-  int get hashCode {
-    return _guard(() => Mapper.hash(this), () => super.hashCode);
-  }
-
-  T _guard<T>(T Function() fn, T Function() fallback) {
-    try {
-      return fn();
-    } on MapperException catch (e) {
-      if (e.isUnsupportedOrUnallowed()) {
-        return fallback();
-      } else {
-        rethrow;
-      }
-    }
-  }
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

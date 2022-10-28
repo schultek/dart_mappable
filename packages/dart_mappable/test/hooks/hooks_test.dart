@@ -26,7 +26,7 @@ class PlayerHooks extends MappingHooks {
 }
 
 @MappableClass(hooks: GameHooks())
-class Game {
+class Game with GameMappable {
   @MappableField(
       hooks: ChainedHooks(
           [PlayerHooks(), UnmappedPropertiesHooks('unmapped_props')]))
@@ -36,19 +36,19 @@ class Game {
 }
 
 @MappableClass()
-class CardGame extends Game {
+class CardGame extends Game with CardGameMappable {
   CardGame(@MappableField(hooks: CardPlayerHooks()) Player player)
       : super(player);
 }
 
 @MappableClass()
-class Player {
+class Player with PlayerMappable {
   String id;
   Player(this.id);
 }
 
 @MappableClass(hooks: UnmappedPropertiesHooks('unmapped_props'))
-class Clothes {
+class Clothes with ClothesMappable {
   int size;
   Map<String, dynamic> unmappedProps;
 
@@ -56,7 +56,7 @@ class Clothes {
 }
 
 @MappableClass(hooks: UnmappedPropertiesHooks('unmapped_props'))
-class Component {
+class Component with ComponentMappable {
   String id;
   String name;
 

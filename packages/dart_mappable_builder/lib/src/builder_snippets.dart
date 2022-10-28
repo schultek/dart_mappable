@@ -27,40 +27,6 @@ class Mapper {
   static List<BaseMapper> getAll() => i.getAll();
 }
 
-mixin Mappable implements MappableMixin {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-
-  @override
-  String toString() {
-    return _guard(() => Mapper.asString(this), super.toString);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            _guard(() => Mapper.isEqual(this, other), () => super == other));
-  }
-
-  @override
-  int get hashCode {
-    return _guard(() => Mapper.hash(this), () => super.hashCode);
-  }
-
-  T _guard<T>(T Function() fn, T Function() fallback) {
-    try {
-      return fn();
-    } on MapperException catch (e) {
-      if (e.isUnsupportedOrUnallowed()) {
-        return fallback();
-      } else {
-        rethrow;
-      }
-    }
-  }
-}
-
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
   BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
 }

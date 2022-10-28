@@ -42,7 +42,7 @@ class CopyWithGenerator {
 
   String generateCopyWithExtension() {
     if (!config.shouldGenerate(GenerateMethods.copy)) return '';
-    if (config.hasCallableConstructor && !hasSubOrSuperConfigs) {
+    if (config.hasCallableConstructor) {
       return '  ${_generateCopyWith()}\n';
     } else {
       return '';
@@ -51,12 +51,7 @@ class CopyWithGenerator {
 
   String generateCopyWithMixin(GetConfig getConfig) {
     if (!config.shouldGenerate(GenerateMethods.copy)) return '';
-    if (hasSubOrSuperConfigs) {
-      _checkCopyWithMixinUsed();
-      return '\n\n${_generateCopyWithMixin(getConfig)}';
-    } else {
-      return '';
-    }
+    return _generateCopyWithMixin(getConfig);
   }
 
   String generateCopyWithClasses(GetConfig getConfig) {
@@ -69,65 +64,21 @@ class CopyWithGenerator {
   }
 
   String _generateCopyWith() {
-    return '${config.uniqueClassName}CopyWith<$selfTypeParam$classTypeParams> get copyWith => _${config.uniqueClassName}CopyWithImpl(this, \$identity, \$identity);';
-  }
-
-  void _checkCopyWithMixinUsed() {
-    var node = config.element.getNode()! as ClassDeclaration;
-    var className = config.className;
-    var mixinName = '${config.uniqueClassName}Mixin';
-
-    var hasCopyWithMixin =
-        node.withClause?.mixinTypes.any((t) => t.name.name == mixinName) ??
-            false;
-
-    if (!hasCopyWithMixin) {
-      var classDeclarationSource = 'class $className';
-      if (node.abstractKeyword != null) {
-        classDeclarationSource = 'abstract $classDeclarationSource';
-      }
-      if (node.extendsClause != null) {
-        classDeclarationSource += ' ' + node.extendsClause!.toSource();
-      }
-      if (node.withClause != null) {
-        classDeclarationSource += ' ' +
-            node.withClause!
-                .toSource()
-                .replaceFirst('with', 'with $mixinName,');
-      } else {
-        classDeclarationSource += ' with $mixinName';
-      }
-      if (node.implementsClause != null) {
-        classDeclarationSource += ' ' + node.implementsClause!.toSource();
-      }
-
-      print('\nClass $className is configured to generate a \'.copyWith()\' '
-          ' extension while being part of a inherited class structure (either '
-          'as superclass or as subclass).\nIn such a case it is required that '
-          'you use the generated \'$mixinName\' on this class.\nOtherwise your '
-          'code might behave faulty or won\'t compile.\n\n'
-          'To solve this, change your class signature to:\n'
-          '$classDeclarationSource\n\n'
-          'Alternatively you can also disable the generation of a \'.copyWith()\' '
-          'extension by using the \'generateMethods\' option\n'
-          '(see https://pub.dev/packages/dart_mappable#generation-methods).\n');
-    }
+    return '${config.uniqueClassName}CopyWith<$selfTypeParam$selfSubTypeParam$selfSuperTypeParam$classTypeParams> get copyWith => _${config.uniqueClassName}CopyWithImpl(this, \$identity, \$identity);';
   }
 
   String _generateCopyWithMixin(GetConfig getConfig) {
     var snippet =
-        '${config.uniqueClassName}CopyWith<$selfTypeParam$selfSubTypeParam$selfSuperTypeParam$classTypeParams> get copyWith';
+        '  ${config.uniqueClassName}CopyWith<$selfTypeParam$selfSubTypeParam$selfSuperTypeParam$classTypeParams> get copyWith';
 
     if (config.hasCallableConstructor) {
       snippet +=
-          ' => _${config.uniqueClassName}CopyWithImpl(this as $selfTypeParam, \$identity, \$identity);';
+          ' => _${config.uniqueClassName}CopyWithImpl(this as $selfTypeParam, \$identity, \$identity);\n';
     } else {
-      snippet += ';';
+      snippet += ';\n';
     }
 
-    return 'mixin ${config.uniqueClassName}Mixin${config.typeParamsDeclaration} {\n'
-        '  $snippet\n'
-        '}';
+    return snippet;
   }
 
   String _generateCopyWithClasses(GetConfig getConfig) {

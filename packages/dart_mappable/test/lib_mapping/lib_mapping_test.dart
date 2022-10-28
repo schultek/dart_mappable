@@ -12,7 +12,7 @@ import 'other/models.dart';
 @MappableLib(include: [Animal], ignoreAnnotated: true)
 import 'other/other.dart';
 
-class Person with Mappable {
+class Person {
   final String firstName;
 
   Person(this.firstName);

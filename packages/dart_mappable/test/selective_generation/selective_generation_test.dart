@@ -8,7 +8,7 @@ import 'selective_generation_test.mapper.g.dart';
 @MappableClass(
   generateMethods: GenerateMethods.encode | GenerateMethods.copy,
 )
-class Person with Mappable {
+class Person with PersonMappable {
   final String name;
 
   Person(this.name);
@@ -56,15 +56,7 @@ void main() {
         )),
       );
 
-      expect(
-        () => car.toMap(),
-        throwsMapperException(MapperException.chain(
-          MapperMethod.encode,
-          '(Car)',
-          MapperException.unsupportedMethod(MapperMethod.encode, Car),
-        )),
-      );
-
+      expect(() => (car as dynamic).toMap, throwsNoSuchMethodError);
       expect(() => (car as dynamic).copyWith, throwsNoSuchMethodError);
     });
   });

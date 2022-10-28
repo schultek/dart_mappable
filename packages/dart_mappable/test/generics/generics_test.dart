@@ -5,7 +5,7 @@ import '../utils.dart';
 import 'generics_test.mapper.g.dart';
 
 @MappableClass()
-class Box<T extends Content> {
+class Box<T extends Content> with BoxMappable<T> {
   int size;
   List<T> contents;
 
@@ -13,22 +13,22 @@ class Box<T extends Content> {
 }
 
 @MappableClass()
-class Confetti extends Content {
+class Confetti extends Content with ConfettiMappable {
   String color;
   Confetti(this.color);
 }
 
 @MappableClass()
-class Content {}
+class Content with ContentMappable {}
 
 @MappableClass()
-class Data {
+class Data with DataMappable {
   final String data;
   Data(this.data);
 }
 
 @MappableClass()
-class SingleSetting<T> with Mappable {
+class SingleSetting<T> with SingleSettingMappable {
   final List<T>? properties;
 
   const SingleSetting({
@@ -37,7 +37,7 @@ class SingleSetting<T> with Mappable {
 }
 
 @MappableClass(hooks: MapHooksAfter())
-class Settings with Mappable {
+class Settings with SettingsMappable {
   final Map<String, SingleSetting>? settings;
 
   const Settings({
@@ -68,7 +68,7 @@ void main() {
   group('Generic classes', () {
     test('Should encode generic objects', () {
       Box box = Box<Confetti>(10, contents: [Confetti('Rainbow')]);
-      String boxJson = box.toJson();
+      String boxJson = Mapper.toJson(box);
       expect(
         boxJson,
         equals(

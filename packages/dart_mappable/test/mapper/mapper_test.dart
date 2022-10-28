@@ -1,10 +1,11 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:dart_mappable/internals.dart';
 import 'package:test/test.dart';
 
 import '../utils.dart';
 import 'mapper_test.mapper.g.dart';
 
-class Item with Mappable {}
+class Item with MappableMixin {}
 
 void main() {
   group('Mapper utils', () {

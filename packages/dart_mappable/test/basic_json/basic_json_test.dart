@@ -5,7 +5,7 @@ import '../utils.dart';
 import 'basic_json_test.mapper.g.dart';
 
 @MappableClass()
-class Person with Mappable {
+class Person with PersonMappable {
   final String name;
   final int age;
   final Car? car;
@@ -18,7 +18,7 @@ class Person with Mappable {
 enum Brand { Toyota, Audi, BMW }
 
 @MappableClass()
-class Car with Mappable {
+class Car with CarMappable {
   final double miles;
   final Brand brand;
 

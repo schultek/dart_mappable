@@ -3,6 +3,6 @@ import 'package:polymorphic_copywith/models/abstract_base.dart';
 import 'package:polymorphic_copywith/polymorphic_copywith.mapper.g.dart';
 
 @MappableClass()
-class Two extends AbstractIdBase with TwoMixin {
+class Two extends AbstractIdBase with TwoMappable {
   Two({required super.id}) : super(name: 'two');
 }

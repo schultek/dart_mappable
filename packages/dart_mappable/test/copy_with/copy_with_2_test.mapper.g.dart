@@ -29,10 +29,7 @@ class AnimalMapper extends BaseMapper<p0.Animal> {
   @override String stringify(p0.Animal self) => 'Animal(name: ${Mapper.asString(self.name)})';
 }
 
-extension AnimalMapperExtension on p0.Animal {
-}
-
-mixin AnimalMixin {
+mixin AnimalMappable implements MappableMixin {
   AnimalCopyWith<p0.Animal, p0.Animal, p0.Animal> get copyWith;
 }
 
@@ -48,11 +45,9 @@ class CatMapper extends BaseMapper<p0.Cat> {
   @override String stringify(p0.Cat self) => 'Cat(name: ${Mapper.asString(self.name)}, color: ${Mapper.asString(self.color)})';
 }
 
-extension CatMapperExtension on p0.Cat {
-}
-
-mixin CatMixin {
+mixin CatMappable implements MappableMixin {
   CatCopyWith<p0.Cat, p0.Cat> get copyWith => _CatCopyWithImpl(this as p0.Cat, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
 }
 
 extension CatObjectCopy<$R, $Out extends p0.Animal> on ObjectCopyWith<$R, p0.Cat, $Out> {
@@ -77,11 +72,9 @@ class DogMapper extends BaseMapper<p0.Dog> {
   @override String stringify(p0.Dog self) => 'Dog(name: ${Mapper.asString(self.name)})';
 }
 
-extension DogMapperExtension on p0.Dog {
-}
-
-mixin DogMixin {
+mixin DogMappable implements MappableMixin {
   DogCopyWith<p0.Dog, p0.Dog> get copyWith => _DogCopyWithImpl(this as p0.Dog, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
 }
 
 extension DogObjectCopy<$R, $Out extends p0.Animal> on ObjectCopyWith<$R, p0.Dog, $Out> {
@@ -106,8 +99,9 @@ class ZooMapper extends BaseMapper<p0.Zoo> {
   @override String stringify(p0.Zoo self) => 'Zoo(animal: ${Mapper.asString(self.animal)})';
 }
 
-extension ZooMapperExtension on p0.Zoo {
-  ZooCopyWith<p0.Zoo> get copyWith => _ZooCopyWithImpl(this, $identity, $identity);
+mixin ZooMappable implements MappableMixin {
+  ZooCopyWith<p0.Zoo> get copyWith => _ZooCopyWithImpl(this as p0.Zoo, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
 }
 
 extension ZooObjectCopy<$R> on ObjectCopyWith<$R, p0.Zoo, p0.Zoo> {
@@ -146,13 +140,13 @@ class AMapper extends BaseMapper<p0.A> {
   @override Function get typeFactory => <T>(f) => f<p0.A<T>>();
 }
 
-extension AMapperExtension<T> on p0.A<T> {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin AMixin<T> {
+mixin AMappable<T> implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.A<T>);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.A<T>);
   ACopyWith<p0.A<T>, p0.A<T>, p0.A<T>, T> get copyWith => _ACopyWithImpl(this as p0.A<T>, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension AObjectCopy<$R, $Out extends p0.A, T> on ObjectCopyWith<$R, p0.A<T>, $Out> {
@@ -189,13 +183,13 @@ class CMapper extends BaseMapper<p0.C> {
   @override Function get typeFactory => <T>(f) => f<p0.C<T>>();
 }
 
-extension CMapperExtension<T> on p0.C<T> {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin CMixin<T> {
+mixin CMappable<T> implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.C<T>);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.C<T>);
   CCopyWith<p0.C<T>, p0.C<T>, T> get copyWith => _CCopyWithImpl(this as p0.C<T>, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension CObjectCopy<$R, $Out extends p0.A, T> on ObjectCopyWith<$R, p0.C<T>, $Out> {
@@ -232,10 +226,13 @@ class BMapper extends BaseMapper<p0.B> {
   @override Function get typeFactory => (f) => f<p0.B>();
 }
 
-extension BMapperExtension on p0.B {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  BCopyWith<p0.B> get copyWith => _BCopyWithImpl(this, $identity, $identity);
+mixin BMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.B);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.B);
+  BCopyWith<p0.B> get copyWith => _BCopyWithImpl(this as p0.B, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension BObjectCopy<$R> on ObjectCopyWith<$R, p0.B, p0.B> {
@@ -291,40 +288,6 @@ class Mapper {
 
   static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
   static List<BaseMapper> getAll() => i.getAll();
-}
-
-mixin Mappable implements MappableMixin {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-
-  @override
-  String toString() {
-    return _guard(() => Mapper.asString(this), super.toString);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            _guard(() => Mapper.isEqual(this, other), () => super == other));
-  }
-
-  @override
-  int get hashCode {
-    return _guard(() => Mapper.hash(this), () => super.hashCode);
-  }
-
-  T _guard<T>(T Function() fn, T Function() fallback) {
-    try {
-      return fn();
-    } on MapperException catch (e) {
-      if (e.isUnsupportedOrUnallowed()) {
-        return fallback();
-      } else {
-        rethrow;
-      }
-    }
-  }
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

@@ -5,37 +5,37 @@ import 'package:test/test.dart';
 import 'copy_with_2_test.mapper.g.dart';
 
 @MappableClass(discriminatorKey: 'type', generateMethods: GenerateMethods.copy | GenerateMethods.stringify)
-abstract class Animal with Mappable, AnimalMixin {
+abstract class Animal with AnimalMappable {
   String name;
   Animal(this.name);
 }
 
 @MappableClass(generateMethods: GenerateMethods.copy | GenerateMethods.stringify)
-class Cat extends Animal with CatMixin {
+class Cat extends Animal with CatMappable {
   String color;
   Cat(String name, this.color) : super(name);
 }
 
 @MappableClass(generateMethods: GenerateMethods.copy | GenerateMethods.stringify)
-class Dog extends Animal with DogMixin {
+class Dog extends Animal with DogMappable {
   Dog(super.name);
 }
 
 @MappableClass(generateMethods: GenerateMethods.copy | GenerateMethods.stringify)
-class Zoo with Mappable {
+class Zoo with ZooMappable {
   Animal animal;
 
   Zoo(this.animal);
 }
 
 @MappableClass()
-class A<T> with AMixin<T> {}
+class A<T> with AMappable<T> {}
 
 @MappableClass()
-class C<T> extends A<T> with CMixin<T> {}
+class C<T> extends A<T> with CMappable<T> {}
 
 @MappableClass()
-class B {
+class B with BMappable {
   List<A?> list;
   A? a;
   B(this.list, this.a);

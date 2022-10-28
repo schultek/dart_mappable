@@ -3,7 +3,12 @@ import 'package:dart_mappable/dart_mappable.dart';
 import '../config/class_mapper_config.dart';
 
 class EqualsGenerator {
-  String generateEqualsMethods(ClassMapperConfig config) {
+
+  EqualsGenerator(this.config);
+
+  final ClassMapperConfig config;
+
+  String generateEqualsMethods() {
     var generated = '';
 
     if (config.shouldGenerate(GenerateMethods.equals)) {
@@ -11,14 +16,23 @@ class EqualsGenerator {
         generated += '\n';
       }
       generated += ''
-          '  @override int hash(${config.prefixedClassName} self) => ${_generateHashParams(config)};\n'
-          '  @override bool equals(${config.prefixedClassName} self, ${config.prefixedClassName} other) => ${_generateEqualsParams(config)};\n'
+          '  @override int hash(${config.prefixedClassName} self) => ${_generateHashParams()};\n'
+          '  @override bool equals(${config.prefixedClassName} self, ${config.prefixedClassName} other) => ${_generateEqualsParams()};\n'
           '';
     }
     return generated;
   }
 
-  String _generateHashParams(ClassMapperConfig config) {
+  String generateEqualsMixin() {
+    if (config.shouldGenerate(GenerateMethods.equals) && !config.isAbstract) {
+      return '  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));\n'
+          '  @override int get hashCode => Mapper.hash(this);\n';
+    } else {
+      return '';
+    }
+  }
+
+  String _generateHashParams() {
     List<String> params = [];
 
     for (var field in config.allPublicFields) {
@@ -32,7 +46,7 @@ class EqualsGenerator {
     }
   }
 
-  String _generateEqualsParams(ClassMapperConfig config) {
+  String _generateEqualsParams() {
     List<String> params = [];
 
     for (var field in config.allPublicFields) {

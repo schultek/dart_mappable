@@ -60,6 +60,7 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
         superTypeArgs: superTypeArgs(imports),
         importPrefix: importPrefix,
         nameIndex: nameIndex,
+        generateMixin: generateMixin,
       );
       config.superConfig?.subConfigs.add(config);
       return config;
@@ -245,6 +246,10 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
     return annotation?.getField('generateMethods')!.toIntValue() ??
         options.generateMethods ??
         GenerateMethods.all;
+  }
+
+  bool get generateMixin {
+    return annotation != null && annotatedElement is! ConstructorElement;
   }
 }
 

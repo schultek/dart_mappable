@@ -3,7 +3,7 @@ import 'package:polymorphic_copywith/models/abstract_base.dart';
 import 'package:polymorphic_copywith/polymorphic_copywith.mapper.g.dart';
 
 @MappableClass()
-abstract class BaseObject extends AbstractIdBase with BaseObjectMixin {
+abstract class BaseObject extends AbstractIdBase with BaseObjectMappable {
   /// Template for macro device specifications
   const BaseObject({
     required super.id,

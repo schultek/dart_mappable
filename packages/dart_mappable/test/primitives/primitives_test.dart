@@ -14,7 +14,7 @@ class MyClass {
 }
 
 @MappableClass()
-class Items {
+class Items with ItemsMappable {
   List<Item> items;
   Map<int, Item> items2;
 
@@ -22,7 +22,7 @@ class Items {
 }
 
 @MappableClass()
-class Item {
+class Item with ItemMappable {
   int index;
 
   Item(this.index);

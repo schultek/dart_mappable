@@ -43,10 +43,13 @@ class PersonMapper extends BaseMapper<p0.Person> {
   @override Function get typeFactory => (f) => f<p0.Person>();
 }
 
-extension PersonMapperExtension on p0.Person {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this, $identity, $identity);
+mixin PersonMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.Person);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.Person);
+  PersonCopyWith<p0.Person> get copyWith => _PersonCopyWithImpl(this as p0.Person, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension PersonObjectCopy<$R> on ObjectCopyWith<$R, p0.Person, p0.Person> {
@@ -85,10 +88,13 @@ class CarMapper extends BaseMapper<p0.Car> {
   @override Function get typeFactory => (f) => f<p0.Car>();
 }
 
-extension CarMapperExtension on p0.Car {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  CarCopyWith<p0.Car> get copyWith => _CarCopyWithImpl(this, $identity, $identity);
+mixin CarMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.Car);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.Car);
+  CarCopyWith<p0.Car> get copyWith => _CarCopyWithImpl(this as p0.Car, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension CarObjectCopy<$R> on ObjectCopyWith<$R, p0.Car, p0.Car> {
@@ -127,10 +133,13 @@ class BrandMapper extends BaseMapper<p0.Brand> {
   @override Function get typeFactory => (f) => f<p0.Brand>();
 }
 
-extension BrandMapperExtension on p0.Brand {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  BrandCopyWith<p0.Brand> get copyWith => _BrandCopyWithImpl(this, $identity, $identity);
+mixin BrandMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.Brand);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.Brand);
+  BrandCopyWith<p0.Brand> get copyWith => _BrandCopyWithImpl(this as p0.Brand, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension BrandObjectCopy<$R> on ObjectCopyWith<$R, p0.Brand, p0.Brand> {
@@ -167,10 +176,13 @@ class DealershipMapper extends BaseMapper<p0.Dealership> {
   @override Function get typeFactory => (f) => f<p0.Dealership>();
 }
 
-extension DealershipMapperExtension on p0.Dealership {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DealershipCopyWith<p0.Dealership> get copyWith => _DealershipCopyWithImpl(this, $identity, $identity);
+mixin DealershipMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.Dealership);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.Dealership);
+  DealershipCopyWith<p0.Dealership> get copyWith => _DealershipCopyWithImpl(this as p0.Dealership, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension DealershipObjectCopy<$R> on ObjectCopyWith<$R, p0.Dealership, p0.Dealership> {
@@ -219,12 +231,9 @@ class ItemListMapper extends BaseMapper<p0.ItemList> {
   @override Function get typeFactory => <T>(f) => f<p0.ItemList<T>>();
 }
 
-extension ItemListMapperExtension<T> on p0.ItemList<T> {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin ItemListMixin<T> {
+mixin ItemListMappable<T> implements MappableMixin {
+  String toJson();
+  Map<String, dynamic> toMap();
   ItemListCopyWith<p0.ItemList<T>, p0.ItemList<T>, p0.ItemList<T>, T> get copyWith;
 }
 
@@ -253,13 +262,13 @@ class BrandListMapper extends BaseMapper<p0.BrandList> {
   @override Function get typeFactory => (f) => f<p0.BrandList>();
 }
 
-extension BrandListMapperExtension on p0.BrandList {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin BrandListMixin {
+mixin BrandListMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.BrandList);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.BrandList);
   BrandListCopyWith<p0.BrandList, p0.BrandList> get copyWith => _BrandListCopyWithImpl(this as p0.BrandList, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension BrandListObjectCopy<$R, $Out extends p0.ItemList> on ObjectCopyWith<$R, p0.BrandList, $Out> {
@@ -298,13 +307,13 @@ class NamedItemListMapper extends BaseMapper<p0.NamedItemList> {
   @override Function get typeFactory => <T>(f) => f<p0.NamedItemList<T>>();
 }
 
-extension NamedItemListMapperExtension<T> on p0.NamedItemList<T> {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin NamedItemListMixin<T> {
+mixin NamedItemListMappable<T> implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.NamedItemList<T>);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.NamedItemList<T>);
   NamedItemListCopyWith<p0.NamedItemList<T>, p0.NamedItemList<T>, T> get copyWith => _NamedItemListCopyWithImpl(this as p0.NamedItemList<T>, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension NamedItemListObjectCopy<$R, $Out extends p0.ItemList, T> on ObjectCopyWith<$R, p0.NamedItemList<T>, $Out> {
@@ -343,13 +352,13 @@ class KeyedItemListMapper extends BaseMapper<p0.KeyedItemList> {
   @override Function get typeFactory => <K, T>(f) => f<p0.KeyedItemList<K, T>>();
 }
 
-extension KeyedItemListMapperExtension<K, T> on p0.KeyedItemList<K, T> {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin KeyedItemListMixin<K, T> {
+mixin KeyedItemListMappable<K, T> implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.KeyedItemList<K, T>);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.KeyedItemList<K, T>);
   KeyedItemListCopyWith<p0.KeyedItemList<K, T>, p0.KeyedItemList<K, T>, K, T> get copyWith => _KeyedItemListCopyWithImpl(this as p0.KeyedItemList<K, T>, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension KeyedItemListObjectCopy<$R, $Out extends p0.ItemList, K, T> on ObjectCopyWith<$R, p0.KeyedItemList<K, T>, $Out> {
@@ -388,13 +397,13 @@ class ComparableItemListMapper extends BaseMapper<p0.ComparableItemList> {
   @override Function get typeFactory => <T extends Comparable<dynamic>>(f) => f<p0.ComparableItemList<T>>();
 }
 
-extension ComparableItemListMapperExtension<T extends Comparable<dynamic>> on p0.ComparableItemList<T> {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin ComparableItemListMixin<T extends Comparable<dynamic>> {
+mixin ComparableItemListMappable<T extends Comparable<dynamic>> implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.ComparableItemList<T>);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.ComparableItemList<T>);
   ComparableItemListCopyWith<p0.ComparableItemList<T>, p0.ComparableItemList<T>, T> get copyWith => _ComparableItemListCopyWithImpl(this as p0.ComparableItemList<T>, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension ComparableItemListObjectCopy<$R, $Out extends p0.ItemList, T extends Comparable<dynamic>> on ObjectCopyWith<$R, p0.ComparableItemList<T>, $Out> {
@@ -448,40 +457,6 @@ class Mapper {
 
   static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
   static List<BaseMapper> getAll() => i.getAll();
-}
-
-mixin Mappable implements MappableMixin {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-
-  @override
-  String toString() {
-    return _guard(() => Mapper.asString(this), super.toString);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            _guard(() => Mapper.isEqual(this, other), () => super == other));
-  }
-
-  @override
-  int get hashCode {
-    return _guard(() => Mapper.hash(this), () => super.hashCode);
-  }
-
-  T _guard<T>(T Function() fn, T Function() fallback) {
-    try {
-      return fn();
-    } on MapperException catch (e) {
-      if (e.isUnsupportedOrUnallowed()) {
-        return fallback();
-      } else {
-        rethrow;
-      }
-    }
-  }
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

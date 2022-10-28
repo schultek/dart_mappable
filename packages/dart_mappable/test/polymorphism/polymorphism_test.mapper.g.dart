@@ -47,12 +47,9 @@ class AnimalMapper extends BaseMapper<p0.Animal> {
   @override Function get typeFactory => (f) => f<p0.Animal>();
 }
 
-extension AnimalMapperExtension on p0.Animal {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin AnimalMixin {
+mixin AnimalMappable implements MappableMixin {
+  String toJson();
+  Map<String, dynamic> toMap();
   AnimalCopyWith<p0.Animal, p0.Animal, p0.Animal> get copyWith;
 }
 
@@ -80,13 +77,13 @@ class CatMapper extends BaseMapper<p0.Cat> {
   @override Function get typeFactory => (f) => f<p0.Cat>();
 }
 
-extension CatMapperExtension on p0.Cat {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin CatMixin {
+mixin CatMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.Cat);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.Cat);
   CatCopyWith<p0.Cat, p0.Cat> get copyWith => _CatCopyWithImpl(this as p0.Cat, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension CatObjectCopy<$R, $Out extends p0.Animal> on ObjectCopyWith<$R, p0.Cat, $Out> {
@@ -123,13 +120,13 @@ class DogMapper extends BaseMapper<p0.Dog> {
   @override Function get typeFactory => (f) => f<p0.Dog>();
 }
 
-extension DogMapperExtension on p0.Dog {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin DogMixin {
+mixin DogMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.Dog);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.Dog);
   DogCopyWith<p0.Dog, p0.Dog> get copyWith => _DogCopyWithImpl(this as p0.Dog, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension DogObjectCopy<$R, $Out extends p0.Animal> on ObjectCopyWith<$R, p0.Dog, $Out> {
@@ -166,13 +163,13 @@ class NullAnimalMapper extends BaseMapper<p0.NullAnimal> {
   @override Function get typeFactory => (f) => f<p0.NullAnimal>();
 }
 
-extension NullAnimalMapperExtension on p0.NullAnimal {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin NullAnimalMixin {
+mixin NullAnimalMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.NullAnimal);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.NullAnimal);
   NullAnimalCopyWith<p0.NullAnimal, p0.NullAnimal> get copyWith => _NullAnimalCopyWithImpl(this as p0.NullAnimal, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension NullAnimalObjectCopy<$R, $Out extends p0.Animal> on ObjectCopyWith<$R, p0.NullAnimal, $Out> {
@@ -209,13 +206,13 @@ class DefaultAnimalMapper extends BaseMapper<p0.DefaultAnimal> {
   @override Function get typeFactory => (f) => f<p0.DefaultAnimal>();
 }
 
-extension DefaultAnimalMapperExtension on p0.DefaultAnimal {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin DefaultAnimalMixin {
+mixin DefaultAnimalMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.DefaultAnimal);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.DefaultAnimal);
   DefaultAnimalCopyWith<p0.DefaultAnimal, p0.DefaultAnimal> get copyWith => _DefaultAnimalCopyWithImpl(this as p0.DefaultAnimal, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension DefaultAnimalObjectCopy<$R, $Out extends p0.Animal> on ObjectCopyWith<$R, p0.DefaultAnimal, $Out> {
@@ -252,10 +249,13 @@ class ZooMapper extends BaseMapper<p0.Zoo> {
   @override Function get typeFactory => (f) => f<p0.Zoo>();
 }
 
-extension ZooMapperExtension on p0.Zoo {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  ZooCopyWith<p0.Zoo> get copyWith => _ZooCopyWithImpl(this, $identity, $identity);
+mixin ZooMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.Zoo);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.Zoo);
+  ZooCopyWith<p0.Zoo> get copyWith => _ZooCopyWithImpl(this as p0.Zoo, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension ZooObjectCopy<$R> on ObjectCopyWith<$R, p0.Zoo, p0.Zoo> {
@@ -313,40 +313,6 @@ class Mapper {
 
   static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
   static List<BaseMapper> getAll() => i.getAll();
-}
-
-mixin Mappable implements MappableMixin {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-
-  @override
-  String toString() {
-    return _guard(() => Mapper.asString(this), super.toString);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            _guard(() => Mapper.isEqual(this, other), () => super == other));
-  }
-
-  @override
-  int get hashCode {
-    return _guard(() => Mapper.hash(this), () => super.hashCode);
-  }
-
-  T _guard<T>(T Function() fn, T Function() fallback) {
-    try {
-      return fn();
-    } on MapperException catch (e) {
-      if (e.isUnsupportedOrUnallowed()) {
-        return fallback();
-      } else {
-        rethrow;
-      }
-    }
-  }
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

@@ -25,6 +25,7 @@ class ClassMapperConfig {
 
   final int? importPrefix;
   final int nameIndex;
+  final bool generateMixin;
 
   ClassMapperConfig({
     required this.element,
@@ -42,6 +43,7 @@ class ClassMapperConfig {
     required this.superTypeArgs,
     required this.importPrefix,
     required this.nameIndex,
+    required this.generateMixin,
   }) {
     checkUnresolvedParameters();
   }
@@ -74,6 +76,8 @@ class ClassMapperConfig {
   late bool hasCallableConstructor = constructor != null &&
       !(element.isAbstract && constructor!.redirectedConstructor == null);
 
+  late bool isAbstract = element.isAbstract;
+
   late String typeParams = element.typeParameters.isNotEmpty
       ? '<${element.typeParameters.map((p) => p.name).join(', ')}>'
       : '';
@@ -100,6 +104,8 @@ class ClassMapperConfig {
 
     return safeParams;
   })();
+
+  late bool generateAsMixin = generateMixin && subConfigs.every((c) => c.generateAsMixin);
 
   void checkUnresolvedParameters() {
     var unresolved = params.whereType<UnresolvedParameterConfig>();

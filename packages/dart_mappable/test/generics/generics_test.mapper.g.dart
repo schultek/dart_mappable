@@ -40,10 +40,13 @@ class BoxMapper extends BaseMapper<p0.Box> {
   @override Function get typeFactory => <T extends p0.Content>(f) => f<p0.Box<T>>();
 }
 
-extension BoxMapperExtension<T extends p0.Content> on p0.Box<T> {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  BoxCopyWith<p0.Box<T>, T> get copyWith => _BoxCopyWithImpl(this, $identity, $identity);
+mixin BoxMappable<T extends p0.Content> implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.Box<T>);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.Box<T>);
+  BoxCopyWith<p0.Box<T>, T> get copyWith => _BoxCopyWithImpl(this as p0.Box<T>, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension BoxObjectCopy<$R, T extends p0.Content> on ObjectCopyWith<$R, p0.Box<T>, p0.Box<T>> {
@@ -82,13 +85,13 @@ class ConfettiMapper extends BaseMapper<p0.Confetti> {
   @override Function get typeFactory => (f) => f<p0.Confetti>();
 }
 
-extension ConfettiMapperExtension on p0.Confetti {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin ConfettiMixin {
+mixin ConfettiMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.Confetti);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.Confetti);
   ConfettiCopyWith<p0.Confetti, p0.Confetti> get copyWith => _ConfettiCopyWithImpl(this as p0.Confetti, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension ConfettiObjectCopy<$R, $Out extends p0.Content> on ObjectCopyWith<$R, p0.Confetti, $Out> {
@@ -125,13 +128,13 @@ class ContentMapper extends BaseMapper<p0.Content> {
   @override Function get typeFactory => (f) => f<p0.Content>();
 }
 
-extension ContentMapperExtension on p0.Content {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-}
-
-mixin ContentMixin {
+mixin ContentMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.Content);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.Content);
   ContentCopyWith<p0.Content, p0.Content, p0.Content> get copyWith => _ContentCopyWithImpl(this as p0.Content, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension ContentObjectCopy<$R, $Out extends p0.Content> on ObjectCopyWith<$R, p0.Content, $Out> {
@@ -168,10 +171,13 @@ class DataMapper extends BaseMapper<p0.Data> {
   @override Function get typeFactory => (f) => f<p0.Data>();
 }
 
-extension DataMapperExtension on p0.Data {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DataCopyWith<p0.Data> get copyWith => _DataCopyWithImpl(this, $identity, $identity);
+mixin DataMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.Data);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.Data);
+  DataCopyWith<p0.Data> get copyWith => _DataCopyWithImpl(this as p0.Data, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension DataObjectCopy<$R> on ObjectCopyWith<$R, p0.Data, p0.Data> {
@@ -208,10 +214,13 @@ class SingleSettingMapper extends BaseMapper<p0.SingleSetting> {
   @override Function get typeFactory => <T>(f) => f<p0.SingleSetting<T>>();
 }
 
-extension SingleSettingMapperExtension<T> on p0.SingleSetting<T> {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  SingleSettingCopyWith<p0.SingleSetting<T>, T> get copyWith => _SingleSettingCopyWithImpl(this, $identity, $identity);
+mixin SingleSettingMappable<T> implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.SingleSetting<T>);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.SingleSetting<T>);
+  SingleSettingCopyWith<p0.SingleSetting<T>, T> get copyWith => _SingleSettingCopyWithImpl(this as p0.SingleSetting<T>, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension SingleSettingObjectCopy<$R, T> on ObjectCopyWith<$R, p0.SingleSetting<T>, p0.SingleSetting<T>> {
@@ -250,10 +259,13 @@ class SettingsMapper extends BaseMapper<p0.Settings> {
   @override Function get typeFactory => (f) => f<p0.Settings>();
 }
 
-extension SettingsMapperExtension on p0.Settings {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  SettingsCopyWith<p0.Settings> get copyWith => _SettingsCopyWithImpl(this, $identity, $identity);
+mixin SettingsMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p0.Settings);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p0.Settings);
+  SettingsCopyWith<p0.Settings> get copyWith => _SettingsCopyWithImpl(this as p0.Settings, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
 }
 
 extension SettingsObjectCopy<$R> on ObjectCopyWith<$R, p0.Settings, p0.Settings> {
@@ -307,40 +319,6 @@ class Mapper {
 
   static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
   static List<BaseMapper> getAll() => i.getAll();
-}
-
-mixin Mappable implements MappableMixin {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-
-  @override
-  String toString() {
-    return _guard(() => Mapper.asString(this), super.toString);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            _guard(() => Mapper.isEqual(this, other), () => super == other));
-  }
-
-  @override
-  int get hashCode {
-    return _guard(() => Mapper.hash(this), () => super.hashCode);
-  }
-
-  T _guard<T>(T Function() fn, T Function() fallback) {
-    try {
-      return fn();
-    } on MapperException catch (e) {
-      if (e.isUnsupportedOrUnallowed()) {
-        return fallback();
-      } else {
-        rethrow;
-      }
-    }
-  }
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

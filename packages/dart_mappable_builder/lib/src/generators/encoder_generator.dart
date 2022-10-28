@@ -24,6 +24,13 @@ class EncoderGenerator {
     }
   }
 
+  String generateEncoderMixin() {
+    return config.shouldGenerate(GenerateMethods.encode)
+        ? '  String toJson()${config.isAbstract ? '' : ' => Mapper.toJson(this as ${config.selfTypeParam})'};\n'
+            '  Map<String, dynamic> toMap()${config.isAbstract ? '' : ' => Mapper.toMap(this as ${config.selfTypeParam})'};\n'
+        : '';
+  }
+
   String generateEncoderExtensions() {
     return config.shouldGenerate(GenerateMethods.encode)
         ? '  String toJson() => Mapper.toJson(this);\n'
@@ -31,8 +38,8 @@ class EncoderGenerator {
         : '';
   }
 
-  String _generateEncoder(ClassMapperConfig config, [String encode = 'encode',
-      String? name]) {
+  String _generateEncoder(ClassMapperConfig config,
+      [String encode = 'encode', String? name]) {
     var wrapped = encode;
     if (config.superConfig != null &&
         config.superConfig!.hookForClass != null) {
@@ -47,7 +54,7 @@ class EncoderGenerator {
   }
 
   String _generateEncode() {
-    String call  = '=> toMap${config.typeParams}(v)';
+    String call = '=> toMap${config.typeParams}(v)';
 
     if (config.hookForClass != null) {
       call =
@@ -109,7 +116,8 @@ class EncoderGenerator {
     }
 
     if (config.typeParams.isNotEmpty) {
-      params.add('...Mapper.i.\$type<${config.prefixedClassName}${config.typeParams}>($paramName)');
+      params.add(
+          '...Mapper.i.\$type<${config.prefixedClassName}${config.typeParams}>($paramName)');
     }
 
     return params.join(', ');
