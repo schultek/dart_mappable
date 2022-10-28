@@ -24,6 +24,7 @@ while adding new or improved support for advances use-cases like generics, inher
 
 - [Get Started](#get-started)
 - [How to use](#how-to-use)
+  - [Annotations](#annotations)
   - [Global options](#global-options)
   - [Mapper interface](#mapper-interface)
   - [Generation Methods](#generation-methods)
@@ -74,10 +75,20 @@ Then annotate your classes that you want to use with `@MappableClass()`:
 import 'package:dart_mappable/dart_mappable.dart';
 
 @MappableClass()
-class MyClass {
-  ...
+class MyClass with MyClassMappable {
+  final int myValue;
+  
+  MyClass(this.myValue);
 }
 ```
+
+To use a class you must:
+
+- annotate the class with `@MappableClass()` and
+- apply a mixin with the name of the class plus `Mappable`.
+
+> Don't worry if the mixin don't exist at first, just run code-generation once an it will be created.
+> The builder will also warn you if you define your class without the proper mixin.
 
 In order to generate the serialization code, run the following command:
 
@@ -85,17 +96,40 @@ In order to generate the serialization code, run the following command:
 pub run build_runner build
 ```
 
-You'll need to re-run code generation each time you are making changes to your annotated classes.
-During development, you can use `watch` to automatically watch your changes like this
-
-```shell script
-pub run build_runner watch
-```
+> You'll need to re-run code generation each time you are making changes to your annotated classes.
+> During development, you can use `watch` to automatically watch your changes:
+> `pub run build_runner watch`
 
 This will generate a `.mapper.g.dart` file for each of your entry points specified in the `build.yaml` file.
-Last step is to `import` the generated file wherever you want / need them.
+
+Last step is to `import` the generated file wherever you want / need them. There are two main ways to 
+interact with your models using this package: Through the generated `Mapper` class, or through the methods
+defined by the generated mixin:
+
+```dart
+
+import 'main.mapper.g.dart'; // import the generated file
+
+void main() {
+  // Option 1: Use the [Mapper] class, e.g. for:
+  // - decoding
+  var myClass = Mapper.fromJson<MyClass>('{"myValue": 123}');
+  // - encoding
+  var json = Mapper.toJson(myClass);
+  
+  // Option 2: Use the methods on your class provided by the mixin, e.g. for:
+  // - encoding
+  var json = myClass.toJson();
+  // - copyWith
+  var myClass2 = myClass.copyWith(myValue: 0);
+}
+```
+
+Checkout [Mapper Interface](#mapper-interface) for a full list of available methods.
 
 ## How to use
+
+### Annotations
 
 The recommended way to use `dart_mappable` is to annotate your model classes with `@MappableClass()` and your enums with `@MappableEnum()`.
 Each annotation has a set of properties to configure the generated code.
@@ -108,7 +142,8 @@ class MyClass { ... }
 enum MyEnum { ... }
 ```
 
-The properties are documented  [here](https://pub.dev/documentation/dart_mappable/latest/dart_mappable/MappableClass-class.html) for `@MappableClass()` and [here](https://pub.dev/documentation/dart_mappable/latest/dart_mappable/MappableEnum-class.html) for `@MappableEnum()`.
+The properties are documented  [here](https://pub.dev/documentation/dart_mappable/latest/dart_mappable/MappableClass-class.html) for `@MappableClass()` 
+and [here](https://pub.dev/documentation/dart_mappable/latest/dart_mappable/MappableEnum-class.html) for `@MappableEnum()`.
 
 For deserialization, `dart_mappable` will use the first available constructor of a class, but you can use a specific constructor using the `@MappableConstructor()` annotation.
 
@@ -152,7 +187,9 @@ class MyClass {
 
 You can also use the `include` and `exclude` property to add any or all classes and enums in a library. Using `exclude` will result in 
 all classes in a library except the specified ones to be included.
+
 Classes or enums specified using those properties do not need to have the `@MappableClass()` or `@MappableEnum()` annotation.
+Classes that are included in this way will not have a generated mixin but rather extension methods.
 
 ```dart
 @MappableLib(include: [MyClass])
@@ -225,25 +262,29 @@ targets:
 - `Mapper.isEqual(a, b)` will compare two objects for equality.
 - `Mapper.asString(o)` will return a string representation of an object.
 
-Also for each included class there are `.toMap()` and `toJson()` extension methods generated, which internally call `Mapper.toMap()` and `Mapper.toJson()` respectively.
+The generated mixins will come with the following methods:
 
-In order for classes to support comparison via `==` as well as a custom `toString()` implementation, you have to use the `Mappable` mixin on those classes.
+- `toMap()` and `toJson()`, which internally call `Mapper.toMap()` and `Mapper.toJson()` respectively.
+- `copyWith()` to create copies of your class instance (see [Copy With](#copywith)).
+- overrides for `operator ==`, `hashCode` and `toString()`.
 
 ### Generation Methods
 
-This package can generate a few different sets of methods, which can be activated or deactivated. This makes sure that only code is generated that you actually need.
+This package can generate a few different sets of methods, which can be activated or deactivated. 
+This makes sure that only code is generated that you actually need.
 By default, all methods are generated for each class.
 
 You can set the `generateMethods` property to specify which methods to generate. Either in the **global options** using a List of Strings, or with a **annotation** using the `GenerateMethods` flags. 
 The following methods are supported:
 
 - **decode**: Will generate code used by `Mapper.fromJson`, `Mapper.fromMap` and `Mapper.fromValue`.
-- **encode**: Will generate code used by `Mapper.toJson`, `Mapper.toMap` and `Mapper.toValue` as well as the extension methods `toJson` and `toMap`.
-- **copy**: Will generate the extension method `copyWith`.
-- **stringify**: Will generate code used by `Mapper.asString` or when using the `Mappable` mixin's `toString` override.
-- **equals**: Will generate code used by `Mapper.isEqual` or when using the `Mappable` mixin's `==` or `hashCode` overrides.
+- **encode**: Will generate code used by `Mapper.toJson`, `Mapper.toMap` and `Mapper.toValue` as well as the mixin methods `toJson` and `toMap`.
+- **copy**: Will generate the mixin method `copyWith`.
+- **stringify**: Will generate code used by `Mapper.asString` and the mixin's `toString` override.
+- **equals**: Will generate code used by `Mapper.isEqual` and the mixin's `==` and `hashCode` overrides.
 
-When using **annotations**, you can specify multiple methods using the *bitwise-or* operator like this: `@MappableClass(generateMethods: GenerateMethods.copy | GenerateMethods.equals | GenerateMethods.stringify)`.
+When using **annotations**, you can specify multiple methods using the *bitwise-or* operator like this: 
+`@MappableClass(generateMethods: GenerateMethods.copy | GenerateMethods.equals | GenerateMethods.stringify)`.
 
 ### Utilize Constructors
 
@@ -364,12 +405,12 @@ enum Status {
 `dart_mappable` support `List`s, `Set`s and `Map`s out of the box, without any special syntax, workarounds or hacks. Just use `Mapper.fromJson` as you normally would:
 
 ```dart
-class Dog with Mappable {
+class Dog with DogMappable {
   String name;
   Dog(this.name);
 }
 
-class Box<T> with Mappable {
+class Box<T> with BoxMappable<T> {
   T content;
   Box(this.content);
 }
@@ -425,7 +466,8 @@ print(myMap); // {{name: Bonny}: 1, {name: Clyde}: 5}
 `dart_mappable` can generate a powerful `copyWith` method for your classes. It supports assigning `null` as well as chained deep copies.
 
 ```dart
-class Person {
+@MappableClass()
+class Person with PersonMappable {
   String name;
   int? age;
     
@@ -445,20 +487,24 @@ void main() {
 ### Deep Copy
 
 When having complex nested classes, this syntax can get quite verbose. 
-Therefore this package provides a special syntax for nested classes, similar to [freezed](https://pub.dev/packages/freezed#deep-copy).
+Therefore this package provides a special syntax for nested classes, similar to 
+[freezed](https://pub.dev/packages/freezed#deep-copy).
 
 Consider the following classes:
 
 ```dart
-class Person {
+@MappableClass()
+class Person with PersonMappable {
   String name;
 
   Person(this.name);
 }
 
-class Company {
+@MappableClass()
+class Company with CompanyMappable {
   Person manager;
   List<Person> employees;
+  
   Company(this.manager, this.employees);
 }
 
@@ -488,27 +534,27 @@ The complete interfaces are documented
 ### CopyWith for Inheritance, Polymorphism and Generics
 
 CopyWith works not only for simple use-cases, but also supports complex class structures with 
-inheritance or generics.
-
-For details on how to use `.copyWith` with inheritance and polymorphism, read on to the 
-[CopyWith and Polymorphism](#copywith-and-polymorphism) section.
+inheritance or generics, like [Polymorphism](#polymorphism-and-discriminators).
 
 ## Polymorphism and Discriminators
 
 A common pattern that you might want to use for your classes is polymorphism. As a simple example see the classes below. 
 
 ```dart
-abstract class Animal with Mappable {
+@MappableClass()
+abstract class Animal with AnimalMappable {
   String name;
   Animal(this.name);
 }
 
-class Cat extends Animal {
+@MappableClass()
+class Cat extends Animal with CatMappable {
   String color;
   Cat(String name, this.color) : super(name);
 }
 
-class Dog extends Animal {
+@MappableClass()
+class Dog extends Animal with DogMappable {
   int age;
   Dog(String name, this.age) : super(name);
 }
@@ -523,9 +569,8 @@ Make sure to specify the `discriminatorKey` property globally or on the base cla
 on each of the child classes - `Cat` and `Dog` in our case.
 
 ```dart
-
 @MappableClass(discriminatorKey: 'type')
-abstract class Animal with Mappable {
+abstract class Animal with AnimalMappable {
   ...
 }
 
@@ -554,12 +599,12 @@ There are two additional cases that you might want to cover. Either your discrim
   
 ```dart
 @MappableClass(discriminatorValue: null)
-class NullAnimal extends Animal {
+class NullAnimal extends Animal with NullAnimalMappable {
   NullAnimal(String name) : super(name);
 }
 
 @MappableClass(discriminatorValue: MappableClass.useAsDefault)
-class DefaultAnimal extends Animal {
+class DefaultAnimal extends Animal with DefaultAnimalMappable {
   String type;
   DefaultAnimal(String name, this.type) : super(name);
 }
@@ -575,27 +620,6 @@ void main() {
   print(animal2.type); // Bear
 }
 ```
-
-### CopyWith and Polymorphism
-
-To use the `.copyWith` feature on classes that use polymorphism (or any inheritance), a small
-additional setup is required. 
-
-Each class that is either a superclass or subclass will generate an additional `MyClassMixin` that
-you should apply to your class. So in our above example we would change the class signatures to:
-
-- `class Animal with Mappable, AnimalMixin`
-- `class Cat extends Animal with CatMixin`
-- `class Dog extends Animal with DogMixin`
-- ...
-
-> Don't worry if the mixins don't exist at first, just run code-generation once an they will be created.
-> The builder will also warn you if you use polymorphism without using the generated mixins.
-
-With this setup, you cannot only use `.copyWith` on `Cat` or `Dog`, but also on any parameter of type
-`Animal`. In those cases, the `.copyWith` implementation is completely subtype-safe, meaning if you
-have a parameter of static type `Animal`, but concrete runtime type `Cat`, calling `.copyWith` will
-correctly result in a new instance of `Cat`.
 
 ## Encoding / Decoding Hooks
 
