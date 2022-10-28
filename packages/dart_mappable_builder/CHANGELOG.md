@@ -1,3 +1,10 @@
+# 2.0.0-dev.5
+
+- Removed the `Mappable` mixin in favor of the new class-specific mixins.
+
+  All annotated classes must now mixin their respective `<MyClass>Mappable` mixin.
+  More details [here](https://pub.dev/packages/dart_mappable/versions/2.0.0-dev.5#get-started).
+
 # 2.0.0-dev.4
 
 - Fixed bug with incorrect type args in copyWith

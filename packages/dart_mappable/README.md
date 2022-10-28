@@ -90,6 +90,9 @@ To use a class you must:
 > Don't worry if the mixin don't exist at first, just run code-generation once an it will be created.
 > The builder will also warn you if you define your class without the proper mixin.
 
+> For generic classes (e.g. `MyClass<T>`) make sure to also provide all type parameters 
+> to the mixin (`... with MyClassMappable<T>`).
+
 In order to generate the serialization code, run the following command:
 
 ```shell script
