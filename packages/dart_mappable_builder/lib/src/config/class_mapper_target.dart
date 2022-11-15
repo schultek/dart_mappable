@@ -15,7 +15,8 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
   List<ClassMapperTarget> subTargets = [];
   ClassMapperTarget? superTarget;
 
-  ClassMapperTarget(ClassElement element, MappableOptions options, int? prefix, int index)
+  ClassMapperTarget(
+      ClassElement element, MappableOptions options, int? prefix, int index)
       : super(element, options, prefix, index);
 
   @override
@@ -94,8 +95,8 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
           'Cannot resolve formal super parameter',
         );
       }
-      var superConfig =
-          await superTarget!.getParameterConfig(dec.superConstructorParameter!, imports);
+      var superConfig = await superTarget!
+          .getParameterConfig(dec.superConstructorParameter!, imports);
       if (superConfig is UnresolvedParameterConfig) {
         return UnresolvedParameterConfig(
           param,
@@ -231,12 +232,18 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
   }
 
   List<String> typeParamsList(ImportsBuilder imports) {
-    return element.typeParameters.map((p) => '${p.displayName}${p.bound != null ? ' extends ${imports.prefixedType(p.bound!)}' : ''}').toList();
+    return element.typeParameters
+        .map((p) =>
+            '${p.displayName}${p.bound != null ? ' extends ${imports.prefixedType(p.bound!)}' : ''}')
+        .toList();
   }
 
   List<String> superTypeArgs(ImportsBuilder imports) {
     if (superTarget == null) return [];
-    return element.supertype?.typeArguments.map((a) => imports.prefixedType(a)).toList() ?? [];
+    return element.supertype?.typeArguments
+            .map((a) => imports.prefixedType(a))
+            .toList() ??
+        [];
   }
 
   CaseStyle? get caseStyle =>
@@ -265,8 +272,12 @@ class FactoryConstructorMapperTarget extends ClassMapperTarget {
 
   FactoryConstructorMapperTarget(
       this.factoryConstructor, MappableOptions options, int? prefix, int index)
-      : super(factoryConstructor.redirectedConstructor!.returnType.element2 as ClassElement,
-            options, prefix, index);
+      : super(
+            factoryConstructor.redirectedConstructor!.returnType.element2
+                as ClassElement,
+            options,
+            prefix,
+            index);
 
   @override
   Element get annotatedElement => factoryConstructor;
