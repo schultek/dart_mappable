@@ -81,22 +81,29 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
 
   Future<ParameterConfig> getParameterConfig(
       ParameterElement param, ImportsBuilder imports) async {
-    if (param is FieldFormalParameterElement) {
-      return FieldParameterConfig(param, param.field!);
+    var dec = param.declaration;
+
+    if (dec is FieldFormalParameterElement) {
+      return FieldParameterConfig(param, dec.field!);
     }
 
-    if (param is SuperFormalParameterElement) {
-      if (param.superConstructorParameter == null) {
+    if (dec is SuperFormalParameterElement) {
+      if (dec.superConstructorParameter == null) {
         return UnresolvedParameterConfig(
           param,
           'Cannot resolve formal super parameter',
         );
       }
-      return SuperParameterConfig(
-        param,
-        await superTarget!
-            .getParameterConfig(param.superConstructorParameter!, imports),
-      );
+      var superConfig =
+          await superTarget!.getParameterConfig(dec.superConstructorParameter!, imports);
+      if (superConfig is UnresolvedParameterConfig) {
+        return UnresolvedParameterConfig(
+          param,
+          'Problem in super constructor: ${superConfig.message}',
+        );
+      } else {
+        return SuperParameterConfig(param, superConfig);
+      }
     }
 
     var getter = element.getGetter(param.name);
