@@ -10,7 +10,7 @@ import 'models/two.dart' as p3;
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
 
-var _mappers = <BaseMapper>{
+var _mappers = <MapperElementBase>{
   // class mappers
   OneMapper._(),
   BaseObjectMapper._(),
@@ -23,7 +23,7 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class OneMapper extends BaseMapper<p0.One> {
+class OneMapper extends MapperElementBase<p0.One> {
   OneMapper._();
 
   @override Function get decoder => decode;
@@ -68,7 +68,7 @@ class _OneCopyWithImpl<$R, $Out extends p2.AbstractIdBase> extends BaseCopyWith<
   @override $R call({String? id, String? name, Map<String, dynamic>? objects}) => $then(p0.One(id: id ?? $value.id, name: name ?? $value.name, objects: objects ?? $value.objects));
 }
 
-class BaseObjectMapper extends BaseMapper<p1.BaseObject> {
+class BaseObjectMapper extends MapperElementBase<p1.BaseObject> {
   BaseObjectMapper._();
 
   @override Function get decoder => decode;
@@ -99,7 +99,7 @@ abstract class BaseObjectCopyWith<$R, $In extends p1.BaseObject, $Out extends p2
 }
 
 
-class AbstractIdBaseMapper extends BaseMapper<p2.AbstractIdBase> {
+class AbstractIdBaseMapper extends MapperElementBase<p2.AbstractIdBase> {
   AbstractIdBaseMapper._();
 
   @override Function get decoder => decode;
@@ -128,7 +128,7 @@ abstract class AbstractIdBaseCopyWith<$R, $In extends p2.AbstractIdBase, $Out ex
 }
 
 
-class TwoMapper extends BaseMapper<p3.Two> {
+class TwoMapper extends MapperElementBase<p3.Two> {
   TwoMapper._();
 
   @override Function get decoder => decode;
@@ -198,12 +198,12 @@ class Mapper {
   static int hash(dynamic value) => i.hash(value);
   static String asString(dynamic value) => i.asString(value);
 
-  static void use<T>(BaseMapper<T> mapper) => i.use<T>(mapper);
-  static BaseMapper<T>? unuse<T>() => i.unuse<T>();
-  static void useAll(List<BaseMapper> mappers) => i.useAll(mappers);
+  static void use<T>(MapperElementBase<T> mapper) => i.use<T>(mapper);
+  static MapperElementBase<T>? unuse<T>() => i.unuse<T>();
+  static void useAll(List<MapperElementBase> mappers) => i.useAll(mappers);
 
-  static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
-  static List<BaseMapper> getAll() => i.getAll();
+  static MapperElementBase<T>? get<T>([Type? type]) => i.get<T>(type);
+  static List<MapperElementBase> getAll() => i.getAll();
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

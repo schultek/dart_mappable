@@ -10,7 +10,7 @@ import 'other/other.dart' as p3;
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
 
-var _mappers = <BaseMapper>{
+var _mappers = <MapperElementBase>{
   // class mappers
   PersonMapper._(),
   AppleMapper._(),
@@ -25,7 +25,7 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class PersonMapper extends BaseMapper<p0.Person> {
+class PersonMapper extends MapperElementBase<p0.Person> {
   PersonMapper._();
 
   @override Function get decoder => decode;
@@ -65,7 +65,7 @@ class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person, p0.Person> imp
   @override $R call({String? firstName}) => $then(p0.Person(firstName ?? $value.firstName));
 }
 
-class AppleMapper extends BaseMapper<p1.Apple> {
+class AppleMapper extends MapperElementBase<p1.Apple> {
   AppleMapper._();
 
   @override Function get decoder => decode;
@@ -108,7 +108,7 @@ class _AppleCopyWithImpl<$R> extends BaseCopyWith<$R, p1.Apple, p1.Apple> implem
   @override $R call({bool? isRed}) => $then(p1.Apple(isRed ?? $value.isRed));
 }
 
-class CakeMapper extends BaseMapper<p1.Cake> {
+class CakeMapper extends MapperElementBase<p1.Cake> {
   CakeMapper._();
 
   @override Function get decoder => decode;
@@ -148,7 +148,7 @@ class _CakeCopyWithImpl<$R> extends BaseCopyWith<$R, p1.Cake, p1.Cake> implement
   @override $R call({String? type}) => $then(p1.Cake(type ?? $value.type));
 }
 
-class CarMapper extends BaseMapper<p2.Car> {
+class CarMapper extends MapperElementBase<p2.Car> {
   CarMapper._();
 
   @override Function get decoder => decode;
@@ -188,7 +188,7 @@ class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p2.Car, p2.Car> implements C
   @override $R call({String? brandName}) => $then(p2.Car(brandName ?? $value.brandName));
 }
 
-class Person1Mapper extends BaseMapper<p2.Person> {
+class Person1Mapper extends MapperElementBase<p2.Person> {
   Person1Mapper._();
 
   @override Function get decoder => decode;
@@ -232,7 +232,7 @@ class _Person1CopyWithImpl<$R> extends BaseCopyWith<$R, p2.Person, p2.Person> im
   @override $R call({String? firstName}) => $then(p2.Person(firstName ?? $value.firstName));
 }
 
-class AnimalMapper extends BaseMapper<p3.Animal> {
+class AnimalMapper extends MapperElementBase<p3.Animal> {
   AnimalMapper._();
 
   @override Function get decoder => decode;
@@ -299,12 +299,12 @@ class Mapper {
   static int hash(dynamic value) => i.hash(value);
   static String asString(dynamic value) => i.asString(value);
 
-  static void use<T>(BaseMapper<T> mapper) => i.use<T>(mapper);
-  static BaseMapper<T>? unuse<T>() => i.unuse<T>();
-  static void useAll(List<BaseMapper> mappers) => i.useAll(mappers);
+  static void use<T>(MapperElementBase<T> mapper) => i.use<T>(mapper);
+  static MapperElementBase<T>? unuse<T>() => i.unuse<T>();
+  static void useAll(List<MapperElementBase> mappers) => i.useAll(mappers);
 
-  static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
-  static List<BaseMapper> getAll() => i.getAll();
+  static MapperElementBase<T>? get<T>([Type? type]) => i.get<T>(type);
+  static List<MapperElementBase> getAll() => i.getAll();
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

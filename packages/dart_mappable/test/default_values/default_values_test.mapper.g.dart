@@ -8,7 +8,7 @@ import 'otherlib.dart' as p1;
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
 
-var _mappers = <BaseMapper>{
+var _mappers = <MapperElementBase>{
   // class mappers
   AMapper._(),
   BMapper._(),
@@ -23,7 +23,7 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class AMapper extends BaseMapper<p0.A> {
+class AMapper extends MapperElementBase<p0.A> {
   AMapper._();
 
   @override Function get decoder => decode;
@@ -68,7 +68,7 @@ class _ACopyWithImpl<$R> extends BaseCopyWith<$R, p0.A, p0.A> implements ACopyWi
   @override $R call({p0.B? b}) => $then(p0.A(b: b ?? $value.b));
 }
 
-class BMapper extends BaseMapper<p0.B> {
+class BMapper extends MapperElementBase<p0.B> {
   BMapper._();
 
   @override Function get decoder => decode;
@@ -113,7 +113,7 @@ class _BCopyWithImpl<$R> extends BaseCopyWith<$R, p0.B, p0.B> implements BCopyWi
   @override $R call({p0.C? c}) => $then(p0.B(c: c ?? $value.c));
 }
 
-class CMapper extends BaseMapper<p0.C> {
+class CMapper extends MapperElementBase<p0.C> {
   CMapper._();
 
   @override Function get decoder => decode;
@@ -156,7 +156,7 @@ class _CCopyWithImpl<$R> extends BaseCopyWith<$R, p0.C, p0.C> implements CCopyWi
   @override $R call({String? d}) => $then(p0.C(d ?? $value.d));
 }
 
-class A1Mapper extends BaseMapper<p1.A> {
+class A1Mapper extends MapperElementBase<p1.A> {
   A1Mapper._();
 
   @override Function get decoder => decode;
@@ -202,7 +202,7 @@ class _A1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.A, p1.A> implements A1Copy
   @override $R call({p1.B? b}) => $then(p1.A(b: b ?? $value.b));
 }
 
-class B1Mapper extends BaseMapper<p1.B> {
+class B1Mapper extends MapperElementBase<p1.B> {
   B1Mapper._();
 
   @override Function get decoder => decode;
@@ -248,7 +248,7 @@ class _B1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.B, p1.B> implements B1Copy
   @override $R call({p1.C? c}) => $then(p1.B(c: c ?? $value.c));
 }
 
-class C1Mapper extends BaseMapper<p1.C> {
+class C1Mapper extends MapperElementBase<p1.C> {
   C1Mapper._();
 
   @override Function get decoder => decode;
@@ -319,12 +319,12 @@ class Mapper {
   static int hash(dynamic value) => i.hash(value);
   static String asString(dynamic value) => i.asString(value);
 
-  static void use<T>(BaseMapper<T> mapper) => i.use<T>(mapper);
-  static BaseMapper<T>? unuse<T>() => i.unuse<T>();
-  static void useAll(List<BaseMapper> mappers) => i.useAll(mappers);
+  static void use<T>(MapperElementBase<T> mapper) => i.use<T>(mapper);
+  static MapperElementBase<T>? unuse<T>() => i.unuse<T>();
+  static void useAll(List<MapperElementBase> mappers) => i.useAll(mappers);
 
-  static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
-  static List<BaseMapper> getAll() => i.getAll();
+  static MapperElementBase<T>? get<T>([Type? type]) => i.get<T>(type);
+  static List<MapperElementBase> getAll() => i.getAll();
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

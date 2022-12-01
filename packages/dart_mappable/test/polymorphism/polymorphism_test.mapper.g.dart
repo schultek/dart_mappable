@@ -7,7 +7,7 @@ import 'polymorphism_test.dart' as p0;
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
 
-var _mappers = <BaseMapper>{
+var _mappers = <MapperElementBase>{
   // class mappers
   AnimalMapper._(),
   CatMapper._(),
@@ -22,7 +22,7 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class AnimalMapper extends BaseMapper<p0.Animal> {
+class AnimalMapper extends MapperElementBase<p0.Animal> {
   AnimalMapper._();
 
   @override Function get decoder => decode;
@@ -59,7 +59,7 @@ abstract class AnimalCopyWith<$R, $In extends p0.Animal, $Out extends p0.Animal>
 }
 
 
-class CatMapper extends BaseMapper<p0.Cat> {
+class CatMapper extends MapperElementBase<p0.Cat> {
   CatMapper._();
 
   @override Function get decoder => decode;
@@ -102,7 +102,7 @@ class _CatCopyWithImpl<$R, $Out extends p0.Animal> extends BaseCopyWith<$R, p0.C
   @override $R call({String? name, String? color}) => $then(p0.Cat(name ?? $value.name, color ?? $value.color));
 }
 
-class DogMapper extends BaseMapper<p0.Dog> {
+class DogMapper extends MapperElementBase<p0.Dog> {
   DogMapper._();
 
   @override Function get decoder => decode;
@@ -145,7 +145,7 @@ class _DogCopyWithImpl<$R, $Out extends p0.Animal> extends BaseCopyWith<$R, p0.D
   @override $R call({int? age}) => $then(p0.Dog(age ?? $value.age));
 }
 
-class NullAnimalMapper extends BaseMapper<p0.NullAnimal> {
+class NullAnimalMapper extends MapperElementBase<p0.NullAnimal> {
   NullAnimalMapper._();
 
   @override Function get decoder => decode;
@@ -188,7 +188,7 @@ class _NullAnimalCopyWithImpl<$R, $Out extends p0.Animal> extends BaseCopyWith<$
   @override $R call({String? name}) => $then(p0.NullAnimal(name ?? $value.name));
 }
 
-class DefaultAnimalMapper extends BaseMapper<p0.DefaultAnimal> {
+class DefaultAnimalMapper extends MapperElementBase<p0.DefaultAnimal> {
   DefaultAnimalMapper._();
 
   @override Function get decoder => decode;
@@ -231,7 +231,7 @@ class _DefaultAnimalCopyWithImpl<$R, $Out extends p0.Animal> extends BaseCopyWit
   @override $R call({String? name, String? type}) => $then(p0.DefaultAnimal(name ?? $value.name, type ?? $value.type));
 }
 
-class ZooMapper extends BaseMapper<p0.Zoo> {
+class ZooMapper extends MapperElementBase<p0.Zoo> {
   ZooMapper._();
 
   @override Function get decoder => decode;
@@ -307,12 +307,12 @@ class Mapper {
   static int hash(dynamic value) => i.hash(value);
   static String asString(dynamic value) => i.asString(value);
 
-  static void use<T>(BaseMapper<T> mapper) => i.use<T>(mapper);
-  static BaseMapper<T>? unuse<T>() => i.unuse<T>();
-  static void useAll(List<BaseMapper> mappers) => i.useAll(mappers);
+  static void use<T>(MapperElementBase<T> mapper) => i.use<T>(mapper);
+  static MapperElementBase<T>? unuse<T>() => i.unuse<T>();
+  static void useAll(List<MapperElementBase> mappers) => i.useAll(mappers);
 
-  static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
-  static List<BaseMapper> getAll() => i.getAll();
+  static MapperElementBase<T>? get<T>([Type? type]) => i.get<T>(type);
+  static List<MapperElementBase> getAll() => i.getAll();
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

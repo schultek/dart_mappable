@@ -8,7 +8,7 @@ import 'selective_generation_test.dart' as p0;
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
 
-var _mappers = <BaseMapper>{
+var _mappers = <MapperElementBase>{
   // class mappers
   PersonMapper._(),
   CarMapper._(),
@@ -19,7 +19,7 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class PersonMapper extends BaseMapper<p0.Person> {
+class PersonMapper extends MapperElementBase<p0.Person> {
   PersonMapper._();
 
   @override Function get encoder => encode;
@@ -49,7 +49,7 @@ class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person, p0.Person> imp
   @override $R call({String? name}) => $then(p0.Person(name ?? $value.name));
 }
 
-class CarMapper extends BaseMapper<p1.Car> {
+class CarMapper extends MapperElementBase<p1.Car> {
   CarMapper._();
 
   @override String stringify(p1.Car self) => 'Car(brand: ${Mapper.asString(self.brand)})';
@@ -90,12 +90,12 @@ class Mapper {
   static int hash(dynamic value) => i.hash(value);
   static String asString(dynamic value) => i.asString(value);
 
-  static void use<T>(BaseMapper<T> mapper) => i.use<T>(mapper);
-  static BaseMapper<T>? unuse<T>() => i.unuse<T>();
-  static void useAll(List<BaseMapper> mappers) => i.useAll(mappers);
+  static void use<T>(MapperElementBase<T> mapper) => i.use<T>(mapper);
+  static MapperElementBase<T>? unuse<T>() => i.unuse<T>();
+  static void useAll(List<MapperElementBase> mappers) => i.useAll(mappers);
 
-  static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
-  static List<BaseMapper> getAll() => i.getAll();
+  static MapperElementBase<T>? get<T>([Type? type]) => i.get<T>(type);
+  static List<MapperElementBase> getAll() => i.getAll();
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

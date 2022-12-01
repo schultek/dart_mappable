@@ -19,7 +19,7 @@ const classChecker = TypeChecker.fromRuntime(MappableClass);
 const fieldChecker = TypeChecker.fromRuntime(MappableField);
 const libChecker = TypeChecker.fromRuntime(MappableLib);
 const customMapperChecker = TypeChecker.fromRuntime(CustomMapper);
-const mapperChecker = TypeChecker.fromRuntime(BaseMapper);
+const mapperChecker = TypeChecker.fromRuntime(MapperElementBase);
 
 extension GetNode on Element {
   AstNode? getNode() {

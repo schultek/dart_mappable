@@ -53,6 +53,10 @@ extension GuardedUtils on MapperContainer {
       return {'__type': value.runtimeType.id};
     }
   }
+
+  $sub<T>(dynamic value) {
+
+  }
 }
 
 T guard<T>(MapperMethod method, String hint, T Function() fn) {
@@ -132,3 +136,7 @@ class BaseCopyWith<Result, In, Out> implements ObjectCopyWith<Result, In, Out> {
 }
 
 abstract class MappableMixin {}
+
+extension ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
+  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
+}

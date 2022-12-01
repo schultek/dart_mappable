@@ -7,7 +7,7 @@ import 'copy_with_2_test.dart' as p0;
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
 
-var _mappers = <BaseMapper>{
+var _mappers = <MapperElementBase>{
   // class mappers
   AnimalMapper._(),
   CatMapper._(),
@@ -23,7 +23,7 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class AnimalMapper extends BaseMapper<p0.Animal> {
+class AnimalMapper extends MapperElementBase<p0.Animal> {
   AnimalMapper._();
 
   @override String stringify(p0.Animal self) => 'Animal(name: ${Mapper.asString(self.name)})';
@@ -39,7 +39,7 @@ abstract class AnimalCopyWith<$R, $In extends p0.Animal, $Out extends p0.Animal>
 }
 
 
-class CatMapper extends BaseMapper<p0.Cat> {
+class CatMapper extends MapperElementBase<p0.Cat> {
   CatMapper._();
 
   @override String stringify(p0.Cat self) => 'Cat(name: ${Mapper.asString(self.name)}, color: ${Mapper.asString(self.color)})';
@@ -66,7 +66,7 @@ class _CatCopyWithImpl<$R, $Out extends p0.Animal> extends BaseCopyWith<$R, p0.C
   @override $R call({String? name, String? color}) => $then(p0.Cat(name ?? $value.name, color ?? $value.color));
 }
 
-class DogMapper extends BaseMapper<p0.Dog> {
+class DogMapper extends MapperElementBase<p0.Dog> {
   DogMapper._();
 
   @override String stringify(p0.Dog self) => 'Dog(name: ${Mapper.asString(self.name)})';
@@ -93,7 +93,7 @@ class _DogCopyWithImpl<$R, $Out extends p0.Animal> extends BaseCopyWith<$R, p0.D
   @override $R call({String? name}) => $then(p0.Dog(name ?? $value.name));
 }
 
-class ZooMapper extends BaseMapper<p0.Zoo> {
+class ZooMapper extends MapperElementBase<p0.Zoo> {
   ZooMapper._();
 
   @override String stringify(p0.Zoo self) => 'Zoo(animal: ${Mapper.asString(self.animal)})';
@@ -122,7 +122,7 @@ class _ZooCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Zoo, p0.Zoo> implements Z
   @override $R call({p0.Animal? animal}) => $then(p0.Zoo(animal ?? $value.animal));
 }
 
-class AMapper extends BaseMapper<p0.A> {
+class AMapper extends MapperElementBase<p0.A> {
   AMapper._();
 
   @override Function get decoder => decode;
@@ -165,7 +165,7 @@ class _ACopyWithImpl<$R, $Out extends p0.A, T> extends BaseCopyWith<$R, p0.A<T>,
   @override $R call() => $then(p0.A());
 }
 
-class CMapper extends BaseMapper<p0.C> {
+class CMapper extends MapperElementBase<p0.C> {
   CMapper._();
 
   @override Function get decoder => decode;
@@ -208,7 +208,7 @@ class _CCopyWithImpl<$R, $Out extends p0.A, T> extends BaseCopyWith<$R, p0.C<T>,
   @override $R call() => $then(p0.C());
 }
 
-class BMapper extends BaseMapper<p0.B> {
+class BMapper extends MapperElementBase<p0.B> {
   BMapper._();
 
   @override Function get decoder => decode;
@@ -282,12 +282,12 @@ class Mapper {
   static int hash(dynamic value) => i.hash(value);
   static String asString(dynamic value) => i.asString(value);
 
-  static void use<T>(BaseMapper<T> mapper) => i.use<T>(mapper);
-  static BaseMapper<T>? unuse<T>() => i.unuse<T>();
-  static void useAll(List<BaseMapper> mappers) => i.useAll(mappers);
+  static void use<T>(MapperElementBase<T> mapper) => i.use<T>(mapper);
+  static MapperElementBase<T>? unuse<T>() => i.unuse<T>();
+  static void useAll(List<MapperElementBase> mappers) => i.useAll(mappers);
 
-  static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
-  static List<BaseMapper> getAll() => i.getAll();
+  static MapperElementBase<T>? get<T>([Type? type]) => i.get<T>(type);
+  static List<MapperElementBase> getAll() => i.getAll();
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

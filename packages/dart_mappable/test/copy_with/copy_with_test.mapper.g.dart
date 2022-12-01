@@ -7,7 +7,7 @@ import 'copy_with_test.dart' as p0;
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
 
-var _mappers = <BaseMapper>{
+var _mappers = <MapperElementBase>{
   // class mappers
   PersonMapper._(),
   CarMapper._(),
@@ -25,7 +25,7 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class PersonMapper extends BaseMapper<p0.Person> {
+class PersonMapper extends MapperElementBase<p0.Person> {
   PersonMapper._();
 
   @override Function get decoder => decode;
@@ -70,7 +70,7 @@ class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person, p0.Person> imp
   @override $R call({String? name, p0.Car? car}) => $then(p0.Person(name ?? $value.name, car ?? $value.car));
 }
 
-class CarMapper extends BaseMapper<p0.Car> {
+class CarMapper extends MapperElementBase<p0.Car> {
   CarMapper._();
 
   @override Function get decoder => decode;
@@ -115,7 +115,7 @@ class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Car, p0.Car> implements C
   @override $R call({Object? brand = $none, String? model}) => $then(p0.Car(or(brand, $value.brand), model ?? $value.model));
 }
 
-class BrandMapper extends BaseMapper<p0.Brand> {
+class BrandMapper extends MapperElementBase<p0.Brand> {
   BrandMapper._();
 
   @override Function get decoder => decode;
@@ -158,7 +158,7 @@ class _BrandCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Brand, p0.Brand> implem
   @override $R call({Object? name = $none}) => $then(p0.Brand(or(name, $value.name)));
 }
 
-class DealershipMapper extends BaseMapper<p0.Dealership> {
+class DealershipMapper extends MapperElementBase<p0.Dealership> {
   DealershipMapper._();
 
   @override Function get decoder => decode;
@@ -205,7 +205,7 @@ class _DealershipCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Dealership, p0.Dea
   @override $R call({List<p0.Car>? cars, Map<p0.Brand, p0.Person?>? salesRep}) => $then(p0.Dealership(cars ?? $value.cars, salesRep ?? $value.salesRep));
 }
 
-class ItemListMapper extends BaseMapper<p0.ItemList> {
+class ItemListMapper extends MapperElementBase<p0.ItemList> {
   ItemListMapper._();
 
   @override Function get decoder => decode;
@@ -244,7 +244,7 @@ abstract class ItemListCopyWith<$R, $In extends p0.ItemList<T>, $Out extends p0.
 }
 
 
-class BrandListMapper extends BaseMapper<p0.BrandList> {
+class BrandListMapper extends MapperElementBase<p0.BrandList> {
   BrandListMapper._();
 
   @override Function get decoder => decode;
@@ -289,7 +289,7 @@ class _BrandListCopyWithImpl<$R, $Out extends p0.ItemList> extends BaseCopyWith<
   @override $R call({Object? items = $none}) => $then(p0.BrandList(or(items, $value.items)));
 }
 
-class NamedItemListMapper extends BaseMapper<p0.NamedItemList> {
+class NamedItemListMapper extends MapperElementBase<p0.NamedItemList> {
   NamedItemListMapper._();
 
   @override Function get decoder => decode;
@@ -334,7 +334,7 @@ class _NamedItemListCopyWithImpl<$R, $Out extends p0.ItemList, T> extends BaseCo
   @override $R call({String? name, Object? items = $none}) => $then(p0.NamedItemList(name ?? $value.name, or(items, $value.items)));
 }
 
-class KeyedItemListMapper extends BaseMapper<p0.KeyedItemList> {
+class KeyedItemListMapper extends MapperElementBase<p0.KeyedItemList> {
   KeyedItemListMapper._();
 
   @override Function get decoder => decode;
@@ -379,7 +379,7 @@ class _KeyedItemListCopyWithImpl<$R, $Out extends p0.ItemList, K, T> extends Bas
   @override $R call({K? key, Object? items = $none}) => $then(p0.KeyedItemList(key ?? $value.key, or(items, $value.items)));
 }
 
-class ComparableItemListMapper extends BaseMapper<p0.ComparableItemList> {
+class ComparableItemListMapper extends MapperElementBase<p0.ComparableItemList> {
   ComparableItemListMapper._();
 
   @override Function get decoder => decode;
@@ -451,12 +451,12 @@ class Mapper {
   static int hash(dynamic value) => i.hash(value);
   static String asString(dynamic value) => i.asString(value);
 
-  static void use<T>(BaseMapper<T> mapper) => i.use<T>(mapper);
-  static BaseMapper<T>? unuse<T>() => i.unuse<T>();
-  static void useAll(List<BaseMapper> mappers) => i.useAll(mappers);
+  static void use<T>(MapperElementBase<T> mapper) => i.use<T>(mapper);
+  static MapperElementBase<T>? unuse<T>() => i.unuse<T>();
+  static void useAll(List<MapperElementBase> mappers) => i.useAll(mappers);
 
-  static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
-  static List<BaseMapper> getAll() => i.getAll();
+  static MapperElementBase<T>? get<T>([Type? type]) => i.get<T>(type);
+  static List<MapperElementBase> getAll() => i.getAll();
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

@@ -34,7 +34,7 @@ class GenericBox<T> {
 }
 
 @CustomMapper()
-class CustomGenericMapper extends BaseMapper<GenericBox> {
+class CustomGenericMapper extends MapperElementBase<GenericBox> {
   // only use the base type here
 
   @override

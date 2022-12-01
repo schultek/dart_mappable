@@ -5,27 +5,52 @@ import '../core/mappers.dart';
 import 'mapper_container.dart';
 import 'mapper_utils.dart';
 
-class PrimitiveMapper<T> extends BaseMapper<T> with PrimitiveMethodsMixin<T> {
-  const PrimitiveMapper(this.decoder);
+mixin MapperAs<B extends MapperBase<T>, T> on MapperElementBase<T> {
+  @override
+  B get mapper => super.mapper as B;
+}
 
-  @override
+class PrimitiveMapper<T> with MapperBase<T> {
+  const PrimitiveMapper(this.decoder);
   final T Function(dynamic value) decoder;
-  @override
-  Function get encoder => (T value) => value;
-  @override
-  Function get typeFactory => (f) => f<T>();
 
   @override
   bool isFor(dynamic v) => v.runtimeType == T;
+
+  @override
+  MapperElementBase<T> createElement(MapperContainer container) {
+    return PrimitiveMapperElement<T>(this, container);
+  }
 }
 
-abstract class EnumMapper<T> extends SimpleMapper<T>
+class PrimitiveMapperElement<T> extends MapperElementBase<T>
+    with MapperAs<PrimitiveMapper<T>, T>, PrimitiveMethodsMixin<T> {
+  const PrimitiveMapperElement(PrimitiveMapper<T> super.mapper, super.container);
+
+  @override
+  Function get decoder => mapper.decoder;
+  @override
+  Function get encoder => (T value) => value;
+}
+
+abstract class EnumMapperElement<T> extends SimpleMapperElement<T>
     with PrimitiveMethodsMixin<T> {
-  EnumMapper();
+  EnumMapperElement(super.mapper, super.container);
 }
 
-class DateTimeMapper extends SimpleMapper<DateTime>
+class DateTimeMapper with MapperBase<DateTime> {
+  const DateTimeMapper();
+
+  @override
+  MapperElementBase<DateTime> createElement(MapperContainer container) {
+    return DateTimeMapperElement(this, container);
+  }
+}
+
+class DateTimeMapperElement extends SimpleMapperElement<DateTime>
     with PrimitiveMethodsMixin<DateTime> {
+  DateTimeMapperElement(super.mapper, super.container);
+
   @override
   DateTime decode(dynamic value) {
     if (value is String) {
@@ -44,57 +69,78 @@ class DateTimeMapper extends SimpleMapper<DateTime>
   }
 }
 
-class IterableMapper<I extends Iterable> extends BaseMapper<I>
-    with MapperEqualityMixin<I> {
-  Iterable<U> Function<U>(Iterable<U> iterable) fromIterable;
-  final MapperContainer mapper;
-  IterableMapper(this.fromIterable, this.typeFactory, this.mapper);
+class IterableMapper<I extends Iterable> with MapperBase<I> {
+  IterableMapper(this.fromIterable, this.typeFactory);
+
+  final Iterable<U> Function<U>(Iterable<U> iterable) fromIterable;
+
+  @override
+  final Function typeFactory;
+
+  @override
+  MapperElementBase<I> createElement(MapperContainer container) {
+    return IterableMapperElement<I>(this, container);
+  }
+}
+
+class IterableMapperElement<I extends Iterable> extends MapperElementBase<I>
+    with MapperAs<IterableMapper<I>, I>, MapperEqualityMixin<I> {
+  IterableMapperElement(super.mapper, super.container);
 
   @override
   Function get decoder => <T>(dynamic l) => checked(
-      l, (Iterable l) => fromIterable(l.map((v) => mapper.$dec<T>(v, 'item'))));
+      l,
+      (Iterable l) =>
+          mapper.fromIterable(l.map((v) => container.$dec<T>(v, 'item'))));
   @override
-  Function get encoder =>
-      <T>(Iterable<T> self) => self.map((v) => mapper.$enc<T>(v, 'item')).toList();
-  @override
-  Function typeFactory;
+  Function get encoder => <T>(Iterable<T> self) =>
+      self.map((v) => container.$enc<T>(v, 'item')).toList();
 
   @override
-  late Equality equality = IterableEquality(MapperEquality(mapper));
+  late Equality equality = IterableEquality(MapperEquality(container));
 
   @override
   String stringify(I self) =>
-      '(${self.map((e) => mapper.asString(e)).join(', ')})';
+      '(${self.map((e) => container.asString(e)).join(', ')})';
 }
 
-class MapMapper<M extends Map> extends BaseMapper<M>
-    with MapperEqualityMixin<M> {
+class MapMapper<M extends Map> with MapperBase<M> {
+  MapMapper(this.fromMap, this.typeFactory);
+
   Map<K, V> Function<K, V>(Map<K, V> map) fromMap;
-  final MapperContainer mapper;
-  MapMapper(this.fromMap, this.typeFactory, this.mapper);
+  @override
+  final Function typeFactory;
+
+  @override
+  MapperElementBase<M> createElement(MapperContainer container) {
+    return MapMapperElement<M>(this, container);
+  }
+}
+
+class MapMapperElement<M extends Map> extends MapperElementBase<M>
+    with MapperAs<MapMapper<M>, M>, MapperEqualityMixin<M> {
+  MapMapperElement(super.mapper, super.container);
 
   @override
   Function get decoder => <K, V>(dynamic m) => checked(
       m,
-      (Map m) => fromMap(m.map((key, value) => MapEntry(
-          mapper.$dec<K>(key, 'key'), mapper.$dec<V>(value, 'value')))));
+      (Map m) => mapper.fromMap(m.map((key, value) => MapEntry(
+          container.$dec<K>(key, 'key'), container.$dec<V>(value, 'value')))));
   @override
-  Function get encoder => <K, V>(Map<K, V> self) => self.map(
-      (key, value) => MapEntry(mapper.toValue<K>(key), mapper.toValue<V>(value)));
-  @override
-  Function typeFactory;
+  Function get encoder => <K, V>(Map<K, V> self) => self.map((key, value) =>
+      MapEntry(container.toValue<K>(key), container.toValue<V>(value)));
 
   @override
-  late Equality equality =
-      MapEquality(keys: MapperEquality(mapper), values: MapperEquality(mapper));
+  late Equality equality = MapEquality(
+      keys: MapperEquality(container), values: MapperEquality(container));
 
   @override
   String stringify(M self) =>
-      '{${self.entries.map((e) => '${mapper.asString(e.key)}: '
-          '${mapper.asString(e.value)}').join(', ')}}';
+      '{${self.entries.map((e) => '${container.asString(e.key)}: '
+          '${container.asString(e.value)}').join(', ')}}';
 }
 
-mixin PrimitiveMethodsMixin<T> implements BaseMapper<T> {
+mixin PrimitiveMethodsMixin<T> implements MapperElementBase<T> {
   @override
   bool equals(T self, T other) => self == other;
   @override
@@ -103,7 +149,7 @@ mixin PrimitiveMethodsMixin<T> implements BaseMapper<T> {
   String stringify(T self) => self.toString();
 }
 
-mixin MapperEqualityMixin<T> implements BaseMapper<T> {
+mixin MapperEqualityMixin<T> implements MapperElementBase<T> {
   Equality get equality;
 
   @override

@@ -7,7 +7,7 @@ import 'generics_test.dart' as p0;
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
 
-var _mappers = <BaseMapper>{
+var _mappers = <MapperElementBase>{
   // class mappers
   BoxMapper._(),
   ConfettiMapper._(),
@@ -22,7 +22,7 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class BoxMapper extends BaseMapper<p0.Box> {
+class BoxMapper extends MapperElementBase<p0.Box> {
   BoxMapper._();
 
   @override Function get decoder => decode;
@@ -67,7 +67,7 @@ class _BoxCopyWithImpl<$R, T extends p0.Content> extends BaseCopyWith<$R, p0.Box
   @override $R call({int? size, List<T>? contents}) => $then(p0.Box(size ?? $value.size, contents: contents ?? $value.contents));
 }
 
-class ConfettiMapper extends BaseMapper<p0.Confetti> {
+class ConfettiMapper extends MapperElementBase<p0.Confetti> {
   ConfettiMapper._();
 
   @override Function get decoder => decode;
@@ -110,7 +110,7 @@ class _ConfettiCopyWithImpl<$R, $Out extends p0.Content> extends BaseCopyWith<$R
   @override $R call({String? color}) => $then(p0.Confetti(color ?? $value.color));
 }
 
-class ContentMapper extends BaseMapper<p0.Content> {
+class ContentMapper extends MapperElementBase<p0.Content> {
   ContentMapper._();
 
   @override Function get decoder => decode;
@@ -153,7 +153,7 @@ class _ContentCopyWithImpl<$R, $Out extends p0.Content> extends BaseCopyWith<$R,
   @override $R call() => $then(p0.Content());
 }
 
-class DataMapper extends BaseMapper<p0.Data> {
+class DataMapper extends MapperElementBase<p0.Data> {
   DataMapper._();
 
   @override Function get decoder => decode;
@@ -196,7 +196,7 @@ class _DataCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Data, p0.Data> implement
   @override $R call({String? data}) => $then(p0.Data(data ?? $value.data));
 }
 
-class SingleSettingMapper extends BaseMapper<p0.SingleSetting> {
+class SingleSettingMapper extends MapperElementBase<p0.SingleSetting> {
   SingleSettingMapper._();
 
   @override Function get decoder => decode;
@@ -241,7 +241,7 @@ class _SingleSettingCopyWithImpl<$R, T> extends BaseCopyWith<$R, p0.SingleSettin
   @override $R call({Object? properties = $none}) => $then(p0.SingleSetting(properties: or(properties, $value.properties)));
 }
 
-class SettingsMapper extends BaseMapper<p0.Settings> {
+class SettingsMapper extends MapperElementBase<p0.Settings> {
   SettingsMapper._();
 
   @override Function get decoder => decode;
@@ -313,12 +313,12 @@ class Mapper {
   static int hash(dynamic value) => i.hash(value);
   static String asString(dynamic value) => i.asString(value);
 
-  static void use<T>(BaseMapper<T> mapper) => i.use<T>(mapper);
-  static BaseMapper<T>? unuse<T>() => i.unuse<T>();
-  static void useAll(List<BaseMapper> mappers) => i.useAll(mappers);
+  static void use<T>(MapperElementBase<T> mapper) => i.use<T>(mapper);
+  static MapperElementBase<T>? unuse<T>() => i.unuse<T>();
+  static void useAll(List<MapperElementBase> mappers) => i.useAll(mappers);
 
-  static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
-  static List<BaseMapper> getAll() => i.getAll();
+  static MapperElementBase<T>? get<T>([Type? type]) => i.get<T>(type);
+  static List<MapperElementBase> getAll() => i.getAll();
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

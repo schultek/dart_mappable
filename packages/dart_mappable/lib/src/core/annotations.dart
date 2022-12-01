@@ -10,6 +10,7 @@ class MappableClass {
     this.discriminatorValue,
     this.hooks,
     this.generateMethods,
+    this.includeSubClasses,
   });
 
   /// The case style for the map keys
@@ -29,6 +30,9 @@ class MappableClass {
 
   /// Specify which methods to generate for this class
   final int? generateMethods;
+
+  /// Specify additional subclasses of this class for polymorphism
+  final Iterable<Type>? includeSubClasses;
 
   static const useAsDefault = MappingFlags.useAsDefault;
 }

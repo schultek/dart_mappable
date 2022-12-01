@@ -7,7 +7,7 @@ import 'main.dart' as p0;
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
 
-var _mappers = <BaseMapper>{
+var _mappers = <MapperElementBase>{
   // class mappers
   UnionMapper._(),
   DataMapper._(),
@@ -20,7 +20,7 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class UnionMapper extends BaseMapper<p0.Union> {
+class UnionMapper extends MapperElementBase<p0.Union> {
   UnionMapper._();
 
   @override Function get decoder => decode;
@@ -56,7 +56,7 @@ abstract class UnionCopyWith<$R, $In extends p0.Union, $Out extends p0.Union> im
 }
 
 
-class DataMapper extends BaseMapper<p0.Data> {
+class DataMapper extends MapperElementBase<p0.Data> {
   DataMapper._();
 
   @override Function get decoder => decode;
@@ -96,7 +96,7 @@ class _DataCopyWithImpl<$R, $Out extends p0.Union> extends BaseCopyWith<$R, p0.D
   @override $R call({int? value}) => $then(p0.Data(value ?? $value.value));
 }
 
-class LoadingMapper extends BaseMapper<p0.Loading> {
+class LoadingMapper extends MapperElementBase<p0.Loading> {
   LoadingMapper._();
 
   @override Function get decoder => decode;
@@ -136,7 +136,7 @@ class _LoadingCopyWithImpl<$R, $Out extends p0.Union> extends BaseCopyWith<$R, p
   @override $R call() => $then(p0.Loading());
 }
 
-class ErrorDetailsMapper extends BaseMapper<p0.ErrorDetails> {
+class ErrorDetailsMapper extends MapperElementBase<p0.ErrorDetails> {
   ErrorDetailsMapper._();
 
   @override Function get decoder => decode;
@@ -203,12 +203,12 @@ class Mapper {
   static int hash(dynamic value) => i.hash(value);
   static String asString(dynamic value) => i.asString(value);
 
-  static void use<T>(BaseMapper<T> mapper) => i.use<T>(mapper);
-  static BaseMapper<T>? unuse<T>() => i.unuse<T>();
-  static void useAll(List<BaseMapper> mappers) => i.useAll(mappers);
+  static void use<T>(MapperElementBase<T> mapper) => i.use<T>(mapper);
+  static MapperElementBase<T>? unuse<T>() => i.unuse<T>();
+  static void useAll(List<MapperElementBase> mappers) => i.useAll(mappers);
 
-  static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
-  static List<BaseMapper> getAll() => i.getAll();
+  static MapperElementBase<T>? get<T>([Type? type]) => i.get<T>(type);
+  static List<MapperElementBase> getAll() => i.getAll();
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {

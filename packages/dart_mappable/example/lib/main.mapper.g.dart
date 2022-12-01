@@ -7,7 +7,7 @@ import 'main.dart' as p0;
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
 
-var _mappers = <BaseMapper>{
+var _mappers = <MapperElementBase>{
   // class mappers
   PersonMapper._(),
   CarMapper._(),
@@ -21,7 +21,7 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class PersonMapper extends BaseMapper<p0.Person> {
+class PersonMapper extends MapperElementBase<p0.Person> {
   PersonMapper._();
 
   @override Function get decoder => decode;
@@ -63,7 +63,7 @@ class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person, p0.Person> imp
   @override $R call({String? name, int? age, Object? car = $none}) => $then(p0.Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
 }
 
-class CarMapper extends BaseMapper<p0.Car> {
+class CarMapper extends MapperElementBase<p0.Car> {
   CarMapper._();
 
   @override Function get decoder => decode;
@@ -103,7 +103,7 @@ class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Car, p0.Car> implements C
   @override $R call({int? drivenKm, p0.Brand? brand}) => $then(p0.Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
 }
 
-class BoxMapper extends BaseMapper<p0.Box> {
+class BoxMapper extends MapperElementBase<p0.Box> {
   BoxMapper._();
 
   @override Function get decoder => decode;
@@ -143,7 +143,7 @@ class _BoxCopyWithImpl<$R, T> extends BaseCopyWith<$R, p0.Box<T>, p0.Box<T>> imp
   @override $R call({int? size, T? content}) => $then(p0.Box(size ?? $value.size, content: content ?? $value.content));
 }
 
-class ConfettiMapper extends BaseMapper<p0.Confetti> {
+class ConfettiMapper extends MapperElementBase<p0.Confetti> {
   ConfettiMapper._();
 
   @override Function get decoder => decode;
@@ -235,12 +235,12 @@ class Mapper {
   static int hash(dynamic value) => i.hash(value);
   static String asString(dynamic value) => i.asString(value);
 
-  static void use<T>(BaseMapper<T> mapper) => i.use<T>(mapper);
-  static BaseMapper<T>? unuse<T>() => i.unuse<T>();
-  static void useAll(List<BaseMapper> mappers) => i.useAll(mappers);
+  static void use<T>(MapperElementBase<T> mapper) => i.use<T>(mapper);
+  static MapperElementBase<T>? unuse<T>() => i.unuse<T>();
+  static void useAll(List<MapperElementBase> mappers) => i.useAll(mappers);
 
-  static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
-  static List<BaseMapper> getAll() => i.getAll();
+  static MapperElementBase<T>? get<T>([Type? type]) => i.get<T>(type);
+  static List<MapperElementBase> getAll() => i.getAll();
 }
 
 mixin Mappable implements MappableMixin {

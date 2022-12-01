@@ -7,7 +7,7 @@ import 'primitives_test.dart' as p0;
 
 // === ALL STATICALLY REGISTERED MAPPERS ===
 
-var _mappers = <BaseMapper>{
+var _mappers = <MapperElementBase>{
   // class mappers
   ItemsMapper._(),
   ItemMapper._(),
@@ -18,7 +18,7 @@ var _mappers = <BaseMapper>{
 
 // === GENERATED CLASS MAPPERS AND EXTENSIONS ===
 
-class ItemsMapper extends BaseMapper<p0.Items> {
+class ItemsMapper extends MapperElementBase<p0.Items> {
   ItemsMapper._();
 
   @override Function get decoder => decode;
@@ -65,7 +65,7 @@ class _ItemsCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Items, p0.Items> implem
   @override $R call({List<p0.Item>? items, Map<int, p0.Item>? items2}) => $then(p0.Items(items ?? $value.items, items2 ?? $value.items2));
 }
 
-class ItemMapper extends BaseMapper<p0.Item> {
+class ItemMapper extends MapperElementBase<p0.Item> {
   ItemMapper._();
 
   @override Function get decoder => decode;
@@ -135,12 +135,12 @@ class Mapper {
   static int hash(dynamic value) => i.hash(value);
   static String asString(dynamic value) => i.asString(value);
 
-  static void use<T>(BaseMapper<T> mapper) => i.use<T>(mapper);
-  static BaseMapper<T>? unuse<T>() => i.unuse<T>();
-  static void useAll(List<BaseMapper> mappers) => i.useAll(mappers);
+  static void use<T>(MapperElementBase<T> mapper) => i.use<T>(mapper);
+  static MapperElementBase<T>? unuse<T>() => i.unuse<T>();
+  static void useAll(List<MapperElementBase> mappers) => i.useAll(mappers);
 
-  static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
-  static List<BaseMapper> getAll() => i.getAll();
+  static MapperElementBase<T>? get<T>([Type? type]) => i.get<T>(type);
+  static List<MapperElementBase> getAll() => i.getAll();
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
