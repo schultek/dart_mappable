@@ -1,3 +1,13 @@
+# 2.0.0-dev.6
+
+- Fixed issue where code where wrongly generated for models outside the package.
+
+  While the builder now stops at package boundaries by default, this can be overruled
+  by explicitly using the `@MappableLib()` annotation on an import statement.
+
+- Added the [CheckTypesHook] to allow for custom discriminator checks on subclasses in a
+  polymorphic class structure.
+
 # 2.0.0-dev.5
 
 - Removed the `Mappable` mixin in favor of the new class-specific mixins.
