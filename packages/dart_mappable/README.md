@@ -105,6 +105,10 @@ pub run build_runner build
 
 This will generate a `.mapper.g.dart` file for each of your entry points specified in the `build.yaml` file.
 
+> Be aware that this is different from packages like freezed or json_serializable. Instead of having a 
+> generated file for each model, you only get generated files for the entry points you specified in the 
+> `build.yaml` file. These then will include all models that are contained in the import tree of the entry point.
+
 Last step is to `import` the generated file wherever you want / need them. There are two main ways to 
 interact with your models using this package: Through the generated `Mapper` class, or through the methods
 defined by the generated mixin:
