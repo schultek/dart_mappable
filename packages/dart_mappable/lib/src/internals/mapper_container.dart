@@ -13,7 +13,7 @@ import 'mapper_utils.dart';
 abstract class MapperContainer {
   factory MapperContainer(
       {Set<MapperBase>? mappers,
-      Set<MapperContainer>? children}) = MapperContainerBase;
+      Set<MapperContainer>? join}) = MapperContainerBase;
 
   T fromValue<T>(dynamic value);
   dynamic toValue<T>(T value);
@@ -116,9 +116,9 @@ class LateMapperContainer implements MapperContainer {
 
 class MapperContainerBase implements MapperContainer, TypeProvider {
   MapperContainerBase(
-      {Set<MapperBase>? mappers, Set<MapperContainer>? children}) {
+      {Set<MapperBase>? mappers, Set<MapperContainer>? join}) {
     TypePlus.register(this);
-    joinAll(children ?? []);
+    joinAll(join ?? []);
     useAll([
       PrimitiveMapper((v) => v),
       PrimitiveMapper<String>((v) => v.toString()),

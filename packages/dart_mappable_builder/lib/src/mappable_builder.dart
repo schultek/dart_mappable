@@ -22,11 +22,13 @@ class MappableBuilder implements Builder {
   @override
   FutureOr<void> build(BuildStep buildStep) async {
     var inputId = buildStep.inputId;
-    var outputId = inputId.changeExtension('.mapper.g.dart');
+    var outputId = inputId.changeExtension('.mapper.dart');
 
     try {
-      var generatedSource = generate(buildStep);
-      await buildStep.writeAsString(outputId, generatedSource);
+      var generatedSource = await generate(buildStep);
+      if (generatedSource != null) {
+        await buildStep.writeAsString(outputId, generatedSource);
+      }
     } catch (e, st) {
       print('An unexpected error occurred.\n'
           'This is probably a bug in dart_mappable.\n'
@@ -39,12 +41,12 @@ class MappableBuilder implements Builder {
 
   @override
   Map<String, List<String>> get buildExtensions => const {
-        '.dart': ['.mapper.g.dart']
+        '.dart': ['.mapper.dart']
       };
 
   /// Main generation handler
   /// Searches for mappable classes and enums recursively
-  Future<String> generate(BuildStep buildStep) async {
+  Future<String?> generate(BuildStep buildStep) async {
     var targets = MapperTargets(buildStep.inputId);
     var entryLib = await buildStep.inputLibrary;
 
@@ -75,7 +77,7 @@ class MappableBuilder implements Builder {
 
     return ''
         '// ignore_for_file: unused_element\n'
-        '${targets.imports.write()}\n'
+        'part of \'${buildStep.inputId.uri}\';\n'
         '// === ALL STATICALLY REGISTERED MAPPERS ===\n\n'
         'var _mappers = <BaseMapper>{\n'
         '  // class mappers\n'
