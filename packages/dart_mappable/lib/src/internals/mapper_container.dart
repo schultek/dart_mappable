@@ -36,7 +36,8 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
   _MapperContainerImpl(Set<BaseMapper> mappers) {
     TypePlus.register(this);
     useAll([
-      PrimitiveMapper((v) => v),
+      PrimitiveMapper<dynamic>((v) => v),
+      PrimitiveMapper<Object>((Object? v) => v!),
       PrimitiveMapper<String>((v) => v.toString()),
       PrimitiveMapper<int>((v) => num.parse(v.toString()).round()),
       PrimitiveMapper<double>((v) => double.parse(v.toString())),
@@ -54,7 +55,7 @@ class _MapperContainerImpl implements MapperContainer, TypeProvider {
     bool isType<T>() => value is T;
     return _mappers[value.runtimeType.baseId] ??
         _mappers.values
-            .where((m) => m.type != dynamic)
+            .where((m) => m.type != dynamic && m.type != Object)
             .where((m) => isType.callWith(typeArguments: [m.type]) as bool)
             .firstOrNull;
   }
