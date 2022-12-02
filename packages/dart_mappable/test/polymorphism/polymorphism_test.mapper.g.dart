@@ -2,6 +2,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
+import 'custom_discriminator.dart' as p1;
 import 'polymorphism_test.dart' as p0;
 
 
@@ -15,6 +16,9 @@ var _mappers = <BaseMapper>{
   NullAnimalMapper._(),
   DefaultAnimalMapper._(),
   ZooMapper._(),
+  AMapper._(),
+  BMapper._(),
+  CMapper._(),
   // enum mappers
   // custom mappers
 };
@@ -278,6 +282,122 @@ class _ZooCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Zoo, p0.Zoo> implements Z
   @override ListCopyWith<$R, p0.Animal, AnimalCopyWith<$R, p0.Animal, p0.Animal>> get animals => ListCopyWith($value.animals, (v, t) => v.copyWith._chain($identity, t), (v) => call(animals: v));
   @override MapCopyWith<$R, String, p0.Animal, AnimalCopyWith<$R, p0.Animal, p0.Animal>> get animals2 => MapCopyWith($value.animals2, (v, t) => v.copyWith._chain($identity, t), (v) => call(animals2: v));
   @override $R call({p0.Animal? animal, List<p0.Animal>? animals, Map<String, p0.Animal>? animals2}) => $then(p0.Zoo(animal ?? $value.animal, animals ?? $value.animals, animals2 ?? $value.animals2));
+}
+
+class AMapper extends BaseMapper<p1.A> {
+  AMapper._();
+
+  @override Function get decoder => decode;
+  p1.A decode(dynamic v) => const CheckTypesHook({ p1.B: p1.B.checkType, p1.C: p1.C.checkType, }, Mapper.fromValue).decode(v, (v) => checked(v, (Map<String, dynamic> map) => fromMap(map)));
+  p1.A fromMap(Map<String, dynamic> map) => throw MapperException.missingConstructor('A');
+
+  @override Function get encoder => encode;
+  dynamic encode(p1.A v) => const CheckTypesHook({ p1.B: p1.B.checkType, p1.C: p1.C.checkType, }, Mapper.fromValue).encode<p1.A>(v, (v) => toMap(v));
+  Map<String, dynamic> toMap(p1.A a) => {};
+
+  @override String stringify(p1.A self) => 'A()';
+  @override int hash(p1.A self) => 0;
+  @override bool equals(p1.A self, p1.A other) => true;
+
+  @override Function get typeFactory => (f) => f<p1.A>();
+}
+
+mixin AMappable implements MappableMixin {
+  String toJson();
+  Map<String, dynamic> toMap();
+  ACopyWith<p1.A, p1.A, p1.A> get copyWith;
+}
+
+abstract class ACopyWith<$R, $In extends p1.A, $Out extends p1.A> implements ObjectCopyWith<$R, $In, $Out> {
+  ACopyWith<$R2, $In, $Out2> _chain<$R2, $Out2 extends p1.A>(Then<p1.A, $Out2> t, Then<$Out2, $R2> t2);
+  $R call();
+}
+
+
+class BMapper extends BaseMapper<p1.B> {
+  BMapper._();
+
+  @override Function get decoder => (v) => const CheckTypesHook({ p1.B: p1.B.checkType, p1.C: p1.C.checkType, }, Mapper.fromValue).decode(v, decode);
+  p1.B decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p1.B fromMap(Map<String, dynamic> map) => p1.B();
+
+  @override Function get encoder => (p1.B v) => const CheckTypesHook({ p1.B: p1.B.checkType, p1.C: p1.C.checkType, }, Mapper.fromValue).encode<p1.B>(v, (v) => encode);
+  dynamic encode(p1.B v) => toMap(v);
+  Map<String, dynamic> toMap(p1.B b) => {};
+
+  @override String stringify(p1.B self) => 'B()';
+  @override int hash(p1.B self) => 0;
+  @override bool equals(p1.B self, p1.B other) => true;
+
+  @override Function get typeFactory => (f) => f<p1.B>();
+}
+
+mixin BMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p1.B);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p1.B);
+  BCopyWith<p1.B, p1.B> get copyWith => _BCopyWithImpl(this as p1.B, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
+}
+
+extension BObjectCopy<$R, $Out extends p1.A> on ObjectCopyWith<$R, p1.B, $Out> {
+  BCopyWith<$R, $Out> get asB => base.as((v, t, t2) => _BCopyWithImpl(v, t, t2));
+}
+
+abstract class BCopyWith<$R, $Out extends p1.A> implements ACopyWith<$R, p1.B, $Out> {
+  BCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p1.A>(Then<p1.B, $Out2> t, Then<$Out2, $R2> t2);
+  @override $R call();
+}
+
+class _BCopyWithImpl<$R, $Out extends p1.A> extends BaseCopyWith<$R, p1.B, $Out> implements BCopyWith<$R, $Out> {
+  _BCopyWithImpl(super.value, super.then, super.then2);
+  @override BCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p1.A>(Then<p1.B, $Out2> t, Then<$Out2, $R2> t2) => _BCopyWithImpl($value, t, t2);
+
+  @override $R call() => $then(p1.B());
+}
+
+class CMapper extends BaseMapper<p1.C> {
+  CMapper._();
+
+  @override Function get decoder => (v) => const CheckTypesHook({ p1.B: p1.B.checkType, p1.C: p1.C.checkType, }, Mapper.fromValue).decode(v, decode);
+  p1.C decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  p1.C fromMap(Map<String, dynamic> map) => p1.C();
+
+  @override Function get encoder => (p1.C v) => const CheckTypesHook({ p1.B: p1.B.checkType, p1.C: p1.C.checkType, }, Mapper.fromValue).encode<p1.C>(v, (v) => encode);
+  dynamic encode(p1.C v) => toMap(v);
+  Map<String, dynamic> toMap(p1.C c) => {};
+
+  @override String stringify(p1.C self) => 'C()';
+  @override int hash(p1.C self) => 0;
+  @override bool equals(p1.C self, p1.C other) => true;
+
+  @override Function get typeFactory => (f) => f<p1.C>();
+}
+
+mixin CMappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this as p1.C);
+  Map<String, dynamic> toMap() => Mapper.toMap(this as p1.C);
+  CCopyWith<p1.C, p1.C> get copyWith => _CCopyWithImpl(this as p1.C, $identity, $identity);
+  @override String toString() => Mapper.asString(this);
+  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));
+  @override int get hashCode => Mapper.hash(this);
+}
+
+extension CObjectCopy<$R, $Out extends p1.A> on ObjectCopyWith<$R, p1.C, $Out> {
+  CCopyWith<$R, $Out> get asC => base.as((v, t, t2) => _CCopyWithImpl(v, t, t2));
+}
+
+abstract class CCopyWith<$R, $Out extends p1.A> implements ACopyWith<$R, p1.C, $Out> {
+  CCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p1.A>(Then<p1.C, $Out2> t, Then<$Out2, $R2> t2);
+  @override $R call();
+}
+
+class _CCopyWithImpl<$R, $Out extends p1.A> extends BaseCopyWith<$R, p1.C, $Out> implements CCopyWith<$R, $Out> {
+  _CCopyWithImpl(super.value, super.then, super.then2);
+  @override CCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p1.A>(Then<p1.C, $Out2> t, Then<$Out2, $R2> t2) => _CCopyWithImpl($value, t, t2);
+
+  @override $R call() => $then(p1.C());
 }
 
 

@@ -37,7 +37,7 @@ while adding new or improved support for advances use-cases like generics, inher
   - [Deep Copy](#deep-copy)
 - [Polymorphism and Discriminators](#polymorphism-and-discriminators)
   - [Null and Default Values](#null-and-default-values)
-  - [CopyWith and Polymorphism](#copywith-and-polymorphism)
+  - [Custom Discriminator Logic](#custom-discriminator-logic)
 - [Encoding / Decoding Hooks](#encoding--decoding-hooks)
   - [Unmapped Properties](#unmapped-properties)
 - [Custom Mappers](#custom-mappers)
@@ -621,6 +621,46 @@ void main() {
   Animal animal2 = Mapper.fromJson('{"name": "Balu", "type": "Bear"}');
   print(animal2.runtimeType); // DefaultAnimal
   print(animal2.type); // Bear
+}
+```
+
+### Custom Discriminator Logic
+
+For a more advanced use-case where the discriminator key/value system is not enough, you can use the
+`CheckTypesHook` to define custom discriminator checks on your subclasses.
+
+Instead of giving each subclass a discriminator value, each subclass can have a custom function
+that checks whether the encoded value should be decoded to this subclass and returns a boolean.
+
+```dart
+@MappableClass(
+  hooks: CheckTypesHook({
+    B: B.checkType,
+    C: C.checkType,
+  }, Mapper.fromValue),
+)
+abstract class A with AMappable {
+  A();
+}
+
+@MappableClass()
+class B extends A with BMappable {
+  B();
+  
+  /// checks if [value] should be decoded to [B]
+  static bool checkType(value) {
+    return value is Map && value['isB'] == true;
+  }
+}
+
+@MappableClass()
+class C extends A with CMappable {
+  C();
+  
+  /// checks if [value] should be decoded to [C]
+  static bool checkType(value) {
+    return value is Map && value['isWhat'] == 'C';
+  }
 }
 ```
 
