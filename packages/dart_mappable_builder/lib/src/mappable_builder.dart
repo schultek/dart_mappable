@@ -123,6 +123,8 @@ class MappableBuilder implements Builder {
       }
     }
 
+    final packageName = entryLib.identifier.split('/').first;
+
     while (toVisit.isNotEmpty) {
       var entry = toVisit.removeFirst();
       var library = entry.key;
@@ -130,7 +132,7 @@ class MappableBuilder implements Builder {
 
       MappableOptions? options;
 
-      if (library.isInSdk) continue;
+      if (!library.identifier.startsWith(packageName)) continue;
 
       if (libChecker.hasAnnotationOf(library)) {
         options = MappableOptions.from(libChecker.firstAnnotationOf(library)!);
