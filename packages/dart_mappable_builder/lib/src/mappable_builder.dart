@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 
 import 'builder_options.dart';
@@ -50,10 +50,54 @@ class MappableBuilder implements Builder {
     var targets = MapperTargets(buildStep.inputId);
     var entryLib = await buildStep.inputLibrary;
 
-    var libraries = resolveLibraries(entryLib);
+    var options = this.options;
+    if (libChecker.hasAnnotationOf(entryLib)) {
+      var libOptions = MappableOptions.from(libChecker.firstAnnotationOf(entryLib)!);
 
-    for (var entry in libraries.entries) {
-      targets.addElementsFromLibrary(entry.key, entry.value);
+      if (libOptions.include != null) {
+        throw 'Cannot use "include" when @MappableLib() is applied to the library keyword.';
+      }
+
+      options = options.apply(libOptions);
+    }
+
+    targets.addElementsFromLibrary(entryLib, options);
+
+    for (var import in entryLib.libraryImports) {
+      if (import.importedLibrary == null) continue;
+
+      if (libChecker.hasAnnotationOf(import)) {
+        var libOptions =
+        MappableOptions.from(libChecker.firstAnnotationOf(import)!);
+
+        if (libOptions.include == null) {
+          throw 'Have to use "include" when @MappableLib() is applied to an import statement.';
+        }
+
+        bool isInNamespace(DartType type) {
+          var name = type.alias?.element.name ?? type.getDisplayString(withNullability: false);
+          var elem = type.alias?.element ?? type.element;
+          Element? imp;
+          if (import.prefix != null) {
+            imp = import.namespace.getPrefixed(import.prefix!.element.name, name);
+          } else {
+            imp = import.namespace.get(name);
+          }
+          return imp == elem;
+        }
+
+        for (var type in libOptions.include!) {
+          if (!isInNamespace(type)) {
+            throw 'Type ${type.getDisplayString(withNullability: false)} cannot be used in "include" list, '
+                'since it is not exposed by the annotated import.';
+          }
+        }
+
+        options = options.apply(libOptions, forceJoin: false);
+        options = this.options.apply(options);
+
+        targets.addElementsFromLibrary(entryLib, options);
+      }
     }
 
     var classConfigs = Map.fromEntries(await Future.wait(targets.classes.entries
@@ -96,70 +140,5 @@ class MappableBuilder implements Builder {
         '\n\n'
         '// === GENERATED UTILITY CODE ===\n\n'
         '$mapperCode';
-  }
-
-  Map<LibraryElement, MappableOptions> resolveLibraries(
-      LibraryElement entryLib) {
-    var libraries = <LibraryElement, MappableOptions>{};
-
-    var packageName = entryLib.source.uri.pathSegments.first;
-
-    bool isPackage(Uri lib) {
-      if (lib.scheme == 'package' || lib.scheme == 'asset') {
-        return lib.pathSegments.first == packageName;
-      } else {
-        return false;
-      }
-    }
-
-    final toVisit = Queue<MapEntry<LibraryElement, MappableOptions>>();
-
-    toVisit.add(MapEntry(entryLib, options));
-
-    void visitDirective(Element directive, LibraryElement? library,
-        MappableOptions parentOptions, MappableOptions? options) {
-      if (library == null) return;
-
-      bool isAnnotated = false;
-      if (libChecker.hasAnnotationOf(directive)) {
-        var libOptions =
-            MappableOptions.from(libChecker.firstAnnotationOf(directive)!);
-        options = options?.apply(libOptions, forceJoin: false) ?? libOptions;
-        isAnnotated = true;
-      }
-
-      options = parentOptions.apply(options);
-
-      if (libraries.containsKey(library)) {
-        libraries[library] = libraries[library]!.join(options);
-      } else  if (isAnnotated || isPackage(library.source.uri)) {
-
-        toVisit.add(MapEntry(library, options));
-
-      }
-    }
-
-    while (toVisit.isNotEmpty) {
-      var entry = toVisit.removeFirst();
-      var library = entry.key;
-      var parentOptions = entry.value;
-
-      MappableOptions? options;
-
-      if (libChecker.hasAnnotationOf(library)) {
-        options = MappableOptions.from(libChecker.firstAnnotationOf(library)!);
-      }
-
-      libraries[library] = parentOptions.apply(options);
-
-      for (var import in library.libraryImports) {
-        visitDirective(import, import.importedLibrary, parentOptions, options);
-      }
-      for (var export in library.libraryExports) {
-        visitDirective(export, export.exportedLibrary, parentOptions, options);
-      }
-    }
-
-    return libraries;
   }
 }

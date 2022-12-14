@@ -1,9 +1,12 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:v2_test/models/cat.dart';
+
+@MappableLib(include: [c.Cat, c.Dog2])
+import 'package:v2_test/models/cat.dart' as c;
 
 part 'animal.mapper.dart';
 
-@MappableClass(discriminatorKey: 'type', includeSubClasses: [Cat])
+
+@MappableClass(discriminatorKey: 'type', includeSubClasses: [c.Cat])
 abstract class Animal with AnimalMappable {
   String name;
   Animal(this.name);

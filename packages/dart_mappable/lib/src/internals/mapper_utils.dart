@@ -99,10 +99,6 @@ extension HooksMapping on MappingHooks? {
   }
 }
 
-extension NullIterable<T> on Iterable<T> {
-  T? get firstOrNull => isEmpty ? null : first;
-}
-
 class _None {
   const _None();
 }

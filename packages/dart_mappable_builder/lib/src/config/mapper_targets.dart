@@ -20,33 +20,42 @@ class MapperTargets {
   Map<String, int> nameIndexes = {};
 
   void addElementsFromLibrary(LibraryElement library, MappableOptions options) {
-    var elements = elementsOf(library);
+    if (options.include == null) {
+      var elements = elementsOf(library);
 
-    for (var element in elements) {
-      if (element is ClassElement &&
-          customMapperChecker.hasAnnotationOf(element)) {
-        var mapperIndex = element.allSupertypes
-            .indexWhere((t) => mapperChecker.isExactlyType(t));
-        if (mapperIndex == -1) {
-          throw UnsupportedError(
-              'Classes marked with @CustomMapper must extend the BaseMapper class');
-        }
-        var type = element.allSupertypes[mapperIndex].typeArguments[0];
-        var libPrefix = imports.add(library.source.uri);
+      for (var element in elements) {
+        if (element is ClassElement &&
+            customMapperChecker.hasAnnotationOf(element)) {
+          var mapperIndex = element.allSupertypes
+              .indexWhere((t) => mapperChecker.isExactlyType(t));
+          if (mapperIndex == -1) {
+            throw UnsupportedError(
+                'Classes marked with @CustomMapper must extend the BaseMapper class');
+          }
+          var type = element.allSupertypes[mapperIndex].typeArguments[0];
+          var libPrefix = imports.add(library.source.uri);
 
-        customMappers[type.element2!] = CustomMapperConfig(
-          element: element,
-          prefix: libPrefix,
-        );
-      } else {
-        var shouldGenerate = options.shouldGenerateFor(element);
-        if (!shouldGenerate && !options.ignoreAnnotated) {
-          shouldGenerate = (element is ClassElement &&
-                  classChecker.hasAnnotationOf(element)) ||
-              (element is EnumElement && enumChecker.hasAnnotationOf(element));
+          customMappers[type.element!] = CustomMapperConfig(
+            element: element,
+            prefix: libPrefix,
+          );
+        } else {
+          if (element is ClassElement &&
+              classChecker.hasAnnotationOf(element)) {
+            addElement(element, options);
+          } else if (element is EnumElement &&
+              enumChecker.hasAnnotationOf(element)) {
+            addElement(element, options);
+          }
         }
-        if (shouldGenerate) {
-          addElement(element, options);
+      }
+    } else {
+      var types = options.include!;
+
+      for (var type in types) {
+        var e = type.element;
+        if (e is InterfaceElement) {
+          addElement(e, options);
         }
       }
     }
@@ -110,7 +119,7 @@ class MapperTargets {
   /// All of the declared classes and enums in this library.
   Iterable<InterfaceElement> elementsOf(LibraryElement element) sync* {
     for (var cu in element.units) {
-      yield* cu.enums2;
+      yield* cu.enums;
       yield* cu.classes;
     }
   }

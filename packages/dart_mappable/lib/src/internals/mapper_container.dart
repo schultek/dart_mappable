@@ -1,13 +1,12 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 // ignore: implementation_imports
 import 'package:type_plus/src/types_registry.dart' show TypeRegistry;
 import 'package:type_plus/type_plus.dart' hide typeOf;
 
 import '../../dart_mappable.dart';
-import 'default_mappers.dart';
-import 'mapper_utils.dart';
 
 @sealed
 abstract class MapperContainer {
@@ -45,8 +44,8 @@ abstract class MapperContainer {
   MapperBase? _mapperForType(Type type, [Set<MapperContainer>? parents]);
 }
 
-class LateMapperContainer implements MapperContainer {
-  LateMapperContainer(this.wrapper);
+class DelegatingMapperContainer implements MapperContainer {
+  DelegatingMapperContainer(this.wrapper);
 
   final MapperContainer Function() wrapper;
 
