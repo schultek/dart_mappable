@@ -120,7 +120,8 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     TypePlus.register(this);
     joinAll(join ?? []);
     useAll([
-      PrimitiveMapper((v) => v),
+      PrimitiveMapper<dynamic>((v) => v),
+      PrimitiveMapper<Object>((Object? v) => v!),
       PrimitiveMapper<String>((v) => v.toString()),
       PrimitiveMapper<int>((v) => num.parse(v.toString()).round()),
       PrimitiveMapper<double>((v) => double.parse(v.toString())),
@@ -146,7 +147,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     bool isType<T>() => value is T;
     var mapper = _mappers[value.runtimeType.baseId] ??
         _mappers.values
-            .where((m) => m.type != dynamic)
+            .where((m) => m.type != dynamic && m.type != Object)
             .where((m) => isType.callWith(typeArguments: [m.type]) as bool)
             .firstOrNull;
     return mapper ?? _children

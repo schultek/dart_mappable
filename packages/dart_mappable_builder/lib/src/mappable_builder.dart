@@ -102,6 +102,16 @@ class MappableBuilder implements Builder {
       LibraryElement entryLib) {
     var libraries = <LibraryElement, MappableOptions>{};
 
+    var packageName = entryLib.source.uri.pathSegments.first;
+
+    bool isPackage(Uri lib) {
+      if (lib.scheme == 'package' || lib.scheme == 'asset') {
+        return lib.pathSegments.first == packageName;
+      } else {
+        return false;
+      }
+    }
+
     final toVisit = Queue<MapEntry<LibraryElement, MappableOptions>>();
 
     toVisit.add(MapEntry(entryLib, options));
@@ -110,18 +120,22 @@ class MappableBuilder implements Builder {
         MappableOptions parentOptions, MappableOptions? options) {
       if (library == null) return;
 
+      bool isAnnotated = false;
       if (libChecker.hasAnnotationOf(directive)) {
         var libOptions =
             MappableOptions.from(libChecker.firstAnnotationOf(directive)!);
         options = options?.apply(libOptions, forceJoin: false) ?? libOptions;
+        isAnnotated = true;
       }
 
       options = parentOptions.apply(options);
 
       if (libraries.containsKey(library)) {
         libraries[library] = libraries[library]!.join(options);
-      } else {
+      } else  if (isAnnotated || isPackage(library.source.uri)) {
+
         toVisit.add(MapEntry(library, options));
+
       }
     }
 
@@ -131,8 +145,6 @@ class MappableBuilder implements Builder {
       var parentOptions = entry.value;
 
       MappableOptions? options;
-
-      if (library.isInSdk) continue;
 
       if (libChecker.hasAnnotationOf(library)) {
         options = MappableOptions.from(libChecker.firstAnnotationOf(library)!);

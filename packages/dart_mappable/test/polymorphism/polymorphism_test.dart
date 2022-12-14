@@ -1,6 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
+import 'custom_discriminator.dart';
 import 'polymorphism_test.mapper.g.dart';
 
 @MappableClass(discriminatorKey: 'type')
@@ -67,6 +68,14 @@ void main() {
       Animal myPet = Mapper.fromJson('{"name":"Kobi","type":"Bear"}');
       expect(myPet, isA<DefaultAnimal>());
       expect((myPet as DefaultAnimal).type, equals('Bear'));
+    });
+
+    test('decodes with custom discriminator', () {
+      var a = Mapper.fromMap<A>({'isB': true});
+      expect(a, isA<B>());
+
+      var b = Mapper.fromMap<A>({'isWhat': 'C'});
+      expect(b, isA<C>());
     });
   });
 }
