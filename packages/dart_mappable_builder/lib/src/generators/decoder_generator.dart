@@ -3,14 +3,12 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/class_mapper_config.dart';
-import '../imports_builder.dart';
 import '../utils.dart';
 
 class DecoderGenerator {
   final ClassMapperConfig config;
-  final ImportsBuilder imports;
 
-  DecoderGenerator(this.config, this.imports);
+  DecoderGenerator(this.config);
 
   Future<String> generateDecoderMethods() async {
     if (config.shouldGenerate(GenerateMethods.decode)) {
@@ -87,11 +85,11 @@ class DecoderGenerator {
     for (var c in sortedCases) {
       c.key.take(c.key.length - 1).forEach((s) => statements.add('case $s:'));
       statements.add(
-          'case ${c.key.last}: return ${c.value}._().decode(map)${config.typeParams.isNotEmpty ? ' as ${config.prefixedClassName}${config.typeParams}' : ''};');
+          'case ${c.key.last}: return ${c.value}().createElement(container).decode(map)${config.typeParams.isNotEmpty ? ' as ${config.prefixedClassName}${config.typeParams}' : ''};');
     }
     if (defaultCase != null) {
       statements.add(
-          'default: return $defaultCase._().decode(map)${config.typeParams.isNotEmpty ? ' as ${config.prefixedClassName}${config.typeParams}' : ''};');
+          'default: return $defaultCase().createElement(container).decode(map)${config.typeParams.isNotEmpty ? ' as ${config.prefixedClassName}${config.typeParams}' : ''};');
     } else {
       statements.add('default: return fromMap${config.typeParams}(map);');
     }
@@ -113,16 +111,16 @@ class DecoderGenerator {
                   .split(',')
                   .map((s) => s.trim())
                   .toList(),
-              subConfig.mapperName));
+              '${subConfig.uniqueClassName}Mapper'));
         } else {
           cases.add(MapEntry(
-              [subConfig.discriminatorValueCode!], subConfig.mapperName));
+              [subConfig.discriminatorValueCode!], '${subConfig.uniqueClassName}Mapper'));
         }
       } else {
         var subCases = _getDiscriminatorCases(subConfig);
         if (subCases.isNotEmpty) {
           cases.add(MapEntry(
-              subCases.expand((e) => e.key).toList(), subConfig.mapperName));
+              subCases.expand((e) => e.key).toList(), '${subConfig.uniqueClassName}Mapper'));
         }
       }
     }
@@ -152,14 +150,14 @@ class DecoderGenerator {
       if (p.isNamed) {
         str = '${p.name}: ';
       }
-      str += 'Mapper.i.\$get';
+      str += 'container.\$get';
       if (p.type.isDynamic || p.isOptional || p.type.isNullable) {
         str += 'Opt';
       }
 
       var args = ['map', "'${param.jsonKey(config.caseStyle)}'"];
 
-      var hook = await param.getHook(imports);
+      var hook = await param.getHook(config.namespace);
       if (hook != null) {
         args.add('const $hook');
       }
@@ -167,7 +165,7 @@ class DecoderGenerator {
       str += "(${args.join(', ')})";
 
       if (p.hasDefaultValue && p.defaultValueCode != 'null') {
-        str += ' ?? ${await getPrefixedDefaultValue(p, imports)}';
+        str += ' ?? ${await getPrefixedDefaultValue(p)}';
       } else {
         var node = p.getNode();
         if (node is DefaultFormalParameter &&
@@ -182,10 +180,10 @@ class DecoderGenerator {
   }
 
   Future<String> getPrefixedDefaultValue(
-      ParameterElement p, ImportsBuilder imports) async {
+      ParameterElement p) async {
     var node = await p.getResolvedNode();
     if (node is DefaultFormalParameter) {
-      return getPrefixedNodeSource(node.defaultValue!, imports);
+      return getPrefixedNodeSource(node.defaultValue!, config.namespace);
     }
 
     return p.defaultValueCode!;

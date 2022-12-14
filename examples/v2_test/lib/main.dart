@@ -9,6 +9,7 @@ final modelMapper = MapperContainer(join: {
 });
 
 void main() {
+
   print(Animal.fromMap({'type': 'Cat', 'name': 'Coco', 'color': 'white'}));
 
   print(PersonMapper.container.fromMap<Person>({'name': 'Kili'}));

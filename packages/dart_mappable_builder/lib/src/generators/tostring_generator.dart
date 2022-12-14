@@ -19,7 +19,7 @@ class ToStringGenerator {
 
   String generateToStringMixin() {
     if (config.shouldGenerate(GenerateMethods.stringify) && !config.isAbstract) {
-      return '  @override String toString() => Mapper.asString(this);\n';
+      return '  @override String toString() => ${config.uniqueClassName}Mapper.container.asString(this);\n';
     } else {
       return '';
     }
@@ -29,7 +29,7 @@ class ToStringGenerator {
     List<String> params = [];
 
     for (var field in config.allPublicFields) {
-      params.add('${field.name}: \${Mapper.asString(self.${field.name})}');
+      params.add('${field.name}: \${container.asString(self.${field.name})}');
     }
 
     return params.join(', ');

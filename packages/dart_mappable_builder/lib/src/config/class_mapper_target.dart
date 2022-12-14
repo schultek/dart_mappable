@@ -1,11 +1,11 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../builder_options.dart';
-import '../imports_builder.dart';
 import '../utils.dart';
 import 'class_mapper_config.dart';
 import 'mapper_targets.dart';
@@ -15,9 +15,7 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
   List<ClassMapperTarget> subTargets = [];
   ClassMapperTarget? superTarget;
 
-  ClassMapperTarget(
-      ClassElement element, MappableOptions options, int? prefix, int index)
-      : super(element, options, prefix, index);
+  ClassMapperTarget(super.element, super.options, super.index, super.namespace);
 
   @override
   DartObject? getAnnotation() =>
@@ -30,7 +28,7 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
     }
 
     if (supertype != null && !supertype.isDartCoreObject) {
-      var element = supertype.element2;
+      var element = supertype.element;
       if (element is ClassElement) return element;
     }
     return null;
@@ -42,46 +40,58 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
   }
 
   Future<ClassMapperConfig>? _config;
-  Future<ClassMapperConfig> getConfig(ImportsBuilder imports) async {
+  Future<ClassMapperConfig> getConfig() async {
     if (_config != null) return _config!;
-    return _config = Future.sync(() async {
+    _config = Future.sync(() async {
       var config = ClassMapperConfig(
         element: element,
         constructor: constructor,
         discriminatorKey: discriminatorKey,
         discriminatorValueCode: discriminatorValueCode,
-        hookForClass: await hookForClass(imports),
+        hookForClass: await hookForClass(),
         caseStyle: caseStyle,
         ignoreNull: ignoreNull,
         generateMethods: generateMethods,
-        superConfig: await superTarget?.getConfig(imports),
+        superConfig: await superTarget?.getConfig(),
         subConfigs: [],
-        params: await analyzeParams(imports),
-        typeParamsList: typeParamsList(imports),
-        superTypeArgs: superTypeArgs(imports),
-        importPrefix: importPrefix,
+        params: await analyzeParams(),
+        typeParamsList: typeParamsList(),
+        superTypeArgs: superTypeArgs(),
         nameIndex: nameIndex,
         generateMixin: generateMixin,
+        includeCustomMappers: customMappers,
+        namespace: namespace,
       );
       config.superConfig?.subConfigs.add(config);
       return config;
     });
+
+    var config = await _config!;
+
+    for (var subclass in includeSubclasses) {
+      var target = ClassMapperTarget(subclass.element as ClassElement, options, 0, namespace);
+      target.superTarget = this;
+      var subconfig = await target.getConfig();
+      assert(config.subConfigs.contains(subconfig));
+    }
+
+    return config;
   }
 
-  Future<List<ParameterConfig>> analyzeParams(ImportsBuilder imports) async {
+  Future<List<ParameterConfig>> analyzeParams() async {
     var params = <ParameterConfig>[];
 
     if (constructor == null) return params;
 
     for (var param in constructor!.parameters) {
-      params.add(await getParameterConfig(param, imports));
+      params.add(await getParameterConfig(param));
     }
 
     return params;
   }
 
   Future<ParameterConfig> getParameterConfig(
-      ParameterElement param, ImportsBuilder imports) async {
+      ParameterElement param) async {
     var dec = param.declaration;
 
     if (dec is FieldFormalParameterElement) {
@@ -96,7 +106,7 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
         );
       }
       var superConfig = await superTarget!
-          .getParameterConfig(dec.superConstructorParameter!, imports);
+          .getParameterConfig(dec.superConstructorParameter!);
       if (superConfig is UnresolvedParameterConfig) {
         return UnresolvedParameterConfig(
           param,
@@ -129,10 +139,10 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
     }
 
     ParameterElement? superParameter =
-        await _findSuperParameter(param, imports);
+        await _findSuperParameter(param);
     if (superParameter != null) {
       var superConfig =
-          await superTarget!.getParameterConfig(superParameter, imports);
+          await superTarget!.getParameterConfig(superParameter);
       if (superConfig is UnresolvedParameterConfig) {
         return UnresolvedParameterConfig(
           param,
@@ -150,8 +160,8 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
   }
 
   Future<ParameterElement?> _findSuperParameter(
-      ParameterElement param, ImportsBuilder imports) async {
-    var superConfig = await superTarget?.getConfig(imports);
+      ParameterElement param) async {
+    var superConfig = await superTarget?.getConfig();
     if (superConfig == null) return null;
 
     var node = constructor!.getNode();
@@ -203,7 +213,7 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
     var discriminatorValueField = annotation?.getField('discriminatorValue');
     String? code;
     if (discriminatorValueField != null) {
-      if (discriminatorValueField.type?.element2?.name ==
+      if (discriminatorValueField.type?.element?.name ==
               MappingFlags.useAsDefault.runtimeType.toString() &&
           discriminatorValueField.getField('index')!.toIntValue() == 0) {
         return 'default';
@@ -219,29 +229,29 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
     return code;
   }
 
-  Future<String?> hookForClass(ImportsBuilder imports) async {
+  Future<String?> hookForClass() async {
     var hooks = annotation?.getField('hooks');
     if (hooks != null && !hooks.isNull) {
       var node = await getResolvedAnnotationNode(
           annotatedElement, MappableClass, 'hooks');
       if (node != null) {
-        return getPrefixedNodeSource(node, imports);
+        return getPrefixedNodeSource(node, namespace);
       }
     }
     return null;
   }
 
-  List<String> typeParamsList(ImportsBuilder imports) {
+  List<String> typeParamsList() {
     return element.typeParameters
         .map((p) =>
-            '${p.displayName}${p.bound != null ? ' extends ${imports.prefixedType(p.bound!)}' : ''}')
+            '${p.displayName}${p.bound != null ? ' extends ${namespace.prefixedType(p.bound!)}' : ''}')
         .toList();
   }
 
-  List<String> superTypeArgs(ImportsBuilder imports) {
+  List<String> superTypeArgs() {
     if (superTarget == null) return [];
     return element.supertype?.typeArguments
-            .map((a) => imports.prefixedType(a))
+            .map((a) => namespace.prefixedType(a))
             .toList() ??
         [];
   }
@@ -265,19 +275,27 @@ class ClassMapperTarget extends MapperTarget<ClassElement> {
   bool get generateMixin {
     return annotation != null && annotatedElement is! ConstructorElement;
   }
+
+  List<DartType> get includeSubclasses {
+    return annotation?.getField('includeSubClasses')?.toTypeList() ?? [];
+  }
+
+  List<DartType> get customMappers {
+    return annotation?.getField('includeCustomMappers')?.toTypeList() ?? [];
+  }
 }
 
 class FactoryConstructorMapperTarget extends ClassMapperTarget {
   ConstructorElement factoryConstructor;
 
   FactoryConstructorMapperTarget(
-      this.factoryConstructor, MappableOptions options, int? prefix, int index)
+      this.factoryConstructor, MappableOptions options, int index, Namespace namespace)
       : super(
-            factoryConstructor.redirectedConstructor!.returnType.element2
+            factoryConstructor.redirectedConstructor!.returnType.element
                 as ClassElement,
             options,
-            prefix,
-            index);
+            index,
+  namespace);
 
   @override
   Element get annotatedElement => factoryConstructor;

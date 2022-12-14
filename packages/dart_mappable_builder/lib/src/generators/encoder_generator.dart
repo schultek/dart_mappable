@@ -3,13 +3,11 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/class_mapper_config.dart';
 import '../config/parameter_config.dart';
-import '../imports_builder.dart';
 
 class EncoderGenerator {
   final ClassMapperConfig config;
-  final ImportsBuilder imports;
 
-  EncoderGenerator(this.config, this.imports);
+  EncoderGenerator(this.config);
 
   Future<String> generateEncoderMethods() async {
     if (config.shouldGenerate(GenerateMethods.encode)) {
@@ -26,8 +24,8 @@ class EncoderGenerator {
 
   String generateEncoderMixin() {
     return config.shouldGenerate(GenerateMethods.encode)
-        ? '  String toJson()${config.isAbstract ? '' : ' => Mapper.toJson(this as ${config.selfTypeParam})'};\n'
-            '  Map<String, dynamic> toMap()${config.isAbstract ? '' : ' => Mapper.toMap(this as ${config.selfTypeParam})'};\n'
+        ? '  String toJson()${config.isAbstract ? '' : ' => ${config.uniqueClassName}Mapper.container.toJson(this as ${config.selfTypeParam})'};\n'
+            '  Map<String, dynamic> toMap()${config.isAbstract ? '' : ' => ${config.uniqueClassName}Mapper.container.toMap(this as ${config.selfTypeParam})'};\n'
         : '';
   }
 
@@ -79,11 +77,11 @@ class EncoderGenerator {
       params.removeWhere((p) => p.startsWith("'$key':"));
 
       String exp;
-      var hook = await param.getHook(imports);
+      var hook = await param.getHook(config.namespace);
       if (hook != null) {
-        exp = 'Mapper.i.\$enc($paramName.$name, \'$name\', const $hook)';
+        exp = 'container.\$enc($paramName.$name, \'$name\', const $hook)';
       } else {
-        exp = 'Mapper.i.\$enc($paramName.$name, \'$name\')';
+        exp = 'container.\$enc($paramName.$name, \'$name\')';
       }
 
       if (config.ignoreNull &&
@@ -117,7 +115,7 @@ class EncoderGenerator {
 
     if (config.typeParams.isNotEmpty) {
       params.add(
-          '...Mapper.i.\$type<${config.prefixedClassName}${config.typeParams}>($paramName)');
+          '...container.\$type<${config.prefixedClassName}${config.typeParams}>($paramName)');
     }
 
     return params.join(', ');

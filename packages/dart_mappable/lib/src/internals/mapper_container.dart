@@ -10,9 +10,24 @@ import '../../dart_mappable.dart';
 
 @sealed
 abstract class MapperContainer {
-  factory MapperContainer(
-      {Set<MapperBase>? mappers,
-      Set<MapperContainer>? join}) = MapperContainerBase;
+  factory MapperContainer({
+    Set<MapperBase>? mappers,
+    Set<MapperContainer>? join,
+  }) = MapperContainerBase;
+
+  static final MapperContainer defaults = MapperContainerBase._({
+    PrimitiveMapper<dynamic>((v) => v),
+    PrimitiveMapper<Object>((Object? v) => v!),
+    PrimitiveMapper<String>((v) => v.toString()),
+    PrimitiveMapper<int>((v) => num.parse(v.toString()).round()),
+    PrimitiveMapper<double>((v) => double.parse(v.toString())),
+    PrimitiveMapper<num>((v) => num.parse(v.toString())),
+    PrimitiveMapper<bool>((v) => v is num ? v != 0 : v.toString() == 'true'),
+    DateTimeMapper(),
+    IterableMapper<List>(<T>(i) => i.toList(), <T>(f) => f<List<T>>()),
+    IterableMapper<Set>(<T>(i) => i.toSet(), <T>(f) => f<Set<T>>()),
+    MapMapper<Map>(<K, V>(map) => map, <K, V>(f) => f<Map<K, V>>()),
+  });
 
   T fromValue<T>(dynamic value);
   dynamic toValue<T>(T value);
@@ -44,94 +59,17 @@ abstract class MapperContainer {
   MapperBase? _mapperForType(Type type, [Set<MapperContainer>? parents]);
 }
 
-class DelegatingMapperContainer implements MapperContainer {
-  DelegatingMapperContainer(this.wrapper);
-
-  final MapperContainer Function() wrapper;
-
-  MapperContainer get wrapped => wrapper();
-
-  @override
-  String asString(value) => wrapped.asString(value);
-
-  @override
-  T fromIterable<T>(Iterable iterable) => wrapped.fromIterable<T>(iterable);
-
-  @override
-  T fromJson<T>(String json) => wrapped.fromJson<T>(json);
-
-  @override
-  T fromMap<T>(Map<String, dynamic> map) => wrapped.fromMap<T>(map);
-
-  @override
-  T fromValue<T>(value) => wrapped.fromValue<T>(value);
-
-  @override
-  MapperBase<T>? get<T>([Type? type]) => wrapped.get<T>(type);
-
-  @override
-  List<MapperBase> getAll() => wrapped.getAll();
-
-  @override
-  int hash(value) => wrapped.hash(value);
-
-  @override
-  bool isEqual(value, Object? other) => wrapped.isEqual(value, other);
-
-  @override
-  void join(MapperContainer container) => wrapped.join(container);
-
-  @override
-  Iterable toIterable<T>(T object) => wrapped.toIterable<T>(object);
-
-  @override
-  String toJson<T>(T object) => wrapped.toJson<T>(object);
-
-  @override
-  Map<String, dynamic> toMap<T>(T object) => wrapped.toMap<T>(object);
-
-  @override
-  toValue<T>(T value) => wrapped.toValue<T>(value);
-
-  @override
-  MapperBase<T>? unuse<T>() => wrapped.unuse<T>();
-
-  @override
-  void use<T>(MapperBase<T> mapper) => wrapped.use<T>(mapper);
-
-  @override
-  void useAll(List<MapperBase> mappers) => wrapped.useAll(mappers);
-
-  @override
-  void joinAll(Iterable<MapperContainer> containers) =>
-      wrapped.joinAll(containers);
-  @override
-  MapperBase? _mapperFor(value, [Set<MapperContainer>? parents]) => wrapped._mapperFor(value, parents);
-
-  @override
-  MapperBase? _mapperForType(Type type, [Set<MapperContainer>? parents]) =>
-      wrapped._mapperForType(type, parents);
-}
-
 class MapperContainerBase implements MapperContainer, TypeProvider {
-  MapperContainerBase(
-      {Set<MapperBase>? mappers, Set<MapperContainer>? join}) {
+  MapperContainerBase._(Set<MapperBase> mappers) {
     TypePlus.register(this);
+    useAll([...mappers]);
+  }
+
+  MapperContainerBase({Set<MapperBase>? mappers, Set<MapperContainer>? join}) {
+    TypePlus.register(this);
+    this.join(MapperContainer.defaults);
     joinAll(join ?? []);
-    useAll([
-      PrimitiveMapper<dynamic>((v) => v),
-      PrimitiveMapper<Object>((Object? v) => v!),
-      PrimitiveMapper<String>((v) => v.toString()),
-      PrimitiveMapper<int>((v) => num.parse(v.toString()).round()),
-      PrimitiveMapper<double>((v) => double.parse(v.toString())),
-      PrimitiveMapper<num>((v) => num.parse(v.toString())),
-      PrimitiveMapper<bool>((v) => v is num ? v != 0 : v.toString() == 'true'),
-      DateTimeMapper(),
-      IterableMapper<List>(<T>(i) => i.toList(), <T>(f) => f<List<T>>()),
-      IterableMapper<Set>(<T>(i) => i.toSet(), <T>(f) => f<Set<T>>()),
-      MapMapper<Map>(<K, V>(map) => map, <K, V>(f) => f<Map<K, V>>()),
-      ...?mappers,
-    ]);
+    useAll([...?mappers]);
   }
 
   final Map<String, MapperBase> _mappers = {};
@@ -149,20 +87,22 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
             .where((m) => m.type != dynamic && m.type != Object)
             .where((m) => isType.callWith(typeArguments: [m.type]) as bool)
             .firstOrNull;
-    return mapper ?? _children
-        .map((c) => c._mapperFor(value, {...?parents, this}))
-        .whereType<MapperBase>()
-        .firstOrNull;
+    return mapper ??
+        _children
+            .map((c) => c._mapperFor(value, {...?parents, this}))
+            .whereType<MapperBase>()
+            .firstOrNull;
   }
 
   @override
   MapperBase? _mapperForType(Type type, [Set<MapperContainer>? parents]) {
     if (parents != null && parents.contains(this)) return null;
     var mapper = _mappers[type.baseId];
-    return mapper ?? _children
-        .map((c) => c._mapperForType(type, {...?parents, this}))
-        .whereType<MapperBase>()
-        .firstOrNull;
+    return mapper ??
+        _children
+            .map((c) => c._mapperForType(type, {...?parents, this}))
+            .whereType<MapperBase>()
+            .firstOrNull;
   }
 
   @override
@@ -331,11 +271,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
         throw MapperException.chain(method, hint(), e);
       }
     } else {
-      if (value is MappableMixin) {
-        throw MapperException.unallowedMappable();
-      } else {
-        return fallback();
-      }
+      return fallback();
     }
   }
 
@@ -369,4 +305,74 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   void joinAll(Iterable<MapperContainer> containers) {
     _children.addAll(containers);
   }
+}
+
+class DelegatingMapperContainer implements MapperContainer {
+  DelegatingMapperContainer(this.wrapper);
+
+  final MapperContainer Function() wrapper;
+
+  MapperContainer get wrapped => wrapper();
+
+  @override
+  String asString(value) => wrapped.asString(value);
+
+  @override
+  T fromIterable<T>(Iterable iterable) => wrapped.fromIterable<T>(iterable);
+
+  @override
+  T fromJson<T>(String json) => wrapped.fromJson<T>(json);
+
+  @override
+  T fromMap<T>(Map<String, dynamic> map) => wrapped.fromMap<T>(map);
+
+  @override
+  T fromValue<T>(value) => wrapped.fromValue<T>(value);
+
+  @override
+  MapperBase<T>? get<T>([Type? type]) => wrapped.get<T>(type);
+
+  @override
+  List<MapperBase> getAll() => wrapped.getAll();
+
+  @override
+  int hash(value) => wrapped.hash(value);
+
+  @override
+  bool isEqual(value, Object? other) => wrapped.isEqual(value, other);
+
+  @override
+  void join(MapperContainer container) => wrapped.join(container);
+
+  @override
+  Iterable toIterable<T>(T object) => wrapped.toIterable<T>(object);
+
+  @override
+  String toJson<T>(T object) => wrapped.toJson<T>(object);
+
+  @override
+  Map<String, dynamic> toMap<T>(T object) => wrapped.toMap<T>(object);
+
+  @override
+  toValue<T>(T value) => wrapped.toValue<T>(value);
+
+  @override
+  MapperBase<T>? unuse<T>() => wrapped.unuse<T>();
+
+  @override
+  void use<T>(MapperBase<T> mapper) => wrapped.use<T>(mapper);
+
+  @override
+  void useAll(List<MapperBase> mappers) => wrapped.useAll(mappers);
+
+  @override
+  void joinAll(Iterable<MapperContainer> containers) =>
+      wrapped.joinAll(containers);
+  @override
+  MapperBase? _mapperFor(value, [Set<MapperContainer>? parents]) =>
+      wrapped._mapperFor(value, parents);
+
+  @override
+  MapperBase? _mapperForType(Type type, [Set<MapperContainer>? parents]) =>
+      wrapped._mapperForType(type, parents);
 }

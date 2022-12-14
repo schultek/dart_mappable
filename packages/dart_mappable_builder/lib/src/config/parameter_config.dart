@@ -1,7 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../imports_builder.dart';
 import '../utils.dart';
 
 abstract class ParameterConfig {
@@ -11,8 +10,8 @@ abstract class ParameterConfig {
 
   String get superName => parameter.name;
 
-  Future<String?> getHook(ImportsBuilder imports) {
-    return _hookFor(parameter, imports);
+  Future<String?> getHook(Namespace namespace) {
+    return _hookFor(parameter, namespace);
   }
 
   PropertyInducingElement get accessor;
@@ -37,8 +36,8 @@ class FieldParameterConfig extends ParameterConfig {
       : super(parameter);
 
   @override
-  Future<String?> getHook(ImportsBuilder imports) async {
-    return (await _hookFor(field, imports)) ?? await super.getHook(imports);
+  Future<String?> getHook(Namespace namespace) async {
+    return (await _hookFor(field, namespace)) ?? await super.getHook(namespace);
   }
 
   @override
@@ -64,9 +63,9 @@ class SuperParameterConfig extends ParameterConfig {
   String? get _paramKey => super._paramKey ?? superParameter._paramKey;
 
   @override
-  Future<String?> getHook(ImportsBuilder imports) async {
-    var thisHook = await super.getHook(imports);
-    var superHook = await superParameter.getHook(imports);
+  Future<String?> getHook(Namespace namespace) async {
+    var thisHook = await super.getHook(namespace);
+    var superHook = await superParameter.getHook(namespace);
     if (thisHook != null && superHook != null) {
       var childHooks = <String>[];
 
@@ -104,11 +103,11 @@ class UnresolvedParameterConfig extends ParameterConfig {
       'Tried to call .accessor on unresolved parameter.');
 }
 
-Future<String?> _hookFor(Element element, ImportsBuilder imports) async {
+Future<String?> _hookFor(Element element, Namespace namespace) async {
   if (fieldChecker.hasAnnotationOf(element)) {
     var node = await getResolvedAnnotationNode(element, MappableField, 'hooks');
     if (node != null) {
-      return getPrefixedNodeSource(node, imports);
+      return getPrefixedNodeSource(node, namespace);
     }
   }
   return null;

@@ -2,6 +2,8 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
+import '../utils.dart';
+import 'copy_param_config.dart';
 import 'parameter_config.dart';
 
 class ClassMapperConfig {
@@ -22,10 +24,11 @@ class ClassMapperConfig {
   final List<ParameterConfig> params;
   final List<String> typeParamsList;
   final List<String> superTypeArgs;
+  final List<DartType> includeCustomMappers;
 
-  final int? importPrefix;
   final int nameIndex;
   final bool generateMixin;
+  final Namespace namespace;
 
   ClassMapperConfig({
     required this.element,
@@ -41,22 +44,22 @@ class ClassMapperConfig {
     required this.params,
     required this.typeParamsList,
     required this.superTypeArgs,
-    required this.importPrefix,
     required this.nameIndex,
     required this.generateMixin,
+    required this.includeCustomMappers,
+    required this.namespace,
   }) {
     checkUnresolvedParameters();
   }
 
   late String className = element.name;
-  late String prefixedClassName =
-      '${importPrefix != null ? 'p$importPrefix.' : ''}$className';
   late String uniqueClassName =
       '$className${nameIndex != 0 ? '$nameIndex' : ''}';
-  late String mapperName = '$className${nameIndex != 0 ? nameIndex : ''}Mapper';
+  late String prefixedClassName = className;
 
-  late String selfTypeParam = '$prefixedClassName$typeParams';
-  late String superPrefixedClassName = superConfig?.superPrefixedClassName ?? prefixedClassName;
+  late String selfTypeParam = '$className$typeParams';
+  late String superPrefixedClassName =
+      superConfig?.superPrefixedClassName ?? prefixedClassName;
 
   Iterable<FieldElement> get allPublicFields sync* {
     yield* superConfig?.allPublicFields ?? [];
@@ -83,7 +86,7 @@ class ClassMapperConfig {
       : '';
 
   late String superTypeParams = element.typeParameters.isNotEmpty
-      ? '<${element.typeParameters.map((p) => element.supertype!.typeArguments.any((t) => t is TypeParameterType && t.element2 == p) ? p.name : 'dynamic').join(', ')}>'
+      ? '<${element.typeParameters.map((p) => element.supertype!.typeArguments.any((t) => t is TypeParameterType && t.element == p) ? p.name : 'dynamic').join(', ')}>'
       : '';
 
   late String typeParamsDeclaration =
@@ -105,7 +108,25 @@ class ClassMapperConfig {
     return safeParams;
   })();
 
-  late bool generateAsMixin = generateMixin && subConfigs.every((c) => c.generateAsMixin);
+  late bool generateAsMixin =
+      generateMixin && subConfigs.every((c) => c.generateAsMixin);
+
+  late List<String> joinConfigs = () {
+    var joins = [...subConfigs.map((c) => '${c.uniqueClassName}Mapper')];
+    for (var param in params) {
+
+      var e = param.parameter.type.element;
+
+      if (e != null && (classChecker.hasAnnotationOf(e) || enumChecker.hasAnnotationOf(e))) {
+        joins.add('${e.name}Mapper');
+      }
+    }
+    return joins;
+  }();
+
+  late List<String> customMappers = includeCustomMappers.map((t) => '${t.getDisplayString(withNullability: false)}()').toList();
+
+
 
   void checkUnresolvedParameters() {
     var unresolved = params.whereType<UnresolvedParameterConfig>();

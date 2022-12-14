@@ -3,7 +3,7 @@ import 'package:type_plus/type_plus.dart';
 import '../../internals.dart';
 import 'mapper_exception.dart';
 
-mixin MapperBase<T> {
+abstract class MapperBase<T> {
   /// A unique id for this type, defaults to the name of the type.
   /// Override this if you have two types with the same name.
   String get id => T.name;

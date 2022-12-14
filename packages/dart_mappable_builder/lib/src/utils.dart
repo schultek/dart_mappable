@@ -8,9 +8,11 @@ import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+// ignore: implementation_imports
+import 'package:analyzer/src/dart/resolver/scope.dart';
 import 'package:source_gen/source_gen.dart';
 
-import 'imports_builder.dart';
+export 'package:analyzer/src/dart/resolver/scope.dart' show Namespace;
 
 const enumChecker = TypeChecker.fromRuntime(MappableEnum);
 const valueChecker = TypeChecker.fromRuntime(MappableValue);
@@ -107,47 +109,56 @@ class Prefix {
 }
 
 Future<String> getPrefixedNodeSource(
-    AstNode node, ImportsBuilder imports) async {
-  var visitor = PrefixVisitor(imports);
-  node.accept(visitor);
+    AstNode node, Namespace namespace) async {
 
-  var prefixOffsets = visitor.prefixes.entries
-      // ignore: unnecessary_cast
-      .sortedBy((i) => i.key as num)
-      .fold<List<Prefix>>([Prefix(node.offset, 0, 0)],
-          (l, i) => [...l, Prefix(i.key, i.key - l.last.offset, i.value)])
-      .skip(1)
-      .toList();
+  return node.toSource();
 
-  var source = '';
-  Token? token = node.beginToken;
-
-  while (token != null && token.offset <= node.endToken.offset) {
-    if (prefixOffsets.isNotEmpty && prefixOffsets.first.delta <= 0) {
-      source += 'p${prefixOffsets.first.prefix}.';
-      prefixOffsets.removeAt(0);
-    }
-
-    source += token.lexeme;
-    prefixOffsets.firstOrNull?.delta -= token.length;
-
-    var next = token.next;
-    if (next != null && next.offset > token.end) {
-      var delta = next.offset - token.end;
-      source += ' ';
-      prefixOffsets.firstOrNull?.delta -= delta;
-    }
-    token = next;
-  }
-
-  return source;
+  // var visitor = PrefixVisitor(namespace);
+  // node.accept(visitor);
+  //
+  // var prefixOffsets = visitor.prefixes.entries
+  //     // ignore: unnecessary_cast
+  //     .sortedBy((i) => i.key as num)
+  //     .fold<List<Prefix>>([Prefix(node.offset, 0, 0)],
+  //         (l, i) => [...l, Prefix(i.key, i.key - l.last.offset, i.value)])
+  //     .skip(1)
+  //     .toList();
+  //
+  // var source = '';
+  // Token? token = node.beginToken;
+  //
+  // while (token != null && token.offset <= node.endToken.offset) {
+  //   if (prefixOffsets.isNotEmpty && prefixOffsets.first.delta <= 0) {
+  //     source += 'p${prefixOffsets.first.prefix}.';
+  //     prefixOffsets.removeAt(0);
+  //   }
+  //
+  //   source += token.lexeme;
+  //   prefixOffsets.firstOrNull?.delta -= token.length;
+  //
+  //   var next = token.next;
+  //   if (next != null && next.offset > token.end) {
+  //     var delta = next.offset - token.end;
+  //     source += ' ';
+  //     prefixOffsets.firstOrNull?.delta -= delta;
+  //   }
+  //   token = next;
+  // }
+  //
+  // return source;
 }
 
 class PrefixVisitor extends RecursiveAstVisitor {
-  final ImportsBuilder imports;
+  final Namespace namespace;
   Map<int, int> prefixes = {};
 
-  PrefixVisitor(this.imports);
+  PrefixVisitor(this.namespace);
+
+  @override
+  visitPrefixedIdentifier(PrefixedIdentifier node) {
+    // TODO: implement visitPrefixedIdentifier
+    return super.visitPrefixedIdentifier(node);
+  }
 
   @override
   visitSimpleIdentifier(SimpleIdentifier node) {
@@ -164,10 +175,11 @@ class PrefixVisitor extends RecursiveAstVisitor {
   }
 
   void addPrefixFor(SimpleIdentifier node) {
-    var prefix = imports.add(node.staticElement!.librarySource?.uri);
-    if (prefix != null) {
-      prefixes[node.offset] = prefix;
-    }
+    // node.
+    // var prefix = imports.add(node.staticElement!.librarySource?.uri);
+    // if (prefix != null) {
+    //   prefixes[node.offset] = prefix;
+    // }
   }
 }
 
@@ -213,4 +225,28 @@ TextTransform? textTransformFromAnnotation(DartObject obj) {
 
 extension NullableType on DartType {
   bool get isNullable => nullabilitySuffix == NullabilitySuffix.question;
+}
+
+extension NamespacePrefix on Namespace {
+
+  String prefixedType(DartType t, {bool withNullability = true}) {
+    if (t is TypeParameterType) {
+      return t.getDisplayString(withNullability: withNullability);
+    }
+
+    var typeArgs = '';
+    if (t is InterfaceType && t.typeArguments.isNotEmpty) {
+      typeArgs = '<${t.typeArguments.map(prefixedType).join(', ')}>';
+    }
+
+    var type = '${t.element?.name}$typeArgs';
+
+    if (withNullability && t.nullabilitySuffix == NullabilitySuffix.question) {
+      type += '?';
+    }
+
+    return type;
+    // var prefix = add(t.element?.librarySource?.uri);
+    // return (prefix != null ? 'p$prefix.' : '') + type;
+  }
 }

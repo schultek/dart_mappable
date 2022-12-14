@@ -33,9 +33,28 @@ class PrimitiveMapperElement<T> extends MapperElementBase<T>
   Function get encoder => (T value) => value;
 }
 
-abstract class EnumMapperElement<T> extends SimpleMapperElement<T>
+abstract class EnumMapper<T extends Enum> with MapperBase<T>  {
+
+
+  T decode(dynamic value);
+
+  dynamic encode(T self);
+
+  @override
+  EnumMapperElement<T> createElement(MapperContainer container) {
+    return EnumMapperElement(this, container);
+  }
+}
+
+class EnumMapperElement<T extends Enum> extends SimpleMapperElement<T>
     with PrimitiveMethodsMixin<T> {
   EnumMapperElement(super.mapper, super.container);
+
+  @override
+  T decode(value) => (mapper as EnumMapper<T>).decode(value);
+
+  @override
+  encode(T self) => (mapper as EnumMapper<T>).encode(self);
 }
 
 class DateTimeMapper with MapperBase<DateTime> {

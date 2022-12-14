@@ -25,8 +25,8 @@ class EqualsGenerator {
 
   String generateEqualsMixin() {
     if (config.shouldGenerate(GenerateMethods.equals) && !config.isAbstract) {
-      return '  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && Mapper.isEqual(this, other));\n'
-          '  @override int get hashCode => Mapper.hash(this);\n';
+      return '  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && ${config.uniqueClassName}Mapper.container.isEqual(this, other));\n'
+          '  @override int get hashCode => ${config.uniqueClassName}Mapper.container.hash(this);\n';
     } else {
       return '';
     }
@@ -36,7 +36,7 @@ class EqualsGenerator {
     List<String> params = [];
 
     for (var field in config.allPublicFields) {
-      params.add('Mapper.hash(self.${field.name})');
+      params.add('container.hash(self.${field.name})');
     }
 
     if (params.isEmpty) {
@@ -50,7 +50,7 @@ class EqualsGenerator {
     List<String> params = [];
 
     for (var field in config.allPublicFields) {
-      params.add('Mapper.isEqual(self.${field.name}, other.${field.name})');
+      params.add('container.isEqual(self.${field.name}, other.${field.name})');
     }
 
     if (params.isEmpty) {

@@ -11,6 +11,7 @@ class MappableClass {
     this.hooks,
     this.generateMethods,
     this.includeSubClasses,
+    this.includeCustomMappers,
   });
 
   /// The case style for the map keys
@@ -33,6 +34,8 @@ class MappableClass {
 
   /// Specify additional subclasses of this class for polymorphism
   final Iterable<Type>? includeSubClasses;
+
+  final Iterable<Type>? includeCustomMappers;
 
   static const useAsDefault = MappingFlags.useAsDefault;
 }

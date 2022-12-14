@@ -2,14 +2,12 @@ import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../builder_options.dart';
 import '../utils.dart';
 import 'enum_mapper_config.dart';
 import 'mapper_targets.dart';
 
 class EnumMapperTarget extends MapperTarget<EnumElement> {
-  EnumMapperTarget(EnumElement element, MappableOptions options, int? prefix, int index)
-      : super(element, options, prefix, index);
+  EnumMapperTarget(super.element, super.options, super.index, super.namespace);
 
   late EnumMapperConfig config = _buildConfig();
   EnumMapperConfig _buildConfig() {
@@ -18,8 +16,8 @@ class EnumMapperTarget extends MapperTarget<EnumElement> {
       mode: mode,
       caseStyle: caseStyle,
       defaultValue: defaultValue,
-      importPrefix: importPrefix,
       nameIndex: nameIndex,
+      namespace: namespace,
     );
   }
 

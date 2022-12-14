@@ -5,7 +5,6 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 
 import 'builder_options.dart';
-import 'builder_snippets.dart';
 import 'config/mapper_targets.dart';
 import 'generators/class_mapper_generator.dart';
 import 'generators/enum_mapper_generator.dart';
@@ -61,7 +60,7 @@ class MappableBuilder implements Builder {
       options = options.apply(libOptions);
     }
 
-    targets.addElementsFromLibrary(entryLib, options);
+    targets.addElementsFromLibrary(entryLib, options, entryLib.publicNamespace);
 
     for (var import in entryLib.libraryImports) {
       if (import.importedLibrary == null) continue;
@@ -96,20 +95,20 @@ class MappableBuilder implements Builder {
         options = options.apply(libOptions, forceJoin: false);
         options = this.options.apply(options);
 
-        targets.addElementsFromLibrary(entryLib, options);
+        targets.addElementsFromLibrary(entryLib, options, entryLib.publicNamespace);
       }
     }
 
     var classConfigs = Map.fromEntries(await Future.wait(targets.classes.entries
         .map((e) async =>
-            MapEntry(e.key, await e.value.getConfig(targets.imports)))));
+            MapEntry(e.key, await e.value.getConfig()))));
 
     var classMappers = targets.classes.keys
-        .map((k) => ClassMapperGenerator(classConfigs[k]!, targets.imports))
+        .map((k) => ClassMapperGenerator(classConfigs[k]!))
         .toList();
 
     var enumMappers = targets.enums.values
-        .map((c) => EnumMapperGenerator(c.config, targets.imports))
+        .map((c) => EnumMapperGenerator(c.config))
         .toList();
 
     var customMappers = targets.customMappers.values;
@@ -120,25 +119,15 @@ class MappableBuilder implements Builder {
     var genEnums = await Future.wait(enumMappers.map((em) => em.generate()));
 
     return ''
-        '// ignore_for_file: unused_element\n'
-        'part of \'${buildStep.inputId.uri}\';\n'
-        '// === ALL STATICALLY REGISTERED MAPPERS ===\n\n'
-        'var _mappers = <BaseMapper>{\n'
-        '  // class mappers\n'
-        '${classMappers.map((om) => '  ${om.config.mapperName}._(),\n').join()}'
-        '  // enum mappers\n'
-        '${enumMappers.map((em) => '  ${em.config.mapperName}._(),\n').join()}'
-        '  // custom mappers\n'
-        '${customMappers.map((e) => '  ${e.prefixedMapperName}(),\n').join()}'
-        '};\n'
-        '\n\n'
+        '// coverage:ignore-file\n'
+        '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
+        '// ignore_for_file: type=lint\n'
+        '// ignore_for_file: unused_element\n\n'
+        'part of \'${buildStep.inputId.uri}\';\n\n'
         '// === GENERATED CLASS MAPPERS AND EXTENSIONS ===\n\n'
         '${genClasses.join('\n\n')}\n'
         '\n\n'
         '// === GENERATED ENUM MAPPERS AND EXTENSIONS ===\n\n'
-        '${genEnums.join('\n\n')}\n'
-        '\n\n'
-        '// === GENERATED UTILITY CODE ===\n\n'
-        '$mapperCode';
+        '${genEnums.join('\n\n')}\n';
   }
 }

@@ -1,17 +1,16 @@
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/src/dart/resolver/scope.dart';
 import 'package:build/build.dart';
 
 import '../builder_options.dart';
-import '../imports_builder.dart';
 import '../utils.dart';
 import 'class_mapper_target.dart';
 import 'custom_mapper_config.dart';
 import 'enum_mapper_target.dart';
 
 class MapperTargets {
-  final ImportsBuilder imports;
-  MapperTargets(AssetId inputId) : imports = ImportsBuilder(inputId);
+  MapperTargets(AssetId inputId);
 
   Map<EnumElement, EnumMapperTarget> enums = {};
   Map<ClassElement, ClassMapperTarget> classes = {};
@@ -19,7 +18,7 @@ class MapperTargets {
 
   Map<String, int> nameIndexes = {};
 
-  void addElementsFromLibrary(LibraryElement library, MappableOptions options) {
+  void addElementsFromLibrary(LibraryElement library, MappableOptions options, Namespace namespace) {
     if (options.include == null) {
       var elements = elementsOf(library);
 
@@ -33,19 +32,17 @@ class MapperTargets {
                 'Classes marked with @CustomMapper must extend the BaseMapper class');
           }
           var type = element.allSupertypes[mapperIndex].typeArguments[0];
-          var libPrefix = imports.add(library.source.uri);
 
           customMappers[type.element!] = CustomMapperConfig(
             element: element,
-            prefix: libPrefix,
           );
         } else {
           if (element is ClassElement &&
               classChecker.hasAnnotationOf(element)) {
-            addElement(element, options);
+            addElement(element, options, namespace);
           } else if (element is EnumElement &&
               enumChecker.hasAnnotationOf(element)) {
-            addElement(element, options);
+            addElement(element, options, namespace);
           }
         }
       }
@@ -55,30 +52,28 @@ class MapperTargets {
       for (var type in types) {
         var e = type.element;
         if (e is InterfaceElement) {
-          addElement(e, options);
+          addElement(e, options, namespace);
         }
       }
     }
   }
 
-  void addElement(InterfaceElement element, MappableOptions options) {
+  void addElement(InterfaceElement element, MappableOptions options, Namespace namespace) {
     if (element.isPrivate) return;
     if (element is EnumElement) {
       if (enums.containsKey(element)) {
         return;
       }
 
-      var prefix = imports.add(element.librarySource.uri);
       var index = getNameIndex(element.name);
-      enums[element] = EnumMapperTarget(element, options, prefix, index);
+      enums[element] = EnumMapperTarget(element, options, index, namespace);
     } else if (element is ClassElement) {
       if (classes.containsKey(element)) {
         return;
       }
 
-      var prefix = imports.add(element.librarySource.uri);
       var index = getNameIndex(element.name);
-      addClassTarget(ClassMapperTarget(element, options, prefix, index));
+      addClassTarget(ClassMapperTarget(element, options, index, namespace));
 
       for (var c in element.constructors) {
         if (c.isFactory &&
@@ -86,7 +81,7 @@ class MapperTargets {
             classChecker.hasAnnotationOf(c)) {
           var index = getNameIndex(c.name);
           addClassTarget(
-              FactoryConstructorMapperTarget(c, options, prefix, index));
+              FactoryConstructorMapperTarget(c, options, index, namespace));
         }
       }
     }
@@ -100,15 +95,12 @@ class MapperTargets {
       ClassMapperTarget superTarget;
       if (classes.containsKey(superElement)) {
         superTarget = classes[superElement]!;
-      } else if (!superElement.isPrivate) {
-        addElement(superElement, target.options);
-        superTarget = classes[superElement]!;
       } else {
         superTarget = ClassMapperTarget(
           superElement,
           target.options,
-          target.importPrefix,
           target.nameIndex,
+          target.namespace
         );
       }
 
@@ -132,12 +124,13 @@ class MapperTargets {
 }
 
 abstract class MapperTarget<T extends InterfaceElement> {
+
   T element;
   MappableOptions options;
-  int? importPrefix;
   int nameIndex;
+  Namespace namespace;
 
-  MapperTarget(this.element, this.options, this.importPrefix, this.nameIndex);
+  MapperTarget(this.element, this.options, this.nameIndex, this.namespace);
 
   Element get annotatedElement => element;
 

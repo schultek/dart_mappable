@@ -67,12 +67,6 @@ class MapperException implements Exception {
         'annotation by using the GenerateMethods flag.');
   }
 
-  factory MapperException.unallowedMappable() {
-    return MapperException._('The Mappable mixin was used on a type that does '
-        'not have a registered mapper. Did you forgot to annotate the class '
-        'or register a custom mapper?');
-  }
-
   factory MapperException.unresolvedType(String type) {
     return MapperException._('Cannot resolve type from property "$type". '
         'Invalid or unregistered type.');

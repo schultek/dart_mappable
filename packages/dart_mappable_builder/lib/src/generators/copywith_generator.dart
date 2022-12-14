@@ -1,17 +1,14 @@
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../config/class_mapper_config.dart';
 import '../config/copy_param_config.dart';
 import '../config/parameter_config.dart';
-import '../imports_builder.dart';
 import '../utils.dart';
 
 class CopyWithGenerator {
   final ClassMapperConfig config;
-  final ImportsBuilder imports;
 
-  CopyWithGenerator(this.config, this.imports);
+  CopyWithGenerator(this.config);
 
   late String classTypeParamsDef =
       config.typeParamsList.map((p) => ', $p').join();
@@ -108,7 +105,7 @@ class CopyWithGenerator {
           '  ${config.uniqueClassName}CopyWith<\$R2$subTypeParam$superTypeParam2$classTypeParams> _chain<\$R2$superTypeParamDef2>(Then<$selfTypeParam, $superOrSelfTypeParam2> t, Then<$superOrSelfTypeParam2, \$R2> t2);\n');
 
     var copyParams =
-        CopyParamConfig.collectFrom(config.params, config, imports, getConfig);
+        CopyParamConfig.collectFrom(config.params, config, getConfig);
 
     for (var param in copyParams) {
       var isOverridden = hasSuperConfig && param.param is SuperParameterConfig;
@@ -153,7 +150,7 @@ class CopyWithGenerator {
     for (var param in config.copySafeParams) {
       var p = param.parameter;
 
-      var type = imports.prefixedType(p.type, withNullability: false);
+      var type = config.namespace.prefixedType(p.type, withNullability: false);
 
       if (param is UnresolvedParameterConfig) {
         if (p.type.isNullable) {

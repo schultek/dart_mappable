@@ -131,8 +131,6 @@ class BaseCopyWith<Result, In, Out> implements ObjectCopyWith<Result, In, Out> {
   Result apply(Then<In, Out> transform) => $then2(transform($value));
 }
 
-abstract class MappableMixin {}
-
 extension ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
   BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
 }
