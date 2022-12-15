@@ -1,16 +1,16 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../config/class_mapper_config.dart';
+import '../elements/class_mapper_element.dart';
 
 class ToStringGenerator {
-  ToStringGenerator(this.config);
+  ToStringGenerator(this.target);
 
-  final ClassMapperConfig config;
+  final ClassMapperElement target;
 
   String generateToStringMethods() {
-    if (config.shouldGenerate(GenerateMethods.stringify)) {
+    if (target.shouldGenerate(GenerateMethods.stringify)) {
       return '\n'
-          "  @override String stringify(${config.prefixedClassName} self) => '${config.className}(${_generateStringParams()})';\n"
+          "  @override String stringify(${target.prefixedClassName} self) => '${target.className}(${_generateStringParams()})';\n"
           '';
     } else {
       return '';
@@ -18,8 +18,8 @@ class ToStringGenerator {
   }
 
   String generateToStringMixin() {
-    if (config.shouldGenerate(GenerateMethods.stringify) && !config.isAbstract) {
-      return '  @override String toString() => ${config.uniqueClassName}Mapper.container.asString(this);\n';
+    if (target.shouldGenerate(GenerateMethods.stringify) && !target.isAbstract) {
+      return '  @override String toString() => ${target.uniqueClassName}Mapper.container.asString(this);\n';
     } else {
       return '';
     }
@@ -28,7 +28,7 @@ class ToStringGenerator {
   String _generateStringParams() {
     List<String> params = [];
 
-    for (var field in config.allPublicFields) {
+    for (var field in target.allPublicFields) {
       params.add('${field.name}: \${container.asString(self.${field.name})}');
     }
 

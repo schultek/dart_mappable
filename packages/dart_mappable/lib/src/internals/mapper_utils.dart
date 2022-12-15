@@ -110,6 +110,7 @@ typedef Then<$T, $R> = $R Function($T);
 
 abstract class ObjectCopyWith<Result, In, Out> {
   const factory ObjectCopyWith(In value, Then<In, Out> then, Then<Out, Result> then2) = BaseCopyWith;
+
   Result apply(Out Function(In) transform);
 }
 

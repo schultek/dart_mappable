@@ -2,11 +2,11 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../config/class_mapper_config.dart';
+import '../elements/class_mapper_element.dart';
 import '../utils.dart';
 
 class DecoderGenerator {
-  final ClassMapperConfig config;
+  final ClassMapperElement config;
 
   DecoderGenerator(this.config);
 
@@ -31,15 +31,15 @@ class DecoderGenerator {
     }
   }
 
-  String _generateDecoder(ClassMapperConfig config, [String fn = 'decode']) {
+  String _generateDecoder(ClassMapperElement config, [String fn = 'decode']) {
     var wrapped = fn;
-    if (config.superConfig != null &&
-        config.superConfig!.hookForClass != null) {
+    if (config.superTarget != null &&
+        config.superTarget!.hookForClass != null) {
       wrapped =
-          '(v) => const ${config.superConfig!.hookForClass}.decode(v, $wrapped)';
+          '(v) => const ${config.superTarget!.hookForClass}.decode(v, $wrapped)';
     }
-    if (config.superConfig != null) {
-      wrapped = _generateDecoder(config.superConfig!, wrapped);
+    if (config.superTarget != null) {
+      wrapped = _generateDecoder(config.superTarget!, wrapped);
     }
     return wrapped;
   }
@@ -47,7 +47,7 @@ class DecoderGenerator {
   String _generateFromMapCall() {
     var call = '';
 
-    if (config.subConfigs.isEmpty || config.discriminatorKey == null) {
+    if (config.subTargets.isEmpty || config.discriminatorKey == null) {
       call = '=> fromMap${config.typeParams}(map)';
     } else {
       call = '{\n'
@@ -98,10 +98,10 @@ class DecoderGenerator {
   }
 
   List<MapEntry<List<String>, String>> _getDiscriminatorCases(
-      ClassMapperConfig config) {
+      ClassMapperElement config) {
     var cases = <MapEntry<List<String>, String>>[];
 
-    for (var subConfig in config.subConfigs) {
+    for (var subConfig in config.subTargets) {
       if (subConfig.discriminatorValueCode != null) {
         if (subConfig.discriminatorValueCode!.startsWith('[') &&
             subConfig.discriminatorValueCode!.endsWith(']')) {
@@ -130,7 +130,7 @@ class DecoderGenerator {
 
   Future<String> _generateFromMap() async {
     if (!config.hasCallableConstructor) {
-      if (config.subConfigs.isNotEmpty && config.discriminatorKey != null) {
+      if (config.subTargets.isNotEmpty && config.discriminatorKey != null) {
         return "throw MapperException.missingSubclass('${config.className}', '${config.discriminatorKey}', '\${map['${config.discriminatorKey}']}');";
       } else {
         return "throw MapperException.missingConstructor('${config.className}');";
@@ -157,7 +157,7 @@ class DecoderGenerator {
 
       var args = ['map', "'${param.jsonKey(config.caseStyle)}'"];
 
-      var hook = await param.getHook(config.namespace);
+      var hook = await param.getHook();
       if (hook != null) {
         args.add('const $hook');
       }
@@ -183,7 +183,7 @@ class DecoderGenerator {
       ParameterElement p) async {
     var node = await p.getResolvedNode();
     if (node is DefaultFormalParameter) {
-      return getPrefixedNodeSource(node.defaultValue!, config.namespace);
+      return node.defaultValue!.toSource();
     }
 
     return p.defaultValueCode!;

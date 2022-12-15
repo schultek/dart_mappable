@@ -5,8 +5,6 @@
 
 part of 'package:v2_test/models/animal.dart';
 
-// === GENERATED CLASS MAPPERS AND EXTENSIONS ===
-
 class AnimalMapper with MapperBase<Animal> {
   static MapperContainer container = MapperContainer(
     mappers: {AnimalMapper()},
@@ -54,7 +52,7 @@ mixin AnimalMappable {
 }
 
 abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal> implements ObjectCopyWith<$R, $In, $Out> {
-  AnimalCopyWith<$R2, $In, $Out2> _chain<$R2, $Out2 extends Animal>(Then<Animal, $Out2> t, Then<$Out2, $R2> t2);
+  AnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(Then<Animal, $Out2> t, Then<$Out2, $R2> t2);
   $R call();
 }
 
@@ -99,23 +97,20 @@ mixin DogMappable {
   @override int get hashCode => DogMapper.container.hash(this);
 }
 
-extension DogObjectCopy<$R, $Out extends Animal> on ObjectCopyWith<$R, Dog, $Out> {
+extension DogValueCopy<$R, $Out extends Animal> on ObjectCopyWith<$R, Dog, $Out> {
   DogCopyWith<$R, $Out> get asDog => base.as((v, t, t2) => _DogCopyWithImpl(v, t, t2));
 }
 
 abstract class DogCopyWith<$R, $Out extends Animal> implements AnimalCopyWith<$R, Dog, $Out> {
-  DogCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2);
+  DogCopyWith<$R2, $Out2> chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2);
+  PersonCopyWith<$R> get owner;
   @override $R call({int? age, Person? owner});
 }
 
 class _DogCopyWithImpl<$R, $Out extends Animal> extends BaseCopyWith<$R, Dog, $Out> implements DogCopyWith<$R, $Out> {
   _DogCopyWithImpl(super.value, super.then, super.then2);
-  @override DogCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2) => _DogCopyWithImpl($value, t, t2);
+  @override DogCopyWith<$R2, $Out2> chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2) => _DogCopyWithImpl($value, t, t2);
 
+  @override PersonCopyWith<$R> get owner => $value.owner.copyWith.chain($identity, (v) => call(owner: v));
   @override $R call({int? age, Person? owner}) => $then(Dog(age ?? $value.age, owner ?? $value.owner));
 }
-
-
-// === GENERATED ENUM MAPPERS AND EXTENSIONS ===
-
-

@@ -188,9 +188,3 @@ abstract class MappingHooks {
   dynamic beforeEncode(dynamic value) => value;
   dynamic afterEncode(dynamic value) => value;
 }
-
-/// Used to annotate a class used as a custom mapper.
-/// The target class must implement [Mapper], e.g. by extending [SimpleMapper] or [BaseMapper]
-class CustomMapper {
-  const CustomMapper();
-}

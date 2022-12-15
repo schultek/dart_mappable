@@ -20,8 +20,7 @@ const constructorChecker = TypeChecker.fromRuntime(MappableConstructor);
 const classChecker = TypeChecker.fromRuntime(MappableClass);
 const fieldChecker = TypeChecker.fromRuntime(MappableField);
 const libChecker = TypeChecker.fromRuntime(MappableLib);
-const customMapperChecker = TypeChecker.fromRuntime(CustomMapper);
-const mapperChecker = TypeChecker.fromRuntime(MapperElementBase);
+const mapperChecker = TypeChecker.fromRuntime(MapperBase);
 
 extension GetNode on Element {
   AstNode? getNode() {
@@ -43,7 +42,7 @@ extension GetNode on Element {
   }
 }
 
-AstNode? _getAnnotationNode(
+AstNode? getAnnotationProperty(
     AstNode? node, Type annotationType, dynamic property) {
   NodeList<Annotation>? annotations;
 
@@ -86,13 +85,13 @@ AstNode? _getAnnotationNode(
 AstNode? getAnnotationNode(
     Element annotatedElement, Type annotationType, dynamic property) {
   var node = annotatedElement.getNode();
-  return _getAnnotationNode(node, annotationType, property);
+  return getAnnotationProperty(node, annotationType, property);
 }
 
 Future<AstNode?> getResolvedAnnotationNode(
     Element annotatedElement, Type annotationType, dynamic property) async {
   var node = await annotatedElement.getResolvedNode();
-  return _getAnnotationNode(node, annotationType, property);
+  return getAnnotationProperty(node, annotationType, property);
 }
 
 class Prefix {
@@ -105,81 +104,6 @@ class Prefix {
   @override
   String toString() {
     return 'Prefix{offset: $offset, delta: $delta, prefix: $prefix}';
-  }
-}
-
-Future<String> getPrefixedNodeSource(
-    AstNode node, Namespace namespace) async {
-
-  return node.toSource();
-
-  // var visitor = PrefixVisitor(namespace);
-  // node.accept(visitor);
-  //
-  // var prefixOffsets = visitor.prefixes.entries
-  //     // ignore: unnecessary_cast
-  //     .sortedBy((i) => i.key as num)
-  //     .fold<List<Prefix>>([Prefix(node.offset, 0, 0)],
-  //         (l, i) => [...l, Prefix(i.key, i.key - l.last.offset, i.value)])
-  //     .skip(1)
-  //     .toList();
-  //
-  // var source = '';
-  // Token? token = node.beginToken;
-  //
-  // while (token != null && token.offset <= node.endToken.offset) {
-  //   if (prefixOffsets.isNotEmpty && prefixOffsets.first.delta <= 0) {
-  //     source += 'p${prefixOffsets.first.prefix}.';
-  //     prefixOffsets.removeAt(0);
-  //   }
-  //
-  //   source += token.lexeme;
-  //   prefixOffsets.firstOrNull?.delta -= token.length;
-  //
-  //   var next = token.next;
-  //   if (next != null && next.offset > token.end) {
-  //     var delta = next.offset - token.end;
-  //     source += ' ';
-  //     prefixOffsets.firstOrNull?.delta -= delta;
-  //   }
-  //   token = next;
-  // }
-  //
-  // return source;
-}
-
-class PrefixVisitor extends RecursiveAstVisitor {
-  final Namespace namespace;
-  Map<int, int> prefixes = {};
-
-  PrefixVisitor(this.namespace);
-
-  @override
-  visitPrefixedIdentifier(PrefixedIdentifier node) {
-    // TODO: implement visitPrefixedIdentifier
-    return super.visitPrefixedIdentifier(node);
-  }
-
-  @override
-  visitSimpleIdentifier(SimpleIdentifier node) {
-    if (node.staticElement is ClassElement) {
-      addPrefixFor(node);
-    } else if (node.staticElement is PropertyAccessorElement) {
-      if ((node.staticElement as PropertyAccessorElement).enclosingElement
-          is CompilationUnitElement) {
-        addPrefixFor(node);
-      }
-    }
-
-    return super.visitSimpleIdentifier(node);
-  }
-
-  void addPrefixFor(SimpleIdentifier node) {
-    // node.
-    // var prefix = imports.add(node.staticElement!.librarySource?.uri);
-    // if (prefix != null) {
-    //   prefixes[node.offset] = prefix;
-    // }
   }
 }
 

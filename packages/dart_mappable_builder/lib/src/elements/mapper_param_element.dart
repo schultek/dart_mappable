@@ -3,15 +3,15 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../utils.dart';
 
-abstract class ParameterConfig {
+abstract class MapperParamElement {
   final ParameterElement parameter;
 
-  ParameterConfig(this.parameter);
+  MapperParamElement(this.parameter);
 
   String get superName => parameter.name;
 
-  Future<String?> getHook(Namespace namespace) {
-    return _hookFor(parameter, namespace);
+  Future<String?> getHook() {
+    return _hookFor(parameter);
   }
 
   PropertyInducingElement get accessor;
@@ -30,14 +30,14 @@ abstract class ParameterConfig {
   }
 }
 
-class FieldParameterConfig extends ParameterConfig {
+class FieldParamElement extends MapperParamElement {
   final PropertyInducingElement field;
-  FieldParameterConfig(ParameterElement parameter, this.field)
+  FieldParamElement(ParameterElement parameter, this.field)
       : super(parameter);
 
   @override
-  Future<String?> getHook(Namespace namespace) async {
-    return (await _hookFor(field, namespace)) ?? await super.getHook(namespace);
+  Future<String?> getHook() async {
+    return (await _hookFor(field)) ?? await super.getHook();
   }
 
   @override
@@ -47,10 +47,10 @@ class FieldParameterConfig extends ParameterConfig {
   String? get _paramKey => _keyFor(field) ?? super._paramKey;
 }
 
-class SuperParameterConfig extends ParameterConfig {
-  final ParameterConfig superParameter;
+class SuperParamElement extends MapperParamElement {
+  final MapperParamElement superParameter;
 
-  SuperParameterConfig(ParameterElement parameter, this.superParameter)
+  SuperParamElement(ParameterElement parameter, this.superParameter)
       : super(parameter);
 
   @override
@@ -63,9 +63,9 @@ class SuperParameterConfig extends ParameterConfig {
   String? get _paramKey => super._paramKey ?? superParameter._paramKey;
 
   @override
-  Future<String?> getHook(Namespace namespace) async {
-    var thisHook = await super.getHook(namespace);
-    var superHook = await superParameter.getHook(namespace);
+  Future<String?> getHook() async {
+    var thisHook = await super.getHook();
+    var superHook = await superParameter.getHook();
     if (thisHook != null && superHook != null) {
       var childHooks = <String>[];
 
@@ -92,10 +92,10 @@ class SuperParameterConfig extends ParameterConfig {
   }
 }
 
-class UnresolvedParameterConfig extends ParameterConfig {
+class UnresolvedParamElement extends MapperParamElement {
   final String message;
 
-  UnresolvedParameterConfig(ParameterElement parameter, this.message)
+  UnresolvedParamElement(ParameterElement parameter, this.message)
       : super(parameter);
 
   @override
@@ -103,11 +103,11 @@ class UnresolvedParameterConfig extends ParameterConfig {
       'Tried to call .accessor on unresolved parameter.');
 }
 
-Future<String?> _hookFor(Element element, Namespace namespace) async {
+Future<String?> _hookFor(Element element) async {
   if (fieldChecker.hasAnnotationOf(element)) {
     var node = await getResolvedAnnotationNode(element, MappableField, 'hooks');
     if (node != null) {
-      return getPrefixedNodeSource(node, namespace);
+      return node.toSource();
     }
   }
   return null;

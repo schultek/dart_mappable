@@ -4,50 +4,47 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../utils.dart';
-import 'class_mapper_config.dart';
-import 'parameter_config.dart';
+import 'class_mapper_element.dart';
+import 'mapper_param_element.dart';
 
-typedef GetConfig = ClassMapperConfig? Function(Element? e);
-
-class CopyParamConfig {
-  static Iterable<CopyParamConfig> collectFrom(
-      List<ParameterConfig> params,
-      ClassMapperConfig config,
-      GetConfig getConfig) sync* {
-    for (var param in config.params) {
-      if (param is UnresolvedParameterConfig) {
+class CopyParamElement {
+  static Iterable<CopyParamElement> collectFrom(
+      List<MapperParamElement> params,
+      ClassMapperElement target) sync* {
+    for (var param in target.params) {
+      if (param is UnresolvedParamElement) {
         continue;
       }
 
-      ClassMapperConfig? resolveElement(Element? element) {
-        var classConfig = getConfig(element);
-        if (classConfig != null &&
-            classConfig.shouldGenerate(GenerateMethods.copy) &&
-            (classConfig.hasCallableConstructor ||
-                classConfig.superConfig != null ||
-                classConfig.subConfigs.isNotEmpty)) {
-          return classConfig;
+      ClassMapperElement? resolveElement(Element? element) {
+        var classTarget = target.parent.getTargetForElement(element);
+        if (classTarget is ClassMapperElement &&
+            classTarget.shouldGenerate(GenerateMethods.copy) &&
+            (classTarget.hasCallableConstructor ||
+                classTarget.superTarget != null ||
+                classTarget.subTargets.isNotEmpty)) {
+          return classTarget;
         }
         return null;
       }
 
-      CopyParamConfig makeCollectionConfig(int valueIndex, String name) {
+      CopyParamElement makeCollectionConfig(int valueIndex, String name) {
         var it = param.parameter.type as InterfaceType;
         var itemElement = it.typeArguments[valueIndex].element;
         var itemConfig = resolveElement(itemElement);
 
-        var forceNullable = config.subConfigs.isNotEmpty;
+        var forceNullable = target.subTargets.isNotEmpty;
 
-        var itemHasSubConfigs = itemConfig?.subConfigs.isNotEmpty ?? false;
-        var itemHasSuperConfig = itemConfig?.superConfig != null;
+        var itemHasSubConfigs = itemConfig?.subTargets.isNotEmpty ?? false;
+        var itemHassuperTarget = itemConfig?.superTarget != null;
 
-        return CollectionCopyParamConfig(
+        return CollectionCopyParamElement(
           param: param,
           name: name,
           itemName: itemConfig?.uniqueClassName ?? 'Object',
           itemHasSubConfigs: itemHasSubConfigs,
-          itemHasSuperConfig: itemHasSuperConfig,
-          namespace: config.namespace,
+          itemHassuperTarget: itemHassuperTarget,
+          namespace: target.parent.namespace,
           forceNullable: forceNullable,
           valueIndex: valueIndex,
         );
@@ -62,33 +59,33 @@ class CopyParamConfig {
         var classConfig = resolveElement(classElement);
 
         if (classConfig != null) {
-          var hasSubConfigs = classConfig.subConfigs.isNotEmpty;
-          var hasSuperConfig = classConfig.superConfig != null;
+          var hasSubConfigs = classConfig.subTargets.isNotEmpty;
+          var hassuperTarget = classConfig.superTarget != null;
 
-          yield CopyParamConfig(
+          yield CopyParamElement(
             param: param,
             name: classConfig.uniqueClassName,
             hasSubConfigs: hasSubConfigs,
-            hasSuperConfig: hasSuperConfig,
-            namespace: config.namespace,
+            hassuperTarget: hassuperTarget,
+            namespace: target.parent.namespace,
           );
         }
       }
     }
   }
 
-  CopyParamConfig({
+  CopyParamElement({
     required this.param,
     required this.name,
     this.hasSubConfigs = false,
-    this.hasSuperConfig = false,
+    this.hassuperTarget = false,
     required this.namespace,
   });
 
-  final ParameterConfig param;
+  final MapperParamElement param;
   final String name;
   final bool hasSubConfigs;
-  final bool hasSuperConfig;
+  final bool hassuperTarget;
   final Namespace namespace;
 
   late ParameterElement p = param.parameter;
@@ -106,22 +103,22 @@ class CopyParamConfig {
   String get subTypeParam => hasSubConfigs
       ? ', ${namespace.prefixedType(p.type, withNullability: false)}'
       : '';
-  String get superTypeParam => hasSubConfigs || hasSuperConfig
+  String get superTypeParam => hasSubConfigs || hassuperTarget
       ? ', ${namespace.prefixedType(p.type, withNullability: false)}'
       : '';
 
   String get invocation {
-    return '\$value.${a.name}${a.type.isNullable ? '?' : ''}.copyWith._chain(\$identity, $invocationThen)';
+    return '\$value.${a.name}${a.type.isNullable ? '?' : ''}.copyWith.chain(\$identity, $invocationThen)';
   }
 }
 
-class CollectionCopyParamConfig extends CopyParamConfig {
-  CollectionCopyParamConfig({
+class CollectionCopyParamElement extends CopyParamElement {
+  CollectionCopyParamElement({
     required super.param,
     required super.name,
     required this.itemName,
     required this.itemHasSubConfigs,
-    required this.itemHasSuperConfig,
+    required this.itemHassuperTarget,
     required super.namespace,
     required this.forceNullable,
     required this.valueIndex,
@@ -129,12 +126,9 @@ class CollectionCopyParamConfig extends CopyParamConfig {
 
   final String itemName;
   final bool itemHasSubConfigs;
-  final bool itemHasSuperConfig;
+  final bool itemHassuperTarget;
   final bool forceNullable;
   final int valueIndex;
-
-  late String itemImplName =
-      itemName == 'Object' ? 'ObjectCopyWith' : '_${itemName}CopyWithImpl';
 
   late DartType itemType = (p.type as InterfaceType).typeArguments[valueIndex];
   late bool itemTypeNullable =
@@ -143,7 +137,7 @@ class CollectionCopyParamConfig extends CopyParamConfig {
   late String itemOptSubTypeParam = itemHasSubConfigs
       ? ', ${namespace.prefixedType(itemType, withNullability: false)}'
       : '';
-  late String itemOptSuperTypeParam = itemHasSubConfigs || itemHasSuperConfig
+  late String itemOptSuperTypeParam = itemHasSubConfigs || itemHassuperTarget
       ? ', ${namespace.prefixedType(itemType, withNullability: false)}'
       : '';
 
@@ -171,7 +165,7 @@ class CollectionCopyParamConfig extends CopyParamConfig {
       itemInvocation = '(v, t) => ObjectCopyWith(v, \$identity, t)';
     } else {
       itemInvocation =
-          '(v, t) => v${itemTypeNullable ? '?' : ''}.copyWith._chain(\$identity, t)';
+          '(v, t) => v${itemTypeNullable ? '?' : ''}.copyWith.chain(\$identity, t)';
     }
 
     var result =

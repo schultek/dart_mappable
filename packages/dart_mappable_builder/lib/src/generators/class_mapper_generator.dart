@@ -1,8 +1,9 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:ansicolor/ansicolor.dart';
 
-import '../config/class_mapper_config.dart';
-import '../config/copy_param_config.dart';
+import '../elements/class_mapper_element.dart';
+import '../elements/copy_param_element.dart';
+import '../elements/mapper_element.dart';
 import '../utils.dart';
 import 'copywith_generator.dart';
 import 'decoder_generator.dart';
@@ -10,30 +11,37 @@ import 'encoder_generator.dart';
 import 'equals_generator.dart';
 import 'tostring_generator.dart';
 
+abstract class MapperGenerator<T extends MapperElement> {
+  final T target;
+
+  MapperGenerator(this.target);
+
+  Future<String> generate();
+}
+
 /// Generates code for a specific class
-class ClassMapperGenerator {
-  ClassMapperConfig config;
+class ClassMapperGenerator extends MapperGenerator<ClassMapperElement> {
+  ClassMapperGenerator(super.target);
 
-  ClassMapperGenerator(this.config);
-
-  Future<String> generate(GetConfig getConfig) async {
+  @override
+  Future<String> generate() async {
     var output = StringBuffer();
 
-    var encoderGen = EncoderGenerator(config);
-    var decoderGen = DecoderGenerator(config);
-    var stringifyGen = ToStringGenerator(config);
-    var equalsGen = EqualsGenerator(config);
-    var copyGen = CopyWithGenerator(config);
+    var encoderGen = EncoderGenerator(target);
+    var decoderGen = DecoderGenerator(target);
+    var stringifyGen = ToStringGenerator(target);
+    var equalsGen = EqualsGenerator(target);
+    var copyGen = CopyWithGenerator(target);
 
     var mappers = [
-      '${config.uniqueClassName}Mapper()',
-      ...config.customMappers,
+      '${target.uniqueClassName}Mapper()',
+      ...target.customMappers.map((t) => '${t.getDisplayString(withNullability: false)}()'),
     ];
 
-    var joins = config.joinConfigs;
+    var joins = target.joinConfigs;
 
     output.write(
-        'class ${config.uniqueClassName}Mapper with MapperBase<${config.prefixedClassName}> {\n'
+        'class ${target.uniqueClassName}Mapper with MapperBase<${target.prefixedClassName}> {\n'
         '  static MapperContainer container = MapperContainer(\n'
         '    mappers: {');
 
@@ -58,20 +66,20 @@ class ClassMapperGenerator {
 
     output.write('  );\n\n'
         '  @override\n'
-        '  ${config.uniqueClassName}MapperElement createElement(MapperContainer container) {\n'
-        '    return ${config.uniqueClassName}MapperElement._(this, container);\n'
+        '  ${target.uniqueClassName}MapperElement createElement(MapperContainer container) {\n'
+        '    return ${target.uniqueClassName}MapperElement._(this, container);\n'
         '  }\n\n');
 
-    if (config.typeParamsList.isNotEmpty) {
+    if (target.typeParamsList.isNotEmpty) {
       output.write(decoderGen.generateTypeFactory());
     }
 
     output.write(
-        '  static final fromMap = container.fromMap<${config.prefixedClassName}>;\n'
-        '  static final fromJson = container.fromJson<${config.prefixedClassName}>;\n'
+        '  static final fromMap = container.fromMap<${target.prefixedClassName}>;\n'
+        '  static final fromJson = container.fromJson<${target.prefixedClassName}>;\n'
         '}\n\n'
-        'class ${config.uniqueClassName}MapperElement extends MapperElementBase<${config.prefixedClassName}> {\n'
-        '  ${config.uniqueClassName}MapperElement._(super.mapper, super.container);\n');
+        'class ${target.uniqueClassName}MapperElement extends MapperElementBase<${target.prefixedClassName}> {\n'
+        '  ${target.uniqueClassName}MapperElement._(super.mapper, super.container);\n');
 
     output.writeAll([
       await decoderGen.generateDecoderMethods(),
@@ -82,21 +90,21 @@ class ClassMapperGenerator {
 
     output.write('}\n\n');
 
-    if (config.generateAsMixin) {
+    if (target.generateAsMixin) {
       _checkMixinUsed();
 
       output.write(
-          'mixin ${config.uniqueClassName}Mappable${config.typeParamsDeclaration} {\n');
+          'mixin ${target.uniqueClassName}Mappable${target.typeParamsDeclaration} {\n');
       output.writeAll([
         encoderGen.generateEncoderMixin(),
-        copyGen.generateCopyWithMixin(getConfig),
+        copyGen.generateCopyWithMixin(),
         stringifyGen.generateToStringMixin(),
         equalsGen.generateEqualsMixin(),
       ]);
       output.write('}');
     } else {
       output.write(
-          'extension ${config.uniqueClassName}MapperExtension${config.typeParamsDeclaration} on ${config.prefixedClassName}${config.typeParams} {\n');
+          'extension ${target.uniqueClassName}MapperExtension${target.typeParamsDeclaration} on ${target.prefixedClassName}${target.typeParams} {\n');
       output.writeAll([
         encoderGen.generateEncoderExtensions(),
         copyGen.generateCopyWithExtension(),
@@ -105,16 +113,16 @@ class ClassMapperGenerator {
     }
 
     output.writeAll([
-      copyGen.generateCopyWithClasses(getConfig),
+      copyGen.generateCopyWithClasses(),
     ]);
 
     return output.toString();
   }
 
   void _checkMixinUsed() {
-    var node = config.element.getNode()! as ClassDeclaration;
-    var className = config.className;
-    var mixinName = '${config.uniqueClassName}Mappable';
+    var node = target.element.getNode()! as ClassDeclaration;
+    var className = target.className;
+    var mixinName = '${target.uniqueClassName}Mappable';
 
     var hasCopyWithMixin =
         node.withClause?.mixinTypes.any((t) => t.name.name == mixinName) ??
