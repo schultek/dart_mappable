@@ -45,6 +45,9 @@ class MappableBuilder implements Builder {
     data.globalOptions = options;
 
     var entryLib = await buildStep.inputLibrary;
+
+    data.packageName = entryLib.source.uri.pathSegments.first;
+
     var group = data.getGroupForLibrary(entryLib);
 
     if (group.targets.isEmpty) {

@@ -259,13 +259,13 @@ class ClassMapperElement extends MapperElement<ClassElement> {
 
   late List<String> typeParamsList = element.typeParameters
       .map((p) =>
-          '${p.displayName}${p.bound != null ? ' extends ${parent.namespace.prefixedType(p.bound!)}' : ''}')
+          '${p.displayName}${p.bound != null ? ' extends ${parent.prefixedType(p.bound!)}' : ''}')
       .toList();
 
   late List<String> superTypeArgs = () {
     if (superTarget == null) return <String>[];
     return element.supertype?.typeArguments
-            .map((a) => parent.namespace.prefixedType(a))
+            .map((a) => parent.prefixedType(a))
             .toList() ??
         [];
   }();
@@ -346,12 +346,18 @@ class ClassMapperElement extends MapperElement<ClassElement> {
       generateMixin && subTargets.every((c) => c.generateAsMixin);
 
   late List<String> joinConfigs = () {
-    var joins = [...subTargets.map((c) => '${c.uniqueClassName}Mapper')];
+    var joins = <String>[];
+
+    for (var target in subTargets) {
+      var prefix = parent.prefixOfElement(target.element);
+      joins.add('$prefix${target.uniqueClassName}Mapper');
+    }
+
     for (var param in params) {
       var e = param.parameter.type.element;
       var m = parent.getTargetForElement(e);
       if (m != null) {
-        joins.add('${m.element.name}Mapper');
+        joins.add('${parent.prefixOfElement(m.element)}${m.element.name}Mapper');
       }
     }
     return joins;

@@ -157,7 +157,7 @@ class CopyWithGenerator {
       var p = param.parameter;
 
       var type =
-          element.parent.namespace.prefixedType(p.type, withNullability: false);
+          element.parent.prefixedType(p.type, withNullability: false);
 
       if (param is UnresolvedParamElement) {
         if (p.type.isNullable) {

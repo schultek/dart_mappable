@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
@@ -13,7 +14,16 @@ final mapperResource = Resource<MapperData>(() => MapperData());
 
 class MapperData {
   late MappableOptions globalOptions;
+  late String packageName;
   final Map<LibraryElement, MapperElementGroup> groups = {};
+
+  bool isPackage(Uri lib) {
+    if (lib.scheme == 'package' || lib.scheme == 'asset') {
+      return lib.pathSegments.first == packageName;
+    } else {
+      return false;
+    }
+  }
 
   MapperElement? getTargetForElement(Element? element) {
     if (element == null) return null;
@@ -21,11 +31,15 @@ class MapperData {
         .map((g) => g.targets[element])
         .whereType<MapperElement>()
         .firstOrNull;
-    if (target == null && element.library != null) {
+
+    if (target == null) {
+      var lib = element.library;
+      if (lib == null || lib.isInSdk || !isPackage(lib.source.uri)) return null;
+
       var g = getGroupForLibrary(element.library!);
       return g.targets[element];
     }
-    return null;
+    return target;
   }
 
   MapperElementGroup getGroupForLibrary(LibraryElement lib) {
@@ -34,6 +48,8 @@ class MapperData {
     }
 
     var group = MapperElementGroup(this, lib);
+    groups[lib] = group;
+
     var options = globalOptions;
 
     if (libChecker.hasAnnotationOf(lib)) {
@@ -91,14 +107,49 @@ class MapperData {
 
 class MapperElementGroup {
   MapperElementGroup(this.parent, LibraryElement lib)
-      : namespace = lib.publicNamespace;
+       {
+       var names = <String, Element>{};
+    for (var i in lib.libraryImports) {
+      names.addAll(i.namespace.definedNames);
+    }
+       names.addAll(lib.publicNamespace.definedNames);
+
+    for (var name in names.entries) {
+      if (name.key.contains('.')) {
+        prefixes[name.value] = name.key.substring(0, name.key.indexOf('.')+1);
+      }
+    }
+  }
 
   final MapperData parent;
-  final Namespace namespace;
+  Map<Element, String> prefixes = {};
 
   Map<InterfaceElement, MapperElement> targets = {};
 
   Map<String, int> nameIndexes = {};
+
+  String prefixOfElement(Element elem) {
+    return prefixes[elem] ?? '';
+  }
+
+  String prefixedType(DartType t, {bool withNullability = true}) {
+    if (t is TypeParameterType || t.element == null) {
+      return t.getDisplayString(withNullability: withNullability);
+    }
+
+    var typeArgs = '';
+    if (t is InterfaceType && t.typeArguments.isNotEmpty) {
+      typeArgs = '<${t.typeArguments.map(prefixedType).join(', ')}>';
+    }
+
+    var type = '${t.element!.name}$typeArgs';
+
+    if (withNullability && t.nullabilitySuffix == NullabilitySuffix.question) {
+      type += '?';
+    }
+
+    return '${prefixOfElement(t.element!)}$type';
+  }
 
   MapperElement? getTargetForElement(Element? element) {
     return targets[element] ?? parent.getTargetForElement(element);

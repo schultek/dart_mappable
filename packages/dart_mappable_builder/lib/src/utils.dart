@@ -150,27 +150,3 @@ TextTransform? textTransformFromAnnotation(DartObject obj) {
 extension NullableType on DartType {
   bool get isNullable => nullabilitySuffix == NullabilitySuffix.question;
 }
-
-extension NamespacePrefix on Namespace {
-
-  String prefixedType(DartType t, {bool withNullability = true}) {
-    if (t is TypeParameterType) {
-      return t.getDisplayString(withNullability: withNullability);
-    }
-
-    var typeArgs = '';
-    if (t is InterfaceType && t.typeArguments.isNotEmpty) {
-      typeArgs = '<${t.typeArguments.map(prefixedType).join(', ')}>';
-    }
-
-    var type = '${t.element?.name}$typeArgs';
-
-    if (withNullability && t.nullabilitySuffix == NullabilitySuffix.question) {
-      type += '?';
-    }
-
-    return type;
-    // var prefix = add(t.element?.librarySource?.uri);
-    // return (prefix != null ? 'p$prefix.' : '') + type;
-  }
-}

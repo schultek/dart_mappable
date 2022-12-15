@@ -10,7 +10,7 @@ class AnimalMapper with MapperBase<Animal> {
     mappers: {AnimalMapper()},
     join: {
       DogMapper.container,
-      CatMapper.container,
+      c.CatMapper.container,
     },
   );
 
@@ -29,7 +29,7 @@ class AnimalMapperElement extends MapperElementBase<Animal> {
   @override Function get decoder => decode;
   Animal decode(dynamic v) => checked(v, (Map<String, dynamic> map) {
     switch(map['type']) {
-      case 'Cat': return CatMapper().createElement(container).decode(map);
+      case 'Cat': return c.CatMapper().createElement(container).decode(map);
       case 1: return DogMapper().createElement(container).decode(map);
       default: return fromMap(map);
     }
@@ -60,7 +60,7 @@ abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal> imple
 class DogMapper with MapperBase<Dog> {
   static MapperContainer container = MapperContainer(
     mappers: {DogMapper()},
-    join: {PersonMapper.container},
+    join: {p.PersonMapper.container},
   );
 
   @override
@@ -103,14 +103,14 @@ extension DogValueCopy<$R, $Out extends Animal> on ObjectCopyWith<$R, Dog, $Out>
 
 abstract class DogCopyWith<$R, $Out extends Animal> implements AnimalCopyWith<$R, Dog, $Out> {
   DogCopyWith<$R2, $Out2> chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2);
-  PersonCopyWith<$R> get owner;
-  @override $R call({int? age, Person? owner});
+  p.PersonCopyWith<$R> get owner;
+  @override $R call({int? age, p.Person? owner});
 }
 
 class _DogCopyWithImpl<$R, $Out extends Animal> extends BaseCopyWith<$R, Dog, $Out> implements DogCopyWith<$R, $Out> {
   _DogCopyWithImpl(super.value, super.then, super.then2);
   @override DogCopyWith<$R2, $Out2> chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2) => _DogCopyWithImpl($value, t, t2);
 
-  @override PersonCopyWith<$R> get owner => $value.owner.copyWith.chain($identity, (v) => call(owner: v));
-  @override $R call({int? age, Person? owner}) => $then(Dog(age ?? $value.age, owner ?? $value.owner));
+  @override p.PersonCopyWith<$R> get owner => $value.owner.copyWith.chain($identity, (v) => call(owner: v));
+  @override $R call({int? age, p.Person? owner}) => $then(Dog(age ?? $value.age, owner ?? $value.owner));
 }

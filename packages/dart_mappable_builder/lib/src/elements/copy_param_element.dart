@@ -3,6 +3,7 @@ import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
+import '../mapper_resource.dart';
 import '../utils.dart';
 import 'class_mapper_element.dart';
 import 'mapper_param_element.dart';
@@ -36,15 +37,18 @@ class CopyParamElement {
         var forceNullable = target.subTargets.isNotEmpty;
 
         var itemHasSubConfigs = itemConfig?.subTargets.isNotEmpty ?? false;
-        var itemHassuperTarget = itemConfig?.superTarget != null;
+        var itemHasSuperTarget = itemConfig?.superTarget != null;
+
+        var itemPrefixedName = itemConfig != null ? target.parent.prefixOfElement(itemConfig.element)
+            + itemConfig.uniqueClassName : 'Object';
 
         return CollectionCopyParamElement(
+          parent: target.parent,
           param: param,
           name: name,
-          itemName: itemConfig?.uniqueClassName ?? 'Object',
+          itemName: itemPrefixedName,
           itemHasSubConfigs: itemHasSubConfigs,
-          itemHassuperTarget: itemHassuperTarget,
-          namespace: target.parent.namespace,
+          itemHassuperTarget: itemHasSuperTarget,
           forceNullable: forceNullable,
           valueIndex: valueIndex,
         );
@@ -60,14 +64,17 @@ class CopyParamElement {
 
         if (classConfig != null) {
           var hasSubConfigs = classConfig.subTargets.isNotEmpty;
-          var hassuperTarget = classConfig.superTarget != null;
+          var hasSuperTarget = classConfig.superTarget != null;
+
+          var prefixedName = target.parent.prefixOfElement(classConfig.element)
+          + classConfig.uniqueClassName;
 
           yield CopyParamElement(
+            parent: target.parent,
             param: param,
-            name: classConfig.uniqueClassName,
+            name: prefixedName,
             hasSubConfigs: hasSubConfigs,
-            hassuperTarget: hassuperTarget,
-            namespace: target.parent.namespace,
+            hassuperTarget: hasSuperTarget,
           );
         }
       }
@@ -75,18 +82,18 @@ class CopyParamElement {
   }
 
   CopyParamElement({
+    required this.parent,
     required this.param,
     required this.name,
     this.hasSubConfigs = false,
     this.hassuperTarget = false,
-    required this.namespace,
   });
 
+  final MapperElementGroup parent;
   final MapperParamElement param;
   final String name;
   final bool hasSubConfigs;
   final bool hassuperTarget;
-  final Namespace namespace;
 
   late ParameterElement p = param.parameter;
   late PropertyInducingElement a = param.accessor;
@@ -94,17 +101,17 @@ class CopyParamElement {
   String get fieldTypeParams => p.type is InterfaceType
       ? (p.type as InterfaceType)
           .typeArguments
-          .map((t) => ', ${namespace.prefixedType(t)}')
+          .map((t) => ', ${parent.prefixedType(t)}')
           .join()
       : '';
 
   String get invocationThen => '(v) => call(${param.superName}: v)';
 
   String get subTypeParam => hasSubConfigs
-      ? ', ${namespace.prefixedType(p.type, withNullability: false)}'
+      ? ', ${parent.prefixedType(p.type, withNullability: false)}'
       : '';
   String get superTypeParam => hasSubConfigs || hassuperTarget
-      ? ', ${namespace.prefixedType(p.type, withNullability: false)}'
+      ? ', ${parent.prefixedType(p.type, withNullability: false)}'
       : '';
 
   String get invocation {
@@ -114,12 +121,12 @@ class CopyParamElement {
 
 class CollectionCopyParamElement extends CopyParamElement {
   CollectionCopyParamElement({
+    required super.parent,
     required super.param,
     required super.name,
     required this.itemName,
     required this.itemHasSubConfigs,
     required this.itemHassuperTarget,
-    required super.namespace,
     required this.forceNullable,
     required this.valueIndex,
   });
@@ -135,23 +142,23 @@ class CollectionCopyParamElement extends CopyParamElement {
       itemType.nullabilitySuffix == NullabilitySuffix.question;
 
   late String itemOptSubTypeParam = itemHasSubConfigs
-      ? ', ${namespace.prefixedType(itemType, withNullability: false)}'
+      ? ', ${parent.prefixedType(itemType, withNullability: false)}'
       : '';
   late String itemOptSuperTypeParam = itemHasSubConfigs || itemHassuperTarget
-      ? ', ${namespace.prefixedType(itemType, withNullability: false)}'
+      ? ', ${parent.prefixedType(itemType, withNullability: false)}'
       : '';
 
   @override
   String get fieldTypeParams {
     if (itemName == 'Object') {
-      var objectTypeParam = ', ${namespace.prefixedType(itemType)}';
+      var objectTypeParam = ', ${parent.prefixedType(itemType)}';
       return '${super.fieldTypeParams}, ObjectCopyWith<\$R$objectTypeParam$objectTypeParam>${itemTypeNullable || forceNullable ? '?' : ''}';
     }
 
     var typeParams = itemType is InterfaceType
         ? (itemType as InterfaceType)
             .typeArguments
-            .map((t) => ', ${namespace.prefixedType(t)}')
+            .map((t) => ', ${parent.prefixedType(t)}')
             .join()
         : '';
 

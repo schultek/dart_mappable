@@ -13,10 +13,3 @@ class Zoo<T extends Animal> with ZooMappable<T> {
   static final fromMap = ZooMapper.fromMap;
   static final fromJson = ZooMapper.fromJson;
 }
-
-void main() {
-
-  Zoo<Dog> park = Zoo<Dog>(Dog());
-
-  park.copyWith.animals();
-}

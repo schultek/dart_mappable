@@ -1,11 +1,11 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'cat.dart';
-import 'person.dart';
+import 'cat.dart' as c;
+import 'person.dart' as p;
 
 part 'animal.mapper.dart';
 
-@MappableClass(discriminatorKey: 'type', includeSubClasses: [Cat])
+@MappableClass(discriminatorKey: 'type', includeSubClasses: [c.Cat])
 abstract class Animal with AnimalMappable {
   String name;
   Animal(this.name);
@@ -18,7 +18,7 @@ abstract class Animal with AnimalMappable {
 class Dog extends Animal with DogMappable {
   int age;
 
-  Person owner;
+  p.Person owner;
 
   Dog(this.age, this.owner) : super('Good Boy');
 }
