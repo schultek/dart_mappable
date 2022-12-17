@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element
 
-part of 'package:v2_test/models/animal.dart';
+part of 'animal.dart';
 
 class AnimalMapper with MapperBase<Animal> {
   static MapperContainer container = MapperContainer(
@@ -27,7 +27,7 @@ class AnimalMapperElement extends MapperElementBase<Animal> {
   AnimalMapperElement._(super.mapper, super.container);
 
   @override Function get decoder => decode;
-  Animal decode(dynamic v) => checked(v, (Map<String, dynamic> map) {
+  Animal decode(dynamic v) => checkedType(v, (Map<String, dynamic> map) {
     switch(map['type']) {
       case 'Cat': return c.CatMapper().createElement(container).decode(map);
       case 1: return DogMapper().createElement(container).decode(map);
@@ -51,6 +51,7 @@ mixin AnimalMappable {
   AnimalCopyWith<Animal, Animal, Animal> get copyWith;
 }
 
+typedef AnimalCopyWithBound = Animal;
 abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal> implements ObjectCopyWith<$R, $In, $Out> {
   AnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(Then<Animal, $Out2> t, Then<$Out2, $R2> t2);
   $R call();
@@ -76,7 +77,7 @@ class DogMapperElement extends MapperElementBase<Dog> {
   DogMapperElement._(super.mapper, super.container);
 
   @override Function get decoder => decode;
-  Dog decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Dog decode(dynamic v) => checkedType(v, (Map<String, dynamic> map) => fromMap(map));
   Dog fromMap(Map<String, dynamic> map) => Dog(container.$get(map, 'age'), container.$get(map, 'owner'));
 
   @override Function get encoder => encode;
@@ -91,26 +92,27 @@ class DogMapperElement extends MapperElementBase<Dog> {
 mixin DogMappable {
   String toJson() => DogMapper.container.toJson(this as Dog);
   Map<String, dynamic> toMap() => DogMapper.container.toMap(this as Dog);
-  DogCopyWith<Dog, Dog> get copyWith => _DogCopyWithImpl(this as Dog, $identity, $identity);
+  DogCopyWith<Dog, Dog, Dog> get copyWith => _DogCopyWithImpl(this as Dog, $identity, $identity);
   @override String toString() => DogMapper.container.asString(this);
   @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && DogMapper.container.isEqual(this, other));
   @override int get hashCode => DogMapper.container.hash(this);
 }
 
 extension DogValueCopy<$R, $Out extends Animal> on ObjectCopyWith<$R, Dog, $Out> {
-  DogCopyWith<$R, $Out> get asDog => base.as((v, t, t2) => _DogCopyWithImpl(v, t, t2));
+  DogCopyWith<$R, Dog, $Out> get asDog => base.as((v, t, t2) => _DogCopyWithImpl(v, t, t2));
 }
 
-abstract class DogCopyWith<$R, $Out extends Animal> implements AnimalCopyWith<$R, Dog, $Out> {
-  DogCopyWith<$R2, $Out2> chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2);
-  p.PersonCopyWith<$R> get owner;
+typedef DogCopyWithBound = Animal;
+abstract class DogCopyWith<$R, $In extends Dog, $Out extends Animal> implements AnimalCopyWith<$R, $In, $Out> {
+  DogCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2);
+  p.PersonCopyWith<$R, p.Person, p.Person> get owner;
   @override $R call({int? age, p.Person? owner});
 }
 
-class _DogCopyWithImpl<$R, $Out extends Animal> extends BaseCopyWith<$R, Dog, $Out> implements DogCopyWith<$R, $Out> {
+class _DogCopyWithImpl<$R, $Out extends Animal> extends CopyWithBase<$R, Dog, $Out> implements DogCopyWith<$R, Dog, $Out> {
   _DogCopyWithImpl(super.value, super.then, super.then2);
-  @override DogCopyWith<$R2, $Out2> chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2) => _DogCopyWithImpl($value, t, t2);
+  @override DogCopyWith<$R2, Dog, $Out2> chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2) => _DogCopyWithImpl($value, t, t2);
 
-  @override p.PersonCopyWith<$R> get owner => $value.owner.copyWith.chain($identity, (v) => call(owner: v));
+  @override p.PersonCopyWith<$R, p.Person, p.Person> get owner => $value.owner.copyWith.chain($identity, (v) => call(owner: v));
   @override $R call({int? age, p.Person? owner}) => $then(Dog(age ?? $value.age, owner ?? $value.owner));
 }

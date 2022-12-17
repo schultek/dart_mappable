@@ -42,7 +42,7 @@ abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person, p0.Pe
   $R call({String? name});
 }
 
-class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person, p0.Person> implements PersonCopyWith<$R> {
+class _PersonCopyWithImpl<$R> extends CopyWithBase<$R, p0.Person, p0.Person> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
   @override PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, p0.Person> t, Then<p0.Person, $R2> t2) => _PersonCopyWithImpl($value, t, t2);
 
@@ -99,5 +99,5 @@ class Mapper {
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
-  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
+  CopyWithBase<Result, In, Out> get base => this as CopyWithBase<Result, In, Out>;
 }

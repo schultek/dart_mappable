@@ -24,8 +24,19 @@ class ClassMapperElement extends MapperElement<ClassElement> {
   late String prefixedClassName = className;
 
   late String selfTypeParam = '$className$typeParams';
-  late String superPrefixedClassName =
-      superTarget?.superPrefixedClassName ?? prefixedClassName;
+  late String superPrefixedClassName = () {
+    if (superTarget != null) {
+      if (superTarget!.parent == parent) {
+        return superTarget!.superPrefixedClassName;
+      } else {
+        return superTarget!.superPrefixedClassNameAlias;
+      }
+    } else {
+      return prefixedClassName;
+    }
+  }();
+
+  late String superPrefixedClassNameAlias = '${uniqueClassName}CopyWithBound';
 
   late Iterable<FieldElement> allPublicFields = () sync* {
     yield* superTarget?.allPublicFields ?? [];
@@ -41,8 +52,6 @@ class ClassMapperElement extends MapperElement<ClassElement> {
   List<ClassMapperElement> subTargets = [];
   ClassMapperElement? superTarget;
 
-  late List<MapperParamElement> params;
-
   @override
   // ignore: overridden_fields
   late Future<void> finalize = () async {
@@ -50,6 +59,8 @@ class ClassMapperElement extends MapperElement<ClassElement> {
 
     for (var subclass in includeSubclasses) {
       var element = parent.getTargetForElement(subclass.element);
+
+      if (subTargets.contains(element)) continue;
 
       if (element == null || element is! ClassMapperElement) {
         throw 'Cannot include subclass ${subclass.getDisplayString(withNullability: false)}, '
@@ -61,8 +72,6 @@ class ClassMapperElement extends MapperElement<ClassElement> {
     }
 
     await superTarget?.finalize;
-
-    params = analyzeParams();
   }();
 
   @override
@@ -87,7 +96,7 @@ class ClassMapperElement extends MapperElement<ClassElement> {
     element.subTargets.add(this);
   }
 
-  List<MapperParamElement> analyzeParams() {
+  late List<MapperParamElement> params = () {
     var params = <MapperParamElement>[];
 
     if (constructor == null) return params;
@@ -111,7 +120,7 @@ class ClassMapperElement extends MapperElement<ClassElement> {
     }
 
     return params;
-  }
+  }();
 
   MapperParamElement getParameterConfig(ParameterElement param) {
     var dec = param.declaration;
@@ -349,6 +358,11 @@ class ClassMapperElement extends MapperElement<ClassElement> {
     var joins = <String>[];
 
     for (var target in subTargets) {
+      if (!target.element.isAccessibleIn(parent.library)) {
+        // TODO warn about unused subclasses
+        continue;
+      }
+
       var prefix = parent.prefixOfElement(target.element);
       joins.add('$prefix${target.uniqueClassName}Mapper');
     }
@@ -357,7 +371,8 @@ class ClassMapperElement extends MapperElement<ClassElement> {
       var e = param.parameter.type.element;
       var m = parent.getTargetForElement(e);
       if (m != null) {
-        joins.add('${parent.prefixOfElement(m.element)}${m.element.name}Mapper');
+        joins
+            .add('${parent.prefixOfElement(m.element)}${m.element.name}Mapper');
       }
     }
     return joins;
@@ -367,8 +382,8 @@ class ClassMapperElement extends MapperElement<ClassElement> {
 class FactoryConstructorMapperTarget extends ClassMapperElement {
   ConstructorElement factoryConstructor;
 
-  FactoryConstructorMapperTarget(MapperElementGroup parent, this.factoryConstructor,
-      MappableOptions options, int index)
+  FactoryConstructorMapperTarget(MapperElementGroup parent,
+      this.factoryConstructor, MappableOptions options, int index)
       : super(
           parent,
           factoryConstructor.redirectedConstructor!.returnType.element

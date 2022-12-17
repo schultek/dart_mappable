@@ -16,12 +16,12 @@ class MappableOptions {
   final List<DartType>? include;
 
   MappableOptions({
-    required this.caseStyle,
-    required this.enumCaseStyle,
-    required this.ignoreNull,
-    required this.discriminatorKey,
-    required this.generateMethods,
-    required this.include,
+    this.caseStyle,
+    this.enumCaseStyle,
+    this.ignoreNull,
+    this.discriminatorKey,
+    this.generateMethods,
+    this.include,
   });
 
   MappableOptions.parse(Map options)

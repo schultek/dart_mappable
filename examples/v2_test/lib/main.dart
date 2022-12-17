@@ -1,4 +1,4 @@
-import 'package:dart_mappable/internals.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
 import 'models/animal.dart';
 import 'models/person.dart';

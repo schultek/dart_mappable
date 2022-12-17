@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element
 
-part of 'package:v2_test/models/zoo.dart';
+part of 'zoo.dart';
 
 class ZooMapper with MapperBase<Zoo> {
   static MapperContainer container = MapperContainer(
@@ -26,7 +26,7 @@ class ZooMapperElement extends MapperElementBase<Zoo> {
   ZooMapperElement._(super.mapper, super.container);
 
   @override Function get decoder => decode;
-  Zoo<T> decode<T extends Animal>(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap<T>(map));
+  Zoo<T> decode<T extends Animal>(dynamic v) => checkedType(v, (Map<String, dynamic> map) => fromMap<T>(map));
   Zoo<T> fromMap<T extends Animal>(Map<String, dynamic> map) => Zoo(container.$get(map, 'animals'));
 
   @override Function get encoder => encode;
@@ -41,26 +41,27 @@ class ZooMapperElement extends MapperElementBase<Zoo> {
 mixin ZooMappable<T extends Animal> {
   String toJson() => ZooMapper.container.toJson(this as Zoo<T>);
   Map<String, dynamic> toMap() => ZooMapper.container.toMap(this as Zoo<T>);
-  ZooCopyWith<Zoo<T>, T> get copyWith => _ZooCopyWithImpl(this as Zoo<T>, $identity, $identity);
+  ZooCopyWith<Zoo<T>, Zoo<T>, Zoo<T>, T> get copyWith => _ZooCopyWithImpl(this as Zoo<T>, $identity, $identity);
   @override String toString() => ZooMapper.container.asString(this);
   @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && ZooMapper.container.isEqual(this, other));
   @override int get hashCode => ZooMapper.container.hash(this);
 }
 
-extension ZooValueCopy<$R, T extends Animal> on ObjectCopyWith<$R, Zoo<T>, Zoo<T>> {
-  ZooCopyWith<$R, T> get asZoo => base.as((v, t, t2) => _ZooCopyWithImpl(v, t, t2));
+extension ZooValueCopy<$R, $Out extends Zoo, T extends Animal> on ObjectCopyWith<$R, Zoo<T>, $Out> {
+  ZooCopyWith<$R, Zoo<T>, $Out, T> get asZoo => base.as((v, t, t2) => _ZooCopyWithImpl(v, t, t2));
 }
 
-abstract class ZooCopyWith<$R, T extends Animal> implements ObjectCopyWith<$R, Zoo<T>, Zoo<T>> {
-  ZooCopyWith<$R2, T> chain<$R2>(Then<Zoo<T>, Zoo<T>> t, Then<Zoo<T>, $R2> t2);
-  DogCopyWith<$R, Dog> get animals;
+typedef ZooCopyWithBound = Zoo;
+abstract class ZooCopyWith<$R, $In extends Zoo<T>, $Out extends Zoo, T extends Animal> implements ObjectCopyWith<$R, $In, $Out> {
+  ZooCopyWith<$R2, $In, $Out2, T> chain<$R2, $Out2 extends Zoo>(Then<Zoo<T>, $Out2> t, Then<$Out2, $R2> t2);
+  DogCopyWith<$R, Dog, Dog> get animals;
   $R call({Dog? animals});
 }
 
-class _ZooCopyWithImpl<$R, T extends Animal> extends BaseCopyWith<$R, Zoo<T>, Zoo<T>> implements ZooCopyWith<$R, T> {
+class _ZooCopyWithImpl<$R, $Out extends Zoo, T extends Animal> extends CopyWithBase<$R, Zoo<T>, $Out> implements ZooCopyWith<$R, Zoo<T>, $Out, T> {
   _ZooCopyWithImpl(super.value, super.then, super.then2);
-  @override ZooCopyWith<$R2, T> chain<$R2>(Then<Zoo<T>, Zoo<T>> t, Then<Zoo<T>, $R2> t2) => _ZooCopyWithImpl($value, t, t2);
+  @override ZooCopyWith<$R2, Zoo<T>, $Out2, T> chain<$R2, $Out2 extends Zoo>(Then<Zoo<T>, $Out2> t, Then<$Out2, $R2> t2) => _ZooCopyWithImpl($value, t, t2);
 
-  @override DogCopyWith<$R, Dog> get animals => $value.animals.copyWith.chain($identity, (v) => call(animals: v));
+  @override DogCopyWith<$R, Dog, Dog> get animals => $value.animals.copyWith.chain($identity, (v) => call(animals: v));
   @override $R call({Dog? animals}) => $then(Zoo(animals ?? $value.animals));
 }

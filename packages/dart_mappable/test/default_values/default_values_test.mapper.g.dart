@@ -60,7 +60,7 @@ abstract class ACopyWith<$R> implements ObjectCopyWith<$R, p0.A, p0.A> {
   $R call({p0.B? b});
 }
 
-class _ACopyWithImpl<$R> extends BaseCopyWith<$R, p0.A, p0.A> implements ACopyWith<$R> {
+class _ACopyWithImpl<$R> extends CopyWithBase<$R, p0.A, p0.A> implements ACopyWith<$R> {
   _ACopyWithImpl(super.value, super.then, super.then2);
   @override ACopyWith<$R2> _chain<$R2>(Then<p0.A, p0.A> t, Then<p0.A, $R2> t2) => _ACopyWithImpl($value, t, t2);
 
@@ -105,7 +105,7 @@ abstract class BCopyWith<$R> implements ObjectCopyWith<$R, p0.B, p0.B> {
   $R call({p0.C? c});
 }
 
-class _BCopyWithImpl<$R> extends BaseCopyWith<$R, p0.B, p0.B> implements BCopyWith<$R> {
+class _BCopyWithImpl<$R> extends CopyWithBase<$R, p0.B, p0.B> implements BCopyWith<$R> {
   _BCopyWithImpl(super.value, super.then, super.then2);
   @override BCopyWith<$R2> _chain<$R2>(Then<p0.B, p0.B> t, Then<p0.B, $R2> t2) => _BCopyWithImpl($value, t, t2);
 
@@ -149,7 +149,7 @@ abstract class CCopyWith<$R> implements ObjectCopyWith<$R, p0.C, p0.C> {
   $R call({String? d});
 }
 
-class _CCopyWithImpl<$R> extends BaseCopyWith<$R, p0.C, p0.C> implements CCopyWith<$R> {
+class _CCopyWithImpl<$R> extends CopyWithBase<$R, p0.C, p0.C> implements CCopyWith<$R> {
   _CCopyWithImpl(super.value, super.then, super.then2);
   @override CCopyWith<$R2> _chain<$R2>(Then<p0.C, p0.C> t, Then<p0.C, $R2> t2) => _CCopyWithImpl($value, t, t2);
 
@@ -194,7 +194,7 @@ abstract class A1CopyWith<$R> implements ObjectCopyWith<$R, p1.A, p1.A> {
   $R call({p1.B? b});
 }
 
-class _A1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.A, p1.A> implements A1CopyWith<$R> {
+class _A1CopyWithImpl<$R> extends CopyWithBase<$R, p1.A, p1.A> implements A1CopyWith<$R> {
   _A1CopyWithImpl(super.value, super.then, super.then2);
   @override A1CopyWith<$R2> _chain<$R2>(Then<p1.A, p1.A> t, Then<p1.A, $R2> t2) => _A1CopyWithImpl($value, t, t2);
 
@@ -240,7 +240,7 @@ abstract class B1CopyWith<$R> implements ObjectCopyWith<$R, p1.B, p1.B> {
   $R call({p1.C? c});
 }
 
-class _B1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.B, p1.B> implements B1CopyWith<$R> {
+class _B1CopyWithImpl<$R> extends CopyWithBase<$R, p1.B, p1.B> implements B1CopyWith<$R> {
   _B1CopyWithImpl(super.value, super.then, super.then2);
   @override B1CopyWith<$R2> _chain<$R2>(Then<p1.B, p1.B> t, Then<p1.B, $R2> t2) => _B1CopyWithImpl($value, t, t2);
 
@@ -285,7 +285,7 @@ abstract class C1CopyWith<$R> implements ObjectCopyWith<$R, p1.C, p1.C> {
   $R call({String? d});
 }
 
-class _C1CopyWithImpl<$R> extends BaseCopyWith<$R, p1.C, p1.C> implements C1CopyWith<$R> {
+class _C1CopyWithImpl<$R> extends CopyWithBase<$R, p1.C, p1.C> implements C1CopyWith<$R> {
   _C1CopyWithImpl(super.value, super.then, super.then2);
   @override C1CopyWith<$R2> _chain<$R2>(Then<p1.C, p1.C> t, Then<p1.C, $R2> t2) => _C1CopyWithImpl($value, t, t2);
 
@@ -328,5 +328,5 @@ class Mapper {
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
-  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
+  CopyWithBase<Result, In, Out> get base => this as CopyWithBase<Result, In, Out>;
 }

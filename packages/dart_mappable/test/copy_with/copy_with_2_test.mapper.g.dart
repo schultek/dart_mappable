@@ -59,7 +59,7 @@ abstract class CatCopyWith<$R, $Out extends p0.Animal> implements AnimalCopyWith
   @override $R call({String? name, String? color});
 }
 
-class _CatCopyWithImpl<$R, $Out extends p0.Animal> extends BaseCopyWith<$R, p0.Cat, $Out> implements CatCopyWith<$R, $Out> {
+class _CatCopyWithImpl<$R, $Out extends p0.Animal> extends CopyWithBase<$R, p0.Cat, $Out> implements CatCopyWith<$R, $Out> {
   _CatCopyWithImpl(super.value, super.then, super.then2);
   @override CatCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.Animal>(Then<p0.Cat, $Out2> t, Then<$Out2, $R2> t2) => _CatCopyWithImpl($value, t, t2);
 
@@ -86,7 +86,7 @@ abstract class DogCopyWith<$R, $Out extends p0.Animal> implements AnimalCopyWith
   @override $R call({String? name});
 }
 
-class _DogCopyWithImpl<$R, $Out extends p0.Animal> extends BaseCopyWith<$R, p0.Dog, $Out> implements DogCopyWith<$R, $Out> {
+class _DogCopyWithImpl<$R, $Out extends p0.Animal> extends CopyWithBase<$R, p0.Dog, $Out> implements DogCopyWith<$R, $Out> {
   _DogCopyWithImpl(super.value, super.then, super.then2);
   @override DogCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.Animal>(Then<p0.Dog, $Out2> t, Then<$Out2, $R2> t2) => _DogCopyWithImpl($value, t, t2);
 
@@ -114,7 +114,7 @@ abstract class ZooCopyWith<$R> implements ObjectCopyWith<$R, p0.Zoo, p0.Zoo> {
   $R call({p0.Animal? animal});
 }
 
-class _ZooCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Zoo, p0.Zoo> implements ZooCopyWith<$R> {
+class _ZooCopyWithImpl<$R> extends CopyWithBase<$R, p0.Zoo, p0.Zoo> implements ZooCopyWith<$R> {
   _ZooCopyWithImpl(super.value, super.then, super.then2);
   @override ZooCopyWith<$R2> _chain<$R2>(Then<p0.Zoo, p0.Zoo> t, Then<p0.Zoo, $R2> t2) => _ZooCopyWithImpl($value, t, t2);
 
@@ -158,7 +158,7 @@ abstract class ACopyWith<$R, $In extends p0.A<T>, $Out extends p0.A, T> implemen
   $R call();
 }
 
-class _ACopyWithImpl<$R, $Out extends p0.A, T> extends BaseCopyWith<$R, p0.A<T>, $Out> implements ACopyWith<$R, p0.A<T>, $Out, T> {
+class _ACopyWithImpl<$R, $Out extends p0.A, T> extends CopyWithBase<$R, p0.A<T>, $Out> implements ACopyWith<$R, p0.A<T>, $Out, T> {
   _ACopyWithImpl(super.value, super.then, super.then2);
   @override ACopyWith<$R2, p0.A<T>, $Out2, T> _chain<$R2, $Out2 extends p0.A>(Then<p0.A<T>, $Out2> t, Then<$Out2, $R2> t2) => _ACopyWithImpl($value, t, t2);
 
@@ -201,7 +201,7 @@ abstract class CCopyWith<$R, $Out extends p0.A, T> implements ACopyWith<$R, p0.C
   @override $R call();
 }
 
-class _CCopyWithImpl<$R, $Out extends p0.A, T> extends BaseCopyWith<$R, p0.C<T>, $Out> implements CCopyWith<$R, $Out, T> {
+class _CCopyWithImpl<$R, $Out extends p0.A, T> extends CopyWithBase<$R, p0.C<T>, $Out> implements CCopyWith<$R, $Out, T> {
   _CCopyWithImpl(super.value, super.then, super.then2);
   @override CCopyWith<$R2, $Out2, T> _chain<$R2, $Out2 extends p0.A>(Then<p0.C<T>, $Out2> t, Then<$Out2, $R2> t2) => _CCopyWithImpl($value, t, t2);
 
@@ -246,7 +246,7 @@ abstract class BCopyWith<$R> implements ObjectCopyWith<$R, p0.B, p0.B> {
   $R call({List<p0.A<dynamic>?>? list, p0.A<dynamic>? a});
 }
 
-class _BCopyWithImpl<$R> extends BaseCopyWith<$R, p0.B, p0.B> implements BCopyWith<$R> {
+class _BCopyWithImpl<$R> extends CopyWithBase<$R, p0.B, p0.B> implements BCopyWith<$R> {
   _BCopyWithImpl(super.value, super.then, super.then2);
   @override BCopyWith<$R2> _chain<$R2>(Then<p0.B, p0.B> t, Then<p0.B, $R2> t2) => _BCopyWithImpl($value, t, t2);
 
@@ -291,5 +291,5 @@ class Mapper {
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
-  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
+  CopyWithBase<Result, In, Out> get base => this as CopyWithBase<Result, In, Out>;
 }

@@ -3,6 +3,7 @@ import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
+import 'package:dart_mappable/dart_mappable.dart' show GenerateMethods;
 
 import 'builder_options.dart';
 import 'elements/class_mapper_element.dart';
@@ -106,22 +107,22 @@ class MapperData {
 }
 
 class MapperElementGroup {
-  MapperElementGroup(this.parent, LibraryElement lib)
-       {
-       var names = <String, Element>{};
-    for (var i in lib.libraryImports) {
+  MapperElementGroup(this.parent, this.library) {
+    var names = <String, Element>{};
+    for (var i in library.libraryImports) {
       names.addAll(i.namespace.definedNames);
     }
-       names.addAll(lib.publicNamespace.definedNames);
+    names.addAll(library.publicNamespace.definedNames);
 
     for (var name in names.entries) {
       if (name.key.contains('.')) {
-        prefixes[name.value] = name.key.substring(0, name.key.indexOf('.')+1);
+        prefixes[name.value] = name.key.substring(0, name.key.indexOf('.') + 1);
       }
     }
   }
 
   final MapperData parent;
+  final LibraryElement library;
   Map<Element, String> prefixes = {};
 
   Map<InterfaceElement, MapperElement> targets = {};
@@ -180,8 +181,7 @@ class MapperElementGroup {
     }
   }
 
-  void addElement(
-      InterfaceElement element, MappableOptions options) {
+  void addElement(InterfaceElement element, MappableOptions options) {
     if (element.isPrivate) return;
     if (targets.containsKey(element)) {
       return;
@@ -199,6 +199,13 @@ class MapperElementGroup {
             c.redirectedConstructor != null &&
             classChecker.hasAnnotationOf(c)) {
           var index = getNameIndex(c.name);
+
+          // Disable copy methods for factory elements.
+          options = options.apply(MappableOptions(
+              generateMethods:
+                  ~(~(options.generateMethods ?? GenerateMethods.all) |
+                      GenerateMethods.copy)));
+
           addClassTarget(
               FactoryConstructorMapperTarget(this, c, options, index));
         }
@@ -211,13 +218,14 @@ class MapperElementGroup {
 
     var superElement = target.getSuperElement();
     if (superElement != null) {
-      ClassMapperElement superTarget;
-      if (targets.containsKey(superElement)) {
-        superTarget = targets[superElement] as ClassMapperElement;
-      } else {
-        superTarget = ClassMapperElement(this,
-            superElement, target.options, target.nameIndex);
-      }
+      var superTarget =
+          getTargetForElement(superElement) as ClassMapperElement? ??
+              ClassMapperElement(
+                this,
+                superElement,
+                target.options.apply(MappableOptions(generateMethods: 0)),
+                target.nameIndex,
+              );
 
       target.setSuperTarget(superTarget);
     }

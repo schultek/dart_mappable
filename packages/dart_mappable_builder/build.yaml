@@ -3,5 +3,6 @@ builders:
     import: "package:dart_mappable_builder/builder.dart"
     builder_factories: [ "buildMappable" ]
     build_extensions: { ".dart": [ ".mapper.dart" ] }
+    required_inputs: [".freezed.dart"]
     auto_apply: dependents
     build_to: source

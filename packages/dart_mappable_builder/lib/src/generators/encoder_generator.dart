@@ -31,8 +31,8 @@ class EncoderGenerator {
 
   String generateEncoderExtensions() {
     return target.shouldGenerate(GenerateMethods.encode)
-        ? '  String toJson() => Mapper.toJson(this);\n'
-            '  Map<String, dynamic> toMap() => Mapper.toMap(this);\n'
+        ? '  String toJson() => ${target.uniqueClassName}Mapper.container.toJson(this);\n'
+            '  Map<String, dynamic> toMap() => ${target.uniqueClassName}Mapper.container.toMap(this);\n'
         : '';
   }
 

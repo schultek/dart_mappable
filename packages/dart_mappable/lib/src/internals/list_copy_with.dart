@@ -51,7 +51,7 @@ abstract class ListCopyWith<Result, Elem, Copy> {
   Result apply(List<Elem> Function(List<Elem>) transform);
 }
 
-class _ListCopyWith<Result, Elem, Copy> extends BaseCopyWith<Result, List<Elem>, List<Elem>>
+class _ListCopyWith<Result, Elem, Copy> extends CopyWithBase<Result, List<Elem>, List<Elem>>
     implements ListCopyWith<Result, Elem, Copy> {
   _ListCopyWith(List<Elem> value, this._item, Then<List<Elem>, Result> then)
       : super(value, $identity, then);

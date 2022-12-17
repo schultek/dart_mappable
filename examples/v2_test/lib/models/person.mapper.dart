@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element
 
-part of 'package:v2_test/models/person.dart';
+part of 'person.dart';
 
 class PersonMapper with MapperBase<Person> {
   static MapperContainer container = MapperContainer(
@@ -26,7 +26,7 @@ class PersonMapperElement extends MapperElementBase<Person> {
   PersonMapperElement._(super.mapper, super.container);
 
   @override Function get decoder => decode;
-  Person decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  Person decode(dynamic v) => checkedType(v, (Map<String, dynamic> map) => fromMap(map));
   Person fromMap(Map<String, dynamic> map) => Person(container.$get(map, 'name'), container.$get(map, 'skill'));
 
   @override Function get encoder => encode;
@@ -41,24 +41,25 @@ class PersonMapperElement extends MapperElementBase<Person> {
 mixin PersonMappable {
   String toJson() => PersonMapper.container.toJson(this as Person);
   Map<String, dynamic> toMap() => PersonMapper.container.toMap(this as Person);
-  PersonCopyWith<Person> get copyWith => _PersonCopyWithImpl(this as Person, $identity, $identity);
+  PersonCopyWith<Person, Person, Person> get copyWith => _PersonCopyWithImpl(this as Person, $identity, $identity);
   @override String toString() => PersonMapper.container.asString(this);
   @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && PersonMapper.container.isEqual(this, other));
   @override int get hashCode => PersonMapper.container.hash(this);
 }
 
-extension PersonValueCopy<$R> on ObjectCopyWith<$R, Person, Person> {
-  PersonCopyWith<$R> get asPerson => base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
+extension PersonValueCopy<$R, $Out extends Person> on ObjectCopyWith<$R, Person, $Out> {
+  PersonCopyWith<$R, Person, $Out> get asPerson => base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
 }
 
-abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, Person, Person> {
-  PersonCopyWith<$R2> chain<$R2>(Then<Person, Person> t, Then<Person, $R2> t2);
+typedef PersonCopyWithBound = Person;
+abstract class PersonCopyWith<$R, $In extends Person, $Out extends Person> implements ObjectCopyWith<$R, $In, $Out> {
+  PersonCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Person>(Then<Person, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? name, Skill? skill});
 }
 
-class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, Person, Person> implements PersonCopyWith<$R> {
+class _PersonCopyWithImpl<$R, $Out extends Person> extends CopyWithBase<$R, Person, $Out> implements PersonCopyWith<$R, Person, $Out> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
-  @override PersonCopyWith<$R2> chain<$R2>(Then<Person, Person> t, Then<Person, $R2> t2) => _PersonCopyWithImpl($value, t, t2);
+  @override PersonCopyWith<$R2, Person, $Out2> chain<$R2, $Out2 extends Person>(Then<Person, $Out2> t, Then<$Out2, $R2> t2) => _PersonCopyWithImpl($value, t, t2);
 
   @override $R call({String? name, Skill? skill}) => $then(Person(name ?? $value.name, skill ?? $value.skill));
 }

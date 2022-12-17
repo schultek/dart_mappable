@@ -1,11 +1,12 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:polymorphic_copywith/models/abstract_base.dart';
-import 'package:polymorphic_copywith/polymorphic_copywith.mapper.g.dart';
+
+part 'base.mapper.dart';
 
 @MappableClass()
-abstract class BaseObject extends AbstractIdBase with BaseObjectMappable {
+abstract class Base extends AbstractIdBase with BaseMappable {
   /// Template for macro device specifications
-  const BaseObject({
+  const Base({
     required super.id,
     required super.name,
     required this.objects,

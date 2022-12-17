@@ -56,7 +56,7 @@ abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person, p0.Pe
   $R call({String? name, int? age, p0.Car? car});
 }
 
-class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person, p0.Person> implements PersonCopyWith<$R> {
+class _PersonCopyWithImpl<$R> extends CopyWithBase<$R, p0.Person, p0.Person> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
   @override PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, p0.Person> t, Then<p0.Person, $R2> t2) => _PersonCopyWithImpl($value, t, t2);
 
@@ -100,7 +100,7 @@ abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car, p0.Car> {
   $R call({int? drivenKm, p0.Brand? brand});
 }
 
-class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Car, p0.Car> implements CarCopyWith<$R> {
+class _CarCopyWithImpl<$R> extends CopyWithBase<$R, p0.Car, p0.Car> implements CarCopyWith<$R> {
   _CarCopyWithImpl(super.value, super.then, super.then2);
   @override CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, p0.Car> t, Then<p0.Car, $R2> t2) => _CarCopyWithImpl($value, t, t2);
 
@@ -168,5 +168,5 @@ class Mapper {
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
-  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
+  CopyWithBase<Result, In, Out> get base => this as CopyWithBase<Result, In, Out>;
 }

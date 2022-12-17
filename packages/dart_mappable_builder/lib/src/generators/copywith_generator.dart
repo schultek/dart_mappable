@@ -15,16 +15,16 @@ class CopyWithGenerator {
   late String classTypeParams =
       element.element.typeParameters.map((p) => ', ${p.name}').join();
 
-  late bool hasSubConfigs = element.subTargets.isNotEmpty;
-  late bool hassuperTarget = element.superTarget != null;
-  late bool hasSubOrsuperTargets = hasSubConfigs || hassuperTarget;
+  late bool hasSubConfigs = true;//element.subTargets.isNotEmpty;
+  late bool hasSuperTarget = element.superTarget != null && element.superTarget!.shouldGenerate(GenerateMethods.copy);
+  late bool hasSubOrSuperTargets = hasSubConfigs || hasSuperTarget;
 
   late String selfTypeParam = element.selfTypeParam;
   late String superPrefixedClassName = element.superPrefixedClassName;
 
   late String selfSubTypeParam = hasSubConfigs ? ', $selfTypeParam' : '';
   late String selfSuperTypeParam =
-      hasSubOrsuperTargets ? ', $selfTypeParam' : '';
+      hasSubOrSuperTargets ? ', $selfTypeParam' : '';
 
   late String subTypeParamDef =
       hasSubConfigs ? ', \$In extends $selfTypeParam' : '';
@@ -33,15 +33,15 @@ class CopyWithGenerator {
       hasSubConfigs ? ', \$In' : ', $selfTypeParam';
 
   late String superTypeParamDef =
-      hasSubOrsuperTargets ? ', \$Out extends $superPrefixedClassName' : '';
+      hasSubOrSuperTargets ? ', \$Out extends $superPrefixedClassName' : '';
   late String superTypeParamDef2 =
-      hasSubOrsuperTargets ? ', \$Out2 extends $superPrefixedClassName' : '';
-  late String superTypeParam = hasSubOrsuperTargets ? ', \$Out' : '';
-  late String superTypeParam2 = hasSubOrsuperTargets ? ', \$Out2' : '';
+      hasSubOrSuperTargets ? ', \$Out2 extends $superPrefixedClassName' : '';
+  late String superTypeParam = hasSubOrSuperTargets ? ', \$Out' : '';
+  late String superTypeParam2 = hasSubOrSuperTargets ? ', \$Out2' : '';
   late String superOrSelfTypeParam =
-      hasSubOrsuperTargets ? ', \$Out' : ', $selfTypeParam';
+      hasSubOrSuperTargets ? ', \$Out' : ', $selfTypeParam';
   late String superOrSelfTypeParam2 =
-      hasSubOrsuperTargets ? '\$Out2' : selfTypeParam;
+      hasSubOrSuperTargets ? '\$Out2' : selfTypeParam;
 
   String generateCopyWithExtension() {
     if (!element.shouldGenerate(GenerateMethods.copy)) return '';
@@ -54,7 +54,11 @@ class CopyWithGenerator {
 
   String generateCopyWithMixin() {
     if (!element.shouldGenerate(GenerateMethods.copy)) return '';
-    return _generateCopyWithMixin();
+    if (element.hasCallableConstructor || hasSubConfigs) {
+      return _generateCopyWithMixin();
+    } else {
+      return '';
+    }
   }
 
   String generateCopyWithClasses() {
@@ -96,13 +100,17 @@ class CopyWithGenerator {
 
     var implementsStmt = '';
 
-    if (hassuperTarget) {
+    if (hasSuperTarget) {
       var superClassTypeParams = element.superTypeArgs.map((a) => ', $a').join();
       implementsStmt =
           ' implements ${element.superTarget!.uniqueClassName}CopyWith<\$R$subOrSelfTypeParam$superTypeParam$superClassTypeParams>';
     } else {
       implementsStmt =
           ' implements ObjectCopyWith<\$R$subOrSelfTypeParam$superOrSelfTypeParam>';
+    }
+
+    if (hasSubConfigs) {
+      snippets.add('typedef ${element.superPrefixedClassNameAlias} = $superPrefixedClassName;\n');
     }
 
     snippets.add(''
@@ -114,20 +122,20 @@ class CopyWithGenerator {
     var copyParams = CopyParamElement.collectFrom(element.params, element);
 
     for (var param in copyParams) {
-      var isOverridden = hassuperTarget && param.param is SuperParamElement;
+      var isOverridden = hasSuperTarget && param.param is SuperParamElement;
       snippets.add(
           '  ${isOverridden ? '@override ' : ''}${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name};\n');
     }
 
     snippets.add(
-        '  ${hassuperTarget ? '@override ' : ''}\$R call(${_generateCopyWithParams()});\n');
+        '  ${hasSuperTarget ? '@override ' : ''}\$R call(${_generateCopyWithParams()});\n');
 
     snippets.add('}\n');
 
     if (element.hasCallableConstructor) {
       snippets.add('\n'
           'class _${element.uniqueClassName}CopyWithImpl<\$R$superTypeParamDef$classTypeParamsDef> '
-          'extends BaseCopyWith<\$R, $selfTypeParam$superOrSelfTypeParam> implements ${element.uniqueClassName}CopyWith'
+          'extends CopyWithBase<\$R, $selfTypeParam$superOrSelfTypeParam> implements ${element.uniqueClassName}CopyWith'
           '<\$R$selfSubTypeParam$superTypeParam$classTypeParams> {\n'
           '  _${element.uniqueClassName}CopyWithImpl(super.value, super.then, super.then2);\n'
           '  @override ${element.uniqueClassName}CopyWith<\$R2$selfSubTypeParam$superTypeParam2$classTypeParams> '

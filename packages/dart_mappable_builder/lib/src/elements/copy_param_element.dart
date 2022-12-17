@@ -36,7 +36,7 @@ class CopyParamElement {
 
         var forceNullable = target.subTargets.isNotEmpty;
 
-        var itemHasSubConfigs = itemConfig?.subTargets.isNotEmpty ?? false;
+        var itemHasSubConfigs = true;//itemConfig?.subTargets.isNotEmpty ?? false;
         var itemHasSuperTarget = itemConfig?.superTarget != null;
 
         var itemPrefixedName = itemConfig != null ? target.parent.prefixOfElement(itemConfig.element)
@@ -63,7 +63,7 @@ class CopyParamElement {
         var classConfig = resolveElement(classElement);
 
         if (classConfig != null) {
-          var hasSubConfigs = classConfig.subTargets.isNotEmpty;
+          var hasSubConfigs = true;//classConfig.subTargets.isNotEmpty;
           var hasSuperTarget = classConfig.superTarget != null;
 
           var prefixedName = target.parent.prefixOfElement(classConfig.element)

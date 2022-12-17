@@ -26,7 +26,7 @@ abstract class MapCopyWith<Result, Key, Value, Copy> {
   Result apply(Map<Key, Value> Function(Map<Key, Value>) transform);
 }
 
-class _MapCopyWith<Result, Key, Value, Copy> extends BaseCopyWith<Result, Map<Key, Value>, Map<Key, Value>>
+class _MapCopyWith<Result, Key, Value, Copy> extends CopyWithBase<Result, Map<Key, Value>, Map<Key, Value>>
     implements MapCopyWith<Result, Key, Value, Copy> {
   _MapCopyWith(Map<Key, Value> value, this._item, Then<Map<Key, Value>, Result> then)
       : super(value, $identity, then);

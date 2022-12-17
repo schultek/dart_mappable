@@ -1,9 +1,9 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'main.mapper.g.dart';
+part 'main.mapper.dart';
 
 @MappableClass()
-class Person with Mappable {
+class Person with PersonMappable {
   final String name;
   final int age;
   final Car? car;
@@ -16,7 +16,7 @@ class Person with Mappable {
 enum Brand { Toyota, Audi, BMW }
 
 @MappableClass()
-class Car with Mappable {
+class Car with CarMappable {
   final double miles;
   final Brand brand;
 
@@ -26,7 +26,7 @@ class Car with Mappable {
 }
 
 @MappableClass()
-class Box<T> {
+class Box<T> with BoxMappable {
   int size;
   T content;
 
@@ -34,7 +34,7 @@ class Box<T> {
 }
 
 @MappableClass()
-class Confetti {
+class Confetti with ConfettiMappable {
   String color;
   Confetti(this.color);
 }
@@ -42,7 +42,7 @@ class Confetti {
 void main() {
   // decode from json string
   String json = '{"name": "Max", "car": {"driven_km": 1000, "brand": "audi"}}';
-  Person person = Mapper.fromJson(json);
+  Person person = PersonMapper.fromJson(json);
 
   print(person);
   // Person(name: Max, age: 18, car: Car(miles: 620.0, brand: Brand.Audi))
@@ -56,30 +56,28 @@ void main() {
   print(map); // {name: Max, age: 18, car: {driven_km: 1000, brand: audi}}
 
   // decode from map
-  Person person3 = Mapper.fromMap(map);
+  Person person3 = PersonMapper.fromMap(map);
   print(person3); // Person(name: Max, age: 18, car: ...
 
   // check equality
   print(person3 == person); // true
 
-  // directly convert to json
-  print(person3.toJson()); // {"name":"Max","age":18,"car":{...
+  // directly convert to json string
+  print(person3.toJson()); // '{"name":"Max","age":18,"car":{...
 
-  // optionally use Mapper functions
-  print(Mapper.isEqual(person, person3)); // true
-  print(Mapper.asString(person)); // Person(name: Max, age: 18, ...
+  // link mappers to work together
+  BoxMapper.container.join(ConfettiMapper.container);
 
   // use generic objects
-  Box<Confetti> box = Box(10, content: Confetti('Rainbow'));
-  String boxJson = Mapper.toJson<Box>(box);
-  print(boxJson);
-  // {"size":10,"content":{"color":"Rainbow"},"_type":"Box<Confetti>"}
+  Box<dynamic> box = Box<Confetti>(10, content: Confetti('Rainbow'));
+  String boxJson = BoxMapper.container.toJson(box);
+  print(boxJson); // {"size":10,"content":{"color":"Rainbow"},"_type":"Box<Confetti>"}
 
   // ... somewhere else
-  dynamic whatAmI = Mapper.fromJson(boxJson);
+  dynamic whatAmI = BoxMapper.fromJson(boxJson);
   print(whatAmI.runtimeType); // Box<Confetti>
 
   // also works with lists and sets
-  List<int> numbers = Mapper.fromJson('[2, 4, 105]');
+  List<int> numbers = MapperContainer().fromJson('[2, 4, 105]');
   print(numbers); // [2, 4, 105]
 }

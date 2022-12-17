@@ -62,7 +62,7 @@ abstract class PersonCopyWith<$R> implements ObjectCopyWith<$R, p0.Person, p0.Pe
   $R call({String? name, p0.Car? car});
 }
 
-class _PersonCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Person, p0.Person> implements PersonCopyWith<$R> {
+class _PersonCopyWithImpl<$R> extends CopyWithBase<$R, p0.Person, p0.Person> implements PersonCopyWith<$R> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
   @override PersonCopyWith<$R2> _chain<$R2>(Then<p0.Person, p0.Person> t, Then<p0.Person, $R2> t2) => _PersonCopyWithImpl($value, t, t2);
 
@@ -107,7 +107,7 @@ abstract class CarCopyWith<$R> implements ObjectCopyWith<$R, p0.Car, p0.Car> {
   $R call({p0.Brand? brand, String? model});
 }
 
-class _CarCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Car, p0.Car> implements CarCopyWith<$R> {
+class _CarCopyWithImpl<$R> extends CopyWithBase<$R, p0.Car, p0.Car> implements CarCopyWith<$R> {
   _CarCopyWithImpl(super.value, super.then, super.then2);
   @override CarCopyWith<$R2> _chain<$R2>(Then<p0.Car, p0.Car> t, Then<p0.Car, $R2> t2) => _CarCopyWithImpl($value, t, t2);
 
@@ -151,7 +151,7 @@ abstract class BrandCopyWith<$R> implements ObjectCopyWith<$R, p0.Brand, p0.Bran
   $R call({dynamic name});
 }
 
-class _BrandCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Brand, p0.Brand> implements BrandCopyWith<$R> {
+class _BrandCopyWithImpl<$R> extends CopyWithBase<$R, p0.Brand, p0.Brand> implements BrandCopyWith<$R> {
   _BrandCopyWithImpl(super.value, super.then, super.then2);
   @override BrandCopyWith<$R2> _chain<$R2>(Then<p0.Brand, p0.Brand> t, Then<p0.Brand, $R2> t2) => _BrandCopyWithImpl($value, t, t2);
 
@@ -196,7 +196,7 @@ abstract class DealershipCopyWith<$R> implements ObjectCopyWith<$R, p0.Dealershi
   $R call({List<p0.Car>? cars, Map<p0.Brand, p0.Person?>? salesRep});
 }
 
-class _DealershipCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Dealership, p0.Dealership> implements DealershipCopyWith<$R> {
+class _DealershipCopyWithImpl<$R> extends CopyWithBase<$R, p0.Dealership, p0.Dealership> implements DealershipCopyWith<$R> {
   _DealershipCopyWithImpl(super.value, super.then, super.then2);
   @override DealershipCopyWith<$R2> _chain<$R2>(Then<p0.Dealership, p0.Dealership> t, Then<p0.Dealership, $R2> t2) => _DealershipCopyWithImpl($value, t, t2);
 
@@ -281,7 +281,7 @@ abstract class BrandListCopyWith<$R, $Out extends p0.ItemList> implements ItemLi
   @override $R call({List<p0.Brand?>? items});
 }
 
-class _BrandListCopyWithImpl<$R, $Out extends p0.ItemList> extends BaseCopyWith<$R, p0.BrandList, $Out> implements BrandListCopyWith<$R, $Out> {
+class _BrandListCopyWithImpl<$R, $Out extends p0.ItemList> extends CopyWithBase<$R, p0.BrandList, $Out> implements BrandListCopyWith<$R, $Out> {
   _BrandListCopyWithImpl(super.value, super.then, super.then2);
   @override BrandListCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.ItemList>(Then<p0.BrandList, $Out2> t, Then<$Out2, $R2> t2) => _BrandListCopyWithImpl($value, t, t2);
 
@@ -326,7 +326,7 @@ abstract class NamedItemListCopyWith<$R, $Out extends p0.ItemList, T> implements
   @override $R call({String? name, List<T>? items});
 }
 
-class _NamedItemListCopyWithImpl<$R, $Out extends p0.ItemList, T> extends BaseCopyWith<$R, p0.NamedItemList<T>, $Out> implements NamedItemListCopyWith<$R, $Out, T> {
+class _NamedItemListCopyWithImpl<$R, $Out extends p0.ItemList, T> extends CopyWithBase<$R, p0.NamedItemList<T>, $Out> implements NamedItemListCopyWith<$R, $Out, T> {
   _NamedItemListCopyWithImpl(super.value, super.then, super.then2);
   @override NamedItemListCopyWith<$R2, $Out2, T> _chain<$R2, $Out2 extends p0.ItemList>(Then<p0.NamedItemList<T>, $Out2> t, Then<$Out2, $R2> t2) => _NamedItemListCopyWithImpl($value, t, t2);
 
@@ -371,7 +371,7 @@ abstract class KeyedItemListCopyWith<$R, $Out extends p0.ItemList, K, T> impleme
   @override $R call({K? key, List<T>? items});
 }
 
-class _KeyedItemListCopyWithImpl<$R, $Out extends p0.ItemList, K, T> extends BaseCopyWith<$R, p0.KeyedItemList<K, T>, $Out> implements KeyedItemListCopyWith<$R, $Out, K, T> {
+class _KeyedItemListCopyWithImpl<$R, $Out extends p0.ItemList, K, T> extends CopyWithBase<$R, p0.KeyedItemList<K, T>, $Out> implements KeyedItemListCopyWith<$R, $Out, K, T> {
   _KeyedItemListCopyWithImpl(super.value, super.then, super.then2);
   @override KeyedItemListCopyWith<$R2, $Out2, K, T> _chain<$R2, $Out2 extends p0.ItemList>(Then<p0.KeyedItemList<K, T>, $Out2> t, Then<$Out2, $R2> t2) => _KeyedItemListCopyWithImpl($value, t, t2);
 
@@ -416,7 +416,7 @@ abstract class ComparableItemListCopyWith<$R, $Out extends p0.ItemList, T extend
   @override $R call({List<T>? items});
 }
 
-class _ComparableItemListCopyWithImpl<$R, $Out extends p0.ItemList, T extends Comparable<dynamic>> extends BaseCopyWith<$R, p0.ComparableItemList<T>, $Out> implements ComparableItemListCopyWith<$R, $Out, T> {
+class _ComparableItemListCopyWithImpl<$R, $Out extends p0.ItemList, T extends Comparable<dynamic>> extends CopyWithBase<$R, p0.ComparableItemList<T>, $Out> implements ComparableItemListCopyWith<$R, $Out, T> {
   _ComparableItemListCopyWithImpl(super.value, super.then, super.then2);
   @override ComparableItemListCopyWith<$R2, $Out2, T> _chain<$R2, $Out2 extends p0.ItemList>(Then<p0.ComparableItemList<T>, $Out2> t, Then<$Out2, $R2> t2) => _ComparableItemListCopyWithImpl($value, t, t2);
 
@@ -460,5 +460,5 @@ class Mapper {
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
-  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
+  CopyWithBase<Result, In, Out> get base => this as CopyWithBase<Result, In, Out>;
 }

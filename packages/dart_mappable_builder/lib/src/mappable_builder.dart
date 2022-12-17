@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:build/build.dart';
+import 'package:path/path.dart' as path;
 
 import 'builder_options.dart';
 import 'mapper_resource.dart';
@@ -41,6 +42,11 @@ class MappableBuilder implements Builder {
   /// Main generation handler
   /// Searches for mappable classes and enums recursively
   Future<String?> generate(BuildStep buildStep) async {
+
+    if (!await buildStep.resolver.isLibrary(buildStep.inputId)) {
+      return null;
+    }
+
     var data = await buildStep.fetchResource(mapperResource);
     data.globalOptions = options;
 
@@ -63,7 +69,7 @@ class MappableBuilder implements Builder {
         '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
         '// ignore_for_file: type=lint\n'
         '// ignore_for_file: unused_element\n\n'
-        'part of \'${buildStep.inputId.uri}\';\n\n'
+        'part of \'${path.basename(buildStep.inputId.uri.toString())}\';\n\n'
         '${output.join('\n\n')}\n';
   }
 }

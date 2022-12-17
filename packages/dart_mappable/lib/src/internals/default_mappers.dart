@@ -25,7 +25,8 @@ class PrimitiveMapper<T> with MapperBase<T> {
 
 class PrimitiveMapperElement<T> extends MapperElementBase<T>
     with MapperAs<PrimitiveMapper<T>, T>, PrimitiveMethodsMixin<T> {
-  const PrimitiveMapperElement(PrimitiveMapper<T> super.mapper, super.container);
+  const PrimitiveMapperElement(
+      PrimitiveMapper<T> super.mapper, super.container);
 
   @override
   Function get decoder => mapper.decoder;
@@ -33,9 +34,7 @@ class PrimitiveMapperElement<T> extends MapperElementBase<T>
   Function get encoder => (T value) => value;
 }
 
-abstract class EnumMapper<T extends Enum> with MapperBase<T>  {
-
-
+abstract class EnumMapper<T extends Enum> with MapperBase<T> {
   T decode(dynamic value);
 
   dynamic encode(T self);
@@ -107,7 +106,7 @@ class IterableMapperElement<I extends Iterable> extends MapperElementBase<I>
   IterableMapperElement(super.mapper, super.container);
 
   @override
-  Function get decoder => <T>(dynamic l) => checked(
+  Function get decoder => <T>(dynamic l) => checkedType(
       l,
       (Iterable l) =>
           mapper.fromIterable(l.map((v) => container.$dec<T>(v, 'item'))));
@@ -141,7 +140,7 @@ class MapMapperElement<M extends Map> extends MapperElementBase<M>
   MapMapperElement(super.mapper, super.container);
 
   @override
-  Function get decoder => <K, V>(dynamic m) => checked(
+  Function get decoder => <K, V>(dynamic m) => checkedType(
       m,
       (Map m) => mapper.fromMap(m.map((key, value) => MapEntry(
           container.$dec<K>(key, 'key'), container.$dec<V>(value, 'value')))));

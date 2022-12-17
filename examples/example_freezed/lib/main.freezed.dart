@@ -16,25 +16,27 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$Union {
+  @MappableField(key: 'mykey')
+  int get value => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(@MappableField(key: 'mykey') int value) data,
-    required TResult Function() loading,
-    required TResult Function(String? message) error,
+    required TResult Function(int value) loading,
+    required TResult Function(int value, String? message) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(@MappableField(key: 'mykey') int value)? data,
-    TResult? Function()? loading,
-    TResult? Function(String? message)? error,
+    TResult? Function(int value)? loading,
+    TResult? Function(int value, String? message)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(@MappableField(key: 'mykey') int value)? data,
-    TResult Function()? loading,
-    TResult Function(String? message)? error,
+    TResult Function(int value)? loading,
+    TResult Function(int value, String? message)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -60,12 +62,17 @@ mixin _$Union {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $UnionCopyWith<Union> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $UnionCopyWith<$Res> {
   factory $UnionCopyWith(Union value, $Res Function(Union) then) =
       _$UnionCopyWithImpl<$Res, Union>;
+  @useResult
+  $Res call({@MappableField(key: 'mykey') int value});
 }
 
 /// @nodoc
@@ -77,12 +84,26 @@ class _$UnionCopyWithImpl<$Res, $Val extends Union>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? value = null,
+  }) {
+    return _then(_value.copyWith(
+      value: null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
 }
 
 /// @nodoc
-abstract class _$$DataCopyWith<$Res> {
+abstract class _$$DataCopyWith<$Res> implements $UnionCopyWith<$Res> {
   factory _$$DataCopyWith(_$Data value, $Res Function(_$Data) then) =
       __$$DataCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call({@MappableField(key: 'mykey') int value});
 }
@@ -143,8 +164,8 @@ class _$Data implements Data {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(@MappableField(key: 'mykey') int value) data,
-    required TResult Function() loading,
-    required TResult Function(String? message) error,
+    required TResult Function(int value) loading,
+    required TResult Function(int value, String? message) error,
   }) {
     return data(value);
   }
@@ -153,8 +174,8 @@ class _$Data implements Data {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(@MappableField(key: 'mykey') int value)? data,
-    TResult? Function()? loading,
-    TResult? Function(String? message)? error,
+    TResult? Function(int value)? loading,
+    TResult? Function(int value, String? message)? error,
   }) {
     return data?.call(value);
   }
@@ -163,8 +184,8 @@ class _$Data implements Data {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(@MappableField(key: 'mykey') int value)? data,
-    TResult Function()? loading,
-    TResult Function(String? message)? error,
+    TResult Function(int value)? loading,
+    TResult Function(int value, String? message)? error,
     required TResult orElse(),
   }) {
     if (data != null) {
@@ -211,16 +232,21 @@ class _$Data implements Data {
 abstract class Data implements Union {
   const factory Data(@MappableField(key: 'mykey') final int value) = _$Data;
 
+  @override
   @MappableField(key: 'mykey')
   int get value;
+  @override
   @JsonKey(ignore: true)
   _$$DataCopyWith<_$Data> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$LoadingCopyWith<$Res> {
+abstract class _$$LoadingCopyWith<$Res> implements $UnionCopyWith<$Res> {
   factory _$$LoadingCopyWith(_$Loading value, $Res Function(_$Loading) then) =
       __$$LoadingCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int value});
 }
 
 /// @nodoc
@@ -228,58 +254,82 @@ class __$$LoadingCopyWithImpl<$Res> extends _$UnionCopyWithImpl<$Res, _$Loading>
     implements _$$LoadingCopyWith<$Res> {
   __$$LoadingCopyWithImpl(_$Loading _value, $Res Function(_$Loading) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? value = null,
+  }) {
+    return _then(_$Loading(
+      null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
 }
 
 /// @nodoc
 
 @MappableClass(discriminatorValue: 'loading')
 class _$Loading implements Loading {
-  const _$Loading();
+  const _$Loading(this.value);
+
+  @override
+  final int value;
 
   @override
   String toString() {
-    return 'Union.loading()';
+    return 'Union.loading(value: $value)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$Loading);
+        (other.runtimeType == runtimeType &&
+            other is _$Loading &&
+            (identical(other.value, value) || other.value == value));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, value);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoadingCopyWith<_$Loading> get copyWith =>
+      __$$LoadingCopyWithImpl<_$Loading>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(@MappableField(key: 'mykey') int value) data,
-    required TResult Function() loading,
-    required TResult Function(String? message) error,
+    required TResult Function(int value) loading,
+    required TResult Function(int value, String? message) error,
   }) {
-    return loading();
+    return loading(value);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(@MappableField(key: 'mykey') int value)? data,
-    TResult? Function()? loading,
-    TResult? Function(String? message)? error,
+    TResult? Function(int value)? loading,
+    TResult? Function(int value, String? message)? error,
   }) {
-    return loading?.call();
+    return loading?.call(value);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(@MappableField(key: 'mykey') int value)? data,
-    TResult Function()? loading,
-    TResult Function(String? message)? error,
+    TResult Function(int value)? loading,
+    TResult Function(int value, String? message)? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
-      return loading();
+      return loading(value);
     }
     return orElse();
   }
@@ -320,16 +370,24 @@ class _$Loading implements Loading {
 }
 
 abstract class Loading implements Union {
-  const factory Loading() = _$Loading;
+  const factory Loading(final int value) = _$Loading;
+
+  @override
+  int get value;
+  @override
+  @JsonKey(ignore: true)
+  _$$LoadingCopyWith<_$Loading> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ErrorDetailsCopyWith<$Res> {
+abstract class _$$ErrorDetailsCopyWith<$Res> implements $UnionCopyWith<$Res> {
   factory _$$ErrorDetailsCopyWith(
           _$ErrorDetails value, $Res Function(_$ErrorDetails) then) =
       __$$ErrorDetailsCopyWithImpl<$Res>;
+  @override
   @useResult
-  $Res call({String? message});
+  $Res call({int value, String? message});
 }
 
 /// @nodoc
@@ -343,9 +401,14 @@ class __$$ErrorDetailsCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? value = null,
     Object? message = freezed,
   }) {
     return _then(_$ErrorDetails(
+      null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as int,
       freezed == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -358,14 +421,16 @@ class __$$ErrorDetailsCopyWithImpl<$Res>
 
 @MappableClass(discriminatorValue: 'error')
 class _$ErrorDetails implements ErrorDetails {
-  const _$ErrorDetails([this.message]);
+  const _$ErrorDetails(this.value, [this.message]);
 
+  @override
+  final int value;
   @override
   final String? message;
 
   @override
   String toString() {
-    return 'Union.error(message: $message)';
+    return 'Union.error(value: $value, message: $message)';
   }
 
   @override
@@ -373,11 +438,12 @@ class _$ErrorDetails implements ErrorDetails {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ErrorDetails &&
+            (identical(other.value, value) || other.value == value) &&
             (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, message);
+  int get hashCode => Object.hash(runtimeType, value, message);
 
   @JsonKey(ignore: true)
   @override
@@ -389,32 +455,32 @@ class _$ErrorDetails implements ErrorDetails {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(@MappableField(key: 'mykey') int value) data,
-    required TResult Function() loading,
-    required TResult Function(String? message) error,
+    required TResult Function(int value) loading,
+    required TResult Function(int value, String? message) error,
   }) {
-    return error(message);
+    return error(value, message);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(@MappableField(key: 'mykey') int value)? data,
-    TResult? Function()? loading,
-    TResult? Function(String? message)? error,
+    TResult? Function(int value)? loading,
+    TResult? Function(int value, String? message)? error,
   }) {
-    return error?.call(message);
+    return error?.call(value, message);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(@MappableField(key: 'mykey') int value)? data,
-    TResult Function()? loading,
-    TResult Function(String? message)? error,
+    TResult Function(int value)? loading,
+    TResult Function(int value, String? message)? error,
     required TResult orElse(),
   }) {
     if (error != null) {
-      return error(message);
+      return error(value, message);
     }
     return orElse();
   }
@@ -455,9 +521,13 @@ class _$ErrorDetails implements ErrorDetails {
 }
 
 abstract class ErrorDetails implements Union {
-  const factory ErrorDetails([final String? message]) = _$ErrorDetails;
+  const factory ErrorDetails(final int value, [final String? message]) =
+      _$ErrorDetails;
 
+  @override
+  int get value;
   String? get message;
+  @override
   @JsonKey(ignore: true)
   _$$ErrorDetailsCopyWith<_$ErrorDetails> get copyWith =>
       throw _privateConstructorUsedError;

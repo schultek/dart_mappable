@@ -57,7 +57,7 @@ class DecoderGenerator {
           '  }';
     }
 
-    call = 'checked(v, (Map<String, dynamic> map) $call)';
+    call = 'checkedType(v, (Map<String, dynamic> map) $call)';
     if (element.hookForClass != null) {
       call = 'const ${element.hookForClass}.decode(v, (v) => $call)';
     }

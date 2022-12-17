@@ -1,6 +1,5 @@
 import 'package:type_plus/type_plus.dart';
 
-import '../../internals.dart';
 import '../core/annotations.dart';
 import '../core/mapper_exception.dart';
 import 'mapper_container.dart';
@@ -47,6 +46,7 @@ extension GuardedUtils on MapperContainer {
   }
 
   Map<String, dynamic> $type<T>(T value) {
+    print("CHECK TYPE $T ${value.runtimeType}");
     if (value.runtimeType == T) {
       return {};
     } else {
@@ -75,7 +75,7 @@ void clearType(Map<String, dynamic> map) {
       .forEach((l) => l.whereType<Map<String, dynamic>>().forEach(clearType));
 }
 
-T checked<T, U>(dynamic v, T Function(U) fn) {
+T checkedType<T, U>(dynamic v, T Function(U) fn) {
   if (v is U) {
     return fn(v);
   } else {
@@ -109,13 +109,13 @@ T $identity<T>(T value) => value;
 typedef Then<$T, $R> = $R Function($T);
 
 abstract class ObjectCopyWith<Result, In, Out> {
-  const factory ObjectCopyWith(In value, Then<In, Out> then, Then<Out, Result> then2) = BaseCopyWith;
+  const factory ObjectCopyWith(In value, Then<In, Out> then, Then<Out, Result> then2) = CopyWithBase;
 
   Result apply(Out Function(In) transform);
 }
 
-class BaseCopyWith<Result, In, Out> implements ObjectCopyWith<Result, In, Out> {
-  const BaseCopyWith(this.$value, this.$then1, this.$then2);
+class CopyWithBase<Result, In, Out> implements ObjectCopyWith<Result, In, Out> {
+  const CopyWithBase(this.$value, this.$then1, this.$then2);
 
   final In $value;
   final Then<In, Out> $then1;
@@ -133,5 +133,5 @@ class BaseCopyWith<Result, In, Out> implements ObjectCopyWith<Result, In, Out> {
 }
 
 extension ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
-  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
+  CopyWithBase<Result, In, Out> get base => this as CopyWithBase<Result, In, Out>;
 }

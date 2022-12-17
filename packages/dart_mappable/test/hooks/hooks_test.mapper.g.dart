@@ -60,7 +60,7 @@ abstract class GameCopyWith<$R, $In extends p0.Game, $Out extends p0.Game> imple
   $R call({p0.Player? player});
 }
 
-class _GameCopyWithImpl<$R, $Out extends p0.Game> extends BaseCopyWith<$R, p0.Game, $Out> implements GameCopyWith<$R, p0.Game, $Out> {
+class _GameCopyWithImpl<$R, $Out extends p0.Game> extends CopyWithBase<$R, p0.Game, $Out> implements GameCopyWith<$R, p0.Game, $Out> {
   _GameCopyWithImpl(super.value, super.then, super.then2);
   @override GameCopyWith<$R2, p0.Game, $Out2> _chain<$R2, $Out2 extends p0.Game>(Then<p0.Game, $Out2> t, Then<$Out2, $R2> t2) => _GameCopyWithImpl($value, t, t2);
 
@@ -105,7 +105,7 @@ abstract class CardGameCopyWith<$R, $Out extends p0.Game> implements GameCopyWit
   @override $R call({p0.Player? player});
 }
 
-class _CardGameCopyWithImpl<$R, $Out extends p0.Game> extends BaseCopyWith<$R, p0.CardGame, $Out> implements CardGameCopyWith<$R, $Out> {
+class _CardGameCopyWithImpl<$R, $Out extends p0.Game> extends CopyWithBase<$R, p0.CardGame, $Out> implements CardGameCopyWith<$R, $Out> {
   _CardGameCopyWithImpl(super.value, super.then, super.then2);
   @override CardGameCopyWith<$R2, $Out2> _chain<$R2, $Out2 extends p0.Game>(Then<p0.CardGame, $Out2> t, Then<$Out2, $R2> t2) => _CardGameCopyWithImpl($value, t, t2);
 
@@ -149,7 +149,7 @@ abstract class PlayerCopyWith<$R> implements ObjectCopyWith<$R, p0.Player, p0.Pl
   $R call({String? id});
 }
 
-class _PlayerCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Player, p0.Player> implements PlayerCopyWith<$R> {
+class _PlayerCopyWithImpl<$R> extends CopyWithBase<$R, p0.Player, p0.Player> implements PlayerCopyWith<$R> {
   _PlayerCopyWithImpl(super.value, super.then, super.then2);
   @override PlayerCopyWith<$R2> _chain<$R2>(Then<p0.Player, p0.Player> t, Then<p0.Player, $R2> t2) => _PlayerCopyWithImpl($value, t, t2);
 
@@ -193,7 +193,7 @@ abstract class ClothesCopyWith<$R> implements ObjectCopyWith<$R, p0.Clothes, p0.
   $R call({int? size, Map<String, dynamic>? unmappedProps});
 }
 
-class _ClothesCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Clothes, p0.Clothes> implements ClothesCopyWith<$R> {
+class _ClothesCopyWithImpl<$R> extends CopyWithBase<$R, p0.Clothes, p0.Clothes> implements ClothesCopyWith<$R> {
   _ClothesCopyWithImpl(super.value, super.then, super.then2);
   @override ClothesCopyWith<$R2> _chain<$R2>(Then<p0.Clothes, p0.Clothes> t, Then<p0.Clothes, $R2> t2) => _ClothesCopyWithImpl($value, t, t2);
 
@@ -238,7 +238,7 @@ abstract class ComponentCopyWith<$R> implements ObjectCopyWith<$R, p0.Component,
   $R call({String? id, Map<String, dynamic>? unmappedProps, String? name});
 }
 
-class _ComponentCopyWithImpl<$R> extends BaseCopyWith<$R, p0.Component, p0.Component> implements ComponentCopyWith<$R> {
+class _ComponentCopyWithImpl<$R> extends CopyWithBase<$R, p0.Component, p0.Component> implements ComponentCopyWith<$R> {
   _ComponentCopyWithImpl(super.value, super.then, super.then2);
   @override ComponentCopyWith<$R2> _chain<$R2>(Then<p0.Component, p0.Component> t, Then<p0.Component, $R2> t2) => _ComponentCopyWithImpl($value, t, t2);
 
@@ -282,5 +282,5 @@ class Mapper {
 }
 
 extension _ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
-  BaseCopyWith<Result, In, Out> get base => this as BaseCopyWith<Result, In, Out>;
+  CopyWithBase<Result, In, Out> get base => this as CopyWithBase<Result, In, Out>;
 }
