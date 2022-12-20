@@ -66,7 +66,7 @@ void main() {
   print(person3.toJson()); // '{"name":"Max","age":18,"car":{...
 
   // link mappers to work together
-  BoxMapper.container.join(ConfettiMapper.container);
+  BoxMapper.container.link(ConfettiMapper.container);
 
   // use generic objects
   Box<dynamic> box = Box<Confetti>(10, content: Confetti('Rainbow'));

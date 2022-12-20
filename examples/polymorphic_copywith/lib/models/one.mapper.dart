@@ -5,7 +5,7 @@
 
 part of 'one.dart';
 
-class OneMapper with MapperBase<One> {
+class OneMapper extends MapperBase<One> {
   static MapperContainer container = MapperContainer(
     mappers: {OneMapper()},
   );

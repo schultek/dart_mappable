@@ -10,6 +10,8 @@ class BrandMapper extends EnumMapper<Brand> {
     mappers: {BrandMapper()},
   );
 
+  static final fromValue = container.fromValue<Brand>;
+
   @override
   Brand decode(dynamic value) {
     switch (value) {
@@ -34,10 +36,10 @@ extension BrandMapperExtension on Brand {
   String toValue() => BrandMapper.container.toValue(this) as String;
 }
 
-class PersonMapper with MapperBase<Person> {
+class PersonMapper extends MapperBase<Person> {
   static MapperContainer container = MapperContainer(
     mappers: {PersonMapper()},
-    join: {CarMapper.container},
+    linked: {CarMapper.container},
   );
 
   @override
@@ -93,10 +95,10 @@ class _PersonCopyWithImpl<$R, $Out extends Person> extends CopyWithBase<$R, Pers
   @override $R call({String? name, int? age, Object? car = $none}) => $then(Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
 }
 
-class CarMapper with MapperBase<Car> {
+class CarMapper extends MapperBase<Car> {
   static MapperContainer container = MapperContainer(
     mappers: {CarMapper()},
-    join: {BrandMapper.container},
+    linked: {BrandMapper.container},
   );
 
   @override
@@ -150,7 +152,7 @@ class _CarCopyWithImpl<$R, $Out extends Car> extends CopyWithBase<$R, Car, $Out>
   @override $R call({int? drivenKm, Brand? brand}) => $then(Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
 }
 
-class BoxMapper with MapperBase<Box> {
+class BoxMapper extends MapperBase<Box> {
   static MapperContainer container = MapperContainer(
     mappers: {BoxMapper()},
   );
@@ -208,7 +210,7 @@ class _BoxCopyWithImpl<$R, $Out extends Box, T> extends CopyWithBase<$R, Box<T>,
   @override $R call({int? size, T? content}) => $then(Box(size ?? $value.size, content: content ?? $value.content));
 }
 
-class ConfettiMapper with MapperBase<Confetti> {
+class ConfettiMapper extends MapperBase<Confetti> {
   static MapperContainer container = MapperContainer(
     mappers: {ConfettiMapper()},
   );

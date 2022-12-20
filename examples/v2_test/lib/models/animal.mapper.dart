@@ -5,10 +5,10 @@
 
 part of 'animal.dart';
 
-class AnimalMapper with MapperBase<Animal> {
+class AnimalMapper extends MapperBase<Animal> {
   static MapperContainer container = MapperContainer(
     mappers: {AnimalMapper()},
-    join: {
+    linked: {
       DogMapper.container,
       c.CatMapper.container,
     },
@@ -58,10 +58,10 @@ abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal> imple
 }
 
 
-class DogMapper with MapperBase<Dog> {
+class DogMapper extends MapperBase<Dog> {
   static MapperContainer container = MapperContainer(
     mappers: {DogMapper()},
-    join: {p.PersonMapper.container},
+    linked: {p.PersonMapper.container},
   );
 
   @override

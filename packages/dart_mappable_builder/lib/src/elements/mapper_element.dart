@@ -30,4 +30,6 @@ abstract class MapperElement<T extends InterfaceElement> {
   }();
 
   MapperGenerator get generator;
+
+  Map<MapperElement, String> get linkedElements => {};
 }

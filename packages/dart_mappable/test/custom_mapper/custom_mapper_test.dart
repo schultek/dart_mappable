@@ -3,15 +3,12 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-import 'custom_mapper_test.mapper.g.dart';
-
 class MyPrivateClass {
   dynamic value;
 
   MyPrivateClass(this.value);
 }
 
-@CustomMapper()
 class PrivateClassMapper extends SimpleMapper<MyPrivateClass> {
   @override
   MyPrivateClass decode(dynamic value) {
@@ -24,8 +21,9 @@ class PrivateClassMapper extends SimpleMapper<MyPrivateClass> {
   }
 
   @override
-  bool equals(MyPrivateClass self, MyPrivateClass other) =>
-      self.value == other.value;
+  bool equals(MyPrivateClass self, MyPrivateClass other) {
+    return self.value == other.value;
+  }
 }
 
 class GenericBox<T> {
@@ -33,25 +31,34 @@ class GenericBox<T> {
   GenericBox(this.content);
 }
 
-@CustomMapper()
-class CustomGenericMapper extends MapperElementBase<GenericBox> {
+class GenericBoxMapper extends MapperBase<GenericBox> {
   // only use the base type here
 
   @override
-  Function decoder = <T>(dynamic value) {
-    return GenericBox<T>(Mapper.fromValue<T>(value));
-  };
-
-  @override
-  Function encoder = <T>(GenericBox<T> self) {
-    return Mapper.toValue<T>(self.content);
-  };
+  MapperElementBase<GenericBox> createElement(MapperContainer container) {
+    return GenericBoxMapperElement(this, container);
+  }
 
   @override
   Function get typeFactory => <T>(f) => f<GenericBox<T>>();
 }
 
-@CustomMapper()
+class GenericBoxMapperElement extends MapperElementBase<GenericBox> {
+  // only use the base type here
+
+  GenericBoxMapperElement(super.mapper, super.container);
+
+  @override
+  late Function decoder = <T>(dynamic value) {
+    return GenericBox<T>(container.fromValue<T>(value));
+  };
+
+  @override
+  late Function encoder = <T>(GenericBox<T> self) {
+    return container.toValue<T>(self.content);
+  };
+}
+
 class UriMapper extends SimpleMapper<Uri> {
   @override
   Uri decode(dynamic value) {
@@ -67,34 +74,41 @@ class UriMapper extends SimpleMapper<Uri> {
 void main() {
   group('Custom Mappers', () {
     test('Simple Custom Mapper', () {
-      MyPrivateClass c = Mapper.fromValue('test');
+
+      var container = MapperContainer(mappers: {PrivateClassMapper()});
+
+      MyPrivateClass c = container.fromValue('test');
       expect(c.value, equals('test'));
 
-      var s = Mapper.toValue(c);
+      var s = container.toValue(c);
       expect(s, equals('test'));
 
-      expect(Mapper.isEqual(c, MyPrivateClass('test')), equals(true));
+      expect(container.isEqual(c, MyPrivateClass('test')), equals(true));
     });
 
     test('Generic custom Mapper', () {
-      GenericBox<int> box = Mapper.fromValue('2');
+      var container = MapperContainer(mappers: {GenericBoxMapper()});
+
+      GenericBox<int> box = container.fromValue('2');
       expect(box.content, equals(2));
 
-      var json = Mapper.toJson(box);
+      var json = container.toJson(box);
       expect(json, equals('2'));
     });
 
     test('Custom Uri Mapper', () {
+      var container = MapperContainer(mappers: {UriMapper()});
+
       var uri = Uri(
           scheme: 'http',
           host: 'example.com',
           path: 'some/path',
           query: 'key=value');
 
-      var encoded = Mapper.toValue(uri);
+      var encoded = container.toValue(uri);
       expect(encoded, equals('http://example.com/some/path?key=value'));
 
-      var decoded = Mapper.fromValue<Uri>(encoded);
+      var decoded = container.fromValue<Uri>(encoded);
       expect(decoded, equals(uri));
     });
   });

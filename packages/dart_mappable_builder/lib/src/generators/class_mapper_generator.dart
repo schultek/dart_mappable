@@ -2,7 +2,6 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:ansicolor/ansicolor.dart';
 
 import '../elements/class_mapper_element.dart';
-import '../elements/copy_param_element.dart';
 import '../elements/mapper_element.dart';
 import '../utils.dart';
 import 'copywith_generator.dart';
@@ -35,13 +34,12 @@ class ClassMapperGenerator extends MapperGenerator<ClassMapperElement> {
 
     var mappers = [
       '${target.uniqueClassName}Mapper()',
-      ...target.customMappers.map((t) => '${t.getDisplayString(withNullability: false)}()'),
+      ...target.customMappers
+          .map((t) => '${t.getDisplayString(withNullability: false)}()'),
     ];
 
-    var joins = target.joinConfigs;
-
     output.write(
-        'class ${target.uniqueClassName}Mapper with MapperBase<${target.prefixedClassName}> {\n'
+        'class ${target.uniqueClassName}Mapper extends MapperBase<${target.prefixedClassName}> {\n'
         '  static MapperContainer container = MapperContainer(\n'
         '    mappers: {');
 
@@ -50,17 +48,42 @@ class ClassMapperGenerator extends MapperGenerator<ClassMapperElement> {
     } else {
       output.write('\n${mappers.map((m) => '      $m,\n').join()}    ');
     }
-
     output.write('},\n');
 
-    if (joins.isNotEmpty) {
-      output.write('    join: {');
-      if (joins.length < 2) {
-        output.write(joins.map((c) => '$c.container').join(', '));
-      } else {
-        output.write('\n${joins.map((c) => '      $c.container,\n').join()}    ');
-      }
+    var linked = target.linkedElements;
 
+    var visited = <MapperElement>{};
+    bool isCyclic(MapperElement e) {
+      if (e == target) return true;
+      if (visited.contains(e)) return false;
+      visited.add(e);
+      return e.linkedElements.keys.any(isCyclic);
+    }
+
+    if (linked.isNotEmpty) {
+      output.write('    linked: {');
+      var containers = linked.entries.map((e) {
+        var c = '${e.value}.container';
+        return isCyclic(e.key) ? 'DelegatingMapperContainer(() => $c)' : c;
+      });
+
+      if (linked.length < 2) {
+        output.write(containers.join(', '));
+      } else {
+        output.write('\n${containers.map((c) => '      $c,\n').join()}    ');
+      }
+      output.write('},\n');
+    }
+
+    var types = target.typesConfigs;
+
+    if (types.isNotEmpty) {
+      output.write('    types: {');
+      if (types.length < 2) {
+        output.write(types.join(', '));
+      } else {
+        output.write('\n${types.map((c) => '      $c,\n').join()}    ');
+      }
       output.write('},\n');
     }
 

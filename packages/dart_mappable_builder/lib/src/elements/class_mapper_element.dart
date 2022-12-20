@@ -354,8 +354,14 @@ class ClassMapperElement extends MapperElement<ClassElement> {
   late bool generateAsMixin =
       generateMixin && subTargets.every((c) => c.generateAsMixin);
 
-  late List<String> joinConfigs = () {
-    var joins = <String>[];
+  @override
+  late Map<MapperElement, String> linkedElements = () {
+    var linked = <MapperElement, String>{};
+
+    if (superTarget != null) {
+      var prefix = parent.prefixOfElement(superTarget!.element);
+      linked[superTarget!] = '$prefix${superTarget!.uniqueClassName}Mapper';
+    }
 
     for (var target in subTargets) {
       if (!target.element.isAccessibleIn(parent.library)) {
@@ -364,18 +370,54 @@ class ClassMapperElement extends MapperElement<ClassElement> {
       }
 
       var prefix = parent.prefixOfElement(target.element);
-      joins.add('$prefix${target.uniqueClassName}Mapper');
+      linked[target] = '$prefix${target.uniqueClassName}Mapper';
+    }
+
+    void checkType(DartType t) {
+      var e = t.element;
+      var m = parent.getTargetForElement(e);
+      if (m != null) {
+        linked[m] = '${parent.prefixOfElement(m.element)}${m.element.name}Mapper';
+      }
+
+      if (t is ParameterizedType) {
+        for (var arg in t.typeArguments) {
+          checkType(arg);
+        }
+      }
     }
 
     for (var param in params) {
-      var e = param.parameter.type.element;
-      var m = parent.getTargetForElement(e);
-      if (m != null) {
-        joins
-            .add('${parent.prefixOfElement(m.element)}${m.element.name}Mapper');
+      checkType(param.parameter.type);
+    }
+
+    for (var param in element.typeParameters) {
+      if (param.bound != null) {
+        var m = parent.getTargetForElement(param.bound!.element);
+        if (m != null) {
+          linked[m] = '${parent.prefixOfElement(m.element)}${m.element.name}Mapper';
+        }
       }
     }
-    return joins;
+
+    return linked;
+  }();
+
+
+  late List<String> typesConfigs = () {
+    var types = <String>[];
+
+    for (var param in element.typeParameters) {
+      if (param.bound != null) {
+        var e = param.bound!.element;
+        var m = parent.getTargetForElement(e);
+        if (e != null && m == null) {
+          types.add("'${e.name}': (f) => f<${e.name}>()");
+        }
+      }
+    }
+
+    return types;
   }();
 }
 

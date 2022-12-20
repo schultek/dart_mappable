@@ -102,6 +102,24 @@ class MapperData {
       }
     }
 
+    for (var target in group.targets.values) {
+      if (target is! ClassMapperElement || target.superTarget != null) continue;
+
+      var superElement = target.getSuperElement();
+      if (superElement != null) {
+        var superTarget =
+            getTargetForElement(superElement) as ClassMapperElement? ??
+                ClassMapperElement(
+                  group,
+                  superElement,
+                  target.options.apply(MappableOptions(generateMethods: 0)),
+                  target.nameIndex,
+                );
+
+        target.setSuperTarget(superTarget);
+      }
+    }
+
     return group;
   }
 }
@@ -215,20 +233,6 @@ class MapperElementGroup {
 
   void addClassTarget(ClassMapperElement target) {
     targets[target.element] = target;
-
-    var superElement = target.getSuperElement();
-    if (superElement != null) {
-      var superTarget =
-          getTargetForElement(superElement) as ClassMapperElement? ??
-              ClassMapperElement(
-                this,
-                superElement,
-                target.options.apply(MappableOptions(generateMethods: 0)),
-                target.nameIndex,
-              );
-
-      target.setSuperTarget(superTarget);
-    }
   }
 
   /// All of the declared classes and enums in this library.

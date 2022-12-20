@@ -3,7 +3,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'models/animal.dart';
 import 'models/person.dart';
 
-final modelMapper = MapperContainer(join: {
+final modelMapper = MapperContainer(linked: {
   AnimalMapper.container,
   PersonMapper.container,
 });

@@ -14,15 +14,7 @@ class Person with PersonMappable {
 
 class Skill {}
 
-class SkillMapper with MapperBase<Skill> {
-  @override
-  MapperElementBase<Skill> createElement(MapperContainer container) {
-    return SkillMapperElement(this, container);
-  }
-}
-
-class SkillMapperElement extends SimpleMapperElement<Skill> {
-  SkillMapperElement(super.mapper, super.container);
+class SkillMapper extends SimpleMapper<Skill> {
 
   @override
   Skill decode(value) {

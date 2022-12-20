@@ -5,10 +5,10 @@
 
 part of 'main.dart';
 
-class UnionMapper with MapperBase<Union> {
+class UnionMapper extends MapperBase<Union> {
   static MapperContainer container = MapperContainer(
     mappers: {UnionMapper()},
-    join: {
+    linked: {
       DataMapper.container,
       LoadingMapper.container,
       ErrorDetailsMapper.container,
@@ -52,13 +52,14 @@ extension UnionMapperExtension on Union {
   Map<String, dynamic> toMap() => UnionMapper.container.toMap(this);
 }
 
+typedef UnionCopyWithBound = Union;
 abstract class UnionCopyWith<$R, $In extends Union, $Out extends Union> implements ObjectCopyWith<$R, $In, $Out> {
   UnionCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Union>(Then<Union, $Out2> t, Then<$Out2, $R2> t2);
   $R call();
 }
 
 
-class DataMapper with MapperBase<Data> {
+class DataMapper extends MapperBase<Data> {
   static MapperContainer container = MapperContainer(
     mappers: {DataMapper()},
   );
@@ -93,7 +94,7 @@ extension DataMapperExtension on Data {
   Map<String, dynamic> toMap() => DataMapper.container.toMap(this);
 }
 
-class LoadingMapper with MapperBase<Loading> {
+class LoadingMapper extends MapperBase<Loading> {
   static MapperContainer container = MapperContainer(
     mappers: {LoadingMapper()},
   );
@@ -128,7 +129,7 @@ extension LoadingMapperExtension on Loading {
   Map<String, dynamic> toMap() => LoadingMapper.container.toMap(this);
 }
 
-class ErrorDetailsMapper with MapperBase<ErrorDetails> {
+class ErrorDetailsMapper extends MapperBase<ErrorDetails> {
   static MapperContainer container = MapperContainer(
     mappers: {ErrorDetailsMapper()},
   );

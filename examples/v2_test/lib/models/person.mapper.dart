@@ -5,7 +5,7 @@
 
 part of 'person.dart';
 
-class PersonMapper with MapperBase<Person> {
+class PersonMapper extends MapperBase<Person> {
   static MapperContainer container = MapperContainer(
     mappers: {
       PersonMapper(),

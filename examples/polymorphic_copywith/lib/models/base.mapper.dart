@@ -5,7 +5,7 @@
 
 part of 'base.dart';
 
-class BaseMapper with MapperBase<Base> {
+class BaseMapper extends MapperBase<Base> {
   static MapperContainer container = MapperContainer(
     mappers: {BaseMapper()},
   );

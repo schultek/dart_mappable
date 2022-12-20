@@ -10,6 +10,8 @@ class CatTypeMapper extends EnumMapper<CatType> {
     mappers: {CatTypeMapper()},
   );
 
+  static final fromValue = container.fromValue<CatType>;
+
   @override
   CatType decode(dynamic value) {
     switch (value) {
@@ -34,10 +36,10 @@ extension CatTypeMapperExtension on CatType {
   String toValue() => CatTypeMapper.container.toValue(this) as String;
 }
 
-class CatMapper with MapperBase<Cat> {
+class CatMapper extends MapperBase<Cat> {
   static MapperContainer container = MapperContainer(
     mappers: {CatMapper()},
-    join: {CatTypeMapper.container},
+    linked: {CatTypeMapper.container},
   );
 
   @override

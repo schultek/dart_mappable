@@ -5,10 +5,10 @@
 
 part of 'zoo.dart';
 
-class ZooMapper with MapperBase<Zoo> {
+class ZooMapper extends MapperBase<Zoo> {
   static MapperContainer container = MapperContainer(
     mappers: {ZooMapper()},
-    join: {DogMapper.container},
+    linked: {DogMapper.container},
   );
 
   @override

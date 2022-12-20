@@ -5,7 +5,7 @@
 
 part of 'two.dart';
 
-class TwoMapper with MapperBase<Two> {
+class TwoMapper extends MapperBase<Two> {
   static MapperContainer container = MapperContainer(
     mappers: {TwoMapper()},
   );

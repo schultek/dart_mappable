@@ -33,6 +33,7 @@ class EnumMapperGenerator extends MapperGenerator<EnumMapperElement> {
         '  static MapperContainer container = MapperContainer(\n'
         '    mappers: {${target.mapperName}()},\n'
         '  );\n\n'
+        '  static final fromValue = container.fromValue<${target.prefixedClassName}>;\n\n'
         '  @override\n'
         '  ${target.prefixedClassName} decode(dynamic value) {\n'
         '    switch (value) {\n'
