@@ -1,10 +1,16 @@
 import 'dart:async';
 
 import 'package:build/build.dart';
+import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart' as path;
 
 import 'builder_options.dart';
-import 'mapper_resource.dart';
+import 'elements/enum_mapper_element.dart';
+import 'elements/target_class_mapper_element.dart';
+import 'generators/class_mapper_generator.dart';
+import 'generators/enum_mapper_generator.dart';
+import 'mapper_group.dart';
+import 'utils.dart';
 
 /// The main builder used for code generation
 class MappableBuilder implements Builder {
@@ -42,34 +48,41 @@ class MappableBuilder implements Builder {
   /// Main generation handler
   /// Searches for mappable classes and enums recursively
   Future<String?> generate(BuildStep buildStep) async {
-
     if (!await buildStep.resolver.isLibrary(buildStep.inputId)) {
       return null;
     }
 
-    var data = await buildStep.fetchResource(mapperResource);
-    data.globalOptions = options;
+    nodeResolver = buildStep.resolver;
 
     var entryLib = await buildStep.inputLibrary;
+    var group = MapperElementGroup(entryLib, options);
+    group.packageName = entryLib.source.uri.pathSegments.first;
+    await group.analyze();
 
-    data.packageName = entryLib.source.uri.pathSegments.first;
+    var mappers = group.targets.values;
 
-    var group = data.getGroupForLibrary(entryLib);
-
-    if (group.targets.isEmpty) {
+    if (mappers.isEmpty) {
       return null;
     }
 
-    var generators = await Future.wait(
-        group.targets.values.map((t) => t.finalize.then((_) => t.generator)));
+    var generators = <MapperGenerator>[
+      ...mappers
+          .whereType<TargetClassMapperElement>()
+          .map((e) => ClassMapperGenerator(e)),
+      ...mappers
+          .whereType<EnumMapperElement>()
+          .map((e) => EnumMapperGenerator(e)),
+    ];
+
     var output = await Future.wait(generators.map((g) => g.generate()));
 
-    return ''
-        '// coverage:ignore-file\n'
-        '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
-        '// ignore_for_file: type=lint\n'
-        '// ignore_for_file: unused_element\n\n'
-        'part of \'${path.basename(buildStep.inputId.uri.toString())}\';\n\n'
-        '${output.join('\n\n')}\n';
+    return DartFormatter(pageWidth: options.lineLength ?? 80).format(
+      '// coverage:ignore-file\n'
+      '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
+      '// ignore_for_file: type=lint\n'
+      '// ignore_for_file: unused_element\n\n'
+      'part of \'${path.basename(buildStep.inputId.uri.toString())}\';\n\n'
+      '${output.join('\n\n')}\n',
+    );
   }
 }

@@ -7,14 +7,8 @@ import '../utils.dart';
 import 'mapper_element.dart';
 
 class EnumMapperElement extends MapperElement<EnumElement> {
-  EnumMapperElement(super.parent, super.element, super.options, super.index);
+  EnumMapperElement(super.parent, super.element, super.options);
 
-  @override
-  EnumMapperGenerator get generator => EnumMapperGenerator(this);
-
-  late String className = element.name;
-  late String prefixedClassName = className;
-  late String mapperName = '$className${nameIndex != 0 ? '$nameIndex' : ''}Mapper';
   late String paramName = className[0].toLowerCase();
 
   late ValuesMode mode = annotation != null

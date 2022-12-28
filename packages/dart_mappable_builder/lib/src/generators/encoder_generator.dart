@@ -3,9 +3,10 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/class_mapper_element.dart';
 import '../elements/mapper_param_element.dart';
+import '../elements/target_class_mapper_element.dart';
 
 class EncoderGenerator {
-  final ClassMapperElement target;
+  final TargetClassMapperElement target;
 
   EncoderGenerator(this.target);
 
@@ -42,7 +43,7 @@ class EncoderGenerator {
     if (config.superTarget != null &&
         config.superTarget!.hookForClass != null) {
       wrapped =
-          '(${config.prefixedClassName}${config.typeParams} v) => const ${config.superTarget!.hookForClass}.encode<${name ?? config.prefixedClassName}>(v, (v) => $wrapped)';
+          '(${config.prefixedClassName}${config.typeParams} v) => const ${config.superTarget!.hookForClass}.encode<${name ?? config.prefixedClassName}>(v, (v) => $wrapped, container)';
     }
     if (config.superTarget != null) {
       wrapped = _generateEncoder(
@@ -56,7 +57,7 @@ class EncoderGenerator {
 
     if (target.hookForClass != null) {
       call =
-          '=> const ${target.hookForClass}.encode<${target.prefixedClassName}${target.typeParams}>(v, (v) $call)';
+          '=> const ${target.hookForClass}.encode<${target.prefixedClassName}${target.typeParams}>(v, (v) $call, container)';
     }
     return call + (call.endsWith('}') ? '' : ';');
   }
@@ -92,23 +93,25 @@ class EncoderGenerator {
       }
     }
 
+    var discriminatorValueCode = await target.discriminatorValueCode;
+
     if (target.superTarget != null &&
         target.superTarget!.discriminatorKey != null &&
-        target.discriminatorValueCode != null &&
-        target.discriminatorValueCode != 'default') {
+        discriminatorValueCode != null &&
+        discriminatorValueCode != 'default') {
       if (!params.any(
           (p) => p.contains("'${target.superTarget!.discriminatorKey}':"))) {
-        if (target.discriminatorValueCode!.startsWith('[') &&
-            target.discriminatorValueCode!.endsWith(']')) {
-          var value = target.discriminatorValueCode!
-              .substring(1, target.discriminatorValueCode!.length - 1)
+        if (discriminatorValueCode.startsWith('[') &&
+            discriminatorValueCode.endsWith(']')) {
+          var value = discriminatorValueCode
+              .substring(1, discriminatorValueCode.length - 1)
               .split(',')
               .first
               .trim();
           params.add("'${target.superTarget!.discriminatorKey}': $value");
         } else {
           params.add(
-              "'${target.superTarget!.discriminatorKey}': ${target.discriminatorValueCode}");
+              "'${target.superTarget!.discriminatorKey}': $discriminatorValueCode");
         }
       }
     }

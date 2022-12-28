@@ -1,8 +1,5 @@
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:source_gen/source_gen.dart';
 
 import 'utils.dart';
 
@@ -13,7 +10,7 @@ class MappableOptions {
   final bool? ignoreNull;
   final String? discriminatorKey;
   final int? generateMethods;
-  final List<DartType>? include;
+  final int? lineLength;
 
   MappableOptions({
     this.caseStyle,
@@ -21,7 +18,7 @@ class MappableOptions {
     this.ignoreNull,
     this.discriminatorKey,
     this.generateMethods,
-    this.include,
+    this.lineLength,
   });
 
   MappableOptions.parse(Map options)
@@ -33,21 +30,10 @@ class MappableOptions {
         discriminatorKey = options['discriminatorKey'] as String?,
         generateMethods =
             GenerateMethods.parse(toList(options['generateMethods'])),
-  include = null;
-
-  bool shouldGenerateFor(InterfaceElement element) {
-    return include?.any((t) => t.element == element) ?? true;
-  }
+        lineLength = options['lineLength'] as int? ?? options['line_length'] as int?;
 
   MappableOptions apply(MappableOptions? options, {bool forceJoin = true}) {
     if (options == null) return this;
-
-    var include = this.include;
-    if (include == null) {
-      include = options.include;
-    } else if (options.include != null){
-      include = forceJoin ? _join(include, options.include!) : _union(include, options.include!);
-    }
 
     return MappableOptions(
       caseStyle: options.caseStyle ?? caseStyle,
@@ -55,7 +41,6 @@ class MappableOptions {
       ignoreNull: options.ignoreNull ?? ignoreNull,
       discriminatorKey: options.discriminatorKey ?? discriminatorKey,
       generateMethods: options.generateMethods ?? generateMethods,
-      include: include,
     );
   }
 
@@ -66,20 +51,6 @@ class MappableOptions {
       ignoreNull: object.getField('ignoreNull')?.toBoolValue(),
       discriminatorKey: object.getField('discriminatorKey')?.toStringValue(),
       generateMethods: object.getField('generateMethods')?.toIntValue(),
-      include: object.getField('include')?.toTypeList(),
     );
   }
-
-  List<T> _join<T>(List<T> a, List<T> b) {
-    return a.where((x) => b.contains(x)).toList();
-  }
-
-  List<T> _union<T>(List<T> a, List<T> b) {
-    return {...a, ...b}.toList();
-  }
-}
-
-extension TypeList on DartObject {
-  List<DartType>? toTypeList() =>
-      toListValue()?.map((o) => o.toTypeValue()).whereType<DartType>().toList();
 }

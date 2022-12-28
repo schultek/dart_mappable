@@ -15,19 +15,26 @@ class StateMapper extends EnumMapper<State> {
   @override
   State decode(dynamic value) {
     switch (value) {
-      case 'On': return State.On;
-      case 'off': return State.off;
-      case 'itsCOMPLICATED': return State.itsCOMPLICATED;
-      default: return State.values[1];
+      case 'On':
+        return State.On;
+      case 'off':
+        return State.off;
+      case 'itsCOMPLICATED':
+        return State.itsCOMPLICATED;
+      default:
+        return State.values[1];
     }
   }
 
   @override
   dynamic encode(State self) {
     switch (self) {
-      case State.On: return 'On';
-      case State.off: return 'off';
-      case State.itsCOMPLICATED: return 'itsCOMPLICATED';
+      case State.On:
+        return 'On';
+      case State.off:
+        return 'off';
+      case State.itsCOMPLICATED:
+        return 'itsCOMPLICATED';
     }
   }
 }
@@ -46,19 +53,26 @@ class ColorMapper extends EnumMapper<Color> {
   @override
   Color decode(dynamic value) {
     switch (value) {
-      case 'green': return Color.Green;
-      case 'blue': return Color.BLUE;
-      case 'blood-red': return Color.bloodRED;
-      default: throw MapperException.unknownEnumValue(value);
+      case 'green':
+        return Color.Green;
+      case 'blue':
+        return Color.BLUE;
+      case 'blood-red':
+        return Color.bloodRED;
+      default:
+        throw MapperException.unknownEnumValue(value);
     }
   }
 
   @override
   dynamic encode(Color self) {
     switch (self) {
-      case Color.Green: return 'green';
-      case Color.BLUE: return 'blue';
-      case Color.bloodRED: return 'blood-red';
+      case Color.Green:
+        return 'green';
+      case Color.BLUE:
+        return 'blue';
+      case Color.bloodRED:
+        return 'blood-red';
     }
   }
 }
@@ -77,19 +91,26 @@ class ItemsMapper extends EnumMapper<Items> {
   @override
   Items decode(dynamic value) {
     switch (value) {
-      case 0: return Items.first;
-      case 1: return Items.second;
-      case 2: return Items.third;
-      default: throw MapperException.unknownEnumValue(value);
+      case 0:
+        return Items.first;
+      case 1:
+        return Items.second;
+      case 2:
+        return Items.third;
+      default:
+        throw MapperException.unknownEnumValue(value);
     }
   }
 
   @override
   dynamic encode(Items self) {
     switch (self) {
-      case Items.first: return 0;
-      case Items.second: return 1;
-      case Items.third: return 2;
+      case Items.first:
+        return 0;
+      case Items.second:
+        return 1;
+      case Items.third:
+        return 2;
     }
   }
 }
@@ -108,19 +129,26 @@ class StatusMapper extends EnumMapper<Status> {
   @override
   Status decode(dynamic value) {
     switch (value) {
-      case 0: return Status.zero;
-      case 200: return Status.success;
-      case 'error': return Status.error;
-      default: throw MapperException.unknownEnumValue(value);
+      case 0:
+        return Status.zero;
+      case 200:
+        return Status.success;
+      case 'error':
+        return Status.error;
+      default:
+        throw MapperException.unknownEnumValue(value);
     }
   }
 
   @override
   dynamic encode(Status self) {
     switch (self) {
-      case Status.zero: return 0;
-      case Status.success: return 200;
-      case Status.error: return 'error';
+      case Status.zero:
+        return 0;
+      case Status.success:
+        return 200;
+      case Status.error:
+        return 'error';
     }
   }
 }

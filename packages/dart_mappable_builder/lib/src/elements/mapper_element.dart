@@ -6,7 +6,7 @@ import 'package:analyzer/dart/element/element.dart';
 
 import '../builder_options.dart';
 import '../generators/class_mapper_generator.dart';
-import '../mapper_resource.dart';
+import '../mapper_group.dart';
 import '../utils.dart';
 
 abstract class MapperElement<T extends InterfaceElement> {
@@ -14,9 +14,17 @@ abstract class MapperElement<T extends InterfaceElement> {
   MapperElementGroup parent;
   T element;
   MappableOptions options;
-  int nameIndex;
 
-  MapperElement(this.parent, this.element, this.options, this.nameIndex);
+  MapperElement(this.parent, this.element, this.options);
+
+  late T targetElement = element;
+  late String className = element.name;
+  late String uniqueClassName = className;
+
+  late String targetClassName = targetElement.name;
+  late String prefixedClassName = parent.prefixOfElement(targetElement)+targetClassName;
+
+  late String mapperName = '${uniqueClassName}Mapper';
 
   Element get annotatedElement => element;
 
@@ -25,11 +33,7 @@ abstract class MapperElement<T extends InterfaceElement> {
 
   late AstNode? annotatedNode;
 
-  late Future<void> finalize = () async {
+  late Future<void> analyze = () async {
     annotatedNode = await annotatedElement.getResolvedNode();
   }();
-
-  MapperGenerator get generator;
-
-  Map<MapperElement, String> get linkedElements => {};
 }

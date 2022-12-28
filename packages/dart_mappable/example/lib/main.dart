@@ -9,6 +9,8 @@ class Person with PersonMappable {
   final Car? car;
 
   Person(this.name, {this.age = 18, this.car});
+
+  static final fromMap = PersonMapper.fromMap;
 }
 
 @MappableEnum()
@@ -41,7 +43,7 @@ class Confetti with ConfettiMappable {
 
 void main() {
   // decode from json string
-  String json = '{"name": "Max", "car": {"driven_km": 1000, "brand": "audi"}}';
+  String json = '{"name": "Max", "car": {"drivenKm": 1000, "brand": "Audi"}}';
   Person person = PersonMapper.fromJson(json);
 
   print(person);
@@ -53,7 +55,7 @@ void main() {
 
   // encode to map
   Map<String, dynamic> map = person.toMap();
-  print(map); // {name: Max, age: 18, car: {driven_km: 1000, brand: audi}}
+  print(map); // {name: Max, age: 18, car: {drivenKm: 1000, brand: Audi}}
 
   // decode from map
   Person person3 = PersonMapper.fromMap(map);

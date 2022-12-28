@@ -14,6 +14,7 @@ extension GuardedUtils on MapperContainer {
         (v) => v == null
             ? throw MapperException.missingParameter(key)
             : fromValue<T>(v),
+        this,
       ),
     );
   }
@@ -24,7 +25,8 @@ extension GuardedUtils on MapperContainer {
       '.$key',
       () => hooks.decode<T?>(
         map[key],
-        (v) => v == null ? null : fromValue<T>(v),
+        fromValue<T?>,
+        this,
       ),
     );
   }
@@ -33,7 +35,7 @@ extension GuardedUtils on MapperContainer {
     return guard(
       MapperMethod.decode,
       '.$key',
-      () => hooks.decode<T>(value, fromValue),
+      () => hooks.decode<T>(value, fromValue<T>, this),
     );
   }
 
@@ -41,7 +43,7 @@ extension GuardedUtils on MapperContainer {
     return guard(
       MapperMethod.encode,
       '.$key',
-      () => hooks.encode<T>(value, toValue<T>),
+      () => hooks.encode<T>(value, toValue<T>, this),
     );
   }
 
@@ -83,18 +85,14 @@ T checkedType<T, U>(dynamic v, T Function(U) fn) {
 }
 
 extension HooksMapping on MappingHooks? {
-  T decode<T>(dynamic value, T Function(dynamic value) fn) {
+  T decode<T>(dynamic value, T Function(dynamic value) fn, MapperContainer container) {
     if (this == null) return fn(value);
-    var v = this!.beforeDecode(value);
-    if (v is! T) v = fn(v);
-    return this!.afterDecode(v) as T;
+    return this!.wrapDecode(value, fn, container);
   }
 
-  dynamic encode<T>(T value, dynamic Function(T value) fn) {
+  dynamic encode<T>(T value, dynamic Function(T value) fn, MapperContainer container) {
     if (this == null) return fn(value);
-    var v = this!.beforeEncode(value);
-    if (v is T) v = fn(v);
-    return this!.afterEncode(v);
+    return this!.wrapEncode(value, fn, container);
   }
 }
 
@@ -105,6 +103,7 @@ class _None {
 const $none = _None();
 
 T $identity<T>(T value) => value;
+T $cast<T>(Object value) => value as T;
 typedef Then<$T, $R> = $R Function($T);
 
 abstract class ObjectCopyWith<Result, In, Out> {

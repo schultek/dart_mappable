@@ -3,10 +3,11 @@ import 'package:dart_mappable/dart_mappable.dart';
 import '../elements/class_mapper_element.dart';
 import '../elements/copy_param_element.dart';
 import '../elements/mapper_param_element.dart';
+import '../elements/target_class_mapper_element.dart';
 import '../utils.dart';
 
 class CopyWithGenerator {
-  final ClassMapperElement element;
+  final TargetClassMapperElement element;
 
   CopyWithGenerator(this.element);
 

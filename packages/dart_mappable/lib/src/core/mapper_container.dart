@@ -61,26 +61,33 @@ abstract class MapperContainer {
 }
 
 class MapperContainerBase implements MapperContainer, TypeProvider {
-  MapperContainerBase._(Set<MapperBase> mappers) {
-    TypePlus.register(this);
-    useAll([...mappers]);
-  }
-
-  MapperContainerBase({
-    Set<MapperBase>? mappers,
-    Set<MapperContainer>? linked,
-    Map<String, Function>? types,
-  }) {
-    TypePlus.register(this);
+  MapperContainerBase._(
+      [Set<MapperBase>? mappers,
+      Set<MapperContainer>? linked,
+      Map<String, Function>? types]) {
+    TypeRegistry.instance.register(this);
     if (types != null) {
       _types.addAll(types);
       for (var e in types.entries) {
         _typeIds[e.value(<T>() => T) as Type] = e.key;
       }
     }
-    link(MapperContainer.defaults);
-    linkAll(linked ?? {});
-    useAll([...?mappers]);
+    if (linked != null) {
+      linkAll(linked);
+    }
+    useAll(mappers ?? {});
+  }
+
+  factory MapperContainerBase({
+    Set<MapperBase>? mappers,
+    Set<MapperContainer>? linked,
+    Map<String, Function>? types,
+  }) {
+    return MapperContainerBase._(
+      mappers ?? {},
+      {...?linked, MapperContainer.defaults},
+      types ?? {},
+    );
   }
 
   final Map<String, MapperBase> _mappers = {};
@@ -112,7 +119,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   @override
   MapperBase? _mapperForType(Type type, [Set<MapperContainer>? parents]) {
     if (parents != null && parents.contains(this)) return null;
-    var mapper = _mappers[type.baseId];
+    var mapper = _mappers[type.baseId] ?? _mappers.values.where((m) => m.implType.base == type.base).firstOrNull;
     return mapper ??
         _children
             .map((c) => c._mapperForType(type, {...?parents, this}))
@@ -159,12 +166,18 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
           try {
             return element.decoder
                 .callWith(parameters: [value], typeArguments: type.args) as T;
-          } on ArgumentError catch (e) {
-            throw ArgumentError(
-                'Failed to call [decoder] function of ${element.runtimeType}: ${e.message}');
+          } on ArgumentError catch (e, stacktrace) {
+            Error.throwWithStackTrace(
+              ArgumentError(
+                  'Failed to call [decoder] function of ${element.runtimeType}: ${e.message}'),
+              stacktrace,
+            );
           }
-        } catch (e) {
-          throw MapperException.chain(MapperMethod.decode, '($type)', e);
+        } catch (e, stacktrace) {
+          Error.throwWithStackTrace(
+            MapperException.chain(MapperMethod.decode, '($type)', e),
+            stacktrace,
+          );
         }
       } else {
         throw MapperException.chain(
@@ -329,74 +342,4 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   void linkAll(Iterable<MapperContainer> containers) {
     _children.addAll(containers);
   }
-}
-
-class DelegatingMapperContainer implements MapperContainer {
-  DelegatingMapperContainer(this.wrapper);
-
-  final MapperContainer Function() wrapper;
-
-  MapperContainer get wrapped => wrapper();
-
-  @override
-  String asString(value) => wrapped.asString(value);
-
-  @override
-  T fromIterable<T>(Iterable iterable) => wrapped.fromIterable<T>(iterable);
-
-  @override
-  T fromJson<T>(String json) => wrapped.fromJson<T>(json);
-
-  @override
-  T fromMap<T>(Map<String, dynamic> map) => wrapped.fromMap<T>(map);
-
-  @override
-  T fromValue<T>(value) => wrapped.fromValue<T>(value);
-
-  @override
-  MapperBase<T>? get<T>([Type? type]) => wrapped.get<T>(type);
-
-  @override
-  List<MapperBase> getAll() => wrapped.getAll();
-
-  @override
-  int hash(value) => wrapped.hash(value);
-
-  @override
-  bool isEqual(value, Object? other) => wrapped.isEqual(value, other);
-
-  @override
-  void link(MapperContainer container) => wrapped.link(container);
-
-  @override
-  Iterable toIterable<T>(T object) => wrapped.toIterable<T>(object);
-
-  @override
-  String toJson<T>(T object) => wrapped.toJson<T>(object);
-
-  @override
-  Map<String, dynamic> toMap<T>(T object) => wrapped.toMap<T>(object);
-
-  @override
-  toValue<T>(T value) => wrapped.toValue<T>(value);
-
-  @override
-  MapperBase<T>? unuse<T>() => wrapped.unuse<T>();
-
-  @override
-  void use<T>(MapperBase<T> mapper) => wrapped.use<T>(mapper);
-
-  @override
-  void useAll(Iterable<MapperBase> mappers) => wrapped.useAll(mappers);
-
-  @override
-  void linkAll(Iterable<MapperContainer> containers) =>
-      wrapped.linkAll(containers);
-  @override
-  MapperBase? _mapperFor(value, [Set<MapperContainer>? parents]) =>
-      wrapped._mapperFor(value, parents);
-
-  @override
-  MapperBase? _mapperForType(Type type, [Set<MapperContainer>? parents]) =>
-      wrapped._mapperForType(type, parents);
 }

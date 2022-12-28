@@ -1,3 +1,4 @@
+import '../../dart_mappable.dart';
 import 'case_style.dart';
 
 /// Used to annotate a class
@@ -115,7 +116,7 @@ class MappableEnum {
   /// The case style for the stringified enum values
   final CaseStyle? caseStyle;
 
-  /// The default value when decoding a string.
+  /// The default value when serialization a string.
   /// Must be a value of the annotated enum
   final Object? defaultValue;
 }
@@ -130,7 +131,7 @@ class MappableValue {
 }
 
 /// Used to annotate a constructor
-/// to be chosen as the decoding function
+/// to be chosen as the serialization function
 class MappableConstructor {
   const MappableConstructor();
 }
@@ -147,8 +148,7 @@ class MappableField {
   final MappingHooks? hooks;
 }
 
-/// Used to annotate a library
-/// to define default values and include / exclude classes
+/// Used to annotate a library to define default values
 class MappableLib {
   const MappableLib({
     this.caseStyle,
@@ -156,7 +156,6 @@ class MappableLib {
     this.ignoreNull,
     this.discriminatorKey,
     this.generateMethods,
-    this.include,
   });
 
   /// The case style for the map keys
@@ -173,9 +172,6 @@ class MappableLib {
 
   /// Specify which methods to generate for classes
   final int? generateMethods;
-
-  /// Specify which classes to include
-  final List<Type>? include;
 }
 
 /// Extend this class to define custom [MappingHooks] for a class or field
@@ -187,4 +183,16 @@ abstract class MappingHooks {
 
   dynamic beforeEncode(dynamic value) => value;
   dynamic afterEncode(dynamic value) => value;
+
+  T wrapDecode<T>(dynamic value, T Function(dynamic value) fn, MapperContainer container) {
+    var v = beforeDecode(value);
+    if (v is! T) v = fn(v);
+    return afterDecode(v) as T;
+  }
+
+  dynamic wrapEncode<T>(T value, dynamic Function(T value) fn, MapperContainer container) {
+    var v = beforeEncode(value);
+    if (v is T) v = fn(v);
+    return afterEncode(v);
+  }
 }

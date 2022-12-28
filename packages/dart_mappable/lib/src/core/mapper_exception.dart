@@ -12,7 +12,7 @@ class MapperException implements Exception {
         'class or register a custom mapper?');
   }
 
-  /// Exception when a required parameter is missing while decoding
+  /// Exception when a required parameter is missing while serialization
   factory MapperException.missingParameter(String key) {
     return MapperException._('Parameter $key is missing.');
   }
@@ -45,7 +45,7 @@ class MapperException implements Exception {
         "'$discriminatorValue' ] or a default subclass?");
   }
 
-  /// Exception when a class has no valid constructor for decoding
+  /// Exception when a class has no valid constructor for serialization
   factory MapperException.missingConstructor(String className) {
     return MapperException._('Cannot instantiate class $className, no valid '
         'constructor found.');

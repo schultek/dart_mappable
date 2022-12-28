@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
@@ -5,28 +7,30 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../builder_options.dart';
-import '../generators/class_mapper_generator.dart';
-import '../mapper_resource.dart';
 import '../utils.dart';
 import 'mapper_element.dart';
 import 'mapper_param_element.dart';
+import 'none_class_mapper_element.dart';
 
-class ClassMapperElement extends MapperElement<ClassElement> {
-  ClassMapperElement(super.parent, super.element, super.options, super.index);
+abstract class ClassMapperElement extends MapperElement<ClassElement> {
+  ClassMapperElement(super.parent, super.element, super.options);
+
+  List<ClassMapperElement> subTargets = [];
+  ClassMapperElement? superTarget;
+
+  late AstNode? constructorNode;
 
   @override
-  ClassMapperGenerator get generator => ClassMapperGenerator(this);
+  // ignore: overridden_fields
+  late Future<void> analyze = () async {
+    await super.analyze;
+    constructorNode = await constructor?.getNode();
+  }();
 
-  late String className = element.name;
-  late String uniqueClassName =
-      '$className${nameIndex != 0 ? '$nameIndex' : ''}';
-  late String prefixedClassName = className;
-
-  late String selfTypeParam = '$className$typeParams';
+  late String selfTypeParam = '$prefixedClassName$typeParams';
   late String superPrefixedClassName = () {
-    if (superTarget != null) {
-      if (superTarget!.parent == parent) {
+    if (superTarget != null && superTarget is! NoneClassMapperElement) {
+      if (superTarget!.element.isAccessibleIn(parent.library)) {
         return superTarget!.superPrefixedClassName;
       } else {
         return superTarget!.superPrefixedClassNameAlias;
@@ -49,57 +53,16 @@ class ClassMapperElement extends MapperElement<ClassElement> {
     }
   }();
 
-  List<ClassMapperElement> subTargets = [];
-  ClassMapperElement? superTarget;
-
-  @override
-  // ignore: overridden_fields
-  late Future<void> finalize = () async {
-    await super.finalize;
-
-    for (var subclass in includeSubclasses) {
-      var element = parent.getTargetForElement(subclass.element);
-
-      if (subTargets.contains(element)) continue;
-
-      if (element == null || element is! ClassMapperElement) {
-        throw 'Cannot include subclass ${subclass.getDisplayString(withNullability: false)}, '
-            'since it has no generated mapper.';
-      }
-
-      element.superTarget = this;
-      subTargets.add(element);
-    }
-
-    await superTarget?.finalize;
-  }();
-
   @override
   DartObject? getAnnotation() =>
       classChecker.firstAnnotationOf(annotatedElement);
 
-  ClassElement? getSuperElement() {
-    var supertype = element.supertype;
-    if (supertype == null || supertype.isDartCoreObject) {
-      supertype = element.interfaces.firstOrNull;
-    }
 
-    if (supertype != null && !supertype.isDartCoreObject) {
-      var element = supertype.element;
-      if (element is ClassElement) return element;
-    }
-    return null;
-  }
-
-  void setSuperTarget(ClassMapperElement element) {
-    superTarget = element;
-    element.subTargets.add(this);
-  }
-
-  late List<MapperParamElement> params = () {
+  late List<MapperParamElement> params = (){
     var params = <MapperParamElement>[];
-
-    if (constructor == null) return params;
+    if (constructor == null) {
+      return params;
+    }
 
     for (var param in constructor!.parameters) {
       params.add(getParameterConfig(param));
@@ -137,7 +100,7 @@ class ClassMapperElement extends MapperElement<ClassElement> {
         );
       }
       var superConfig =
-          superTarget!.getParameterConfig(dec.superConstructorParameter!);
+           superTarget!.getParameterConfig(dec.superConstructorParameter!);
       if (superConfig is UnresolvedParamElement) {
         return UnresolvedParamElement(
           param,
@@ -148,7 +111,20 @@ class ClassMapperElement extends MapperElement<ClassElement> {
       }
     }
 
-    var getter = element.getGetter(param.name);
+    ParameterElement? superParameter = _findSuperParameter(param);
+    if (superParameter != null) {
+      var superConfig =  superTarget!.getParameterConfig(superParameter);
+      if (superConfig is UnresolvedParamElement) {
+        return UnresolvedParamElement(
+          param,
+          'Problem in super constructor: ${superConfig.message}',
+        );
+      } else {
+        return SuperParamElement(param, superConfig);
+      }
+    }
+
+    var getter = element.lookUpGetter(param.name, parent.library);
     if (getter != null) {
       var getterType = getter.type.returnType;
       if (getterType == param.type) {
@@ -169,19 +145,6 @@ class ClassMapperElement extends MapperElement<ClassElement> {
       );
     }
 
-    ParameterElement? superParameter = _findSuperParameter(param);
-    if (superParameter != null) {
-      var superConfig = superTarget!.getParameterConfig(superParameter);
-      if (superConfig is UnresolvedParamElement) {
-        return UnresolvedParamElement(
-          param,
-          'Problem in super constructor: ${superConfig.message}',
-        );
-      } else {
-        return SuperParamElement(param, superConfig);
-      }
-    }
-
     return UnresolvedParamElement(
       param,
       'Cannot find field or getter related to this parameter.',
@@ -191,7 +154,7 @@ class ClassMapperElement extends MapperElement<ClassElement> {
   ParameterElement? _findSuperParameter(ParameterElement param) {
     if (superTarget == null) return null;
 
-    var node = constructor!.getNode();
+    var node = constructorNode;
     if (node is ConstructorDeclaration && node.initializers.isNotEmpty) {
       var last = node.initializers.last;
       if (last is SuperConstructorInvocation) {
@@ -223,10 +186,10 @@ class ClassMapperElement extends MapperElement<ClassElement> {
     return null;
   }
 
-  late ConstructorElement? constructor = element.constructors
+  late ConstructorElement? constructor = targetElement.constructors
           .where((c) => !c.isPrivate && constructorChecker.hasAnnotationOf(c))
           .firstOrNull ??
-      element.constructors
+      targetElement.constructors
           .where((c) => !c.isPrivate && !classChecker.hasAnnotationOf(c))
           .firstOrNull;
 
@@ -235,7 +198,7 @@ class ClassMapperElement extends MapperElement<ClassElement> {
           options.discriminatorKey ??
           superTarget?.discriminatorKey;
 
-  late String? discriminatorValueCode = () {
+  late Future<String?> discriminatorValueCode = () async {
     var discriminatorValueField = annotation?.getField('discriminatorValue');
     String? code;
     if (discriminatorValueField != null) {
@@ -244,12 +207,12 @@ class ClassMapperElement extends MapperElement<ClassElement> {
           discriminatorValueField.getField('index')!.toIntValue() == 0) {
         return 'default';
       } else {
-        code = getAnnotationNode(
-                annotatedElement, MappableClass, 'discriminatorValue')
+        code = (await getAnnotationNode(
+                annotatedElement, MappableClass, 'discriminatorValue'))
             ?.toSource();
       }
     }
-    if (code == null && superTarget != null && !element.isAbstract) {
+    if (code == null && superTarget != null && !isAbstract) {
       code = "'${element.name}'";
     }
     return code;
@@ -296,33 +259,23 @@ class ClassMapperElement extends MapperElement<ClassElement> {
     return annotation != null && annotatedElement is! ConstructorElement;
   }();
 
-  late List<DartType> includeSubclasses =
-      annotation?.getField('includeSubClasses')?.toTypeList() ?? [];
-
-  late List<DartType> customMappers = () {
-    var mappers =
-        annotation?.getField('includeCustomMappers')?.toTypeList() ?? [];
-    for (var mapper in mappers) {
-      var mapperIndex = mapper is InterfaceType
-          ? mapper.allSupertypes
-              .indexWhere((t) => mapperChecker.isExactlyType(t))
-          : -1;
-      if (mapperIndex == -1) {
-        throw UnsupportedError(
-            'Classes supplied to invludeCustomMappers must extend the MapperBase class');
-      }
-    }
-    return mappers;
-  }();
+  List<ClassElement> getSubClasses() {
+    return annotation
+            ?.getField('includeSubClasses')
+            ?.toTypeList()
+            ?.map((t) => t.element)
+            .whereType<ClassElement>()
+            .toList() ?? [];
+  }
 
   bool shouldGenerate(int method) {
     return (generateMethods & method) != 0;
   }
 
   late bool hasCallableConstructor = constructor != null &&
-      !(element.isAbstract && constructor!.redirectedConstructor == null);
+      !(isAbstract && constructor!.redirectedConstructor == null);
 
-  late bool isAbstract = element.isAbstract;
+  late bool isAbstract = targetElement.isAbstract;
 
   late String typeParams = element.typeParameters.isNotEmpty
       ? '<${element.typeParameters.map((p) => p.name).join(', ')}>'
@@ -354,90 +307,4 @@ class ClassMapperElement extends MapperElement<ClassElement> {
   late bool generateAsMixin =
       generateMixin && subTargets.every((c) => c.generateAsMixin);
 
-  @override
-  late Map<MapperElement, String> linkedElements = () {
-    var linked = <MapperElement, String>{};
-
-    if (superTarget != null) {
-      var prefix = parent.prefixOfElement(superTarget!.element);
-      linked[superTarget!] = '$prefix${superTarget!.uniqueClassName}Mapper';
-    }
-
-    for (var target in subTargets) {
-      if (!target.element.isAccessibleIn(parent.library)) {
-        // TODO warn about unused subclasses
-        continue;
-      }
-
-      var prefix = parent.prefixOfElement(target.element);
-      linked[target] = '$prefix${target.uniqueClassName}Mapper';
-    }
-
-    void checkType(DartType t) {
-      var e = t.element;
-      var m = parent.getTargetForElement(e);
-      if (m != null) {
-        linked[m] = '${parent.prefixOfElement(m.element)}${m.element.name}Mapper';
-      }
-
-      if (t is ParameterizedType) {
-        for (var arg in t.typeArguments) {
-          checkType(arg);
-        }
-      }
-    }
-
-    for (var param in params) {
-      checkType(param.parameter.type);
-    }
-
-    for (var param in element.typeParameters) {
-      if (param.bound != null) {
-        var m = parent.getTargetForElement(param.bound!.element);
-        if (m != null) {
-          linked[m] = '${parent.prefixOfElement(m.element)}${m.element.name}Mapper';
-        }
-      }
-    }
-
-    return linked;
-  }();
-
-
-  late List<String> typesConfigs = () {
-    var types = <String>[];
-
-    for (var param in element.typeParameters) {
-      if (param.bound != null) {
-        var e = param.bound!.element;
-        var m = parent.getTargetForElement(e);
-        if (e != null && m == null) {
-          types.add("'${e.name}': (f) => f<${e.name}>()");
-        }
-      }
-    }
-
-    return types;
-  }();
-}
-
-class FactoryConstructorMapperTarget extends ClassMapperElement {
-  ConstructorElement factoryConstructor;
-
-  FactoryConstructorMapperTarget(MapperElementGroup parent,
-      this.factoryConstructor, MappableOptions options, int index)
-      : super(
-          parent,
-          factoryConstructor.redirectedConstructor!.returnType.element
-              as ClassElement,
-          options,
-          index,
-        );
-
-  @override
-  Element get annotatedElement => factoryConstructor;
-
-  @override
-  ConstructorElement? get constructor =>
-      factoryConstructor.redirectedConstructor!;
 }

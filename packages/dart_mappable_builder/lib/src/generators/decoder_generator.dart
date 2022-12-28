@@ -3,10 +3,11 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/class_mapper_element.dart';
+import '../elements/target_class_mapper_element.dart';
 import '../utils.dart';
 
 class DecoderGenerator {
-  final ClassMapperElement element;
+  final TargetClassMapperElement element;
 
   DecoderGenerator(this.element);
 
@@ -14,8 +15,8 @@ class DecoderGenerator {
     if (element.shouldGenerate(GenerateMethods.decode)) {
       return '\n'
           '  @override Function get decoder => ${_generateDecoder(element)};\n'
-          '  ${element.prefixedClassName}${element.typeParams} decode${element.typeParamsDeclaration}(dynamic v) => ${_generateFromMapCall()};\n'
-          '  ${element.prefixedClassName}${element.typeParams} fromMap${element.typeParamsDeclaration}(Map<String, dynamic> map) => ${await _generateFromMap()}\n';
+          '  ${element.prefixedDecodingClassName}${element.typeParams} decode${element.typeParamsDeclaration}(dynamic v) => ${await _generateFromMapCall()};\n'
+          '  ${element.prefixedDecodingClassName}${element.typeParams} fromMap${element.typeParamsDeclaration}(Map<String, dynamic> map) => ${await _generateFromMap()}\n';
     } else {
       return '';
     }
@@ -23,9 +24,10 @@ class DecoderGenerator {
 
   String generateTypeFactory() {
     if (element.shouldGenerate(GenerateMethods.decode)) {
-      return '\n'
+      return
           '${element.className != element.uniqueClassName ? '  @override String get id => \'${element.uniqueClassName}\';\n' : ''}'
-          '  @override Function get typeFactory => ${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();\n';
+          '  @override\n'
+          '  Function get typeFactory => ${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();\n';
     } else {
       return '';
     }
@@ -36,7 +38,7 @@ class DecoderGenerator {
     if (config.superTarget != null &&
         config.superTarget!.hookForClass != null) {
       wrapped =
-          '(v) => const ${config.superTarget!.hookForClass}.decode(v, $wrapped)';
+          '(v) => const ${config.superTarget!.hookForClass}.decode(v, $wrapped, container)';
     }
     if (config.superTarget != null) {
       wrapped = _generateDecoder(config.superTarget!, wrapped);
@@ -44,7 +46,7 @@ class DecoderGenerator {
     return wrapped;
   }
 
-  String _generateFromMapCall() {
+  Future<String> _generateFromMapCall() async {
     var call = '';
 
     if (element.subTargets.isEmpty || element.discriminatorKey == null) {
@@ -52,20 +54,20 @@ class DecoderGenerator {
     } else {
       call = '{\n'
           "    switch(map['${element.discriminatorKey}']) {\n"
-          '      ${_generateTypeCases().join('\n      ')}\n'
+          '      ${(await _generateTypeCases()).join('\n      ')}\n'
           '    }\n'
           '  }';
     }
 
     call = 'checkedType(v, (Map<String, dynamic> map) $call)';
     if (element.hookForClass != null) {
-      call = 'const ${element.hookForClass}.decode(v, (v) => $call)';
+      call = 'const ${element.hookForClass}.decode(v, (v) => $call, container)';
     }
     return call;
   }
 
-  List<String> _generateTypeCases() {
-    var cases = _getDiscriminatorCases(element);
+  Future<List<String>> _generateTypeCases() async {
+    var cases = await _getDiscriminatorCases(element);
 
     String? defaultCase;
 
@@ -97,29 +99,31 @@ class DecoderGenerator {
     return statements;
   }
 
-  List<MapEntry<List<String>, String>> _getDiscriminatorCases(
-      ClassMapperElement element) {
+  Future<List<MapEntry<List<String>, String>>> _getDiscriminatorCases(
+      ClassMapperElement element) async {
     var cases = <MapEntry<List<String>, String>>[];
 
     for (var subConfig in element.subTargets) {
       var subConfigMapper =
           '${element.parent.prefixOfElement(subConfig.element)}${subConfig.uniqueClassName}Mapper';
-      if (subConfig.discriminatorValueCode != null) {
-        if (subConfig.discriminatorValueCode!.startsWith('[') &&
-            subConfig.discriminatorValueCode!.endsWith(']')) {
+      var discriminatorValueCode = await subConfig.discriminatorValueCode;
+
+      if (discriminatorValueCode != null) {
+        if (discriminatorValueCode.startsWith('[') &&
+            discriminatorValueCode.endsWith(']')) {
           cases.add(MapEntry(
-              subConfig.discriminatorValueCode!
-                  .substring(1, subConfig.discriminatorValueCode!.length - 1)
+              discriminatorValueCode
+                  .substring(1, discriminatorValueCode.length - 1)
                   .split(',')
                   .map((s) => s.trim())
                   .toList(),
               subConfigMapper));
         } else {
           cases.add(
-              MapEntry([subConfig.discriminatorValueCode!], subConfigMapper));
+              MapEntry([discriminatorValueCode], subConfigMapper));
         }
       } else {
-        var subCases = _getDiscriminatorCases(subConfig);
+        var subCases = await _getDiscriminatorCases(subConfig);
         if (subCases.isNotEmpty) {
           cases.add(MapEntry(
               subCases.expand((e) => e.key).toList(), subConfigMapper));
@@ -138,7 +142,7 @@ class DecoderGenerator {
         return "throw MapperException.missingConstructor('${element.className}');";
       }
     } else {
-      return '${element.prefixedClassName}${element.constructor!.name != '' ? '.${element.constructor!.name}' : ''}(${await _generateConstructorParams()});';
+      return '${element.prefixedDecodingClassName}${element.constructor!.name != '' ? '.${element.constructor!.name}' : ''}(${await _generateConstructorParams()});';
     }
   }
 
@@ -169,7 +173,7 @@ class DecoderGenerator {
       if (p.hasDefaultValue && p.defaultValueCode != 'null') {
         str += ' ?? ${await getPrefixedDefaultValue(p)}';
       } else {
-        var node = p.getNode();
+        var node = await p.getNode();
         if (node is DefaultFormalParameter &&
             node.defaultValue.toString() != 'null') {
           str += ' ?? ${node.defaultValue}';

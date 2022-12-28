@@ -1,11 +1,12 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/class_mapper_element.dart';
+import '../elements/target_class_mapper_element.dart';
 
 class ToStringGenerator {
   ToStringGenerator(this.target);
 
-  final ClassMapperElement target;
+  final TargetClassMapperElement target;
 
   String generateToStringMethods() {
     if (target.shouldGenerate(GenerateMethods.stringify)) {

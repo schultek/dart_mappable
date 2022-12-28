@@ -6,6 +6,7 @@ import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 // ignore: implementation_imports
@@ -22,23 +23,15 @@ const fieldChecker = TypeChecker.fromRuntime(MappableField);
 const libChecker = TypeChecker.fromRuntime(MappableLib);
 const mapperChecker = TypeChecker.fromRuntime(MapperBase);
 
+late Resolver nodeResolver;
+
 extension GetNode on Element {
-  AstNode? getNode() {
-    var result = session?.getParsedLibraryByElement(library!);
-    if (result is ParsedLibraryResult) {
-      return result.getElementDeclaration(this)?.node;
-    } else {
-      return null;
-    }
+  Future<AstNode?> getNode() {
+    return nodeResolver.astNodeFor(this, resolve: false);
   }
 
   Future<AstNode?> getResolvedNode() async {
-    var result = await session?.getResolvedLibraryByElement(library!);
-    if (result is ResolvedLibraryResult) {
-      return result.getElementDeclaration(this)?.node;
-    } else {
-      return null;
-    }
+    return nodeResolver.astNodeFor(this, resolve: true);
   }
 }
 
@@ -82,9 +75,9 @@ AstNode? getAnnotationProperty(
   return null;
 }
 
-AstNode? getAnnotationNode(
-    Element annotatedElement, Type annotationType, dynamic property) {
-  var node = annotatedElement.getNode();
+Future<AstNode?> getAnnotationNode(
+    Element annotatedElement, Type annotationType, dynamic property) async {
+  var node = await annotatedElement.getNode();
   return getAnnotationProperty(node, annotationType, property);
 }
 
@@ -149,4 +142,9 @@ TextTransform? textTransformFromAnnotation(DartObject obj) {
 
 extension NullableType on DartType {
   bool get isNullable => nullabilitySuffix == NullabilitySuffix.question;
+}
+
+extension TypeList on DartObject {
+  List<DartType>? toTypeList() =>
+      toListValue()?.map((o) => o.toTypeValue()).whereType<DartType>().toList();
 }

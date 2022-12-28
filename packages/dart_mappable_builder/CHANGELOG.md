@@ -1,3 +1,17 @@
+# 2.0.0-dev.7
+
+- Mappers are now generated for each file containing annotated classes. This removes the
+  need to specify entry points in the `build.yaml`.
+  
+  > This is now similar to how packages like json_serializable or freezed generate code.
+  
+  - Generated files are now `part` files and need to be included as such.
+  - Instead of one global `Mapper` each class has its own mapper.
+  - Mappers can be linked together to enable working with multiple classes.
+  - Removed `@CustomMapper` annotation in favor of `includeCustomMappers` property on `@MappableClass()`.
+  
+  For a detailed migration guide, see [this issue]().
+
 # 2.0.0-dev.6
 
 - Fixed issue where code where wrongly generated for models outside the package.

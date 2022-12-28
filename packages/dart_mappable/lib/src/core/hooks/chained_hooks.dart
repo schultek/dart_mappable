@@ -3,7 +3,7 @@ import '../annotations.dart';
 /// A [MappingHooks] that will chain multiple other hooks.
 class ChainedHooks extends MappingHooks {
   /// The provided [MappingHooks].
-  /// These will be applied for both encoding and decoding in the following order:
+  /// These will be applied for both encoding and serialization in the following order:
   /// `first.beforeDecode -> second.beforeDecode -> ... -> decode -> ... -> second.afterDecode -> first.afterDecode`.
   final List<MappingHooks> hooks;
   const ChainedHooks(this.hooks);

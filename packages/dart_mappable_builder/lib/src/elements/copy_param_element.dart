@@ -3,27 +3,30 @@ import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../mapper_resource.dart';
+import '../mapper_group.dart';
 import '../utils.dart';
+import 'alias_class_mapper_element.dart';
 import 'class_mapper_element.dart';
 import 'mapper_param_element.dart';
 
 class CopyParamElement {
   static Iterable<CopyParamElement> collectFrom(
-      List<MapperParamElement> params,
-      ClassMapperElement target) sync* {
+      List<MapperParamElement> params, ClassMapperElement target) sync* {
     for (var param in target.params) {
       if (param is UnresolvedParamElement) {
         continue;
       }
 
       ClassMapperElement? resolveElement(Element? element) {
-        var classTarget = target.parent.getTargetForElement(element);
-        if (classTarget is ClassMapperElement &&
-            classTarget.shouldGenerate(GenerateMethods.copy) &&
-            (classTarget.hasCallableConstructor ||
-                classTarget.superTarget != null ||
-                classTarget.subTargets.isNotEmpty)) {
+        var classTarget = target.parent.getMapperForElement(element);
+
+        if (classTarget is! ClassMapperElement ||
+            !classTarget.shouldGenerate(GenerateMethods.copy)) return null;
+        if (classTarget is AliasClassMapperElement &&
+            element == classTarget.targetElement) return null;
+        if (classTarget.hasCallableConstructor ||
+            classTarget.superTarget != null ||
+            classTarget.subTargets.isNotEmpty) {
           return classTarget;
         }
         return null;
@@ -31,16 +34,25 @@ class CopyParamElement {
 
       CopyParamElement makeCollectionConfig(int valueIndex, String name) {
         var it = param.parameter.type as InterfaceType;
-        var itemElement = it.typeArguments[valueIndex].element;
+        var itemType = it.typeArguments[valueIndex];
+        var itemElement = itemType.element;
+
+        if (itemElement is TypeParameterElement) {
+          itemElement = itemElement.bound?.element;
+        }
+
         var itemConfig = resolveElement(itemElement);
 
         var forceNullable = target.subTargets.isNotEmpty;
 
-        var itemHasSubConfigs = true;//itemConfig?.subTargets.isNotEmpty ?? false;
+        var itemHasSubConfigs =
+            true; //itemConfig?.subTargets.isNotEmpty ?? false;
         var itemHasSuperTarget = itemConfig?.superTarget != null;
 
-        var itemPrefixedName = itemConfig != null ? target.parent.prefixOfElement(itemConfig.element)
-            + itemConfig.uniqueClassName : 'Object';
+        var itemPrefixedName = itemConfig != null
+            ? target.parent.prefixOfElement(itemConfig.element) +
+                itemConfig.uniqueClassName
+            : 'Object';
 
         return CollectionCopyParamElement(
           parent: target.parent,
@@ -63,11 +75,12 @@ class CopyParamElement {
         var classConfig = resolveElement(classElement);
 
         if (classConfig != null) {
-          var hasSubConfigs = true;//classConfig.subTargets.isNotEmpty;
+          var hasSubConfigs = true; //classConfig.subTargets.isNotEmpty;
           var hasSuperTarget = classConfig.superTarget != null;
 
-          var prefixedName = target.parent.prefixOfElement(classConfig.element)
-          + classConfig.uniqueClassName;
+          var prefixedName =
+              target.parent.prefixOfElement(classConfig.element) +
+                  classConfig.uniqueClassName;
 
           yield CopyParamElement(
             parent: target.parent,
@@ -171,8 +184,17 @@ class CollectionCopyParamElement extends CopyParamElement {
     if (itemName == 'Object') {
       itemInvocation = '(v, t) => ObjectCopyWith(v, \$identity, t)';
     } else {
+      var isBounded = itemType is TypeParameterType;
+
+      itemInvocation = isBounded ? '\$cast' : '\$identity';
       itemInvocation =
-          '(v, t) => v${itemTypeNullable ? '?' : ''}.copyWith.chain(\$identity, t)';
+          'v${itemTypeNullable ? '?' : ''}.copyWith.chain<\$R${super.fieldTypeParams}>($itemInvocation, t)';
+
+      if (isBounded) {
+        itemInvocation = '\$cast($itemInvocation)';
+      }
+
+      itemInvocation = '(v, t) => $itemInvocation';
     }
 
     var result =

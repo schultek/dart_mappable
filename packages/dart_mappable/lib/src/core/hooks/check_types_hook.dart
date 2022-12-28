@@ -2,8 +2,9 @@
 import 'package:type_plus/type_plus.dart';
 
 import '../annotations.dart';
+import '../mapper_container.dart';
 
-/// A [MappingHooks] that allows to specify custom type checks for decoding
+/// A [MappingHooks] that allows to specify custom type checks for serialization
 /// polymorph subclasses of a class.
 ///
 /// This overrides the default discriminator key/value system to allow for a
@@ -23,7 +24,7 @@ import '../annotations.dart';
 ///   hooks: CheckTypesHook({
 ///     B: B.checkType,
 ///     C: C.checkType,
-///   }, Mapper.fromValue),
+///   }),
 /// )
 /// abstract class A with AMappable {
 ///   A();
@@ -51,31 +52,32 @@ import '../annotations.dart';
 /// ```
 ///
 class CheckTypesHook extends MappingHooks {
-  const CheckTypesHook(this.checks, this.fromValue);
+  const CheckTypesHook(this.checks);
 
   final Map<Type, bool Function(dynamic)> checks;
-  final dynamic Function<T>(dynamic) fromValue;
 
   static final _locked = Expando<bool>();
   bool get isLocked => _locked[this] == true;
   set isLocked(bool locked) => _locked[this] = locked;
 
   @override
-  beforeDecode(value) {
-    if (isLocked) return value;
-    for (var e in checks.entries) {
-      var isT = e.key.provideTo(<T>() => value is T);
-      if (isT) {
-        return value;
-      } else if (e.value(value)) {
-        try {
-          isLocked = true;
-          return e.key.provideTo(<T>() => fromValue<T>(value));
-        } finally {
-          isLocked = false;
+  T wrapDecode<T>(value, T Function(dynamic value) fn, MapperContainer container) {
+    if (!isLocked) {
+      for (var e in checks.entries) {
+        var isT = e.key.provideTo(<T>() => value is T);
+        if (isT) {
+          break;
+        } else if (e.value(value)) {
+          try {
+            isLocked = true;
+            return e.key.provideTo<dynamic>(<T>() =>
+                container.fromValue<T>(value)) as T;
+          } finally {
+            isLocked = false;
+          }
         }
       }
     }
-    return value;
+    return fn(value);
   }
 }

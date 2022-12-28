@@ -15,6 +15,10 @@ abstract class MapperBase<T> {
   Function get typeFactory => (f) => f<T>();
 
   Type get type => T;
+
+  /// Optional type of the implementations of [T] used for decoding.
+  Type get implType => type;
+
   bool isFor(dynamic v) => v is T;
 
   MapperElementBase<T> createElement(MapperContainer container);
