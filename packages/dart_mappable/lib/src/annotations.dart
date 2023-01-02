@@ -211,13 +211,15 @@ abstract class MappingHook {
   dynamic beforeEncode(dynamic value) => value;
   dynamic afterEncode(dynamic value) => value;
 
-  T wrapDecode<T>(dynamic value, T Function(dynamic value) fn, MapperContainer container) {
+  T wrapDecode<T>(
+      dynamic value, T Function(dynamic value) fn, MapperContainer container) {
     var v = beforeDecode(value);
     if (v is! T) v = fn(v);
     return afterDecode(v) as T;
   }
 
-  dynamic wrapEncode<T>(T value, dynamic Function(T value) fn, MapperContainer container) {
+  dynamic wrapEncode<T>(
+      T value, dynamic Function(T value) fn, MapperContainer container) {
     var v = beforeEncode(value);
     if (v is T) v = fn(v);
     return afterEncode(v);

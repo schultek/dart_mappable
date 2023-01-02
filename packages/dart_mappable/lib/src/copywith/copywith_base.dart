@@ -1,4 +1,3 @@
-
 class _None {
   const _None();
 }
@@ -17,7 +16,8 @@ typedef Then<$T, $R> = $R Function($T);
 
 /// {@category Copy-With}
 abstract class ObjectCopyWith<Result, In, Out> {
-  const factory ObjectCopyWith(In value, Then<In, Out> then, Then<Out, Result> then2) = CopyWithBase;
+  const factory ObjectCopyWith(
+      In value, Then<In, Out> then, Then<Out, Result> then2) = CopyWithBase;
 
   Result apply(Out Function(In) transform);
 }
@@ -32,7 +32,8 @@ class CopyWithBase<Result, In, Out> implements ObjectCopyWith<Result, In, Out> {
 
   T or<T>(Object? v, T t) => v == $none ? t : v as T;
 
-  $C as<$C>($C Function(In, Then<In, Out>, Then<Out, Result>) copy) => copy($value, $then1, $then2);
+  $C as<$C>($C Function(In, Then<In, Out>, Then<Out, Result>) copy) =>
+      copy($value, $then1, $then2);
 
   Result $then(In value) => $then2($then1(value));
 
@@ -43,5 +44,6 @@ class CopyWithBase<Result, In, Out> implements ObjectCopyWith<Result, In, Out> {
 
 /// {@nodoc}
 extension ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
-  CopyWithBase<Result, In, Out> get base => this as CopyWithBase<Result, In, Out>;
+  CopyWithBase<Result, In, Out> get base =>
+      this as CopyWithBase<Result, In, Out>;
 }
