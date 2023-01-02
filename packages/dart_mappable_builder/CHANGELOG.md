@@ -1,3 +1,7 @@
+# 2.0.0-dev.8
+
+- Added compatibility support for `json_serializable` models and `fast_immutable_collections`.
+
 # 2.0.0-dev.7
 
 - Mappers are now generated for each file containing annotated classes. This removes the
