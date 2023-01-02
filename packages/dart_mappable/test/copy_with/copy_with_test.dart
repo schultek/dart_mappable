@@ -1,10 +1,10 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-import 'copy_with_test.mapper.g.dart';
+part 'copy_with_test.mapper.dart';
 
 @MappableClass()
-class Person with Mappable {
+class Person with PersonMappable {
   final String name;
   final Car car;
 
@@ -12,7 +12,7 @@ class Person with Mappable {
 }
 
 @MappableClass()
-class Car with Mappable {
+class Car with CarMappable {
   final String model;
   final Brand? brand;
 
@@ -20,14 +20,14 @@ class Car with Mappable {
 }
 
 @MappableClass()
-class Brand with Mappable {
+class Brand with BrandMappable {
   final dynamic name;
 
   Brand(this.name);
 }
 
 @MappableClass()
-class Dealership with Mappable {
+class Dealership with DealershipMappable {
   final List<Car> cars;
   final Map<Brand, Person?> salesRep;
 
@@ -35,31 +35,31 @@ class Dealership with Mappable {
 }
 
 @MappableClass(discriminatorKey: 'type')
-abstract class ItemList<T> with Mappable, ItemListMixin<T> {
+abstract class ItemList<T> with ItemListMappable<T> {
   final List<T> items;
 
   ItemList(List<T>? items) : items = items ?? [];
 }
 
 @MappableClass()
-class BrandList extends ItemList<Brand?> with BrandListMixin {
+class BrandList extends ItemList<Brand?> with BrandListMappable {
   BrandList(List<Brand?>? brands) : super(brands);
 }
 
 @MappableClass()
-class NamedItemList<T> extends ItemList<T> with NamedItemListMixin<T> {
+class NamedItemList<T> extends ItemList<T> with NamedItemListMappable<T> {
   String name;
   NamedItemList(this.name, List<T>? items): super(items);
 }
 
 @MappableClass()
-class KeyedItemList<K, T> extends ItemList<T> with KeyedItemListMixin<K, T> {
+class KeyedItemList<K, T> extends ItemList<T> with KeyedItemListMappable<K, T> {
   K key;
   KeyedItemList(this.key, List<T>? items): super(items);
 }
 
 @MappableClass()
-class ComparableItemList<T extends Comparable> extends ItemList<T> with ComparableItemListMixin<T> {
+class ComparableItemList<T extends Comparable> extends ItemList<T> with ComparableItemListMappable<T> {
   ComparableItemList(List<T>? items): super(items);
 }
 

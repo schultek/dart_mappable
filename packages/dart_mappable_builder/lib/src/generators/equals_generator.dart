@@ -1,28 +1,42 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../config/class_mapper_config.dart';
+import '../elements/target_class_mapper_element.dart';
 
 class EqualsGenerator {
-  String generateEqualsMethods(ClassMapperConfig config) {
+
+  EqualsGenerator(this.target);
+
+  final TargetClassMapperElement target;
+
+  String generateEqualsMethods() {
     var generated = '';
 
-    if (config.shouldGenerate(GenerateMethods.equals)) {
-      if (!config.shouldGenerate(GenerateMethods.stringify)) {
+    if (target.shouldGenerate(GenerateMethods.equals)) {
+      if (!target.shouldGenerate(GenerateMethods.stringify)) {
         generated += '\n';
       }
       generated += ''
-          '  @override int hash(${config.prefixedClassName} self) => ${_generateHashParams(config)};\n'
-          '  @override bool equals(${config.prefixedClassName} self, ${config.prefixedClassName} other) => ${_generateEqualsParams(config)};\n'
+          '  @override int hash(${target.prefixedClassName} self) => ${_generateHashParams()};\n'
+          '  @override bool equals(${target.prefixedClassName} self, ${target.prefixedClassName} other) => ${_generateEqualsParams()};\n'
           '';
     }
     return generated;
   }
 
-  String _generateHashParams(ClassMapperConfig config) {
+  String generateEqualsMixin() {
+    if (target.shouldGenerate(GenerateMethods.equals) && !target.isAbstract) {
+      return '  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && ${target.uniqueClassName}Mapper.container.isEqual(this, other));\n'
+          '  @override int get hashCode => ${target.uniqueClassName}Mapper.container.hash(this);\n';
+    } else {
+      return '';
+    }
+  }
+
+  String _generateHashParams() {
     List<String> params = [];
 
-    for (var field in config.allPublicFields) {
-      params.add('Mapper.hash(self.${field.name})');
+    for (var field in target.allPublicFields) {
+      params.add('container.hash(self.${field.name})');
     }
 
     if (params.isEmpty) {
@@ -32,11 +46,11 @@ class EqualsGenerator {
     }
   }
 
-  String _generateEqualsParams(ClassMapperConfig config) {
+  String _generateEqualsParams() {
     List<String> params = [];
 
-    for (var field in config.allPublicFields) {
-      params.add('Mapper.isEqual(self.${field.name}, other.${field.name})');
+    for (var field in target.allPublicFields) {
+      params.add('container.isEqual(self.${field.name}, other.${field.name})');
     }
 
     if (params.isEmpty) {

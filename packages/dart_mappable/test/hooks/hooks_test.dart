@@ -1,12 +1,13 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-import 'hooks_test.mapper.g.dart';
 import 'more_hooks.dart';
 import 'other_hooks.dart';
 
-class PlayerHooks extends MappingHooks {
-  const PlayerHooks();
+part 'hooks_test.mapper.dart';
+
+class PlayerHook extends MappingHook {
+  const PlayerHook();
 
   @override
   dynamic beforeDecode(dynamic value) {
@@ -25,38 +26,38 @@ class PlayerHooks extends MappingHooks {
   }
 }
 
-@MappableClass(hooks: GameHooks())
-class Game {
+@MappableClass(hook: GameHook())
+class Game with GameMappable {
   @MappableField(
-      hooks: ChainedHooks(
-          [PlayerHooks(), UnmappedPropertiesHooks('unmapped_props')]))
+      hook: ChainedHook(
+          [PlayerHook(), UnmappedPropertiesHook('unmappedProps')]))
   Player player;
 
   Game(this.player);
 }
 
 @MappableClass()
-class CardGame extends Game {
-  CardGame(@MappableField(hooks: CardPlayerHooks()) Player player)
+class CardGame extends Game with CardGameMappable {
+  CardGame(@MappableField(hook: CardPlayerHook()) Player player)
       : super(player);
 }
 
 @MappableClass()
-class Player {
+class Player with PlayerMappable {
   String id;
   Player(this.id);
 }
 
-@MappableClass(hooks: UnmappedPropertiesHooks('unmapped_props'))
-class Clothes {
+@MappableClass(hook: UnmappedPropertiesHook('unmappedProps'))
+class Clothes with ClothesMappable {
   int size;
   Map<String, dynamic> unmappedProps;
 
   Clothes(this.size, {this.unmappedProps = const {}});
 }
 
-@MappableClass(hooks: UnmappedPropertiesHooks('unmapped_props'))
-class Component {
+@MappableClass(hook: UnmappedPropertiesHook('unmappedProps'))
+class Component with ComponentMappable {
   String id;
   String name;
 
@@ -66,36 +67,36 @@ class Component {
 }
 
 void main() {
-  group('Hooks', () {
-    test('Before Decode Hook', () {
-      Game game = Mapper.fromJson('{"player": {"id": "Tom"}}');
+  group('hooks', () {
+    test('apply before decode', () {
+      Game game = GameMapper.fromJson('{"player": {"id": "Tom"}}');
       expect(game.player.id, equals('Tom'));
 
-      Game game2 = Mapper.fromJson('{"player": "John"}');
+      Game game2 = GameMapper.fromJson('{"player": "John"}');
       expect(game2.player.id, equals('John'));
     });
 
-    test('After Encode Hook', () {
+    test('apply after encode', () {
       var game = Game(Player('Tom'));
       expect(game.toJson(), equals('{"player":"Tom"}'));
     });
 
-    test('Chained field hooks', () {
-      var game = Mapper.fromMap<CardGame>({'player': 'Anna'});
+    test('chained field hooks', () {
+      var game = CardGameMapper.fromMap({'player': 'Anna'});
       expect(game.player.id, equals('Anna-card'));
     });
   });
 
-  group('Class Hooks', () {
-    test('Unmapped Properties', () {
-      Clothes clothes =
-          Mapper.fromJson('{"size": 1, "color": "green",  "quality": 2}');
+  group('default hooks', () {
+    test('unmapped properties', () {
+      var clothes = ClothesMapper.fromJson(
+          '{"size": 1, "color": "green",  "quality": 2}');
       expect(clothes.unmappedProps, equals({'color': 'green', 'quality': 2}));
       expect(
           clothes.toMap(), equals({'size': 1, 'color': 'green', 'quality': 2}));
 
-      Component component =
-          Mapper.fromJson('{"id": "some_id", "value": 3, "name": "my_comp"}');
+      var component = ComponentMapper.fromJson(
+          '{"id": "some_id", "value": 3, "name": "my_comp"}');
       expect(component.unmappedProps, equals({'value': 3}));
       component.name = 'changed';
       expect(component.toMap(),

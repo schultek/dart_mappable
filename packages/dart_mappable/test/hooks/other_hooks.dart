@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-class CardPlayerHooks extends MappingHooks {
-  const CardPlayerHooks();
+class CardPlayerHook extends MappingHook {
+  const CardPlayerHook();
 
   @override
   beforeDecode(value) {

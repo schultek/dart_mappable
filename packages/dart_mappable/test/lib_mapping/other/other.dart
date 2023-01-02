@@ -1,14 +1,14 @@
-import 'package:dart_mappable/dart_mappable.dart';
 
-@MappableClass()
-class Pet {
-  final String name;
+import 'models.dart';
 
-  Pet(this.name);
-}
-
-class Animal {
+abstract class Animal {
   final String color;
 
-  Animal(this.color);
+  const Animal(this.color);
+}
+
+class Pet extends Animal {
+  final Person owner;
+
+  const Pet(this.owner, super.color);
 }

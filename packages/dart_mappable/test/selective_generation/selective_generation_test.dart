@@ -2,70 +2,72 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
 import '../utils.dart';
-import 'other/models.dart';
-import 'selective_generation_test.mapper.g.dart';
+part 'selective_generation_test.mapper.dart';
 
 @MappableClass(
   generateMethods: GenerateMethods.encode | GenerateMethods.copy,
 )
-class Person with Mappable {
-  final String name;
+class A with AMappable {
+  final String a;
 
-  Person(this.name);
+  A(this.a);
 }
+
+@MappableClass(
+  generateMethods: GenerateMethods.equals | GenerateMethods.stringify,
+)
+class B with BMappable {
+  final String b;
+
+  B(this.b);
+}
+
 
 void main() {
   group('Selective generation', () {
     test('Should only generate encode and copy methods', () {
-      var person = Person('Tom');
+      var a = A('test');
 
       // should work
-      expect(person.toMap(), equals({'name': 'Tom'}));
-      expect(person.toJson(), equals('{"name":"Tom"}'));
-      expect(person.copyWith(name: 'Max').name, equals('Max'));
+      expect(a.toMap(), equals({'a': 'test'}));
+      expect(a.toJson(), equals('{"a":"test"}'));
+      expect(a.copyWith(a: 'test2').a, equals('test2'));
 
       // should not work
       expect(
-        () => Mapper.fromJson<Person>('{}'),
+        () => AMapper.container.fromJson<A>('{}'),
         throwsMapperException(MapperException.chain(
           MapperMethod.decode,
-          '(Person)',
-          MapperException.unsupportedMethod(MapperMethod.decode, Person),
+          '(A)',
+          MapperException.unsupportedMethod(MapperMethod.decode, A),
         )),
       );
-      expect(person, isNot(equals(Person('Tom'))));
-      expect(person.toString(), equals("Instance of 'Person'"));
+
+      expect(a, isNot(equals(A('test'))));
+      expect(a.toString(), equals("Instance of 'A'"));
     });
 
     test('Should only generate equals and stringify', () {
-      var car = Car('Audi');
+      var b = B('hi');
 
       // should work
-      expect(car, equals(Car('Audi')));
-      expect(Mapper.isEqual(car, Car('Audi')), equals(true));
-      expect(car.toString(), equals('Car(brand: Audi)'));
-      expect(Mapper.asString(car), equals('Car(brand: Audi)'));
+      expect(b, equals(B('hi')));
+      expect(BMapper.container.isEqual(b, B('hi')), equals(true));
+      expect(b.toString(), equals('B(b: hi)'));
+      expect(BMapper.container.asString(b), equals('B(b: hi)'));
 
       // should not work
       expect(
-        () => Mapper.fromJson<Car>('{}'),
+        () => BMapper.container.fromJson<B>('{}'),
         throwsMapperException(MapperException.chain(
           MapperMethod.decode,
-          '(Car)',
-          MapperException.unsupportedMethod(MapperMethod.decode, Car),
+          '(B)',
+          MapperException.unsupportedMethod(MapperMethod.decode, B),
         )),
       );
 
-      expect(
-        () => car.toMap(),
-        throwsMapperException(MapperException.chain(
-          MapperMethod.encode,
-          '(Car)',
-          MapperException.unsupportedMethod(MapperMethod.encode, Car),
-        )),
-      );
-
-      expect(() => (car as dynamic).copyWith, throwsNoSuchMethodError);
+      expect(() => (b as dynamic).toMap, throwsNoSuchMethodError);
+      expect(() => (b as dynamic).copyWith, throwsNoSuchMethodError);
     });
   });
 }

@@ -1,18 +1,29 @@
-@MappableLib(include: [Person], caseStyle: CaseStyle.snakeCase)
-library main;
+@MappableLib(caseStyle: CaseStyle.snakeCase)
+library lib;
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-import 'lib_mapping_test.mapper.g.dart';
-@MappableLib(exclude: [Bread, Apple])
-import 'other/food.dart';
-@MappableLib(include: [Car])
-import 'other/models.dart';
-@MappableLib(include: [Animal], ignoreAnnotated: true)
-import 'other/other.dart';
+import 'other/food.dart' as f;
+import 'other/models.dart' as m;
+import 'other/other.dart' as o;
 
-class Person with Mappable {
+part 'lib_mapping_test.mapper.dart';
+
+@MappableClass()
+class Cake = f.Cake with CakeMappable;
+
+@MappableClass()
+class Person2 = m.Person with Person2Mappable;
+
+@MappableClass(discriminatorKey: 'type')
+abstract class Animal = o.Animal with AnimalMappable;
+
+@MappableClass()
+class Pet = o.Pet with PetMappable implements Animal;
+
+@MappableClass()
+class Person with PersonMappable {
   final String firstName;
 
   Person(this.firstName);
@@ -21,13 +32,26 @@ class Person with Mappable {
 void main() {
   group('Lib mapping', () {
     test('Mappers are generated correctly', () {
-      expect(Mapper.get<Person>(), isNotNull);
-      expect(Mapper.get<Car>(), isNotNull);
-      expect(Mapper.get<Pet>(), isNull);
-      expect(Mapper.get<Animal>(), isNotNull);
-      expect(Mapper.get<Apple>(), isNotNull);
-      expect(Mapper.get<Bread>(), isNull);
-      expect(Mapper.get<Cake>(), isNotNull);
+      expect(Person('Tom').toMap(), equals({'first_name': 'Tom'}));
+      expect(Cake('Lemon').toMap(), equals({'type': 'Lemon'}));
+      expect(Person('Anna').toMap(), equals({'first_name': 'Anna'}));
+      expect(
+        Pet(Person2('Clara'), 'Buddy').toMap(),
+        equals({
+          'owner': {'first_name': 'Clara'},
+          'color': 'Buddy',
+          'type': 'Pet',
+        }),
+      );
+
+      expect(
+        AnimalMapper.fromMap({
+          'type': 'Pet',
+          'owner': {'first_name': 'Clara'},
+          'color': 'Buddy',
+        }),
+        equals(Pet(Person2('Clara'), 'Buddy')),
+      );
     });
   });
 }

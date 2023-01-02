@@ -1,0 +1,30 @@
+dartdoc:
+  categories:
+    "Introduction":
+      markdown: "doc/intro.md"
+    "Models":
+      markdown: "doc/models.md"
+    "Enums":
+      markdown: "doc/enums.md"
+    "Configuration":
+      markdown: "doc/configuration.md"
+    "Copy-With":
+      markdown: "doc/copywith.md"
+    "Polymorphism":
+      markdown: "doc/polymorphism.md"
+    "Mapping Hooks":
+      markdown: "doc/hooks.md"
+    "Custom Mappers":
+      markdown: "doc/custom.md"
+    "Mapper Container":
+      markdown: "doc/container.md"
+  categoryOrder:
+    - "Introduction"
+    - "Models"
+    - "Enums"
+    - "Configuration"
+    - "Copy-With"
+    - "Polymorphism"
+    - "Mapping Hooks"
+    - "Custom Mappers"
+    - "Mapper Container"

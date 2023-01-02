@@ -3,7 +3,4 @@ targets:
     builders:
       dart_mappable_builder:
         generate_for:
-          - test/*/*_test.dart
-        options:
-          caseStyle: snakeCase
-          enumCaseStyle: camelCase
+          - test/**/*.dart

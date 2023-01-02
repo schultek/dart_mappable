@@ -1,0 +1,13 @@
+name: fic_mappable
+
+environment:
+  sdk: '>=2.18.0 <3.0.0'
+
+dependencies:
+  dart_mappable: ^2.0.0
+  fast_immutable_collections: ^7.4.1
+
+dev_dependencies:
+  build_runner: ^2.1.0
+  dart_mappable_builder: ^2.0.0
+  lints: ^1.0.1

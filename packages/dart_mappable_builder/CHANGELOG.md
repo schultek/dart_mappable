@@ -1,3 +1,41 @@
+# 2.0.0-dev.7
+
+- Mappers are now generated for each file containing annotated classes. This removes the
+  need to specify entry points in the `build.yaml`.
+  
+  > This is now similar to how packages like `json_serializable` or `freezed` generate code.
+  
+  - Generated files are now `part` files and need to be included as such.
+  - Instead of one global `Mapper` each class has its own mapper.
+  - Mappers can be linked together to enable working with multiple classes.
+  - Removed `@CustomMapper` annotation in favor of `includeCustomMappers` property on `@MappableClass()`.
+  
+  For a detailed migration guide, see [this issue](https://github.com/schultek/dart_mappable/issues/46).
+
+- Documentation is now separated from the README using the official pub.dev documentation topics.
+  Find the new documentation [here](https://pub.dev/documentation/dart_mappable/latest/topics/Introduction-topic.html)
+
+# 2.0.0-dev.6
+
+- Fixed issue where code where wrongly generated for models outside the package.
+
+  While the builder now stops at package boundaries by default, this can be overruled
+  by explicitly using the `@MappableLib()` annotation on an import statement.
+
+- Added the [CheckTypesHook] to allow for custom discriminator checks on subclasses in a
+  polymorphic class structure.
+
+# 2.0.0-dev.5
+
+- Removed the `Mappable` mixin in favor of the new class-specific mixins.
+
+  All annotated classes must now mixin their respective `<MyClass>Mappable` mixin.
+  More details [here](https://pub.dev/packages/dart_mappable/versions/2.0.0-dev.5#get-started).
+
+# 2.0.0-dev.4
+
+- Fixed bug with incorrect type args in copyWith
+
 # 2.0.0-dev.3
 
 - Fixed various issues with the copyWith implementation for inherited classes.

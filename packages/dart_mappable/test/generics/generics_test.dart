@@ -2,10 +2,11 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
 import '../utils.dart';
-import 'generics_test.mapper.g.dart';
+
+part 'generics_test.mapper.dart';
 
 @MappableClass()
-class Box<T extends Content> {
+class Box<T extends Content> with BoxMappable<T> {
   int size;
   List<T> contents;
 
@@ -13,22 +14,22 @@ class Box<T extends Content> {
 }
 
 @MappableClass()
-class Confetti extends Content {
+class Confetti extends Content with ConfettiMappable {
   String color;
   Confetti(this.color);
 }
 
 @MappableClass()
-class Content {}
+class Content with ContentMappable {}
 
 @MappableClass()
-class Data {
+class Data with DataMappable {
   final String data;
   Data(this.data);
 }
 
 @MappableClass()
-class SingleSetting<T> with Mappable {
+class SingleSetting<T> with SingleSettingMappable {
   final List<T>? properties;
 
   const SingleSetting({
@@ -36,8 +37,8 @@ class SingleSetting<T> with Mappable {
   });
 }
 
-@MappableClass(hooks: MapHooksAfter())
-class Settings with Mappable {
+@MappableClass(hook: MapHooksAfter())
+class Settings with SettingsMappable {
   final Map<String, SingleSetting>? settings;
 
   const Settings({
@@ -45,7 +46,7 @@ class Settings with Mappable {
   });
 }
 
-class MapHooksAfter extends MappingHooks {
+class MapHooksAfter extends MappingHook {
   const MapHooksAfter();
 
   @override
@@ -67,19 +68,22 @@ class MapHooksAfter extends MappingHooks {
 void main() {
   group('Generic classes', () {
     test('Should encode generic objects', () {
+      BoxMapper.container.link(ConfettiMapper.container);
       Box box = Box<Confetti>(10, contents: [Confetti('Rainbow')]);
-      String boxJson = box.toJson();
+      String boxJson = BoxMapper.container.toJson(box);
       expect(
         boxJson,
         equals(
             '{"size":10,"contents":[{"color":"Rainbow"}],"__type":"Box<Confetti>"}'),
       );
 
-      dynamic whatAmI = Mapper.fromJson(boxJson);
+      dynamic whatAmI = BoxMapper.fromJson(boxJson);
       expect(whatAmI.runtimeType, equals(type<Box<Confetti>>()));
     });
 
     test('Should keep type information', () {
+      SettingsMapper.container.link(DataMapper.container);
+
       var settings = Settings(settings: {
         'counts': SingleSetting<int>(properties: [2, 3, 4]),
         'names': SingleSetting<String>(properties: ['Tom', 'Anna']),
@@ -89,7 +93,7 @@ void main() {
       var json = settings.toJson();
       expect(json, equals('{"settings":{"counts":{"properties":[2,3,4],"__type":"SingleSetting<int>"},"names":{"properties":["Tom","Anna"],"__type":"SingleSetting<String>"},"data":{"properties":[{"data":"1234"}],"__type":"SingleSetting<Data>"}}}'));
 
-      Settings copied = Mapper.fromJson(json);
+      Settings copied = SettingsMapper.fromJson(json);
 
       expect(copied.settings!['counts'].runtimeType, equals(type<SingleSetting<int>>()));
       expect(copied.settings!['names'].runtimeType, equals(type<SingleSetting<String>>()));
@@ -97,10 +101,10 @@ void main() {
     });
 
     test('Generic type encodinng', () {
-      var jsonA = Mapper.toJson(SingleSetting<int>(properties: [2, 3]));
+      var jsonA = SettingsMapper.container.toJson(SingleSetting<int>(properties: [2, 3]));
       expect(jsonA, equals('{"properties":[2,3]}'));
 
-      var jsonB = Mapper.toJson<dynamic>(SingleSetting<int>(properties: [1, 4]));
+      var jsonB = SettingsMapper.container.toJson<dynamic>(SingleSetting<int>(properties: [1, 4]));
       expect(jsonB, equals('{"properties":[1,4],"__type":"SingleSetting<int>"}'));
     });
   });

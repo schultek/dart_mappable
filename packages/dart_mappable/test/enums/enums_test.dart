@@ -4,7 +4,8 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
 import '../utils.dart';
-import 'enums_test.mapper.g.dart';
+
+part 'enums_test.mapper.dart';
 
 @MappableEnum(defaultValue: State.off)
 enum State { On, off, itsCOMPLICATED }
@@ -25,40 +26,82 @@ enum Status {
 }
 
 void main() {
-  group('Enum Mappers', () {
-    test('Should encode enums', () {
-      expect(Mapper.toValue(State.On), equals('on'));
-      expect(State.itsCOMPLICATED.toValue(), equals('itsComplicated'));
-      expect(Mapper.toValue(Color.BLUE), equals('blue'));
-      expect(Color.bloodRED.toValue(), equals('blood-red'));
+  group('enum mapping', () {
+    group('encodes', () {
+      test('enum', () {
+        expect(State.On.toValue(), equals('On'));
+        expect(State.off.toValue(), equals('off'));
+        expect(State.itsCOMPLICATED.toValue(), equals('itsCOMPLICATED'));
+      });
+
+      test('enum with case style', () {
+        expect(Color.Green.toValue(), equals('green'));
+        expect(Color.BLUE.toValue(), equals('blue'));
+        expect(Color.bloodRED.toValue(), equals('blood-red'));
+      });
+
+      test('enum with index mode', () {
+        expect(Items.first.toValue(), equals(0));
+        expect(Items.second.toValue(), equals(1));
+        expect(Items.third.toValue(), equals(2));
+      });
+
+      test('enum with custom values', () {
+        expect(Status.zero.toValue(), equals(0));
+        expect(Status.success.toValue(), equals(200));
+        expect(Status.error.toValue(), equals('error'));
+      });
     });
 
-    test('Should decode enums', () {
-      expect(Mapper.fromValue<State>('on'), equals(State.On));
-      expect(Mapper.fromValue<State>('off'), equals(State.off));
-      expect(Mapper.fromValue<State>('none'), equals(State.off));
+    group('decodes', () {
+      test('enum', () {
+        expect(ColorMapper.fromValue('green'), equals(Color.Green));
+        expect(ColorMapper.fromValue('blood-red'), equals(Color.bloodRED));
+        expect(
+          () => ColorMapper.fromValue('pink'),
+          throwsMapperException(MapperException.chain(
+            MapperMethod.decode,
+            '(Color)',
+            MapperException.unknownEnumValue('pink'),
+          )),
+        );
+      });
 
-      expect(Mapper.fromValue<Color>('green'), equals(Color.Green));
-      expect(Mapper.fromValue<Color>('blood-red'), equals(Color.bloodRED));
-      expect(
-        () => Mapper.fromValue<Color>('pink'),
-        throwsMapperException(MapperException.chain(
-          MapperMethod.decode,
-          '(Color)',
-          MapperException.unknownEnumValue('pink'),
-        )),
-      );
-    });
+      test('enum with case style', () {
+        expect(StateMapper.fromValue('On'), equals(State.On));
+        expect(StateMapper.fromValue('off'), equals(State.off));
+        expect(StateMapper.fromValue('none'), equals(State.off));
+      });
 
-    test('Should use index mode for enum', () {
-      expect(Items.second.toValue(), equals(1));
-      expect(Mapper.fromValue<Items>(2), equals(Items.third));
-    });
+      test('enum with index mode', () {
+        expect(ItemsMapper.fromValue(0), equals(Items.first));
+        expect(ItemsMapper.fromValue(1), equals(Items.second));
+        expect(ItemsMapper.fromValue(2), equals(Items.third));
 
-    test('Should use custom values for enum', () {
-      expect(Status.zero.toValue(), equals(0));
-      expect(Mapper.toValue(Status.success), equals(200));
-      expect(Mapper.fromValue<Status>('error'), equals(Status.error));
+        expect(
+          () => ItemsMapper.fromValue(3),
+          throwsMapperException(MapperException.chain(
+            MapperMethod.decode,
+            '(Items)',
+            MapperException.unknownEnumValue(3),
+          )),
+        );
+      });
+
+      test('enum with custom values', () {
+        expect(StatusMapper.fromValue(0), equals(Status.zero));
+        expect(StatusMapper.fromValue(200), equals(Status.success));
+        expect(StatusMapper.fromValue('error'), equals(Status.error));
+
+        expect(
+          () => ItemsMapper.fromValue(false),
+          throwsMapperException(MapperException.chain(
+            MapperMethod.decode,
+            '(Items)',
+            MapperException.unknownEnumValue(false),
+          )),
+        );
+      });
     });
   });
 }
