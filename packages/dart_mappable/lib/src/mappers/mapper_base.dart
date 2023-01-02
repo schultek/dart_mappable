@@ -1,7 +1,7 @@
 import 'package:type_plus/type_plus.dart';
 
-import 'mapper_container.dart';
-import 'mapper_exception.dart';
+import '../mapper_container.dart';
+import '../mapper_exception.dart';
 
 /// {@category Custom Mappers}
 abstract class MapperBase<T> {

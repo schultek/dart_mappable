@@ -1,4 +1,4 @@
-import 'mapper_utils.dart';
+import 'copywith_base.dart';
 
 typedef ItemCopyWith<Copy, Elem, Result> = Copy Function(Elem a, Then<Elem, Result> b);
 

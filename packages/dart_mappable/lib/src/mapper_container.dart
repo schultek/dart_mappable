@@ -6,7 +6,9 @@ import 'package:meta/meta.dart';
 import 'package:type_plus/src/types_registry.dart' show TypeRegistry;
 import 'package:type_plus/type_plus.dart' hide typeOf;
 
-import '../../dart_mappable.dart';
+import 'mappers/default_mappers.dart';
+import 'mappers/mapper_base.dart';
+import 'mapper_exception.dart';
 
 /// {@category Mapper Container}
 @sealed

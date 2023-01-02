@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
 
-import 'mapper_exception.dart';
+import '../mapper_exception.dart';
 import 'mapper_base.dart';
-import 'mapper_container.dart';
+import '../mapper_container.dart';
 import 'mapper_mixins.dart';
-import 'mapper_utils.dart';
+import '../mapper_utils.dart';
 import 'simple_mapper.dart';
 
 class PrimitiveMapper<T> extends MapperBase<T> {

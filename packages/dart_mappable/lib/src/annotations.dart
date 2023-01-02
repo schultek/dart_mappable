@@ -1,4 +1,5 @@
-import '../../dart_mappable.dart';
+import 'case_style.dart';
+import 'mapper_container.dart';
 
 /// Used to annotate a class
 /// in order to generate mapping code

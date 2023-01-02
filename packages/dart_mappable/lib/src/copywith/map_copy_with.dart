@@ -1,5 +1,5 @@
+import 'copywith_base.dart';
 import 'list_copy_with.dart' show ItemCopyWith;
-import 'mapper_utils.dart';
 
 /// Interface used for [Map]s in chained copyWith methods
 /// All methods return a new modified map and do not modify the original map.

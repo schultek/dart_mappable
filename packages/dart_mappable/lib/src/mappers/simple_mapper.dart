@@ -1,7 +1,7 @@
 
 
 import 'mapper_base.dart';
-import 'mapper_container.dart';
+import '../mapper_container.dart';
 import 'mapper_mixins.dart';
 
 /// Interface to define custom mappers.
