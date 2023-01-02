@@ -203,8 +203,9 @@ class BoxMapper extends MapperBase<Box> {
 
   @override
   Function get typeFactory => <T>(f) => f<Box<T>>();
-  static final fromMap = container.fromMap<Box>;
-  static final fromJson = container.fromJson<Box>;
+  static Box<T> fromMap<T>(Map<String, dynamic> map) =>
+      container.fromMap<Box<T>>(map);
+  static Box<T> fromJson<T>(String json) => container.fromJson<Box<T>>(json);
 }
 
 class BoxMapperElement extends MapperElementBase<Box> {

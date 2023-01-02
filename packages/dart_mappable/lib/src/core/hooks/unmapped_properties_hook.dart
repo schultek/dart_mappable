@@ -2,12 +2,14 @@ import 'dart:collection';
 
 import '../annotations.dart';
 
-/// A [MappingHooks] to get all unmapped properties in a [Map].
-class UnmappedPropertiesHooks extends MappingHooks {
+/// A [MappingHook] to get all unmapped properties in a [Map].
+///
+/// {@category Mapping Hooks}
+class UnmappedPropertiesHook extends MappingHook {
   /// The key of the target property of your class.
   /// Needs to be specified in the correct case-style
   final String key;
-  const UnmappedPropertiesHooks(this.key);
+  const UnmappedPropertiesHook(this.key);
 
   @override
   dynamic beforeDecode(dynamic value) {

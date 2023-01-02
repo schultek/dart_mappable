@@ -45,8 +45,6 @@ class CopyParamElement {
 
         var forceNullable = target.subTargets.isNotEmpty;
 
-        var itemHasSubConfigs =
-            true; //itemConfig?.subTargets.isNotEmpty ?? false;
         var itemHasSuperTarget = itemConfig?.superTarget != null;
 
         var itemPrefixedName = itemConfig != null
@@ -59,8 +57,7 @@ class CopyParamElement {
           param: param,
           name: name,
           itemName: itemPrefixedName,
-          itemHasSubConfigs: itemHasSubConfigs,
-          itemHassuperTarget: itemHasSuperTarget,
+          itemHasSuperTarget: itemHasSuperTarget,
           forceNullable: forceNullable,
           valueIndex: valueIndex,
         );
@@ -138,15 +135,13 @@ class CollectionCopyParamElement extends CopyParamElement {
     required super.param,
     required super.name,
     required this.itemName,
-    required this.itemHasSubConfigs,
-    required this.itemHassuperTarget,
+    required this.itemHasSuperTarget,
     required this.forceNullable,
     required this.valueIndex,
   });
 
   final String itemName;
-  final bool itemHasSubConfigs;
-  final bool itemHassuperTarget;
+  final bool itemHasSuperTarget;
   final bool forceNullable;
   final int valueIndex;
 
@@ -154,12 +149,9 @@ class CollectionCopyParamElement extends CopyParamElement {
   late bool itemTypeNullable =
       itemType.nullabilitySuffix == NullabilitySuffix.question;
 
-  late String itemOptSubTypeParam = itemHasSubConfigs
-      ? ', ${parent.prefixedType(itemType, withNullability: false)}'
-      : '';
-  late String itemOptSuperTypeParam = itemHasSubConfigs || itemHassuperTarget
-      ? ', ${parent.prefixedType(itemType, withNullability: false)}'
-      : '';
+  late String itemTypeParam =
+       ', ${parent.prefixedType(itemType, withNullability: false)}'
+      ;
 
   @override
   String get fieldTypeParams {
@@ -175,7 +167,7 @@ class CollectionCopyParamElement extends CopyParamElement {
             .join()
         : '';
 
-    return '${super.fieldTypeParams}, ${itemName}CopyWith<\$R$itemOptSubTypeParam$itemOptSuperTypeParam$typeParams>${itemTypeNullable ? '?' : ''}';
+    return '${super.fieldTypeParams}, ${itemName}CopyWith<\$R$itemTypeParam$itemTypeParam$typeParams>${itemTypeNullable ? '?' : ''}';
   }
 
   @override
@@ -188,7 +180,7 @@ class CollectionCopyParamElement extends CopyParamElement {
 
       itemInvocation = isBounded ? '\$cast' : '\$identity';
       itemInvocation =
-          'v${itemTypeNullable ? '?' : ''}.copyWith.chain<\$R${super.fieldTypeParams}>($itemInvocation, t)';
+          'v${itemTypeNullable ? '?' : ''}.copyWith.chain<\$R$itemTypeParam>($itemInvocation, t)';
 
       if (isBounded) {
         itemInvocation = '\$cast($itemInvocation)';

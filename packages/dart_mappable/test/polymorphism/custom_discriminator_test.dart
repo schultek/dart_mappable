@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 part 'custom_discriminator_test.mapper.dart';
 
 @MappableClass(
-  hooks: CheckTypesHook({
+  hook: CheckTypesHook({
     B: B.checkType,
     C: C.checkType,
   }),

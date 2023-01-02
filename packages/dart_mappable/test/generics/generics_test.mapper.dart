@@ -83,7 +83,7 @@ abstract class BoxCopyWith<$R, $In extends Box<T>, $Out extends Box,
     T extends Content> implements ObjectCopyWith<$R, $In, $Out> {
   BoxCopyWith<$R2, $In, $Out2, T> chain<$R2, $Out2 extends Box>(
       Then<Box<T>, $Out2> t, Then<$Out2, $R2> t2);
-  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get contents;
+  ListCopyWith<$R, T, ContentCopyWith<$R, T, T>> get contents;
   $R call({int? size, List<T>? contents});
 }
 
@@ -97,9 +97,9 @@ class _BoxCopyWithImpl<$R, $Out extends Box, T extends Content>
       _BoxCopyWithImpl($value, t, t2);
 
   @override
-  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get contents => ListCopyWith(
+  ListCopyWith<$R, T, ContentCopyWith<$R, T, T>> get contents => ListCopyWith(
       $value.contents,
-      (v, t) => ObjectCopyWith(v, $identity, t),
+      (v, t) => $cast(v.copyWith.chain<$R, T>($cast, t)),
       (v) => call(contents: v));
   @override
   $R call({int? size, List<T>? contents}) =>
@@ -563,7 +563,9 @@ class _SettingsCopyWithImpl<$R, $Out extends Settings>
       SingleSetting<dynamic>,
       SingleSettingCopyWith<$R, SingleSetting<dynamic>, SingleSetting<dynamic>,
           dynamic>>? get settings => $value.settings != null
-      ? MapCopyWith($value.settings!, (v, t) => v.copyWith.chain($identity, t),
+      ? MapCopyWith(
+          $value.settings!,
+          (v, t) => v.copyWith.chain<$R, SingleSetting<dynamic>>($identity, t),
           (v) => call(settings: v))
       : null;
   @override

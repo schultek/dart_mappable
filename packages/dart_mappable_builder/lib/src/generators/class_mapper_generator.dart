@@ -3,7 +3,6 @@ import 'package:ansicolor/ansicolor.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/alias_class_mapper_element.dart';
-import '../elements/class_mapper_element.dart';
 import '../elements/linked_elements_mixin.dart';
 import '../elements/mapper_element.dart';
 import '../elements/target_class_mapper_element.dart';

@@ -24,8 +24,7 @@ class TempAssetWriter implements RecordingAssetWriter {
   }
 
   Future<dynamic> run(String code) async {
-    try {
-      return await _run('''
+    return await _run('''
       import 'dart:isolate';
       import 'dart:async';
       import 'package:test/test.dart';
@@ -44,10 +43,6 @@ class TempAssetWriter implements RecordingAssetWriter {
         $code
       }
     ''').last;
-    } catch (e) {
-      print("EXC $e ${e.runtimeType}");
-      rethrow;
-    }
   }
 
   Stream<dynamic> _run(String code) async* {
@@ -74,8 +69,7 @@ class TempAssetWriter implements RecordingAssetWriter {
 
     var results = StreamController.broadcast();
 
-    var sub =
-    port.listen((message) {
+    var sub = port.listen((message) {
       results.add(message);
     });
 

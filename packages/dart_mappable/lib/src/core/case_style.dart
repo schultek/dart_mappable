@@ -1,7 +1,9 @@
-final splitter = RegExp(r'[ ./_\-\\]+|(?<=[a-z])(?=[A-Z])');
-final customCase = RegExp(r'^custom\(([luc][luc]?)?,(.?)\)$');
+final _splitter = RegExp(r'[ ./_\-\\]+|(?<=[a-z])(?=[A-Z])');
+final _customCase = RegExp(r'^custom\(([luc][luc]?)?,(.?)\)$');
 
-/// Used to transform fields to a specific case style
+/// Used to transform fields to a specific case style.
+///
+/// {@category Configuration}
 class CaseStyle {
   const CaseStyle({this.head, this.tail, this.separator = ''});
 
@@ -35,7 +37,7 @@ class CaseStyle {
           return upperCase;
       }
       if (value.startsWith('custom')) {
-        var match = customCase.firstMatch(value);
+        var match = _customCase.firstMatch(value);
         if (match == null || match.groupCount != 2) {
           throw FormatException(
               "Cannot parse custom caseStyle expression '$value'");
@@ -96,7 +98,7 @@ extension CaseStyleTransform on CaseStyle? {
     if (style == null) {
       return text;
     } else {
-      var words = text.split(splitter);
+      var words = text.split(_splitter);
       if (style.head != null) {
         words = [
           style.head.transform(words[0]),
@@ -110,7 +112,9 @@ extension CaseStyleTransform on CaseStyle? {
   }
 }
 
-/// Text transformation applied to a single word
+/// Text transformation applied to a single word.
+///
+/// {@category Configuration}
 enum TextTransform { upperCase, lowerCase, capitalCase }
 
 extension TextTransformParser on TextTransform {

@@ -27,26 +27,26 @@ class GameMapperElement extends MapperElementBase<Game> {
 
   @override
   Function get decoder => decode;
-  Game decode(dynamic v) => const GameHooks().decode(
+  Game decode(dynamic v) => const GameHook().decode(
       v,
       (v) => checkedType(v, (Map<String, dynamic> map) => fromMap(map)),
       container);
   Game fromMap(Map<String, dynamic> map) => Game(container.$get(
       map,
       'player',
-      const ChainedHooks(
-          [PlayerHooks(), UnmappedPropertiesHooks('unmappedProps')])));
+      const ChainedHook(
+          [PlayerHook(), UnmappedPropertiesHook('unmappedProps')])));
 
   @override
   Function get encoder => encode;
   dynamic encode(Game v) =>
-      const GameHooks().encode<Game>(v, (v) => toMap(v), container);
+      const GameHook().encode<Game>(v, (v) => toMap(v), container);
   Map<String, dynamic> toMap(Game g) => {
         'player': container.$enc(
             g.player,
             'player',
-            const ChainedHooks(
-                [PlayerHooks(), UnmappedPropertiesHooks('unmappedProps')]))
+            const ChainedHook(
+                [PlayerHook(), UnmappedPropertiesHook('unmappedProps')]))
       };
 
   @override
@@ -128,30 +128,30 @@ class CardGameMapperElement extends MapperElementBase<CardGame> {
   CardGameMapperElement._(super.mapper, super.container);
 
   @override
-  Function get decoder => (v) => const GameHooks().decode(v, decode, container);
+  Function get decoder => (v) => const GameHook().decode(v, decode, container);
   CardGame decode(dynamic v) =>
       checkedType(v, (Map<String, dynamic> map) => fromMap(map));
   CardGame fromMap(Map<String, dynamic> map) => CardGame(container.$get(
       map,
       'player',
-      const ChainedHooks([
-        PlayerHooks(),
-        UnmappedPropertiesHooks('unmappedProps'),
-        CardPlayerHooks()
+      const ChainedHook([
+        PlayerHook(),
+        UnmappedPropertiesHook('unmappedProps'),
+        CardPlayerHook()
       ])));
 
   @override
   Function get encoder => (CardGame v) =>
-      const GameHooks().encode<CardGame>(v, (v) => encode, container);
+      const GameHook().encode<CardGame>(v, (v) => encode, container);
   dynamic encode(CardGame v) => toMap(v);
   Map<String, dynamic> toMap(CardGame c) => {
         'player': container.$enc(
             c.player,
             'player',
-            const ChainedHooks([
-              PlayerHooks(),
-              UnmappedPropertiesHooks('unmappedProps'),
-              CardPlayerHooks()
+            const ChainedHook([
+              PlayerHook(),
+              UnmappedPropertiesHook('unmappedProps'),
+              CardPlayerHook()
             ]))
       };
 
@@ -317,7 +317,7 @@ class ClothesMapperElement extends MapperElementBase<Clothes> {
   @override
   Function get decoder => decode;
   Clothes decode(dynamic v) =>
-      const UnmappedPropertiesHooks('unmappedProps').decode(
+      const UnmappedPropertiesHook('unmappedProps').decode(
           v,
           (v) => checkedType(v, (Map<String, dynamic> map) => fromMap(map)),
           container);
@@ -327,7 +327,7 @@ class ClothesMapperElement extends MapperElementBase<Clothes> {
 
   @override
   Function get encoder => encode;
-  dynamic encode(Clothes v) => const UnmappedPropertiesHooks('unmappedProps')
+  dynamic encode(Clothes v) => const UnmappedPropertiesHook('unmappedProps')
       .encode<Clothes>(v, (v) => toMap(v), container);
   Map<String, dynamic> toMap(Clothes c) => {
         'size': container.$enc(c.size, 'size'),
@@ -421,7 +421,7 @@ class ComponentMapperElement extends MapperElementBase<Component> {
   @override
   Function get decoder => decode;
   Component decode(dynamic v) =>
-      const UnmappedPropertiesHooks('unmappedProps').decode(
+      const UnmappedPropertiesHook('unmappedProps').decode(
           v,
           (v) => checkedType(v, (Map<String, dynamic> map) => fromMap(map)),
           container);
@@ -432,7 +432,7 @@ class ComponentMapperElement extends MapperElementBase<Component> {
 
   @override
   Function get encoder => encode;
-  dynamic encode(Component v) => const UnmappedPropertiesHooks('unmappedProps')
+  dynamic encode(Component v) => const UnmappedPropertiesHook('unmappedProps')
       .encode<Component>(v, (v) => toMap(v), container);
   Map<String, dynamic> toMap(Component c) => {
         'id': container.$enc(c.id, 'id'),

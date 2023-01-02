@@ -367,12 +367,14 @@ class _DealershipCopyWithImpl<$R, $Out extends Dealership>
   @override
   ListCopyWith<$R, Car, CarCopyWith<$R, Car, Car>> get cars => ListCopyWith(
       $value.cars,
-      (v, t) => v.copyWith.chain($identity, t),
+      (v, t) => v.copyWith.chain<$R, Car>($identity, t),
       (v) => call(cars: v));
   @override
   MapCopyWith<$R, Brand, Person?, PersonCopyWith<$R, Person, Person>?>
-      get salesRep => MapCopyWith($value.salesRep,
-          (v, t) => v?.copyWith.chain($identity, t), (v) => call(salesRep: v));
+      get salesRep => MapCopyWith(
+          $value.salesRep,
+          (v, t) => v?.copyWith.chain<$R, Person>($identity, t),
+          (v) => call(salesRep: v));
   @override
   $R call({List<Car>? cars, Map<Brand, Person?>? salesRep}) =>
       $then(Dealership(cars ?? $value.cars, salesRep ?? $value.salesRep));
@@ -556,7 +558,9 @@ class _BrandListCopyWithImpl<$R, $Out extends ItemList>
 
   @override
   ListCopyWith<$R, Brand?, BrandCopyWith<$R, Brand, Brand>?> get items =>
-      ListCopyWith($value.items, (v, t) => v?.copyWith.chain($identity, t),
+      ListCopyWith(
+          $value.items,
+          (v, t) => v?.copyWith.chain<$R, Brand>($identity, t),
           (v) => call(items: v));
   @override
   $R call({Object? items = $none}) => $then(BrandList(or(items, $value.items)));

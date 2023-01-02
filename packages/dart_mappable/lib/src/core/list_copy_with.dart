@@ -3,7 +3,9 @@ import 'mapper_utils.dart';
 typedef ItemCopyWith<Copy, Elem, Result> = Copy Function(Elem a, Then<Elem, Result> b);
 
 /// Interface used for [List]s in chained copyWith methods
-/// All methods return a new modified list and do not modify the original list
+/// All methods return a new modified list and do not modify the original list.
+///
+/// {@category Copy-With}
 abstract class ListCopyWith<Result, Elem, Copy> {
   factory ListCopyWith(
     List<Elem> value,

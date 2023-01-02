@@ -93,11 +93,15 @@ class _ItemsCopyWithImpl<$R, $Out extends Items>
 
   @override
   ListCopyWith<$R, Item, ItemCopyWith<$R, Item, Item>> get items =>
-      ListCopyWith($value.items, (v, t) => v.copyWith.chain($identity, t),
+      ListCopyWith(
+          $value.items,
+          (v, t) => v.copyWith.chain<$R, Item>($identity, t),
           (v) => call(items: v));
   @override
   MapCopyWith<$R, int, Item, ItemCopyWith<$R, Item, Item>> get items2 =>
-      MapCopyWith($value.items2, (v, t) => v.copyWith.chain($identity, t),
+      MapCopyWith(
+          $value.items2,
+          (v, t) => v.copyWith.chain<$R, Item>($identity, t),
           (v) => call(items2: v));
   @override
   $R call({List<Item>? items, Map<int, Item>? items2}) =>

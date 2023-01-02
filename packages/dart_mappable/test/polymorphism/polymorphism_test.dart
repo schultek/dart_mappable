@@ -1,7 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-import 'custom_discriminator_test.dart';
 part 'polymorphism_test.mapper.dart';
 
 @MappableClass(discriminatorKey: 'type')

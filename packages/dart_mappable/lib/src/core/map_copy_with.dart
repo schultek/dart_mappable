@@ -2,7 +2,9 @@ import 'list_copy_with.dart' show ItemCopyWith;
 import 'mapper_utils.dart';
 
 /// Interface used for [Map]s in chained copyWith methods
-/// All methods return a new modified map and do not modify the original map
+/// All methods return a new modified map and do not modify the original map.
+///
+/// {@category Copy-With}
 abstract class MapCopyWith<Result, Key, Value, Copy> {
   factory MapCopyWith(Map<Key, Value> value, ItemCopyWith<Copy, Value, Result> item,
       Then<Map<Key, Value>, Result> then) = _MapCopyWith;

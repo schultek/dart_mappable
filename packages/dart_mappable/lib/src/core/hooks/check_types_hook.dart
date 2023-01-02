@@ -4,7 +4,7 @@ import 'package:type_plus/type_plus.dart';
 import '../annotations.dart';
 import '../mapper_container.dart';
 
-/// A [MappingHooks] that allows to specify custom type checks for serialization
+/// A [MappingHook] that allows to specify custom type checks for serialization
 /// polymorph subclasses of a class.
 ///
 /// This overrides the default discriminator key/value system to allow for a
@@ -51,7 +51,9 @@ import '../mapper_container.dart';
 /// }
 /// ```
 ///
-class CheckTypesHook extends MappingHooks {
+/// {@category Polymorphism}
+/// {@category Mapping Hooks}
+class CheckTypesHook extends MappingHook {
   const CheckTypesHook(this.checks);
 
   final Map<Type, bool Function(dynamic)> checks;

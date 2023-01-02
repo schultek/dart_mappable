@@ -4,8 +4,9 @@ import 'annotations.dart';
 import 'mapper_exception.dart';
 import 'mapper_container.dart';
 
+/// {@nodoc}
 extension GuardedUtils on MapperContainer {
-  T $get<T>(Map<String, dynamic> map, String key, [MappingHooks? hooks]) {
+  T $get<T>(Map<String, dynamic> map, String key, [MappingHook? hooks]) {
     return guard(
       MapperMethod.decode,
       '.$key',
@@ -19,7 +20,7 @@ extension GuardedUtils on MapperContainer {
     );
   }
 
-  T? $getOpt<T>(Map<String, dynamic> map, String key, [MappingHooks? hooks]) {
+  T? $getOpt<T>(Map<String, dynamic> map, String key, [MappingHook? hooks]) {
     return guard(
       MapperMethod.decode,
       '.$key',
@@ -31,7 +32,7 @@ extension GuardedUtils on MapperContainer {
     );
   }
 
-  T $dec<T>(dynamic value, String key, [MappingHooks? hooks]) {
+  T $dec<T>(dynamic value, String key, [MappingHook? hooks]) {
     return guard(
       MapperMethod.decode,
       '.$key',
@@ -39,7 +40,7 @@ extension GuardedUtils on MapperContainer {
     );
   }
 
-  dynamic $enc<T>(T value, String key, [MappingHooks? hooks]) {
+  dynamic $enc<T>(T value, String key, [MappingHook? hooks]) {
     return guard(
       MapperMethod.encode,
       '.$key',
@@ -60,6 +61,7 @@ extension GuardedUtils on MapperContainer {
   }
 }
 
+/// {@nodoc}
 T guard<T>(MapperMethod method, String hint, T Function() fn) {
   try {
     return fn();
@@ -68,6 +70,7 @@ T guard<T>(MapperMethod method, String hint, T Function() fn) {
   }
 }
 
+/// {@nodoc}
 void clearType(Map<String, dynamic> map) {
   map.removeWhere((key, _) => key == '__type');
   map.values.whereType<Map<String, dynamic>>().forEach(clearType);
@@ -76,6 +79,7 @@ void clearType(Map<String, dynamic> map) {
       .forEach((l) => l.whereType<Map<String, dynamic>>().forEach(clearType));
 }
 
+/// {@nodoc}
 T checkedType<T, U>(dynamic v, T Function(U) fn) {
   if (v is U) {
     return fn(v);
@@ -84,7 +88,8 @@ T checkedType<T, U>(dynamic v, T Function(U) fn) {
   }
 }
 
-extension HooksMapping on MappingHooks? {
+/// {@nodoc}
+extension HooksMapping on MappingHook? {
   T decode<T>(dynamic value, T Function(dynamic value) fn, MapperContainer container) {
     if (this == null) return fn(value);
     return this!.wrapDecode(value, fn, container);
@@ -100,18 +105,26 @@ class _None {
   const _None();
 }
 
+/// {@nodoc}
 const $none = _None();
 
+/// {@nodoc}
 T $identity<T>(T value) => value;
+
+/// {@nodoc}
 T $cast<T>(Object value) => value as T;
+
+/// {@nodoc}
 typedef Then<$T, $R> = $R Function($T);
 
+/// {@category Copy-With}
 abstract class ObjectCopyWith<Result, In, Out> {
   const factory ObjectCopyWith(In value, Then<In, Out> then, Then<Out, Result> then2) = CopyWithBase;
 
   Result apply(Out Function(In) transform);
 }
 
+/// {@category Copy-With}
 class CopyWithBase<Result, In, Out> implements ObjectCopyWith<Result, In, Out> {
   const CopyWithBase(this.$value, this.$then1, this.$then2);
 
@@ -130,6 +143,7 @@ class CopyWithBase<Result, In, Out> implements ObjectCopyWith<Result, In, Out> {
   Result apply(Then<In, Out> transform) => $then2(transform($value));
 }
 
+/// {@nodoc}
 extension ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
   CopyWithBase<Result, In, Out> get base => this as CopyWithBase<Result, In, Out>;
 }

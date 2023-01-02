@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:test/test.dart';

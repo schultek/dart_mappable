@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
-import 'package:dart_mappable/dart_mappable.dart' hide EnumMapperElement;
+import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/enum_mapper_element.dart';
 import '../utils.dart';

@@ -1,7 +1,4 @@
-import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/ast/token.dart';
-import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
@@ -9,8 +6,6 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-// ignore: implementation_imports
-import 'package:analyzer/src/dart/resolver/scope.dart';
 import 'package:source_gen/source_gen.dart';
 
 export 'package:analyzer/src/dart/resolver/scope.dart' show Namespace;

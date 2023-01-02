@@ -5,7 +5,6 @@ import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 import '../builder_options.dart';
-import '../generators/class_mapper_generator.dart';
 import '../mapper_group.dart';
 import '../utils.dart';
 

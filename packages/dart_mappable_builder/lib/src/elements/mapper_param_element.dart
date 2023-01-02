@@ -69,7 +69,7 @@ class SuperParamElement extends MapperParamElement {
     if (thisHook != null && superHook != null) {
       var childHooks = <String>[];
 
-      var multiRegex = RegExp(r'^ChainedHooks\(\s*\[(.*)\]\s*\)$');
+      var multiRegex = RegExp(r'^ChainedHook\(\s*\[(.*)\]\s*\)$');
 
       if (multiRegex.hasMatch(superHook)) {
         var match = multiRegex.firstMatch(superHook)!.group(1)!;
@@ -85,7 +85,7 @@ class SuperParamElement extends MapperParamElement {
         childHooks.add(thisHook);
       }
 
-      return 'ChainedHooks([${childHooks.join(', ')}])';
+      return 'ChainedHook([${childHooks.join(', ')}])';
     } else {
       return thisHook ?? superHook;
     }
@@ -105,7 +105,7 @@ class UnresolvedParamElement extends MapperParamElement {
 
 Future<String?> _hookFor(Element element) async {
   if (fieldChecker.hasAnnotationOf(element)) {
-    var node = await getResolvedAnnotationNode(element, MappableField, 'hooks');
+    var node = await getResolvedAnnotationNode(element, MappableField, 'hook');
     if (node != null) {
       return node.toSource();
     }

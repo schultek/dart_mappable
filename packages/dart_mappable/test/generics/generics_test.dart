@@ -37,7 +37,7 @@ class SingleSetting<T> with SingleSettingMappable {
   });
 }
 
-@MappableClass(hooks: MapHooksAfter())
+@MappableClass(hook: MapHooksAfter())
 class Settings with SettingsMappable {
   final Map<String, SingleSetting>? settings;
 
@@ -46,7 +46,7 @@ class Settings with SettingsMappable {
   });
 }
 
-class MapHooksAfter extends MappingHooks {
+class MapHooksAfter extends MappingHook {
   const MapHooksAfter();
 
   @override

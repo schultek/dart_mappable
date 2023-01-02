@@ -1,4 +1,6 @@
 /// General exception class used throughout the package
+///
+/// {@category Mapper Container}
 class MapperException implements Exception {
   final String message;
   const MapperException._(this.message);

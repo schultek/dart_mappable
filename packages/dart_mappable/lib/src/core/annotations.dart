@@ -1,15 +1,21 @@
 import '../../dart_mappable.dart';
-import 'case_style.dart';
 
 /// Used to annotate a class
 /// in order to generate mapping code
+///
+/// {@category Introduction}
+/// {@category Models}
+/// {@category Configuration}
+/// {@category Polymorphism}
+/// {@category Mapping Hooks}
+/// {@category Custom Mappers}
 class MappableClass {
   const MappableClass({
     this.caseStyle,
     this.ignoreNull,
     this.discriminatorKey,
     this.discriminatorValue,
-    this.hooks,
+    this.hook,
     this.generateMethods,
     this.includeSubClasses,
     this.includeCustomMappers,
@@ -28,12 +34,12 @@ class MappableClass {
   final dynamic discriminatorValue;
 
   /// Define custom hooks used only for this class
-  final MappingHooks? hooks;
+  final MappingHook? hook;
 
   /// Specify which methods to generate for this class
   final int? generateMethods;
 
-  /// Specify additional subclasses of this class for polymorphism
+  /// Specify additional subclasses of this class for polymorphism.
   final Iterable<Type>? includeSubClasses;
 
   final Iterable<Type>? includeCustomMappers;
@@ -44,7 +50,9 @@ class MappableClass {
 /// Collection of flags used for annotations
 enum MappingFlags { useAsDefault }
 
-/// Collection of constants to indicate which methods and extensions to generate for a specific class
+/// Collection of constants to indicate which methods and extensions to generate for a specific class.
+///
+/// {@category Configuration}
 class GenerateMethods {
   /// Indicates to generate the fromMap / fromJson methods
   static const decode = 0x1;
@@ -96,11 +104,15 @@ class GenerateMethods {
 
 /// The mode used for encoding the enum values.
 /// Can be [ValuesMode.named] to map each enum value to its name as [String]
-/// or [ValuesMode.indexed] to map each enum value to its index as [int]
+/// or [ValuesMode.indexed] to map each enum value to its index as [int].
+///
+/// {@category Enums}
 enum ValuesMode { named, indexed }
 
 /// Used to annotate an enum
 /// in order to generate mapping code
+///
+/// {@category Enums}
 class MappableEnum {
   const MappableEnum({
     this.mode = ValuesMode.named,
@@ -122,7 +134,9 @@ class MappableEnum {
 }
 
 /// Used to annotate an enum value
-/// in order to define a custom encoded value
+/// in order to define a custom encoded value.
+///
+/// {@category Enums}
 class MappableValue {
   const MappableValue(this.value);
 
@@ -131,24 +145,34 @@ class MappableValue {
 }
 
 /// Used to annotate a constructor
-/// to be chosen as the serialization function
+/// to be chosen as the serialization function.
+///
+/// {@category Models}
+/// {@category Configuration}
 class MappableConstructor {
   const MappableConstructor();
 }
 
 /// Used to annotate a parameter or field
-/// to overwrite the mapped key
+/// to overwrite the mapped key.
+///
+/// {@category Models}
+/// {@category Configuration}
+/// {@category Mapping Hooks}
 class MappableField {
-  const MappableField({this.key, this.hooks});
+  const MappableField({this.key, this.hook});
 
   /// Use this key instead of the field name
   final String? key;
 
   /// Define custom hooks used only for this field
-  final MappingHooks? hooks;
+  final MappingHook? hook;
 }
 
-/// Used to annotate a library to define default values
+/// Used to annotate a library to define default values.
+///
+/// {@category Configuration}
+/// {@category Polymorphism}
 class MappableLib {
   const MappableLib({
     this.caseStyle,
@@ -174,9 +198,11 @@ class MappableLib {
   final int? generateMethods;
 }
 
-/// Extend this class to define custom [MappingHooks] for a class or field
-abstract class MappingHooks {
-  const MappingHooks();
+/// Extend this class to define a custom [MappingHook] for a class or field.
+///
+/// {@category Mapping Hooks}
+abstract class MappingHook {
+  const MappingHook();
 
   dynamic beforeDecode(dynamic value) => value;
   dynamic afterDecode(dynamic value) => value;

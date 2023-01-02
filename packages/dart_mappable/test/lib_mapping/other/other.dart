@@ -1,4 +1,3 @@
-import 'package:dart_mappable/dart_mappable.dart';
 
 import 'models.dart';
 

@@ -5,6 +5,7 @@ import 'mapper_base.dart';
 import 'mapper_container.dart';
 import 'mapper_mixins.dart';
 import 'mapper_utils.dart';
+import 'simple_mapper.dart';
 
 class PrimitiveMapper<T> extends MapperBase<T> {
   const PrimitiveMapper(this.decoder);
@@ -30,6 +31,7 @@ class PrimitiveMapperElement<T> extends MapperElementBase<T>
   Function get encoder => (T value) => value;
 }
 
+/// {@category Custom Mappers}
 abstract class EnumMapper<T extends Enum> extends SimpleMapper<T> {
   const EnumMapper();
 }
@@ -55,6 +57,7 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
   }
 }
 
+/// {@category Custom Mappers}
 class IterableMapper<I extends Iterable> extends MapperBase<I> {
   IterableMapper(this.fromIterable, this.typeFactory);
 
@@ -65,13 +68,13 @@ class IterableMapper<I extends Iterable> extends MapperBase<I> {
 
   @override
   MapperElementBase<I> createElement(MapperContainer container) {
-    return IterableMapperElement<I>(this, container);
+    return _IterableMapperElement<I>(this, container);
   }
 }
 
-class IterableMapperElement<I extends Iterable> extends MapperElementBase<I>
+class _IterableMapperElement<I extends Iterable> extends MapperElementBase<I>
     with MapperAs<IterableMapper<I>, I>, MapperEqualityMixin<I> {
-  IterableMapperElement(IterableMapper<I> super.mapper, super.container);
+  _IterableMapperElement(IterableMapper<I> super.mapper, super.container);
 
   @override
   Function get decoder => <T>(dynamic l) => checkedType(
@@ -90,6 +93,7 @@ class IterableMapperElement<I extends Iterable> extends MapperElementBase<I>
       '(${self.map((e) => container.asString(e)).join(', ')})';
 }
 
+/// {@category Custom Mappers}
 class MapMapper<M extends Map> extends MapperBase<M> {
   MapMapper(this.fromMap, this.typeFactory);
 
@@ -99,13 +103,13 @@ class MapMapper<M extends Map> extends MapperBase<M> {
 
   @override
   MapperElementBase<M> createElement(MapperContainer container) {
-    return MapMapperElement<M>(this, container);
+    return _MapMapperElement<M>(this, container);
   }
 }
 
-class MapMapperElement<M extends Map> extends MapperElementBase<M>
+class _MapMapperElement<M extends Map> extends MapperElementBase<M>
     with MapperAs<MapMapper<M>, M>, MapperEqualityMixin<M> {
-  MapMapperElement(MapMapper<M> super.mapper, super.container);
+  _MapMapperElement(MapMapper<M> super.mapper, super.container);
 
   @override
   Function get decoder => <K, V>(dynamic m) => checkedType(

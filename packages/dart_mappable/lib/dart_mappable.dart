@@ -4,6 +4,7 @@ export 'src/core/annotations.dart';
 export 'src/core/case_style.dart';
 export 'src/core/hooks.dart';
 export 'src/core/default_mappers.dart';
+export 'src/core/simple_mapper.dart';
 export 'src/core/mapper_exception.dart';
 export 'src/core/mapper_base.dart';
 export 'src/core/mapper_mixins.dart';

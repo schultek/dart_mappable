@@ -6,8 +6,8 @@ import 'other_hooks.dart';
 
 part 'hooks_test.mapper.dart';
 
-class PlayerHooks extends MappingHooks {
-  const PlayerHooks();
+class PlayerHook extends MappingHook {
+  const PlayerHook();
 
   @override
   dynamic beforeDecode(dynamic value) {
@@ -26,11 +26,11 @@ class PlayerHooks extends MappingHooks {
   }
 }
 
-@MappableClass(hooks: GameHooks())
+@MappableClass(hook: GameHook())
 class Game with GameMappable {
   @MappableField(
-      hooks: ChainedHooks(
-          [PlayerHooks(), UnmappedPropertiesHooks('unmappedProps')]))
+      hook: ChainedHook(
+          [PlayerHook(), UnmappedPropertiesHook('unmappedProps')]))
   Player player;
 
   Game(this.player);
@@ -38,7 +38,7 @@ class Game with GameMappable {
 
 @MappableClass()
 class CardGame extends Game with CardGameMappable {
-  CardGame(@MappableField(hooks: CardPlayerHooks()) Player player)
+  CardGame(@MappableField(hook: CardPlayerHook()) Player player)
       : super(player);
 }
 
@@ -48,7 +48,7 @@ class Player with PlayerMappable {
   Player(this.id);
 }
 
-@MappableClass(hooks: UnmappedPropertiesHooks('unmappedProps'))
+@MappableClass(hook: UnmappedPropertiesHook('unmappedProps'))
 class Clothes with ClothesMappable {
   int size;
   Map<String, dynamic> unmappedProps;
@@ -56,7 +56,7 @@ class Clothes with ClothesMappable {
   Clothes(this.size, {this.unmappedProps = const {}});
 }
 
-@MappableClass(hooks: UnmappedPropertiesHooks('unmappedProps'))
+@MappableClass(hook: UnmappedPropertiesHook('unmappedProps'))
 class Component with ComponentMappable {
   String id;
   String name;

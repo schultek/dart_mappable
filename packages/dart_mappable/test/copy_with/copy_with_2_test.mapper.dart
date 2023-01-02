@@ -463,8 +463,10 @@ class _BCopyWithImpl<$R, $Out extends B> extends CopyWithBase<$R, B, $Out>
 
   @override
   ListCopyWith<$R, A<dynamic>?, ACopyWith<$R, A<dynamic>, A<dynamic>, dynamic>?>
-      get list => ListCopyWith($value.list,
-          (v, t) => v?.copyWith.chain($identity, t), (v) => call(list: v));
+      get list => ListCopyWith(
+          $value.list,
+          (v, t) => v?.copyWith.chain<$R, A<dynamic>>($identity, t),
+          (v) => call(list: v));
   @override
   ACopyWith<$R, A<dynamic>, A<dynamic>, dynamic>? get a =>
       $value.a?.copyWith.chain($identity, (v) => call(a: v));

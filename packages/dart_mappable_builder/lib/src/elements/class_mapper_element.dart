@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
@@ -219,9 +218,9 @@ abstract class ClassMapperElement extends MapperElement<ClassElement> {
   }();
 
   late String? hookForClass = () {
-    var hooks = annotation?.getField('hooks');
-    if (hooks != null && !hooks.isNull) {
-      var node = getAnnotationProperty(annotatedNode, MappableClass, 'hooks');
+    var hook = annotation?.getField('hook');
+    if (hook != null && !hook.isNull) {
+      var node = getAnnotationProperty(annotatedNode, MappableClass, 'hook');
       if (node != null) {
         return node.toSource();
       }

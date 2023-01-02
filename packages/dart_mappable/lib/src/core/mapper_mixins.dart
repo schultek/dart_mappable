@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'mapper_base.dart';
 import 'mapper_container.dart';
 
-
 mixin MapperAs<B extends MapperBase<T>, T> on MapperElementBase<T> {
   @override
   B get mapper => super.mapper as B;

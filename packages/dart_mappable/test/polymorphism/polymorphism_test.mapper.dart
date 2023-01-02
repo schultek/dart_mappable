@@ -539,12 +539,16 @@ class _ZooCopyWithImpl<$R, $Out extends Zoo> extends CopyWithBase<$R, Zoo, $Out>
       $value.animal.copyWith.chain($identity, (v) => call(animal: v));
   @override
   ListCopyWith<$R, Animal, AnimalCopyWith<$R, Animal, Animal>> get animals =>
-      ListCopyWith($value.animals, (v, t) => v.copyWith.chain($identity, t),
+      ListCopyWith(
+          $value.animals,
+          (v, t) => v.copyWith.chain<$R, Animal>($identity, t),
           (v) => call(animals: v));
   @override
   MapCopyWith<$R, String, Animal, AnimalCopyWith<$R, Animal, Animal>>
-      get animals2 => MapCopyWith($value.animals2,
-          (v, t) => v.copyWith.chain($identity, t), (v) => call(animals2: v));
+      get animals2 => MapCopyWith(
+          $value.animals2,
+          (v, t) => v.copyWith.chain<$R, Animal>($identity, t),
+          (v) => call(animals2: v));
   @override
   $R call(
           {Animal? animal,

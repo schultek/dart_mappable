@@ -8,6 +8,7 @@ import 'package:type_plus/type_plus.dart' hide typeOf;
 
 import '../../dart_mappable.dart';
 
+/// {@category Mapper Container}
 @sealed
 abstract class MapperContainer {
   factory MapperContainer({
