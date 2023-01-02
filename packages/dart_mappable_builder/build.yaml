@@ -1,6 +1,6 @@
 builders:
   dart_mappable_builder:
-    import: "package:dart_mappable_builder/builder.dart"
+    import: "package:dart_mappable_builder/dart_mappable_builder.dart"
     builder_factories: [ "buildMappable" ]
     build_extensions: { ".dart": [ ".mapper.dart" ] }
     required_inputs: [".freezed.dart"]
