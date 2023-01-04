@@ -1,3 +1,7 @@
+# 2.0.0-dev.9
+
+- Added generating combined container using `@MappableLib(createCombinedContainer: true)`.
+
 # 2.0.0-dev.8
 
 - Added compatibility support for `json_serializable` models and `fast_immutable_collections`.

@@ -18,7 +18,6 @@ import 'elements/mapper_element.dart';
 import 'elements/none_class_mapper_element.dart';
 import 'elements/target_class_mapper_element.dart';
 import 'utils.dart';
-// ignore: depend_on_referenced_packages
 import 'package:glob/glob.dart';
 
 class MapperElementGroup {
