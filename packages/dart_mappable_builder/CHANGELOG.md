@@ -1,3 +1,7 @@
+# 2.0.0-dev.10
+
+- Fixed analysis issues.
+
 # 2.0.0-dev.9
 
 - Added generating combined container using `@MappableLib(createCombinedContainer: true)`.

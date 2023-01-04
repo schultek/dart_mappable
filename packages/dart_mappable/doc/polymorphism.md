@@ -167,4 +167,4 @@ class C extends A with CMappable {
 
 ---
 
-<p align="right"><a href="../topics/Mapping%20Hooks-topic.html">Next: Mapping Hooks</a></p>
+<p align="right"><a href="../topics/Generics-topic.html">Next: Generics</a></p>

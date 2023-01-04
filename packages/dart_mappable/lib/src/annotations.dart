@@ -180,6 +180,7 @@ class MappableField {
 /// Used to annotate a library to define default values.
 ///
 /// {@category Configuration}
+/// {@category Generics}
 /// {@category Polymorphism}
 class MappableLib {
   const MappableLib({
@@ -215,6 +216,9 @@ class MappableLib {
   final DiscoveryMode? discoveryMode;
 }
 
+/// How to discover mappers when [MappableLib.createLinkedContainer] is true.
+///
+/// {@category Generics}
 enum DiscoveryMode {
   /// Discover all models in the current library (default).
   library,

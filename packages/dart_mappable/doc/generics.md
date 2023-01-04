@@ -99,3 +99,7 @@ library main;
 - `library` is the default and discovers all mappers in the current library,
 - `directory` discover all mappers in the current or any subdirectory,
 - `package` discover all models in the current package.
+
+---
+
+<p align="right"><a href="../topics/Mapping%20Hooks-topic.html">Next: Mapping Hooks</a></p>

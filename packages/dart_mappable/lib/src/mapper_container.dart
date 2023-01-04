@@ -10,6 +10,7 @@ import 'mappers/default_mappers.dart';
 import 'mappers/mapper_base.dart';
 import 'mapper_exception.dart';
 
+/// {@category Generics}
 /// {@category Mapper Container}
 @sealed
 abstract class MapperContainer {
