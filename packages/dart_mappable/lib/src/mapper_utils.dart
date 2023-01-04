@@ -47,18 +47,6 @@ extension GuardedUtils on MapperContainer {
       () => hooks.encode<T>(value, toValue<T>, this),
     );
   }
-
-  Map<String, dynamic> $type<T>(T value) {
-    if (value.runtimeType == T) {
-      return {};
-    } else {
-      return {'__type': value.runtimeType.id};
-    }
-  }
-
-  $sub<T>(dynamic value) {
-
-  }
 }
 
 /// {@nodoc}

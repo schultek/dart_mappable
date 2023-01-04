@@ -18,6 +18,9 @@ class BaseMapper extends MapperBase<Base> {
     return BaseMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Base';
+
   static final fromMap = container.fromMap<Base>;
   static final fromJson = container.fromJson<Base>;
 }
@@ -85,6 +88,9 @@ class OneMapper extends MapperBase<One> {
   OneMapperElement createElement(MapperContainer container) {
     return OneMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'One';
 
   static final fromMap = container.fromMap<One>;
   static final fromJson = container.fromJson<One>;
@@ -189,6 +195,9 @@ class TwoMapper extends MapperBase<Two> {
   TwoMapperElement createElement(MapperContainer container) {
     return TwoMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Two';
 
   static final fromMap = container.fromMap<Two>;
   static final fromJson = container.fromJson<Two>;

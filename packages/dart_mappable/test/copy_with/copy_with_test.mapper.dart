@@ -15,6 +15,9 @@ class PersonMapper extends MapperBase<Person> {
     return PersonMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Person';
+
   static final fromMap = container.fromMap<Person>;
   static final fromJson = container.fromJson<Person>;
 }
@@ -107,6 +110,9 @@ class CarMapper extends MapperBase<Car> {
     return CarMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Car';
+
   static final fromMap = container.fromMap<Car>;
   static final fromJson = container.fromJson<Car>;
 }
@@ -197,6 +203,9 @@ class BrandMapper extends MapperBase<Brand> {
     return BrandMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Brand';
+
   static final fromMap = container.fromMap<Brand>;
   static final fromJson = container.fromJson<Brand>;
 }
@@ -284,6 +293,9 @@ class DealershipMapper extends MapperBase<Dealership> {
   DealershipMapperElement createElement(MapperContainer container) {
     return DealershipMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Dealership';
 
   static final fromMap = container.fromMap<Dealership>;
   static final fromJson = container.fromJson<Dealership>;
@@ -399,7 +411,10 @@ class ItemListMapper extends MapperBase<ItemList> {
   }
 
   @override
+  String get id => 'ItemList';
+  @override
   Function get typeFactory => <T>(f) => f<ItemList<T>>();
+
   static ItemList<T> fromMap<T>(Map<String, dynamic> map) =>
       container.fromMap<ItemList<T>>(map);
   static ItemList<T> fromJson<T>(String json) =>
@@ -438,10 +453,8 @@ class ItemListMapperElement extends MapperElementBase<ItemList> {
   @override
   Function get encoder => encode;
   dynamic encode<T>(ItemList<T> v) => toMap<T>(v);
-  Map<String, dynamic> toMap<T>(ItemList<T> i) => {
-        'items': container.$enc(i.items, 'items'),
-        ...container.$type<ItemList<T>>(i)
-      };
+  Map<String, dynamic> toMap<T>(ItemList<T> i) =>
+      {'items': container.$enc(i.items, 'items')};
 
   @override
   String stringify(ItemList self) =>
@@ -481,6 +494,9 @@ class BrandListMapper extends MapperBase<BrandList> {
   BrandListMapperElement createElement(MapperContainer container) {
     return BrandListMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'BrandList';
 
   static final fromMap = container.fromMap<BrandList>;
   static final fromJson = container.fromJson<BrandList>;
@@ -580,7 +596,10 @@ class NamedItemListMapper extends MapperBase<NamedItemList> {
   }
 
   @override
+  String get id => 'NamedItemList';
+  @override
   Function get typeFactory => <T>(f) => f<NamedItemList<T>>();
+
   static NamedItemList<T> fromMap<T>(Map<String, dynamic> map) =>
       container.fromMap<NamedItemList<T>>(map);
   static NamedItemList<T> fromJson<T>(String json) =>
@@ -603,8 +622,7 @@ class NamedItemListMapperElement extends MapperElementBase<NamedItemList> {
   Map<String, dynamic> toMap<T>(NamedItemList<T> n) => {
         'name': container.$enc(n.name, 'name'),
         'items': container.$enc(n.items, 'items'),
-        'type': 'NamedItemList',
-        ...container.$type<NamedItemList<T>>(n)
+        'type': 'NamedItemList'
       };
 
   @override
@@ -690,7 +708,10 @@ class KeyedItemListMapper extends MapperBase<KeyedItemList> {
   }
 
   @override
+  String get id => 'KeyedItemList';
+  @override
   Function get typeFactory => <K, T>(f) => f<KeyedItemList<K, T>>();
+
   static KeyedItemList<K, T> fromMap<K, T>(Map<String, dynamic> map) =>
       container.fromMap<KeyedItemList<K, T>>(map);
   static KeyedItemList<K, T> fromJson<K, T>(String json) =>
@@ -713,8 +734,7 @@ class KeyedItemListMapperElement extends MapperElementBase<KeyedItemList> {
   Map<String, dynamic> toMap<K, T>(KeyedItemList<K, T> k) => {
         'key': container.$enc(k.key, 'key'),
         'items': container.$enc(k.items, 'items'),
-        'type': 'KeyedItemList',
-        ...container.$type<KeyedItemList<K, T>>(k)
+        'type': 'KeyedItemList'
       };
 
   @override
@@ -804,8 +824,11 @@ class ComparableItemListMapper extends MapperBase<ComparableItemList> {
   }
 
   @override
+  String get id => 'ComparableItemList';
+  @override
   Function get typeFactory =>
       <T extends Comparable<dynamic>>(f) => f<ComparableItemList<T>>();
+
   static ComparableItemList<T> fromMap<T extends Comparable<dynamic>>(
           Map<String, dynamic> map) =>
       container.fromMap<ComparableItemList<T>>(map);
@@ -832,11 +855,7 @@ class ComparableItemListMapperElement
       toMap<T>(v);
   Map<String, dynamic> toMap<T extends Comparable<dynamic>>(
           ComparableItemList<T> c) =>
-      {
-        'items': container.$enc(c.items, 'items'),
-        'type': 'ComparableItemList',
-        ...container.$type<ComparableItemList<T>>(c)
-      };
+      {'items': container.$enc(c.items, 'items'), 'type': 'ComparableItemList'};
 
   @override
   String stringify(ComparableItemList self) =>

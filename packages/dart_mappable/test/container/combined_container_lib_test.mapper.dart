@@ -3,12 +3,12 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element
 
-part of 'main.dart';
+part of 'combined_container_lib_test.dart';
 
 class AMapper extends MapperBase<A> {
   static MapperContainer container = MapperContainer(
     mappers: {AMapper()},
-  )..linkAll({BMapper.container});
+  );
 
   @override
   AMapperElement createElement(MapperContainer container) {
@@ -29,19 +29,19 @@ class AMapperElement extends MapperElementBase<A> {
   Function get decoder => decode;
   A decode(dynamic v) =>
       checkedType(v, (Map<String, dynamic> map) => fromMap(map));
-  A fromMap(Map<String, dynamic> map) => A(container.$get(map, 'list'));
+  A fromMap(Map<String, dynamic> map) => A();
 
   @override
   Function get encoder => encode;
   dynamic encode(A v) => toMap(v);
-  Map<String, dynamic> toMap(A a) => {'list': container.$enc(a.list, 'list')};
+  Map<String, dynamic> toMap(A a) => {};
 
   @override
-  String stringify(A self) => 'A(list: ${container.asString(self.list)})';
+  String stringify(A self) => 'A()';
   @override
-  int hash(A self) => container.hash(self.list);
+  int hash(A self) => 0;
   @override
-  bool equals(A self, A other) => container.isEqual(self.list, other.list);
+  bool equals(A self, A other) => true;
 }
 
 mixin AMappable {
@@ -71,7 +71,7 @@ abstract class ACopyWith<$R, $In extends A, $Out extends A>
     implements ObjectCopyWith<$R, $In, $Out> {
   ACopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends A>(
       Then<A, $Out2> t, Then<$Out2, $R2> t2);
-  $R call({IList<B>? list});
+  $R call();
 }
 
 class _ACopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, A, $Out>
@@ -83,7 +83,7 @@ class _ACopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, A, $Out>
       _ACopyWithImpl($value, t, t2);
 
   @override
-  $R call({IList<B>? list}) => $then(A(list ?? $value.list));
+  $R call() => $then(A());
 }
 
 class BMapper extends MapperBase<B> {
@@ -110,19 +110,19 @@ class BMapperElement extends MapperElementBase<B> {
   Function get decoder => decode;
   B decode(dynamic v) =>
       checkedType(v, (Map<String, dynamic> map) => fromMap(map));
-  B fromMap(Map<String, dynamic> map) => B(container.$get(map, 'str'));
+  B fromMap(Map<String, dynamic> map) => B();
 
   @override
   Function get encoder => encode;
   dynamic encode(B v) => toMap(v);
-  Map<String, dynamic> toMap(B b) => {'str': container.$enc(b.str, 'str')};
+  Map<String, dynamic> toMap(B b) => {};
 
   @override
-  String stringify(B self) => 'B(str: ${container.asString(self.str)})';
+  String stringify(B self) => 'B()';
   @override
-  int hash(B self) => container.hash(self.str);
+  int hash(B self) => 0;
   @override
-  bool equals(B self, B other) => container.isEqual(self.str, other.str);
+  bool equals(B self, B other) => true;
 }
 
 mixin BMappable {
@@ -152,7 +152,7 @@ abstract class BCopyWith<$R, $In extends B, $Out extends B>
     implements ObjectCopyWith<$R, $In, $Out> {
   BCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends B>(
       Then<B, $Out2> t, Then<$Out2, $R2> t2);
-  $R call({String? str});
+  $R call();
 }
 
 class _BCopyWithImpl<$R, $Out extends B> extends CopyWithBase<$R, B, $Out>
@@ -164,5 +164,5 @@ class _BCopyWithImpl<$R, $Out extends B> extends CopyWithBase<$R, B, $Out>
       _BCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? str}) => $then(B(str ?? $value.str));
+  $R call() => $then(B());
 }

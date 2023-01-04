@@ -18,6 +18,9 @@ class DogMapper extends MapperBase<Dog> {
     return DogMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Dog';
+
   static final fromMap = container.fromMap<Dog>;
   static final fromJson = container.fromJson<Dog>;
 }

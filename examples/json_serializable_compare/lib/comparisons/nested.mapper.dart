@@ -15,6 +15,9 @@ class GameBMapper extends MapperBase<GameB> {
     return GameBMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'GameB';
+
   static final fromMap = container.fromMap<GameB>;
   static final fromJson = container.fromJson<GameB>;
 }
@@ -102,6 +105,9 @@ class PlayerBMapper extends MapperBase<PlayerB> {
   PlayerBMapperElement createElement(MapperContainer container) {
     return PlayerBMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'PlayerB';
 
   static final fromMap = container.fromMap<PlayerB>;
   static final fromJson = container.fromJson<PlayerB>;

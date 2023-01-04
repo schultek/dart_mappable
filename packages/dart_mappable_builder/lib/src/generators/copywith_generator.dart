@@ -150,7 +150,7 @@ class CopyWithGenerator {
       }
 
       snippets.add(
-          '  @override \$R call(${_generateCopyWithParams(implVersion: true)}) => \$then(${element.prefixedClassName}${element.constructor!.name != '' ? '.${element.constructor!.name}' : ''}(${_generateCopyWithConstructorParams()}));\n'
+          '  @override \$R call(${_generateCopyWithParams(implVersion: true)}) => \$then(${element.prefixedDecodingClassName}${element.constructor!.name != '' ? '.${element.constructor!.name}' : ''}(${_generateCopyWithConstructorParams()}));\n'
           '}');
     }
 

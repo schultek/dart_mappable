@@ -56,6 +56,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement> {
   DartObject? getAnnotation() =>
       classChecker.firstAnnotationOf(annotatedElement);
 
+  late String uniqueId = annotation?.getField('uniqueId')?.toStringValue() ?? className;
 
   late List<MapperParamElement> params = (){
     var params = <MapperParamElement>[];

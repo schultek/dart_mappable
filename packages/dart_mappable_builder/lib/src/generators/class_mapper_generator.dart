@@ -114,9 +114,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
         '    return ${target.mapperName}Element._(this, container);\n'
         '  }\n\n');
 
-    if (target.customId != null) {
-      output.write("@override\nString get id => '${target.customId}';\n");
-    }
+    output.write("@override\nString get id => '${target.uniqueId}';\n");
 
     if (target.typeParamsList.isNotEmpty) {
       output.write(decoderGen.generateTypeFactory());
@@ -128,6 +126,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     }
 
     if (target.shouldGenerate(GenerateMethods.decode)) {
+      output.write('\n');
       if (target.typeParamsList.isNotEmpty) {
         output.write(
             '  static ${target.prefixedDecodingClassName}${target.typeParams} fromMap${target.typeParamsDeclaration}(Map<String, dynamic> map) => container.fromMap<${target.prefixedDecodingClassName}${target.typeParams}>(map);\n'

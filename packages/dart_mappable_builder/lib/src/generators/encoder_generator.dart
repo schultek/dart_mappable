@@ -116,11 +116,6 @@ class EncoderGenerator {
       }
     }
 
-    if (target.typeParams.isNotEmpty) {
-      params.add(
-          '...container.\$type<${target.prefixedClassName}${target.typeParams}>($paramName)');
-    }
-
     return params.join(', ');
   }
 }

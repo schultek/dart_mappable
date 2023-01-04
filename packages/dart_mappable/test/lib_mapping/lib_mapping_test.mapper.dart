@@ -17,7 +17,7 @@ class CakeMapper extends MapperBase<f.Cake> {
   }
 
   @override
-  String get id => 'f.Cake';
+  String get id => 'Cake';
   @override
   Type get implType => Cake;
   static final fromMap = container.fromMap<Cake>;
@@ -48,10 +48,10 @@ class CakeMapperElement extends MapperElementBase<f.Cake> {
 }
 
 mixin CakeMappable {
-  String toJson() => CakeMapper.container.toJson(this as f.Cake);
-  Map<String, dynamic> toMap() => CakeMapper.container.toMap(this as f.Cake);
-  CakeCopyWith<f.Cake, f.Cake, f.Cake> get copyWith =>
-      _CakeCopyWithImpl(this as f.Cake, $identity, $identity);
+  String toJson() => CakeMapper.container.toJson(this as Cake);
+  Map<String, dynamic> toMap() => CakeMapper.container.toMap(this as Cake);
+  CakeCopyWith<Cake, Cake, Cake> get copyWith =>
+      _CakeCopyWithImpl(this as Cake, $identity, $identity);
   @override
   String toString() => CakeMapper.container.asString(this);
   @override
@@ -64,31 +64,31 @@ mixin CakeMappable {
 }
 
 extension CakeValueCopy<$R, $Out extends f.Cake>
-    on ObjectCopyWith<$R, f.Cake, $Out> {
-  CakeCopyWith<$R, f.Cake, $Out> get asCake =>
+    on ObjectCopyWith<$R, Cake, $Out> {
+  CakeCopyWith<$R, Cake, $Out> get asCake =>
       base.as((v, t, t2) => _CakeCopyWithImpl(v, t, t2));
 }
 
 typedef CakeCopyWithBound = f.Cake;
 
-abstract class CakeCopyWith<$R, $In extends f.Cake, $Out extends f.Cake>
+abstract class CakeCopyWith<$R, $In extends Cake, $Out extends f.Cake>
     implements ObjectCopyWith<$R, $In, $Out> {
   CakeCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends f.Cake>(
-      Then<f.Cake, $Out2> t, Then<$Out2, $R2> t2);
+      Then<Cake, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? type});
 }
 
 class _CakeCopyWithImpl<$R, $Out extends f.Cake>
-    extends CopyWithBase<$R, f.Cake, $Out>
-    implements CakeCopyWith<$R, f.Cake, $Out> {
+    extends CopyWithBase<$R, Cake, $Out>
+    implements CakeCopyWith<$R, Cake, $Out> {
   _CakeCopyWithImpl(super.value, super.then, super.then2);
   @override
-  CakeCopyWith<$R2, f.Cake, $Out2> chain<$R2, $Out2 extends f.Cake>(
-          Then<f.Cake, $Out2> t, Then<$Out2, $R2> t2) =>
+  CakeCopyWith<$R2, Cake, $Out2> chain<$R2, $Out2 extends f.Cake>(
+          Then<Cake, $Out2> t, Then<$Out2, $R2> t2) =>
       _CakeCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? type}) => $then(f.Cake(type ?? $value.type));
+  $R call({String? type}) => $then(Cake(type ?? $value.type));
 }
 
 class Person2Mapper extends MapperBase<m.Person> {
@@ -103,7 +103,7 @@ class Person2Mapper extends MapperBase<m.Person> {
   }
 
   @override
-  String get id => 'm.Person';
+  String get id => 'Person2';
   @override
   Type get implType => Person2;
   static final fromMap = container.fromMap<Person2>;
@@ -135,11 +135,11 @@ class Person2MapperElement extends MapperElementBase<m.Person> {
 }
 
 mixin Person2Mappable {
-  String toJson() => Person2Mapper.container.toJson(this as m.Person);
+  String toJson() => Person2Mapper.container.toJson(this as Person2);
   Map<String, dynamic> toMap() =>
-      Person2Mapper.container.toMap(this as m.Person);
-  Person2CopyWith<m.Person, m.Person, m.Person> get copyWith =>
-      _Person2CopyWithImpl(this as m.Person, $identity, $identity);
+      Person2Mapper.container.toMap(this as Person2);
+  Person2CopyWith<Person2, Person2, Person2> get copyWith =>
+      _Person2CopyWithImpl(this as Person2, $identity, $identity);
   @override
   String toString() => Person2Mapper.container.asString(this);
   @override
@@ -152,32 +152,31 @@ mixin Person2Mappable {
 }
 
 extension Person2ValueCopy<$R, $Out extends m.Person>
-    on ObjectCopyWith<$R, m.Person, $Out> {
-  Person2CopyWith<$R, m.Person, $Out> get asPerson2 =>
+    on ObjectCopyWith<$R, Person2, $Out> {
+  Person2CopyWith<$R, Person2, $Out> get asPerson2 =>
       base.as((v, t, t2) => _Person2CopyWithImpl(v, t, t2));
 }
 
 typedef Person2CopyWithBound = m.Person;
 
-abstract class Person2CopyWith<$R, $In extends m.Person, $Out extends m.Person>
+abstract class Person2CopyWith<$R, $In extends Person2, $Out extends m.Person>
     implements ObjectCopyWith<$R, $In, $Out> {
   Person2CopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends m.Person>(
-      Then<m.Person, $Out2> t, Then<$Out2, $R2> t2);
+      Then<Person2, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? firstName});
 }
 
 class _Person2CopyWithImpl<$R, $Out extends m.Person>
-    extends CopyWithBase<$R, m.Person, $Out>
-    implements Person2CopyWith<$R, m.Person, $Out> {
+    extends CopyWithBase<$R, Person2, $Out>
+    implements Person2CopyWith<$R, Person2, $Out> {
   _Person2CopyWithImpl(super.value, super.then, super.then2);
   @override
-  Person2CopyWith<$R2, m.Person, $Out2> chain<$R2, $Out2 extends m.Person>(
-          Then<m.Person, $Out2> t, Then<$Out2, $R2> t2) =>
+  Person2CopyWith<$R2, Person2, $Out2> chain<$R2, $Out2 extends m.Person>(
+          Then<Person2, $Out2> t, Then<$Out2, $R2> t2) =>
       _Person2CopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? firstName}) =>
-      $then(m.Person(firstName ?? $value.firstName));
+  $R call({String? firstName}) => $then(Person2(firstName ?? $value.firstName));
 }
 
 class AnimalMapper extends MapperBase<o.Animal> {
@@ -195,7 +194,7 @@ class AnimalMapper extends MapperBase<o.Animal> {
   }
 
   @override
-  String get id => 'o.Animal';
+  String get id => 'Animal';
   @override
   Type get implType => Animal;
   static final fromMap = container.fromMap<Animal>;
@@ -235,15 +234,15 @@ class AnimalMapperElement extends MapperElementBase<o.Animal> {
 mixin AnimalMappable {
   String toJson();
   Map<String, dynamic> toMap();
-  AnimalCopyWith<o.Animal, o.Animal, o.Animal> get copyWith;
+  AnimalCopyWith<Animal, Animal, Animal> get copyWith;
 }
 
 typedef AnimalCopyWithBound = o.Animal;
 
-abstract class AnimalCopyWith<$R, $In extends o.Animal, $Out extends o.Animal>
+abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends o.Animal>
     implements ObjectCopyWith<$R, $In, $Out> {
   AnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends o.Animal>(
-      Then<o.Animal, $Out2> t, Then<$Out2, $R2> t2);
+      Then<Animal, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? color});
 }
 
@@ -262,7 +261,7 @@ class PetMapper extends MapperBase<o.Pet> {
   }
 
   @override
-  String get id => 'o.Pet';
+  String get id => 'Pet';
   @override
   Type get implType => Pet;
   static final fromMap = container.fromMap<Pet>;
@@ -297,10 +296,10 @@ class PetMapperElement extends MapperElementBase<o.Pet> {
 }
 
 mixin PetMappable {
-  String toJson() => PetMapper.container.toJson(this as o.Pet);
-  Map<String, dynamic> toMap() => PetMapper.container.toMap(this as o.Pet);
-  PetCopyWith<o.Pet, o.Pet, o.Pet> get copyWith =>
-      _PetCopyWithImpl(this as o.Pet, $identity, $identity);
+  String toJson() => PetMapper.container.toJson(this as Pet);
+  Map<String, dynamic> toMap() => PetMapper.container.toMap(this as Pet);
+  PetCopyWith<Pet, Pet, Pet> get copyWith =>
+      _PetCopyWithImpl(this as Pet, $identity, $identity);
   @override
   String toString() => PetMapper.container.asString(this);
   @override
@@ -313,33 +312,32 @@ mixin PetMappable {
 }
 
 extension PetValueCopy<$R, $Out extends o.Animal>
-    on ObjectCopyWith<$R, o.Pet, $Out> {
-  PetCopyWith<$R, o.Pet, $Out> get asPet =>
+    on ObjectCopyWith<$R, Pet, $Out> {
+  PetCopyWith<$R, Pet, $Out> get asPet =>
       base.as((v, t, t2) => _PetCopyWithImpl(v, t, t2));
 }
 
 typedef PetCopyWithBound = o.Animal;
 
-abstract class PetCopyWith<$R, $In extends o.Pet, $Out extends o.Animal>
+abstract class PetCopyWith<$R, $In extends Pet, $Out extends o.Animal>
     implements AnimalCopyWith<$R, $In, $Out> {
   PetCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends o.Animal>(
-      Then<o.Pet, $Out2> t, Then<$Out2, $R2> t2);
+      Then<Pet, $Out2> t, Then<$Out2, $R2> t2);
   @override
   $R call({m.Person? owner, String? color});
 }
 
 class _PetCopyWithImpl<$R, $Out extends o.Animal>
-    extends CopyWithBase<$R, o.Pet, $Out>
-    implements PetCopyWith<$R, o.Pet, $Out> {
+    extends CopyWithBase<$R, Pet, $Out> implements PetCopyWith<$R, Pet, $Out> {
   _PetCopyWithImpl(super.value, super.then, super.then2);
   @override
-  PetCopyWith<$R2, o.Pet, $Out2> chain<$R2, $Out2 extends o.Animal>(
-          Then<o.Pet, $Out2> t, Then<$Out2, $R2> t2) =>
+  PetCopyWith<$R2, Pet, $Out2> chain<$R2, $Out2 extends o.Animal>(
+          Then<Pet, $Out2> t, Then<$Out2, $R2> t2) =>
       _PetCopyWithImpl($value, t, t2);
 
   @override
   $R call({m.Person? owner, String? color}) =>
-      $then(o.Pet(owner ?? $value.owner, color ?? $value.color));
+      $then(Pet(owner ?? $value.owner, color ?? $value.color));
 }
 
 class PersonMapper extends MapperBase<Person> {
@@ -351,6 +349,9 @@ class PersonMapper extends MapperBase<Person> {
   PersonMapperElement createElement(MapperContainer container) {
     return PersonMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Person';
 
   static final fromMap = container.fromMap<Person>;
   static final fromJson = container.fromJson<Person>;

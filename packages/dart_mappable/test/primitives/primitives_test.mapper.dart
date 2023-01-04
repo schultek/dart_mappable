@@ -15,6 +15,9 @@ class ItemsMapper extends MapperBase<Items> {
     return ItemsMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Items';
+
   static final fromMap = container.fromMap<Items>;
   static final fromJson = container.fromJson<Items>;
 }
@@ -117,6 +120,9 @@ class ItemMapper extends MapperBase<Item> {
   ItemMapperElement createElement(MapperContainer container) {
     return ItemMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Item';
 
   static final fromMap = container.fromMap<Item>;
   static final fromJson = container.fromJson<Item>;

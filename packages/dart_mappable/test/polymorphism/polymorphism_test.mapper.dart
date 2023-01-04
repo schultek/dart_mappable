@@ -23,6 +23,9 @@ class AnimalMapper extends MapperBase<Animal> {
     return AnimalMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Animal';
+
   static final fromMap = container.fromMap<Animal>;
   static final fromJson = container.fromJson<Animal>;
 }
@@ -90,6 +93,9 @@ class CatMapper extends MapperBase<Cat> {
   CatMapperElement createElement(MapperContainer container) {
     return CatMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Cat';
 
   static final fromMap = container.fromMap<Cat>;
   static final fromJson = container.fromJson<Cat>;
@@ -183,6 +189,9 @@ class DogMapper extends MapperBase<Dog> {
     return DogMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Dog';
+
   static final fromMap = container.fromMap<Dog>;
   static final fromJson = container.fromJson<Dog>;
 }
@@ -269,6 +278,9 @@ class NullAnimalMapper extends MapperBase<NullAnimal> {
   NullAnimalMapperElement createElement(MapperContainer container) {
     return NullAnimalMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'NullAnimal';
 
   static final fromMap = container.fromMap<NullAnimal>;
   static final fromJson = container.fromJson<NullAnimal>;
@@ -358,6 +370,9 @@ class DefaultAnimalMapper extends MapperBase<DefaultAnimal> {
   DefaultAnimalMapperElement createElement(MapperContainer container) {
     return DefaultAnimalMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'DefaultAnimal';
 
   static final fromMap = container.fromMap<DefaultAnimal>;
   static final fromJson = container.fromJson<DefaultAnimal>;
@@ -452,6 +467,9 @@ class ZooMapper extends MapperBase<Zoo> {
   ZooMapperElement createElement(MapperContainer container) {
     return ZooMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Zoo';
 
   static final fromMap = container.fromMap<Zoo>;
   static final fromJson = container.fromJson<Zoo>;

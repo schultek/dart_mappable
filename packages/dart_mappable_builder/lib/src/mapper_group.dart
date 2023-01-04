@@ -2,8 +2,12 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:build/build.dart';
 import 'package:collection/collection.dart';
-import 'package:dart_mappable/dart_mappable.dart' show GenerateMethods;
+import 'package:dart_mappable/dart_mappable.dart'
+    show DiscoveryMode, GenerateMethods;
+import 'package:path/path.dart';
+import 'package:source_gen/source_gen.dart';
 
 import 'builder_options.dart';
 import 'elements/alias_class_mapper_element.dart';
@@ -15,6 +19,7 @@ import 'elements/mapper_element.dart';
 import 'elements/none_class_mapper_element.dart';
 import 'elements/target_class_mapper_element.dart';
 import 'utils.dart';
+import 'package:glob/glob.dart';
 
 class MapperElementGroup {
   MapperElementGroup(this.library, this.options) {
@@ -58,15 +63,6 @@ class MapperElementGroup {
   }
 
   Future<void> analyze() async {
-    var options = this.options;
-
-    if (libChecker.hasAnnotationOf(library)) {
-      var libOptions =
-          MappableOptions.from(libChecker.firstAnnotationOf(library)!);
-
-      options = options.apply(libOptions);
-    }
-
     var elements = elementsOf(library);
 
     for (var element in elements) {
@@ -77,7 +73,8 @@ class MapperElementGroup {
       if (element is ClassElement && classChecker.hasAnnotationOf(element)) {
         var node = await element.getResolvedNode();
         if (node is ClassTypeAlias) {
-          await addMapper(AliasClassMapperElement(this, element, node, options));
+          await addMapper(
+              AliasClassMapperElement(this, element, node, options));
         } else {
           await addMapper(TargetClassMapperElement(this, element, options));
         }
@@ -87,12 +84,13 @@ class MapperElementGroup {
               c.redirectedConstructor != null &&
               classChecker.hasAnnotationOf(c)) {
             // Disable copy methods for factory elements.
-            options = options.apply(MappableOptions(
+            var subOptions = options.apply(MappableOptions(
                 generateMethods:
                     ~(~(options.generateMethods ?? GenerateMethods.all) |
                         GenerateMethods.copy)));
 
-            await addMapper(FactoryConstructorMapperElement(this, c, options));
+            await addMapper(
+                FactoryConstructorMapperElement(this, c, subOptions));
           }
         }
       } else if (element is EnumElement &&
@@ -133,7 +131,8 @@ class MapperElementGroup {
     }
 
     for (var elem in target.getSubClasses()) {
-      ClassMapperElement? subMapper = await getOrAddMapperForElement(elem) as ClassMapperElement?;
+      ClassMapperElement? subMapper =
+          await getOrAddMapperForElement(elem) as ClassMapperElement?;
 
       if (subMapper == null) {
         throw 'Cannot include subclass ${elem.getDisplayString(withNullability: false)}, '
@@ -171,7 +170,8 @@ class MapperElementGroup {
     return targets[e] ?? alias[e];
   }
 
-  Future<MapperElement?> getOrAddMapperForElement(Element? e, {bool orNone = false}) async {
+  Future<MapperElement?> getOrAddMapperForElement(Element? e,
+      {bool orNone = false}) async {
     var m = getMapperForElement(e);
     if (m != null) {
       return m;
@@ -180,7 +180,7 @@ class MapperElementGroup {
       await analyzeElement(m);
       return m;
     } else if (e is ClassElement && orNone) {
-      var m =  await addMapper(NoneClassMapperElement(this, e, options));
+      var m = await addMapper(NoneClassMapperElement(this, e, options));
       await analyzeElement(m);
       return m;
     } else {
@@ -217,5 +217,39 @@ class MapperElementGroup {
       yield* cu.enums;
       yield* cu.classes;
     }
+  }
+
+  Future<List<MapEntry<LibraryElement, Iterable<Element>>>> discover(
+      BuildStep buildStep) async {
+    var mode = options.discoveryMode;
+
+    bool isMapper(Element e) {
+      return (e is ClassElement && classChecker.hasAnnotationOf(e)) ||
+          (e is EnumElement && enumChecker.hasAnnotationOf(e));
+    }
+
+    if (mode == DiscoveryMode.package || mode == DiscoveryMode.directory) {
+      var glob = mode == DiscoveryMode.package
+          ? Glob('**.dart')
+          : Glob('${dirname(buildStep.inputId.path)}/**.dart');
+      return await buildStep
+          .findAssets(glob)
+          .asyncMap((id) async {
+            if (await buildStep.resolver.isLibrary(id)) {
+              return buildStep.resolver.libraryFor(id);
+            }
+            return null;
+          })
+          .where((l) => l != null)
+          .map((lib) => MapEntry(lib!, lib.topLevelElements.where(isMapper)))
+          .where((e) => e.value.isNotEmpty)
+          .toList();
+    } else if (mode == DiscoveryMode.library) {
+      var lib = await buildStep.inputLibrary;
+
+      return [MapEntry(lib, lib.topLevelElements.where(isMapper))];
+    }
+
+    return [];
   }
 }

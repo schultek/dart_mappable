@@ -15,6 +15,9 @@ class PersonMapper extends MapperBase<Person> {
     return PersonMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Person';
+
   static final fromMap = container.fromMap<Person>;
   static final fromJson = container.fromJson<Person>;
 }
@@ -115,6 +118,9 @@ class CarMapper extends MapperBase<Car> {
     return CarMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Car';
+
   static final fromMap = container.fromMap<Car>;
   static final fromJson = container.fromJson<Car>;
 }
@@ -202,7 +208,10 @@ class BoxMapper extends MapperBase<Box> {
   }
 
   @override
+  String get id => 'Box';
+  @override
   Function get typeFactory => <T>(f) => f<Box<T>>();
+
   static Box<T> fromMap<T>(Map<String, dynamic> map) =>
       container.fromMap<Box<T>>(map);
   static Box<T> fromJson<T>(String json) => container.fromJson<Box<T>>(json);
@@ -223,8 +232,7 @@ class BoxMapperElement extends MapperElementBase<Box> {
   dynamic encode<T>(Box<T> v) => toMap<T>(v);
   Map<String, dynamic> toMap<T>(Box<T> b) => {
         'size': container.$enc(b.size, 'size'),
-        'content': container.$enc(b.content, 'content'),
-        ...container.$type<Box<T>>(b)
+        'content': container.$enc(b.content, 'content')
       };
 
   @override
@@ -293,6 +301,9 @@ class ConfettiMapper extends MapperBase<Confetti> {
   ConfettiMapperElement createElement(MapperContainer container) {
     return ConfettiMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Confetti';
 
   static final fromMap = container.fromMap<Confetti>;
   static final fromJson = container.fromJson<Confetti>;

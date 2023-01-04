@@ -22,6 +22,9 @@ class UnionMapper extends MapperBase<Union> {
     return UnionMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Union';
+
   static final fromMap = container.fromMap<Union>;
   static final fromJson = container.fromJson<Union>;
 }
@@ -86,6 +89,9 @@ class DataMapper extends MapperBase<Data> {
     return DataMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Data';
+
   static final fromMap = container.fromMap<Data>;
   static final fromJson = container.fromJson<Data>;
 }
@@ -130,6 +136,9 @@ class LoadingMapper extends MapperBase<Loading> {
   LoadingMapperElement createElement(MapperContainer container) {
     return LoadingMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Loading';
 
   static final fromMap = container.fromMap<Loading>;
   static final fromJson = container.fromJson<Loading>;
@@ -176,6 +185,9 @@ class ErrorDetailsMapper extends MapperBase<ErrorDetails> {
   ErrorDetailsMapperElement createElement(MapperContainer container) {
     return ErrorDetailsMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'ErrorDetails';
 
   static final fromMap = container.fromMap<ErrorDetails>;
   static final fromJson = container.fromJson<ErrorDetails>;

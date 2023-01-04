@@ -16,7 +16,10 @@ class ZooMapper extends MapperBase<Zoo> {
   }
 
   @override
+  String get id => 'Zoo';
+  @override
   Function get typeFactory => <T extends Animal>(f) => f<Zoo<T>>();
+
   static Zoo<T> fromMap<T extends Animal>(Map<String, dynamic> map) =>
       container.fromMap<Zoo<T>>(map);
   static Zoo<T> fromJson<T extends Animal>(String json) =>
@@ -36,10 +39,8 @@ class ZooMapperElement extends MapperElementBase<Zoo> {
   @override
   Function get encoder => encode;
   dynamic encode<T extends Animal>(Zoo<T> v) => toMap<T>(v);
-  Map<String, dynamic> toMap<T extends Animal>(Zoo<T> z) => {
-        'animals': container.$enc(z.animals, 'animals'),
-        ...container.$type<Zoo<T>>(z)
-      };
+  Map<String, dynamic> toMap<T extends Animal>(Zoo<T> z) =>
+      {'animals': container.$enc(z.animals, 'animals')};
 
   @override
   String stringify(Zoo self) =>

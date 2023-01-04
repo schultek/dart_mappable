@@ -15,6 +15,9 @@ class PersonMapper extends MapperBase<Person> {
     return PersonMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Person';
+
   static final fromMap = container.fromMap<Person>;
   static final fromJson = container.fromJson<Person>;
 }
@@ -114,6 +117,9 @@ class CarMapper extends MapperBase<Car> {
   CarMapperElement createElement(MapperContainer container) {
     return CarMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Car';
 
   static final fromMap = container.fromMap<Car>;
   static final fromJson = container.fromJson<Car>;

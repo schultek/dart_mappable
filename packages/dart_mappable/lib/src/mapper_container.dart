@@ -71,9 +71,6 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     TypeRegistry.instance.register(this);
     if (types != null) {
       _types.addAll(types);
-      for (var e in types.entries) {
-        _typeIds[e.value(<T>() => T) as Type] = e.key;
-      }
     }
     if (linked != null) {
       linkAll(linked);
@@ -93,10 +90,8 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     );
   }
 
-  final Map<String, MapperBase> _mappers = {};
+  final Map<Type, MapperBase> _mappers = {};
   final Map<String, Function> _types = {};
-
-  final Map<Type, String> _typeIds = {};
 
   final Set<MapperContainer> _children = {};
 
@@ -104,7 +99,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   MapperBase? _mapperFor(dynamic value, [Set<MapperContainer>? parents]) {
     if (parents != null && parents.contains(this)) return null;
     bool isType<T>() => value is T;
-    var mapper = _mappers[value.runtimeType.baseId] ??
+    var mapper = _mappers[value.runtimeType.base] ??
         _mappers.values
             .where((m) => m.type != dynamic && m.type != Object)
             .where((m) => isType.callWith(typeArguments: [m.type]) as bool)
@@ -122,7 +117,8 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   @override
   MapperBase? _mapperForType(Type type, [Set<MapperContainer>? parents]) {
     if (parents != null && parents.contains(this)) return null;
-    var mapper = _mappers[type.baseId] ?? _mappers.values.where((m) => m.implType.base == type.base).firstOrNull;
+    var mapper = _mappers[type.base] ??
+        _mappers.values.where((m) => m.implType.base == type.base).firstOrNull;
     return mapper ??
         _children
             .map((c) => c._mapperForType(type, {...?parents, this}))
@@ -132,7 +128,8 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
 
   @override
   Function? getFactoryById(String id) {
-    return _mappers[id]?.typeFactory ?? _types[id];
+    return _mappers.values.where((m) => m.id == id).firstOrNull?.typeFactory ??
+        _types[id];
   }
 
   @override
@@ -146,8 +143,12 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   @override
-  String idOf(Type type) {
-    return _typeIds[type] ?? type.name;
+  String? idOf(Type type) {
+    return _mappers[type]?.id ??
+        _types.entries
+            .where((e) => e.value(<T>() => T == type) as bool)
+            .map((e) => e.key)
+            .firstOrNull;
   }
 
   @override
@@ -192,20 +193,37 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   @override
   dynamic toValue<T>(T value) {
     if (value == null) return null;
-    var type = value.runtimeType;
     var element = _mapperFor(value)?.createElement(this);
     if (element != null) {
       try {
         try {
-          var typeArgs = T.args;
-          // in case T is dynamic
+          Type type = T;
+          String? typeId;
+          if (value.runtimeType != type.nonNull) {
+            if (value is! Map && value is! Iterable) {
+              if (element.mapper.implType == element.mapper.type ||
+                  value.runtimeType != element.mapper.implType) {
+                typeId = value.runtimeType.id;
+                type = value.runtimeType;
+              }
+            }
+          }
+
+          var typeArgs = type.args;
+
           var fallback = element.mapper.type.base.args;
           if (typeArgs.length != fallback.length) {
             typeArgs = fallback;
           }
 
-          return element.encoder
+          var result = element.encoder
               .callWith(parameters: [value], typeArguments: typeArgs);
+
+          if (result is Map<String, dynamic> && typeId != null) {
+            result['__type'] = typeId;
+          }
+
+          return result;
         } on ArgumentError catch (e, stacktrace) {
           Error.throwWithStackTrace(
             ArgumentError('Failed to call [encoder] function '
@@ -215,7 +233,8 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
         }
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
-          MapperException.chain(MapperMethod.encode, '($type)', e),
+          MapperException.chain(
+              MapperMethod.encode, '(${value.runtimeType})', e),
           stacktrace,
         );
       }
@@ -319,19 +338,16 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   void use<T>(MapperBase<T> mapper) => useAll([mapper]);
 
   @override
-  MapperBase<T>? unuse<T>() => _mappers.remove(T.baseId) as MapperBase<T>?;
+  MapperBase<T>? unuse<T>() => _mappers.remove(T.base) as MapperBase<T>?;
 
   @override
   void useAll(Iterable<MapperBase> mappers) {
-    _typeIds.addEntries(mappers.map((m) => MapEntry(m.type, m.id)));
-    _mappers.addEntries(mappers.map((m) {
-      return MapEntry(TypeRegistry.instance.idOf(m.type)!, m);
-    }));
+    _mappers.addEntries(mappers.map((m) => MapEntry(m.type, m)));
   }
 
   @override
   MapperBase<T>? get<T>([Type? type]) =>
-      _mappers[(type ?? T).baseId] as MapperBase<T>?;
+      _mappers[(type ?? T).base] as MapperBase<T>?;
 
   @override
   List<MapperBase> getAll() => [..._mappers.values];

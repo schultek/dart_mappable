@@ -16,7 +16,10 @@ class BoxBMapper extends MapperBase<BoxB> {
   }
 
   @override
+  String get id => 'BoxB';
+  @override
   Function get typeFactory => <T>(f) => f<BoxB<T>>();
+
   static BoxB<T> fromMap<T>(Map<String, dynamic> map) =>
       container.fromMap<BoxB<T>>(map);
   static BoxB<T> fromJson<T>(String json) => container.fromJson<BoxB<T>>(json);
@@ -35,10 +38,8 @@ class BoxBMapperElement extends MapperElementBase<BoxB> {
   @override
   Function get encoder => encode;
   dynamic encode<T>(BoxB<T> v) => toMap<T>(v);
-  Map<String, dynamic> toMap<T>(BoxB<T> b) => {
-        'content': container.$enc(b.content, 'content'),
-        ...container.$type<BoxB<T>>(b)
-      };
+  Map<String, dynamic> toMap<T>(BoxB<T> b) =>
+      {'content': container.$enc(b.content, 'content')};
 
   @override
   String stringify(BoxB self) =>
@@ -103,6 +104,9 @@ class ContentBMapper extends MapperBase<ContentB> {
   ContentBMapperElement createElement(MapperContainer container) {
     return ContentBMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'ContentB';
 
   static final fromMap = container.fromMap<ContentB>;
   static final fromJson = container.fromJson<ContentB>;

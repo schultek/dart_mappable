@@ -14,6 +14,7 @@ class MappableClass {
   const MappableClass({
     this.caseStyle,
     this.ignoreNull,
+    this.uniqueId,
     this.discriminatorKey,
     this.discriminatorValue,
     this.hook,
@@ -27,6 +28,12 @@ class MappableClass {
 
   /// If true removes all map keys with null values
   final bool? ignoreNull;
+
+  /// A unique id representing this class
+  ///
+  /// This only needs to be set when you have two classes with the same name
+  /// and want to use generic serialization.
+  final String? uniqueId;
 
   /// Property key used for type discriminators
   final String? discriminatorKey;
@@ -181,6 +188,8 @@ class MappableLib {
     this.ignoreNull,
     this.discriminatorKey,
     this.generateMethods,
+    this.createCombinedContainer,
+    this.discoveryMode,
   });
 
   /// The case style for the map keys
@@ -197,6 +206,22 @@ class MappableLib {
 
   /// Specify which methods to generate for classes
   final int? generateMethods;
+
+  /// Whether to create a new <filename>.container.dart file with a container that
+  /// combines a set of discovered mappers.
+  final bool? createCombinedContainer;
+
+  /// How to discover mappers when [createLinkedContainer] is true.
+  final DiscoveryMode? discoveryMode;
+}
+
+enum DiscoveryMode {
+  /// Discover all models in the current library (default).
+  library,
+  /// Discover all models in the current or any subdirectory.
+  directory,
+  /// Discover all models in the current package.
+  package,
 }
 
 /// Extend this class to define a custom [MappingHook] for a class or field.

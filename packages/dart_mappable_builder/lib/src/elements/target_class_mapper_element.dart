@@ -10,8 +10,6 @@ class TargetClassMapperElement extends ClassMapperElement with LinkedElementsMix
 
   late String prefixedDecodingClassName = prefixedClassName;
 
-  String? customId;
-
   late List<DartType> customMappers = () {
     var mappers =
         annotation?.getField('includeCustomMappers')?.toTypeList() ?? [];

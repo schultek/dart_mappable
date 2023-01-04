@@ -18,6 +18,9 @@ class GameMapper extends MapperBase<Game> {
     return GameMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Game';
+
   static final fromMap = container.fromMap<Game>;
   static final fromJson = container.fromJson<Game>;
 }
@@ -119,6 +122,9 @@ class CardGameMapper extends MapperBase<CardGame> {
   CardGameMapperElement createElement(MapperContainer container) {
     return CardGameMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'CardGame';
 
   static final fromMap = container.fromMap<CardGame>;
   static final fromJson = container.fromJson<CardGame>;
@@ -226,6 +232,9 @@ class PlayerMapper extends MapperBase<Player> {
     return PlayerMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Player';
+
   static final fromMap = container.fromMap<Player>;
   static final fromJson = container.fromJson<Player>;
 }
@@ -306,6 +315,9 @@ class ClothesMapper extends MapperBase<Clothes> {
   ClothesMapperElement createElement(MapperContainer container) {
     return ClothesMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Clothes';
 
   static final fromMap = container.fromMap<Clothes>;
   static final fromJson = container.fromJson<Clothes>;
@@ -410,6 +422,9 @@ class ComponentMapper extends MapperBase<Component> {
   ComponentMapperElement createElement(MapperContainer container) {
     return ComponentMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Component';
 
   static final fromMap = container.fromMap<Component>;
   static final fromJson = container.fromJson<Component>;

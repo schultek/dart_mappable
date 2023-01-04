@@ -12,6 +12,8 @@ dartdoc:
       markdown: "doc/copywith.md"
     "Polymorphism":
       markdown: "doc/polymorphism.md"
+    "Generics":
+      markdown: "doc/generics.md"
     "Mapping Hooks":
       markdown: "doc/hooks.md"
     "Custom Mappers":
@@ -25,6 +27,7 @@ dartdoc:
     - "Configuration"
     - "Copy-With"
     - "Polymorphism"
+    - "Generics"
     - "Mapping Hooks"
     - "Custom Mappers"
     - "Mapper Container"

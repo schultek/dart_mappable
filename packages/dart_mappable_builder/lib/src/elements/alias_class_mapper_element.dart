@@ -19,7 +19,7 @@ class AliasClassMapperElement extends TargetClassMapperElement {
   late String prefixedDecodingClassName = parent.prefixOfElement(element)+className;
 
   @override
-  late String? customId = prefixedClassName;
+  late String selfTypeParam = '$uniqueClassName$typeParams';
 
   @override
   late List<String> typesConfigs = () {

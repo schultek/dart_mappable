@@ -17,6 +17,9 @@ class AnimalMapper extends MapperBase<Animal> {
   AnimalMapperElement createElement(MapperContainer container) {
     return AnimalMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Animal';
 }
 
 class AnimalMapperElement extends MapperElementBase<Animal> {
@@ -52,6 +55,9 @@ class CatMapper extends MapperBase<Cat> {
   CatMapperElement createElement(MapperContainer container) {
     return CatMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Cat';
 }
 
 class CatMapperElement extends MapperElementBase<Cat> {
@@ -110,6 +116,9 @@ class DogMapper extends MapperBase<Dog> {
   DogMapperElement createElement(MapperContainer container) {
     return DogMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Dog';
 }
 
 class DogMapperElement extends MapperElementBase<Dog> {
@@ -163,6 +172,9 @@ class ZooMapper extends MapperBase<Zoo> {
   ZooMapperElement createElement(MapperContainer container) {
     return ZooMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Zoo';
 }
 
 class ZooMapperElement extends MapperElementBase<Zoo> {
@@ -224,7 +236,10 @@ class AMapper extends MapperBase<A> {
   }
 
   @override
+  String get id => 'A';
+  @override
   Function get typeFactory => <T>(f) => f<A<T>>();
+
   static A<T> fromMap<T>(Map<String, dynamic> map) =>
       container.fromMap<A<T>>(map);
   static A<T> fromJson<T>(String json) => container.fromJson<A<T>>(json);
@@ -242,7 +257,7 @@ class AMapperElement extends MapperElementBase<A> {
   @override
   Function get encoder => encode;
   dynamic encode<T>(A<T> v) => toMap<T>(v);
-  Map<String, dynamic> toMap<T>(A<T> a) => {...container.$type<A<T>>(a)};
+  Map<String, dynamic> toMap<T>(A<T> a) => {};
 
   @override
   String stringify(A self) => 'A()';
@@ -308,7 +323,10 @@ class CMapper extends MapperBase<C> {
   }
 
   @override
+  String get id => 'C';
+  @override
   Function get typeFactory => <T>(f) => f<C<T>>();
+
   static C<T> fromMap<T>(Map<String, dynamic> map) =>
       container.fromMap<C<T>>(map);
   static C<T> fromJson<T>(String json) => container.fromJson<C<T>>(json);
@@ -326,7 +344,7 @@ class CMapperElement extends MapperElementBase<C> {
   @override
   Function get encoder => encode;
   dynamic encode<T>(C<T> v) => toMap<T>(v);
-  Map<String, dynamic> toMap<T>(C<T> c) => {...container.$type<C<T>>(c)};
+  Map<String, dynamic> toMap<T>(C<T> c) => {};
 
   @override
   String stringify(C self) => 'C()';
@@ -388,6 +406,9 @@ class BMapper extends MapperBase<B> {
   BMapperElement createElement(MapperContainer container) {
     return BMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'B';
 
   static final fromMap = container.fromMap<B>;
   static final fromJson = container.fromJson<B>;

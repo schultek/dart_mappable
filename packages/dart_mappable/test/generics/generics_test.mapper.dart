@@ -16,7 +16,10 @@ class BoxMapper extends MapperBase<Box> {
   }
 
   @override
+  String get id => 'Box';
+  @override
   Function get typeFactory => <T extends Content>(f) => f<Box<T>>();
+
   static Box<T> fromMap<T extends Content>(Map<String, dynamic> map) =>
       container.fromMap<Box<T>>(map);
   static Box<T> fromJson<T extends Content>(String json) =>
@@ -39,8 +42,7 @@ class BoxMapperElement extends MapperElementBase<Box> {
   dynamic encode<T extends Content>(Box<T> v) => toMap<T>(v);
   Map<String, dynamic> toMap<T extends Content>(Box<T> b) => {
         'size': container.$enc(b.size, 'size'),
-        'contents': container.$enc(b.contents, 'contents'),
-        ...container.$type<Box<T>>(b)
+        'contents': container.$enc(b.contents, 'contents')
       };
 
   @override
@@ -118,6 +120,9 @@ class ConfettiMapper extends MapperBase<Confetti> {
   ConfettiMapperElement createElement(MapperContainer container) {
     return ConfettiMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Confetti';
 
   static final fromMap = container.fromMap<Confetti>;
   static final fromJson = container.fromJson<Confetti>;
@@ -208,6 +213,9 @@ class ContentMapper extends MapperBase<Content> {
     return ContentMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Content';
+
   static final fromMap = container.fromMap<Content>;
   static final fromJson = container.fromJson<Content>;
 }
@@ -288,6 +296,9 @@ class DataMapper extends MapperBase<Data> {
   DataMapperElement createElement(MapperContainer container) {
     return DataMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Data';
 
   static final fromMap = container.fromMap<Data>;
   static final fromJson = container.fromJson<Data>;
@@ -372,7 +383,10 @@ class SingleSettingMapper extends MapperBase<SingleSetting> {
   }
 
   @override
+  String get id => 'SingleSetting';
+  @override
   Function get typeFactory => <T>(f) => f<SingleSetting<T>>();
+
   static SingleSetting<T> fromMap<T>(Map<String, dynamic> map) =>
       container.fromMap<SingleSetting<T>>(map);
   static SingleSetting<T> fromJson<T>(String json) =>
@@ -392,10 +406,8 @@ class SingleSettingMapperElement extends MapperElementBase<SingleSetting> {
   @override
   Function get encoder => encode;
   dynamic encode<T>(SingleSetting<T> v) => toMap<T>(v);
-  Map<String, dynamic> toMap<T>(SingleSetting<T> s) => {
-        'properties': container.$enc(s.properties, 'properties'),
-        ...container.$type<SingleSetting<T>>(s)
-      };
+  Map<String, dynamic> toMap<T>(SingleSetting<T> s) =>
+      {'properties': container.$enc(s.properties, 'properties')};
 
   @override
   String stringify(SingleSetting self) =>
@@ -475,6 +487,9 @@ class SettingsMapper extends MapperBase<Settings> {
   SettingsMapperElement createElement(MapperContainer container) {
     return SettingsMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'Settings';
 
   static final fromMap = container.fromMap<Settings>;
   static final fromJson = container.fromJson<Settings>;

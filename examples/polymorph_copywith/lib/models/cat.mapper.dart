@@ -18,6 +18,9 @@ class CatMapper extends MapperBase<Cat> {
     return CatMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Cat';
+
   static final fromMap = container.fromMap<Cat>;
   static final fromJson = container.fromJson<Cat>;
 }

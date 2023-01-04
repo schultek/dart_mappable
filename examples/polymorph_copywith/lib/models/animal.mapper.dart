@@ -18,6 +18,9 @@ class AnimalMapper extends MapperBase<Animal> {
     return AnimalMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'Animal';
+
   static final fromMap = container.fromMap<Animal>;
   static final fromJson = container.fromJson<Animal>;
 }

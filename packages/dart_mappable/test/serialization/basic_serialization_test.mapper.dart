@@ -15,6 +15,9 @@ class AMapper extends MapperBase<A> {
     return AMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'A';
+
   static final fromMap = container.fromMap<A>;
   static final fromJson = container.fromJson<A>;
 }

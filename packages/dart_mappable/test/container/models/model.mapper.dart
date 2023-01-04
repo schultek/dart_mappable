@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element
 
-part of 'selective_generation_test.dart';
+part of 'model.dart';
 
 class AMapper extends MapperBase<A> {
   static MapperContainer container = MapperContainer(
@@ -17,15 +17,31 @@ class AMapper extends MapperBase<A> {
 
   @override
   String get id => 'A';
+
+  static final fromMap = container.fromMap<A>;
+  static final fromJson = container.fromJson<A>;
 }
 
 class AMapperElement extends MapperElementBase<A> {
   AMapperElement._(super.mapper, super.container);
 
   @override
+  Function get decoder => decode;
+  A decode(dynamic v) =>
+      checkedType(v, (Map<String, dynamic> map) => fromMap(map));
+  A fromMap(Map<String, dynamic> map) => A();
+
+  @override
   Function get encoder => encode;
   dynamic encode(A v) => toMap(v);
-  Map<String, dynamic> toMap(A a) => {'a': container.$enc(a.a, 'a')};
+  Map<String, dynamic> toMap(A a) => {};
+
+  @override
+  String stringify(A self) => 'A()';
+  @override
+  int hash(A self) => 0;
+  @override
+  bool equals(A self, A other) => true;
 }
 
 mixin AMappable {
@@ -33,6 +49,15 @@ mixin AMappable {
   Map<String, dynamic> toMap() => AMapper.container.toMap(this as A);
   ACopyWith<A, A, A> get copyWith =>
       _ACopyWithImpl(this as A, $identity, $identity);
+  @override
+  String toString() => AMapper.container.asString(this);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (runtimeType == other.runtimeType &&
+          AMapper.container.isEqual(this, other));
+  @override
+  int get hashCode => AMapper.container.hash(this);
 }
 
 extension AValueCopy<$R, $Out extends A> on ObjectCopyWith<$R, A, $Out> {
@@ -46,7 +71,7 @@ abstract class ACopyWith<$R, $In extends A, $Out extends A>
     implements ObjectCopyWith<$R, $In, $Out> {
   ACopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends A>(
       Then<A, $Out2> t, Then<$Out2, $R2> t2);
-  $R call({String? a});
+  $R call();
 }
 
 class _ACopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, A, $Out>
@@ -58,42 +83,5 @@ class _ACopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, A, $Out>
       _ACopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? a}) => $then(A(a ?? $value.a));
-}
-
-class BMapper extends MapperBase<B> {
-  static MapperContainer container = MapperContainer(
-    mappers: {BMapper()},
-  );
-
-  @override
-  BMapperElement createElement(MapperContainer container) {
-    return BMapperElement._(this, container);
-  }
-
-  @override
-  String get id => 'B';
-}
-
-class BMapperElement extends MapperElementBase<B> {
-  BMapperElement._(super.mapper, super.container);
-
-  @override
-  String stringify(B self) => 'B(b: ${container.asString(self.b)})';
-  @override
-  int hash(B self) => container.hash(self.b);
-  @override
-  bool equals(B self, B other) => container.isEqual(self.b, other.b);
-}
-
-mixin BMappable {
-  @override
-  String toString() => BMapper.container.asString(this);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (runtimeType == other.runtimeType &&
-          BMapper.container.isEqual(this, other));
-  @override
-  int get hashCode => BMapper.container.hash(this);
+  $R call() => $then(A());
 }

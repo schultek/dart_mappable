@@ -18,6 +18,9 @@ class AMapper extends MapperBase<A> {
     return AMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'A';
+
   static final fromMap = container.fromMap<A>;
   static final fromJson = container.fromJson<A>;
 }
@@ -76,6 +79,9 @@ class BMapper extends MapperBase<B> {
   BMapperElement createElement(MapperContainer container) {
     return BMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'B';
 
   static final fromMap = container.fromMap<B>;
   static final fromJson = container.fromJson<B>;
@@ -162,6 +168,9 @@ class CMapper extends MapperBase<C> {
   CMapperElement createElement(MapperContainer container) {
     return CMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'C';
 
   static final fromMap = container.fromMap<C>;
   static final fromJson = container.fromJson<C>;

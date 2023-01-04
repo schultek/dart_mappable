@@ -18,6 +18,9 @@ class AnimalBMapper extends MapperBase<AnimalB> {
     return AnimalBMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'AnimalB';
+
   static final fromMap = container.fromMap<AnimalB>;
   static final fromJson = container.fromJson<AnimalB>;
 }
@@ -84,6 +87,9 @@ class CatBMapper extends MapperBase<CatB> {
   CatBMapperElement createElement(MapperContainer container) {
     return CatBMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'CatB';
 
   static final fromMap = container.fromMap<CatB>;
   static final fromJson = container.fromJson<CatB>;
@@ -177,6 +183,9 @@ class DogBMapper extends MapperBase<DogB> {
   DogBMapperElement createElement(MapperContainer container) {
     return DogBMapperElement._(this, container);
   }
+
+  @override
+  String get id => 'DogB';
 
   static final fromMap = container.fromMap<DogB>;
   static final fromJson = container.fromJson<DogB>;

@@ -15,6 +15,9 @@ class PersonBMapper extends MapperBase<PersonB> {
     return PersonBMapperElement._(this, container);
   }
 
+  @override
+  String get id => 'PersonB';
+
   static final fromMap = container.fromMap<PersonB>;
   static final fromJson = container.fromJson<PersonB>;
 }
