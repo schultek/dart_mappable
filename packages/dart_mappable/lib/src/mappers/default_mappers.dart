@@ -142,8 +142,6 @@ typedef SerializableEncoder2<T> = Object Function(
     Function(T);
 typedef TypeFactory2 = Object? Function<A, B>(Object? Function<V>() f);
 
-
-
 class SerializableMapper<T, V> extends MapperBase<T> {
   late Function Function(MapperContainer c) getDecoder;
 
@@ -164,7 +162,8 @@ class SerializableMapper<T, V> extends MapperBase<T> {
     required SerializableEncoder1<T> encode,
     required TypeFactory1 type,
   }) {
-    getDecoder = (c) => <A>(v) => checkedType<T, V>(v, (vv) => decode<A>(vv, c.fromValue<A>));
+    getDecoder = (c) =>
+        <A>(v) => checkedType<T, V>(v, (vv) => decode<A>(vv, c.fromValue<A>));
     getEncoder = (c) => <A>(T v) => type<A>(<V>() => checkedType<Object?, V>(
         v, (d) => encode(d as T)((vv) => c.toValue<A>(vv as A))));
     typeFactory = type;
@@ -175,8 +174,8 @@ class SerializableMapper<T, V> extends MapperBase<T> {
     required SerializableEncoder2<T> encode,
     required TypeFactory2 type,
   }) {
-    getDecoder =
-        (c) => <A, B>(v) => checkedType<T, V>(v, (vv) => decode<A, B>(vv, c.fromValue<A>, c.fromValue<B>));
+    getDecoder = (c) => <A, B>(v) => checkedType<T, V>(
+        v, (vv) => decode<A, B>(vv, c.fromValue<A>, c.fromValue<B>));
     getEncoder = (c) => <A, B>(T v) => type<A, B>(<V>() =>
         checkedType<Object?, V>(
             v,

@@ -22,7 +22,6 @@ class B with BMappable {
   B(this.b);
 }
 
-
 void main() {
   group('Selective generation', () {
     test('Should only generate encode and copy methods', () {

@@ -5,13 +5,15 @@ import 'package:test/test.dart';
 
 import 'temp_asset_writer.dart';
 
-Map<String, String> singleModel(String modelClass) => {'model': '''
+Map<String, String> singleModel(String modelClass) => {
+      'model': '''
   import 'package:dart_mappable/dart_mappable.dart';
      
   part 'model.mapper.dart';
   
   $modelClass
-'''};
+'''
+    };
 
 Future<void> testMappable(
   Map<String, String> inputs, {

@@ -5,7 +5,8 @@ import 'class_mapper_element.dart';
 import 'linked_elements_mixin.dart';
 import 'none_class_mapper_element.dart';
 
-class TargetClassMapperElement extends ClassMapperElement with LinkedElementsMixin {
+class TargetClassMapperElement extends ClassMapperElement
+    with LinkedElementsMixin {
   TargetClassMapperElement(super.parent, super.element, super.options);
 
   late String prefixedDecodingClassName = prefixedClassName;
@@ -16,7 +17,7 @@ class TargetClassMapperElement extends ClassMapperElement with LinkedElementsMix
     for (var mapper in mappers) {
       var mapperIndex = mapper is InterfaceType
           ? mapper.allSupertypes
-          .indexWhere((t) => mapperChecker.isExactlyType(t))
+              .indexWhere((t) => mapperChecker.isExactlyType(t))
           : -1;
       if (mapperIndex == -1) {
         throw UnsupportedError(

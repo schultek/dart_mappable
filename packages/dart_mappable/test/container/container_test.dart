@@ -22,7 +22,8 @@ void main() {
 
       expect(container.fromValue<int>('2'), equals(2));
 
-      container.use(PrimitiveMapper((value) => int.parse(value.toString())*10));
+      container
+          .use(PrimitiveMapper((value) => int.parse(value.toString()) * 10));
 
       expect(container.fromValue<int>('2'), 20);
     });

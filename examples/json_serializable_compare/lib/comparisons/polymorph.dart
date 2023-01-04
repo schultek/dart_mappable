@@ -25,8 +25,7 @@ class CatA extends AnimalA {
   CatA(String name, this.color) : super(name);
 
   // Required Boilerplate
-  factory CatA.fromJson(Map<String, dynamic> json) =>
-      _$CatAFromJson(json);
+  factory CatA.fromJson(Map<String, dynamic> json) => _$CatAFromJson(json);
 
   // Required Boilerplate
   @override
@@ -40,8 +39,7 @@ class DogA extends AnimalA {
   DogA(String name, this.age) : super(name);
 
   // Required Boilerplate
-  factory DogA.fromJson(Map<String, dynamic> json) =>
-      _$DogAFromJson(json);
+  factory DogA.fromJson(Map<String, dynamic> json) => _$DogAFromJson(json);
 
   // Required Boilerplate
   @override
@@ -98,7 +96,8 @@ void comparePolymorph() {
 
       // dart_mappable
       expect(
-        AnimalBMapper.fromMap({'type': 'CatB', 'name': 'Kitty', 'color': 'brown'}),
+        AnimalBMapper.fromMap(
+            {'type': 'CatB', 'name': 'Kitty', 'color': 'brown'}),
         equals(CatB('Kitty', 'brown')),
       );
       expect(

@@ -1,5 +1,3 @@
-import 'package:type_plus/type_plus.dart';
-
 import 'annotations.dart';
 import 'mapper_exception.dart';
 import 'mapper_container.dart';
@@ -78,12 +76,14 @@ T checkedType<T, U>(dynamic v, T Function(U) fn) {
 
 /// {@nodoc}
 extension HooksMapping on MappingHook? {
-  T decode<T>(dynamic value, T Function(dynamic value) fn, MapperContainer container) {
+  T decode<T>(
+      dynamic value, T Function(dynamic value) fn, MapperContainer container) {
     if (this == null) return fn(value);
     return this!.wrapDecode(value, fn, container);
   }
 
-  dynamic encode<T>(T value, dynamic Function(T value) fn, MapperContainer container) {
+  dynamic encode<T>(
+      T value, dynamic Function(T value) fn, MapperContainer container) {
     if (this == null) return fn(value);
     return this!.wrapEncode(value, fn, container);
   }

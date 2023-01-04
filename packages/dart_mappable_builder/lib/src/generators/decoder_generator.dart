@@ -24,8 +24,7 @@ class DecoderGenerator {
 
   String generateTypeFactory() {
     if (element.shouldGenerate(GenerateMethods.decode)) {
-      return
-          '${element.className != element.uniqueClassName ? '  @override String get id => \'${element.uniqueClassName}\';\n' : ''}'
+      return '${element.className != element.uniqueClassName ? '  @override String get id => \'${element.uniqueClassName}\';\n' : ''}'
           '  @override\n'
           '  Function get typeFactory => ${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();\n';
     } else {
@@ -119,8 +118,7 @@ class DecoderGenerator {
                   .toList(),
               subConfigMapper));
         } else {
-          cases.add(
-              MapEntry([discriminatorValueCode], subConfigMapper));
+          cases.add(MapEntry([discriminatorValueCode], subConfigMapper));
         }
       } else {
         var subCases = await _getDiscriminatorCases(subConfig);

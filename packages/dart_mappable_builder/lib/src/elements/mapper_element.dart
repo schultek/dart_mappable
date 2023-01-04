@@ -9,7 +9,6 @@ import '../mapper_group.dart';
 import '../utils.dart';
 
 abstract class MapperElement<T extends InterfaceElement> {
-
   MapperElementGroup parent;
   T element;
   MappableOptions options;
@@ -21,7 +20,8 @@ abstract class MapperElement<T extends InterfaceElement> {
   late String uniqueClassName = className;
 
   late String targetClassName = targetElement.name;
-  late String prefixedClassName = parent.prefixOfElement(targetElement)+targetClassName;
+  late String prefixedClassName =
+      parent.prefixOfElement(targetElement) + targetClassName;
 
   late String mapperName = '${uniqueClassName}Mapper';
 

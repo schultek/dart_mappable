@@ -29,8 +29,8 @@ class PlayerHook extends MappingHook {
 @MappableClass(hook: GameHook())
 class Game with GameMappable {
   @MappableField(
-      hook: ChainedHook(
-          [PlayerHook(), UnmappedPropertiesHook('unmappedProps')]))
+      hook:
+          ChainedHook([PlayerHook(), UnmappedPropertiesHook('unmappedProps')]))
   Player player;
 
   Game(this.player);

@@ -14,8 +14,7 @@ class GameA {
   GameA({required this.player});
 
   // Required Boilerplate
-  factory GameA.fromJson(Map<String, dynamic> json) =>
-      _$GameAFromJson(json);
+  factory GameA.fromJson(Map<String, dynamic> json) => _$GameAFromJson(json);
 
   // Required Boilerplate
   Map<String, dynamic> toJson() => _$GameAToJson(this);
@@ -60,13 +59,17 @@ void compareNested() {
     test('decode from map', () {
       // json_serializable
       expect(
-        GameA.fromJson({'player': {'name': 'Alice'}}),
+        GameA.fromJson({
+          'player': {'name': 'Alice'}
+        }),
         predicate<GameA>((p) => p.player.name == 'Alice'),
       );
 
       // dart_mappable
       expect(
-        GameBMapper.fromMap({'player': {'name': 'Bob'}}),
+        GameBMapper.fromMap({
+          'player': {'name': 'Bob'}
+        }),
         equals(GameB(player: PlayerB(name: 'Bob'))),
       );
     });
@@ -75,13 +78,17 @@ void compareNested() {
       // json_serializable
       expect(
         GameA(player: PlayerA(name: 'Alice')).toJson(),
-        equals({'player': {'name': 'Alice'}}),
+        equals({
+          'player': {'name': 'Alice'}
+        }),
       );
 
       // dart_mappable
       expect(
         GameB(player: PlayerB(name: 'Bob')).toMap(),
-        equals({'player': {'name': 'Bob'}}),
+        equals({
+          'player': {'name': 'Bob'}
+        }),
       );
     });
   });

@@ -7,7 +7,6 @@ import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart'
     show DiscoveryMode, GenerateMethods;
 import 'package:path/path.dart';
-import 'package:source_gen/source_gen.dart';
 
 import 'builder_options.dart';
 import 'elements/alias_class_mapper_element.dart';
@@ -19,6 +18,7 @@ import 'elements/mapper_element.dart';
 import 'elements/none_class_mapper_element.dart';
 import 'elements/target_class_mapper_element.dart';
 import 'utils.dart';
+// ignore: depend_on_referenced_packages
 import 'package:glob/glob.dart';
 
 class MapperElementGroup {

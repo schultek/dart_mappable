@@ -1,27 +1,31 @@
-
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
 part 'copy_with_2_test.mapper.dart';
 
-@MappableClass(discriminatorKey: 'type', generateMethods: GenerateMethods.copy | GenerateMethods.stringify)
+@MappableClass(
+    discriminatorKey: 'type',
+    generateMethods: GenerateMethods.copy | GenerateMethods.stringify)
 abstract class Animal with AnimalMappable {
   String name;
   Animal(this.name);
 }
 
-@MappableClass(generateMethods: GenerateMethods.copy | GenerateMethods.stringify)
+@MappableClass(
+    generateMethods: GenerateMethods.copy | GenerateMethods.stringify)
 class Cat extends Animal with CatMappable {
   String color;
   Cat(String name, this.color) : super(name);
 }
 
-@MappableClass(generateMethods: GenerateMethods.copy | GenerateMethods.stringify)
+@MappableClass(
+    generateMethods: GenerateMethods.copy | GenerateMethods.stringify)
 class Dog extends Animal with DogMappable {
   Dog(super.name);
 }
 
-@MappableClass(generateMethods: GenerateMethods.copy | GenerateMethods.stringify)
+@MappableClass(
+    generateMethods: GenerateMethods.copy | GenerateMethods.stringify)
 class Zoo with ZooMappable {
   Animal animal;
 

@@ -15,5 +15,7 @@ scripts:
       scope: dart_mappable
   build:
     run: melos exec -- 'dart run build_runner build --delete-conflicting-outputs'
+  format:
+    run: melos exec -- 'dart format .'
   analyze:
     run: melos exec -- 'dart analyze .'

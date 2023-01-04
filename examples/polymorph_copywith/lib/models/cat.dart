@@ -13,6 +13,4 @@ class Cat extends Animal with CatMappable {
 }
 
 @MappableEnum()
-enum CatType {
-  black, siamese, tiger
-}
+enum CatType { black, siamese, tiger }

@@ -58,7 +58,7 @@ class MappableBuilder implements Builder {
 
     if (libChecker.hasAnnotationOf(entryLib)) {
       var libOptions =
-      MappableOptions.from(libChecker.firstAnnotationOf(entryLib)!);
+          MappableOptions.from(libChecker.firstAnnotationOf(entryLib)!);
 
       options = options.apply(libOptions);
     }
@@ -69,7 +69,8 @@ class MappableBuilder implements Builder {
     return group;
   }
 
-  Future<void> generateContainerFile(BuildStep buildStep, MapperElementGroup group) async {
+  Future<void> generateContainerFile(
+      BuildStep buildStep, MapperElementGroup group) async {
     if (group.options.createCombinedContainer != true) {
       return;
     }
@@ -82,9 +83,10 @@ class MappableBuilder implements Builder {
       return;
     }
 
-    output.write(writeImports(buildStep.inputId, discovered.map((e) => e.key.source.uri).toList()));
+    output.write(writeImports(
+        buildStep.inputId, discovered.map((e) => e.key.source.uri).toList()));
 
-    var name = CaseStyle.camelCase.transform(group.library.name + '_container');
+    var name = CaseStyle.camelCase.transform('${group.library.name}_container');
 
     output.write('final $name = MapperContainer(linked: {\n');
 
@@ -94,8 +96,7 @@ class MappableBuilder implements Builder {
       }
     }
 
-    output.write(
-        '});');
+    output.write('});');
 
     var source = DartFormatter(pageWidth: options.lineLength ?? 80).format(
       '// coverage:ignore-file\n'
@@ -110,7 +111,8 @@ class MappableBuilder implements Builder {
     await buildStep.writeAsString(outputId, source);
   }
 
-  Future<void> generateMapperFile(BuildStep buildStep, MapperElementGroup group) async {
+  Future<void> generateMapperFile(
+      BuildStep buildStep, MapperElementGroup group) async {
     await group.analyze();
 
     var mappers = group.targets.values;
@@ -152,7 +154,7 @@ String writeImports(AssetId input, List<Uri> imports) {
     var import = imports[i];
     if (import.isScheme('asset')) {
       var relativePath =
-      path.relative(import.path, from: path.dirname(input.uri.path));
+          path.relative(import.path, from: path.dirname(input.uri.path));
 
       relative.add(relativePath);
       prefixes[relativePath] = i;
@@ -162,12 +164,10 @@ String writeImports(AssetId input, List<Uri> imports) {
       var libPath =
           import.replace(pathSegments: import.pathSegments.skip(1)).path;
 
-      var inputPath = input.uri
-          .replace(pathSegments: input.uri.pathSegments.skip(1))
-          .path;
+      var inputPath =
+          input.uri.replace(pathSegments: input.uri.pathSegments.skip(1)).path;
 
-      var relativePath =
-      path.relative(libPath, from: path.dirname(inputPath));
+      var relativePath = path.relative(libPath, from: path.dirname(inputPath));
 
       relative.add(relativePath);
       prefixes[relativePath] = i;

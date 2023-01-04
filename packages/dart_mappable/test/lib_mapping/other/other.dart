@@ -1,4 +1,3 @@
-
 import 'models.dart';
 
 abstract class Animal {

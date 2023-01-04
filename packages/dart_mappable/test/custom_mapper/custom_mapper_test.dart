@@ -74,7 +74,6 @@ class UriMapper extends SimpleMapper<Uri> {
 void main() {
   group('Custom Mappers', () {
     test('Simple Custom Mapper', () {
-
       var container = MapperContainer(mappers: {PrivateClassMapper()});
 
       MyPrivateClass c = container.fromValue('test');

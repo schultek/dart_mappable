@@ -1,4 +1,3 @@
-
 import 'package:analyzer/dart/element/element.dart';
 
 import '../builder_options.dart';
@@ -11,11 +10,11 @@ class FactoryConstructorMapperElement extends TargetClassMapperElement {
   FactoryConstructorMapperElement(MapperElementGroup parent,
       this.factoryConstructor, MappableOptions options)
       : super(
-    parent,
-    factoryConstructor.redirectedConstructor!.returnType.element
-    as ClassElement,
-    options,
-  );
+          parent,
+          factoryConstructor.redirectedConstructor!.returnType.element
+              as ClassElement,
+          options,
+        );
 
   @override
   Element get annotatedElement => factoryConstructor;

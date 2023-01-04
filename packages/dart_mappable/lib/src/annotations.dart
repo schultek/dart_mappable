@@ -218,8 +218,10 @@ class MappableLib {
 enum DiscoveryMode {
   /// Discover all models in the current library (default).
   library,
+
   /// Discover all models in the current or any subdirectory.
   directory,
+
   /// Discover all models in the current package.
   package,
 }

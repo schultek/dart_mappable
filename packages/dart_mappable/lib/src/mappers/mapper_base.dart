@@ -34,15 +34,15 @@ abstract class MapperElementBase<T> {
   final MapperBase<T> mapper;
   final MapperContainer container;
 
-  Function get decoder =>
-      (_) => throw MapperException.unsupportedMethod(MapperMethod.decode, mapper.type);
-  Function get encoder =>
-      (_) => throw MapperException.unsupportedMethod(MapperMethod.encode, mapper.type);
+  Function get decoder => (_) =>
+      throw MapperException.unsupportedMethod(MapperMethod.decode, mapper.type);
+  Function get encoder => (_) =>
+      throw MapperException.unsupportedMethod(MapperMethod.encode, mapper.type);
 
   bool equals(T self, T other) =>
       throw MapperException.unsupportedMethod(MapperMethod.equals, mapper.type);
   int hash(T self) =>
       throw MapperException.unsupportedMethod(MapperMethod.hash, mapper.type);
-  String stringify(T self) =>
-      throw MapperException.unsupportedMethod(MapperMethod.stringify, mapper.type);
+  String stringify(T self) => throw MapperException.unsupportedMethod(
+      MapperMethod.stringify, mapper.type);
 }

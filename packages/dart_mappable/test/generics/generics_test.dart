@@ -91,21 +91,30 @@ void main() {
       });
 
       var json = settings.toJson();
-      expect(json, equals('{"settings":{"counts":{"properties":[2,3,4],"__type":"SingleSetting<int>"},"names":{"properties":["Tom","Anna"],"__type":"SingleSetting<String>"},"data":{"properties":[{"data":"1234"}],"__type":"SingleSetting<Data>"}}}'));
+      expect(
+          json,
+          equals(
+              '{"settings":{"counts":{"properties":[2,3,4],"__type":"SingleSetting<int>"},"names":{"properties":["Tom","Anna"],"__type":"SingleSetting<String>"},"data":{"properties":[{"data":"1234"}],"__type":"SingleSetting<Data>"}}}'));
 
       Settings copied = SettingsMapper.fromJson(json);
 
-      expect(copied.settings!['counts'].runtimeType, equals(type<SingleSetting<int>>()));
-      expect(copied.settings!['names'].runtimeType, equals(type<SingleSetting<String>>()));
-      expect(copied.settings!['data'].runtimeType, equals(type<SingleSetting<Data>>()));
+      expect(copied.settings!['counts'].runtimeType,
+          equals(type<SingleSetting<int>>()));
+      expect(copied.settings!['names'].runtimeType,
+          equals(type<SingleSetting<String>>()));
+      expect(copied.settings!['data'].runtimeType,
+          equals(type<SingleSetting<Data>>()));
     });
 
     test('Generic type encodinng', () {
-      var jsonA = SettingsMapper.container.toJson(SingleSetting<int>(properties: [2, 3]));
+      var jsonA = SettingsMapper.container
+          .toJson(SingleSetting<int>(properties: [2, 3]));
       expect(jsonA, equals('{"properties":[2,3]}'));
 
-      var jsonB = SettingsMapper.container.toJson<dynamic>(SingleSetting<int>(properties: [1, 4]));
-      expect(jsonB, equals('{"properties":[1,4],"__type":"SingleSetting<int>"}'));
+      var jsonB = SettingsMapper.container
+          .toJson<dynamic>(SingleSetting<int>(properties: [1, 4]));
+      expect(
+          jsonB, equals('{"properties":[1,4],"__type":"SingleSetting<int>"}'));
     });
   });
 }

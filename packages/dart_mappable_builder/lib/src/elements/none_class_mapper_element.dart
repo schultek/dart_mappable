@@ -7,5 +7,4 @@ class NoneClassMapperElement extends ClassMapperElement {
   bool shouldGenerate(int method) {
     return false;
   }
-
 }

@@ -32,8 +32,7 @@ abstract class MapperParamElement {
 
 class FieldParamElement extends MapperParamElement {
   final PropertyInducingElement field;
-  FieldParamElement(ParameterElement parameter, this.field)
-      : super(parameter);
+  FieldParamElement(ParameterElement parameter, this.field) : super(parameter);
 
   @override
   Future<String?> getHook() async {

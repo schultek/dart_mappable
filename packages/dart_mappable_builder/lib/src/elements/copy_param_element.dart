@@ -150,8 +150,7 @@ class CollectionCopyParamElement extends CopyParamElement {
       itemType.nullabilitySuffix == NullabilitySuffix.question;
 
   late String itemTypeParam =
-       ', ${parent.prefixedType(itemType, withNullability: false)}'
-      ;
+      ', ${parent.prefixedType(itemType, withNullability: false)}';
 
   @override
   String get fieldTypeParams {

@@ -3,7 +3,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 import '../elements/target_class_mapper_element.dart';
 
 class EqualsGenerator {
-
   EqualsGenerator(this.target);
 
   final TargetClassMapperElement target;

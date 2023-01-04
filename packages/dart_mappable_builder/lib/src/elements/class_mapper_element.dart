@@ -1,4 +1,3 @@
-
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
@@ -56,9 +55,10 @@ abstract class ClassMapperElement extends MapperElement<ClassElement> {
   DartObject? getAnnotation() =>
       classChecker.firstAnnotationOf(annotatedElement);
 
-  late String uniqueId = annotation?.getField('uniqueId')?.toStringValue() ?? className;
+  late String uniqueId =
+      annotation?.getField('uniqueId')?.toStringValue() ?? className;
 
-  late List<MapperParamElement> params = (){
+  late List<MapperParamElement> params = () {
     var params = <MapperParamElement>[];
     if (constructor == null) {
       return params;
@@ -100,7 +100,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement> {
         );
       }
       var superConfig =
-           superTarget!.getParameterConfig(dec.superConstructorParameter!);
+          superTarget!.getParameterConfig(dec.superConstructorParameter!);
       if (superConfig is UnresolvedParamElement) {
         return UnresolvedParamElement(
           param,
@@ -113,7 +113,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement> {
 
     ParameterElement? superParameter = _findSuperParameter(param);
     if (superParameter != null) {
-      var superConfig =  superTarget!.getParameterConfig(superParameter);
+      var superConfig = superTarget!.getParameterConfig(superParameter);
       if (superConfig is UnresolvedParamElement) {
         return UnresolvedParamElement(
           param,
@@ -265,7 +265,8 @@ abstract class ClassMapperElement extends MapperElement<ClassElement> {
             ?.toTypeList()
             ?.map((t) => t.element)
             .whereType<ClassElement>()
-            .toList() ?? [];
+            .toList() ??
+        [];
   }
 
   bool shouldGenerate(int method) {
@@ -306,5 +307,4 @@ abstract class ClassMapperElement extends MapperElement<ClassElement> {
 
   late bool generateAsMixin =
       generateMixin && subTargets.every((c) => c.generateAsMixin);
-
 }

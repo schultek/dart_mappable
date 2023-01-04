@@ -130,8 +130,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
       if (target.typeParamsList.isNotEmpty) {
         output.write(
             '  static ${target.prefixedDecodingClassName}${target.typeParams} fromMap${target.typeParamsDeclaration}(Map<String, dynamic> map) => container.fromMap<${target.prefixedDecodingClassName}${target.typeParams}>(map);\n'
-            '  static ${target.prefixedDecodingClassName}${target.typeParams} fromJson${target.typeParamsDeclaration}(String json) => container.fromJson<${target.prefixedDecodingClassName}${target.typeParams}>(json);\n'
-        );
+            '  static ${target.prefixedDecodingClassName}${target.typeParams} fromJson${target.typeParamsDeclaration}(String json) => container.fromJson<${target.prefixedDecodingClassName}${target.typeParams}>(json);\n');
       } else {
         output.write(
             '  static final fromMap = container.fromMap<${target.prefixedDecodingClassName}>;\n'

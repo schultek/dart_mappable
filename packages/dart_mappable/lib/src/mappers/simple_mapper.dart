@@ -1,5 +1,3 @@
-
-
 import 'mapper_base.dart';
 import '../mapper_container.dart';
 import 'mapper_mixins.dart';
@@ -71,8 +69,10 @@ abstract class _SimpleMapperBase<T> extends MapperBase<T> {
   }
 }
 
-class _SimpleMapperElement<T> extends MapperElementBase<T> with MapperAs<_SimpleMapperBase<T>, T> {
-  const _SimpleMapperElement(_SimpleMapperBase<T> super.mapper, super.container);
+class _SimpleMapperElement<T> extends MapperElementBase<T>
+    with MapperAs<_SimpleMapperBase<T>, T> {
+  const _SimpleMapperElement(
+      _SimpleMapperBase<T> super.mapper, super.container);
 
   @override
   Function get encoder => mapper._encoder;

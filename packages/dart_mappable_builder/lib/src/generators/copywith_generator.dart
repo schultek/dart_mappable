@@ -15,8 +15,9 @@ class CopyWithGenerator {
   late String classTypeParams =
       element.element.typeParameters.map((p) => ', ${p.name}').join();
 
-  late bool hasSubConfigs = true;//element.subTargets.isNotEmpty;
-  late bool hasSuperTarget = element.superTarget != null && element.superTarget!.shouldGenerate(GenerateMethods.copy);
+  late bool hasSubConfigs = true; //element.subTargets.isNotEmpty;
+  late bool hasSuperTarget = element.superTarget != null &&
+      element.superTarget!.shouldGenerate(GenerateMethods.copy);
   late bool hasSubOrSuperTargets = hasSubConfigs || hasSuperTarget;
 
   late String selfTypeParam = element.selfTypeParam;
@@ -101,7 +102,8 @@ class CopyWithGenerator {
     var implementsStmt = '';
 
     if (hasSuperTarget) {
-      var superClassTypeParams = element.superTypeArgs.map((a) => ', $a').join();
+      var superClassTypeParams =
+          element.superTypeArgs.map((a) => ', $a').join();
       implementsStmt =
           ' implements ${element.superTarget!.uniqueClassName}CopyWith<\$R$subOrSelfTypeParam$superTypeParam$superClassTypeParams>';
     } else {
@@ -110,7 +112,8 @@ class CopyWithGenerator {
     }
 
     if (hasSubConfigs) {
-      snippets.add('typedef ${element.superPrefixedClassNameAlias} = $superPrefixedClassName;\n');
+      snippets.add(
+          'typedef ${element.superPrefixedClassNameAlias} = $superPrefixedClassName;\n');
     }
 
     snippets.add(''
@@ -164,8 +167,7 @@ class CopyWithGenerator {
     for (var param in element.copySafeParams) {
       var p = param.parameter;
 
-      var type =
-          element.parent.prefixedType(p.type, withNullability: false);
+      var type = element.parent.prefixedType(p.type, withNullability: false);
 
       if (param is UnresolvedParamElement) {
         if (p.type.isNullable) {

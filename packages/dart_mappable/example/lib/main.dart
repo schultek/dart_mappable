@@ -73,7 +73,8 @@ void main() {
   // use generic objects
   Box<dynamic> box = Box<Confetti>(10, content: Confetti('Rainbow'));
   String boxJson = BoxMapper.container.toJson(box);
-  print(boxJson); // {"size":10,"content":{"color":"Rainbow"},"_type":"Box<Confetti>"}
+  print(
+      boxJson); // {"size":10,"content":{"color":"Rainbow"},"_type":"Box<Confetti>"}
 
   // ... somewhere else
   dynamic whatAmI = BoxMapper.fromJson(boxJson);

@@ -1,4 +1,3 @@
-
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'animal.dart';
@@ -14,4 +13,3 @@ class Dog extends Animal with DogMappable {
 
   Dog(String name, this.age, this.owner) : super(name);
 }
-

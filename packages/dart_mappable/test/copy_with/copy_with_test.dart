@@ -49,18 +49,19 @@ class BrandList extends ItemList<Brand?> with BrandListMappable {
 @MappableClass()
 class NamedItemList<T> extends ItemList<T> with NamedItemListMappable<T> {
   String name;
-  NamedItemList(this.name, List<T>? items): super(items);
+  NamedItemList(this.name, List<T>? items) : super(items);
 }
 
 @MappableClass()
 class KeyedItemList<K, T> extends ItemList<T> with KeyedItemListMappable<K, T> {
   K key;
-  KeyedItemList(this.key, List<T>? items): super(items);
+  KeyedItemList(this.key, List<T>? items) : super(items);
 }
 
 @MappableClass()
-class ComparableItemList<T extends Comparable> extends ItemList<T> with ComparableItemListMappable<T> {
-  ComparableItemList(List<T>? items): super(items);
+class ComparableItemList<T extends Comparable> extends ItemList<T>
+    with ComparableItemListMappable<T> {
+  ComparableItemList(List<T>? items) : super(items);
 }
 
 void main() {
@@ -156,7 +157,7 @@ void main() {
       list2 = list.copyWith(items: [1]);
       expect(list2, isA<ComparableItemList<int>>());
 
-      var list3 = list.copyWith.items.at(0)!.apply((v) => v+1);
+      var list3 = list.copyWith.items.at(0)!.apply((v) => v + 1);
       expect(list3, equals(ComparableItemList([3, 5])));
     });
 

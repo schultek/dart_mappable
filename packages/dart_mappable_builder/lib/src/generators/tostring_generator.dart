@@ -18,7 +18,8 @@ class ToStringGenerator {
   }
 
   String generateToStringMixin() {
-    if (target.shouldGenerate(GenerateMethods.stringify) && !target.isAbstract) {
+    if (target.shouldGenerate(GenerateMethods.stringify) &&
+        !target.isAbstract) {
       return '  @override String toString() => ${target.uniqueClassName}Mapper.container.asString(this);\n';
     } else {
       return '';

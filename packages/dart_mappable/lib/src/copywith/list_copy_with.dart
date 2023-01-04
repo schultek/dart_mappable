@@ -1,6 +1,7 @@
 import 'copywith_base.dart';
 
-typedef ItemCopyWith<Copy, Elem, Result> = Copy Function(Elem a, Then<Elem, Result> b);
+typedef ItemCopyWith<Copy, Elem, Result> = Copy Function(
+    Elem a, Then<Elem, Result> b);
 
 /// Interface used for [List]s in chained copyWith methods
 /// All methods return a new modified list and do not modify the original list.
@@ -14,7 +15,7 @@ abstract class ListCopyWith<Result, Elem, Copy> {
   ) = _ListCopyWith;
 
   /// Access the copyWith interface for the item at [index]
-  Copy operator[](int index);
+  Copy operator [](int index);
 
   /// Access the copyWith interface for the item at [index]
   Copy at(int index);
@@ -56,14 +57,15 @@ abstract class ListCopyWith<Result, Elem, Copy> {
   Result apply(List<Elem> Function(List<Elem>) transform);
 }
 
-class _ListCopyWith<Result, Elem, Copy> extends CopyWithBase<Result, List<Elem>, List<Elem>>
+class _ListCopyWith<Result, Elem, Copy>
+    extends CopyWithBase<Result, List<Elem>, List<Elem>>
     implements ListCopyWith<Result, Elem, Copy> {
   _ListCopyWith(List<Elem> value, this._item, Then<List<Elem>, Result> then)
       : super(value, $identity, then);
   final ItemCopyWith<Copy, Elem, Result> _item;
 
   @override
-  Copy operator[](int index) => at(index);
+  Copy operator [](int index) => at(index);
 
   @override
   Copy at(int index) => _item($value[index], (v) => replace(index, v));
@@ -87,7 +89,8 @@ class _ListCopyWith<Result, Elem, Copy> extends CopyWithBase<Result, List<Elem>,
   Result removeAt(int index) => splice(index, 1);
 
   @override
-  Result splice(int index, int removeCount, [Iterable<Elem>? toInsert]) => $then([
+  Result splice(int index, int removeCount, [Iterable<Elem>? toInsert]) =>
+      $then([
         ...$value.take(index),
         if (toInsert != null) ...toInsert,
         ...$value.skip(index + removeCount),

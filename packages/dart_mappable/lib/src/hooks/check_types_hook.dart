@@ -1,4 +1,3 @@
-
 import 'package:type_plus/type_plus.dart';
 
 import '../annotations.dart';
@@ -63,7 +62,8 @@ class CheckTypesHook extends MappingHook {
   set isLocked(bool locked) => _locked[this] = locked;
 
   @override
-  T wrapDecode<T>(value, T Function(dynamic value) fn, MapperContainer container) {
+  T wrapDecode<T>(
+      value, T Function(dynamic value) fn, MapperContainer container) {
     if (!isLocked) {
       for (var e in checks.entries) {
         var isT = e.key.provideTo(<T>() => value is T);
@@ -72,8 +72,9 @@ class CheckTypesHook extends MappingHook {
         } else if (e.value(value)) {
           try {
             isLocked = true;
-            return e.key.provideTo<dynamic>(<T>() =>
-                container.fromValue<T>(value)) as T;
+            return e.key
+                    .provideTo<dynamic>(<T>() => container.fromValue<T>(value))
+                as T;
           } finally {
             isLocked = false;
           }

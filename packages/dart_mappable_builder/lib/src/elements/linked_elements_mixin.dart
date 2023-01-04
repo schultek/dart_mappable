@@ -1,5 +1,3 @@
-
-
 import 'package:analyzer/dart/element/type.dart';
 
 import 'class_mapper_element.dart';
@@ -7,8 +5,7 @@ import 'mapper_element.dart';
 import 'none_class_mapper_element.dart';
 
 mixin LinkedElementsMixin on ClassMapperElement {
-
-  late Map<MapperElement, String> linkedElements = (){
+  late Map<MapperElement, String> linkedElements = () {
     var linked = <MapperElement, String>{};
 
     if (superTarget != null && superTarget is! NoneClassMapperElement) {
@@ -45,13 +42,11 @@ mixin LinkedElementsMixin on ClassMapperElement {
       if (param.bound != null) {
         var m = parent.getMapperForElement(param.bound!.element);
         if (m is ClassMapperElement && m is! NoneClassMapperElement) {
-          linked[m] =
-          '${parent.prefixOfElement(m.element)}${m.mapperName}';
+          linked[m] = '${parent.prefixOfElement(m.element)}${m.mapperName}';
         }
       }
     }
 
     return linked;
   }();
-
 }

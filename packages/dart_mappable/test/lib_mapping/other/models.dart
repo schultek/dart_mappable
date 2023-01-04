@@ -1,4 +1,3 @@
-
 class Person {
   final String firstName;
 
