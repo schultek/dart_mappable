@@ -182,6 +182,9 @@ class MapperElementGroup {
       var m = await addMapper(NoneClassMapperElement(this, e, options));
       await analyzeElement(m);
       return m;
+    } else if (e is EnumElement && enumChecker.hasAnnotationOf(e)) {
+      var m = await addMapper(EnumMapperElement(this, e, options));
+      return m;
     } else {
       return null;
     }

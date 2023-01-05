@@ -8,7 +8,7 @@ part of 'basic_serialization_test.dart';
 class AMapper extends MapperBase<A> {
   static MapperContainer container = MapperContainer(
     mappers: {AMapper()},
-  );
+  )..linkAll({BMapper.container});
 
   @override
   AMapperElement createElement(MapperContainer container) {
@@ -32,7 +32,8 @@ class AMapperElement extends MapperElementBase<A> {
   A fromMap(Map<String, dynamic> map) => A(container.$get(map, 'a'),
       b: container.$getOpt(map, 'b') ?? 0,
       c: container.$getOpt(map, 'c'),
-      d: container.$get(map, 'd'));
+      d: container.$get(map, 'd'),
+      e: container.$getOpt(map, 'e'));
 
   @override
   Function get encoder => encode;
@@ -41,24 +42,27 @@ class AMapperElement extends MapperElementBase<A> {
         'a': container.$enc(a.a, 'a'),
         'b': container.$enc(a.b, 'b'),
         'c': container.$enc(a.c, 'c'),
-        'd': container.$enc(a.d, 'd')
+        'd': container.$enc(a.d, 'd'),
+        'e': container.$enc(a.e, 'e')
       };
 
   @override
   String stringify(A self) =>
-      'A(a: ${container.asString(self.a)}, b: ${container.asString(self.b)}, c: ${container.asString(self.c)}, d: ${container.asString(self.d)})';
+      'A(a: ${container.asString(self.a)}, b: ${container.asString(self.b)}, c: ${container.asString(self.c)}, d: ${container.asString(self.d)}, e: ${container.asString(self.e)})';
   @override
   int hash(A self) =>
       container.hash(self.a) ^
       container.hash(self.b) ^
       container.hash(self.c) ^
-      container.hash(self.d);
+      container.hash(self.d) ^
+      container.hash(self.e);
   @override
   bool equals(A self, A other) =>
       container.isEqual(self.a, other.a) &&
       container.isEqual(self.b, other.b) &&
       container.isEqual(self.c, other.c) &&
-      container.isEqual(self.d, other.d);
+      container.isEqual(self.d, other.d) &&
+      container.isEqual(self.e, other.e);
 }
 
 mixin AMappable {
@@ -88,7 +92,7 @@ abstract class ACopyWith<$R, $In extends A, $Out extends A>
     implements ObjectCopyWith<$R, $In, $Out> {
   ACopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends A>(
       Then<A, $Out2> t, Then<$Out2, $R2> t2);
-  $R call({String? a, int? b, double? c, bool? d});
+  $R call({String? a, int? b, double? c, bool? d, B? e});
 }
 
 class _ACopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, A, $Out>
@@ -100,8 +104,12 @@ class _ACopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, A, $Out>
       _ACopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? a, int? b, Object? c = $none, bool? d}) => $then(
-      A(a ?? $value.a, b: b ?? $value.b, c: or(c, $value.c), d: d ?? $value.d));
+  $R call({String? a, int? b, Object? c = $none, bool? d, Object? e = $none}) =>
+      $then(A(a ?? $value.a,
+          b: b ?? $value.b,
+          c: or(c, $value.c),
+          d: d ?? $value.d,
+          e: or(e, $value.e)));
 }
 
 class BMapper extends EnumMapper<B> {

@@ -2,6 +2,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
 import '../utils.dart';
+import 'model.dart';
 
 part 'basic_serialization_test.mapper.dart';
 
@@ -11,12 +12,10 @@ class A with AMappable {
   final int b;
   final double? c;
   final bool d;
+  final B? e;
 
-  A(this.a, {this.b = 0, this.c, required this.d});
+  A(this.a, {this.b = 0, this.c, required this.d, this.e});
 }
-
-@MappableEnum(defaultValue: B.a)
-enum B { a, bB, ccCc }
 
 void main() {
   group('basic serialization', () {
@@ -53,12 +52,12 @@ void main() {
 
     test('to map succeeds', () {
       expect(
-        A('hi', d: false).toMap(),
-        equals({'a': 'hi', 'b': 0, 'c': null, 'd': false}),
+        A('hi', d: false, e: B.bB).toMap(),
+        equals({'a': 'hi', 'b': 0, 'c': null, 'd': false, 'e': 'bB'}),
       );
       expect(
         A('test', b: 1, c: 0.5, d: true).toMap(),
-        equals({'a': 'test', 'b': 1, 'c': 0.5, 'd': true}),
+        equals({'a': 'test', 'b': 1, 'c': 0.5, 'd': true, 'e': null}),
       );
     });
   });

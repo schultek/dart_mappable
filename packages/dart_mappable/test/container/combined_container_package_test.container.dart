@@ -18,6 +18,7 @@ import '../polymorphism/polymorphism_test.dart' as p6;
 import '../primitives/primitives_test.dart' as p9;
 import '../selective_generation/selective_generation_test.dart' as p12;
 import '../serialization/basic_serialization_test.dart' as p3;
+import '../serialization/model.dart' as p17;
 import '../serialization/nested_serialization_test.dart' as p4;
 import 'combined_container_lib_test.dart' as p10;
 import 'models/model.dart' as p11;
@@ -37,7 +38,6 @@ final mainContainer = MapperContainer(linked: {
   p2.BoxMapper.container,
   p2.ContentMapper.container,
   p3.AMapper.container,
-  p3.BMapper.container,
   p4.PersonMapper.container,
   p4.CarMapper.container,
   p4.BrandMapper.container,
@@ -90,4 +90,5 @@ final mainContainer = MapperContainer(linked: {
   p16.AMapper.container,
   p16.CMapper.container,
   p16.BMapper.container,
+  p17.BMapper.container,
 });
