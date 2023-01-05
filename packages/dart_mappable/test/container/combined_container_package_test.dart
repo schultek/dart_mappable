@@ -19,7 +19,6 @@ void main() {
       expect(mainContainer.fromMap<b.B>({}), isA<b.B>());
       expect(mainContainer.fromMap<b.A>({}), isA<b.A>());
       expect(mainContainer.fromMap<c.A>({'a': 'a', 'd': false}), isA<c.A>());
-      expect(mainContainer.fromValue<c.B>('bB'), equals(c.B.bB));
     });
   });
 }

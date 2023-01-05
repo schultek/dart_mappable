@@ -2,12 +2,12 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../elements/enum_mapper_element.dart';
+import '../elements/enum/target_enum_mapper_element.dart';
 import '../utils.dart';
 import 'class_mapper_generator.dart';
 
 /// Generates code for a specific enum
-class EnumMapperGenerator extends MapperGenerator<EnumMapperElement> {
+class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
   EnumMapperGenerator(super.element);
 
   @override

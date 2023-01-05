@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/element/type.dart';
 
 import 'class_mapper_element.dart';
-import 'mapper_element.dart';
+import '../mapper_element.dart';
 import 'none_class_mapper_element.dart';
 
 mixin LinkedElementsMixin on ClassMapperElement {

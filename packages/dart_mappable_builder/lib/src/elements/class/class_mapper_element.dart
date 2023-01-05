@@ -5,9 +5,9 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../utils.dart';
-import 'mapper_element.dart';
-import 'mapper_param_element.dart';
+import '../../utils.dart';
+import '../mapper_element.dart';
+import '../mapper_param_element.dart';
 import 'none_class_mapper_element.dart';
 
 abstract class ClassMapperElement extends MapperElement<ClassElement> {

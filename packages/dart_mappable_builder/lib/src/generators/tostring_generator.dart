@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../elements/target_class_mapper_element.dart';
+import '../elements/class/target_class_mapper_element.dart';
 
 class ToStringGenerator {
   ToStringGenerator(this.target);

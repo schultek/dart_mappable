@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/element/element.dart';
 
-import '../builder_options.dart';
-import '../mapper_group.dart';
+import '../../builder_options.dart';
+import '../../mapper_group.dart';
 import 'target_class_mapper_element.dart';
 
 class FactoryConstructorMapperElement extends TargetClassMapperElement {

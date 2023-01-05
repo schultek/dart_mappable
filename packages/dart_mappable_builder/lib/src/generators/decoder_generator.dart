@@ -2,8 +2,8 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../elements/class_mapper_element.dart';
-import '../elements/target_class_mapper_element.dart';
+import '../elements/class/class_mapper_element.dart';
+import '../elements/class/target_class_mapper_element.dart';
 import '../utils.dart';
 
 class DecoderGenerator {

@@ -6,8 +6,8 @@ import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart' as path;
 
 import 'builder_options.dart';
-import 'elements/enum_mapper_element.dart';
-import 'elements/target_class_mapper_element.dart';
+import 'elements/class/target_class_mapper_element.dart';
+import 'elements/enum/target_enum_mapper_element.dart';
 import 'generators/class_mapper_generator.dart';
 import 'generators/enum_mapper_generator.dart';
 import 'mapper_group.dart';
@@ -126,7 +126,7 @@ class MappableBuilder implements Builder {
           .whereType<TargetClassMapperElement>()
           .map((e) => ClassMapperGenerator(e)),
       ...mappers
-          .whereType<EnumMapperElement>()
+          .whereType<TargetEnumMapperElement>()
           .map((e) => EnumMapperGenerator(e)),
     ];
 

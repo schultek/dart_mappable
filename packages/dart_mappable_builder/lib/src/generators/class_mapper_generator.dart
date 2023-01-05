@@ -2,10 +2,10 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:ansicolor/ansicolor.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../elements/alias_class_mapper_element.dart';
-import '../elements/linked_elements_mixin.dart';
+import '../elements/class/alias_class_mapper_element.dart';
+import '../elements/class/linked_elements_mixin.dart';
 import '../elements/mapper_element.dart';
-import '../elements/target_class_mapper_element.dart';
+import '../elements/class/target_class_mapper_element.dart';
 import '../utils.dart';
 import 'copywith_generator.dart';
 import 'decoder_generator.dart';

@@ -5,8 +5,8 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../mapper_group.dart';
 import '../utils.dart';
-import 'alias_class_mapper_element.dart';
-import 'class_mapper_element.dart';
+import 'class/alias_class_mapper_element.dart';
+import 'class/class_mapper_element.dart';
 import 'mapper_param_element.dart';
 
 class CopyParamElement {

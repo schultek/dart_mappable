@@ -9,14 +9,15 @@ import 'package:dart_mappable/dart_mappable.dart'
 import 'package:path/path.dart';
 
 import 'builder_options.dart';
-import 'elements/alias_class_mapper_element.dart';
-import 'elements/class_mapper_element.dart';
-import 'elements/dependent_class_mapper_element.dart';
-import 'elements/enum_mapper_element.dart';
-import 'elements/factory_constructor_mapper_element.dart';
+import 'elements/class/alias_class_mapper_element.dart';
+import 'elements/class/class_mapper_element.dart';
+import 'elements/class/dependent_class_mapper_element.dart';
+import 'elements/enum/dependent_enum_mapper_element.dart';
+import 'elements/class/factory_constructor_mapper_element.dart';
+import 'elements/enum/target_enum_mapper_element.dart';
 import 'elements/mapper_element.dart';
-import 'elements/none_class_mapper_element.dart';
-import 'elements/target_class_mapper_element.dart';
+import 'elements/class/none_class_mapper_element.dart';
+import 'elements/class/target_class_mapper_element.dart';
 import 'utils.dart';
 import 'package:glob/glob.dart';
 
@@ -94,7 +95,7 @@ class MapperElementGroup {
         }
       } else if (element is EnumElement &&
           enumChecker.hasAnnotationOf(element)) {
-        await addMapper(EnumMapperElement(this, element, options));
+        await addMapper(TargetEnumMapperElement(this, element, options));
       }
     }
 
@@ -183,7 +184,7 @@ class MapperElementGroup {
       await analyzeElement(m);
       return m;
     } else if (e is EnumElement && enumChecker.hasAnnotationOf(e)) {
-      var m = await addMapper(EnumMapperElement(this, e, options));
+      var m = await addMapper(DependentEnumMapperElement(this, e, options));
       return m;
     } else {
       return null;

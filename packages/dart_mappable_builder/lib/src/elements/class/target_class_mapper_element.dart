@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/element/type.dart';
 
-import '../utils.dart';
+import '../../utils.dart';
 import 'class_mapper_element.dart';
 import 'linked_elements_mixin.dart';
 import 'none_class_mapper_element.dart';
