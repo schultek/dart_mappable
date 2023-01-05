@@ -1,3 +1,7 @@
+# 2.0.0-dev.11
+
+- Fixed missing linked enums ([#50](https://github.com/schultek/dart_mappable/issues/50))
+
 # 2.0.0-dev.10
 
 - Fixed analysis issues.
