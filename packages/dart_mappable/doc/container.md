@@ -112,6 +112,14 @@ void main() {
 
 ```
 
+## Combined Containers
+
+For convenience or when using **generic decoding** you may want to have a container that knows 
+**all classes in your project**. Such a container can be auto-generated using the 
+`@MappableLib(createCombinedContainer: true)` annotation.
+
+This feature is documented [here](../topics/Generics-topic.html).
+
 ## Encoding Lists, Sets and Maps
 
 Because all of the `MapperContainer`s methods are generic, you are not limited to use a single 
