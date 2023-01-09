@@ -1,3 +1,8 @@
+# 2.0.0-dev.12
+
+- Boost performance by caching mappers.
+- Small bug fixes.
+
 # 2.0.0-dev.11
 
 - Fixed missing linked enums ([#50](https://github.com/schultek/dart_mappable/issues/50))
