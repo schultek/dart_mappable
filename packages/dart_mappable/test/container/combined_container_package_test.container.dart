@@ -4,12 +4,13 @@
 // ignore_for_file: unused_element
 
 import 'package:dart_mappable/dart_mappable.dart';
-import '../../example/lib/main.dart' as p0;
+import '../../example/lib/main.dart' as p18;
 import '../copy_with/copy_with_2_test.dart' as p17;
 import '../copy_with/copy_with_test.dart' as p16;
-import '../enums/enums_test.dart' as p6;
-import '../generics/duplicate_names_test.dart' as p2;
-import '../generics/generics_test.dart' as p1;
+import '../enums/enum_map_test.dart' as p6;
+import '../enums/enums_test.dart' as p5;
+import '../generics/duplicate_names_test.dart' as p1;
+import '../generics/generics_test.dart' as p0;
 import '../hooks/hooks_test.dart' as p15;
 import '../lib_mapping/lib_mapping_test.dart' as p14;
 import '../polymorphism/custom_discriminator_test.dart' as p8;
@@ -17,35 +18,33 @@ import '../polymorphism/mixed_mappable_test.dart' as p9;
 import '../polymorphism/polymorphism_test.dart' as p7;
 import '../primitives/primitives_test.dart' as p10;
 import '../selective_generation/selective_generation_test.dart' as p13;
-import '../serialization/basic_serialization_test.dart' as p3;
-import '../serialization/model.dart' as p5;
-import '../serialization/nested_serialization_test.dart' as p4;
+import '../serialization/basic_serialization_test.dart' as p2;
+import '../serialization/model.dart' as p4;
+import '../serialization/nested_serialization_test.dart' as p3;
 import 'combined_container_lib_test.dart' as p11;
 import 'models/model.dart' as p12;
 
 final mainContainer = MapperContainer(linked: {
-  p0.PersonMapper.container,
-  p0.CarMapper.container,
   p0.BoxMapper.container,
   p0.ConfettiMapper.container,
-  p0.BrandMapper.container,
+  p0.ContentMapper.container,
+  p0.DataMapper.container,
+  p0.SingleSettingMapper.container,
+  p0.SettingsMapper.container,
+  p0.AssetMapper.container,
   p1.BoxMapper.container,
-  p1.ConfettiMapper.container,
   p1.ContentMapper.container,
-  p1.DataMapper.container,
-  p1.SingleSettingMapper.container,
-  p1.SettingsMapper.container,
-  p2.BoxMapper.container,
-  p2.ContentMapper.container,
-  p3.AMapper.container,
-  p4.PersonMapper.container,
-  p4.CarMapper.container,
-  p4.BrandMapper.container,
-  p5.BMapper.container,
-  p6.StateMapper.container,
-  p6.ColorMapper.container,
-  p6.ItemsMapper.container,
-  p6.StatusMapper.container,
+  p2.AMapper.container,
+  p3.PersonMapper.container,
+  p3.CarMapper.container,
+  p3.BrandMapper.container,
+  p4.BMapper.container,
+  p5.StateMapper.container,
+  p5.ColorMapper.container,
+  p5.ItemsMapper.container,
+  p5.StatusMapper.container,
+  p6.ClassAMapper.container,
+  p6.EnumAMapper.container,
   p7.AnimalMapper.container,
   p7.CatMapper.container,
   p7.DogMapper.container,
@@ -91,4 +90,9 @@ final mainContainer = MapperContainer(linked: {
   p17.AMapper.container,
   p17.CMapper.container,
   p17.BMapper.container,
+  p18.PersonMapper.container,
+  p18.CarMapper.container,
+  p18.BoxMapper.container,
+  p18.ConfettiMapper.container,
+  p18.BrandMapper.container,
 });

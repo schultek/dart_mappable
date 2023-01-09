@@ -65,6 +65,15 @@ class MapHooksAfter extends MappingHook {
   }
 }
 
+@MappableClass()
+class Asset<T> with AssetMappable {
+  Asset({
+    required this.data,
+  });
+
+  final T data;
+}
+
 void main() {
   group('Generic classes', () {
     test('Should encode generic objects', () {
@@ -106,7 +115,7 @@ void main() {
           equals(type<SingleSetting<Data>>()));
     });
 
-    test('Generic type encodinng', () {
+    test('Generic type encoding', () {
       var jsonA = SettingsMapper.container
           .toJson(SingleSetting<int>(properties: [2, 3]));
       expect(jsonA, equals('{"properties":[2,3]}'));
@@ -115,6 +124,24 @@ void main() {
           .toJson<dynamic>(SingleSetting<int>(properties: [1, 4]));
       expect(
           jsonB, equals('{"properties":[1,4],"__type":"SingleSetting<int>"}'));
+    });
+
+    test('Nullable generic param', () {
+      expect(
+        AssetMapper.fromJson<dynamic>('{"data": null}').data,
+        isNull,
+      );
+
+      expect(
+        AssetMapper.fromJson<String?>('{"data": null}').data,
+        isNull,
+      );
+
+      expect(
+        () => AssetMapper.fromJson<String>('{"data": null}'),
+        throwsMapperException(MapperException.chain(MapperMethod.decode,
+            '(Asset<String>).data', MapperException.missingParameter('data'))),
+      );
     });
   });
 }

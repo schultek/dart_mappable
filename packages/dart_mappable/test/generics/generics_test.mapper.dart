@@ -587,3 +587,94 @@ class _SettingsCopyWithImpl<$R, $Out extends Settings>
   $R call({Object? settings = $none}) =>
       $then(Settings(settings: or(settings, $value.settings)));
 }
+
+class AssetMapper extends MapperBase<Asset> {
+  static MapperContainer container = MapperContainer(
+    mappers: {AssetMapper()},
+  );
+
+  @override
+  AssetMapperElement createElement(MapperContainer container) {
+    return AssetMapperElement._(this, container);
+  }
+
+  @override
+  String get id => 'Asset';
+  @override
+  Function get typeFactory => <T>(f) => f<Asset<T>>();
+
+  static Asset<T> fromMap<T>(Map<String, dynamic> map) =>
+      container.fromMap<Asset<T>>(map);
+  static Asset<T> fromJson<T>(String json) =>
+      container.fromJson<Asset<T>>(json);
+}
+
+class AssetMapperElement extends MapperElementBase<Asset> {
+  AssetMapperElement._(super.mapper, super.container);
+
+  @override
+  Function get decoder => decode;
+  Asset<T> decode<T>(dynamic v) =>
+      checkedType(v, (Map<String, dynamic> map) => fromMap<T>(map));
+  Asset<T> fromMap<T>(Map<String, dynamic> map) =>
+      Asset(data: container.$get(map, 'data'));
+
+  @override
+  Function get encoder => encode;
+  dynamic encode<T>(Asset<T> v) => toMap<T>(v);
+  Map<String, dynamic> toMap<T>(Asset<T> a) =>
+      {'data': container.$enc(a.data, 'data')};
+
+  @override
+  String stringify(Asset self) =>
+      'Asset(data: ${container.asString(self.data)})';
+  @override
+  int hash(Asset self) => container.hash(self.data);
+  @override
+  bool equals(Asset self, Asset other) =>
+      container.isEqual(self.data, other.data);
+}
+
+mixin AssetMappable<T> {
+  String toJson() => AssetMapper.container.toJson(this as Asset<T>);
+  Map<String, dynamic> toMap() => AssetMapper.container.toMap(this as Asset<T>);
+  AssetCopyWith<Asset<T>, Asset<T>, Asset<T>, T> get copyWith =>
+      _AssetCopyWithImpl(this as Asset<T>, $identity, $identity);
+  @override
+  String toString() => AssetMapper.container.asString(this);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (runtimeType == other.runtimeType &&
+          AssetMapper.container.isEqual(this, other));
+  @override
+  int get hashCode => AssetMapper.container.hash(this);
+}
+
+extension AssetValueCopy<$R, $Out extends Asset, T>
+    on ObjectCopyWith<$R, Asset<T>, $Out> {
+  AssetCopyWith<$R, Asset<T>, $Out, T> get asAsset =>
+      base.as((v, t, t2) => _AssetCopyWithImpl(v, t, t2));
+}
+
+typedef AssetCopyWithBound = Asset;
+
+abstract class AssetCopyWith<$R, $In extends Asset<T>, $Out extends Asset, T>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  AssetCopyWith<$R2, $In, $Out2, T> chain<$R2, $Out2 extends Asset>(
+      Then<Asset<T>, $Out2> t, Then<$Out2, $R2> t2);
+  $R call({T? data});
+}
+
+class _AssetCopyWithImpl<$R, $Out extends Asset, T>
+    extends CopyWithBase<$R, Asset<T>, $Out>
+    implements AssetCopyWith<$R, Asset<T>, $Out, T> {
+  _AssetCopyWithImpl(super.value, super.then, super.then2);
+  @override
+  AssetCopyWith<$R2, Asset<T>, $Out2, T> chain<$R2, $Out2 extends Asset>(
+          Then<Asset<T>, $Out2> t, Then<$Out2, $R2> t2) =>
+      _AssetCopyWithImpl($value, t, t2);
+
+  @override
+  $R call({T? data}) => $then(Asset(data: data ?? $value.data));
+}

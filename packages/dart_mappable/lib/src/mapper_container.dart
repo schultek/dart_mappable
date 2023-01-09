@@ -59,16 +59,14 @@ abstract class MapperContainer {
 
   void link(MapperContainer container);
   void linkAll(Iterable<MapperContainer> containers);
-
-  MapperBase? _mapperFor(dynamic value, [Set<MapperContainer>? parents]);
-  MapperBase? _mapperForType(Type type, [Set<MapperContainer>? parents]);
 }
 
 class MapperContainerBase implements MapperContainer, TypeProvider {
-  MapperContainerBase._(
-      [Set<MapperBase>? mappers,
-      Set<MapperContainer>? linked,
-      Map<String, Function>? types]) {
+  MapperContainerBase._([
+    Set<MapperBase>? mappers,
+    Set<MapperContainer>? linked,
+    Map<String, Function>? types,
+  ]) {
     TypeRegistry.instance.register(this);
     if (types != null) {
       _types.addAll(types);
@@ -94,37 +92,71 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   final Map<Type, MapperBase> _mappers = {};
   final Map<String, Function> _types = {};
 
-  final Set<MapperContainer> _children = {};
+  final Set<MapperContainerBase> _parents = {};
+  final Set<MapperContainerBase> _children = {};
 
-  @override
-  MapperBase? _mapperFor(dynamic value, [Set<MapperContainer>? parents]) {
-    if (parents != null && parents.contains(this)) return null;
-    bool isType<T>() => value is T;
-    var mapper = _mappers[value.runtimeType.base] ??
-        _mappers.values
-            .where((m) => m.type != dynamic && m.type != Object)
-            .where((m) => isType.callWith(typeArguments: [m.type]) as bool)
-            .firstOrNull;
-    if (mapper != null) {
-      return mapper;
+  final Map<Type, MapperBase?> _cachedMappers = {};
+
+  void _invalidateCachedMappers([Set<MapperContainer>? invalidated]) {
+    // for avoiding hanging on circular links
+    if (invalidated != null && invalidated.contains(this)) return;
+
+    _cachedMappers.clear();
+    _cachedInheritedMappers = null;
+    for (var c in _parents) {
+      c._invalidateCachedMappers({...?invalidated, this});
     }
-    var options = _children
-        .map((c) => c._mapperFor(value, {...?parents, this}))
-        .whereType<MapperBase>();
-    return options.where((m) => m.type == value.runtimeType.base).firstOrNull ??
-        options.firstOrNull;
   }
 
-  @override
-  MapperBase? _mapperForType(Type type, [Set<MapperContainer>? parents]) {
-    if (parents != null && parents.contains(this)) return null;
-    var mapper = _mappers[type.base] ??
-        _mappers.values.where((m) => m.implType.base == type.base).firstOrNull;
-    return mapper ??
-        _children
-            .map((c) => c._mapperForType(type, {...?parents, this}))
-            .whereType<MapperBase>()
+  Map<Type, MapperBase>? _cachedInheritedMappers;
+  Map<Type, MapperBase> get _inheritedMappers {
+    return _cachedInheritedMappers ??= _getInheritedMappers();
+  }
+
+  Map<Type, MapperBase> _getInheritedMappers([Set<MapperContainer>? parents]) {
+    // for avoiding hanging on circular links
+    if (parents != null && parents.contains(this)) return {};
+
+    return {
+      for (var c in _children) ...(c)._getInheritedMappers({...?parents, this}),
+      ..._mappers,
+    };
+  }
+
+  MapperBase? _mapperFor(dynamic value) {
+    var baseType = value.runtimeType.base;
+    if (_cachedMappers[baseType] != null) {
+      return _cachedMappers[baseType];
+    }
+
+    var mapper = //
+        // direct type
+        _mappers[baseType] ??
+            // indirect type ie. subtype
+            _mappers.values.where((m) => m.isFor(value)).firstOrNull ??
+            // inherited direct type
+            _inheritedMappers[baseType] ??
+            // inherited indirect type ie. subclasses
+            _inheritedMappers.values.where((m) => m.isFor(value)).firstOrNull;
+
+    if (mapper != null) {
+      _cachedMappers[baseType] = mapper;
+    }
+
+    return mapper;
+  }
+
+  MapperBase? _mapperForType(Type type) {
+    var baseType = type.base;
+
+    var mapper = _mappers[baseType] ??
+        _mappers.values.where((m) => m.implType.base == baseType).firstOrNull ??
+        _inheritedMappers[baseType] ??
+        _inheritedMappers.values
+            .where((m) => m.implType.base == baseType)
             .firstOrNull;
+
+    return mapper;
   }
 
   @override
@@ -277,14 +309,10 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   @override
-  T fromJson<T>(String json) {
-    return fromValue<T>(jsonDecode(json));
-  }
+  T fromJson<T>(String json) => fromValue<T>(jsonDecode(json));
 
   @override
-  String toJson<T>(T object) {
-    return jsonEncode(toValue<T>(object));
-  }
+  String toJson<T>(T object) => jsonEncode(toValue<T>(object));
 
   @override
   bool isEqual(dynamic value, Object? other) {
@@ -293,27 +321,34 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     }
 
     return guardMappable(
-        value,
-        (e) => e.mapper.isFor(other) && e.equals(value, other),
-        () => value == other,
-        MapperMethod.equals,
-        () => '[$value]');
+      value,
+      (e) => e.mapper.isFor(other) && e.equals(value, other),
+      () => value == other,
+      MapperMethod.equals,
+      () => '[$value]',
+    );
   }
 
   @override
   int hash(dynamic value) {
-    return guardMappable(value, (e) => e.hash(value), () => value.hashCode,
-        MapperMethod.hash, () => '[$value]');
+    return guardMappable(
+      value,
+      (e) => e.hash(value),
+      () => value.hashCode,
+      MapperMethod.hash,
+      () => '[$value]',
+    );
   }
 
   @override
   String asString(dynamic value) {
     return guardMappable(
-        value,
-        (e) => e.stringify(value),
-        () => value.toString(),
-        MapperMethod.stringify,
-        () => '(Instance of \'${value.runtimeType}\')');
+      value,
+      (e) => e.stringify(value),
+      () => value.toString(),
+      MapperMethod.stringify,
+      () => '(Instance of \'${value.runtimeType}\')',
+    );
   }
 
   T guardMappable<T>(
@@ -339,27 +374,38 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   void use<T>(MapperBase<T> mapper) => useAll([mapper]);
 
   @override
-  MapperBase<T>? unuse<T>() => _mappers.remove(T.base) as MapperBase<T>?;
+  MapperBase<T>? unuse<T>() {
+    var mapper = _mappers.remove(T.base) as MapperBase<T>?;
+    _invalidateCachedMappers();
+    return mapper;
+  }
 
   @override
   void useAll(Iterable<MapperBase> mappers) {
     _mappers.addEntries(mappers.map((m) => MapEntry(m.type, m)));
+    _invalidateCachedMappers();
   }
 
   @override
-  MapperBase<T>? get<T>([Type? type]) =>
-      _mappers[(type ?? T).base] as MapperBase<T>?;
-
-  @override
-  List<MapperBase> getAll() => [..._mappers.values];
-
-  @override
-  void link(MapperContainer container) {
-    linkAll({container});
+  MapperBase<T>? get<T>([Type? type]) {
+    return _mappers[(type ?? T).base] as MapperBase<T>?;
   }
+
+  @override
+  List<MapperBase> getAll() {
+    return [..._mappers.values];
+  }
+
+  @override
+  void link(MapperContainer container) => linkAll({container});
 
   @override
   void linkAll(Iterable<MapperContainer> containers) {
-    _children.addAll(containers);
+    assert(containers.every((c) => c is MapperContainerBase));
+    for (var c in containers.cast<MapperContainerBase>()) {
+      _children.add(c);
+      c._parents.add(this);
+    }
+    _invalidateCachedMappers();
   }
 }

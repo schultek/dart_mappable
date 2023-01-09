@@ -1,3 +1,5 @@
+import 'package:type_plus/type_plus.dart';
+
 import 'annotations.dart';
 import 'mapper_exception.dart';
 import 'mapper_container.dart';
@@ -5,36 +7,35 @@ import 'mapper_container.dart';
 /// {@nodoc}
 extension GuardedUtils on MapperContainer {
   T $get<T>(Map<String, dynamic> map, String key, [MappingHook? hooks]) {
-    return guard(
-      MapperMethod.decode,
-      '.$key',
-      () => hooks.decode<T>(
-        map[key],
-        (v) => v == null
-            ? throw MapperException.missingParameter(key)
-            : fromValue<T>(v),
-        this,
-      ),
-    );
+    return $dec(map[key], key, hooks, (v) {
+      if (v == null) {
+        try {
+          return v as T;
+        } on TypeError catch (_) {
+          throw MapperException.missingParameter(key);
+        }
+      }
+      return fromValue<T>(v);
+    });
   }
 
   T? $getOpt<T>(Map<String, dynamic> map, String key, [MappingHook? hooks]) {
-    return guard(
-      MapperMethod.decode,
-      '.$key',
-      () => hooks.decode<T?>(
-        map[key],
-        fromValue<T?>,
-        this,
-      ),
-    );
+    return $dec(map[key], key, hooks);
   }
 
-  T $dec<T>(dynamic value, String key, [MappingHook? hooks]) {
+  T $dec<T>(
+    dynamic value,
+    String key, [
+    MappingHook? hooks,
+    T Function(dynamic)? decoder,
+  ]) {
+    decoder ??= fromValue<T>;
     return guard(
       MapperMethod.decode,
       '.$key',
-      () => hooks.decode<T>(value, fromValue<T>, this),
+      () => hooks != null
+          ? hooks.wrapDecode(value, decoder!, this)
+          : decoder!(value),
     );
   }
 
@@ -42,7 +43,12 @@ extension GuardedUtils on MapperContainer {
     return guard(
       MapperMethod.encode,
       '.$key',
-      () => hooks.encode<T>(value, toValue<T>, this),
+      () {
+        if (hooks != null) {
+          return hooks.wrapEncode(value, toValue<T>, this);
+        }
+        return toValue<T>(value);
+      },
     );
   }
 }
