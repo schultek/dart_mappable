@@ -10,14 +10,14 @@ class TargetEnumMapperElement extends EnumMapperElement {
 
   late ValuesMode mode = annotation != null
       ? ValuesMode.values[
-  annotation?.getField('mode')?.getField('index')?.toIntValue() ?? 0]
+          annotation?.getField('mode')?.getField('index')?.toIntValue() ?? 0]
       : ValuesMode.named;
 
   late CaseStyle? caseStyle =
-  annotation != null && !annotation!.getField('caseStyle')!.isNull
-      ? caseStyleFromAnnotation(annotation!.getField('caseStyle')!)
-      : options.enumCaseStyle;
+      annotation != null && !annotation!.getField('caseStyle')!.isNull
+          ? caseStyleFromAnnotation(annotation!.getField('caseStyle')!)
+          : options.enumCaseStyle;
 
   late int? defaultValue =
-  annotation?.getField('defaultValue')!.getField('index')?.toIntValue();
+      annotation?.getField('defaultValue')!.getField('index')?.toIntValue();
 }

@@ -1,4 +1,3 @@
-
 import 'enum_mapper_element.dart';
 
 class DependentEnumMapperElement extends EnumMapperElement {

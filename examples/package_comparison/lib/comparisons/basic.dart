@@ -129,7 +129,8 @@ void compareBasic() {
 
       test('dart_json_mapper', () {
         expect(
-          JsonMapper.toJson(PersonB(name: 'Bob'), d.SerializationOptions(indent: '')),
+          JsonMapper.toJson(
+              PersonB(name: 'Bob'), d.SerializationOptions(indent: '')),
           equals('{"name":"Bob"}'),
         );
       });
