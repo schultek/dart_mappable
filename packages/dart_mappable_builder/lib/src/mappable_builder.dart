@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:build/build.dart';
+import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_style/dart_style.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as p;
 
 import 'builder_options.dart';
 import 'elements/class/target_class_mapper_element.dart';
@@ -83,6 +84,8 @@ class MappableBuilder implements Builder {
       return;
     }
 
+    discovered.sortBy((e) => e.key.source.uri.toString());
+    
     output.write(writeImports(
         buildStep.inputId, discovered.map((e) => e.key.source.uri).toList()));
 
@@ -137,7 +140,7 @@ class MappableBuilder implements Builder {
       '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
       '// ignore_for_file: type=lint\n'
       '// ignore_for_file: unused_element\n\n'
-      'part of \'${path.basename(buildStep.inputId.uri.toString())}\';\n\n'
+      'part of \'${p.basename(buildStep.inputId.uri.toString())}\';\n\n'
       '${output.join('\n\n')}\n',
     );
 
@@ -149,6 +152,8 @@ class MappableBuilder implements Builder {
 String writeImports(AssetId input, List<Uri> imports) {
   List<String> package = [], relative = [];
   var prefixes = <String, int?>{};
+
+  var path = p.posix;
 
   for (var i = 0; i < imports.length; i++) {
     var import = imports[i];
