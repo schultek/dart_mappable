@@ -29,12 +29,13 @@
 
 ---
 
-`dart_mappable` covers all basic features *(from/to json, == override, toString() override, ...)*
-while adding new or improved support for advances use-cases like **generics, inheritance and customization**.
+`dart_mappable` covers all basic features *(from/to json, == override, hashCode, toString(), copyWith)*
+while adding new or improved support for advances use-cases including **generics, inheritance and 
+polymorphism, customization** and more.
 
 - 🎁 **Everything included**: Serialization, Equality, ToString, CopyWith and more.
 - 🧬 **Shines at complex class structures**: It handles generics and inheritance with ease.
-- ⚙️ **Highly flexible**: You can customize the serialization, add custom types and integrate with other packages.
+- ⚙️ **Highly flexible**: Customize the serialization, add custom types or integrate with other packages.
 - 🔥 **No compromises**: Its promise is that it just works, no matter what classes you throw at it.  
   *(If you find an unsupported case, you get a cookie 🍪. And please add an issue on github.)*
 
@@ -236,6 +237,7 @@ or jump directly to the topic you are looking for:
 - [**Configuration**](https://pub.dev/documentation/dart_mappable/latest/topics/Configuration-topic.html)
 - [**Copy-With**](https://pub.dev/documentation/dart_mappable/latest/topics/Copy-With-topic.html)
 - [**Polymorphism**](https://pub.dev/documentation/dart_mappable/latest/topics/Polymorphism-topic.html)
+- [**Generics**](https://pub.dev/documentation/dart_mappable/latest/topics/Generics-topic.html)
 - [**Mapping Hooks**](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html)
 - [**Custom Mappers**](https://pub.dev/documentation/dart_mappable/latest/topics/Custom%20Mappers-topic.html)
 - [**Mapper Container**](https://pub.dev/documentation/dart_mappable/latest/topics/Mapper%20Container-topic.html)
