@@ -22,6 +22,9 @@ Sounds too good to be true? Not anymore.
   <a href="https://github.com/schultek/dart_mappable/actions/workflows/test.yaml">
     <img src="https://img.shields.io/github/actions/workflow/status/schultek/dart_mappable/test.yaml?branch=main&label=tests&labelColor=333940&logo=github">
   </a>
+  <a href="https://app.codecov.io/gh/schultek/dart_mappable">
+    <img src="https://img.shields.io/codecov/c/github/schultek/dart_mappable?logo=codecov&logoColor=fff&labelColor=333940">
+  </a>
   <!--<a href="https://twitter.com/schultek_dev">
     <img src="https://img.shields.io/twitter/follow/schultek_dev?style=flat&label=Follow&color=1DA1F2&labelColor=333940&logo=twitter&logoColor=fff">
   </a>-->
