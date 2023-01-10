@@ -16,6 +16,6 @@ scripts:
   build:
     run: melos exec -- 'dart run build_runner build --delete-conflicting-outputs'
   format:
-    run: melos exec -- 'dart format .'
+    run: melos exec -- 'dart format . --set-exit-if-changed'
   analyze:
-    run: melos exec -- 'dart analyze .'
+    run: melos exec -- 'dart analyze . --fatal-infos'

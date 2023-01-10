@@ -1,0 +1,33 @@
+name: Dart CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:  
+  test:
+    name: Analyze and Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1.3
+      - run: dart pub global activate melos
+
+      - name: Bootstrap
+        run: melos bootstrap
+          
+      - name: Check formatting
+        run: melos format
+
+      - name: Generate Code
+        run: melos build
+
+      - name: Lint
+        run: melos analyze
+
+      - name: Run Unit tests
+        run: melos test

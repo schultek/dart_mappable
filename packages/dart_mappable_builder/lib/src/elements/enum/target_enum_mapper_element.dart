@@ -1,9 +1,6 @@
-import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../utils.dart';
-import '../mapper_element.dart';
 import 'enum_mapper_element.dart';
 
 class TargetEnumMapperElement extends EnumMapperElement {

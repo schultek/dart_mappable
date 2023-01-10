@@ -1,5 +1,3 @@
-import 'package:type_plus/type_plus.dart';
-
 import 'annotations.dart';
 import 'mapper_exception.dart';
 import 'mapper_container.dart';

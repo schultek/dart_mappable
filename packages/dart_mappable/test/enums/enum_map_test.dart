@@ -3,8 +3,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-import '../utils.dart';
-
 part 'enum_map_test.mapper.dart';
 
 @MappableEnum(defaultValue: EnumA.unknown)
