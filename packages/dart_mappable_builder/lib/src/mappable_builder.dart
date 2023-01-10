@@ -85,7 +85,7 @@ class MappableBuilder implements Builder {
     }
 
     discovered.sortBy((e) => e.key.source.uri.toString());
-    
+
     output.write(writeImports(
         buildStep.inputId, discovered.map((e) => e.key.source.uri).toList()));
 

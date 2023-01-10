@@ -1,6 +1,6 @@
 name: dart_mappable
 description: Improved json serialization and data classes with full support for generics, inheritance, customization and more.
-version: 2.0.0-dev.12
+version: 2.0.0-dev.13
 repository: https://github.com/schultek/dart_mappable
 issue_tracker: https://github.com/schultek/dart_mappable/issues
 funding:
@@ -16,6 +16,6 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.2.0
-  dart_mappable_builder: ^2.0.0-dev.12
+  dart_mappable_builder: ^2.0.0-dev.13
   lints: '>=1.0.0 <3.0.0'
   test: ^1.20.1
