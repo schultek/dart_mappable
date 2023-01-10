@@ -17,6 +17,7 @@ scripts:
     run: |
       melos exec -- 'dart test --coverage=coverage'
       melos exec -- 'dart pub global run coverage:format_coverage --check-ignore --packages=.dart_tool/package_config.json --report-on=lib --lcov -o "$MELOS_ROOT_PATH/coverage/lcov.info" -i ./coverage'
+      genhtml -o $MELOS_ROOT_PATH/coverage/report $MELOS_ROOT_PATH/coverage/lcov.info
     select-package:
       scope: dart_mappable
   build:

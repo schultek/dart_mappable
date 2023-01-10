@@ -1,19 +1,4 @@
-Imagine a data-class & json serialization package with:
-
-- **NO** nasty boilerplate code
-- **NO** minified/uglified generated files
-- **NO** workarounds or compromises
-
-while being able to
-
-- **decode & encode** json
-- come with built-in **type & null-safety**
-- be **fully configurable**
-- support **custom types**, **generics**, **polymorphism** and more.
-
-Sounds too good to be true? Not anymore.
-
----
+<h1 align="center">dart_mappable</h1>
 
 <p align="center">
   <a href="https://pub.dev/packages/dart_mappable">
@@ -38,11 +23,20 @@ Sounds too good to be true? Not anymore.
   <a href="https://github.com/schultek/dart_mappable">Github</a>
 </p>
 
-`dart_mappable` is an **improved json serialization and data-class** package that can replace
-similar packages like `json_serializable`. 
+<p align="center">
+  <b>Improved json serialization and data classes</b> with <br/> full support for <b>generics, inheritance, customization and more</b>. 
+</p>
 
-It covers all basic features *(from/to json, == override, toString() override, ...)*
-while adding new or improved support for **advances use-cases like generics, inheritance and customization**.
+---
+
+`dart_mappable` covers all basic features *(from/to json, == override, toString() override, ...)*
+while adding new or improved support for advances use-cases like **generics, inheritance and customization**.
+
+- 🎁 **Everything included**: Serialization, Equality, ToString, CopyWith and more.
+- 🧬 **Shines at complex class structures**: It handles generics and inheritance with ease.
+- ⚙️ **Highly flexible**: You can customize the serialization, add custom types and integrate with other packages.
+- 🔥 **No compromises**: Its promise is that it just works, no matter what classes you throw at it.  
+  *(If you find an unsupported case, you get a cookie 🍪. And please add an issue on github.)*
 
 ## Quick Start
 
@@ -56,7 +50,7 @@ flutter pub add dart_mappable_builder --dev
 
 ---
 
-Next annotate your classes that you want to use with `@MappableClass()` and add the 
+Next annotate your classes that you want to use with `@MappableClass()` and add the
 appropriate `part` directive to include the generated `.mapper.dart` file:
 
 ```dart
@@ -69,7 +63,7 @@ part 'model.mapper.dart';
 @MappableClass()
 class MyClass with MyClassMappable {
   final int myValue;
-  
+
   MyClass(this.myValue);
 }
 ```
@@ -82,7 +76,7 @@ To use a class you must:
 ***Tip**: Don't worry if the mixin don't exist at first, just run code-generation once an it will be created.
 The builder will also warn you if you define your class without the proper mixin.*
 
-***Note**: For generic classes (e.g. `MyClass<T>`) make sure to also provide all type parameters 
+***Note**: For generic classes (e.g. `MyClass<T>`) make sure to also provide all type parameters
 to the mixin (`... with MyClassMappable<T>`).*
 
 ---
@@ -100,37 +94,37 @@ This will generate a `<filename>.mapper.dart` file for each of your files contai
 
 ---
 
-Last step is to use the generated mappers. There are two main ways to interact with your models 
-using this package: 
+Last step is to use the generated mappers. There are two main ways to interact with your models
+using this package:
 
-1. Through the generated `<ClassName>Mapper` classes, and 
+1. Through the generated `<ClassName>Mapper` classes, and
 2. through the methods defined by the generated mixin.
 
 ```dart
 ...
 
 void main() {
-  // Decode a [Map] using the [MyClassMapper] class:
-  var myClass = MyClassMapper.fromMap({'myValue': 123});
-  
-  // Or decode directly from json:
-  var myClass2 = MyClassMapper.fromJson('{"myValue": 123}');
-  
-  // Encode an instance of your class using the methods provided by the mixin:
-  var json = myClass.toJson(); // or .toMap()
+// Decode a [Map] using the [MyClassMapper] class:
+var myClass = MyClassMapper.fromMap({'myValue': 123});
 
-  // There are also implementations generated for [operator ==], [hashCode] and [toString]:
-  var thisIsTrue = (myClass == myClass2);
-  print(myClass);
-  
-  // Last you can use [copyWith] to create a copy of an object:
-  var myClass3 = myClass.copyWith(myValue: 0);
+// Or decode directly from json:
+var myClass2 = MyClassMapper.fromJson('{"myValue": 123}');
+
+// Encode an instance of your class using the methods provided by the mixin:
+var json = myClass.toJson(); // or .toMap()
+
+// There are also implementations generated for [operator ==], [hashCode] and [toString]:
+var thisIsTrue = (myClass == myClass2);
+print(myClass);
+
+// Last you can use [copyWith] to create a copy of an object:
+var myClass3 = myClass.copyWith(myValue: 0);
 }
 ```
 
 ## Overview
 
-To setup, annotate your model classes with `@MappableClass()` and your enums with `@MappableEnum()`. 
+To setup, annotate your model classes with `@MappableClass()` and your enums with `@MappableEnum()`.
 Each annotation has a set of properties to configure the generated code.
 
 ```dart
@@ -141,8 +135,8 @@ class MyClass with MyClassMappable { ... }
 enum MyEnum { ... }
 ```
 
-***Tip**: Check out the documentation about 
-[Models](https://pub.dev/documentation/dart_mappable/latest/topics/Models-topic.html) and 
+***Tip**: Check out the documentation about
+[Models](https://pub.dev/documentation/dart_mappable/latest/topics/Models-topic.html) and
 [Enums](https://pub.dev/documentation/dart_mappable/latest/topics/Enums-topic.html).*
 
 For deserialization, `dart_mappable` will use the first available constructor of a class, but you
@@ -152,7 +146,7 @@ can use a specific constructor using the `@MappableConstructor()` annotation.
 @MappableClass()
 class MyClass with MyClassMappable {
   MyClass(); // Don't use this
-  
+
   @MappableConstructor()
   MyClass.special(); // Use this
 }
@@ -214,7 +208,7 @@ Here are again all **six** annotations that you can use in your code:
 - `<ClassName>Mapper.fromJson<T>(String json)` internally uses `fromMap` but works with json encoded `String`s.
 - `<ClassName>Mapper.container` exposes the internal [`MapperContainer`](https://pub.dev/documentation/dart_mappable/latest/topics/Mapper%20Container-topic.html) for more advanced uses.
 
-***Tip**: If you prefer to use `MyClass.fromJson` over `MyClassMapper.fromJson`, add the `fromJson` and 
+***Tip**: If you prefer to use `MyClass.fromJson` over `MyClassMapper.fromJson`, add the `fromJson` and
 `fromMap` methods directly to your class like this:*
 
 ```
@@ -307,8 +301,8 @@ For the full example and generated files, check out the `examples/example_freeze
 ### json_serializable
 
 [json_serializable](https://pub.dev/packages/json_serializable) is a popular serialization package
-for simple applications. While this package was designed as a replacement / alternative for 
-json_serializable, you may come across situations where you need to deal with classes that either 
+for simple applications. While this package was designed as a replacement / alternative for
+json_serializable, you may come across situations where you need to deal with classes that either
 use this package directly, or are designed to be compatible with it.
 
 These classes always have the same structure:
@@ -335,7 +329,7 @@ For generic classes with one or two type parameters, use the `SerializableMapper
 ### fast_immutable_collections
 
 [fast_immutable_collections](https://pub.dev/packages/fast_immutable_collections) adds immutable
-variants for the standard collections types (`List`, `Map`, `Set`). These types are compatible with 
+variants for the standard collections types (`List`, `Map`, `Set`). These types are compatible with
 `json_serializable`, so we can use the `SerializableMapper` from above as follows:
 
 ```dart
@@ -346,9 +340,9 @@ final iListMapper = SerializableMapper<IList, dynamic>.arg1(
 );
 
 final iMapMapper = SerializableMapper<IMap, Map<String, dynamic>.arg2(
-  decode: IMap.fromJson,
-  encode: (map) => map.toJson,
-  type: <Key, Val>(f) => f<IMap<Key, Val>>(),
+decode: IMap.fromJson,
+encode: (map) => map.toJson,
+type: <Key, Val>(f) => f<IMap<Key, Val>>(),
 );
 ```
 
