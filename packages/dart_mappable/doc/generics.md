@@ -100,6 +100,78 @@ library main;
 - `directory` discover all mappers in the current or any subdirectory,
 - `package` discover all models in the current package.
 
+## Typeless Serialization
+
+**Generic Decoding** is already a very powerful and unique feature of `dart_mappable`. But you can
+go a step further and serialize json with **no static typing** at all - which I call **typeless serialization**.
+
+All that is needed is a special `__type` key in the json data. You can then do some magic like this:
+
+```dart
+void main() {
+  
+  /// this needs to know about all involved classes, see the section above
+  var container = ...;
+  
+  var json = '{"__type": "Person", "name": "Bob"}';
+  
+  // notice the static type 'dynamic', no 'Person.fromJson' or 'container.fromJson<Person>' needed
+  dynamic object = container.fromJson(json);
+  
+  // this is actually a [Person] instance
+  assert(object.runtimeType == Person);
+}
+```
+
+> This also works for generic classes, like `{'__type': 'Box<Content>'}`. 
+
+To go full circle, `dart_mappable` can also include this type indicator for you when you encode a 
+class. For this notice that the `toValue` and related methods of a container are actually also generic:
+`dynamic container.toValue<T>(T value)`. 
+
+Specifying this type parameter is by design redundant and not important for most cases. It only takes
+effect when the static type `T` and the runtime type `value.runtimeType` are different, in which case
+it will add the `__type` property.
+
+```dart
+void main() {
+  /// this needs to know about all involved classes, see the section above
+  var container = ...;
+  
+  // this will encode normal without '__type'
+  
+  container.toValue<MyClass>>(myClassInstance);
+  container.toValue(MyClass()); // works because of type inference
+  container.toValue<MyGenericClass<int>>(myGenericClassInstance);
+
+  // this will add the '__type' property
+  
+  container.toValue<dynamic>(myClassInstance);
+  container.toValue(someDynamicVariable); // where type inference does not work
+  container.toValue<MyGenericClass<dynamic>(
+          myGenericClassInstance); // because the instance has a specific type
+}
+```
+
+Together this allows you to serialize and deserialize an object without even knowing its type:
+
+```dart
+void main() {
+  /// this needs to know about all involved classes, see the section above
+  var container = ...;
+  
+  dynamic someObject = ...;
+  
+  String json = container.toJson(someObject);
+  
+  // do something in between, or even send the json between server and client
+  
+  dynamic newObject = container.fromJson(json);
+  
+  assert(someObject.runtimeType == newObject.runtimeType);
+}
+```
+
 ---
 
 <p align="right"><a href="../topics/Mapping%20Hooks-topic.html">Next: Mapping Hooks</a></p>
