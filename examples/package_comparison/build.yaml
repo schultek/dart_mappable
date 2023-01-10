@@ -1,0 +1,14 @@
+# only required for dart_json_mapper
+targets:
+  $default:
+    builders:
+      dart_json_mapper:
+        generate_for:
+          - lib/main.dart
+      reflectable:
+        generate_for:
+          - no/files
+      # only to resolve build_runner conflicts
+      dart_mappable_builder:
+        generate_for:
+          - lib/comparisons/*

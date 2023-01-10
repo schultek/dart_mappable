@@ -19,7 +19,7 @@ Sounds too good to be true? Not anymore.
   <a href="#quick-start">Quickstart</a> •
   <a href="https://pub.dev/documentation/dart_mappable/latest/topics/Introduction-topic.html">Documentation</a> •
   <a href="https://pub.dev/packages/dart_mappable/example">Example</a> •
-  <a href="https://github.com/schultek/dart_mappable/tree/main/examples/json_serializable_compare">Package Comparison</a> •
+  <a href="https://github.com/schultek/dart_mappable/tree/main/examples/package_comparison">Package Comparison</a> •
   <a href="https://github.com/schultek/dart_mappable">Github</a>
 </p>
 
