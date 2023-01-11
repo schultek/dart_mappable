@@ -96,12 +96,14 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   final Set<MapperContainerBase> _children = {};
 
   final Map<Type, MapperBase?> _cachedMappers = {};
+  final Map<Type, MapperBase?> _cachedTypeMappers = {};
 
   void _invalidateCachedMappers([Set<MapperContainer>? invalidated]) {
     // for avoiding hanging on circular links
     if (invalidated != null && invalidated.contains(this)) return;
 
     _cachedMappers.clear();
+    _cachedTypeMappers.clear();
     _cachedInheritedMappers = null;
     for (var c in _parents) {
       c._invalidateCachedMappers({...?invalidated, this});
@@ -148,7 +150,9 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
 
   MapperBase? _mapperForType(Type type) {
     var baseType = type.base;
-
+    if (_cachedTypeMappers[baseType] != null) {
+      return _cachedTypeMappers[baseType];
+    }
     var mapper = _mappers[baseType] ??
         _mappers.values.where((m) => m.implType.base == baseType).firstOrNull ??
         _inheritedMappers[baseType] ??
@@ -156,6 +160,9 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
             .where((m) => m.implType.base == baseType)
             .firstOrNull;
 
+    if (mapper != null) {
+      _cachedTypeMappers[baseType] = mapper;
+    }
     return mapper;
   }
 
@@ -186,40 +193,43 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
 
   @override
   T fromValue<T>(dynamic value) {
-    if (value.runtimeType == T || value == null) {
+    if (value == null) {
       return value as T;
-    } else {
-      var type = T;
-      if (value is Map<String, dynamic> && value['__type'] != null) {
-        type = TypePlus.fromId(value['__type'] as String);
-        if (type == UnresolvedType) {
-          var e = MapperException.unresolvedType(value['__type'] as String);
-          throw MapperException.chain(MapperMethod.decode, '($T)', e);
-        }
+    }
+
+    var type = T;
+    if (value is Map<String, dynamic> && value['__type'] != null) {
+      type = TypePlus.fromId(value['__type'] as String);
+      if (type == UnresolvedType) {
+        var e = MapperException.unresolvedType(value['__type'] as String);
+        throw MapperException.chain(MapperMethod.decode, '($T)', e);
       }
-      var element = _mapperForType(type)?.createElement(this);
-      if (element != null) {
+    } else if (value is T) {
+      return value;
+    }
+
+    var element = _mapperForType(type)?.createElement(this);
+    if (element != null) {
+      try {
         try {
-          try {
-            return element.decoder
-                .callWith(parameters: [value], typeArguments: type.args) as T;
-          } on ArgumentError catch (e, stacktrace) {
-            Error.throwWithStackTrace(
-              ArgumentError(
-                  'Failed to call [decoder] function of ${element.runtimeType}: ${e.message}'),
-              stacktrace,
-            );
-          }
-        } catch (e, stacktrace) {
+          return element.decoder
+              .callWith(parameters: [value], typeArguments: type.args) as T;
+        } on ArgumentError catch (e, stacktrace) {
           Error.throwWithStackTrace(
-            MapperException.chain(MapperMethod.decode, '($type)', e),
+            ArgumentError(
+                'Failed to call [decoder] function of ${element.runtimeType}: ${e.message}'),
             stacktrace,
           );
         }
-      } else {
-        throw MapperException.chain(
-            MapperMethod.decode, '($type)', MapperException.unknownType(type));
+      } catch (e, stacktrace) {
+        Error.throwWithStackTrace(
+          MapperException.chain(MapperMethod.decode, '($type)', e),
+          stacktrace,
+        );
       }
+    } else {
+      throw MapperException.chain(
+          MapperMethod.decode, '($type)', MapperException.unknownType(type));
     }
   }
 
