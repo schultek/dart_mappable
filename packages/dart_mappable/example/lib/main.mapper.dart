@@ -133,13 +133,13 @@ class CarMapperElement extends MapperElementBase<Car> {
   Car decode(dynamic v) =>
       checkedType(v, (Map<String, dynamic> map) => fromMap(map));
   Car fromMap(Map<String, dynamic> map) =>
-      Car(container.$get(map, 'drivenKm'), container.$get(map, 'brand'));
+      Car(container.$get(map, 'miles'), container.$get(map, 'brand'));
 
   @override
   Function get encoder => encode;
   dynamic encode(Car v) => toMap(v);
   Map<String, dynamic> toMap(Car c) => {
-        'drivenKm': container.$enc(c.drivenKm, 'drivenKm'),
+        'miles': container.$enc(c.miles, 'miles'),
         'brand': container.$enc(c.brand, 'brand')
       };
 
@@ -181,7 +181,7 @@ abstract class CarCopyWith<$R, $In extends Car, $Out extends Car>
     implements ObjectCopyWith<$R, $In, $Out> {
   CarCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Car>(
       Then<Car, $Out2> t, Then<$Out2, $R2> t2);
-  $R call({int? drivenKm, Brand? brand});
+  $R call({double? miles, Brand? brand});
 }
 
 class _CarCopyWithImpl<$R, $Out extends Car> extends CopyWithBase<$R, Car, $Out>
@@ -193,8 +193,8 @@ class _CarCopyWithImpl<$R, $Out extends Car> extends CopyWithBase<$R, Car, $Out>
       _CarCopyWithImpl($value, t, t2);
 
   @override
-  $R call({int? drivenKm, Brand? brand}) =>
-      $then(Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
+  $R call({double? miles, Brand? brand}) =>
+      $then(Car(miles ?? $value.miles, brand ?? $value.brand));
 }
 
 class BoxMapper extends MapperBase<Box> {

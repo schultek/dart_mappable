@@ -126,8 +126,11 @@ void main() {
 > This also works for generic classes, like `{'__type': 'Box<Content>'}`. 
 
 To go full circle, `dart_mappable` can also include this type indicator for you when you encode a 
-class. For this notice that the `toValue` and related methods of a container are actually also generic:
-`dynamic container.toValue<T>(T value)`. 
+class. For this notice that the `toValue`, `toMap` and `toJson` methods of a container are actually 
+also generic: `dynamic container.toValue<T>(T value)`. 
+
+> This is different to the `toMap` and `toJson` methods of the generated mixin. You have to use a 
+> `MapperContainer` directly.
 
 Specifying this type parameter is by design redundant and not important for most cases. It only takes
 effect when the static type `T` and the runtime type `value.runtimeType` are different, in which case
@@ -135,7 +138,10 @@ it will add the `__type` property.
 
 ```dart
 void main() {
-  /// this needs to know about all involved classes, see the section above
+  // this needs to know about all involved classes
+  // 
+  // either use a combined container (see the section above) or a 
+  // class-specific one, e.g. [MyClassMapper.container]
   var container = ...;
   
   // this will encode normal without '__type'
@@ -157,7 +163,7 @@ Together this allows you to serialize and deserialize an object without even kno
 
 ```dart
 void main() {
-  /// this needs to know about all involved classes, see the section above
+  // this needs to know about all involved classes (see the snippet above)
   var container = ...;
   
   dynamic someObject = ...;

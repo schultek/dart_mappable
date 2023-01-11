@@ -9,8 +9,6 @@ class Person with PersonMappable {
   final Car? car;
 
   Person(this.name, {this.age = 18, this.car});
-
-  static final fromMap = PersonMapper.fromMap;
 }
 
 @MappableEnum()
@@ -22,13 +20,11 @@ class Car with CarMappable {
   final double miles;
   final Brand brand;
 
-  const Car(int drivenKm, this.brand) : miles = drivenKm * 0.62;
-
-  int get drivenKm => (miles / 0.62).round();
+  const Car(this.miles, this.brand);
 }
 
 @MappableClass()
-class Box<T> with BoxMappable {
+class Box<T> with BoxMappable<T> {
   int size;
   T content;
 
@@ -43,11 +39,12 @@ class Confetti with ConfettiMappable {
 
 void main() {
   // decode from json string
-  String json = '{"name": "Max", "car": {"drivenKm": 1000, "brand": "Audi"}}';
+  String json = '{"name": "Max", "car": {"miles": 1000, "brand": "Audi"}}';
   Person person = PersonMapper.fromJson(json);
 
+  // use toString()
   print(person);
-  // Person(name: Max, age: 18, car: Car(miles: 620.0, brand: Brand.Audi))
+  // Person(name: Max, age: 18, car: Car(miles: 1000.0, brand: Brand.Audi))
 
   // make a copy
   Person person2 = person.copyWith(name: 'Anna', age: 20);
@@ -55,7 +52,7 @@ void main() {
 
   // encode to map
   Map<String, dynamic> map = person.toMap();
-  print(map); // {name: Max, age: 18, car: {drivenKm: 1000, brand: Audi}}
+  print(map); // {name: Max, age: 18, car: {miles: 1000, brand: Audi}}
 
   // decode from map
   Person person3 = PersonMapper.fromMap(map);
@@ -71,13 +68,12 @@ void main() {
   BoxMapper.container.link(ConfettiMapper.container);
 
   // use generic objects
-  Box<dynamic> box = Box<Confetti>(10, content: Confetti('Rainbow'));
-  String boxJson = BoxMapper.container.toJson(box);
-  print(
-      boxJson); // {"size":10,"content":{"color":"Rainbow"},"_type":"Box<Confetti>"}
+  var box = Box<Confetti>(10, content: Confetti('Rainbow'));
+  String boxJson = box.toJson();
+  print(boxJson); // {"size":10,"content":{"color":"Rainbow"}}
 
   // ... somewhere else
-  dynamic whatAmI = BoxMapper.fromJson(boxJson);
+  dynamic whatAmI = BoxMapper.fromJson<Confetti>(boxJson);
   print(whatAmI.runtimeType); // Box<Confetti>
 
   // also works with lists and sets
