@@ -1,29 +1,4 @@
-# 2.0.0-dev.13
-
-- Bug fixes and documentation.
-
-# 2.0.0-dev.12
-
-- Boost performance by caching mappers.
-- Small bug fixes.
-
-# 2.0.0-dev.11
-
-- Fixed missing linked enums ([#50](https://github.com/schultek/dart_mappable/issues/50))
-
-# 2.0.0-dev.10
-
-- Fixed analysis issues.
-
-# 2.0.0-dev.9
-
-- Added generating combined container using `@MappableLib(createCombinedContainer: true)`.
-
-# 2.0.0-dev.8
-
-- Added compatibility support for `json_serializable` models and `fast_immutable_collections`.
-
-# 2.0.0-dev.7
+# 2.0.0
 
 - Mappers are now generated for each file containing annotated classes. This removes the
   need to specify entry points in the `build.yaml`.
@@ -31,7 +6,10 @@
   > This is now similar to how packages like `json_serializable` or `freezed` generate code.
 
   - Generated files are now `part` files and need to be included as such.
-  - Instead of one global `Mapper` each class has its own mapper.
+  - All annotated classes must now use their respective `<MyClass>Mappable` mixin.
+  - Instead of one global `Mapper` each class has its own `<ClassName>Mapper`.
+    - A new global container that includes all models can now be generated using
+      `@MappableLib(createCombinedContainer: true)`.
   - Mappers can be linked together to enable working with multiple classes.
   - Removed `@CustomMapper` annotation in favor of `includeCustomMappers` property on `@MappableClass()`.
 
@@ -40,83 +18,30 @@
 - Documentation is now separated from the README using the official pub.dev documentation topics.
   Find the new documentation [here](https://pub.dev/documentation/dart_mappable/latest/topics/Introduction-topic.html)
 
-# 2.0.0-dev.6
+- Improvements in performance and support for generics and inheritance.
 
-- Fixed issue where code where wrongly generated for models outside the package.
-  
-  While the builder now stops at package boundaries by default, this can be overruled
-  by explicitly using the `@MappableLib()` annotation on an import statement.
-  
-- Added the [CheckTypesHook] to allow for custom discriminator checks on subclasses in a 
+- Added the [CheckTypesHook] to allow for custom discriminator checks on subclasses in a
   polymorphic class structure.
 
-# 2.0.0-dev.5
+- CopyWith is now more powerful and also works for generic or polymorphic classes, while being
+  completely type-safe.
 
-- Removed the `Mappable` mixin in favor of the new class-specific mixins.
+  When called on a superclass, the concrete subtype will be retained through a
+  `.copyWith` call, which also respects generics:
 
-  All annotated classes must now mixin their respective `<MyClass>Mappable` mixin. 
-  More details [here](https://pub.dev/packages/dart_mappable/versions/2.0.0-dev.5#get-started).
-
-# 2.0.0-dev.4
-
-- Fixed bug with incorrect type args in copyWith
-
-# 2.0.0-dev.3
-
-- Fixed various issues with the copyWith implementation for inherited classes.
-
-  CopyWith now works on a wider range of parameters and is completely subtype-safe. 
-  Specifically a parameter of static type `A` but concrete type `B extends A` keeps
-  it concrete type through any `.copyWith` call, including lists and maps.
-
-# 2.0.0-dev.2
-
-- Fixed bug with missing copyWith parameters.
-
-# 2.0.0-dev.1
-
-- Added support for inherited copyWith implementations.
-
-  When using polymorphism or any inheritance, you will now be able to call
-  `.copyWith` on the superclass to change any field that is inherited by all
-  sub-classes. The concrete subclass types will be retained through such a 
-  `.copyWith` call and also respects generics.
-  
   ```dart
-    // with `class A` and `class B extends A`
-    A a = B(); // static type A, dynamic type B
+    // with `class A` and `class B<T> extends A`
+    A a = B<int>(); // static type A, dynamic type B<int>
   
     // signature will be `A copyWith()`, so static type A
     A a2 = a.copyWith(); 
   
-    // this will still resolve to a dynamic type of B
-    assert(a2 is B);
+    // this will still resolve to a dynamic type of B<int>
+    assert(a2 is B<int>);
   ```
-  
-  Classes using this must mixin the newly generated `<MyClass>Mixin`. More details
-  [here](https://pub.dev/packages/dart_mappable/versions/2.0.0-dev.1#copywith-and-polymorphism).
 
-# 2.0.0-dev.0
-
-- Improved encoding of generic instances.
-
-  Any encoding method (Mapper.toValue, Mapper.toMap, Mapper.toJson) now also takes a
-  generic type argument `T`, which must be an assignable type for the passed value.
-  When `T` and the values `runtimeType` match exactly, it is encoded as normal. If not, a `__type`
-  property is added with the specific type of `value`. This can then be used to decode the value
-  without specifying a target type.
-
-  ```dart
-    // this will encode normal without '__type'
-    Mapper.toValue<MyClass>>(myClassInstance);
-    Mapper.toValue(MyClass()); // works because of type inference
-    Mapper.toValue<MyGenericClass<int>>(myGenericClassInstance);
-  
-    // this will add the '__type' property
-    Mapper.toValue<dynamic>(myClassInstance);
-    Mapper.toValue(someDynamicVariable); // where type inference does not work
-    Mapper.toValue<MyGenericClass>(myGenericClassInstance); // because the instance has a specific type
-  ```
+  For more checkout the [docs](https://pub.dev/documentation/dart_mappable/latest/topics/Copy-With-topic.html)
+  or [example](https://github.com/schultek/dart_mappable/tree/main/examples/polymorph_copywith)
 
 # 1.2.0
 
