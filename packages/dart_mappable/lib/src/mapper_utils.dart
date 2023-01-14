@@ -55,8 +55,11 @@ extension GuardedUtils on MapperContainer {
 T guard<T>(MapperMethod method, String hint, T Function() fn) {
   try {
     return fn();
-  } catch (e) {
-    throw MapperException.chain(method, hint, e);
+  } catch (e, stacktrace) {
+    Error.throwWithStackTrace(
+      MapperException.chain(method, hint, e),
+      stacktrace,
+    );
   }
 }
 

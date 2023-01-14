@@ -127,6 +127,9 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
 
   MapperBase? _mapperFor(dynamic value) {
     var baseType = value.runtimeType.base;
+    if (baseType == UnresolvedType) {
+      baseType = value.runtimeType;
+    }
     if (_cachedMappers[baseType] != null) {
       return _cachedMappers[baseType];
     }
@@ -150,6 +153,9 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
 
   MapperBase? _mapperForType(Type type) {
     var baseType = type.base;
+    if (baseType == UnresolvedType) {
+      baseType = type;
+    }
     if (_cachedTypeMappers[baseType] != null) {
       return _cachedTypeMappers[baseType];
     }
@@ -372,8 +378,11 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     if (element != null) {
       try {
         return fn(element);
-      } catch (e) {
-        throw MapperException.chain(method, hint(), e);
+      } catch (e, stacktrace) {
+        Error.throwWithStackTrace(
+          MapperException.chain(method, hint(), e),
+          stacktrace,
+        );
       }
     } else {
       return fallback();

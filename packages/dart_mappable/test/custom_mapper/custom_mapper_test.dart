@@ -3,6 +3,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
+part 'custom_mapper_test.mapper.dart';
+
 class MyPrivateClass {
   dynamic value;
 
@@ -71,6 +73,26 @@ class UriMapper extends SimpleMapper<Uri> {
   }
 }
 
+@MappableClass(
+    hook: UnmappedPropertiesHook('unmappedProps'),
+    includeCustomMappers: [BigIntMapper])
+class TestObj with TestObjMappable {
+  BigInt? x;
+
+  // Unmapped values
+  Map<String, dynamic> unmappedProps = const {};
+
+  @MappableConstructor()
+  TestObj.explicit(this.x, this.unmappedProps);
+}
+
+class BigIntMapper extends PrimitiveMapper<BigInt> {
+  BigIntMapper() : super((v) => v as BigInt);
+
+  @override
+  bool isFor(value) => value is BigInt;
+}
+
 void main() {
   group('Custom Mappers', () {
     test('Simple Custom Mapper', () {
@@ -109,6 +131,28 @@ void main() {
 
       var decoded = container.fromValue<Uri>(encoded);
       expect(decoded, equals(uri));
+    });
+  });
+
+  group('bigint', () {
+    test('decode', () {
+      var testMap = {'x': BigInt.from(12345), 'y': 1234};
+      var testObj = TestObjMapper.fromMap(testMap);
+      
+      expect(
+        testObj,
+        equals(TestObj.explicit(BigInt.from(12345), {'y': 1234})),
+      );
+
+      expect(
+        testObj.toString(),
+        equals('TestObj(x: 12345, unmappedProps: {y: 1234})'),
+      );
+
+      expect(
+        testObj.toMap(),
+        equals(testMap),
+      );
     });
   });
 }
