@@ -1,3 +1,7 @@
+# 2.0.1
+
+- Fixed unresolved type bug with custom mappers.
+
 # 2.0.0
 
 - Mappers are now generated for each file containing annotated classes. This removes the
