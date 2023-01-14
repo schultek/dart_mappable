@@ -86,12 +86,7 @@ class TestObj with TestObjMappable {
   TestObj.explicit(this.x, this.unmappedProps);
 }
 
-class BigIntMapper extends PrimitiveMapper<BigInt> {
-  BigIntMapper() : super((v) => v as BigInt);
-
-  @override
-  bool isFor(value) => value is BigInt;
-}
+class BigIntMapper extends PrimitiveMapper<BigInt> {}
 
 void main() {
   group('Custom Mappers', () {
@@ -138,7 +133,7 @@ void main() {
     test('decode', () {
       var testMap = {'x': BigInt.from(12345), 'y': 1234};
       var testObj = TestObjMapper.fromMap(testMap);
-      
+
       expect(
         testObj,
         equals(TestObj.explicit(BigInt.from(12345), {'y': 1234})),

@@ -8,16 +8,25 @@ import 'mapper_mixins.dart';
 import 'simple_mapper.dart';
 
 class PrimitiveMapper<T> extends MapperBase<T> {
-  const PrimitiveMapper(this.decoder);
+  const PrimitiveMapper([T Function(dynamic value)? decoder])
+      : decoder = decoder ?? _cast<T>,
+        exactTypeCheck = false;
+  const PrimitiveMapper.exact([T Function(dynamic value)? decoder])
+      : decoder = decoder ?? _cast<T>,
+        exactTypeCheck = true;
+
   final T Function(dynamic value) decoder;
+  final bool exactTypeCheck;
 
   @override
-  bool isFor(dynamic v) => v.runtimeType == T;
+  bool isFor(dynamic v) => exactTypeCheck ? v.runtimeType == T : super.isFor(v);
 
   @override
   MapperElementBase<T> createElement(MapperContainer container) {
     return PrimitiveMapperElement<T>(this, container);
   }
+
+  static T _cast<T>(v) => v as T;
 }
 
 class PrimitiveMapperElement<T> extends MapperElementBase<T>

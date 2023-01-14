@@ -21,12 +21,12 @@ abstract class MapperContainer {
   }) = MapperContainerBase;
 
   static final MapperContainer defaults = MapperContainerBase._({
-    PrimitiveMapper<dynamic>((v) => v),
-    PrimitiveMapper<Object>((Object? v) => v!),
+    PrimitiveMapper<dynamic>.exact((v) => v),
+    PrimitiveMapper<Object>.exact((Object? v) => v!),
     PrimitiveMapper<String>((v) => v.toString()),
     PrimitiveMapper<int>((v) => num.parse(v.toString()).round()),
     PrimitiveMapper<double>((v) => double.parse(v.toString())),
-    PrimitiveMapper<num>((v) => num.parse(v.toString())),
+    PrimitiveMapper<num>.exact((v) => num.parse(v.toString())),
     PrimitiveMapper<bool>((v) => v is num ? v != 0 : v.toString() == 'true'),
     DateTimeMapper(),
     IterableMapper<List>(<T>(i) => i.toList(), <T>(f) => f<List<T>>()),
