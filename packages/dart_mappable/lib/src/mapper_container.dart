@@ -248,7 +248,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
         try {
           Type type = T;
           String? typeId;
-          if (value.runtimeType != type.nonNull) {
+          if (value.runtimeType != type.nonNull && value.runtimeType.base != UnresolvedType) {
             if (value is! Map && value is! Iterable) {
               if (element.mapper.implType == element.mapper.type ||
                   value.runtimeType != element.mapper.implType) {

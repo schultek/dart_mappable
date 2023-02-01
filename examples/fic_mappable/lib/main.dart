@@ -50,4 +50,9 @@ void main() {
   print(a);
   print(a2);
   print(a3);
+
+  var m = IMap({
+    "value": 1000
+  });
+  print(MapperContainer.defaults.toValue(m));
 }

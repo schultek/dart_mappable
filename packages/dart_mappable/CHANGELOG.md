@@ -1,3 +1,7 @@
+# 2.0.2
+
+- Fixed yet another unresolved type bug.
+
 # 2.0.1
 
 - Fixed unresolved type bug with custom mappers.
