@@ -7,16 +7,6 @@ class ToStringGenerator {
 
   final TargetClassMapperElement target;
 
-  String generateToStringMethods() {
-    if (target.shouldGenerate(GenerateMethods.stringify)) {
-      return '\n'
-          "  @override String stringify(${target.prefixedClassName} self) => '${target.className}(${_generateStringParams()})';\n"
-          '';
-    } else {
-      return '';
-    }
-  }
-
   String generateToStringMixin() {
     if (target.shouldGenerate(GenerateMethods.stringify) &&
         !target.isAbstract) {
@@ -24,15 +14,5 @@ class ToStringGenerator {
     } else {
       return '';
     }
-  }
-
-  String _generateStringParams() {
-    List<String> params = [];
-
-    for (var field in target.allPublicFields) {
-      params.add('${field.name}: \${container.asString(self.${field.name})}');
-    }
-
-    return params.join(', ');
   }
 }

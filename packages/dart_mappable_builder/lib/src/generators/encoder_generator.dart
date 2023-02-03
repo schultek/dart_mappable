@@ -10,19 +10,6 @@ class EncoderGenerator {
 
   EncoderGenerator(this.target);
 
-  Future<String> generateEncoderMethods() async {
-    if (target.shouldGenerate(GenerateMethods.encode)) {
-      var paramName = target.className[0].toLowerCase();
-      return '\n'
-          '  @override Function get encoder => ${_generateEncoder(target)};\n'
-          '  dynamic encode${target.typeParamsDeclaration}(${target.prefixedClassName}${target.typeParams} v) ${_generateEncode()}\n'
-          '  Map<String, dynamic> toMap${target.typeParamsDeclaration}(${target.prefixedClassName}${target.typeParams} $paramName) => {${await _generateMappingEntries()}};\n'
-          '';
-    } else {
-      return '';
-    }
-  }
-
   String generateEncoderMixin() {
     return target.shouldGenerate(GenerateMethods.encode)
         ? '  String toJson()${target.isAbstract ? '' : ' => ${target.uniqueClassName}Mapper.container.toJson(this as ${target.selfTypeParam})'};\n'
@@ -37,30 +24,6 @@ class EncoderGenerator {
         : '';
   }
 
-  String _generateEncoder(ClassMapperElement config,
-      [String encode = 'encode', String? name]) {
-    var wrapped = encode;
-    if (config.superTarget != null &&
-        config.superTarget!.hookForClass != null) {
-      wrapped =
-          '(${config.prefixedClassName}${config.typeParams} v) => const ${config.superTarget!.hookForClass}.encode<${name ?? config.prefixedClassName}>(v, (v) => $wrapped, container)';
-    }
-    if (config.superTarget != null) {
-      wrapped = _generateEncoder(
-          config.superTarget!, wrapped, name ?? config.prefixedClassName);
-    }
-    return wrapped;
-  }
-
-  String _generateEncode() {
-    String call = '=> toMap${target.typeParams}(v)';
-
-    if (target.hookForClass != null) {
-      call =
-          '=> const ${target.hookForClass}.encode<${target.prefixedClassName}${target.typeParams}>(v, (v) $call, container)';
-    }
-    return call + (call.endsWith('}') ? '' : ';');
-  }
 
   Future<String> _generateMappingEntries() async {
     List<String> params = [];

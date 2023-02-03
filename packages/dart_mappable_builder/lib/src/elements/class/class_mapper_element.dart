@@ -51,6 +51,22 @@ abstract class ClassMapperElement extends MapperElement<ClassElement> {
     }
   }();
 
+  late List<MapperFieldElement> fields = () {
+    var fields = <PropertyInducingElement, MapperFieldElement>{};
+
+    for (var p in params) {
+      fields[p.accessor] = MapperFieldElement(p, p.accessor, this);
+    }
+
+    for (var f in allPublicFields) {
+      if (!fields.containsKey(f)) {
+        fields[f] = MapperFieldElement(null, f, this);
+      }
+    }
+
+    return fields.values.toList();
+  }();
+
   @override
   DartObject? getAnnotation() =>
       classChecker.firstAnnotationOf(annotatedElement);

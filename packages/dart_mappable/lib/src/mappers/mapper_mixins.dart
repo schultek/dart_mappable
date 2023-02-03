@@ -3,12 +3,7 @@ import 'package:collection/collection.dart';
 import 'mapper_base.dart';
 import '../mapper_container.dart';
 
-mixin MapperAs<B extends MapperBase<T>, T> on MapperElementBase<T> {
-  @override
-  B get mapper => super.mapper as B;
-}
-
-mixin PrimitiveMethodsMixin<T> implements MapperElementBase<T> {
+mixin PrimitiveMethodsMixin<M extends MapperBase<T>, T extends Object> implements MapperElementBase<M, T> {
   @override
   bool equals(T self, T other) => self == other;
   @override
@@ -17,7 +12,7 @@ mixin PrimitiveMethodsMixin<T> implements MapperElementBase<T> {
   String stringify(T self) => self.toString();
 }
 
-mixin MapperEqualityMixin<T> implements MapperElementBase<T> {
+mixin MapperEqualityMixin<M extends MapperBase<T>, T extends Object> implements MapperElementBase<M, T> {
   Equality get equality;
 
   @override

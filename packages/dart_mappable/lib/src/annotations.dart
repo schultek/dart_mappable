@@ -1,5 +1,6 @@
 import 'case_style.dart';
 import 'mapper_container.dart';
+import 'mappers/mapper_base.dart';
 
 /// Used to annotate a class
 /// in order to generate mapping code
@@ -236,23 +237,40 @@ enum DiscoveryMode {
 abstract class MappingHook {
   const MappingHook();
 
-  dynamic beforeDecode(dynamic value) => value;
-  dynamic afterDecode(dynamic value) => value;
+  Object? beforeDecode(Object? value) => value;
+  Object? afterDecode(Object? value) => value;
 
-  dynamic beforeEncode(dynamic value) => value;
-  dynamic afterEncode(dynamic value) => value;
+  Object? beforeEncode(Object? value) => value;
+  Object? afterEncode(Object? value) => value;
 
   T wrapDecode<T>(
       dynamic value, T Function(dynamic value) fn, MapperContainer container) {
-    var v = beforeDecode(value);
-    if (v is! T) v = fn(v);
+    var v = beforeDecode(value as Object);
+    if (v is! T) v = fn(v) as Object;
     return afterDecode(v) as T;
+  }
+
+  T wrapDecoder<M extends MapperBase<T>, T extends Object>(DecodingContext<Object?, M, T> context, Decoder<Object?, M, T> decoder) {
+    context = context.change<Object?>(beforeDecode(context.value));
+    var out = context.change<T>(context.value is! T ? decoder(context) : context.value as T);
+    return afterDecode(out.value) as T;
+  }
+
+  Object? wrapEncoder<M extends MapperBase<T>, T extends Object>(EncodingContext<Object?, M, T> context, Encoder<Object?, T, M, T> encoder) {
+    context = context.change<Object?>(beforeEncode(context.value));
+    if (context.value is T) {
+      if (context is! EncodingContext<T, M, T>) {
+        context = context.change<T>(context.value as T);
+      }
+      context = context.change<Object?>(encoder(context));
+    }
+    return afterDecode(context.value);
   }
 
   dynamic wrapEncode<T>(
       T value, dynamic Function(T value) fn, MapperContainer container) {
-    var v = beforeEncode(value);
-    if (v is T) v = fn(v);
+    var v = beforeEncode(value as Object);
+    if (v is T) v = fn(v) as Object;
     return afterEncode(v);
   }
 }

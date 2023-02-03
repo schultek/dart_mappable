@@ -4,46 +4,36 @@ import 'mapper_container.dart';
 
 /// {@nodoc}
 extension GuardedUtils on MapperContainer {
-  T $get<T>(Map<String, dynamic> map, String key, [MappingHook? hooks]) {
-    return $dec(map[key], key, hooks, (v) {
-      if (v == null) {
-        try {
-          return v as T;
-        } on TypeError catch (_) {
-          throw MapperException.missingParameter(key);
-        }
-      }
-      return fromValue<T>(v);
-    });
-  }
-
-  T? $getOpt<T>(Map<String, dynamic> map, String key, [MappingHook? hooks]) {
-    return $dec(map[key], key, hooks);
-  }
-
   T $dec<T>(
     dynamic value,
     String key, [
-    MappingHook? hooks,
-    T Function(dynamic)? decoder,
+    MappingHook? hook,
   ]) {
-    decoder ??= fromValue<T>;
+    decode(value) {
+      if (value != null) {
+        return fromValue<T>(value);
+      } else if (value is T) {
+        return value;
+      } else {
+        throw MapperException.missingParameter(key);
+      }
+    }
+
     return guard(
       MapperMethod.decode,
       '.$key',
-      () => hooks != null
-          ? hooks.wrapDecode(value, decoder!, this)
-          : decoder!(value),
+      () =>
+          hook != null ? hook.wrapDecode(value, decode, this) : decode(value),
     );
   }
 
-  dynamic $enc<T>(T value, String key, [MappingHook? hooks]) {
+  dynamic $enc<T>(T value, String key, [MappingHook? hook]) {
     return guard(
       MapperMethod.encode,
       '.$key',
       () {
-        if (hooks != null) {
-          return hooks.wrapEncode(value, toValue<T>, this);
+        if (hook != null) {
+          return hook.wrapEncode(value, toValue<T>, this);
         }
         return toValue<T>(value);
       },
@@ -63,14 +53,6 @@ T guard<T>(MapperMethod method, String hint, T Function() fn) {
   }
 }
 
-/// {@nodoc}
-void clearType(Map<String, dynamic> map) {
-  map.removeWhere((key, _) => key == '__type');
-  map.values.whereType<Map<String, dynamic>>().forEach(clearType);
-  map.values
-      .whereType<List>()
-      .forEach((l) => l.whereType<Map<String, dynamic>>().forEach(clearType));
-}
 
 /// {@nodoc}
 T checkedType<T, U>(dynamic v, T Function(U) fn) {

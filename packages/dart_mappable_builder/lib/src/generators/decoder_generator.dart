@@ -1,6 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/class/class_mapper_element.dart';
 import '../elements/class/target_class_mapper_element.dart';
@@ -11,59 +10,53 @@ class DecoderGenerator {
 
   DecoderGenerator(this.element);
 
-  Future<String> generateDecoderMethods() async {
-    if (element.shouldGenerate(GenerateMethods.decode)) {
-      return '\n'
-          '  @override Function get decoder => ${_generateDecoder(element)};\n'
-          '  ${element.prefixedDecodingClassName}${element.typeParams} decode${element.typeParamsDeclaration}(dynamic v) => ${await _generateFromMapCall()};\n'
-          '  ${element.prefixedDecodingClassName}${element.typeParams} fromMap${element.typeParamsDeclaration}(Map<String, dynamic> map) => ${await _generateFromMap()}\n';
-    } else {
-      return '';
+  Future<String> generateInstantiateMethod() async {
+
+    var s = '\n';
+
+    if (element.hookForClass != null) {
+      s +=
+          '  @override\n'
+          '  final MappingHook hook = const ${element.hookForClass};\n';
     }
+
+    var superHooks = _getSuperHooks(element);
+    if (superHooks.isNotEmpty) {
+      s += '  @override\n'
+          '  final MappingHook superHook = const ${superHooks.length == 1 ? superHooks.first : 'ChainedHook([${superHooks.join(', ')}])'};\n\n';
+    }
+
+    s +=
+          '  static ${element.prefixedDecodingClassName}${element.typeParams} _instantiate${element.typeParamsDeclaration}(DecodingData data) {\n'
+              '    ${await _generateConstructorCall()}\n'
+              '  }\n'
+              '  @override\n'
+          '  final Function instantiate = _instantiate;\n';
+
+    return s;
   }
 
   String generateTypeFactory() {
-    if (element.shouldGenerate(GenerateMethods.decode)) {
-      return '${element.className != element.uniqueClassName ? '  @override String get id => \'${element.uniqueClassName}\';\n' : ''}'
-          '  @override\n'
+    return '  @override\n'
           '  Function get typeFactory => ${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();\n';
+  }
+
+  List<String> _getSuperHooks(ClassMapperElement element) {
+    if (element.superTarget == null) {
+      return [];
     } else {
-      return '';
+      return [if (element.superTarget!.hookForClass != null) element.superTarget!.hookForClass!, ..._getSuperHooks(element.superTarget!)];
     }
   }
 
-  String _generateDecoder(ClassMapperElement config, [String fn = 'decode']) {
-    var wrapped = fn;
-    if (config.superTarget != null &&
-        config.superTarget!.hookForClass != null) {
-      wrapped =
-          '(v) => const ${config.superTarget!.hookForClass}.decode(v, $wrapped, container)';
-    }
-    if (config.superTarget != null) {
-      wrapped = _generateDecoder(config.superTarget!, wrapped);
-    }
-    return wrapped;
-  }
+  /*
 
-  Future<String> _generateFromMapCall() async {
-    var call = '';
+  if (element.subTargets.isNotEmpty && element.discriminatorKey != null) {
+      "switch(map['${element.discriminatorKey}']) {\n"
+      '      ${(await _generateTypeCases()).join('\n      ')}\n'
+      '    }\n'
 
-    if (element.subTargets.isEmpty || element.discriminatorKey == null) {
-      call = '=> fromMap${element.typeParams}(map)';
-    } else {
-      call = '{\n'
-          "    switch(map['${element.discriminatorKey}']) {\n"
-          '      ${(await _generateTypeCases()).join('\n      ')}\n'
-          '    }\n'
-          '  }';
-    }
-
-    call = 'checkedType(v, (Map<String, dynamic> map) $call)';
-    if (element.hookForClass != null) {
-      call = 'const ${element.hookForClass}.decode(v, (v) => $call, container)';
-    }
-    return call;
-  }
+   */
 
   Future<List<String>> _generateTypeCases() async {
     var cases = await _getDiscriminatorCases(element);
@@ -132,7 +125,7 @@ class DecoderGenerator {
     return cases;
   }
 
-  Future<String> _generateFromMap() async {
+  Future<String> _generateConstructorCall() async {
     if (!element.hasCallableConstructor) {
       if (element.subTargets.isNotEmpty && element.discriminatorKey != null) {
         return "throw MapperException.missingSubclass('${element.className}', '${element.discriminatorKey}', '\${map['${element.discriminatorKey}']}');";
@@ -140,7 +133,7 @@ class DecoderGenerator {
         return "throw MapperException.missingConstructor('${element.className}');";
       }
     } else {
-      return '${element.prefixedDecodingClassName}${element.constructor!.name != '' ? '.${element.constructor!.name}' : ''}(${await _generateConstructorParams()});';
+      return 'return ${element.prefixedDecodingClassName}${element.constructor!.name != '' ? '.${element.constructor!.name}' : ''}(${await _generateConstructorParams()});';
     }
   }
 
@@ -154,29 +147,26 @@ class DecoderGenerator {
       if (p.isNamed) {
         str = '${p.name}: ';
       }
-      str += 'container.\$get';
-      if (p.type.isDynamic || p.isOptional || p.type.isNullable) {
-        str += 'Opt';
-      }
+      str += 'data.get(#${p.name})';
 
-      var args = ['map', "'${param.jsonKey(element.caseStyle)}'"];
+      //var args = ['map', "'${param.jsonKey(element.caseStyle)}'"];
 
-      var hook = await param.getHook();
-      if (hook != null) {
-        args.add('const $hook');
-      }
+      // var hook = await param.getHook();
+      // if (hook != null) {
+      //   args.add('const $hook');
+      // }
 
-      str += "(${args.join(', ')})";
+      //str += "(${args.join(', ')})";
 
-      if (p.hasDefaultValue && p.defaultValueCode != 'null') {
-        str += ' ?? ${await getPrefixedDefaultValue(p)}';
-      } else {
-        var node = await p.getNode();
-        if (node is DefaultFormalParameter &&
-            node.defaultValue.toString() != 'null') {
-          str += ' ?? ${node.defaultValue}';
-        }
-      }
+      // if (p.hasDefaultValue && p.defaultValueCode != 'null') {
+      //   str += ' ?? ${await getPrefixedDefaultValue(p)}';
+      // } else {
+      //   var node = await p.getNode();
+      //   if (node is DefaultFormalParameter &&
+      //       node.defaultValue.toString() != 'null') {
+      //     str += ' ?? ${node.defaultValue}';
+      //   }
+      // }
 
       params.add(str);
     }

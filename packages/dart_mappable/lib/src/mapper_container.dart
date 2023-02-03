@@ -21,12 +21,12 @@ abstract class MapperContainer {
   }) = MapperContainerBase;
 
   static final MapperContainer defaults = MapperContainerBase._({
-    PrimitiveMapper<dynamic>.exact((v) => v),
-    PrimitiveMapper<Object>.exact((Object? v) => v!),
+    PrimitiveMapper<Object>((v) => v, dynamic),
+    PrimitiveMapper<Object>((v) => v, Object),
     PrimitiveMapper<String>((v) => v.toString()),
     PrimitiveMapper<int>((v) => num.parse(v.toString()).round()),
     PrimitiveMapper<double>((v) => double.parse(v.toString())),
-    PrimitiveMapper<num>.exact((v) => num.parse(v.toString())),
+    PrimitiveMapper<num>((v) => num.parse(v.toString()), num),
     PrimitiveMapper<bool>((v) => v is num ? v != 0 : v.toString() == 'true'),
     DateTimeMapper(),
     IterableMapper<List>(<T>(i) => i.toList(), <T>(f) => f<List<T>>()),
@@ -50,11 +50,11 @@ abstract class MapperContainer {
   int hash(dynamic value);
   String asString(dynamic value);
 
-  void use<T>(MapperBase<T> mapper);
-  MapperBase<T>? unuse<T>();
+  void use<T extends Object>(MapperBase<T> mapper);
+  MapperBase<T>? unuse<T extends Object>();
   void useAll(Iterable<MapperBase> mappers);
 
-  MapperBase<T>? get<T>([Type? type]);
+  MapperBase<T>? get<T extends Object>([Type? type]);
   List<MapperBase> getAll();
 
   void link(MapperContainer container);
@@ -198,7 +198,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   @override
-  T fromValue<T>(dynamic value) {
+  T fromValue<T>(Object? value) {
     if (value == null) {
       return value as T;
     }
@@ -211,22 +211,13 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
         throw MapperException.chain(MapperMethod.decode, '($T)', e);
       }
     } else if (value is T) {
-      return value;
+      return value as T;
     }
 
     var element = _mapperForType(type)?.createElement(this);
     if (element != null) {
       try {
-        try {
-          return element.decoder
-              .callWith(parameters: [value], typeArguments: type.args) as T;
-        } on ArgumentError catch (e, stacktrace) {
-          Error.throwWithStackTrace(
-            ArgumentError(
-                'Failed to call [decoder] function of ${element.runtimeType}: ${e.message}'),
-            stacktrace,
-          );
-        }
+        return element.decoder(DecodingOptions(value, args: type.args)) as T;
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
           MapperException.chain(MapperMethod.decode, '($type)', e),
@@ -242,44 +233,37 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   @override
   dynamic toValue<T>(T value) {
     if (value == null) return null;
-    var element = _mapperFor(value)?.createElement(this);
-    if (element != null) {
+    var mapper = _mapperFor(value);
+    if (mapper != null) {
+      var element = mapper.createElement(this);
       try {
-        try {
-          Type type = T;
-          String? typeId;
-          if (value.runtimeType != type.nonNull && value.runtimeType.base != UnresolvedType) {
-            if (value is! Map && value is! Iterable) {
-              if (element.mapper.implType == element.mapper.type ||
-                  value.runtimeType != element.mapper.implType) {
-                typeId = value.runtimeType.id;
-                type = value.runtimeType;
-              }
+        Type type = T;
+        String? typeId;
+        if (value.runtimeType != type.nonNull &&
+            value.runtimeType.base != UnresolvedType) {
+          if (value is! Map && value is! Iterable) {
+            if (element.mapper.implType == element.mapper.type ||
+                value.runtimeType != element.mapper.implType) {
+              typeId = value.runtimeType.id;
+              type = value.runtimeType;
             }
           }
-
-          var typeArgs = type.args;
-
-          var fallback = element.mapper.type.base.args;
-          if (typeArgs.length != fallback.length) {
-            typeArgs = fallback;
-          }
-
-          var result = element.encoder
-              .callWith(parameters: [value], typeArguments: typeArgs);
-
-          if (result is Map<String, dynamic> && typeId != null) {
-            result['__type'] = typeId;
-          }
-
-          return result;
-        } on ArgumentError catch (e, stacktrace) {
-          Error.throwWithStackTrace(
-            ArgumentError('Failed to call [encoder] function '
-                'of ${element.runtimeType}: ${e.message}'),
-            stacktrace,
-          );
         }
+
+        var typeArgs = type.args;
+
+        var fallback = element.mapper.type.base.args;
+        if (typeArgs.length != fallback.length) {
+          typeArgs = fallback;
+        }
+
+        var result = element.encoder(EncodingOptions<Object>(value, args: typeArgs));
+
+        if (result is Map<String, dynamic> && typeId != null) {
+          result['__type'] = typeId;
+        }
+
+        return result;
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
           MapperException.chain(
@@ -331,14 +315,13 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   String toJson<T>(T object) => jsonEncode(toValue<T>(object));
 
   @override
-  bool isEqual(dynamic value, Object? other) {
+  bool isEqual(Object? value, Object? other) {
     if (value == null) {
       return other == null;
     }
-
     return guardMappable(
       value,
-      (e) => e.mapper.isFor(other) && e.equals(value, other),
+      (e) => e.mapper.isFor(other) && e.equals(value, other!),
       () => value == other,
       MapperMethod.equals,
       () => '[$value]',
@@ -346,7 +329,10 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   @override
-  int hash(dynamic value) {
+  int hash(Object? value) {
+    if (value == null) {
+      return value.hashCode;
+    }
     return guardMappable(
       value,
       (e) => e.hash(value),
@@ -357,7 +343,10 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   @override
-  String asString(dynamic value) {
+  String asString(Object? value) {
+    if (value == null) {
+      return value.toString();
+    }
     return guardMappable(
       value,
       (e) => e.stringify(value),
@@ -390,10 +379,10 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   @override
-  void use<T>(MapperBase<T> mapper) => useAll([mapper]);
+  void use<T extends Object>(MapperBase<T> mapper) => useAll([mapper]);
 
   @override
-  MapperBase<T>? unuse<T>() {
+  MapperBase<T>? unuse<T extends Object>() {
     var mapper = _mappers.remove(T.base) as MapperBase<T>?;
     _invalidateCachedMappers();
     return mapper;
@@ -406,7 +395,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   @override
-  MapperBase<T>? get<T>([Type? type]) {
+  MapperBase<T>? get<T extends Object>([Type? type]) {
     return _mappers[(type ?? T).base] as MapperBase<T>?;
   }
 

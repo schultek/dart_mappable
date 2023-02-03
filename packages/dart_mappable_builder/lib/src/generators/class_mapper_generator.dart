@@ -35,12 +35,6 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     var equalsGen = EqualsGenerator(target);
     var copyGen = CopyWithGenerator(target);
 
-    var mappers = [
-      '${target.mapperName}()',
-      ...target.customMappers
-          .map((t) => '${t.getDisplayString(withNullability: false)}()'),
-    ];
-
     var linked = target.linkedElements;
 
     var visited = <MapperElement>{};
@@ -55,45 +49,40 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
 
     var hasCyclicLink = linked.keys.any(isCyclic);
 
+
     output.write(
-        'class ${target.mapperName} extends MapperBase<${target.prefixedClassName}> {\n');
+        'class ${target.mapperName} extends ClassMapperBase<${target.prefixedClassName}> {\n'
+            '  static final ${target.mapperName} instance = ${target.mapperName}();\n');
+
+    var typesConfigs = target.typesConfigs;
+    var types = '';
+
+    if (typesConfigs.isNotEmpty) {
+      types += 'types: {';
+      if (typesConfigs.length < 3) {
+        types += typesConfigs.join(', ');
+      } else {
+    types += '\n${typesConfigs.map((c) => '      $c,\n').join()}    ';
+      }
+    types += '}';
+    }
 
     if (hasCyclicLink) {
       output.write('  static MapperContainer? _c;\n'
-          '  static MapperContainer container = _c ?? ((_c = MapperContainer(\n'
-          '    mappers: {');
+          '  static final MapperContainer container = _c ?? ((_c = MapperContainer($types))');
     } else {
-      output.write('  static MapperContainer container = MapperContainer(\n'
-          '    mappers: {');
+      output.write('  static final MapperContainer container = MapperContainer($types)');
     }
 
-    if (mappers.length < 3) {
-      output.write(mappers.join(', '));
+    if (target.customMappers.isEmpty) {
+      output.write('\n  ..use(instance)');
     } else {
-      output.write('\n${mappers.map((m) => '      $m,\n').join()}    ');
-    }
-    output.write('},\n');
-
-    var types = target.typesConfigs;
-
-    if (types.isNotEmpty) {
-      output.write('    types: {');
-      if (types.length < 3) {
-        output.write(types.join(', '));
-      } else {
-        output.write('\n${types.map((c) => '      $c,\n').join()}    ');
-      }
-      output.write('},\n');
-    }
-
-    output.write('  )');
-
-    if (hasCyclicLink) {
-      output.write(')');
+      var mappers = target.customMappers.map((t) => '${t.getDisplayString(withNullability: false)}()');
+      output.write('\n  ..useAll([instance, ${mappers.join()}])');
     }
 
     if (linked.isNotEmpty) {
-      output.write('..linkAll({');
+      output.write('\n  ..linkAll({');
       var containers = linked.entries.map((e) => '${e.value}.container');
 
       if (linked.length < 3) {
@@ -110,11 +99,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
 
     output.write(';\n\n'
         '  @override\n'
-        '  ${target.mapperName}Element createElement(MapperContainer container) {\n'
-        '    return ${target.mapperName}Element._(this, container);\n'
-        '  }\n\n');
-
-    output.write("@override\nString get id => '${target.uniqueId}';\n");
+        "  String get id => '${target.uniqueId}';\n");
 
     if (target.typeParamsList.isNotEmpty) {
       output.write(decoderGen.generateTypeFactory());
@@ -122,8 +107,33 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
 
     if (target is AliasClassMapperElement) {
       output.write(
-          '@override\nType get implType => ${target.prefixedDecodingClassName};');
+          '@override\nType get implType => ${target.prefixedDecodingClassName};\n');
     }
+
+    output.write('\n');
+
+    var fields = target.fields;
+
+    for (var f in fields) {
+      output.write('  static ${f.staticType} _\$${f.field.name}(${target.prefixedClassName} v) => v.${f.field.name};\n');
+      if (f.generic) {
+        output.write('  static dynamic _arg\$${f.field.name}${target.typeParamsDeclaration}(f) => f<${f.type}>();\n');
+      }
+    }
+
+    output.write('\n  @override\n  final Map<Symbol, Field<${target.prefixedClassName}, dynamic>> fields = const {\n');
+
+    for (var f in fields) {
+      output.write("    #${f.field.name}: Field<${target.prefixedClassName}, ${f.staticType}>('${f.field.name}', _\$${f.field.name}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook}),\n");
+    }
+
+    output.write('  };\n');
+
+    if (target.ignoreNull) {
+      output.write('  @override\n  final bool ignoreNull = true;\n');
+    }
+
+    output.write(await decoderGen.generateInstantiateMethod());
 
     if (target.shouldGenerate(GenerateMethods.decode)) {
       output.write('\n');
@@ -137,18 +147,11 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
             '  static final fromJson = container.fromJson<${target.prefixedDecodingClassName}>;\n');
       }
     }
-    output.write('}\n\n'
-        'class ${target.mapperName}Element extends MapperElementBase<${target.prefixedClassName}> {\n'
-        '  ${target.mapperName}Element._(super.mapper, super.container);\n');
-
-    output.writeAll([
-      await decoderGen.generateDecoderMethods(),
-      await encoderGen.generateEncoderMethods(),
-      stringifyGen.generateToStringMethods(),
-      equalsGen.generateEqualsMethods(),
-    ]);
-
     output.write('}\n\n');
+
+    // output.writeAll([
+    //   await encoderGen.generateEncoderMethods(),
+    // ]);
 
     if (target.generateAsMixin) {
       await _checkMixinUsed();

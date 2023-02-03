@@ -1,7 +1,126 @@
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:dart_mappable/dart_mappable.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
+import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/dart/element/type_visitor.dart';
+import 'package:dart_mappable/dart_mappable.dart' hide ClassMapperElement;
 
 import '../utils.dart';
+import 'class/class_mapper_element.dart';
+
+class RemoveParamsVisitor extends TypeVisitor<String> {
+
+  @override
+  String visitDynamicType(DynamicType type) {
+    return 'dynamic';
+  }
+
+  @override
+  String visitFunctionType(FunctionType type) {
+    // TODO
+    return type.getDisplayString(withNullability: true);
+  }
+
+  @override
+  String visitInterfaceType(InterfaceType type) {
+    return '${type.element.name}'
+        '${type.typeArguments.isNotEmpty ? '<${type.typeArguments.map((t) => t.accept(this)).join(', ')}>' : ''}'
+        '${
+    type.nullabilitySuffix == NullabilitySuffix.question ? '?' : ''
+    }';
+  }
+
+  @override
+  String visitNeverType(NeverType type) {
+    return 'Never';
+  }
+
+  @override
+  String visitRecordType(RecordType type) {
+    // TODO
+    return type.getDisplayString(withNullability: true);
+  }
+
+  @override
+  String visitTypeParameterType(TypeParameterType type) {
+    return type.bound.accept(this);
+  }
+
+  @override
+  String visitVoidType(VoidType type) {
+    return 'void';
+  }
+
+}
+
+class MapperFieldElement {
+  final MapperParamElement? param;
+  final PropertyInducingElement field;
+  final ClassMapperElement parent;
+
+  MapperFieldElement(this.param, this.field, this.parent);
+
+  // TODO check nested generic types
+  late bool generic = () {
+    return staticType != type;
+  }();
+  late String arg = () {
+    if (!generic) return '';
+
+    return ', arg: _arg\$${field.name}';
+  }();
+  late String staticType = () {
+    return field.type.accept(RemoveParamsVisitor());
+  }();
+
+  late String type = () {
+    return field.type.getDisplayString(withNullability: true);
+  }();
+
+  late String mode = () {
+    if (param == null) {
+      return ', mode: FieldMode.member';
+    } else if (param!.accessor is! FieldElement) {
+      return ', mode: FieldMode.param';
+    } else {
+      return '';
+    }
+  }();
+
+  late String key = () {
+    var key = param?.jsonKey(parent.caseStyle) ?? field.name;
+    if (key != field.name) {
+      return ", key: '$key'";
+    } else {
+      return '';
+    }
+  }();
+
+  late String opt = (param?.parameter.isOptional ?? false) ? ', opt: true' : '';
+
+  late Future<String> def = () async {
+    if (param == null) return '';
+
+    var p = param!.parameter;
+
+    if (p.hasDefaultValue && p.defaultValueCode != 'null') {
+      return ', def: ${p.defaultValueCode}';
+    } else {
+      var node = await p.getNode();
+      if (node is DefaultFormalParameter &&
+          node.defaultValue.toString() != 'null') {
+        return ', def: ${node.defaultValue}';
+      }
+    }
+
+    return '';
+  }();
+
+  late Future<String> hook = () async {
+    var hook = await param?.getHook();
+    return hook != null ? ', hook: $hook' : '';
+  }();
+}
 
 abstract class MapperParamElement {
   final ParameterElement parameter;
