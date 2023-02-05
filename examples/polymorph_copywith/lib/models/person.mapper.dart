@@ -11,7 +11,7 @@ class PersonMapper extends ClassMapperBase<Person> {
   ..use(instance);
 
   @override
-  String get id => 'Person';
+  final String id = 'Person';
 
   static String _$name(Person v) => v.name;
 

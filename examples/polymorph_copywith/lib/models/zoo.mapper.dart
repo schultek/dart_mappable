@@ -12,7 +12,7 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   ..linkAll({AnimalMapper.container});
 
   @override
-  String get id => 'Zoo';
+  final String id = 'Zoo';
   @override
   Function get typeFactory => <T extends Animal>(f) => f<Zoo<T>>();
 

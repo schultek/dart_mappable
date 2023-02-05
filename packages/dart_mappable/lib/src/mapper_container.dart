@@ -214,10 +214,10 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
       return value as T;
     }
 
-    var element = _mapperForType(type)?.createElement(this);
-    if (element != null) {
+    var mapper = _mapperForType(type);
+    if (mapper != null) {
       try {
-        return element.decoder(DecodingOptions(value, args: type.args)) as T;
+        return mapper.decoder(DecodingOptions(value, this, args: type.args)) as T;
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
           MapperException.chain(MapperMethod.decode, '($type)', e),
@@ -235,15 +235,14 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     if (value == null) return null;
     var mapper = _mapperFor(value);
     if (mapper != null) {
-      var element = mapper.createElement(this);
       try {
         Type type = T;
         String? typeId;
         if (value.runtimeType != type.nonNull &&
             value.runtimeType.base != UnresolvedType) {
           if (value is! Map && value is! Iterable) {
-            if (element.mapper.implType == element.mapper.type ||
-                value.runtimeType != element.mapper.implType) {
+            if (mapper.implType == mapper.type ||
+                value.runtimeType != mapper.implType) {
               typeId = value.runtimeType.id;
               type = value.runtimeType;
             }
@@ -252,12 +251,12 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
 
         var typeArgs = type.args;
 
-        var fallback = element.mapper.type.base.args;
+        var fallback = mapper.type.base.args;
         if (typeArgs.length != fallback.length) {
           typeArgs = fallback;
         }
 
-        var result = element.encoder(EncodingOptions<Object>(value, args: typeArgs));
+        var result = mapper.encoder(EncodingOptions<Object>(value, this, args: typeArgs));
 
         if (result is Map<String, dynamic> && typeId != null) {
           result['__type'] = typeId;
@@ -321,7 +320,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     }
     return guardMappable(
       value,
-      (e) => e.mapper.isFor(other) && e.equals(value, other!),
+      (m, o) => m.isFor(other) && m.equals(o, other!),
       () => value == other,
       MapperMethod.equals,
       () => '[$value]',
@@ -335,7 +334,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     }
     return guardMappable(
       value,
-      (e) => e.hash(value),
+      (m, o) => m.hash(o),
       () => value.hashCode,
       MapperMethod.hash,
       () => '[$value]',
@@ -349,7 +348,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     }
     return guardMappable(
       value,
-      (e) => e.stringify(value),
+      (m, o) => m.stringify(o),
       () => value.toString(),
       MapperMethod.stringify,
       () => '(Instance of \'${value.runtimeType}\')',
@@ -357,16 +356,16 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   T guardMappable<T>(
-    dynamic value,
-    T Function(MapperElementBase) fn,
+    Object value,
+    T Function(MapperBase, MappingOptions<Object>) fn,
     T Function() fallback,
     MapperMethod method,
     String Function() hint,
   ) {
-    var element = _mapperFor(value)?.createElement(this);
-    if (element != null) {
+    var mapper = _mapperFor(value);
+    if (mapper != null) {
       try {
-        return fn(element);
+        return fn(mapper, MappingOptions(value, this));
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
           MapperException.chain(method, hint(), e),

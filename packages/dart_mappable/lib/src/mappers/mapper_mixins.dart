@@ -3,22 +3,22 @@ import 'package:collection/collection.dart';
 import 'mapper_base.dart';
 import '../mapper_container.dart';
 
-mixin PrimitiveMethodsMixin<M extends MapperBase<T>, T extends Object> implements MapperElementBase<M, T> {
+mixin PrimitiveMethodsMixin<T extends Object> implements MapperBase<T> {
   @override
-  bool equals(T self, T other) => self == other;
+  bool equals(MappingOptions<T> options, T other) => options.value == other;
   @override
-  int hash(T self) => self.hashCode;
+  int hash(MappingOptions<T> options) => options.value.hashCode;
   @override
-  String stringify(T self) => self.toString();
+  String stringify(MappingOptions<T> options) => options.value.toString();
 }
 
-mixin MapperEqualityMixin<M extends MapperBase<T>, T extends Object> implements MapperElementBase<M, T> {
-  Equality get equality;
+mixin MapperEqualityMixin<T extends Object> implements MapperBase<T> {
+  Equality equality(Equality child);
 
   @override
-  bool equals(T self, T other) => equality.equals(self, other);
+  bool equals(MappingOptions<T> options, T other) => equality(MapperEquality(options.container)).equals(options.value, other);
   @override
-  int hash(T self) => equality.hash(self);
+  int hash(MappingOptions<T> options) => equality(MapperEquality(options.container)).hash(options.value);
 }
 
 class MapperEquality implements Equality {

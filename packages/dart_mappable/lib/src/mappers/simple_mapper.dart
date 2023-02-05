@@ -1,5 +1,5 @@
 import 'mapper_base.dart';
-import '../mapper_container.dart';
+import 'mapper_mixins.dart';
 
 /// Interface to define custom mappers.
 ///
@@ -11,13 +11,13 @@ abstract class SimpleMapper<T extends Object> extends _SimpleMapperBase<T> {
   Object? encode(T self);
 
   @override
-  T decoder(SimpleDecodingContext<T> context) {
-    return decode(context.value);
+  T _decode(DecodingOptions<Object> options) {
+    return decode(options.value);
   }
 
   @override
-  Object? encoder(SimpleEncodingContext<T> context) {
-    return encode(context.value);
+  Object? _encode(EncodingOptions<T> options) {
+    return encode(options.value);
   }
 }
 
@@ -34,13 +34,13 @@ abstract class SimpleMapper1<T extends Object> extends _SimpleMapperBase<T> {
   Object? encode<A>(T self);
 
   @override
-  T decoder(SimpleDecodingContext<T> context) {
-    return context.callWith1(decode, _$value);
+  T _decode(DecodingOptions<Object> options) {
+    return options.callWith1(decode, _$value);
   }
 
   @override
-  Object? encoder(SimpleEncodingContext<T> context) {
-    return context.callWith1(encode, _$value);
+  Object? _encode(EncodingOptions<T> options) {
+    return options.callWith1(encode, _$value);
   }
 }
 
@@ -57,55 +57,31 @@ abstract class SimpleMapper2<T extends Object> extends _SimpleMapperBase<T> {
   Object? encode<A, B>(T self);
 
   @override
-  T decoder(SimpleDecodingContext<T> context) {
-    return context.callWith2(decode, _$value);
+  T _decode(DecodingOptions<Object> options) {
+    return options.callWith2(decode, _$value);
   }
 
   @override
-  Object? encoder(SimpleEncodingContext<T> context) {
-    return context.callWith2(encode, _$value);
+  Object? _encode(EncodingOptions<T> options) {
+    return options.callWith2(encode, _$value);
   }
 }
 
-typedef SimpleDecodingContext<T extends Object> = DecodingContext<Object, _SimpleMapperBase<T>, T>;
-typedef SimpleEncodingContext<T extends Object> = EncodingContext<T, _SimpleMapperBase<T>, T>;
-
-abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T> {
+abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T> with PrimitiveMethodsMixin<T> {
   const _SimpleMapperBase();
 
-  T decoder(SimpleDecodingContext<T> context);
-  Object? encoder(EncodingContext<T, _SimpleMapperBase<T>, T> context);
-
-  bool equals(T self, T other) => self == other;
-  int hash(T self) => self.hashCode;
-  String stringify(T self) => self.toString();
-
-  @override
-  _SimpleMapperElement<T> createElement(MapperContainer container) {
-    return _SimpleMapperElement<T>(this, container);
-  }
+  T _decode(DecodingOptions<Object> options);
+  Object? _encode(EncodingOptions<T> options);
 
   V _$value<V extends Object>(MappingOptions<V> o) => o.value;
-}
-
-class _SimpleMapperElement<T extends Object>
-    extends MapperElementBase<_SimpleMapperBase<T>, T> {
-  const _SimpleMapperElement(super.mapper, super.container);
 
   @override
   T decoder(DecodingOptions<Object> options) {
-    return mapper.decoder(options.apply<_SimpleMapperBase<T>, T>(this));
+    return _decode(options);
   }
 
   @override
   Object? encoder(EncodingOptions<Object> options) {
-    return mapper.encoder(options.apply(this).checked<T>());
+    return _encode(options.checked<T>());
   }
-
-  @override
-  bool equals(T self, T other) => mapper.equals(self, other);
-  @override
-  int hash(T self) => mapper.hash(self);
-  @override
-  String stringify(T self) => mapper.stringify(self);
 }

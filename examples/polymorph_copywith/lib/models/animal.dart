@@ -10,3 +10,14 @@ abstract class Animal with AnimalMappable {
   String name;
   Animal(this.name);
 }
+
+
+class A<T extends B<C>> {
+
+}
+
+class C extends A<B<C>> {}
+
+class B<T extends A> {
+
+}

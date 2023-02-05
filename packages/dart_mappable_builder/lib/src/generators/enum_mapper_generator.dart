@@ -30,8 +30,9 @@ class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
 
     return ''
         'class ${target.mapperName} extends EnumMapper<${target.prefixedClassName}> {\n'
+        '  static ${target.mapperName} instance = ${target.mapperName}();\n'
         '  static MapperContainer container = MapperContainer(\n'
-        '    mappers: {${target.mapperName}()},\n'
+        '    mappers: {${target.mapperName}.instance},\n'
         '  );\n\n'
         '  static final fromValue = container.fromValue<${target.prefixedClassName}>;\n\n'
         '  @override\n'

@@ -5,7 +5,7 @@
 
 part of 'dog.dart';
 
-class DogMapper extends ClassMapperBase<Dog> {
+class DogMapper extends SubClassMapperBase<Dog> {
   static final DogMapper instance = DogMapper();
   static MapperContainer? _c;
   static final MapperContainer container = _c ?? ((_c = MapperContainer())
@@ -13,7 +13,7 @@ class DogMapper extends ClassMapperBase<Dog> {
   ..linkAll({AnimalMapper.container, PersonMapper.container}));
 
   @override
-  String get id => 'Dog';
+  final String id = 'Dog';
 
   static String _$name(Dog v) => v.name;
   static int _$age(Dog v) => v.age;
@@ -25,6 +25,11 @@ class DogMapper extends ClassMapperBase<Dog> {
     #age: Field<Dog, int>('age', _$age),
     #owner: Field<Dog, Person>('owner', _$owner),
   };
+
+  @override
+  bool canDecode(DecodingOptions<Map<String, dynamic>> options) {
+    return options.value['type'] == 1;
+  }
 
   static Dog _instantiate(DecodingData data) {
     return Dog(data.get(#name), data.get(#age), data.get(#owner));

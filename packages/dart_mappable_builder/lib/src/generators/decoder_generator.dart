@@ -11,12 +11,10 @@ class DecoderGenerator {
   DecoderGenerator(this.element);
 
   Future<String> generateInstantiateMethod() async {
-
     var s = '\n';
 
     if (element.hookForClass != null) {
-      s +=
-          '  @override\n'
+      s += '  @override\n'
           '  final MappingHook hook = const ${element.hookForClass};\n';
     }
 
@@ -27,25 +25,56 @@ class DecoderGenerator {
     }
 
     s +=
-          '  static ${element.prefixedDecodingClassName}${element.typeParams} _instantiate${element.typeParamsDeclaration}(DecodingData data) {\n'
-              '    ${await _generateConstructorCall()}\n'
-              '  }\n'
-              '  @override\n'
-          '  final Function instantiate = _instantiate;\n';
+        '  static ${element.prefixedDecodingClassName}${element.typeParams} _instantiate${element.typeParamsDeclaration}(DecodingData data) {\n'
+        '    ${await _generateConstructorCall()}\n'
+        '  }\n'
+        '  @override\n'
+        '  final Function instantiate = _instantiate;\n';
 
     return s;
   }
 
   String generateTypeFactory() {
     return '  @override\n'
-          '  Function get typeFactory => ${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();\n';
+        '  Function get typeFactory => ${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();\n';
   }
 
   List<String> _getSuperHooks(ClassMapperElement element) {
     if (element.superTarget == null) {
       return [];
     } else {
-      return [if (element.superTarget!.hookForClass != null) element.superTarget!.hookForClass!, ..._getSuperHooks(element.superTarget!)];
+      return [
+        if (element.superTarget!.hookForClass != null)
+          element.superTarget!.hookForClass!,
+        ..._getSuperHooks(element.superTarget!)
+      ];
+    }
+  }
+
+  Future<String> generateCanDecodeMethod() async {
+    return '\n'
+        '  @override\n'
+        '  bool canDecode(DecodingOptions<Map<String, dynamic>> options) {\n'
+        '    ${await _generateDecodePredicateCall()};\n'
+        '  }\n';
+  }
+
+  Future<String> _generateDecodePredicateCall() async {
+    if (element.isDefaultDiscriminator) {
+      return 'return true';
+    }
+
+    var value = await element.discriminatorValueCode;
+
+    if (value != null) {
+      var isList = value.startsWith('[') && value.endsWith(']');
+      if (isList) {
+        return "return $value.contains(options.value['${element.superTarget!.discriminatorKey}'])";
+      } else {
+        return "return options.value['${element.superTarget!.discriminatorKey}'] == $value";
+      }
+    } else {
+      return 'throw "TODO"';
     }
   }
 
@@ -128,7 +157,7 @@ class DecoderGenerator {
   Future<String> _generateConstructorCall() async {
     if (!element.hasCallableConstructor) {
       if (element.subTargets.isNotEmpty && element.discriminatorKey != null) {
-        return "throw MapperException.missingSubclass('${element.className}', '${element.discriminatorKey}', '\${map['${element.discriminatorKey}']}');";
+        return "throw MapperException.missingSubclass('${element.className}', '${element.discriminatorKey}', '\${data.value['${element.discriminatorKey}']}');";
       } else {
         return "throw MapperException.missingConstructor('${element.className}');";
       }
@@ -148,25 +177,6 @@ class DecoderGenerator {
         str = '${p.name}: ';
       }
       str += 'data.get(#${p.name})';
-
-      //var args = ['map', "'${param.jsonKey(element.caseStyle)}'"];
-
-      // var hook = await param.getHook();
-      // if (hook != null) {
-      //   args.add('const $hook');
-      // }
-
-      //str += "(${args.join(', ')})";
-
-      // if (p.hasDefaultValue && p.defaultValueCode != 'null') {
-      //   str += ' ?? ${await getPrefixedDefaultValue(p)}';
-      // } else {
-      //   var node = await p.getNode();
-      //   if (node is DefaultFormalParameter &&
-      //       node.defaultValue.toString() != 'null') {
-      //     str += ' ?? ${node.defaultValue}';
-      //   }
-      // }
 
       params.add(str);
     }

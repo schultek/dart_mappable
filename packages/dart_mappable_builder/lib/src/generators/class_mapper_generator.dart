@@ -4,6 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/class/alias_class_mapper_element.dart';
 import '../elements/class/linked_elements_mixin.dart';
+import '../elements/class/none_class_mapper_element.dart';
 import '../elements/mapper_element.dart';
 import '../elements/class/target_class_mapper_element.dart';
 import '../utils.dart';
@@ -49,10 +50,12 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
 
     var hasCyclicLink = linked.keys.any(isCyclic);
 
+    var isSubClass = target.superTarget != null &&
+        target.superTarget! is! NoneClassMapperElement;
 
     output.write(
-        'class ${target.mapperName} extends ClassMapperBase<${target.prefixedClassName}> {\n'
-            '  static final ${target.mapperName} instance = ${target.mapperName}();\n');
+        'class ${target.mapperName} extends ${isSubClass ? 'Sub' : ''}ClassMapperBase<${target.prefixedClassName}> {\n'
+        '  static final ${target.mapperName} instance = ${target.mapperName}();\n');
 
     var typesConfigs = target.typesConfigs;
     var types = '';
@@ -62,22 +65,24 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
       if (typesConfigs.length < 3) {
         types += typesConfigs.join(', ');
       } else {
-    types += '\n${typesConfigs.map((c) => '      $c,\n').join()}    ';
+        types += '\n${typesConfigs.map((c) => '      $c,\n').join()}    ';
       }
-    types += '}';
+      types += '}';
     }
 
     if (hasCyclicLink) {
       output.write('  static MapperContainer? _c;\n'
           '  static final MapperContainer container = _c ?? ((_c = MapperContainer($types))');
     } else {
-      output.write('  static final MapperContainer container = MapperContainer($types)');
+      output.write(
+          '  static final MapperContainer container = MapperContainer($types)');
     }
 
     if (target.customMappers.isEmpty) {
       output.write('\n  ..use(instance)');
     } else {
-      var mappers = target.customMappers.map((t) => '${t.getDisplayString(withNullability: false)}()');
+      var mappers = target.customMappers
+          .map((t) => '${t.getDisplayString(withNullability: false)}()');
       output.write('\n  ..useAll([instance, ${mappers.join()}])');
     }
 
@@ -99,15 +104,29 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
 
     output.write(';\n\n'
         '  @override\n'
-        "  String get id => '${target.uniqueId}';\n");
+        "  final String id = '${target.uniqueId}';\n");
 
     if (target.typeParamsList.isNotEmpty) {
       output.write(decoderGen.generateTypeFactory());
     }
 
     if (target is AliasClassMapperElement) {
+      output.write('  @override\n'
+          '  Type get implType => ${target.prefixedDecodingClassName};\n');
+    }
+
+    if (target.subTargets.isNotEmpty) {
+      var subMappers = target.subTargets //
+          .where((t) => t is! NoneClassMapperElement)
+          .map((t) {
+        var prefix = target.parent.prefixOfElement(t.element);
+        return '    $prefix${t.mapperName}.instance,\n';
+      });
+
       output.write(
-          '@override\nType get implType => ${target.prefixedDecodingClassName};\n');
+          '\n  @override\n  final List<SubClassMapperBase<${target.prefixedClassName}>> subMappers = [\n'
+          '${subMappers.join()}'
+          '  ];\n');
     }
 
     output.write('\n');
@@ -115,22 +134,30 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     var fields = target.fields;
 
     for (var f in fields) {
-      output.write('  static ${f.staticType} _\$${f.field.name}(${target.prefixedClassName} v) => v.${f.field.name};\n');
+      output.write(
+          '  static ${f.staticType} _\$${f.field.name}(${target.prefixedClassName} v) => v.${f.field.name};\n');
       if (f.generic) {
-        output.write('  static dynamic _arg\$${f.field.name}${target.typeParamsDeclaration}(f) => f<${f.type}>();\n');
+        output.write(
+            '  static dynamic _arg\$${f.field.name}${target.typeParamsDeclaration}(f) => f<${f.type}>();\n');
       }
     }
 
-    output.write('\n  @override\n  final Map<Symbol, Field<${target.prefixedClassName}, dynamic>> fields = const {\n');
+    output.write(
+        '\n  @override\n  final Map<Symbol, Field<${target.prefixedClassName}, dynamic>> fields = const {\n');
 
     for (var f in fields) {
-      output.write("    #${f.field.name}: Field<${target.prefixedClassName}, ${f.staticType}>('${f.field.name}', _\$${f.field.name}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook}),\n");
+      output.write(
+          "    #${f.field.name}: Field<${target.prefixedClassName}, ${f.staticType}>('${f.field.name}', _\$${f.field.name}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook}),\n");
     }
 
     output.write('  };\n');
 
     if (target.ignoreNull) {
       output.write('  @override\n  final bool ignoreNull = true;\n');
+    }
+
+    if (isSubClass) {
+      output.write(await decoderGen.generateCanDecodeMethod());
     }
 
     output.write(await decoderGen.generateInstantiateMethod());

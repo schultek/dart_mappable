@@ -5,7 +5,7 @@
 
 part of 'cat.dart';
 
-class CatMapper extends ClassMapperBase<Cat> {
+class CatMapper extends SubClassMapperBase<Cat> {
   static final CatMapper instance = CatMapper();
   static MapperContainer? _c;
   static final MapperContainer container = _c ?? ((_c = MapperContainer())
@@ -13,7 +13,7 @@ class CatMapper extends ClassMapperBase<Cat> {
   ..linkAll({AnimalMapper.container, CatTypeMapper.container}));
 
   @override
-  String get id => 'Cat';
+  final String id = 'Cat';
 
   static String _$name(Cat v) => v.name;
   static CatType _$breed(Cat v) => v.breed;
@@ -25,6 +25,15 @@ class CatMapper extends ClassMapperBase<Cat> {
     #breed: Field<Cat, CatType>('breed', _$breed),
     #color: Field<Cat, String>('color', _$color),
   };
+
+  @override
+  bool canDecode(DecodingOptions<Map<String, dynamic>> options) {
+    return options.value['type'] == 'Cat';
+  }
+  @override
+  DecodingOptions<Object> inherit(DecodingOptions<Object> options) {
+    return options.inherit(container: container);
+  }
 
   static Cat _instantiate(DecodingData data) {
     return Cat(data.get(#name), data.get(#breed), data.get(#color));
@@ -63,8 +72,9 @@ class _CatCopyWithImpl<$R, $Out extends Animal> extends CopyWithBase<$R, Cat, $O
 }
 
 class CatTypeMapper extends EnumMapper<CatType> {
+  static CatTypeMapper instance = CatTypeMapper();
   static MapperContainer container = MapperContainer(
-    mappers: {CatTypeMapper()},
+    mappers: {CatTypeMapper.instance},
   );
 
   static final fromValue = container.fromValue<CatType>;

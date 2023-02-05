@@ -9,11 +9,16 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   static final AnimalMapper instance = AnimalMapper();
   static MapperContainer? _c;
   static final MapperContainer container = _c ?? ((_c = MapperContainer())
-  ..use(instance)
-  ..linkAll({c.CatMapper.container, d.DogMapper.container}));
+  ..use(instance));
 
   @override
-  String get id => 'Animal';
+  final String id = 'Animal';
+
+  @override
+  final List<SubClassMapperBase<Animal>> subMappers = [
+    c.CatMapper.instance,
+    d.DogMapper.instance,
+  ];
 
   static String _$name(Animal v) => v.name;
 
@@ -23,7 +28,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   };
 
   static Animal _instantiate(DecodingData data) {
-    throw MapperException.missingSubclass('Animal', 'type', '${map['type']}');
+    throw MapperException.missingSubclass('Animal', 'type', '${data.value['type']}');
   }
   @override
   final Function instantiate = _instantiate;

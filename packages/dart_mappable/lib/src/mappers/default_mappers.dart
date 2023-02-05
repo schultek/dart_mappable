@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 
 import '../mapper_exception.dart';
-import '../mapper_container.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
 import 'mapper_mixins.dart';
@@ -9,32 +8,22 @@ import 'simple_mapper.dart';
 
 class PrimitiveMapper<T extends Object> extends MapperBase<T> {
   const PrimitiveMapper([T Function(Object value)? decoder, this.exactType])
-      : decoder = decoder ?? _cast<T>;
+      : _decoder = decoder ?? _cast<T>;
 
-  final T Function(Object value) decoder;
+  final T Function(Object value) _decoder;
   final Type? exactType;
 
   @override
   Type get type => exactType ?? super.type;
   @override
-  bool isFor(dynamic v) => exactType != null ? v.runtimeType == exactType : super.isFor(v);
-
-  @override
-  MapperElementBase<PrimitiveMapper<T>, T> createElement(MapperContainer container) {
-    return _PrimitiveMapperElement<T>(this, container);
-  }
+  bool isFor(dynamic v) =>
+      exactType != null ? v.runtimeType == exactType : super.isFor(v);
 
   static T _cast<T>(v) => v as T;
-}
-
-class _PrimitiveMapperElement<T extends Object> extends MapperElementBase<PrimitiveMapper<T>, T>
-    with PrimitiveMethodsMixin<PrimitiveMapper<T>, T> {
-  const _PrimitiveMapperElement(
-      super.mapper, super.container);
 
   @override
   T decoder(DecodingOptions<Object> options) {
-    return mapper.decoder(options.value);
+    return _decoder(options.value);
   }
 
   @override
@@ -70,7 +59,8 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
 }
 
 /// {@category Custom Mappers}
-class IterableMapper<I extends Iterable> extends MapperBase<I> {
+class IterableMapper<I extends Iterable> extends MapperBase<I>
+    with MapperEqualityMixin<I> {
   IterableMapper(this.fromIterable, this.typeFactory);
 
   final Iterable<U> Function<U>(Iterable<U> iterable) fromIterable;
@@ -79,40 +69,31 @@ class IterableMapper<I extends Iterable> extends MapperBase<I> {
   final Function typeFactory;
 
   @override
-  MapperElementBase<IterableMapper<I>, I> createElement(MapperContainer container) {
-    return _IterableMapperElement<I>(this, container);
-  }
-}
-
-class _IterableMapperElement<I extends Iterable> extends MapperElementBase<IterableMapper<I>, I>
-    with  MapperEqualityMixin<IterableMapper<I>, I> {
-  _IterableMapperElement(super.mapper, super.container);
-
-  @override
   I decoder(DecodingOptions options) {
-    return options.apply(this).checked<Iterable>().call1(<T>(o) {
-      return mapper.fromIterable(o.value.map((v) {
-        return container.$dec<T>(v, 'item');
+    return options.checked<Iterable>().call1(<T>(o) {
+      return fromIterable(o.value.map((v) {
+        return o.container.$dec<T>(v, 'item');
       })) as I;
     });
   }
 
-
   @override
   Object encoder(EncodingOptions<Object> options) {
-    return options.apply(this).checked<I>().call1(<T>(o) => o.value.map((v) => container.$enc<T>(v as T, 'item')).toList());
+    return options.checked<I>().call1(<T>(o) =>
+        o.value.map((v) => o.container.$enc<T>(v as T, 'item')).toList());
   }
 
   @override
-  late Equality equality = IterableEquality(MapperEquality(container));
+  Equality equality(Equality child) => IterableEquality(child);
 
   @override
-  String stringify(I self) =>
-      '(${self.map((e) => container.asString(e)).join(', ')})';
+  String stringify(MappingOptions<I> options) =>
+      '(${options.value.map((e) => options.container.asString(e)).join(', ')})';
 }
 
 /// {@category Custom Mappers}
-class MapMapper<M extends Map> extends MapperBase<M> {
+class MapMapper<M extends Map> extends MapperBase<M>
+    with MapperEqualityMixin<M> {
   MapMapper(this.fromMap, this.typeFactory);
 
   Map<K, V> Function<K, V>(Map<K, V> map) fromMap;
@@ -120,40 +101,30 @@ class MapMapper<M extends Map> extends MapperBase<M> {
   final Function typeFactory;
 
   @override
-  MapperElementBase<MapMapper<M>, M> createElement(MapperContainer container) {
-    return _MapMapperElement<M>(this, container);
-  }
-}
-
-class _MapMapperElement<M extends Map> extends MapperElementBase<MapMapper<M>, M>
-    with  MapperEqualityMixin<MapMapper<M>, M> {
-  _MapMapperElement(super.mapper, super.container);
-
-  @override
   M decoder(DecodingOptions options) {
-    return options.apply(this).checked<Map>().call2(<K, V>(o) {
-      return mapper.fromMap(o.value.map((key, value) {
-        return MapEntry(
-            container.$dec<K>(key, 'key'), container.$dec<V>(value, 'value'));
+    return options.checked<Map>().call2(<K, V>(o) {
+      return fromMap(o.value.map((key, value) {
+        return MapEntry(o.container.$dec<K>(key, 'key'),
+            o.container.$dec<V>(value, 'value'));
       })) as M;
     });
   }
 
   @override
   Object encoder(EncodingOptions<Object> options) {
-    return options.apply(this).checked<M>().call2(<K, V>(o) => o.value.map((key, value) {
-      return MapEntry(container.toValue<K>(key as K), container.toValue<V>(value as V));
-    }));
+    return options.checked<M>().call2(<K, V>(o) => o.value.map((key, value) {
+          return MapEntry(o.container.toValue<K>(key as K),
+              o.container.toValue<V>(value as V));
+        }));
   }
 
   @override
-  late Equality equality = MapEquality(
-      keys: MapperEquality(container), values: MapperEquality(container));
+  Equality equality(Equality child) => MapEquality(keys: child, values: child);
 
   @override
-  String stringify(M self) =>
-      '{${self.entries.map((e) => '${container.asString(e.key)}: '
-          '${container.asString(e.value)}').join(', ')}}';
+  String stringify(MappingOptions<M> options) =>
+      '{${options.value.entries.map((e) => '${options.container.asString(e.key)}: '
+          '${options.container.asString(e.value)}').join(', ')}}';
 }
 
 typedef SerializableDecoder1<T, V> = T Function<A>(V, A Function(Object?));
@@ -166,9 +137,10 @@ typedef SerializableEncoder2<T> = Object Function(
         Object? Function(dynamic), Object? Function(dynamic))
     Function(T);
 
-class SerializableMapper<T extends Object, V extends Object> extends MapperBase<T> {
-  late T Function(DecodingContext<V, SerializableMapper<T, V>, T> c) decoder;
-  late Object Function(EncodingContext<T, SerializableMapper<T, V>, T> c) encoder;
+class SerializableMapper<T extends Object, V extends Object>
+    extends MapperBase<T> {
+  late T Function(DecodingOptions<V> o) _decoder;
+  late Object Function(EncodingOptions<T> o) _encoder;
 
   @override
   late Function typeFactory;
@@ -176,8 +148,8 @@ class SerializableMapper<T extends Object, V extends Object> extends MapperBase<
   SerializableMapper({
     required T Function(V) decode,
     required Object Function() Function(T) encode,
-  })  : decoder = ((c) => decode(c.value)),
-        encoder = ((c) => encode(c.value)()),
+  })  : _decoder = ((c) => decode(c.value)),
+        _encoder = ((c) => encode(c.value)()),
         typeFactory = ((f) => f<T>());
 
   SerializableMapper.arg1({
@@ -185,8 +157,10 @@ class SerializableMapper<T extends Object, V extends Object> extends MapperBase<
     required SerializableEncoder1<T> encode,
     required TypeFactory1 type,
   }) {
-    decoder = ((c) => c.call1(<A>(c) => decode<A>(c.value, c.context.container.fromValue<A>)));
-    encoder = ((c) => c.call1(<A>(c) => encode(c.value)((o) => c.context.container.toValue<A>(o as A)))!);
+    _decoder = ((c) =>
+        c.call1(<A>(c) => decode<A>(c.value, c.container.fromValue<A>)));
+    _encoder = ((c) => c.call1(
+        <A>(c) => encode(c.value)((o) => c.container.toValue<A>(o as A)))!);
     typeFactory = type;
   }
 
@@ -195,29 +169,21 @@ class SerializableMapper<T extends Object, V extends Object> extends MapperBase<
     required SerializableEncoder2<T> encode,
     required TypeFactory2 type,
   }) {
-    decoder = ((c) => c.call2(<A, B>(c) => decode<A, B>(c.value, c.context.container.fromValue<A>, c.context.container.fromValue<B>)));
-    encoder = ((c) => c.call2(<A, B>(c) => encode(c.value)((o) => c.context.container.toValue<A>(o as A), (o) => c.context.container.toValue<B>(o as B))));
+    _decoder = ((c) => c.call2(<A, B>(c) => decode<A, B>(
+        c.value, c.container.fromValue<A>, c.container.fromValue<B>)));
+    _encoder = ((c) => c.call2(<A, B>(c) => encode(c.value)(
+        (o) => c.container.toValue<A>(o as A),
+        (o) => c.container.toValue<B>(o as B))));
     typeFactory = type;
   }
 
   @override
-  MapperElementBase<SerializableMapper<T, V>, T> createElement(MapperContainer container) {
-    return _SerializableMapperElement(this, container);
-  }
-}
-
-class _SerializableMapperElement<T extends Object, V extends Object> extends MapperElementBase<SerializableMapper<T, V>, T>
-    with PrimitiveMethodsMixin<SerializableMapper<T, V>, T> {
-  _SerializableMapperElement(super.mapper, super.container);
-
-  @override
   T decoder(DecodingOptions<Object> options) {
-    return mapper.decoder(options.apply(this).checked<V>());
+    return _decoder(options.checked<V>());
   }
 
   @override
   Object encoder(EncodingOptions<Object> options) {
-    var context = options.apply(this).checked<T>();
-    return mapper.encoder(context);
+    return _encoder(options.checked<T>());
   }
 }

@@ -215,23 +215,24 @@ abstract class ClassMapperElement extends MapperElement<ClassElement> {
           superTarget?.discriminatorKey;
 
   late Future<String?> discriminatorValueCode = () async {
-    var discriminatorValueField = annotation?.getField('discriminatorValue');
-    String? code;
-    if (discriminatorValueField != null) {
-      if (discriminatorValueField.type?.element?.name ==
-              MappingFlags.useAsDefault.runtimeType.toString() &&
-          discriminatorValueField.getField('index')!.toIntValue() == 0) {
-        return 'default';
-      } else {
-        code = (await getAnnotationNode(
+    String? code = (await getAnnotationNode(
                 annotatedElement, MappableClass, 'discriminatorValue'))
             ?.toSource();
-      }
-    }
     if (code == null && superTarget != null && !isAbstract) {
       code = "'${element.name}'";
     }
     return code;
+  }();
+
+  late bool isDefaultDiscriminator = () {
+    var value = annotation?.getField('discriminatorValue');
+    if (value != null &&
+        value.type?.element?.name ==
+            MappingFlags.useAsDefault.runtimeType.toString() &&
+        value.getField('index')!.toIntValue() == 0) {
+      return true;
+    }
+    return false;
   }();
 
   late String? hookForClass = () {

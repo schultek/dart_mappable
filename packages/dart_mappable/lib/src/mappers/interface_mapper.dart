@@ -1,24 +1,26 @@
 import '../annotations.dart';
-import '../mapper_container.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
 
-typedef DecodingData<T extends Object>
-    = DecodingContext<Map<String, dynamic>, ClassMapperBase<T>, T>;
-typedef EncodingData<T extends Object>
-    = EncodingContext<T, ClassMapperBase<T>, T>;
 
-extension DecodingDataGet on DecodingData {
-  T get<T>(Symbol name) => context.mapper.fields[name]!.decode(this);
+class DecodingData<T extends Object> {
+  DecodingData(this.options, this.mapper);
+
+  final DecodingOptions<Map<String, dynamic>> options;
+  final ClassMapperBase<T> mapper;
+
+  Map<String, dynamic> get value => options.value;
+
+  V get<V>(Symbol name) {
+    return mapper.fields[name]!.decode(options);
+  }
 }
 
-abstract class SubClassMapperBase<T extends Object>
-    implements ClassMapperBase<T> {
-  bool canDecode(
-      DecodingContext<Map<String, dynamic>, ClassMapperBase<T>, T> context);
-  DecodingContext<Object, MapperBase, Object> inherit(
-          DecodingContext<Object, MapperBase, Object> context) =>
-      context.inherit();
+abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
+  bool canDecode(DecodingOptions<Map<String, dynamic>> options);
+  DecodingOptions<Object> inherit(DecodingOptions<Object> options) {
+    return options.inherit();
+  }
 }
 
 abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
@@ -35,68 +37,54 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
       fields.values.where((f) => f.mode != FieldMode.member).toList();
 
   Function get instantiate;
-  T decode(DecodingData<T> data) {
-    return data.callWith(instantiate, data);
-  }
-
-  @override
-  ClassMapperElement<T> createElement(MapperContainer container) {
-    return ClassMapperElement(this, container);
-  }
-}
-
-class ClassMapperElement<T extends Object>
-    extends MapperElementBase<ClassMapperBase<T>, T> {
-  ClassMapperElement(super.mapper, super.container);
 
   @override
   T decoder(DecodingOptions<Object> options) {
-    return options.apply(this).wrap(hook: mapper.superHook, skipInherited: true,
-        (c) {
-      return c.wrap(hook: mapper.hook, (c) {
+    return options.wrap(hook: superHook, skipInherited: true, (c) {
+      return c.wrap(hook: hook, (c) {
         var context = c.checked<Map<String, dynamic>>();
-        if (mapper.subMappers.isNotEmpty) {
-          for (var m in mapper.subMappers) {
+        if (subMappers.isNotEmpty) {
+          for (var m in subMappers) {
             if (m.canDecode(context)) {
-              return m.createElement(container).decoder(m.inherit(context));
+              return m.decoder(m.inherit(context));
             }
           }
         }
-        return mapper.decode(c.checked());
+        return c.callWith(instantiate, DecodingData<T>(c.checked(), this));
       });
     });
   }
 
   @override
   Object? encoder(EncodingOptions<Object> options) {
-    return options.apply(this).checked<T>().wrap(hook: mapper.superHook, (c) {
-      return c.wrap(hook: mapper.hook, (c) {
+    return options.checked<T>().wrap(hook: superHook, (c) {
+      return c.wrap(hook: hook, (c) {
         return {
-          for (var f in mapper._params)
-            if (!mapper.ignoreNull || f.get(c.value) != null) f.key: f.encode(c)
+          for (var f in _params)
+            if (!ignoreNull || f.get(c.value) != null) f.key: f.encode(c)
         };
       });
     });
   }
 
   @override
-  String stringify(T self) {
-    return '${mapper.id}(${mapper._members.map((f) {
-      return '${f.name}: ${container.asString(f.get(self))}';
+  String stringify(MappingOptions<T> options) {
+    return '$id(${_members.map((f) {
+      return '${f.name}: ${options.container.asString(f.get(options.value))}';
     }).join(', ')})';
   }
 
   @override
-  int hash(T self) {
-    return Object.hashAll(mapper._members.map((f) {
-      return container.hash(f.get(self));
+  int hash(MappingOptions<T> options) {
+    return Object.hashAll(_members.map((f) {
+      return options.container.hash(f.get(options.value));
     }));
   }
 
   @override
-  bool equals(T self, T other) {
-    return mapper._members.every((f) {
-      return container.isEqual(f.get(self), f.get(other));
+  bool equals(MappingOptions<T> options, T other) {
+    return _members.every((f) {
+      return options.container.isEqual(f.get(options.value), f.get(other));
     });
   }
 }
@@ -126,19 +114,20 @@ class Field<T extends Object, V> {
       this.hook})
       : key = key ?? name;
 
-  dynamic encode(EncodingData<T> context) {
-    var container = context.context.container;
+  dynamic encode(EncodingOptions<T> options) {
+    var container = options.container;
     if (arg == null) {
-      return container.$enc<V>(get(context.value), name, hook);
+      return container.$enc<V>(get(options.value), name, hook);
     } else {
-      return context.callWith(arg!, <U>() => container.$enc<U>(get(context.value) as U, name, hook));
+      return options.callWith(arg!,
+          <U>() => container.$enc<U>(get(options.value) as U, name, hook));
     }
   }
 
-  R decode<R>(DecodingData<T> context) {
+  R decode<R>(DecodingOptions<Map<String, dynamic>> options) {
     var value = opt || def != null
-        ? context.context.container.$dec<R?>(context.value[key], key, hook)
-        : context.context.container.$dec<R>(context.value[key], key, hook);
+        ? options.container.$dec<R?>(options.value[key], key, hook)
+        : options.container.$dec<R>(options.value[key], key, hook);
     return value ?? (def as R);
   }
 }
