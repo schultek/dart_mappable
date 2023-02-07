@@ -3,12 +3,17 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_visitor.dart';
-import 'package:dart_mappable/dart_mappable.dart' hide ClassMapperElement;
+import 'package:dart_mappable/dart_mappable.dart';
 
+import '../mapper_group.dart';
 import '../utils.dart';
 import 'class/class_mapper_element.dart';
 
 class RemoveParamsVisitor extends TypeVisitor<String> {
+
+  final MapperElementGroup parent;
+
+  RemoveParamsVisitor(this.parent);
 
   @override
   String visitDynamicType(DynamicType type) {
@@ -23,7 +28,9 @@ class RemoveParamsVisitor extends TypeVisitor<String> {
 
   @override
   String visitInterfaceType(InterfaceType type) {
-    return '${type.element.name}'
+    return '${
+    parent.prefixOfElement(type.element)
+    }${type.element.name}'
         '${type.typeArguments.isNotEmpty ? '<${type.typeArguments.map((t) => t.accept(this)).join(', ')}>' : ''}'
         '${
     type.nullabilitySuffix == NullabilitySuffix.question ? '?' : ''
@@ -69,12 +76,24 @@ class MapperFieldElement {
 
     return ', arg: _arg\$${field.name}';
   }();
+
+  late DartType resolvedType = () {
+    var type = field.type;
+
+    if (field.enclosingElement is InterfaceElement) {
+      var it = parent.element.thisType.asInstanceOf(field.enclosingElement as InterfaceElement)!;
+      var getter = it.getGetter(field.name);
+      type = getter!.type.returnType;
+    }
+    return type;
+  }();
+
   late String staticType = () {
-    return field.type.accept(RemoveParamsVisitor());
+    return resolvedType.accept(RemoveParamsVisitor(parent.parent));
   }();
 
   late String type = () {
-    return field.type.getDisplayString(withNullability: true);
+    return parent.parent.prefixedType(resolvedType);
   }();
 
   late String mode = () {

@@ -34,6 +34,8 @@ abstract class MapperContainer {
     MapMapper<Map>(<K, V>(map) => map, <K, V>(f) => f<Map<K, V>>()),
   });
 
+  static final MapperContainer globals = MapperContainerBase();
+
   T fromValue<T>(dynamic value);
   dynamic toValue<T>(T value);
 
@@ -217,7 +219,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     var mapper = _mapperForType(type);
     if (mapper != null) {
       try {
-        return mapper.decoder(DecodingOptions(value, this, args: type.args)) as T;
+        return mapper.decoder(DecodingOptions(value, container: this, args: type.args)) as T;
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
           MapperException.chain(MapperMethod.decode, '($type)', e),
@@ -256,7 +258,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
           typeArgs = fallback;
         }
 
-        var result = mapper.encoder(EncodingOptions<Object>(value, this, args: typeArgs));
+        var result = mapper.encoder(EncodingOptions<Object>(value, container: this, args: typeArgs));
 
         if (result is Map<String, dynamic> && typeId != null) {
           result['__type'] = typeId;
@@ -365,7 +367,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     var mapper = _mapperFor(value);
     if (mapper != null) {
       try {
-        return fn(mapper, MappingOptions(value, this));
+        return fn(mapper, MappingOptions(value, container: this));
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
           MapperException.chain(method, hint(), e),

@@ -6,12 +6,16 @@
 part of 'generic.dart';
 
 class BoxCMapper extends ClassMapperBase<BoxC> {
-  static final BoxCMapper instance = BoxCMapper();
-  static final MapperContainer container = MapperContainer()
-  ..use(instance);
-
+  BoxCMapper._();
+  static BoxCMapper? _instance;
+  static BoxCMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = BoxCMapper._());
+    }
+    return _instance!;
+  }
   @override
-  String get id => 'BoxC';
+  final String id = 'BoxC';
   @override
   Function get typeFactory => <T>(f) => f<BoxC<T>>();
 
@@ -29,17 +33,41 @@ class BoxCMapper extends ClassMapperBase<BoxC> {
   @override
   final Function instantiate = _instantiate;
 
-  static BoxC<T> fromMap<T>(Map<String, dynamic> map) => container.fromMap<BoxC<T>>(map);
-  static BoxC<T> fromJson<T>(String json) => container.fromJson<BoxC<T>>(json);
+  static BoxC<T> fromMap<T>(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<BoxC<T>>(map);
+  }
+  static BoxC<T> fromJson<T>(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<BoxC<T>>(json);
+  }
 }
 
 mixin BoxCMappable<T> {
-  String toJson() => BoxCMapper.container.toJson(this as BoxC<T>);
-  Map<String, dynamic> toMap() => BoxCMapper.container.toMap(this as BoxC<T>);
+  String toJson() {
+    BoxCMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as BoxC<T>);
+  }
+  Map<String, dynamic> toMap() {
+    BoxCMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as BoxC<T>);
+  }
   BoxCCopyWith<BoxC<T>, BoxC<T>, BoxC<T>, T> get copyWith => _BoxCCopyWithImpl(this as BoxC<T>, $identity, $identity);
-  @override String toString() => BoxCMapper.container.asString(this);
-  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && BoxCMapper.container.isEqual(this, other));
-  @override int get hashCode => BoxCMapper.container.hash(this);
+  @override
+  String toString() {
+    BoxCMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
+  @override
+  bool operator ==(Object other) {
+    BoxCMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
+  @override
+  int get hashCode {
+    BoxCMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
 extension BoxCValueCopy<$R, $Out extends BoxC, T> on ObjectCopyWith<$R, BoxC<T>, $Out> {
@@ -60,12 +88,16 @@ class _BoxCCopyWithImpl<$R, $Out extends BoxC, T> extends CopyWithBase<$R, BoxC<
 }
 
 class ContentCMapper extends ClassMapperBase<ContentC> {
-  static final ContentCMapper instance = ContentCMapper();
-  static final MapperContainer container = MapperContainer()
-  ..use(instance);
-
+  ContentCMapper._();
+  static ContentCMapper? _instance;
+  static ContentCMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ContentCMapper._());
+    }
+    return _instance!;
+  }
   @override
-  String get id => 'ContentC';
+  final String id = 'ContentC';
 
   static String _$data(ContentC v) => v.data;
 
@@ -80,17 +112,41 @@ class ContentCMapper extends ClassMapperBase<ContentC> {
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<ContentC>;
-  static final fromJson = container.fromJson<ContentC>;
+  static ContentC fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<ContentC>(map);
+  }
+  static ContentC fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<ContentC>(json);
+  }
 }
 
 mixin ContentCMappable {
-  String toJson() => ContentCMapper.container.toJson(this as ContentC);
-  Map<String, dynamic> toMap() => ContentCMapper.container.toMap(this as ContentC);
+  String toJson() {
+    ContentCMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as ContentC);
+  }
+  Map<String, dynamic> toMap() {
+    ContentCMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as ContentC);
+  }
   ContentCCopyWith<ContentC, ContentC, ContentC> get copyWith => _ContentCCopyWithImpl(this as ContentC, $identity, $identity);
-  @override String toString() => ContentCMapper.container.asString(this);
-  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && ContentCMapper.container.isEqual(this, other));
-  @override int get hashCode => ContentCMapper.container.hash(this);
+  @override
+  String toString() {
+    ContentCMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
+  @override
+  bool operator ==(Object other) {
+    ContentCMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
+  @override
+  int get hashCode {
+    ContentCMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
 extension ContentCValueCopy<$R, $Out extends ContentC> on ObjectCopyWith<$R, ContentC, $Out> {

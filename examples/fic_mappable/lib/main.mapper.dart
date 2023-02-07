@@ -6,13 +6,17 @@
 part of 'main.dart';
 
 class AMapper extends ClassMapperBase<A> {
-  static final AMapper instance = AMapper();
-  static final MapperContainer container = MapperContainer()
-  ..use(instance)
-  ..linkAll({BMapper.container});
-
+  AMapper._();
+  static AMapper? _instance;
+  static AMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = AMapper._());
+      BMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
   @override
-  String get id => 'A';
+  final String id = 'A';
 
   static IList<B> _$list(A v) => v.list;
 
@@ -27,17 +31,41 @@ class AMapper extends ClassMapperBase<A> {
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<A>;
-  static final fromJson = container.fromJson<A>;
+  static A fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<A>(map);
+  }
+  static A fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<A>(json);
+  }
 }
 
 mixin AMappable {
-  String toJson() => AMapper.container.toJson(this as A);
-  Map<String, dynamic> toMap() => AMapper.container.toMap(this as A);
+  String toJson() {
+    AMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as A);
+  }
+  Map<String, dynamic> toMap() {
+    AMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as A);
+  }
   ACopyWith<A, A, A> get copyWith => _ACopyWithImpl(this as A, $identity, $identity);
-  @override String toString() => AMapper.container.asString(this);
-  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && AMapper.container.isEqual(this, other));
-  @override int get hashCode => AMapper.container.hash(this);
+  @override
+  String toString() {
+    AMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
+  @override
+  bool operator ==(Object other) {
+    AMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
+  @override
+  int get hashCode {
+    AMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
 extension AValueCopy<$R, $Out extends A> on ObjectCopyWith<$R, A, $Out> {
@@ -58,12 +86,16 @@ class _ACopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, A, $Out> imple
 }
 
 class BMapper extends ClassMapperBase<B> {
-  static final BMapper instance = BMapper();
-  static final MapperContainer container = MapperContainer()
-  ..use(instance);
-
+  BMapper._();
+  static BMapper? _instance;
+  static BMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = BMapper._());
+    }
+    return _instance!;
+  }
   @override
-  String get id => 'B';
+  final String id = 'B';
 
   static String _$str(B v) => v.str;
 
@@ -78,17 +110,41 @@ class BMapper extends ClassMapperBase<B> {
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<B>;
-  static final fromJson = container.fromJson<B>;
+  static B fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<B>(map);
+  }
+  static B fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<B>(json);
+  }
 }
 
 mixin BMappable {
-  String toJson() => BMapper.container.toJson(this as B);
-  Map<String, dynamic> toMap() => BMapper.container.toMap(this as B);
+  String toJson() {
+    BMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as B);
+  }
+  Map<String, dynamic> toMap() {
+    BMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as B);
+  }
   BCopyWith<B, B, B> get copyWith => _BCopyWithImpl(this as B, $identity, $identity);
-  @override String toString() => BMapper.container.asString(this);
-  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && BMapper.container.isEqual(this, other));
-  @override int get hashCode => BMapper.container.hash(this);
+  @override
+  String toString() {
+    BMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
+  @override
+  bool operator ==(Object other) {
+    BMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
+  @override
+  int get hashCode {
+    BMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
 extension BValueCopy<$R, $Out extends B> on ObjectCopyWith<$R, B, $Out> {

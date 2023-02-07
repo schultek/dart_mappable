@@ -41,8 +41,9 @@ class Two extends AbstractIdBase with TwoMappable {
 void main() {
   group('mixed mappable', () {
     test('does not generate for non-mappable superclass', () {
-      expect(BaseMapper.container.get<Base>(), isNotNull);
-      expect(BaseMapper.container.get<AbstractIdBase>(), isNull);
+      BaseMapper.ensureInitialized();
+      expect(MapperContainer.globals.get<Base>(), isNotNull);
+      expect(MapperContainer.globals.get<AbstractIdBase>(), isNull);
     });
   });
 }

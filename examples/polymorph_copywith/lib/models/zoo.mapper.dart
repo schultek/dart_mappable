@@ -6,11 +6,15 @@
 part of 'zoo.dart';
 
 class ZooMapper extends ClassMapperBase<Zoo> {
-  static final ZooMapper instance = ZooMapper();
-  static final MapperContainer container = MapperContainer()
-  ..use(instance)
-  ..linkAll({AnimalMapper.container});
-
+  ZooMapper._();
+  static ZooMapper? _instance;
+  static ZooMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ZooMapper._());
+      AnimalMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
   @override
   final String id = 'Zoo';
   @override
@@ -30,17 +34,41 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   @override
   final Function instantiate = _instantiate;
 
-  static Zoo<T> fromMap<T extends Animal>(Map<String, dynamic> map) => container.fromMap<Zoo<T>>(map);
-  static Zoo<T> fromJson<T extends Animal>(String json) => container.fromJson<Zoo<T>>(json);
+  static Zoo<T> fromMap<T extends Animal>(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<Zoo<T>>(map);
+  }
+  static Zoo<T> fromJson<T extends Animal>(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<Zoo<T>>(json);
+  }
 }
 
 mixin ZooMappable<T extends Animal> {
-  String toJson() => ZooMapper.container.toJson(this as Zoo<T>);
-  Map<String, dynamic> toMap() => ZooMapper.container.toMap(this as Zoo<T>);
+  String toJson() {
+    ZooMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as Zoo<T>);
+  }
+  Map<String, dynamic> toMap() {
+    ZooMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as Zoo<T>);
+  }
   ZooCopyWith<Zoo<T>, Zoo<T>, Zoo<T>, T> get copyWith => _ZooCopyWithImpl(this as Zoo<T>, $identity, $identity);
-  @override String toString() => ZooMapper.container.asString(this);
-  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && ZooMapper.container.isEqual(this, other));
-  @override int get hashCode => ZooMapper.container.hash(this);
+  @override
+  String toString() {
+    ZooMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
+  @override
+  bool operator ==(Object other) {
+    ZooMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
+  @override
+  int get hashCode {
+    ZooMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
 extension ZooValueCopy<$R, $Out extends Zoo, T extends Animal> on ObjectCopyWith<$R, Zoo<T>, $Out> {

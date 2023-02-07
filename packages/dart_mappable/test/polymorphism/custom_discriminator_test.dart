@@ -3,17 +3,12 @@ import 'package:test/test.dart';
 
 part 'custom_discriminator_test.mapper.dart';
 
-@MappableClass(
-  hook: CheckTypesHook({
-    B: B.checkType,
-    C: C.checkType,
-  }),
-)
+@MappableClass()
 abstract class A with AMappable {
   A();
 }
 
-@MappableClass()
+@MappableClass(discriminatorValue: B.checkType)
 class B extends A with BMappable {
   B();
 
@@ -22,7 +17,7 @@ class B extends A with BMappable {
   }
 }
 
-@MappableClass()
+@MappableClass(discriminatorValue: C.checkType)
 class C extends A with CMappable {
   C();
 

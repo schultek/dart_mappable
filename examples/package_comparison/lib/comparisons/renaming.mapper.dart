@@ -6,12 +6,16 @@
 part of 'renaming.dart';
 
 class PersonBMapper extends ClassMapperBase<PersonB> {
-  static final PersonBMapper instance = PersonBMapper();
-  static final MapperContainer container = MapperContainer()
-  ..use(instance);
-
+  PersonBMapper._();
+  static PersonBMapper? _instance;
+  static PersonBMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = PersonBMapper._());
+    }
+    return _instance!;
+  }
   @override
-  String get id => 'PersonB';
+  final String id = 'PersonB';
 
   static String _$firstName(PersonB v) => v.firstName;
   static String _$lastName(PersonB v) => v.lastName;
@@ -28,17 +32,41 @@ class PersonBMapper extends ClassMapperBase<PersonB> {
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<PersonB>;
-  static final fromJson = container.fromJson<PersonB>;
+  static PersonB fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<PersonB>(map);
+  }
+  static PersonB fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<PersonB>(json);
+  }
 }
 
 mixin PersonBMappable {
-  String toJson() => PersonBMapper.container.toJson(this as PersonB);
-  Map<String, dynamic> toMap() => PersonBMapper.container.toMap(this as PersonB);
+  String toJson() {
+    PersonBMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as PersonB);
+  }
+  Map<String, dynamic> toMap() {
+    PersonBMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as PersonB);
+  }
   PersonBCopyWith<PersonB, PersonB, PersonB> get copyWith => _PersonBCopyWithImpl(this as PersonB, $identity, $identity);
-  @override String toString() => PersonBMapper.container.asString(this);
-  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && PersonBMapper.container.isEqual(this, other));
-  @override int get hashCode => PersonBMapper.container.hash(this);
+  @override
+  String toString() {
+    PersonBMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
+  @override
+  bool operator ==(Object other) {
+    PersonBMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
+  @override
+  int get hashCode {
+    PersonBMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
 extension PersonBValueCopy<$R, $Out extends PersonB> on ObjectCopyWith<$R, PersonB, $Out> {

@@ -5,230 +5,207 @@
 
 part of 'lib_mapping_test.dart';
 
-class CakeMapper extends MapperBase<f.Cake> {
-  static MapperContainer container = MapperContainer(
-    mappers: {CakeMapper()},
-    types: {'Cake': (f) => f<Cake>()},
-  );
-
-  @override
-  CakeMapperElement createElement(MapperContainer container) {
-    return CakeMapperElement._(this, container);
+class CakeMapper extends ClassMapperBase<f.Cake> {
+  CakeMapper._();
+  static CakeMapper? _instance;
+  static CakeMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperBase.addType<Cake>();
+      MapperContainer.globals.use(_instance = CakeMapper._());
+    }
+    return _instance!;
   }
-
   @override
-  String get id => 'Cake';
+  final String id = 'Cake';
   @override
   Type get implType => Cake;
-  static final fromMap = container.fromMap<Cake>;
-  static final fromJson = container.fromJson<Cake>;
-}
 
-class CakeMapperElement extends MapperElementBase<f.Cake> {
-  CakeMapperElement._(super.mapper, super.container);
+  static String _$type(f.Cake v) => v.type;
 
   @override
-  Function get decoder => decode;
-  Cake decode(dynamic v) =>
-      checkedType(v, (Map<String, dynamic> map) => fromMap(map));
-  Cake fromMap(Map<String, dynamic> map) => Cake(container.$get(map, 'type'));
+  final Map<Symbol, Field<f.Cake, dynamic>> fields = const {
+    #type: Field<f.Cake, String>('type', _$type),
+  };
 
+  static Cake _instantiate(DecodingData data) {
+    return Cake(data.get(#type));
+  }
   @override
-  Function get encoder => encode;
-  dynamic encode(f.Cake v) => toMap(v);
-  Map<String, dynamic> toMap(f.Cake c) =>
-      {'type': container.$enc(c.type, 'type')};
+  final Function instantiate = _instantiate;
 
-  @override
-  String stringify(f.Cake self) => 'Cake()';
-  @override
-  int hash(f.Cake self) => 0;
-  @override
-  bool equals(f.Cake self, f.Cake other) => true;
+  static Cake fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<Cake>(map);
+  }
+  static Cake fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<Cake>(json);
+  }
 }
 
 mixin CakeMappable {
-  String toJson() => CakeMapper.container.toJson(this as Cake);
-  Map<String, dynamic> toMap() => CakeMapper.container.toMap(this as Cake);
-  CakeCopyWith<Cake, Cake, Cake> get copyWith =>
-      _CakeCopyWithImpl(this as Cake, $identity, $identity);
+  String toJson() {
+    CakeMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as Cake);
+  }
+  Map<String, dynamic> toMap() {
+    CakeMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as Cake);
+  }
+  CakeCopyWith<Cake, Cake, Cake> get copyWith => _CakeCopyWithImpl(this as Cake, $identity, $identity);
   @override
-  String toString() => CakeMapper.container.asString(this);
+  String toString() {
+    CakeMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (runtimeType == other.runtimeType &&
-          CakeMapper.container.isEqual(this, other));
+  bool operator ==(Object other) {
+    CakeMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
   @override
-  int get hashCode => CakeMapper.container.hash(this);
+  int get hashCode {
+    CakeMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
-extension CakeValueCopy<$R, $Out extends f.Cake>
-    on ObjectCopyWith<$R, Cake, $Out> {
-  CakeCopyWith<$R, Cake, $Out> get asCake =>
-      base.as((v, t, t2) => _CakeCopyWithImpl(v, t, t2));
+extension CakeValueCopy<$R, $Out extends f.Cake> on ObjectCopyWith<$R, Cake, $Out> {
+  CakeCopyWith<$R, Cake, $Out> get asCake => base.as((v, t, t2) => _CakeCopyWithImpl(v, t, t2));
 }
 
 typedef CakeCopyWithBound = f.Cake;
-
-abstract class CakeCopyWith<$R, $In extends Cake, $Out extends f.Cake>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  CakeCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends f.Cake>(
-      Then<Cake, $Out2> t, Then<$Out2, $R2> t2);
+abstract class CakeCopyWith<$R, $In extends Cake, $Out extends f.Cake> implements ObjectCopyWith<$R, $In, $Out> {
+  CakeCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends f.Cake>(Then<Cake, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? type});
 }
 
-class _CakeCopyWithImpl<$R, $Out extends f.Cake>
-    extends CopyWithBase<$R, Cake, $Out>
-    implements CakeCopyWith<$R, Cake, $Out> {
+class _CakeCopyWithImpl<$R, $Out extends f.Cake> extends CopyWithBase<$R, Cake, $Out> implements CakeCopyWith<$R, Cake, $Out> {
   _CakeCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  CakeCopyWith<$R2, Cake, $Out2> chain<$R2, $Out2 extends f.Cake>(
-          Then<Cake, $Out2> t, Then<$Out2, $R2> t2) =>
-      _CakeCopyWithImpl($value, t, t2);
+  @override CakeCopyWith<$R2, Cake, $Out2> chain<$R2, $Out2 extends f.Cake>(Then<Cake, $Out2> t, Then<$Out2, $R2> t2) => _CakeCopyWithImpl($value, t, t2);
 
-  @override
-  $R call({String? type}) => $then(Cake(type ?? $value.type));
+  @override $R call({String? type}) => $then(Cake(type ?? $value.type));
 }
 
-class Person2Mapper extends MapperBase<m.Person> {
-  static MapperContainer container = MapperContainer(
-    mappers: {Person2Mapper()},
-    types: {'Person2': (f) => f<Person2>()},
-  );
-
-  @override
-  Person2MapperElement createElement(MapperContainer container) {
-    return Person2MapperElement._(this, container);
+class Person2Mapper extends ClassMapperBase<m.Person> {
+  Person2Mapper._();
+  static Person2Mapper? _instance;
+  static Person2Mapper ensureInitialized() {
+    if (_instance == null) {
+      MapperBase.addType<Person2>();
+      MapperContainer.globals.use(_instance = Person2Mapper._());
+    }
+    return _instance!;
   }
-
   @override
-  String get id => 'Person2';
+  final String id = 'Person2';
   @override
   Type get implType => Person2;
-  static final fromMap = container.fromMap<Person2>;
-  static final fromJson = container.fromJson<Person2>;
-}
 
-class Person2MapperElement extends MapperElementBase<m.Person> {
-  Person2MapperElement._(super.mapper, super.container);
+  static String _$firstName(m.Person v) => v.firstName;
 
   @override
-  Function get decoder => decode;
-  Person2 decode(dynamic v) =>
-      checkedType(v, (Map<String, dynamic> map) => fromMap(map));
-  Person2 fromMap(Map<String, dynamic> map) =>
-      Person2(container.$get(map, 'first_name'));
+  final Map<Symbol, Field<m.Person, dynamic>> fields = const {
+    #firstName: Field<m.Person, String>('firstName', _$firstName, key: 'first_name'),
+  };
 
+  static Person2 _instantiate(DecodingData data) {
+    return Person2(data.get(#firstName));
+  }
   @override
-  Function get encoder => encode;
-  dynamic encode(m.Person v) => toMap(v);
-  Map<String, dynamic> toMap(m.Person p) =>
-      {'first_name': container.$enc(p.firstName, 'firstName')};
+  final Function instantiate = _instantiate;
 
-  @override
-  String stringify(m.Person self) => 'Person2()';
-  @override
-  int hash(m.Person self) => 0;
-  @override
-  bool equals(m.Person self, m.Person other) => true;
+  static Person2 fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<Person2>(map);
+  }
+  static Person2 fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<Person2>(json);
+  }
 }
 
 mixin Person2Mappable {
-  String toJson() => Person2Mapper.container.toJson(this as Person2);
-  Map<String, dynamic> toMap() =>
-      Person2Mapper.container.toMap(this as Person2);
-  Person2CopyWith<Person2, Person2, Person2> get copyWith =>
-      _Person2CopyWithImpl(this as Person2, $identity, $identity);
+  String toJson() {
+    Person2Mapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as Person2);
+  }
+  Map<String, dynamic> toMap() {
+    Person2Mapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as Person2);
+  }
+  Person2CopyWith<Person2, Person2, Person2> get copyWith => _Person2CopyWithImpl(this as Person2, $identity, $identity);
   @override
-  String toString() => Person2Mapper.container.asString(this);
+  String toString() {
+    Person2Mapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (runtimeType == other.runtimeType &&
-          Person2Mapper.container.isEqual(this, other));
+  bool operator ==(Object other) {
+    Person2Mapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
   @override
-  int get hashCode => Person2Mapper.container.hash(this);
+  int get hashCode {
+    Person2Mapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
-extension Person2ValueCopy<$R, $Out extends m.Person>
-    on ObjectCopyWith<$R, Person2, $Out> {
-  Person2CopyWith<$R, Person2, $Out> get asPerson2 =>
-      base.as((v, t, t2) => _Person2CopyWithImpl(v, t, t2));
+extension Person2ValueCopy<$R, $Out extends m.Person> on ObjectCopyWith<$R, Person2, $Out> {
+  Person2CopyWith<$R, Person2, $Out> get asPerson2 => base.as((v, t, t2) => _Person2CopyWithImpl(v, t, t2));
 }
 
 typedef Person2CopyWithBound = m.Person;
-
-abstract class Person2CopyWith<$R, $In extends Person2, $Out extends m.Person>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  Person2CopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends m.Person>(
-      Then<Person2, $Out2> t, Then<$Out2, $R2> t2);
+abstract class Person2CopyWith<$R, $In extends Person2, $Out extends m.Person> implements ObjectCopyWith<$R, $In, $Out> {
+  Person2CopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends m.Person>(Then<Person2, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? firstName});
 }
 
-class _Person2CopyWithImpl<$R, $Out extends m.Person>
-    extends CopyWithBase<$R, Person2, $Out>
-    implements Person2CopyWith<$R, Person2, $Out> {
+class _Person2CopyWithImpl<$R, $Out extends m.Person> extends CopyWithBase<$R, Person2, $Out> implements Person2CopyWith<$R, Person2, $Out> {
   _Person2CopyWithImpl(super.value, super.then, super.then2);
-  @override
-  Person2CopyWith<$R2, Person2, $Out2> chain<$R2, $Out2 extends m.Person>(
-          Then<Person2, $Out2> t, Then<$Out2, $R2> t2) =>
-      _Person2CopyWithImpl($value, t, t2);
+  @override Person2CopyWith<$R2, Person2, $Out2> chain<$R2, $Out2 extends m.Person>(Then<Person2, $Out2> t, Then<$Out2, $R2> t2) => _Person2CopyWithImpl($value, t, t2);
 
-  @override
-  $R call({String? firstName}) => $then(Person2(firstName ?? $value.firstName));
+  @override $R call({String? firstName}) => $then(Person2(firstName ?? $value.firstName));
 }
 
-class AnimalMapper extends MapperBase<o.Animal> {
-  static MapperContainer? _c;
-  static MapperContainer container = _c ??
-      ((_c = MapperContainer(
-        mappers: {AnimalMapper()},
-        types: {'Animal': (f) => f<Animal>()},
-      ))
-        ..linkAll({PetMapper.container}));
-
-  @override
-  AnimalMapperElement createElement(MapperContainer container) {
-    return AnimalMapperElement._(this, container);
+class AnimalMapper extends ClassMapperBase<o.Animal> {
+  AnimalMapper._();
+  static AnimalMapper? _instance;
+  static AnimalMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperBase.addType<Animal>();
+      MapperContainer.globals.use(_instance = AnimalMapper._());
+      PetMapper.ensureInitialized();
+    }
+    return _instance!;
   }
-
   @override
-  String get id => 'Animal';
+  final String id = 'Animal';
   @override
   Type get implType => Animal;
-  static final fromMap = container.fromMap<Animal>;
-  static final fromJson = container.fromJson<Animal>;
-}
 
-class AnimalMapperElement extends MapperElementBase<o.Animal> {
-  AnimalMapperElement._(super.mapper, super.container);
+  static String _$color(o.Animal v) => v.color;
 
   @override
-  Function get decoder => decode;
-  Animal decode(dynamic v) => checkedType(v, (Map<String, dynamic> map) {
-        switch (map['type']) {
-          case 'Pet':
-            return PetMapper().createElement(container).decode(map);
-          default:
-            return fromMap(map);
-        }
-      });
-  Animal fromMap(Map<String, dynamic> map) =>
-      throw MapperException.missingSubclass('Animal', 'type', '${map['type']}');
+  final Map<Symbol, Field<o.Animal, dynamic>> fields = const {
+    #color: Field<o.Animal, String>('color', _$color),
+  };
 
+  static Animal _instantiate(DecodingData data) {
+    throw MapperException.missingSubclass('Animal', 'type', '${data.value['type']}');
+  }
   @override
-  Function get encoder => encode;
-  dynamic encode(o.Animal v) => toMap(v);
-  Map<String, dynamic> toMap(o.Animal a) =>
-      {'color': container.$enc(a.color, 'color')};
+  final Function instantiate = _instantiate;
 
-  @override
-  String stringify(o.Animal self) => 'Animal()';
-  @override
-  int hash(o.Animal self) => 0;
-  @override
-  bool equals(o.Animal self, o.Animal other) => true;
+  static Animal fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<Animal>(map);
+  }
+  static Animal fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<Animal>(json);
+  }
 }
 
 mixin AnimalMappable {
@@ -238,191 +215,177 @@ mixin AnimalMappable {
 }
 
 typedef AnimalCopyWithBound = o.Animal;
-
-abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends o.Animal>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  AnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends o.Animal>(
-      Then<Animal, $Out2> t, Then<$Out2, $R2> t2);
+abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends o.Animal> implements ObjectCopyWith<$R, $In, $Out> {
+  AnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends o.Animal>(Then<Animal, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? color});
 }
 
-class PetMapper extends MapperBase<o.Pet> {
-  static MapperContainer? _c;
-  static MapperContainer container = _c ??
-      ((_c = MapperContainer(
-        mappers: {PetMapper()},
-        types: {'Pet': (f) => f<Pet>()},
-      ))
-        ..linkAll({AnimalMapper.container, Person2Mapper.container}));
 
-  @override
-  PetMapperElement createElement(MapperContainer container) {
-    return PetMapperElement._(this, container);
+class PetMapper extends DiscriminatorSubClassMapperBase<o.Pet> {
+  PetMapper._();
+  static PetMapper? _instance;
+  static PetMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperBase.addType<Pet>();
+      MapperContainer.globals.use(_instance = PetMapper._());
+      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
+      Person2Mapper.ensureInitialized();
+    }
+    return _instance!;
   }
-
   @override
-  String get id => 'Pet';
+  final String id = 'Pet';
   @override
   Type get implType => Pet;
-  static final fromMap = container.fromMap<Pet>;
-  static final fromJson = container.fromJson<Pet>;
-}
 
-class PetMapperElement extends MapperElementBase<o.Pet> {
-  PetMapperElement._(super.mapper, super.container);
+  static m.Person _$owner(o.Pet v) => v.owner;
+  static String _$color(o.Pet v) => v.color;
 
   @override
-  Function get decoder => decode;
-  Pet decode(dynamic v) =>
-      checkedType(v, (Map<String, dynamic> map) => fromMap(map));
-  Pet fromMap(Map<String, dynamic> map) =>
-      Pet(container.$get(map, 'owner'), container.$get(map, 'color'));
+  final Map<Symbol, Field<o.Pet, dynamic>> fields = const {
+    #owner: Field<o.Pet, m.Person>('owner', _$owner),
+    #color: Field<o.Pet, String>('color', _$color),
+  };
 
   @override
-  Function get encoder => encode;
-  dynamic encode(o.Pet v) => toMap(v);
-  Map<String, dynamic> toMap(o.Pet p) => {
-        'owner': container.$enc(p.owner, 'owner'),
-        'color': container.$enc(p.color, 'color'),
-        'type': 'Pet'
-      };
+  final String discriminatorKey = 'type';
+  final dynamic discriminatorValue = 'Pet';
 
+  static Pet _instantiate(DecodingData data) {
+    return Pet(data.get(#owner), data.get(#color));
+  }
   @override
-  String stringify(o.Pet self) => 'Pet()';
-  @override
-  int hash(o.Pet self) => 0;
-  @override
-  bool equals(o.Pet self, o.Pet other) => true;
+  final Function instantiate = _instantiate;
+
+  static Pet fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<Pet>(map);
+  }
+  static Pet fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<Pet>(json);
+  }
 }
 
 mixin PetMappable {
-  String toJson() => PetMapper.container.toJson(this as Pet);
-  Map<String, dynamic> toMap() => PetMapper.container.toMap(this as Pet);
-  PetCopyWith<Pet, Pet, Pet> get copyWith =>
-      _PetCopyWithImpl(this as Pet, $identity, $identity);
+  String toJson() {
+    PetMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as Pet);
+  }
+  Map<String, dynamic> toMap() {
+    PetMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as Pet);
+  }
+  PetCopyWith<Pet, Pet, Pet> get copyWith => _PetCopyWithImpl(this as Pet, $identity, $identity);
   @override
-  String toString() => PetMapper.container.asString(this);
+  String toString() {
+    PetMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (runtimeType == other.runtimeType &&
-          PetMapper.container.isEqual(this, other));
+  bool operator ==(Object other) {
+    PetMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
   @override
-  int get hashCode => PetMapper.container.hash(this);
+  int get hashCode {
+    PetMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
-extension PetValueCopy<$R, $Out extends o.Animal>
-    on ObjectCopyWith<$R, Pet, $Out> {
-  PetCopyWith<$R, Pet, $Out> get asPet =>
-      base.as((v, t, t2) => _PetCopyWithImpl(v, t, t2));
+extension PetValueCopy<$R, $Out extends o.Animal> on ObjectCopyWith<$R, Pet, $Out> {
+  PetCopyWith<$R, Pet, $Out> get asPet => base.as((v, t, t2) => _PetCopyWithImpl(v, t, t2));
 }
 
 typedef PetCopyWithBound = o.Animal;
-
-abstract class PetCopyWith<$R, $In extends Pet, $Out extends o.Animal>
-    implements AnimalCopyWith<$R, $In, $Out> {
-  PetCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends o.Animal>(
-      Then<Pet, $Out2> t, Then<$Out2, $R2> t2);
-  @override
-  $R call({m.Person? owner, String? color});
+abstract class PetCopyWith<$R, $In extends Pet, $Out extends o.Animal> implements AnimalCopyWith<$R, $In, $Out> {
+  PetCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends o.Animal>(Then<Pet, $Out2> t, Then<$Out2, $R2> t2);
+  @override $R call({m.Person? owner, String? color});
 }
 
-class _PetCopyWithImpl<$R, $Out extends o.Animal>
-    extends CopyWithBase<$R, Pet, $Out> implements PetCopyWith<$R, Pet, $Out> {
+class _PetCopyWithImpl<$R, $Out extends o.Animal> extends CopyWithBase<$R, Pet, $Out> implements PetCopyWith<$R, Pet, $Out> {
   _PetCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  PetCopyWith<$R2, Pet, $Out2> chain<$R2, $Out2 extends o.Animal>(
-          Then<Pet, $Out2> t, Then<$Out2, $R2> t2) =>
-      _PetCopyWithImpl($value, t, t2);
+  @override PetCopyWith<$R2, Pet, $Out2> chain<$R2, $Out2 extends o.Animal>(Then<Pet, $Out2> t, Then<$Out2, $R2> t2) => _PetCopyWithImpl($value, t, t2);
 
-  @override
-  $R call({m.Person? owner, String? color}) =>
-      $then(Pet(owner ?? $value.owner, color ?? $value.color));
+  @override $R call({m.Person? owner, String? color}) => $then(Pet(owner ?? $value.owner, color ?? $value.color));
 }
 
-class PersonMapper extends MapperBase<Person> {
-  static MapperContainer container = MapperContainer(
-    mappers: {PersonMapper()},
-  );
-
-  @override
-  PersonMapperElement createElement(MapperContainer container) {
-    return PersonMapperElement._(this, container);
+class PersonMapper extends ClassMapperBase<Person> {
+  PersonMapper._();
+  static PersonMapper? _instance;
+  static PersonMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = PersonMapper._());
+    }
+    return _instance!;
   }
+  @override
+  final String id = 'Person';
+
+  static String _$firstName(Person v) => v.firstName;
 
   @override
-  String get id => 'Person';
+  final Map<Symbol, Field<Person, dynamic>> fields = const {
+    #firstName: Field<Person, String>('firstName', _$firstName, key: 'first_name'),
+  };
 
-  static final fromMap = container.fromMap<Person>;
-  static final fromJson = container.fromJson<Person>;
-}
+  static Person _instantiate(DecodingData data) {
+    return Person(data.get(#firstName));
+  }
+  @override
+  final Function instantiate = _instantiate;
 
-class PersonMapperElement extends MapperElementBase<Person> {
-  PersonMapperElement._(super.mapper, super.container);
-
-  @override
-  Function get decoder => decode;
-  Person decode(dynamic v) =>
-      checkedType(v, (Map<String, dynamic> map) => fromMap(map));
-  Person fromMap(Map<String, dynamic> map) =>
-      Person(container.$get(map, 'first_name'));
-
-  @override
-  Function get encoder => encode;
-  dynamic encode(Person v) => toMap(v);
-  Map<String, dynamic> toMap(Person p) =>
-      {'first_name': container.$enc(p.firstName, 'firstName')};
-
-  @override
-  String stringify(Person self) =>
-      'Person(firstName: ${container.asString(self.firstName)})';
-  @override
-  int hash(Person self) => container.hash(self.firstName);
-  @override
-  bool equals(Person self, Person other) =>
-      container.isEqual(self.firstName, other.firstName);
+  static Person fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<Person>(map);
+  }
+  static Person fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<Person>(json);
+  }
 }
 
 mixin PersonMappable {
-  String toJson() => PersonMapper.container.toJson(this as Person);
-  Map<String, dynamic> toMap() => PersonMapper.container.toMap(this as Person);
-  PersonCopyWith<Person, Person, Person> get copyWith =>
-      _PersonCopyWithImpl(this as Person, $identity, $identity);
+  String toJson() {
+    PersonMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as Person);
+  }
+  Map<String, dynamic> toMap() {
+    PersonMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as Person);
+  }
+  PersonCopyWith<Person, Person, Person> get copyWith => _PersonCopyWithImpl(this as Person, $identity, $identity);
   @override
-  String toString() => PersonMapper.container.asString(this);
+  String toString() {
+    PersonMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (runtimeType == other.runtimeType &&
-          PersonMapper.container.isEqual(this, other));
+  bool operator ==(Object other) {
+    PersonMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
   @override
-  int get hashCode => PersonMapper.container.hash(this);
+  int get hashCode {
+    PersonMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
-extension PersonValueCopy<$R, $Out extends Person>
-    on ObjectCopyWith<$R, Person, $Out> {
-  PersonCopyWith<$R, Person, $Out> get asPerson =>
-      base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
+extension PersonValueCopy<$R, $Out extends Person> on ObjectCopyWith<$R, Person, $Out> {
+  PersonCopyWith<$R, Person, $Out> get asPerson => base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
 }
 
 typedef PersonCopyWithBound = Person;
-
-abstract class PersonCopyWith<$R, $In extends Person, $Out extends Person>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  PersonCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Person>(
-      Then<Person, $Out2> t, Then<$Out2, $R2> t2);
+abstract class PersonCopyWith<$R, $In extends Person, $Out extends Person> implements ObjectCopyWith<$R, $In, $Out> {
+  PersonCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Person>(Then<Person, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? firstName});
 }
 
-class _PersonCopyWithImpl<$R, $Out extends Person>
-    extends CopyWithBase<$R, Person, $Out>
-    implements PersonCopyWith<$R, Person, $Out> {
+class _PersonCopyWithImpl<$R, $Out extends Person> extends CopyWithBase<$R, Person, $Out> implements PersonCopyWith<$R, Person, $Out> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  PersonCopyWith<$R2, Person, $Out2> chain<$R2, $Out2 extends Person>(
-          Then<Person, $Out2> t, Then<$Out2, $R2> t2) =>
-      _PersonCopyWithImpl($value, t, t2);
+  @override PersonCopyWith<$R2, Person, $Out2> chain<$R2, $Out2 extends Person>(Then<Person, $Out2> t, Then<$Out2, $R2> t2) => _PersonCopyWithImpl($value, t, t2);
 
-  @override
-  $R call({String? firstName}) => $then(Person(firstName ?? $value.firstName));
+  @override $R call({String? firstName}) => $then(Person(firstName ?? $value.firstName));
 }

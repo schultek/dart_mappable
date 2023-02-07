@@ -5,13 +5,17 @@
 
 part of 'cat.dart';
 
-class CatMapper extends SubClassMapperBase<Cat> {
-  static final CatMapper instance = CatMapper();
-  static MapperContainer? _c;
-  static final MapperContainer container = _c ?? ((_c = MapperContainer())
-  ..use(instance)
-  ..linkAll({AnimalMapper.container, CatTypeMapper.container}));
-
+class CatMapper extends DiscriminatorSubClassMapperBase<Cat> {
+  CatMapper._();
+  static CatMapper? _instance;
+  static CatMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = CatMapper._());
+      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
+      CatTypeMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
   @override
   final String id = 'Cat';
 
@@ -27,13 +31,8 @@ class CatMapper extends SubClassMapperBase<Cat> {
   };
 
   @override
-  bool canDecode(DecodingOptions<Map<String, dynamic>> options) {
-    return options.value['type'] == 'Cat';
-  }
-  @override
-  DecodingOptions<Object> inherit(DecodingOptions<Object> options) {
-    return options.inherit(container: container);
-  }
+  final String discriminatorKey = 'type';
+  final dynamic discriminatorValue = 'Cat';
 
   static Cat _instantiate(DecodingData data) {
     return Cat(data.get(#name), data.get(#breed), data.get(#color));
@@ -41,17 +40,41 @@ class CatMapper extends SubClassMapperBase<Cat> {
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<Cat>;
-  static final fromJson = container.fromJson<Cat>;
+  static Cat fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<Cat>(map);
+  }
+  static Cat fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<Cat>(json);
+  }
 }
 
 mixin CatMappable {
-  String toJson() => CatMapper.container.toJson(this as Cat);
-  Map<String, dynamic> toMap() => CatMapper.container.toMap(this as Cat);
+  String toJson() {
+    CatMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as Cat);
+  }
+  Map<String, dynamic> toMap() {
+    CatMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as Cat);
+  }
   CatCopyWith<Cat, Cat, Cat> get copyWith => _CatCopyWithImpl(this as Cat, $identity, $identity);
-  @override String toString() => CatMapper.container.asString(this);
-  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && CatMapper.container.isEqual(this, other));
-  @override int get hashCode => CatMapper.container.hash(this);
+  @override
+  String toString() {
+    CatMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
+  @override
+  bool operator ==(Object other) {
+    CatMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
+  @override
+  int get hashCode {
+    CatMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
 extension CatValueCopy<$R, $Out extends Animal> on ObjectCopyWith<$R, Cat, $Out> {
@@ -72,12 +95,19 @@ class _CatCopyWithImpl<$R, $Out extends Animal> extends CopyWithBase<$R, Cat, $O
 }
 
 class CatTypeMapper extends EnumMapper<CatType> {
-  static CatTypeMapper instance = CatTypeMapper();
-  static MapperContainer container = MapperContainer(
-    mappers: {CatTypeMapper.instance},
-  );
+  CatTypeMapper._();
+  static CatTypeMapper? _instance;
+  static CatTypeMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = CatTypeMapper._());
+    }
+    return _instance!;
+  }
 
-  static final fromValue = container.fromValue<CatType>;
+  static CatType fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
 
   @override
   CatType decode(dynamic value) {
@@ -100,5 +130,8 @@ class CatTypeMapper extends EnumMapper<CatType> {
 }
 
 extension CatTypeMapperExtension on CatType {
-  String toValue() => CatTypeMapper.container.toValue(this) as String;
+  String toValue() {
+    CatTypeMapper.ensureInitialized();
+    return MapperContainer.globals.toValue(this) as String;
+  }
 }

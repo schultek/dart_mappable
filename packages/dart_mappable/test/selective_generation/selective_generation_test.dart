@@ -25,6 +25,7 @@ class B with BMappable {
 void main() {
   group('Selective generation', () {
     test('Should only generate encode and copy methods', () {
+      AMapper.ensureInitialized();
       var a = A('test');
 
       // should work
@@ -34,7 +35,7 @@ void main() {
 
       // should not work
       expect(
-        () => AMapper.container.fromJson<A>('{}'),
+        () => MapperContainer.globals.fromJson<A>('{}'),
         throwsMapperException(MapperException.chain(
           MapperMethod.decode,
           '(A)',
@@ -47,17 +48,18 @@ void main() {
     });
 
     test('Should only generate equals and stringify', () {
+      BMapper.ensureInitialized();
       var b = B('hi');
 
       // should work
       expect(b, equals(B('hi')));
-      expect(BMapper.container.isEqual(b, B('hi')), equals(true));
+      expect(MapperContainer.globals.isEqual(b, B('hi')), equals(true));
       expect(b.toString(), equals('B(b: hi)'));
-      expect(BMapper.container.asString(b), equals('B(b: hi)'));
+      expect(MapperContainer.globals.asString(b), equals('B(b: hi)'));
 
       // should not work
       expect(
-        () => BMapper.container.fromJson<B>('{}'),
+        () => MapperContainer.globals.fromJson<B>('{}'),
         throwsMapperException(MapperException.chain(
           MapperMethod.decode,
           '(B)',

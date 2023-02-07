@@ -3,7 +3,6 @@ import 'package:ansicolor/ansicolor.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/class/alias_class_mapper_element.dart';
-import '../elements/class/linked_elements_mixin.dart';
 import '../elements/class/none_class_mapper_element.dart';
 import '../elements/mapper_element.dart';
 import '../elements/class/target_class_mapper_element.dart';
@@ -36,73 +35,49 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     var equalsGen = EqualsGenerator(target);
     var copyGen = CopyWithGenerator(target);
 
-    var linked = target.linkedElements;
-
-    var visited = <MapperElement>{};
-    bool isCyclic(MapperElement e) {
-      if (e == target) return true;
-      if (visited.contains(e)) return false;
-      visited.add(e);
-      return e is LinkedElementsMixin
-          ? e.linkedElements.keys.any(isCyclic)
-          : false;
-    }
-
-    var hasCyclicLink = linked.keys.any(isCyclic);
-
-    var isSubClass = target.superTarget != null &&
-        target.superTarget! is! NoneClassMapperElement;
+    var isSubClass = await target.isDiscriminatingSubclass;
 
     output.write(
-        'class ${target.mapperName} extends ${isSubClass ? 'Sub' : ''}ClassMapperBase<${target.prefixedClassName}> {\n'
-        '  static final ${target.mapperName} instance = ${target.mapperName}();\n');
+        'class ${target.mapperName} extends ${isSubClass ? 'DiscriminatorSub' : ''}ClassMapperBase<${target.prefixedClassName}> {\n'
+        '  ${target.mapperName}._();\n'
+        '  static ${target.mapperName}? _instance;\n'
+        '  static ${target.mapperName} ensureInitialized() {\n'
+        '    if (_instance == null) {\n');
 
     var typesConfigs = target.typesConfigs;
-    var types = '';
-
     if (typesConfigs.isNotEmpty) {
-      types += 'types: {';
-      if (typesConfigs.length < 3) {
-        types += typesConfigs.join(', ');
-      } else {
-        types += '\n${typesConfigs.map((c) => '      $c,\n').join()}    ';
+      for (var t in typesConfigs) {
+        output.write('      MapperBase.addType<$t>();\n');
       }
-      types += '}';
     }
 
-    if (hasCyclicLink) {
-      output.write('  static MapperContainer? _c;\n'
-          '  static final MapperContainer container = _c ?? ((_c = MapperContainer($types))');
-    } else {
-      output.write(
-          '  static final MapperContainer container = MapperContainer($types)');
+    output.write(
+        '      MapperContainer.globals.use(_instance = ${target.mapperName}._());\n');
+
+    var customMappers = await target.customMappers;
+    if (customMappers.isNotEmpty) {
+      for (var t in customMappers) {
+        output.write('      MapperContainer.globals.use($t);\n');
+      }
     }
 
-    if (target.customMappers.isEmpty) {
-      output.write('\n  ..use(instance)');
-    } else {
-      var mappers = target.customMappers
-          .map((t) => '${t.getDisplayString(withNullability: false)}()');
-      output.write('\n  ..useAll([instance, ${mappers.join()}])');
+    if (isSubClass) {
+      var prefix = target.parent.prefixOfElement(target.superTarget!.element);
+      output.write('      $prefix${target.superTarget!.mapperName}.ensureInitialized().addSubMapper(_instance!);\n');
     }
 
+    var linked = target.linkedElements;
     if (linked.isNotEmpty) {
-      output.write('\n  ..linkAll({');
-      var containers = linked.entries.map((e) => '${e.value}.container');
-
-      if (linked.length < 3) {
-        output.write(containers.join(', '));
-      } else {
-        output.write('\n${containers.map((c) => '      $c,\n').join()}    ');
+      for (var l in linked.values) {
+        output.write('      $l.ensureInitialized();\n');
       }
-      output.write('})');
     }
 
-    if (hasCyclicLink) {
-      output.write(')');
-    }
+    output.write('    }\n'
+        '    return _instance!;\n'
+        '  }');
 
-    output.write(';\n\n'
+    output.write('\n'
         '  @override\n'
         "  final String id = '${target.uniqueId}';\n");
 
@@ -113,20 +88,6 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     if (target is AliasClassMapperElement) {
       output.write('  @override\n'
           '  Type get implType => ${target.prefixedDecodingClassName};\n');
-    }
-
-    if (target.subTargets.isNotEmpty) {
-      var subMappers = target.subTargets //
-          .where((t) => t is! NoneClassMapperElement)
-          .map((t) {
-        var prefix = target.parent.prefixOfElement(t.element);
-        return '    $prefix${t.mapperName}.instance,\n';
-      });
-
-      output.write(
-          '\n  @override\n  final List<SubClassMapperBase<${target.prefixedClassName}>> subMappers = [\n'
-          '${subMappers.join()}'
-          '  ];\n');
     }
 
     output.write('\n');
@@ -157,28 +118,24 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     }
 
     if (isSubClass) {
-      output.write(await decoderGen.generateCanDecodeMethod());
+      output.write(await decoderGen.generateDiscriminatorFields());
     }
 
     output.write(await decoderGen.generateInstantiateMethod());
 
     if (target.shouldGenerate(GenerateMethods.decode)) {
-      output.write('\n');
-      if (target.typeParamsList.isNotEmpty) {
-        output.write(
-            '  static ${target.prefixedDecodingClassName}${target.typeParams} fromMap${target.typeParamsDeclaration}(Map<String, dynamic> map) => container.fromMap<${target.prefixedDecodingClassName}${target.typeParams}>(map);\n'
-            '  static ${target.prefixedDecodingClassName}${target.typeParams} fromJson${target.typeParamsDeclaration}(String json) => container.fromJson<${target.prefixedDecodingClassName}${target.typeParams}>(json);\n');
-      } else {
-        output.write(
-            '  static final fromMap = container.fromMap<${target.prefixedDecodingClassName}>;\n'
-            '  static final fromJson = container.fromJson<${target.prefixedDecodingClassName}>;\n');
-      }
+      output.write('\n'
+          '  static ${target.prefixedDecodingClassName}${target.typeParams} fromMap${target.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
+          '    ensureInitialized();\n'
+          '    return MapperContainer.globals.fromMap<${target.prefixedDecodingClassName}${target.typeParams}>(map);\n'
+          '  }\n'
+          '  static ${target.prefixedDecodingClassName}${target.typeParams} fromJson${target.typeParamsDeclaration}(String json) {\n'
+          '    ensureInitialized();\n'
+          '    return MapperContainer.globals.fromJson<${target.prefixedDecodingClassName}${target.typeParams}>(json);\n'
+          '  }\n');
     }
-    output.write('}\n\n');
 
-    // output.writeAll([
-    //   await encoderGen.generateEncoderMethods(),
-    // ]);
+    output.write('}\n\n');
 
     if (target.generateAsMixin) {
       await _checkMixinUsed();

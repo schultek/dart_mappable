@@ -6,18 +6,26 @@
 part of 'main.dart';
 
 class UnionMapper extends ClassMapperBase<Union> {
-  static final UnionMapper instance = UnionMapper();
-  static MapperContainer? _c;
-  static final MapperContainer container = _c ?? ((_c = MapperContainer())
-  ..use(instance)
-  ..linkAll({
-      DataMapper.container,
-      LoadingMapper.container,
-      ErrorDetailsMapper.container,
-    }));
+  UnionMapper._();
+  static UnionMapper? _instance;
+  static UnionMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = UnionMapper._());
+      DataMapper.ensureInitialized();
+      LoadingMapper.ensureInitialized();
+      ErrorDetailsMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+  @override
+  final String id = 'Union';
 
   @override
-  String get id => 'Union';
+  final List<SubClassMapperBase<Union>> subMappers = [
+    DataMapper.ensureInitialized(),
+    LoadingMapper.ensureInitialized(),
+    ErrorDetailsMapper.ensureInitialized(),
+  ];
 
 
   @override
@@ -25,18 +33,30 @@ class UnionMapper extends ClassMapperBase<Union> {
   };
 
   static Union _instantiate(DecodingData data) {
-    throw MapperException.missingSubclass('Union', 'type', '${map['type']}');
+    throw MapperException.missingSubclass('Union', 'type', '${data.value['type']}');
   }
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<Union>;
-  static final fromJson = container.fromJson<Union>;
+  static Union fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<Union>(map);
+  }
+  static Union fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<Union>(json);
+  }
 }
 
 extension UnionMapperExtension on Union {
-  String toJson() => UnionMapper.container.toJson(this);
-  Map<String, dynamic> toMap() => UnionMapper.container.toMap(this);
+  String toJson() {
+    UnionMapper.ensureInitialized();
+    MapperContainer.globals.toJson(this);
+  }
+  Map<String, dynamic> toMap() {
+    UnionMapper.ensureInitialized();
+    MapperContainer.globals.toMap(this);
+  }
 }
 
 typedef UnionCopyWithBound = Union;
@@ -46,15 +66,18 @@ abstract class UnionCopyWith<$R, $In extends Union, $Out extends Union> implemen
 }
 
 
-class DataMapper extends ClassMapperBase<Data> {
-  static final DataMapper instance = DataMapper();
-  static MapperContainer? _c;
-  static final MapperContainer container = _c ?? ((_c = MapperContainer())
-  ..use(instance)
-  ..linkAll({UnionMapper.container}));
-
+class DataMapper extends DiscriminatorSubClassMapperBase<Data> {
+  DataMapper._();
+  static DataMapper? _instance;
+  static DataMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = DataMapper._());
+      UnionMapper.ensureInitialized().addSubMapper(_instance!);
+    }
+    return _instance!;
+  }
   @override
-  String get id => 'Data';
+  final String id = 'Data';
 
   static int _$value(Data v) => v.value;
 
@@ -63,30 +86,49 @@ class DataMapper extends ClassMapperBase<Data> {
     #value: Field<Data, int>('value', _$value, key: 'mykey'),
   };
 
+  @override
+  final String discriminatorKey = 'type';
+  final dynamic discriminatorValue = 'data';
+
   static Data _instantiate(DecodingData data) {
     return Data(data.get(#value));
   }
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<Data>;
-  static final fromJson = container.fromJson<Data>;
+  static Data fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<Data>(map);
+  }
+  static Data fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<Data>(json);
+  }
 }
 
 extension DataMapperExtension on Data {
-  String toJson() => DataMapper.container.toJson(this);
-  Map<String, dynamic> toMap() => DataMapper.container.toMap(this);
+  String toJson() {
+    DataMapper.ensureInitialized();
+    MapperContainer.globals.toJson(this);
+  }
+  Map<String, dynamic> toMap() {
+    DataMapper.ensureInitialized();
+    MapperContainer.globals.toMap(this);
+  }
 }
 
-class LoadingMapper extends ClassMapperBase<Loading> {
-  static final LoadingMapper instance = LoadingMapper();
-  static MapperContainer? _c;
-  static final MapperContainer container = _c ?? ((_c = MapperContainer())
-  ..use(instance)
-  ..linkAll({UnionMapper.container}));
-
+class LoadingMapper extends DiscriminatorSubClassMapperBase<Loading> {
+  LoadingMapper._();
+  static LoadingMapper? _instance;
+  static LoadingMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = LoadingMapper._());
+      UnionMapper.ensureInitialized().addSubMapper(_instance!);
+    }
+    return _instance!;
+  }
   @override
-  String get id => 'Loading';
+  final String id = 'Loading';
 
   static int _$value(Loading v) => v.value;
 
@@ -95,30 +137,49 @@ class LoadingMapper extends ClassMapperBase<Loading> {
     #value: Field<Loading, int>('value', _$value),
   };
 
+  @override
+  final String discriminatorKey = 'type';
+  final dynamic discriminatorValue = 'loading';
+
   static Loading _instantiate(DecodingData data) {
     return Loading(data.get(#value));
   }
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<Loading>;
-  static final fromJson = container.fromJson<Loading>;
+  static Loading fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<Loading>(map);
+  }
+  static Loading fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<Loading>(json);
+  }
 }
 
 extension LoadingMapperExtension on Loading {
-  String toJson() => LoadingMapper.container.toJson(this);
-  Map<String, dynamic> toMap() => LoadingMapper.container.toMap(this);
+  String toJson() {
+    LoadingMapper.ensureInitialized();
+    MapperContainer.globals.toJson(this);
+  }
+  Map<String, dynamic> toMap() {
+    LoadingMapper.ensureInitialized();
+    MapperContainer.globals.toMap(this);
+  }
 }
 
-class ErrorDetailsMapper extends ClassMapperBase<ErrorDetails> {
-  static final ErrorDetailsMapper instance = ErrorDetailsMapper();
-  static MapperContainer? _c;
-  static final MapperContainer container = _c ?? ((_c = MapperContainer())
-  ..use(instance)
-  ..linkAll({UnionMapper.container}));
-
+class ErrorDetailsMapper extends DiscriminatorSubClassMapperBase<ErrorDetails> {
+  ErrorDetailsMapper._();
+  static ErrorDetailsMapper? _instance;
+  static ErrorDetailsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ErrorDetailsMapper._());
+      UnionMapper.ensureInitialized().addSubMapper(_instance!);
+    }
+    return _instance!;
+  }
   @override
-  String get id => 'ErrorDetails';
+  final String id = 'ErrorDetails';
 
   static int _$value(ErrorDetails v) => v.value;
   static String? _$message(ErrorDetails v) => v.message;
@@ -129,17 +190,33 @@ class ErrorDetailsMapper extends ClassMapperBase<ErrorDetails> {
     #message: Field<ErrorDetails, String?>('message', _$message, opt: true),
   };
 
+  @override
+  final String discriminatorKey = 'type';
+  final dynamic discriminatorValue = 'error';
+
   static ErrorDetails _instantiate(DecodingData data) {
     return ErrorDetails(data.get(#value), data.get(#message));
   }
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<ErrorDetails>;
-  static final fromJson = container.fromJson<ErrorDetails>;
+  static ErrorDetails fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<ErrorDetails>(map);
+  }
+  static ErrorDetails fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<ErrorDetails>(json);
+  }
 }
 
 extension ErrorDetailsMapperExtension on ErrorDetails {
-  String toJson() => ErrorDetailsMapper.container.toJson(this);
-  Map<String, dynamic> toMap() => ErrorDetailsMapper.container.toMap(this);
+  String toJson() {
+    ErrorDetailsMapper.ensureInitialized();
+    MapperContainer.globals.toJson(this);
+  }
+  Map<String, dynamic> toMap() {
+    ErrorDetailsMapper.ensureInitialized();
+    MapperContainer.globals.toMap(this);
+  }
 }

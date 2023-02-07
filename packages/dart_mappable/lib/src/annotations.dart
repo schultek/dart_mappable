@@ -51,7 +51,7 @@ class MappableClass {
   /// Specify additional subclasses of this class for polymorphism.
   final Iterable<Type>? includeSubClasses;
 
-  final Iterable<Type>? includeCustomMappers;
+  final Iterable<MapperBase>? includeCustomMappers;
 
   static const useAsDefault = MappingFlags.useAsDefault;
 }

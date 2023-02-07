@@ -28,9 +28,8 @@ class AliasClassMapperElement extends TargetClassMapperElement {
   late List<String> typesConfigs = () {
     var types = super.typesConfigs;
 
-    types.add(
-        "'$className': $typeParamsDeclaration(f) => f<$className$typeParams>()");
-
+    // TODO handle generics
+    types.add(className);
     return types;
   }();
 }

@@ -1,7 +1,8 @@
+import 'dart:convert';
+
 import '../annotations.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
-
 
 class DecodingData<T extends Object> {
   DecodingData(this.options, this.mapper);
@@ -16,10 +17,41 @@ class DecodingData<T extends Object> {
   }
 }
 
+abstract class DiscriminatorSubClassMapperBase<T extends Object>
+    extends SubClassMapperBase<T> {
+  String get discriminatorKey;
+  dynamic get discriminatorValue;
+
+  @override
+  bool canDecode(DecodingOptions<Map<String, dynamic>> options) {
+    var value = discriminatorValue;
+    if (identical(value, MappingFlags.useAsDefault)) {
+      return true;
+    } else if (value is Function) {
+      if (value is bool Function(Map<String, dynamic>)) {
+        if (value(options.value)) {
+          return true;
+        }
+      } else {
+        throw AssertionError(
+            'Discriminator function must be of type "bool Function(Map<String, dynamic>)".');
+      }
+    } else if (value == options.value[discriminatorKey]) {
+      return true;
+    }
+    return false;
+  }
+
+  late final bool shouldEncodeDiscriminatorParam = () {
+    return _params.every((p) => p.key != discriminatorKey) &&
+        !identical(discriminatorValue, MappingFlags.useAsDefault) &&
+        discriminatorValue is! Function;
+  }();
+}
+
 abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
-  bool canDecode(DecodingOptions<Map<String, dynamic>> options);
-  DecodingOptions<Object> inherit(DecodingOptions<Object> options) {
-    return options.inherit();
+  bool canDecode(DecodingOptions<Map<String, dynamic>> options) {
+    return false;
   }
 }
 
@@ -29,7 +61,20 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
   bool get ignoreNull => false;
   MappingHook? get hook => null;
   MappingHook? get superHook => null;
-  List<SubClassMapperBase<T>> get subMappers => const [];
+
+  SubClassMapperBase<T>? _defaultSubMapper;
+  final Set<SubClassMapperBase<T>> _subMappers = {};
+
+  void addSubMapper(SubClassMapperBase<T> mapper) {
+    if (mapper is DiscriminatorSubClassMapperBase<T> &&
+        identical(mapper.discriminatorValue, MappingFlags.useAsDefault)) {
+      assert(_defaultSubMapper == null,
+          'Cannot have multiple default mappers for a polymorphic class.');
+      _defaultSubMapper = mapper;
+    } else {
+      _subMappers.add(mapper);
+    }
+  }
 
   late final List<Field<T, dynamic>> _members =
       fields.values.where((f) => f.mode != FieldMode.param).toList();
@@ -43,48 +88,66 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
     return options.wrap(hook: superHook, skipInherited: true, (c) {
       return c.wrap(hook: hook, (c) {
         var context = c.checked<Map<String, dynamic>>();
-        if (subMappers.isNotEmpty) {
-          for (var m in subMappers) {
+        if (_subMappers.isNotEmpty) {
+          for (var m in _subMappers) {
             if (m.canDecode(context)) {
-              return m.decoder(m.inherit(context));
+              return m.decoder(context.inherit());
             }
           }
+        }
+        if (_defaultSubMapper != null) {
+          return _defaultSubMapper!.decoder(context.inherit());
         }
         return c.callWith(instantiate, DecodingData<T>(c.checked(), this));
       });
     });
   }
 
+  T jsonDecoder(DecodingOptions<String> options) {
+    return decoder(options.change(jsonDecode(options.value) as Object));
+  }
+
   @override
   Object? encoder(EncodingOptions<Object> options) {
     return options.checked<T>().wrap(hook: superHook, (c) {
       return c.wrap(hook: hook, (c) {
+        var $this = this;
         return {
           for (var f in _params)
-            if (!ignoreNull || f.get(c.value) != null) f.key: f.encode(c)
+            if (!ignoreNull || f.get(c.value) != null) f.key: f.encode(c),
+          if ($this is DiscriminatorSubClassMapperBase<T> &&
+              $this.shouldEncodeDiscriminatorParam)
+            $this.discriminatorKey: $this.discriminatorValue
         };
       });
     });
   }
 
+  String jsonEncoder(EncodingOptions<Object> options) {
+    return jsonEncode(encoder(options));
+  }
+
   @override
-  String stringify(MappingOptions<T> options) {
+  String stringify(MappingOptions<Object> options) {
+    var value = options.checked<T>().value;
     return '$id(${_members.map((f) {
-      return '${f.name}: ${options.container.asString(f.get(options.value))}';
+      return '${f.name}: ${options.container.asString(f.get(value))}';
     }).join(', ')})';
   }
 
   @override
-  int hash(MappingOptions<T> options) {
+  int hash(MappingOptions<Object> options) {
+    var value = options.checked<T>().value;
     return Object.hashAll(_members.map((f) {
-      return options.container.hash(f.get(options.value));
+      return options.container.hash(f.get(value));
     }));
   }
 
   @override
-  bool equals(MappingOptions<T> options, T other) {
+  bool equals(MappingOptions<Object> options, T other) {
+    var value = options.checked<T>().value;
     return _members.every((f) {
-      return options.container.isEqual(f.get(options.value), f.get(other));
+      return options.container.isEqual(f.get(value), f.get(other));
     });
   }
 }

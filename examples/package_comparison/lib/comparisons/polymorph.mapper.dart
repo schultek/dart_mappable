@@ -6,14 +6,24 @@
 part of 'polymorph.dart';
 
 class AnimalBMapper extends ClassMapperBase<AnimalB> {
-  static final AnimalBMapper instance = AnimalBMapper();
-  static MapperContainer? _c;
-  static final MapperContainer container = _c ?? ((_c = MapperContainer())
-  ..use(instance)
-  ..linkAll({CatBMapper.container, DogBMapper.container}));
+  AnimalBMapper._();
+  static AnimalBMapper? _instance;
+  static AnimalBMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = AnimalBMapper._());
+      CatBMapper.ensureInitialized();
+      DogBMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+  @override
+  final String id = 'AnimalB';
 
   @override
-  String get id => 'AnimalB';
+  final List<SubClassMapperBase<AnimalB>> subMappers = [
+    CatBMapper.ensureInitialized(),
+    DogBMapper.ensureInitialized(),
+  ];
 
   static String _$name(AnimalB v) => v.name;
 
@@ -23,13 +33,19 @@ class AnimalBMapper extends ClassMapperBase<AnimalB> {
   };
 
   static AnimalB _instantiate(DecodingData data) {
-    throw MapperException.missingSubclass('AnimalB', 'type', '${map['type']}');
+    throw MapperException.missingSubclass('AnimalB', 'type', '${data.value['type']}');
   }
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<AnimalB>;
-  static final fromJson = container.fromJson<AnimalB>;
+  static AnimalB fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<AnimalB>(map);
+  }
+  static AnimalB fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<AnimalB>(json);
+  }
 }
 
 mixin AnimalBMappable {
@@ -45,15 +61,18 @@ abstract class AnimalBCopyWith<$R, $In extends AnimalB, $Out extends AnimalB> im
 }
 
 
-class CatBMapper extends ClassMapperBase<CatB> {
-  static final CatBMapper instance = CatBMapper();
-  static MapperContainer? _c;
-  static final MapperContainer container = _c ?? ((_c = MapperContainer())
-  ..use(instance)
-  ..linkAll({AnimalBMapper.container}));
-
+class CatBMapper extends DiscriminatorSubClassMapperBase<CatB> {
+  CatBMapper._();
+  static CatBMapper? _instance;
+  static CatBMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = CatBMapper._());
+      AnimalBMapper.ensureInitialized().addSubMapper(_instance!);
+    }
+    return _instance!;
+  }
   @override
-  String get id => 'CatB';
+  final String id = 'CatB';
 
   static String _$name(CatB v) => v.name;
   static String _$color(CatB v) => v.color;
@@ -64,23 +83,51 @@ class CatBMapper extends ClassMapperBase<CatB> {
     #color: Field<CatB, String>('color', _$color),
   };
 
+  @override
+  final String discriminatorKey = 'type';
+  final dynamic discriminatorValue = 'CatB';
+
   static CatB _instantiate(DecodingData data) {
     return CatB(data.get(#name), data.get(#color));
   }
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<CatB>;
-  static final fromJson = container.fromJson<CatB>;
+  static CatB fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<CatB>(map);
+  }
+  static CatB fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<CatB>(json);
+  }
 }
 
 mixin CatBMappable {
-  String toJson() => CatBMapper.container.toJson(this as CatB);
-  Map<String, dynamic> toMap() => CatBMapper.container.toMap(this as CatB);
+  String toJson() {
+    CatBMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as CatB);
+  }
+  Map<String, dynamic> toMap() {
+    CatBMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as CatB);
+  }
   CatBCopyWith<CatB, CatB, CatB> get copyWith => _CatBCopyWithImpl(this as CatB, $identity, $identity);
-  @override String toString() => CatBMapper.container.asString(this);
-  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && CatBMapper.container.isEqual(this, other));
-  @override int get hashCode => CatBMapper.container.hash(this);
+  @override
+  String toString() {
+    CatBMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
+  @override
+  bool operator ==(Object other) {
+    CatBMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
+  @override
+  int get hashCode {
+    CatBMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
 extension CatBValueCopy<$R, $Out extends AnimalB> on ObjectCopyWith<$R, CatB, $Out> {
@@ -100,15 +147,18 @@ class _CatBCopyWithImpl<$R, $Out extends AnimalB> extends CopyWithBase<$R, CatB,
   @override $R call({String? name, String? color}) => $then(CatB(name ?? $value.name, color ?? $value.color));
 }
 
-class DogBMapper extends ClassMapperBase<DogB> {
-  static final DogBMapper instance = DogBMapper();
-  static MapperContainer? _c;
-  static final MapperContainer container = _c ?? ((_c = MapperContainer())
-  ..use(instance)
-  ..linkAll({AnimalBMapper.container}));
-
+class DogBMapper extends DiscriminatorSubClassMapperBase<DogB> {
+  DogBMapper._();
+  static DogBMapper? _instance;
+  static DogBMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = DogBMapper._());
+      AnimalBMapper.ensureInitialized().addSubMapper(_instance!);
+    }
+    return _instance!;
+  }
   @override
-  String get id => 'DogB';
+  final String id = 'DogB';
 
   static String _$name(DogB v) => v.name;
   static int _$age(DogB v) => v.age;
@@ -119,23 +169,51 @@ class DogBMapper extends ClassMapperBase<DogB> {
     #age: Field<DogB, int>('age', _$age),
   };
 
+  @override
+  final String discriminatorKey = 'type';
+  final dynamic discriminatorValue = 'dog';
+
   static DogB _instantiate(DecodingData data) {
     return DogB(data.get(#name), data.get(#age));
   }
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<DogB>;
-  static final fromJson = container.fromJson<DogB>;
+  static DogB fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<DogB>(map);
+  }
+  static DogB fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<DogB>(json);
+  }
 }
 
 mixin DogBMappable {
-  String toJson() => DogBMapper.container.toJson(this as DogB);
-  Map<String, dynamic> toMap() => DogBMapper.container.toMap(this as DogB);
+  String toJson() {
+    DogBMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as DogB);
+  }
+  Map<String, dynamic> toMap() {
+    DogBMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as DogB);
+  }
   DogBCopyWith<DogB, DogB, DogB> get copyWith => _DogBCopyWithImpl(this as DogB, $identity, $identity);
-  @override String toString() => DogBMapper.container.asString(this);
-  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && DogBMapper.container.isEqual(this, other));
-  @override int get hashCode => DogBMapper.container.hash(this);
+  @override
+  String toString() {
+    DogBMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
+  @override
+  bool operator ==(Object other) {
+    DogBMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
+  @override
+  int get hashCode {
+    DogBMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
 extension DogBValueCopy<$R, $Out extends AnimalB> on ObjectCopyWith<$R, DogB, $Out> {

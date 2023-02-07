@@ -23,7 +23,7 @@ class PrivateClassMapper extends SimpleMapper<MyPrivateClass> {
   }
 
   @override
-  bool equals(MyPrivateClass self, MyPrivateClass other) {
+  bool equals(MappingOptions<Object> self, MyPrivateClass other) {
     return self.value == other.value;
   }
 }
@@ -33,32 +33,22 @@ class GenericBox<T> {
   GenericBox(this.content);
 }
 
-class GenericBoxMapper extends MapperBase<GenericBox> {
-  // only use the base type here
+// only use the base type here
+class GenericBoxMapper extends SimpleMapper1<GenericBox> {
 
-  @override
-  MapperElementBase<GenericBox> createElement(MapperContainer container) {
-    return GenericBoxMapperElement(this, container);
-  }
 
   @override
   Function get typeFactory => <T>(f) => f<GenericBox<T>>();
-}
-
-class GenericBoxMapperElement extends MapperElementBase<GenericBox> {
-  // only use the base type here
-
-  GenericBoxMapperElement(super.mapper, super.container);
 
   @override
-  late Function decoder = <T>(dynamic value) {
-    return GenericBox<T>(container.fromValue<T>(value));
-  };
+  GenericBox decode<A>(Object value) {
+    return GenericBox<A>(value as A);
+  }
 
   @override
-  late Function encoder = <T>(GenericBox<T> self) {
-    return container.toValue<T>(self.content);
-  };
+  Object? encode<A>(GenericBox self) {
+    return self.content;
+  }
 }
 
 class UriMapper extends SimpleMapper<Uri> {
@@ -75,7 +65,7 @@ class UriMapper extends SimpleMapper<Uri> {
 
 @MappableClass(
     hook: UnmappedPropertiesHook('unmappedProps'),
-    includeCustomMappers: [BigIntMapper])
+    includeCustomMappers: [BigIntMapper()])
 class TestObj with TestObjMappable {
   BigInt? x;
 
@@ -86,7 +76,9 @@ class TestObj with TestObjMappable {
   TestObj.explicit(this.x, this.unmappedProps);
 }
 
-class BigIntMapper extends PrimitiveMapper<BigInt> {}
+class BigIntMapper extends PrimitiveMapper<BigInt> {
+  const BigIntMapper();
+}
 
 void main() {
   group('Custom Mappers', () {

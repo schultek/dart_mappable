@@ -6,13 +6,17 @@
 part of 'nested.dart';
 
 class GameBMapper extends ClassMapperBase<GameB> {
-  static final GameBMapper instance = GameBMapper();
-  static final MapperContainer container = MapperContainer()
-  ..use(instance)
-  ..linkAll({PlayerBMapper.container});
-
+  GameBMapper._();
+  static GameBMapper? _instance;
+  static GameBMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = GameBMapper._());
+      PlayerBMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
   @override
-  String get id => 'GameB';
+  final String id = 'GameB';
 
   static PlayerB _$player(GameB v) => v.player;
 
@@ -27,17 +31,41 @@ class GameBMapper extends ClassMapperBase<GameB> {
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<GameB>;
-  static final fromJson = container.fromJson<GameB>;
+  static GameB fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<GameB>(map);
+  }
+  static GameB fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<GameB>(json);
+  }
 }
 
 mixin GameBMappable {
-  String toJson() => GameBMapper.container.toJson(this as GameB);
-  Map<String, dynamic> toMap() => GameBMapper.container.toMap(this as GameB);
+  String toJson() {
+    GameBMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as GameB);
+  }
+  Map<String, dynamic> toMap() {
+    GameBMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as GameB);
+  }
   GameBCopyWith<GameB, GameB, GameB> get copyWith => _GameBCopyWithImpl(this as GameB, $identity, $identity);
-  @override String toString() => GameBMapper.container.asString(this);
-  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && GameBMapper.container.isEqual(this, other));
-  @override int get hashCode => GameBMapper.container.hash(this);
+  @override
+  String toString() {
+    GameBMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
+  @override
+  bool operator ==(Object other) {
+    GameBMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
+  @override
+  int get hashCode {
+    GameBMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
 extension GameBValueCopy<$R, $Out extends GameB> on ObjectCopyWith<$R, GameB, $Out> {
@@ -60,12 +88,16 @@ class _GameBCopyWithImpl<$R, $Out extends GameB> extends CopyWithBase<$R, GameB,
 }
 
 class PlayerBMapper extends ClassMapperBase<PlayerB> {
-  static final PlayerBMapper instance = PlayerBMapper();
-  static final MapperContainer container = MapperContainer()
-  ..use(instance);
-
+  PlayerBMapper._();
+  static PlayerBMapper? _instance;
+  static PlayerBMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = PlayerBMapper._());
+    }
+    return _instance!;
+  }
   @override
-  String get id => 'PlayerB';
+  final String id = 'PlayerB';
 
   static String _$name(PlayerB v) => v.name;
 
@@ -80,17 +112,41 @@ class PlayerBMapper extends ClassMapperBase<PlayerB> {
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<PlayerB>;
-  static final fromJson = container.fromJson<PlayerB>;
+  static PlayerB fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<PlayerB>(map);
+  }
+  static PlayerB fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<PlayerB>(json);
+  }
 }
 
 mixin PlayerBMappable {
-  String toJson() => PlayerBMapper.container.toJson(this as PlayerB);
-  Map<String, dynamic> toMap() => PlayerBMapper.container.toMap(this as PlayerB);
+  String toJson() {
+    PlayerBMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as PlayerB);
+  }
+  Map<String, dynamic> toMap() {
+    PlayerBMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as PlayerB);
+  }
   PlayerBCopyWith<PlayerB, PlayerB, PlayerB> get copyWith => _PlayerBCopyWithImpl(this as PlayerB, $identity, $identity);
-  @override String toString() => PlayerBMapper.container.asString(this);
-  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && PlayerBMapper.container.isEqual(this, other));
-  @override int get hashCode => PlayerBMapper.container.hash(this);
+  @override
+  String toString() {
+    PlayerBMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
+  @override
+  bool operator ==(Object other) {
+    PlayerBMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
+  @override
+  int get hashCode {
+    PlayerBMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
 extension PlayerBValueCopy<$R, $Out extends PlayerB> on ObjectCopyWith<$R, PlayerB, $Out> {

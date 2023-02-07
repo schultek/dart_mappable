@@ -5,109 +5,90 @@
 
 part of 'basic_serialization_test.dart';
 
-class AMapper extends MapperBase<A> {
-  static MapperContainer container = MapperContainer(
-    mappers: {AMapper()},
-  )..linkAll({BMapper.container});
-
-  @override
-  AMapperElement createElement(MapperContainer container) {
-    return AMapperElement._(this, container);
+class AMapper extends ClassMapperBase<A> {
+  AMapper._();
+  static AMapper? _instance;
+  static AMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = AMapper._());
+      BMapper.ensureInitialized();
+    }
+    return _instance!;
   }
+  @override
+  final String id = 'A';
+
+  static String _$a(A v) => v.a;
+  static int _$b(A v) => v.b;
+  static double? _$c(A v) => v.c;
+  static bool _$d(A v) => v.d;
+  static B? _$e(A v) => v.e;
 
   @override
-  String get id => 'A';
+  final Map<Symbol, Field<A, dynamic>> fields = const {
+    #a: Field<A, String>('a', _$a),
+    #b: Field<A, int>('b', _$b, opt: true, def: 0),
+    #c: Field<A, double?>('c', _$c, opt: true),
+    #d: Field<A, bool>('d', _$d),
+    #e: Field<A, B?>('e', _$e, opt: true),
+  };
 
-  static final fromMap = container.fromMap<A>;
-  static final fromJson = container.fromJson<A>;
-}
+  static A _instantiate(DecodingData data) {
+    return A(data.get(#a), b: data.get(#b), c: data.get(#c), d: data.get(#d), e: data.get(#e));
+  }
+  @override
+  final Function instantiate = _instantiate;
 
-class AMapperElement extends MapperElementBase<A> {
-  AMapperElement._(super.mapper, super.container);
-
-  @override
-  Function get decoder => decode;
-  A decode(dynamic v) =>
-      checkedType(v, (Map<String, dynamic> map) => fromMap(map));
-  A fromMap(Map<String, dynamic> map) => A(container.$get(map, 'a'),
-      b: container.$getOpt(map, 'b') ?? 0,
-      c: container.$getOpt(map, 'c'),
-      d: container.$get(map, 'd'),
-      e: container.$getOpt(map, 'e'));
-
-  @override
-  Function get encoder => encode;
-  dynamic encode(A v) => toMap(v);
-  Map<String, dynamic> toMap(A a) => {
-        'a': container.$enc(a.a, 'a'),
-        'b': container.$enc(a.b, 'b'),
-        'c': container.$enc(a.c, 'c'),
-        'd': container.$enc(a.d, 'd'),
-        'e': container.$enc(a.e, 'e')
-      };
-
-  @override
-  String stringify(A self) =>
-      'A(a: ${container.asString(self.a)}, b: ${container.asString(self.b)}, c: ${container.asString(self.c)}, d: ${container.asString(self.d)}, e: ${container.asString(self.e)})';
-  @override
-  int hash(A self) =>
-      container.hash(self.a) ^
-      container.hash(self.b) ^
-      container.hash(self.c) ^
-      container.hash(self.d) ^
-      container.hash(self.e);
-  @override
-  bool equals(A self, A other) =>
-      container.isEqual(self.a, other.a) &&
-      container.isEqual(self.b, other.b) &&
-      container.isEqual(self.c, other.c) &&
-      container.isEqual(self.d, other.d) &&
-      container.isEqual(self.e, other.e);
+  static A fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<A>(map);
+  }
+  static A fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<A>(json);
+  }
 }
 
 mixin AMappable {
-  String toJson() => AMapper.container.toJson(this as A);
-  Map<String, dynamic> toMap() => AMapper.container.toMap(this as A);
-  ACopyWith<A, A, A> get copyWith =>
-      _ACopyWithImpl(this as A, $identity, $identity);
+  String toJson() {
+    AMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as A);
+  }
+  Map<String, dynamic> toMap() {
+    AMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as A);
+  }
+  ACopyWith<A, A, A> get copyWith => _ACopyWithImpl(this as A, $identity, $identity);
   @override
-  String toString() => AMapper.container.asString(this);
+  String toString() {
+    AMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (runtimeType == other.runtimeType &&
-          AMapper.container.isEqual(this, other));
+  bool operator ==(Object other) {
+    AMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
   @override
-  int get hashCode => AMapper.container.hash(this);
+  int get hashCode {
+    AMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
 extension AValueCopy<$R, $Out extends A> on ObjectCopyWith<$R, A, $Out> {
-  ACopyWith<$R, A, $Out> get asA =>
-      base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
+  ACopyWith<$R, A, $Out> get asA => base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
 }
 
 typedef ACopyWithBound = A;
-
-abstract class ACopyWith<$R, $In extends A, $Out extends A>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  ACopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends A>(
-      Then<A, $Out2> t, Then<$Out2, $R2> t2);
+abstract class ACopyWith<$R, $In extends A, $Out extends A> implements ObjectCopyWith<$R, $In, $Out> {
+  ACopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends A>(Then<A, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? a, int? b, double? c, bool? d, B? e});
 }
 
-class _ACopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, A, $Out>
-    implements ACopyWith<$R, A, $Out> {
+class _ACopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, A, $Out> implements ACopyWith<$R, A, $Out> {
   _ACopyWithImpl(super.value, super.then, super.then2);
-  @override
-  ACopyWith<$R2, A, $Out2> chain<$R2, $Out2 extends A>(
-          Then<A, $Out2> t, Then<$Out2, $R2> t2) =>
-      _ACopyWithImpl($value, t, t2);
+  @override ACopyWith<$R2, A, $Out2> chain<$R2, $Out2 extends A>(Then<A, $Out2> t, Then<$Out2, $R2> t2) => _ACopyWithImpl($value, t, t2);
 
-  @override
-  $R call({String? a, int? b, Object? c = $none, bool? d, Object? e = $none}) =>
-      $then(A(a ?? $value.a,
-          b: b ?? $value.b,
-          c: or(c, $value.c),
-          d: d ?? $value.d,
-          e: or(e, $value.e)));
+  @override $R call({String? a, int? b, Object? c = $none, bool? d, Object? e = $none}) => $then(A(a ?? $value.a, b: b ?? $value.b, c: or(c, $value.c), d: d ?? $value.d, e: or(e, $value.e)));
 }

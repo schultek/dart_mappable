@@ -77,9 +77,10 @@ class Asset<T> with AssetMappable {
 void main() {
   group('Generic classes', () {
     test('Should encode generic objects', () {
-      BoxMapper.container.link(ConfettiMapper.container);
+      BoxMapper.ensureInitialized();
+      ConfettiMapper.ensureInitialized();
       Box box = Box<Confetti>(10, contents: [Confetti('Rainbow')]);
-      String boxJson = BoxMapper.container.toJson(box);
+      String boxJson = MapperContainer.globals.toJson(box);
       expect(
         boxJson,
         equals(
@@ -91,7 +92,7 @@ void main() {
     });
 
     test('Should keep type information', () {
-      SettingsMapper.container.link(DataMapper.container);
+      DataMapper.ensureInitialized();
 
       var settings = Settings(settings: {
         'counts': SingleSetting<int>(properties: [2, 3, 4]),
@@ -116,11 +117,11 @@ void main() {
     });
 
     test('Generic type encoding', () {
-      var jsonA = SettingsMapper.container
+      var jsonA = MapperContainer.globals
           .toJson(SingleSetting<int>(properties: [2, 3]));
       expect(jsonA, equals('{"properties":[2,3]}'));
 
-      var jsonB = SettingsMapper.container
+      var jsonB = MapperContainer.globals
           .toJson<dynamic>(SingleSetting<int>(properties: [1, 4]));
       expect(
           jsonB, equals('{"properties":[1,4],"__type":"SingleSetting<int>"}'));

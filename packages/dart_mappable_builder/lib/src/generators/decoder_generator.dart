@@ -51,107 +51,11 @@ class DecoderGenerator {
     }
   }
 
-  Future<String> generateCanDecodeMethod() async {
+  Future<String> generateDiscriminatorFields() async {
     return '\n'
         '  @override\n'
-        '  bool canDecode(DecodingOptions<Map<String, dynamic>> options) {\n'
-        '    ${await _generateDecodePredicateCall()};\n'
-        '  }\n';
-  }
-
-  Future<String> _generateDecodePredicateCall() async {
-    if (element.isDefaultDiscriminator) {
-      return 'return true';
-    }
-
-    var value = await element.discriminatorValueCode;
-
-    if (value != null) {
-      var isList = value.startsWith('[') && value.endsWith(']');
-      if (isList) {
-        return "return $value.contains(options.value['${element.superTarget!.discriminatorKey}'])";
-      } else {
-        return "return options.value['${element.superTarget!.discriminatorKey}'] == $value";
-      }
-    } else {
-      return 'throw "TODO"';
-    }
-  }
-
-  /*
-
-  if (element.subTargets.isNotEmpty && element.discriminatorKey != null) {
-      "switch(map['${element.discriminatorKey}']) {\n"
-      '      ${(await _generateTypeCases()).join('\n      ')}\n'
-      '    }\n'
-
-   */
-
-  Future<List<String>> _generateTypeCases() async {
-    var cases = await _getDiscriminatorCases(element);
-
-    String? defaultCase;
-
-    var sortedCases = <MapEntry<List<String>, String>>[];
-
-    for (var c in cases) {
-      if (c.key.contains('default')) {
-        defaultCase = c.value;
-      } else {
-        sortedCases.add(MapEntry(c.key..sort(), c.value));
-      }
-    }
-    sortedCases.sort((a, b) => a.key.first.compareTo(b.key.first));
-
-    var statements = <String>[];
-
-    for (var c in sortedCases) {
-      c.key.take(c.key.length - 1).forEach((s) => statements.add('case $s:'));
-      statements.add(
-          'case ${c.key.last}: return ${c.value}().createElement(container).decode(map)${element.typeParams.isNotEmpty ? ' as ${element.prefixedClassName}${element.typeParams}' : ''};');
-    }
-    if (defaultCase != null) {
-      statements.add(
-          'default: return $defaultCase().createElement(container).decode(map)${element.typeParams.isNotEmpty ? ' as ${element.prefixedClassName}${element.typeParams}' : ''};');
-    } else {
-      statements.add('default: return fromMap${element.typeParams}(map);');
-    }
-
-    return statements;
-  }
-
-  Future<List<MapEntry<List<String>, String>>> _getDiscriminatorCases(
-      ClassMapperElement element) async {
-    var cases = <MapEntry<List<String>, String>>[];
-
-    for (var subConfig in element.subTargets) {
-      var subConfigMapper =
-          '${element.parent.prefixOfElement(subConfig.element)}${subConfig.uniqueClassName}Mapper';
-      var discriminatorValueCode = await subConfig.discriminatorValueCode;
-
-      if (discriminatorValueCode != null) {
-        if (discriminatorValueCode.startsWith('[') &&
-            discriminatorValueCode.endsWith(']')) {
-          cases.add(MapEntry(
-              discriminatorValueCode
-                  .substring(1, discriminatorValueCode.length - 1)
-                  .split(',')
-                  .map((s) => s.trim())
-                  .toList(),
-              subConfigMapper));
-        } else {
-          cases.add(MapEntry([discriminatorValueCode], subConfigMapper));
-        }
-      } else {
-        var subCases = await _getDiscriminatorCases(subConfig);
-        if (subCases.isNotEmpty) {
-          cases.add(MapEntry(
-              subCases.expand((e) => e.key).toList(), subConfigMapper));
-        }
-      }
-    }
-
-    return cases;
+        "  final String discriminatorKey = '${element.superTarget!.discriminatorKey ?? 'type'}';\n"
+        '  final dynamic discriminatorValue = ${(await element.discriminatorValueCode) ?? "'${element.className}'"};\n';
   }
 
   Future<String> _generateConstructorCall() async {

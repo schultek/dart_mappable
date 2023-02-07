@@ -6,18 +6,23 @@
 part of 'animal.dart';
 
 class AnimalMapper extends ClassMapperBase<Animal> {
-  static final AnimalMapper instance = AnimalMapper();
-  static MapperContainer? _c;
-  static final MapperContainer container = _c ?? ((_c = MapperContainer())
-  ..use(instance));
-
+  AnimalMapper._();
+  static AnimalMapper? _instance;
+  static AnimalMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = AnimalMapper._());
+      c.CatMapper.ensureInitialized();
+      d.DogMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
   @override
   final String id = 'Animal';
 
   @override
   final List<SubClassMapperBase<Animal>> subMappers = [
-    c.CatMapper.instance,
-    d.DogMapper.instance,
+    c.CatMapper.ensureInitialized(),
+    d.DogMapper.ensureInitialized(),
   ];
 
   static String _$name(Animal v) => v.name;
@@ -33,8 +38,14 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<Animal>;
-  static final fromJson = container.fromJson<Animal>;
+  static Animal fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<Animal>(map);
+  }
+  static Animal fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<Animal>(json);
+  }
 }
 
 mixin AnimalMappable {

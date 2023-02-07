@@ -196,22 +196,22 @@ class MapperElementGroup {
   }
 
   String prefixedType(DartType t, {bool withNullability = true}) {
-    if (t is TypeParameterType || t.element == null) {
+    if (t is! InterfaceType) {
       return t.getDisplayString(withNullability: withNullability);
     }
 
     var typeArgs = '';
-    if (t is InterfaceType && t.typeArguments.isNotEmpty) {
+    if (t.typeArguments.isNotEmpty) {
       typeArgs = '<${t.typeArguments.map(prefixedType).join(', ')}>';
     }
 
-    var type = '${t.element!.name}$typeArgs';
+    var type = '${t.element.name}$typeArgs';
 
     if (withNullability && t.nullabilitySuffix == NullabilitySuffix.question) {
       type += '?';
     }
 
-    return '${prefixOfElement(t.element!)}$type';
+    return '${prefixOfElement(t.element)}$type';
   }
 
   /// All of the declared classes and enums in this library.

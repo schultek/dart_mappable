@@ -6,7 +6,7 @@ import 'mapper_base.dart';
 import 'mapper_mixins.dart';
 import 'simple_mapper.dart';
 
-class PrimitiveMapper<T extends Object> extends MapperBase<T> {
+class PrimitiveMapper<T extends Object> extends MapperBase<T> with PrimitiveMethodsMixin<T> {
   const PrimitiveMapper([T Function(Object value)? decoder, this.exactType])
       : _decoder = decoder ?? _cast<T>;
 
@@ -87,8 +87,8 @@ class IterableMapper<I extends Iterable> extends MapperBase<I>
   Equality equality(Equality child) => IterableEquality(child);
 
   @override
-  String stringify(MappingOptions<I> options) =>
-      '(${options.value.map((e) => options.container.asString(e)).join(', ')})';
+  String stringify(MappingOptions<Object> options) =>
+      '(${options.checked<I>().value.map((e) => options.container.asString(e)).join(', ')})';
 }
 
 /// {@category Custom Mappers}
@@ -122,8 +122,8 @@ class MapMapper<M extends Map> extends MapperBase<M>
   Equality equality(Equality child) => MapEquality(keys: child, values: child);
 
   @override
-  String stringify(MappingOptions<M> options) =>
-      '{${options.value.entries.map((e) => '${options.container.asString(e.key)}: '
+  String stringify(MappingOptions<Object> options) =>
+      '{${options.checked<M>().value.entries.map((e) => '${options.container.asString(e.key)}: '
           '${options.container.asString(e.value)}').join(', ')}}';
 }
 

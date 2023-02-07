@@ -5,13 +5,17 @@
 
 part of 'dog.dart';
 
-class DogMapper extends SubClassMapperBase<Dog> {
-  static final DogMapper instance = DogMapper();
-  static MapperContainer? _c;
-  static final MapperContainer container = _c ?? ((_c = MapperContainer())
-  ..use(instance)
-  ..linkAll({AnimalMapper.container, PersonMapper.container}));
-
+class DogMapper extends DiscriminatorSubClassMapperBase<Dog> {
+  DogMapper._();
+  static DogMapper? _instance;
+  static DogMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = DogMapper._());
+      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
+      PersonMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
   @override
   final String id = 'Dog';
 
@@ -27,9 +31,8 @@ class DogMapper extends SubClassMapperBase<Dog> {
   };
 
   @override
-  bool canDecode(DecodingOptions<Map<String, dynamic>> options) {
-    return options.value['type'] == 1;
-  }
+  final String discriminatorKey = 'type';
+  final dynamic discriminatorValue = 1;
 
   static Dog _instantiate(DecodingData data) {
     return Dog(data.get(#name), data.get(#age), data.get(#owner));
@@ -37,17 +40,41 @@ class DogMapper extends SubClassMapperBase<Dog> {
   @override
   final Function instantiate = _instantiate;
 
-  static final fromMap = container.fromMap<Dog>;
-  static final fromJson = container.fromJson<Dog>;
+  static Dog fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<Dog>(map);
+  }
+  static Dog fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<Dog>(json);
+  }
 }
 
 mixin DogMappable {
-  String toJson() => DogMapper.container.toJson(this as Dog);
-  Map<String, dynamic> toMap() => DogMapper.container.toMap(this as Dog);
+  String toJson() {
+    DogMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as Dog);
+  }
+  Map<String, dynamic> toMap() {
+    DogMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as Dog);
+  }
   DogCopyWith<Dog, Dog, Dog> get copyWith => _DogCopyWithImpl(this as Dog, $identity, $identity);
-  @override String toString() => DogMapper.container.asString(this);
-  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && DogMapper.container.isEqual(this, other));
-  @override int get hashCode => DogMapper.container.hash(this);
+  @override
+  String toString() {
+    DogMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
+  @override
+  bool operator ==(Object other) {
+    DogMapper.ensureInitialized();
+    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+  }
+  @override
+  int get hashCode {
+    DogMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
 }
 
 extension DogValueCopy<$R, $Out extends Animal> on ObjectCopyWith<$R, Dog, $Out> {

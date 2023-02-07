@@ -30,12 +30,16 @@ abstract class MapperBase<T extends Object> {
   Object? encoder(EncodingOptions<Object> options) =>
       throw MapperException.unsupportedMethod(MapperMethod.encode, type);
 
-  bool equals(MappingOptions<T> options, T other) =>
+  bool equals(MappingOptions<Object> options, T other) =>
       throw MapperException.unsupportedMethod(MapperMethod.equals, type);
-  int hash(MappingOptions<T> options) =>
+  int hash(MappingOptions<Object> options) =>
       throw MapperException.unsupportedMethod(MapperMethod.hash, type);
-  String stringify(MappingOptions<T> options) =>
+  String stringify(MappingOptions<Object> options) =>
       throw MapperException.unsupportedMethod(MapperMethod.stringify, type);
+
+  static void addType<T>() {
+    TypePlus.add<T>();
+  }
 }
 
 typedef Decoder<V extends Object?, T> = T Function(DecodingOptions<V> options);
@@ -96,17 +100,33 @@ class MappingOptions<V extends Object?> {
   final List<Type> args;
   final MapperContainer container;
 
-  MappingOptions(this.value, this.container, {this.args = const []});
+  MappingOptions(this.value, {MapperContainer? container, this.args = const []})
+  : container = container ?? MapperContainer.globals;
+
+  MappingOptions<U> checked<U extends Object?>() {
+    if (value is U) {
+      return change<U>(value as U);
+    } else {
+      throw MapperException.unexpectedType(value.runtimeType, V, U.toString());
+    }
+  }
+
+  MappingOptions<$V> change<$V extends Object?>($V value) {
+    if (identical(value, this.value) && $V == V) {
+      return this as EncodingOptions<$V>;
+    }
+    return MappingOptions<$V>(value, container: container, args: args);
+  }
 }
 
 class DecodingOptions<V extends Object?> extends MappingOptions<V> {
   final bool inherited;
 
-  DecodingOptions(super.value, super.container,
-      {super.args, this.inherited = false});
+  DecodingOptions(super.value,
+      {super.container, super.args, this.inherited = false});
 
   DecodingOptions<V> inherit({MapperContainer? container}) {
-    return DecodingOptions<V>(value, container ?? this.container, args: args, inherited: true);
+    return DecodingOptions<V>(value, container: container ?? this.container, args: args, inherited: true);
   }
 
   T wrap<T>(Decoder<Object?, T> decoder,
@@ -118,39 +138,35 @@ class DecodingOptions<V extends Object?> extends MappingOptions<V> {
     }
   }
 
+  @override
   DecodingOptions<U> checked<U extends Object?>() {
-    if (value is U) {
-      return change<U>(value as U);
-    } else {
-      throw MapperException.unexpectedType(value.runtimeType, V, U.toString());
-    }
+    return super.checked<U>() as DecodingOptions<U>;
   }
 
+  @override
   DecodingOptions<$V> change<$V extends Object?>($V value) {
     if (identical(value, this.value) && $V == V) {
       return this as DecodingOptions<$V>;
     }
-    return DecodingOptions<$V>(value, container,
+    return DecodingOptions<$V>(value, container: container,
         args: args, inherited: inherited);
   }
 }
 
 class EncodingOptions<V extends Object?> extends MappingOptions<V> {
-  EncodingOptions(super.value, super.container, {super.args});
+  EncodingOptions(super.value, {super.container, super.args});
 
+  @override
   EncodingOptions<U> checked<U extends Object?>() {
-    if (value is U) {
-      return change<U>(value as U);
-    } else {
-      throw MapperException.unexpectedType(value.runtimeType, V, U.toString());
-    }
+    return super.checked<U>() as EncodingOptions<U>;
   }
 
+  @override
   EncodingOptions<$V> change<$V extends Object?>($V value) {
     if (identical(value, this.value) && $V == V) {
       return this as EncodingOptions<$V>;
     }
-    return EncodingOptions<$V>(value, container, args: args);
+    return EncodingOptions<$V>(value, container: container, args: args);
   }
 }
 

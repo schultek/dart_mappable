@@ -12,7 +12,6 @@ export 'src/copywith/map_copy_with.dart';
 
 export 'src/hooks/chained_hook.dart';
 export 'src/hooks/string_hooks.dart';
-export 'src/hooks/check_types_hook.dart';
 export 'src/hooks/unmapped_properties_hook.dart';
 
 export 'src/mappers/interface_mapper.dart';

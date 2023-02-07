@@ -8,11 +8,18 @@ class EqualsGenerator {
   final TargetClassMapperElement target;
 
   String generateEqualsMixin() {
-    if (target.shouldGenerate(GenerateMethods.equals) && !target.isAbstract) {
-      return '  @override bool operator ==(Object other) => identical(this, other) || (runtimeType == other.runtimeType && ${target.uniqueClassName}Mapper.container.isEqual(this, other));\n'
-          '  @override int get hashCode => ${target.uniqueClassName}Mapper.container.hash(this);\n';
-    } else {
+    if (!target.shouldGenerate(GenerateMethods.equals) || target.isAbstract) {
       return '';
     }
+    return '  @override\n'
+        '  bool operator ==(Object other) {\n'
+        '    ${target.mapperName}.ensureInitialized();\n'
+        '    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));\n'
+        '  }\n'
+        '  @override\n'
+        '  int get hashCode {\n'
+        '    ${target.mapperName}.ensureInitialized();\n'
+        '    return MapperContainer.globals.hash(this);\n'
+        '  }\n';
   }
 }

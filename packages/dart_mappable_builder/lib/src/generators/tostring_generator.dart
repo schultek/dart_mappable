@@ -8,11 +8,14 @@ class ToStringGenerator {
   final TargetClassMapperElement target;
 
   String generateToStringMixin() {
-    if (target.shouldGenerate(GenerateMethods.stringify) &&
-        !target.isAbstract) {
-      return '  @override String toString() => ${target.uniqueClassName}Mapper.container.asString(this);\n';
-    } else {
+    if (!target.shouldGenerate(GenerateMethods.stringify) ||
+        target.isAbstract) {
       return '';
     }
+    return '  @override\n'
+        '  String toString() {\n'
+        '    ${target.mapperName}.ensureInitialized();\n'
+        '    return MapperContainer.globals.asString(this);\n'
+        '  }\n';
   }
 }

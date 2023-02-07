@@ -21,15 +21,13 @@ class Content with ContentMappable {
 
 void main() {
   group('duplicate names', () {
-    var container = MapperContainer(linked: {
-      BoxMapper.container,
-      b.BoxMapper.container,
-      b.ConfettiMapper.container,
-    });
+    BoxMapper.ensureInitialized();
+    b.BoxMapper.ensureInitialized();
+    b.ConfettiMapper.ensureInitialized();
 
     test('Should encode generic objects', () {
-      var boxA = container.toJson<dynamic>(Box(10, contents: Content('test')));
-      var boxB = container.toJson<dynamic>(
+      var boxA = MapperContainer.globals.toJson<dynamic>(Box(10, contents: Content('test')));
+      var boxB = MapperContainer.globals.toJson<dynamic>(
           b.Box<b.Confetti>(10, contents: [b.Confetti('Rainbow')]));
 
       expect(
@@ -41,8 +39,8 @@ void main() {
           equals(
               '{"size":10,"contents":[{"color":"Rainbow"}],"__type":"Box<Confetti>"}'));
 
-      var decA = container.fromJson(boxA);
-      var decB = container.fromJson(boxB);
+      var decA = MapperContainer.globals.fromJson(boxA);
+      var decB = MapperContainer.globals.fromJson(boxB);
 
       expect(decA, isA<Box>());
       expect(decB, isA<b.Box<b.Confetti>>());

@@ -1,4 +1,5 @@
-import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../utils.dart';
 import 'class_mapper_element.dart';
@@ -11,20 +12,14 @@ class TargetClassMapperElement extends ClassMapperElement
 
   late String prefixedDecodingClassName = prefixedClassName;
 
-  late List<DartType> customMappers = () {
+  late Future<List<String>> customMappers = () async {
     var mappers =
-        annotation?.getField('includeCustomMappers')?.toTypeList() ?? [];
-    for (var mapper in mappers) {
-      var mapperIndex = mapper is InterfaceType
-          ? mapper.allSupertypes
-              .indexWhere((t) => mapperChecker.isExactlyType(t))
-          : -1;
-      if (mapperIndex == -1) {
-        throw UnsupportedError(
-            'Classes supplied to invludeCustomMappers must extend the MapperBase class');
-      }
+        await getAnnotationNode(element, MappableClass, 'includeCustomMappers');
+    if (mappers is ListLiteral) {
+      assert(mappers.elements.every((e) => e is Expression));
+      return mappers.elements.map((e) => e.toSource()).toList();
     }
-    return mappers;
+    return <String>[];
   }();
 
   late List<String> typesConfigs = () {
@@ -35,7 +30,7 @@ class TargetClassMapperElement extends ClassMapperElement
         var e = param.bound!.element;
         var m = parent.getMapperForElement(e);
         if (e != null && (m == null || m is NoneClassMapperElement)) {
-          types.add("'${e.name}': (f) => f<${e.name}>()");
+          types.add(e.name!);
         }
       }
     }

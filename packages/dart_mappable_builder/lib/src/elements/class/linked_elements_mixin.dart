@@ -8,11 +8,6 @@ mixin LinkedElementsMixin on ClassMapperElement {
   late Map<MapperElement, String> linkedElements = () {
     var linked = <MapperElement, String>{};
 
-    if (superTarget != null && superTarget is! NoneClassMapperElement) {
-      var prefix = parent.prefixOfElement(superTarget!.element);
-      linked[superTarget!] = '$prefix${superTarget!.mapperName}';
-    }
-
     for (var target in subTargets) {
       if (target is! NoneClassMapperElement) {
         var prefix = parent.prefixOfElement(target.element);

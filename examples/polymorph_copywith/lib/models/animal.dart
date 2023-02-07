@@ -11,13 +11,3 @@ abstract class Animal with AnimalMappable {
   Animal(this.name);
 }
 
-
-class A<T extends B<C>> {
-
-}
-
-class C extends A<B<C>> {}
-
-class B<T extends A> {
-
-}
