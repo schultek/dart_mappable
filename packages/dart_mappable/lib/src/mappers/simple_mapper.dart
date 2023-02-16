@@ -1,3 +1,5 @@
+
+import '../mapper_container.dart';
 import 'mapper_base.dart';
 import 'mapper_mixins.dart';
 
@@ -31,7 +33,7 @@ abstract class SimpleMapper1<T extends Object> extends _SimpleMapperBase<T> {
   T decode<A>(Object value);
 
   /// Override as `Object encode<A>(MyClass<A> self)`
-  Object? encode<A>(T self);
+  Object? encode<A>(covariant T self);
 
   @override
   T _decode(DecodingOptions<Object> options) {
@@ -54,7 +56,7 @@ abstract class SimpleMapper2<T extends Object> extends _SimpleMapperBase<T> {
   T decode<A, B>(Object value);
 
   /// Override as `Object? encode<A, B>(MyClass<A, B> self)`
-  Object? encode<A, B>(T self);
+  Object? encode<A, B>(covariant T self);
 
   @override
   T _decode(DecodingOptions<Object> options) {
@@ -70,6 +72,12 @@ abstract class SimpleMapper2<T extends Object> extends _SimpleMapperBase<T> {
 abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T> with PrimitiveMethodsMixin<T> {
   const _SimpleMapperBase();
 
+  static MapperContainer? _container;
+  MapperContainer get container {
+    assert(_container != null, 'SimpleMapper.container can only be accessed inside the decode() or encode() functions.');
+    return _container!;
+  }
+
   T _decode(DecodingOptions<Object> options);
   Object? _encode(EncodingOptions<T> options);
 
@@ -77,11 +85,21 @@ abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T> with Pr
 
   @override
   T decoder(DecodingOptions<Object> options) {
-    return _decode(options);
+    _container = options.container;
+    try {
+      return _decode(options);
+    } finally {
+      _container = null;
+    }
   }
 
   @override
   Object? encoder(EncodingOptions<Object> options) {
+    _container = options.container;
+    try {
     return _encode(options.checked<T>());
+    } finally {
+      _container = null;
+    }
   }
 }

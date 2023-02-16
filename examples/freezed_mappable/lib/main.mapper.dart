@@ -20,13 +20,6 @@ class UnionMapper extends ClassMapperBase<Union> {
   @override
   final String id = 'Union';
 
-  @override
-  final List<SubClassMapperBase<Union>> subMappers = [
-    DataMapper.ensureInitialized(),
-    LoadingMapper.ensureInitialized(),
-    ErrorDetailsMapper.ensureInitialized(),
-  ];
-
 
   @override
   final Map<Symbol, Field<Union, dynamic>> fields = const {
@@ -51,11 +44,11 @@ class UnionMapper extends ClassMapperBase<Union> {
 extension UnionMapperExtension on Union {
   String toJson() {
     UnionMapper.ensureInitialized();
-    MapperContainer.globals.toJson(this);
+    return MapperContainer.globals.toJson(this);
   }
   Map<String, dynamic> toMap() {
     UnionMapper.ensureInitialized();
-    MapperContainer.globals.toMap(this);
+    return MapperContainer.globals.toMap(this);
   }
 }
 
@@ -109,11 +102,11 @@ class DataMapper extends DiscriminatorSubClassMapperBase<Data> {
 extension DataMapperExtension on Data {
   String toJson() {
     DataMapper.ensureInitialized();
-    MapperContainer.globals.toJson(this);
+    return MapperContainer.globals.toJson(this);
   }
   Map<String, dynamic> toMap() {
     DataMapper.ensureInitialized();
-    MapperContainer.globals.toMap(this);
+    return MapperContainer.globals.toMap(this);
   }
 }
 
@@ -160,11 +153,11 @@ class LoadingMapper extends DiscriminatorSubClassMapperBase<Loading> {
 extension LoadingMapperExtension on Loading {
   String toJson() {
     LoadingMapper.ensureInitialized();
-    MapperContainer.globals.toJson(this);
+    return MapperContainer.globals.toJson(this);
   }
   Map<String, dynamic> toMap() {
     LoadingMapper.ensureInitialized();
-    MapperContainer.globals.toMap(this);
+    return MapperContainer.globals.toMap(this);
   }
 }
 
@@ -213,10 +206,10 @@ class ErrorDetailsMapper extends DiscriminatorSubClassMapperBase<ErrorDetails> {
 extension ErrorDetailsMapperExtension on ErrorDetails {
   String toJson() {
     ErrorDetailsMapper.ensureInitialized();
-    MapperContainer.globals.toJson(this);
+    return MapperContainer.globals.toJson(this);
   }
   Map<String, dynamic> toMap() {
     ErrorDetailsMapper.ensureInitialized();
-    MapperContainer.globals.toMap(this);
+    return MapperContainer.globals.toMap(this);
   }
 }

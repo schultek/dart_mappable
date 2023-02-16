@@ -83,7 +83,7 @@ void compareGeneric() {
       // required for dart_json_mapper
       initializeJsonMapper();
       // requires for dart_mappable
-      BoxCMapper.container.link(ContentCMapper.container);
+      ContentCMapper.ensureInitialized();
     });
 
     group('decode from map', () {
@@ -188,8 +188,7 @@ void compareGeneric() {
           () => BoxCMapper.fromMap<ContentC>({'content': '123'}),
           throwsMapperException(
               'Failed to decode (BoxC<ContentC>).content(ContentC): '
-              'Cannot decode value of type String to type ContentC, because '
-              'a value of type Map<String, dynamic> is expected.'),
+              'Expected a value of type Map<String, dynamic>, but got type String.'),
         );
       });
     });
@@ -225,7 +224,7 @@ void compareGeneric() {
 
       test('dart_mappable', () {
         // built in
-        var decode = BoxCMapper.container.fromValue;
+        var decode = MapperContainer.globals.fromValue;
 
         expect(
           decode<BoxC<ContentC>>({

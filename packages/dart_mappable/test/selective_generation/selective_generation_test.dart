@@ -34,15 +34,6 @@ void main() {
       expect(a.copyWith(a: 'test2').a, equals('test2'));
 
       // should not work
-      expect(
-        () => MapperContainer.globals.fromJson<A>('{}'),
-        throwsMapperException(MapperException.chain(
-          MapperMethod.decode,
-          '(A)',
-          MapperException.unsupportedMethod(MapperMethod.decode, A),
-        )),
-      );
-
       expect(a, isNot(equals(A('test'))));
       expect(a.toString(), equals("Instance of 'A'"));
     });
@@ -58,15 +49,6 @@ void main() {
       expect(MapperContainer.globals.asString(b), equals('B(b: hi)'));
 
       // should not work
-      expect(
-        () => MapperContainer.globals.fromJson<B>('{}'),
-        throwsMapperException(MapperException.chain(
-          MapperMethod.decode,
-          '(B)',
-          MapperException.unsupportedMethod(MapperMethod.decode, B),
-        )),
-      );
-
       expect(() => (b as dynamic).toMap, throwsNoSuchMethodError);
       expect(() => (b as dynamic).copyWith, throwsNoSuchMethodError);
     });

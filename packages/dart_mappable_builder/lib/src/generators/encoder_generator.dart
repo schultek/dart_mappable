@@ -34,11 +34,11 @@ class EncoderGenerator {
     }
     return '  String toJson() {\n'
         '    ${target.mapperName}.ensureInitialized();\n'
-        '    MapperContainer.globals.toJson(this);\n'
+        '    return MapperContainer.globals.toJson(this);\n'
         '  }\n'
         '  Map<String, dynamic> toMap() {\n'
         '    ${target.mapperName}.ensureInitialized();\n'
-        '    MapperContainer.globals.toMap(this);\n'
+        '    return MapperContainer.globals.toMap(this);\n'
         '  }\n';
   }
 }

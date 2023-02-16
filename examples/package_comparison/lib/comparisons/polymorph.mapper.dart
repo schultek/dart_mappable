@@ -19,12 +19,6 @@ class AnimalBMapper extends ClassMapperBase<AnimalB> {
   @override
   final String id = 'AnimalB';
 
-  @override
-  final List<SubClassMapperBase<AnimalB>> subMappers = [
-    CatBMapper.ensureInitialized(),
-    DogBMapper.ensureInitialized(),
-  ];
-
   static String _$name(AnimalB v) => v.name;
 
   @override

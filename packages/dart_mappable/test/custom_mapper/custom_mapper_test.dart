@@ -24,7 +24,7 @@ class PrivateClassMapper extends SimpleMapper<MyPrivateClass> {
 
   @override
   bool equals(MappingOptions<Object> self, MyPrivateClass other) {
-    return self.value == other.value;
+    return self.checked<MyPrivateClass>().value.value == other.value;
   }
 }
 
@@ -36,18 +36,17 @@ class GenericBox<T> {
 // only use the base type here
 class GenericBoxMapper extends SimpleMapper1<GenericBox> {
 
-
   @override
   Function get typeFactory => <T>(f) => f<GenericBox<T>>();
 
   @override
   GenericBox decode<A>(Object value) {
-    return GenericBox<A>(value as A);
+    return GenericBox<A>(container.fromValue<A>(value));
   }
 
   @override
-  Object? encode<A>(GenericBox self) {
-    return self.content;
+  Object? encode<A>(GenericBox<A> self) {
+    return container.toValue(self.content);
   }
 }
 
@@ -91,7 +90,7 @@ void main() {
       var s = container.toValue(c);
       expect(s, equals('test'));
 
-      expect(container.isEqual(c, MyPrivateClass('test')), equals(true));
+      expect(container.isEqual(c, MyPrivateClass('test')), isTrue);
     });
 
     test('Generic custom Mapper', () {

@@ -64,8 +64,8 @@ void main() {
   // directly convert to json string
   print(person3.toJson()); // '{"name":"Max","age":18,"car":{...
 
-  // link mappers to work together
-  BoxMapper.container.link(ConfettiMapper.container);
+  // make sure that Confetti can be serialized
+  ConfettiMapper.ensureInitialized();
 
   // use generic objects
   var box = Box<Confetti>(10, content: Confetti('Rainbow'));

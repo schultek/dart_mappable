@@ -12,7 +12,9 @@ scripts:
   test:
     run: melos exec -- 'dart test'
     select-package:
-      scope: dart_mappable
+      scope:
+        - dart_mappable
+        - package_comparison
   coverage:
     run: |
       melos exec -- 'dart test --coverage=coverage'
