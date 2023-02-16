@@ -216,8 +216,8 @@ Here are again all **six** annotations that you can use in your code:
 class MyClass with MyClassMappable {
   ...
 
- static final fromMap = PersonMapper.fromMap;
- static final fromJson = PersonMapper.fromJson;
+ static final fromMap = MyClassMapper.fromMap;
+ static final fromJson = MyClassMapper.fromJson;
 }
 ```
 
