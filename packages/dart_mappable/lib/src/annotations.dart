@@ -264,7 +264,7 @@ abstract class MappingHook {
       }
       options = options.change<Object?>(encoder(options));
     }
-    return afterDecode(options.value);
+    return afterEncode(options.value);
   }
 
   dynamic wrapEncode<T>(

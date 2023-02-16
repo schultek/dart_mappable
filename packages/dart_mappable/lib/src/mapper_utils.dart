@@ -55,15 +55,6 @@ T guard<T>(MapperMethod method, String hint, T Function() fn) {
 
 
 /// {@nodoc}
-T checkedType<T, U>(dynamic v, T Function(U) fn) {
-  if (v is U) {
-    return fn(v);
-  } else {
-    throw MapperException.unexpectedType(v.runtimeType, T, U.toString());
-  }
-}
-
-/// {@nodoc}
 extension HooksMapping on MappingHook? {
   T decode<T>(
       dynamic value, T Function(dynamic value) fn, MapperContainer container) {

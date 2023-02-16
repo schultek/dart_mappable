@@ -48,7 +48,7 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
       return DateTime.fromMillisecondsSinceEpoch(value.round());
     } else {
       throw MapperException.unexpectedType(
-          value.runtimeType, DateTime, 'String or num');
+          value.runtimeType, 'String or num');
     }
   }
 

@@ -57,7 +57,7 @@ void main() {
         throwsMapperException(MapperException.chain(
           MapperMethod.decode,
           '(Person).car(Car?)',
-          MapperException.unexpectedType(String, Car, 'Map<String, dynamic>'),
+          MapperException.unexpectedType(String, 'Map<String, dynamic>'),
         )),
       );
     });

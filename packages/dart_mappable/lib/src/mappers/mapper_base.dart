@@ -107,7 +107,7 @@ class MappingOptions<V extends Object?> {
     if (value is U) {
       return change<U>(value as U);
     } else {
-      throw MapperException.unexpectedType(value.runtimeType, V, U.toString());
+      throw MapperException.unexpectedType(value.runtimeType, U.toString());
     }
   }
 

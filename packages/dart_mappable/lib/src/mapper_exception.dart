@@ -27,9 +27,8 @@ class MapperException implements Exception {
 
   /// Exception when passing an unexpected type to a decoder
   factory MapperException.unexpectedType(
-      Type actual, Type target, String expected) {
-    return MapperException._('Cannot decode value of type $actual to type '
-        '$target, because a value of type $expected is expected.');
+      Type actual, String expected) {
+    return MapperException._('Expected a value of type $expected, but got type $actual.');
   }
 
   /// Exception when getting an unexpected type from an encoder
