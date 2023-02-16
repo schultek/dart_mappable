@@ -1,3 +1,8 @@
+# 2.0.3
+
+- Fixed typo in readme (by [@timmaffett](https://github.com/schultek/dart_mappable/pull/67))
+- Fixed generated container for private libraries.
+
 # 2.0.2
 
 - Fixed yet another unresolved type bug.
