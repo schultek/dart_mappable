@@ -10,6 +10,12 @@ import 'mappers/default_mappers.dart';
 import 'mappers/mapper_base.dart';
 import 'mapper_exception.dart';
 
+class EncodingOptions {
+  EncodingOptions({this.includeTypeId});
+
+  final bool? includeTypeId;
+}
+
 /// {@category Generics}
 /// {@category Mapper Container}
 @sealed
@@ -37,7 +43,7 @@ abstract class MapperContainer {
   static final MapperContainer globals = MapperContainerBase();
 
   T fromValue<T>(dynamic value);
-  dynamic toValue<T>(T value);
+  dynamic toValue<T>(T value, [EncodingOptions? options]);
 
   T fromMap<T>(Map<String, dynamic> map);
   Map<String, dynamic> toMap<T>(T object);
@@ -233,22 +239,22 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   @override
-  dynamic toValue<T>(T value) {
+  dynamic toValue<T>(T value, [EncodingOptions? options]) {
     if (value == null) return null;
     var mapper = _mapperFor(value);
     if (mapper != null) {
       try {
         Type type = T;
         String? typeId;
-        if (value.runtimeType != type.nonNull &&
-            value.runtimeType.base != UnresolvedType) {
-          if (value is! Map && value is! Iterable) {
-            if (mapper.implType == mapper.type ||
-                value.runtimeType != mapper.implType) {
-              typeId = value.runtimeType.id;
-              type = value.runtimeType;
-            }
-          }
+
+        var includeTypeId = options?.includeTypeId;
+        includeTypeId ??= (value.runtimeType != type.nonNull &&
+              value.runtimeType.base != UnresolvedType) && (value is! Map && value is! Iterable) && (mapper.implType == mapper.type ||
+              value.runtimeType != mapper.implType);
+
+        if (includeTypeId) {
+          typeId = value.runtimeType.id;
+          type = value.runtimeType;
         }
 
         var typeArgs = type.args;
