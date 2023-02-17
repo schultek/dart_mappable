@@ -13,13 +13,13 @@ abstract class SimpleMapper<T extends Object> extends _SimpleMapperBase<T> {
   Object? encode(T self);
 
   @override
-  T _decode(DecodingOptions<Object> options) {
-    return decode(options.value);
+  T _decode(DecodingContext<Object> context) {
+    return decode(context.value);
   }
 
   @override
-  Object? _encode(EncodingOptions<T> options) {
-    return encode(options.value);
+  Object? _encode(EncodingContext<T> context) {
+    return encode(context.value);
   }
 }
 
@@ -36,13 +36,13 @@ abstract class SimpleMapper1<T extends Object> extends _SimpleMapperBase<T> {
   Object? encode<A>(covariant T self);
 
   @override
-  T _decode(DecodingOptions<Object> options) {
-    return options.callWith1(decode, _$value);
+  T _decode(DecodingContext<Object> context) {
+    return context.callWith1(decode, _$value);
   }
 
   @override
-  Object? _encode(EncodingOptions<T> options) {
-    return options.callWith1(encode, _$value);
+  Object? _encode(EncodingContext<T> context) {
+    return context.callWith1(encode, _$value);
   }
 }
 
@@ -59,13 +59,13 @@ abstract class SimpleMapper2<T extends Object> extends _SimpleMapperBase<T> {
   Object? encode<A, B>(covariant T self);
 
   @override
-  T _decode(DecodingOptions<Object> options) {
-    return options.callWith2(decode, _$value);
+  T _decode(DecodingContext<Object> context) {
+    return context.callWith2(decode, _$value);
   }
 
   @override
-  Object? _encode(EncodingOptions<T> options) {
-    return options.callWith2(encode, _$value);
+  Object? _encode(EncodingContext<T> context) {
+    return context.callWith2(encode, _$value);
   }
 }
 
@@ -78,26 +78,26 @@ abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T> with Pr
     return _container!;
   }
 
-  T _decode(DecodingOptions<Object> options);
-  Object? _encode(EncodingOptions<T> options);
+  T _decode(DecodingContext<Object> context);
+  Object? _encode(EncodingContext<T> context);
 
-  V _$value<V extends Object>(MappingOptions<V> o) => o.value;
+  V _$value<V extends Object>(MappingContext<V> o) => o.value;
 
   @override
-  T decoder(DecodingOptions<Object> options) {
-    _container = options.container;
+  T decoder(DecodingContext<Object> context) {
+    _container = context.container;
     try {
-      return _decode(options);
+      return _decode(context);
     } finally {
       _container = null;
     }
   }
 
   @override
-  Object? encoder(EncodingOptions<Object> options) {
-    _container = options.container;
+  Object? encoder(EncodingContext<Object> context) {
+    _container = context.container;
     try {
-    return _encode(options.checked<T>());
+    return _encode(context.checked<T>());
     } finally {
       _container = null;
     }

@@ -5,20 +5,20 @@ import '../mapper_container.dart';
 
 mixin PrimitiveMethodsMixin<T extends Object> implements MapperBase<T> {
   @override
-  bool equals(MappingOptions<Object> options, T other) => options.value == other;
+  bool equals(MappingContext<Object> context, T other) => context.value == other;
   @override
-  int hash(MappingOptions<Object> options) => options.value.hashCode;
+  int hash(MappingContext<Object> context) => context.value.hashCode;
   @override
-  String stringify(MappingOptions<Object> options) => options.value.toString();
+  String stringify(MappingContext<Object> context) => context.value.toString();
 }
 
 mixin MapperEqualityMixin<T extends Object> implements MapperBase<T> {
   Equality equality(Equality child);
 
   @override
-  bool equals(MappingOptions<Object> options, T other) => equality(MapperEquality(options.container)).equals(options.value, other);
+  bool equals(MappingContext<Object> context, T other) => equality(MapperEquality(context.container)).equals(context.value, other);
   @override
-  int hash(MappingOptions<Object> options) => equality(MapperEquality(options.container)).hash(options.value);
+  int hash(MappingContext<Object> context) => equality(MapperEquality(context.container)).hash(context.value);
 }
 
 class MapperEquality implements Equality {

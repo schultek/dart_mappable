@@ -5,15 +5,15 @@ import '../mapper_utils.dart';
 import 'mapper_base.dart';
 
 class DecodingData<T extends Object> {
-  DecodingData(this.options, this.mapper);
+  DecodingData(this.context, this.mapper);
 
-  final DecodingOptions<Map<String, dynamic>> options;
-  final ClassMapperBase<T> mapper;
+  final DecodingContext<Map<String, dynamic>> context;
+  final InterfaceMapperBase<T> mapper;
 
-  Map<String, dynamic> get value => options.value;
+  Map<String, dynamic> get value => context.value;
 
   V get<V>(Symbol name) {
-    return mapper.fields[name]!.decode(options);
+    return mapper.fields[name]!.decode(context);
   }
 }
 
@@ -23,20 +23,20 @@ abstract class DiscriminatorSubClassMapperBase<T extends Object>
   dynamic get discriminatorValue;
 
   @override
-  bool canDecode(DecodingOptions<Map<String, dynamic>> options) {
+  bool canDecode(DecodingContext<Map<String, dynamic>> context) {
     var value = discriminatorValue;
     if (identical(value, MappingFlags.useAsDefault)) {
       return true;
     } else if (value is Function) {
       if (value is bool Function(Map<String, dynamic>)) {
-        if (value(options.value)) {
+        if (value(context.value)) {
           return true;
         }
       } else {
         throw AssertionError(
             'Discriminator function must be of type "bool Function(Map<String, dynamic>)".');
       }
-    } else if (value == options.value[discriminatorKey]) {
+    } else if (value == context.value[discriminatorKey]) {
       return true;
     }
     return false;
@@ -50,12 +50,17 @@ abstract class DiscriminatorSubClassMapperBase<T extends Object>
 }
 
 abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
-  bool canDecode(DecodingOptions<Map<String, dynamic>> options) {
+  bool canDecode(DecodingContext<Map<String, dynamic>> context) {
     return false;
   }
 }
 
-abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
+abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
+  Map<Symbol, Field<T, dynamic>> get fields;
+}
+
+abstract class ClassMapperBase<T extends Object> extends InterfaceMapperBase<T> {
+  @override
   Map<Symbol, Field<T, dynamic>> get fields;
 
   bool get ignoreNull => false;
@@ -84,32 +89,28 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
   Function get instantiate;
 
   @override
-  T decoder(DecodingOptions<Object> options) {
-    return options.wrap(hook: superHook, skipInherited: true, (c) {
+  T decoder(DecodingContext<Object> context) {
+    return context.wrap(hook: superHook, skipInherited: true, (c) {
       return c.wrap(hook: hook, (c) {
-        var context = c.checked<Map<String, dynamic>>();
+        var c2 = c.checked<Map<String, dynamic>>();
         if (_subMappers.isNotEmpty) {
           for (var m in _subMappers) {
-            if (m.canDecode(context)) {
-              return m.decoder(context.inherit());
+            if (m.canDecode(c2)) {
+              return m.decoder(c2.inherit());
             }
           }
         }
         if (_defaultSubMapper != null) {
-          return _defaultSubMapper!.decoder(context.inherit());
+          return _defaultSubMapper!.decoder(c2.inherit());
         }
         return c.callWith(instantiate, DecodingData<T>(c.checked(), this));
       });
     });
   }
 
-  T jsonDecoder(DecodingOptions<String> options) {
-    return decoder(options.change(jsonDecode(options.value) as Object));
-  }
-
   @override
-  Object? encoder(EncodingOptions<Object> options) {
-    return options.checked<T>().wrap(hook: superHook, (c) {
+  Object? encoder(EncodingContext<Object> context) {
+    return context.checked<T>().wrap(hook: superHook, (c) {
       return c.wrap(hook: hook, (c) {
         var $this = this;
         return {
@@ -123,31 +124,27 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
     });
   }
 
-  String jsonEncoder(EncodingOptions<Object> options) {
-    return jsonEncode(encoder(options));
-  }
-
   @override
-  String stringify(MappingOptions<Object> options) {
-    var value = options.checked<T>().value;
+  String stringify(MappingContext<Object> context) {
+    var value = context.checked<T>().value;
     return '$id(${_members.map((f) {
-      return '${f.name}: ${options.container.asString(f.get(value))}';
+      return '${f.name}: ${context.container.asString(f.get(value))}';
     }).join(', ')})';
   }
 
   @override
-  int hash(MappingOptions<Object> options) {
-    var value = options.checked<T>().value;
+  int hash(MappingContext<Object> context) {
+    var value = context.checked<T>().value;
     return Object.hashAll(_members.map((f) {
-      return options.container.hash(f.get(value));
+      return context.container.hash(f.get(value));
     }));
   }
 
   @override
-  bool equals(MappingOptions<Object> options, T other) {
-    var value = options.checked<T>().value;
+  bool equals(MappingContext<Object> context, T other) {
+    var value = context.checked<T>().value;
     return _members.every((f) {
-      return options.container.isEqual(f.get(value), f.get(other));
+      return context.container.isEqual(f.get(value), f.get(other));
     });
   }
 }
@@ -177,20 +174,20 @@ class Field<T extends Object, V> {
       this.hook})
       : key = key ?? name;
 
-  dynamic encode(EncodingOptions<T> options) {
-    var container = options.container;
+  dynamic encode(EncodingContext<T> context) {
+    var container = context.container;
     if (arg == null) {
-      return container.$enc<V>(get(options.value), name, hook);
+      return container.$enc<V>(get(context.value), name, hook);
     } else {
-      return options.callWith(arg!,
-          <U>() => container.$enc<U>(get(options.value) as U, name, hook));
+      return context.callWith(arg!,
+          <U>() => container.$enc<U>(get(context.value) as U, name, hook));
     }
   }
 
-  R decode<R>(DecodingOptions<Map<String, dynamic>> options) {
+  R decode<R>(DecodingContext<Map<String, dynamic>> context) {
     var value = opt || def != null
-        ? options.container.$dec<R?>(options.value[key], key, hook)
-        : options.container.$dec<R>(options.value[key], key, hook);
+        ? context.container.$dec<R?>(context.value[key], key, hook)
+        : context.container.$dec<R>(context.value[key], key, hook);
     return value ?? (def as R);
   }
 }

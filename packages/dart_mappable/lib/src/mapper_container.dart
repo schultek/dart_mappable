@@ -219,7 +219,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     var mapper = _mapperForType(type);
     if (mapper != null) {
       try {
-        return mapper.decoder(DecodingOptions(value, container: this, args: type.args)) as T;
+        return mapper.decoder(DecodingContext(value, container: this, args: type.args)) as T;
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
           MapperException.chain(MapperMethod.decode, '($type)', e),
@@ -258,7 +258,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
           typeArgs = fallback;
         }
 
-        var result = mapper.encoder(EncodingOptions<Object>(value, container: this, args: typeArgs));
+        var result = mapper.encoder(EncodingContext<Object>(value, container: this, args: typeArgs));
 
         if (result is Map<String, dynamic> && typeId != null) {
           result['__type'] = typeId;
@@ -359,7 +359,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
 
   T guardMappable<T>(
     Object value,
-    T Function(MapperBase, MappingOptions<Object>) fn,
+    T Function(MapperBase, MappingContext<Object>) fn,
     T Function() fallback,
     MapperMethod method,
     String Function() hint,
@@ -367,7 +367,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     var mapper = _mapperFor(value);
     if (mapper != null) {
       try {
-        return fn(mapper, MappingOptions(value, container: this));
+        return fn(mapper, MappingContext(value, container: this));
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
           MapperException.chain(method, hint(), e),

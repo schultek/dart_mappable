@@ -23,7 +23,7 @@ class PrivateClassMapper extends SimpleMapper<MyPrivateClass> {
   }
 
   @override
-  bool equals(MappingOptions<Object> self, MyPrivateClass other) {
+  bool equals(MappingContext<Object> self, MyPrivateClass other) {
     return self.checked<MyPrivateClass>().value.value == other.value;
   }
 }

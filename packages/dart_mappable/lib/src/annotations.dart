@@ -250,21 +250,21 @@ abstract class MappingHook {
     return afterDecode(v) as T;
   }
 
-  T wrapDecoder<T>(DecodingOptions<Object?> options, Decoder<Object?, T> decoder) {
-    options = options.change<Object?>(beforeDecode(options.value));
-    var out = options.change<T>(options.value is! T ? decoder(options) : options.value as T);
+  T wrapDecoder<T>(DecodingContext<Object?> context, Decoder<Object?, T> decoder) {
+    context = context.change<Object?>(beforeDecode(context.value));
+    var out = context.change<T>(context.value is! T ? decoder(context) : context.value as T);
     return afterDecode(out.value) as T;
   }
 
-  Object? wrapEncoder<T extends Object>(EncodingOptions<Object?> options, Encoder<Object?, T> encoder) {
-    options = options.change<Object?>(beforeEncode(options.value));
-    if (options.value is T) {
-      if (options is! EncodingOptions<T>) {
-        options = options.change<T>(options.value as T);
+  Object? wrapEncoder<T extends Object>(EncodingContext<Object?> context, Encoder<Object?, T> encoder) {
+    context = context.change<Object?>(beforeEncode(context.value));
+    if (context.value is T) {
+      if (context is! EncodingContext<T>) {
+        context = context.change<T>(context.value as T);
       }
-      options = options.change<Object?>(encoder(options));
+      context = context.change<Object?>(encoder(context));
     }
-    return afterEncode(options.value);
+    return afterEncode(context.value);
   }
 
   dynamic wrapEncode<T>(

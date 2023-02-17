@@ -22,13 +22,13 @@ class PrimitiveMapper<T extends Object> extends MapperBase<T> with PrimitiveMeth
   static T _cast<T>(v) => v as T;
 
   @override
-  T decoder(DecodingOptions<Object> options) {
-    return _decoder(options.value);
+  T decoder(DecodingContext<Object> context) {
+    return _decoder(context.value);
   }
 
   @override
-  Object encoder(EncodingOptions<Object> options) {
-    return options.value;
+  Object encoder(EncodingContext<Object> context) {
+    return context.value;
   }
 }
 
@@ -69,8 +69,8 @@ class IterableMapper<I extends Iterable> extends MapperBase<I>
   final Function typeFactory;
 
   @override
-  I decoder(DecodingOptions options) {
-    return options.checked<Iterable>().call1(<T>(o) {
+  I decoder(DecodingContext context) {
+    return context.checked<Iterable>().call1(<T>(o) {
       return fromIterable(o.value.map((v) {
         return o.container.$dec<T>(v, 'item');
       })) as I;
@@ -78,8 +78,8 @@ class IterableMapper<I extends Iterable> extends MapperBase<I>
   }
 
   @override
-  Object encoder(EncodingOptions<Object> options) {
-    return options.checked<I>().call1(<T>(o) =>
+  Object encoder(EncodingContext<Object> context) {
+    return context.checked<I>().call1(<T>(o) =>
         o.value.map((v) => o.container.$enc<T>(v as T, 'item')).toList());
   }
 
@@ -87,8 +87,8 @@ class IterableMapper<I extends Iterable> extends MapperBase<I>
   Equality equality(Equality child) => IterableEquality(child);
 
   @override
-  String stringify(MappingOptions<Object> options) =>
-      '(${options.checked<I>().value.map((e) => options.container.asString(e)).join(', ')})';
+  String stringify(MappingContext<Object> context) =>
+      '(${context.checked<I>().value.map((e) => context.container.asString(e)).join(', ')})';
 }
 
 /// {@category Custom Mappers}
@@ -101,8 +101,8 @@ class MapMapper<M extends Map> extends MapperBase<M>
   final Function typeFactory;
 
   @override
-  M decoder(DecodingOptions options) {
-    return options.checked<Map>().call2(<K, V>(o) {
+  M decoder(DecodingContext context) {
+    return context.checked<Map>().call2(<K, V>(o) {
       return fromMap(o.value.map((key, value) {
         return MapEntry(o.container.$dec<K>(key, 'key'),
             o.container.$dec<V>(value, 'value'));
@@ -111,8 +111,8 @@ class MapMapper<M extends Map> extends MapperBase<M>
   }
 
   @override
-  Object encoder(EncodingOptions<Object> options) {
-    return options.checked<M>().call2(<K, V>(o) => o.value.map((key, value) {
+  Object encoder(EncodingContext<Object> context) {
+    return context.checked<M>().call2(<K, V>(o) => o.value.map((key, value) {
           return MapEntry(o.container.toValue<K>(key as K),
               o.container.toValue<V>(value as V));
         }));
@@ -122,9 +122,9 @@ class MapMapper<M extends Map> extends MapperBase<M>
   Equality equality(Equality child) => MapEquality(keys: child, values: child);
 
   @override
-  String stringify(MappingOptions<Object> options) =>
-      '{${options.checked<M>().value.entries.map((e) => '${options.container.asString(e.key)}: '
-          '${options.container.asString(e.value)}').join(', ')}}';
+  String stringify(MappingContext<Object> context) =>
+      '{${context.checked<M>().value.entries.map((e) => '${context.container.asString(e.key)}: '
+          '${context.container.asString(e.value)}').join(', ')}}';
 }
 
 typedef SerializableDecoder1<T, V> = T Function<A>(V, A Function(Object?));
@@ -139,8 +139,8 @@ typedef SerializableEncoder2<T> = Object Function(
 
 class SerializableMapper<T extends Object, V extends Object>
     extends MapperBase<T> {
-  late T Function(DecodingOptions<V> o) _decoder;
-  late Object Function(EncodingOptions<T> o) _encoder;
+  late T Function(DecodingContext<V> context) _decoder;
+  late Object Function(EncodingContext<T> context) _encoder;
 
   @override
   late Function typeFactory;
@@ -178,12 +178,12 @@ class SerializableMapper<T extends Object, V extends Object>
   }
 
   @override
-  T decoder(DecodingOptions<Object> options) {
-    return _decoder(options.checked<V>());
+  T decoder(DecodingContext<Object> context) {
+    return _decoder(context.checked<V>());
   }
 
   @override
-  Object encoder(EncodingOptions<Object> options) {
-    return _encoder(options.checked<T>());
+  Object encoder(EncodingContext<Object> context) {
+    return _encoder(context.checked<T>());
   }
 }
