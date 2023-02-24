@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import '../annotations.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
@@ -8,7 +6,7 @@ class DecodingData<T extends Object> {
   DecodingData(this.context, this.mapper);
 
   final DecodingContext<Map<String, dynamic>> context;
-  final InterfaceMapperBase<T> mapper;
+  final ClassMapperBase<T> mapper;
 
   Map<String, dynamic> get value => context.value;
 
@@ -55,12 +53,7 @@ abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
   }
 }
 
-abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
-  Map<Symbol, Field<T, dynamic>> get fields;
-}
-
-abstract class ClassMapperBase<T extends Object> extends InterfaceMapperBase<T> {
-  @override
+abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
   Map<Symbol, Field<T, dynamic>> get fields;
 
   bool get ignoreNull => false;

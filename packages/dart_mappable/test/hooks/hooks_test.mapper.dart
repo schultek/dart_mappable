@@ -16,6 +16,7 @@ class GameMapper extends ClassMapperBase<Game> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'Game';
 
@@ -23,7 +24,9 @@ class GameMapper extends ClassMapperBase<Game> {
 
   @override
   final Map<Symbol, Field<Game, dynamic>> fields = const {
-    #player: Field<Game, Player>('player', _$player, hook: ChainedHook([PlayerHook(), UnmappedPropertiesHook('unmappedProps')])),
+    #player: Field<Game, Player>('player', _$player,
+        hook: ChainedHook(
+            [PlayerHook(), UnmappedPropertiesHook('unmappedProps')])),
   };
 
   @override
@@ -31,6 +34,7 @@ class GameMapper extends ClassMapperBase<Game> {
   static Game _instantiate(DecodingData data) {
     return Game(data.get(#player));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -38,6 +42,7 @@ class GameMapper extends ClassMapperBase<Game> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<Game>(map);
   }
+
   static Game fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<Game>(json);
@@ -49,21 +54,28 @@ mixin GameMappable {
     GameMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as Game);
   }
+
   Map<String, dynamic> toMap() {
     GameMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as Game);
   }
-  GameCopyWith<Game, Game, Game> get copyWith => _GameCopyWithImpl(this as Game, $identity, $identity);
+
+  GameCopyWith<Game, Game, Game> get copyWith =>
+      _GameCopyWithImpl(this as Game, $identity, $identity);
   @override
   String toString() {
     GameMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     GameMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     GameMapper.ensureInitialized();
@@ -71,23 +83,36 @@ mixin GameMappable {
   }
 }
 
-extension GameValueCopy<$R, $Out extends Game> on ObjectCopyWith<$R, Game, $Out> {
-  GameCopyWith<$R, Game, $Out> get asGame => base.as((v, t, t2) => _GameCopyWithImpl(v, t, t2));
+extension GameValueCopy<$R, $Out extends Game>
+    on ObjectCopyWith<$R, Game, $Out> {
+  GameCopyWith<$R, Game, $Out> get asGame =>
+      base.as((v, t, t2) => _GameCopyWithImpl(v, t, t2));
 }
 
 typedef GameCopyWithBound = Game;
-abstract class GameCopyWith<$R, $In extends Game, $Out extends Game> implements ObjectCopyWith<$R, $In, $Out> {
-  GameCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Game>(Then<Game, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class GameCopyWith<$R, $In extends Game, $Out extends Game>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  GameCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Game>(
+      Then<Game, $Out2> t, Then<$Out2, $R2> t2);
   PlayerCopyWith<$R, Player, Player> get player;
   $R call({Player? player});
 }
 
-class _GameCopyWithImpl<$R, $Out extends Game> extends CopyWithBase<$R, Game, $Out> implements GameCopyWith<$R, Game, $Out> {
+class _GameCopyWithImpl<$R, $Out extends Game>
+    extends CopyWithBase<$R, Game, $Out>
+    implements GameCopyWith<$R, Game, $Out> {
   _GameCopyWithImpl(super.value, super.then, super.then2);
-  @override GameCopyWith<$R2, Game, $Out2> chain<$R2, $Out2 extends Game>(Then<Game, $Out2> t, Then<$Out2, $R2> t2) => _GameCopyWithImpl($value, t, t2);
+  @override
+  GameCopyWith<$R2, Game, $Out2> chain<$R2, $Out2 extends Game>(
+          Then<Game, $Out2> t, Then<$Out2, $R2> t2) =>
+      _GameCopyWithImpl($value, t, t2);
 
-  @override PlayerCopyWith<$R, Player, Player> get player => $value.player.copyWith.chain($identity, (v) => call(player: v));
-  @override $R call({Player? player}) => $then(Game(player ?? $value.player));
+  @override
+  PlayerCopyWith<$R, Player, Player> get player =>
+      $value.player.copyWith.chain($identity, (v) => call(player: v));
+  @override
+  $R call({Player? player}) => $then(Game(player ?? $value.player));
 }
 
 class CardGameMapper extends ClassMapperBase<CardGame> {
@@ -100,6 +125,7 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'CardGame';
 
@@ -107,7 +133,12 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
 
   @override
   final Map<Symbol, Field<CardGame, dynamic>> fields = const {
-    #player: Field<CardGame, Player>('player', _$player, hook: ChainedHook([PlayerHook(), UnmappedPropertiesHook('unmappedProps'), CardPlayerHook()])),
+    #player: Field<CardGame, Player>('player', _$player,
+        hook: ChainedHook([
+          PlayerHook(),
+          UnmappedPropertiesHook('unmappedProps'),
+          CardPlayerHook()
+        ])),
   };
 
   @override
@@ -116,6 +147,7 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
   static CardGame _instantiate(DecodingData data) {
     return CardGame(data.get(#player));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -123,6 +155,7 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<CardGame>(map);
   }
+
   static CardGame fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<CardGame>(json);
@@ -134,21 +167,28 @@ mixin CardGameMappable {
     CardGameMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as CardGame);
   }
+
   Map<String, dynamic> toMap() {
     CardGameMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as CardGame);
   }
-  CardGameCopyWith<CardGame, CardGame, CardGame> get copyWith => _CardGameCopyWithImpl(this as CardGame, $identity, $identity);
+
+  CardGameCopyWith<CardGame, CardGame, CardGame> get copyWith =>
+      _CardGameCopyWithImpl(this as CardGame, $identity, $identity);
   @override
   String toString() {
     CardGameMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     CardGameMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     CardGameMapper.ensureInitialized();
@@ -156,23 +196,38 @@ mixin CardGameMappable {
   }
 }
 
-extension CardGameValueCopy<$R, $Out extends Game> on ObjectCopyWith<$R, CardGame, $Out> {
-  CardGameCopyWith<$R, CardGame, $Out> get asCardGame => base.as((v, t, t2) => _CardGameCopyWithImpl(v, t, t2));
+extension CardGameValueCopy<$R, $Out extends Game>
+    on ObjectCopyWith<$R, CardGame, $Out> {
+  CardGameCopyWith<$R, CardGame, $Out> get asCardGame =>
+      base.as((v, t, t2) => _CardGameCopyWithImpl(v, t, t2));
 }
 
 typedef CardGameCopyWithBound = Game;
-abstract class CardGameCopyWith<$R, $In extends CardGame, $Out extends Game> implements GameCopyWith<$R, $In, $Out> {
-  CardGameCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Game>(Then<CardGame, $Out2> t, Then<$Out2, $R2> t2);
-  @override PlayerCopyWith<$R, Player, Player> get player;
-  @override $R call({Player? player});
+
+abstract class CardGameCopyWith<$R, $In extends CardGame, $Out extends Game>
+    implements GameCopyWith<$R, $In, $Out> {
+  CardGameCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Game>(
+      Then<CardGame, $Out2> t, Then<$Out2, $R2> t2);
+  @override
+  PlayerCopyWith<$R, Player, Player> get player;
+  @override
+  $R call({Player? player});
 }
 
-class _CardGameCopyWithImpl<$R, $Out extends Game> extends CopyWithBase<$R, CardGame, $Out> implements CardGameCopyWith<$R, CardGame, $Out> {
+class _CardGameCopyWithImpl<$R, $Out extends Game>
+    extends CopyWithBase<$R, CardGame, $Out>
+    implements CardGameCopyWith<$R, CardGame, $Out> {
   _CardGameCopyWithImpl(super.value, super.then, super.then2);
-  @override CardGameCopyWith<$R2, CardGame, $Out2> chain<$R2, $Out2 extends Game>(Then<CardGame, $Out2> t, Then<$Out2, $R2> t2) => _CardGameCopyWithImpl($value, t, t2);
+  @override
+  CardGameCopyWith<$R2, CardGame, $Out2> chain<$R2, $Out2 extends Game>(
+          Then<CardGame, $Out2> t, Then<$Out2, $R2> t2) =>
+      _CardGameCopyWithImpl($value, t, t2);
 
-  @override PlayerCopyWith<$R, Player, Player> get player => $value.player.copyWith.chain($identity, (v) => call(player: v));
-  @override $R call({Player? player}) => $then(CardGame(player ?? $value.player));
+  @override
+  PlayerCopyWith<$R, Player, Player> get player =>
+      $value.player.copyWith.chain($identity, (v) => call(player: v));
+  @override
+  $R call({Player? player}) => $then(CardGame(player ?? $value.player));
 }
 
 class PlayerMapper extends ClassMapperBase<Player> {
@@ -184,6 +239,7 @@ class PlayerMapper extends ClassMapperBase<Player> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'Player';
 
@@ -197,6 +253,7 @@ class PlayerMapper extends ClassMapperBase<Player> {
   static Player _instantiate(DecodingData data) {
     return Player(data.get(#id));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -204,6 +261,7 @@ class PlayerMapper extends ClassMapperBase<Player> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<Player>(map);
   }
+
   static Player fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<Player>(json);
@@ -215,21 +273,28 @@ mixin PlayerMappable {
     PlayerMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as Player);
   }
+
   Map<String, dynamic> toMap() {
     PlayerMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as Player);
   }
-  PlayerCopyWith<Player, Player, Player> get copyWith => _PlayerCopyWithImpl(this as Player, $identity, $identity);
+
+  PlayerCopyWith<Player, Player, Player> get copyWith =>
+      _PlayerCopyWithImpl(this as Player, $identity, $identity);
   @override
   String toString() {
     PlayerMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     PlayerMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     PlayerMapper.ensureInitialized();
@@ -237,21 +302,32 @@ mixin PlayerMappable {
   }
 }
 
-extension PlayerValueCopy<$R, $Out extends Player> on ObjectCopyWith<$R, Player, $Out> {
-  PlayerCopyWith<$R, Player, $Out> get asPlayer => base.as((v, t, t2) => _PlayerCopyWithImpl(v, t, t2));
+extension PlayerValueCopy<$R, $Out extends Player>
+    on ObjectCopyWith<$R, Player, $Out> {
+  PlayerCopyWith<$R, Player, $Out> get asPlayer =>
+      base.as((v, t, t2) => _PlayerCopyWithImpl(v, t, t2));
 }
 
 typedef PlayerCopyWithBound = Player;
-abstract class PlayerCopyWith<$R, $In extends Player, $Out extends Player> implements ObjectCopyWith<$R, $In, $Out> {
-  PlayerCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Player>(Then<Player, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class PlayerCopyWith<$R, $In extends Player, $Out extends Player>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  PlayerCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Player>(
+      Then<Player, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? id});
 }
 
-class _PlayerCopyWithImpl<$R, $Out extends Player> extends CopyWithBase<$R, Player, $Out> implements PlayerCopyWith<$R, Player, $Out> {
+class _PlayerCopyWithImpl<$R, $Out extends Player>
+    extends CopyWithBase<$R, Player, $Out>
+    implements PlayerCopyWith<$R, Player, $Out> {
   _PlayerCopyWithImpl(super.value, super.then, super.then2);
-  @override PlayerCopyWith<$R2, Player, $Out2> chain<$R2, $Out2 extends Player>(Then<Player, $Out2> t, Then<$Out2, $R2> t2) => _PlayerCopyWithImpl($value, t, t2);
+  @override
+  PlayerCopyWith<$R2, Player, $Out2> chain<$R2, $Out2 extends Player>(
+          Then<Player, $Out2> t, Then<$Out2, $R2> t2) =>
+      _PlayerCopyWithImpl($value, t, t2);
 
-  @override $R call({String? id}) => $then(Player(id ?? $value.id));
+  @override
+  $R call({String? id}) => $then(Player(id ?? $value.id));
 }
 
 class ClothesMapper extends ClassMapperBase<Clothes> {
@@ -263,6 +339,7 @@ class ClothesMapper extends ClassMapperBase<Clothes> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'Clothes';
 
@@ -272,7 +349,9 @@ class ClothesMapper extends ClassMapperBase<Clothes> {
   @override
   final Map<Symbol, Field<Clothes, dynamic>> fields = const {
     #size: Field<Clothes, int>('size', _$size),
-    #unmappedProps: Field<Clothes, Map<String, dynamic>>('unmappedProps', _$unmappedProps, opt: true, def: const {}),
+    #unmappedProps: Field<Clothes, Map<String, dynamic>>(
+        'unmappedProps', _$unmappedProps,
+        opt: true, def: const {}),
   };
 
   @override
@@ -280,6 +359,7 @@ class ClothesMapper extends ClassMapperBase<Clothes> {
   static Clothes _instantiate(DecodingData data) {
     return Clothes(data.get(#size), unmappedProps: data.get(#unmappedProps));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -287,6 +367,7 @@ class ClothesMapper extends ClassMapperBase<Clothes> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<Clothes>(map);
   }
+
   static Clothes fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<Clothes>(json);
@@ -298,21 +379,28 @@ mixin ClothesMappable {
     ClothesMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as Clothes);
   }
+
   Map<String, dynamic> toMap() {
     ClothesMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as Clothes);
   }
-  ClothesCopyWith<Clothes, Clothes, Clothes> get copyWith => _ClothesCopyWithImpl(this as Clothes, $identity, $identity);
+
+  ClothesCopyWith<Clothes, Clothes, Clothes> get copyWith =>
+      _ClothesCopyWithImpl(this as Clothes, $identity, $identity);
   @override
   String toString() {
     ClothesMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     ClothesMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     ClothesMapper.ensureInitialized();
@@ -320,23 +408,42 @@ mixin ClothesMappable {
   }
 }
 
-extension ClothesValueCopy<$R, $Out extends Clothes> on ObjectCopyWith<$R, Clothes, $Out> {
-  ClothesCopyWith<$R, Clothes, $Out> get asClothes => base.as((v, t, t2) => _ClothesCopyWithImpl(v, t, t2));
+extension ClothesValueCopy<$R, $Out extends Clothes>
+    on ObjectCopyWith<$R, Clothes, $Out> {
+  ClothesCopyWith<$R, Clothes, $Out> get asClothes =>
+      base.as((v, t, t2) => _ClothesCopyWithImpl(v, t, t2));
 }
 
 typedef ClothesCopyWithBound = Clothes;
-abstract class ClothesCopyWith<$R, $In extends Clothes, $Out extends Clothes> implements ObjectCopyWith<$R, $In, $Out> {
-  ClothesCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Clothes>(Then<Clothes, $Out2> t, Then<$Out2, $R2> t2);
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>> get unmappedProps;
+
+abstract class ClothesCopyWith<$R, $In extends Clothes, $Out extends Clothes>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  ClothesCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Clothes>(
+      Then<Clothes, $Out2> t, Then<$Out2, $R2> t2);
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+      get unmappedProps;
   $R call({int? size, Map<String, dynamic>? unmappedProps});
 }
 
-class _ClothesCopyWithImpl<$R, $Out extends Clothes> extends CopyWithBase<$R, Clothes, $Out> implements ClothesCopyWith<$R, Clothes, $Out> {
+class _ClothesCopyWithImpl<$R, $Out extends Clothes>
+    extends CopyWithBase<$R, Clothes, $Out>
+    implements ClothesCopyWith<$R, Clothes, $Out> {
   _ClothesCopyWithImpl(super.value, super.then, super.then2);
-  @override ClothesCopyWith<$R2, Clothes, $Out2> chain<$R2, $Out2 extends Clothes>(Then<Clothes, $Out2> t, Then<$Out2, $R2> t2) => _ClothesCopyWithImpl($value, t, t2);
+  @override
+  ClothesCopyWith<$R2, Clothes, $Out2> chain<$R2, $Out2 extends Clothes>(
+          Then<Clothes, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ClothesCopyWithImpl($value, t, t2);
 
-  @override MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>> get unmappedProps => MapCopyWith($value.unmappedProps, (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(unmappedProps: v));
-  @override $R call({int? size, Map<String, dynamic>? unmappedProps}) => $then(Clothes(size ?? $value.size, unmappedProps: unmappedProps ?? $value.unmappedProps));
+  @override
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+      get unmappedProps => MapCopyWith(
+          $value.unmappedProps,
+          (v, t) => ObjectCopyWith(v, $identity, t),
+          (v) => call(unmappedProps: v));
+  @override
+  $R call({int? size, Map<String, dynamic>? unmappedProps}) =>
+      $then(Clothes(size ?? $value.size,
+          unmappedProps: unmappedProps ?? $value.unmappedProps));
 }
 
 class ComponentMapper extends ClassMapperBase<Component> {
@@ -348,6 +455,7 @@ class ComponentMapper extends ClassMapperBase<Component> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'Component';
 
@@ -358,7 +466,8 @@ class ComponentMapper extends ClassMapperBase<Component> {
   @override
   final Map<Symbol, Field<Component, dynamic>> fields = const {
     #id: Field<Component, String>('id', _$id),
-    #unmappedProps: Field<Component, Map<String, dynamic>?>('unmappedProps', _$unmappedProps),
+    #unmappedProps: Field<Component, Map<String, dynamic>?>(
+        'unmappedProps', _$unmappedProps),
     #name: Field<Component, String>('name', _$name),
   };
 
@@ -367,6 +476,7 @@ class ComponentMapper extends ClassMapperBase<Component> {
   static Component _instantiate(DecodingData data) {
     return Component(data.get(#id), data.get(#unmappedProps), data.get(#name));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -374,6 +484,7 @@ class ComponentMapper extends ClassMapperBase<Component> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<Component>(map);
   }
+
   static Component fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<Component>(json);
@@ -385,21 +496,28 @@ mixin ComponentMappable {
     ComponentMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as Component);
   }
+
   Map<String, dynamic> toMap() {
     ComponentMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as Component);
   }
-  ComponentCopyWith<Component, Component, Component> get copyWith => _ComponentCopyWithImpl(this as Component, $identity, $identity);
+
+  ComponentCopyWith<Component, Component, Component> get copyWith =>
+      _ComponentCopyWithImpl(this as Component, $identity, $identity);
   @override
   String toString() {
     ComponentMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     ComponentMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     ComponentMapper.ensureInitialized();
@@ -407,21 +525,42 @@ mixin ComponentMappable {
   }
 }
 
-extension ComponentValueCopy<$R, $Out extends Component> on ObjectCopyWith<$R, Component, $Out> {
-  ComponentCopyWith<$R, Component, $Out> get asComponent => base.as((v, t, t2) => _ComponentCopyWithImpl(v, t, t2));
+extension ComponentValueCopy<$R, $Out extends Component>
+    on ObjectCopyWith<$R, Component, $Out> {
+  ComponentCopyWith<$R, Component, $Out> get asComponent =>
+      base.as((v, t, t2) => _ComponentCopyWithImpl(v, t, t2));
 }
 
 typedef ComponentCopyWithBound = Component;
-abstract class ComponentCopyWith<$R, $In extends Component, $Out extends Component> implements ObjectCopyWith<$R, $In, $Out> {
-  ComponentCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Component>(Then<Component, $Out2> t, Then<$Out2, $R2> t2);
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>? get unmappedProps;
+
+abstract class ComponentCopyWith<$R, $In extends Component,
+    $Out extends Component> implements ObjectCopyWith<$R, $In, $Out> {
+  ComponentCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Component>(
+      Then<Component, $Out2> t, Then<$Out2, $R2> t2);
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+      get unmappedProps;
   $R call({String? id, Map<String, dynamic>? unmappedProps, String? name});
 }
 
-class _ComponentCopyWithImpl<$R, $Out extends Component> extends CopyWithBase<$R, Component, $Out> implements ComponentCopyWith<$R, Component, $Out> {
+class _ComponentCopyWithImpl<$R, $Out extends Component>
+    extends CopyWithBase<$R, Component, $Out>
+    implements ComponentCopyWith<$R, Component, $Out> {
   _ComponentCopyWithImpl(super.value, super.then, super.then2);
-  @override ComponentCopyWith<$R2, Component, $Out2> chain<$R2, $Out2 extends Component>(Then<Component, $Out2> t, Then<$Out2, $R2> t2) => _ComponentCopyWithImpl($value, t, t2);
+  @override
+  ComponentCopyWith<$R2, Component, $Out2> chain<$R2, $Out2 extends Component>(
+          Then<Component, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ComponentCopyWithImpl($value, t, t2);
 
-  @override MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>? get unmappedProps => $value.unmappedProps != null ? MapCopyWith($value.unmappedProps!, (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(unmappedProps: v)) : null;
-  @override $R call({String? id, Object? unmappedProps = $none, String? name}) => $then(Component(id ?? $value.id, or(unmappedProps, $value.unmappedProps), name ?? $value.name));
+  @override
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+      get unmappedProps => $value.unmappedProps != null
+          ? MapCopyWith(
+              $value.unmappedProps!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(unmappedProps: v))
+          : null;
+  @override
+  $R call({String? id, Object? unmappedProps = $none, String? name}) =>
+      $then(Component(id ?? $value.id, or(unmappedProps, $value.unmappedProps),
+          name ?? $value.name));
 }

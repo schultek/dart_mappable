@@ -15,6 +15,7 @@ class PersonMapper extends ClassMapperBase<Person> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'Person';
 
@@ -32,6 +33,7 @@ class PersonMapper extends ClassMapperBase<Person> {
   static Person _instantiate(DecodingData data) {
     return Person(data.get(#name), age: data.get(#age), car: data.get(#car));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -39,6 +41,7 @@ class PersonMapper extends ClassMapperBase<Person> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<Person>(map);
   }
+
   static Person fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<Person>(json);
@@ -50,21 +53,28 @@ mixin PersonMappable {
     PersonMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as Person);
   }
+
   Map<String, dynamic> toMap() {
     PersonMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as Person);
   }
-  PersonCopyWith<Person, Person, Person> get copyWith => _PersonCopyWithImpl(this as Person, $identity, $identity);
+
+  PersonCopyWith<Person, Person, Person> get copyWith =>
+      _PersonCopyWithImpl(this as Person, $identity, $identity);
   @override
   String toString() {
     PersonMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     PersonMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     PersonMapper.ensureInitialized();
@@ -72,23 +82,38 @@ mixin PersonMappable {
   }
 }
 
-extension PersonValueCopy<$R, $Out extends Person> on ObjectCopyWith<$R, Person, $Out> {
-  PersonCopyWith<$R, Person, $Out> get asPerson => base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
+extension PersonValueCopy<$R, $Out extends Person>
+    on ObjectCopyWith<$R, Person, $Out> {
+  PersonCopyWith<$R, Person, $Out> get asPerson =>
+      base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
 }
 
 typedef PersonCopyWithBound = Person;
-abstract class PersonCopyWith<$R, $In extends Person, $Out extends Person> implements ObjectCopyWith<$R, $In, $Out> {
-  PersonCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Person>(Then<Person, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class PersonCopyWith<$R, $In extends Person, $Out extends Person>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  PersonCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Person>(
+      Then<Person, $Out2> t, Then<$Out2, $R2> t2);
   CarCopyWith<$R, Car, Car>? get car;
   $R call({String? name, int? age, Car? car});
 }
 
-class _PersonCopyWithImpl<$R, $Out extends Person> extends CopyWithBase<$R, Person, $Out> implements PersonCopyWith<$R, Person, $Out> {
+class _PersonCopyWithImpl<$R, $Out extends Person>
+    extends CopyWithBase<$R, Person, $Out>
+    implements PersonCopyWith<$R, Person, $Out> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
-  @override PersonCopyWith<$R2, Person, $Out2> chain<$R2, $Out2 extends Person>(Then<Person, $Out2> t, Then<$Out2, $R2> t2) => _PersonCopyWithImpl($value, t, t2);
+  @override
+  PersonCopyWith<$R2, Person, $Out2> chain<$R2, $Out2 extends Person>(
+          Then<Person, $Out2> t, Then<$Out2, $R2> t2) =>
+      _PersonCopyWithImpl($value, t, t2);
 
-  @override CarCopyWith<$R, Car, Car>? get car => $value.car?.copyWith.chain($identity, (v) => call(car: v));
-  @override $R call({String? name, int? age, Object? car = $none}) => $then(Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
+  @override
+  CarCopyWith<$R, Car, Car>? get car =>
+      $value.car?.copyWith.chain($identity, (v) => call(car: v));
+  @override
+  $R call({String? name, int? age, Object? car = $none}) =>
+      $then(Person(name ?? $value.name,
+          age: age ?? $value.age, car: or(car, $value.car)));
 }
 
 class CarMapper extends ClassMapperBase<Car> {
@@ -101,6 +126,7 @@ class CarMapper extends ClassMapperBase<Car> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'Car';
 
@@ -118,6 +144,7 @@ class CarMapper extends ClassMapperBase<Car> {
   static Car _instantiate(DecodingData data) {
     return Car(data.get(#drivenKm), data.get(#brand));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -125,6 +152,7 @@ class CarMapper extends ClassMapperBase<Car> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<Car>(map);
   }
+
   static Car fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<Car>(json);
@@ -136,21 +164,28 @@ mixin CarMappable {
     CarMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as Car);
   }
+
   Map<String, dynamic> toMap() {
     CarMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as Car);
   }
-  CarCopyWith<Car, Car, Car> get copyWith => _CarCopyWithImpl(this as Car, $identity, $identity);
+
+  CarCopyWith<Car, Car, Car> get copyWith =>
+      _CarCopyWithImpl(this as Car, $identity, $identity);
   @override
   String toString() {
     CarMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     CarMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     CarMapper.ensureInitialized();
@@ -159,20 +194,30 @@ mixin CarMappable {
 }
 
 extension CarValueCopy<$R, $Out extends Car> on ObjectCopyWith<$R, Car, $Out> {
-  CarCopyWith<$R, Car, $Out> get asCar => base.as((v, t, t2) => _CarCopyWithImpl(v, t, t2));
+  CarCopyWith<$R, Car, $Out> get asCar =>
+      base.as((v, t, t2) => _CarCopyWithImpl(v, t, t2));
 }
 
 typedef CarCopyWithBound = Car;
-abstract class CarCopyWith<$R, $In extends Car, $Out extends Car> implements ObjectCopyWith<$R, $In, $Out> {
-  CarCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Car>(Then<Car, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class CarCopyWith<$R, $In extends Car, $Out extends Car>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  CarCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Car>(
+      Then<Car, $Out2> t, Then<$Out2, $R2> t2);
   $R call({int? drivenKm, Brand? brand});
 }
 
-class _CarCopyWithImpl<$R, $Out extends Car> extends CopyWithBase<$R, Car, $Out> implements CarCopyWith<$R, Car, $Out> {
+class _CarCopyWithImpl<$R, $Out extends Car> extends CopyWithBase<$R, Car, $Out>
+    implements CarCopyWith<$R, Car, $Out> {
   _CarCopyWithImpl(super.value, super.then, super.then2);
-  @override CarCopyWith<$R2, Car, $Out2> chain<$R2, $Out2 extends Car>(Then<Car, $Out2> t, Then<$Out2, $R2> t2) => _CarCopyWithImpl($value, t, t2);
+  @override
+  CarCopyWith<$R2, Car, $Out2> chain<$R2, $Out2 extends Car>(
+          Then<Car, $Out2> t, Then<$Out2, $R2> t2) =>
+      _CarCopyWithImpl($value, t, t2);
 
-  @override $R call({int? drivenKm, Brand? brand}) => $then(Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
+  @override
+  $R call({int? drivenKm, Brand? brand}) =>
+      $then(Car(drivenKm ?? $value.drivenKm, brand ?? $value.brand));
 }
 
 class BrandMapper extends EnumMapper<Brand> {
@@ -193,19 +238,26 @@ class BrandMapper extends EnumMapper<Brand> {
   @override
   Brand decode(dynamic value) {
     switch (value) {
-      case 'Toyota': return Brand.Toyota;
-      case 'Audi': return Brand.Audi;
-      case 'BMW': return Brand.BMW;
-      default: return Brand.values[1];
+      case 'Toyota':
+        return Brand.Toyota;
+      case 'Audi':
+        return Brand.Audi;
+      case 'BMW':
+        return Brand.BMW;
+      default:
+        return Brand.values[1];
     }
   }
 
   @override
   dynamic encode(Brand self) {
     switch (self) {
-      case Brand.Toyota: return 'Toyota';
-      case Brand.Audi: return 'Audi';
-      case Brand.BMW: return 'BMW';
+      case Brand.Toyota:
+        return 'Toyota';
+      case Brand.Audi:
+        return 'Audi';
+      case Brand.BMW:
+        return 'BMW';
     }
   }
 }

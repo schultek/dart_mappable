@@ -10,8 +10,7 @@ class MappableOptions {
   final bool? ignoreNull;
   final String? discriminatorKey;
   final int? generateMethods;
-  final bool? createCombinedContainer;
-  final DiscoveryMode? discoveryMode;
+  final InitializerScope? initializerScope;
   final int? lineLength;
 
   MappableOptions({
@@ -20,8 +19,7 @@ class MappableOptions {
     this.ignoreNull,
     this.discriminatorKey,
     this.generateMethods,
-    this.createCombinedContainer,
-    this.discoveryMode,
+    this.initializerScope,
     this.lineLength,
   });
 
@@ -33,8 +31,7 @@ class MappableOptions {
         discriminatorKey = options['discriminatorKey'] as String?,
         generateMethods =
             GenerateMethods.parse(toList(options['generateMethods'])),
-        createCombinedContainer = null,
-        discoveryMode = null,
+        initializerScope = null,
         lineLength =
             options['lineLength'] as int? ?? options['line_length'] as int?;
 
@@ -47,24 +44,22 @@ class MappableOptions {
       ignoreNull: options.ignoreNull ?? ignoreNull,
       discriminatorKey: options.discriminatorKey ?? discriminatorKey,
       generateMethods: options.generateMethods ?? generateMethods,
-      createCombinedContainer:
-          options.createCombinedContainer ?? createCombinedContainer,
-      discoveryMode: options.discoveryMode ?? discoveryMode,
+      initializerScope: options.initializerScope ?? initializerScope,
     );
   }
 
   factory MappableOptions.from(DartObject object) {
+    var initScope = object.getField('generateInitializerForScope');
     return MappableOptions(
       caseStyle: caseStyleFromAnnotation(object.getField('caseStyle')),
       enumCaseStyle: caseStyleFromAnnotation(object.getField('enumCaseStyle')),
       ignoreNull: object.getField('ignoreNull')?.toBoolValue(),
       discriminatorKey: object.getField('discriminatorKey')?.toStringValue(),
       generateMethods: object.getField('generateMethods')?.toIntValue(),
-      createCombinedContainer:
-          object.getField('createCombinedContainer')?.toBoolValue(),
-      discoveryMode: DiscoveryMode.values[
-          object.getField('discoveryMode')?.getField('index')?.toIntValue() ??
-              0],
+      initializerScope: initScope?.isNull ?? true
+          ? null
+          : InitializerScope
+              .values[initScope?.getField('index')?.toIntValue() ?? 0],
     );
   }
 }

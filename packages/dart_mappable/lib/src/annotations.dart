@@ -190,8 +190,7 @@ class MappableLib {
     this.ignoreNull,
     this.discriminatorKey,
     this.generateMethods,
-    this.createCombinedContainer,
-    this.discoveryMode,
+    this.generateInitializerForScope,
   });
 
   /// The case style for the map keys
@@ -209,25 +208,23 @@ class MappableLib {
   /// Specify which methods to generate for classes
   final int? generateMethods;
 
-  /// Whether to create a new <filename>.container.dart file with a container that
-  /// combines a set of discovered mappers.
-  final bool? createCombinedContainer;
-
-  /// How to discover mappers when [createLinkedContainer] is true.
-  final DiscoveryMode? discoveryMode;
+  /// Will generated a new <filename>.init.dart file with an initializer
+  /// method that automatically registers all mappers in the scope.
+  final InitializerScope? generateInitializerForScope;
 }
 
-/// How to discover mappers when [MappableLib.createLinkedContainer] is true.
+/// The scope of mappers that should automatically be registered when using
+/// [MappableClass.generateInitializerInScope].
 ///
 /// {@category Generics}
-enum DiscoveryMode {
-  /// Discover all models in the current library (default).
+enum InitializerScope {
+  /// Discover all mappers in the current library (default).
   library,
 
-  /// Discover all models in the current or any subdirectory.
+  /// Discover all mappers in the current or any subdirectory.
   directory,
 
-  /// Discover all models in the current package.
+  /// Discover all mappers in the current package.
   package,
 }
 
@@ -250,24 +247,7 @@ abstract class MappingHook {
     return afterDecode(v) as T;
   }
 
-  T wrapDecoder<T>(DecodingContext<Object?> context, Decoder<Object?, T> decoder) {
-    context = context.change<Object?>(beforeDecode(context.value));
-    var out = context.change<T>(context.value is! T ? decoder(context) : context.value as T);
-    return afterDecode(out.value) as T;
-  }
-
-  Object? wrapEncoder<T extends Object>(EncodingContext<Object?> context, Encoder<Object?, T> encoder) {
-    context = context.change<Object?>(beforeEncode(context.value));
-    if (context.value is T) {
-      if (context is! EncodingContext<T>) {
-        context = context.change<T>(context.value as T);
-      }
-      context = context.change<Object?>(encoder(context));
-    }
-    return afterEncode(context.value);
-  }
-
-  dynamic wrapEncode<T>(
+  Object? wrapEncode<T>(
       T value, dynamic Function(T value) fn, MapperContainer container) {
     var v = beforeEncode(value as Object);
     if (v is T) v = fn(v) as Object;

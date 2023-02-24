@@ -1,0 +1,95 @@
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element
+
+import '../../example/lib/main.dart' as p0;
+import '../copy_with/copy_with_2_test.dart' as p3;
+import '../copy_with/copy_with_test.dart' as p4;
+import '../custom_mapper/custom_mapper_test.dart' as p5;
+import '../enums/enum_map_test.dart' as p6;
+import '../enums/enums_test.dart' as p7;
+import '../generics/duplicate_names_test.dart' as p8;
+import '../generics/generics_test.dart' as p9;
+import '../hooks/hooks_test.dart' as p10;
+import '../lib_mapping/lib_mapping_test.dart' as p11;
+import '../polymorphism/custom_discriminator_test.dart' as p12;
+import '../polymorphism/mixed_mappable_test.dart' as p13;
+import '../polymorphism/polymorphism_test.dart' as p14;
+import '../primitives/primitives_test.dart' as p15;
+import '../selective_generation/selective_generation_test.dart' as p16;
+import '../serialization/basic_serialization_test.dart' as p17;
+import '../serialization/model.dart' as p18;
+import '../serialization/nested_serialization_test.dart' as p19;
+import 'init_lib_test.dart' as p1;
+import 'models/model.dart' as p2;
+
+void initializeMappers() {
+  p0.PersonMapper.ensureInitialized();
+  p0.CarMapper.ensureInitialized();
+  p0.BoxMapper.ensureInitialized();
+  p0.ConfettiMapper.ensureInitialized();
+  p0.BrandMapper.ensureInitialized();
+  p1.AMapper.ensureInitialized();
+  p1.BMapper.ensureInitialized();
+  p2.AMapper.ensureInitialized();
+  p3.AnimalMapper.ensureInitialized();
+  p3.CatMapper.ensureInitialized();
+  p3.DogMapper.ensureInitialized();
+  p3.ZooMapper.ensureInitialized();
+  p3.AMapper.ensureInitialized();
+  p3.CMapper.ensureInitialized();
+  p3.BMapper.ensureInitialized();
+  p4.PersonMapper.ensureInitialized();
+  p4.CarMapper.ensureInitialized();
+  p4.BrandMapper.ensureInitialized();
+  p4.DealershipMapper.ensureInitialized();
+  p4.ItemListMapper.ensureInitialized();
+  p4.BrandListMapper.ensureInitialized();
+  p4.NamedItemListMapper.ensureInitialized();
+  p4.KeyedItemListMapper.ensureInitialized();
+  p4.ComparableItemListMapper.ensureInitialized();
+  p5.TestObjMapper.ensureInitialized();
+  p6.ClassAMapper.ensureInitialized();
+  p6.EnumAMapper.ensureInitialized();
+  p7.StateMapper.ensureInitialized();
+  p7.ColorMapper.ensureInitialized();
+  p7.ItemsMapper.ensureInitialized();
+  p7.StatusMapper.ensureInitialized();
+  p8.BoxMapper.ensureInitialized();
+  p8.ContentMapper.ensureInitialized();
+  p9.BoxMapper.ensureInitialized();
+  p9.ConfettiMapper.ensureInitialized();
+  p9.ContentMapper.ensureInitialized();
+  p9.DataMapper.ensureInitialized();
+  p9.SingleSettingMapper.ensureInitialized();
+  p9.SettingsMapper.ensureInitialized();
+  p9.AssetMapper.ensureInitialized();
+  p10.GameMapper.ensureInitialized();
+  p10.CardGameMapper.ensureInitialized();
+  p10.PlayerMapper.ensureInitialized();
+  p10.ClothesMapper.ensureInitialized();
+  p10.ComponentMapper.ensureInitialized();
+  p11.PersonMapper.ensureInitialized();
+  p12.AMapper.ensureInitialized();
+  p12.BMapper.ensureInitialized();
+  p12.CMapper.ensureInitialized();
+  p13.BaseMapper.ensureInitialized();
+  p13.OneMapper.ensureInitialized();
+  p13.TwoMapper.ensureInitialized();
+  p14.AnimalMapper.ensureInitialized();
+  p14.CatMapper.ensureInitialized();
+  p14.DogMapper.ensureInitialized();
+  p14.NullAnimalMapper.ensureInitialized();
+  p14.DefaultAnimalMapper.ensureInitialized();
+  p14.ZooMapper.ensureInitialized();
+  p15.ItemsMapper.ensureInitialized();
+  p15.ItemMapper.ensureInitialized();
+  p16.AMapper.ensureInitialized();
+  p16.BMapper.ensureInitialized();
+  p17.AMapper.ensureInitialized();
+  p18.BMapper.ensureInitialized();
+  p19.PersonMapper.ensureInitialized();
+  p19.CarMapper.ensureInitialized();
+  p19.BrandMapper.ensureInitialized();
+}

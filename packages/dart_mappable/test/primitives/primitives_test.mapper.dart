@@ -15,6 +15,7 @@ class ItemsMapper extends ClassMapperBase<Items> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'Items';
 
@@ -30,6 +31,7 @@ class ItemsMapper extends ClassMapperBase<Items> {
   static Items _instantiate(DecodingData data) {
     return Items(data.get(#items), data.get(#items2));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -37,6 +39,7 @@ class ItemsMapper extends ClassMapperBase<Items> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<Items>(map);
   }
+
   static Items fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<Items>(json);
@@ -48,21 +51,28 @@ mixin ItemsMappable {
     ItemsMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as Items);
   }
+
   Map<String, dynamic> toMap() {
     ItemsMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as Items);
   }
-  ItemsCopyWith<Items, Items, Items> get copyWith => _ItemsCopyWithImpl(this as Items, $identity, $identity);
+
+  ItemsCopyWith<Items, Items, Items> get copyWith =>
+      _ItemsCopyWithImpl(this as Items, $identity, $identity);
   @override
   String toString() {
     ItemsMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     ItemsMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     ItemsMapper.ensureInitialized();
@@ -70,25 +80,47 @@ mixin ItemsMappable {
   }
 }
 
-extension ItemsValueCopy<$R, $Out extends Items> on ObjectCopyWith<$R, Items, $Out> {
-  ItemsCopyWith<$R, Items, $Out> get asItems => base.as((v, t, t2) => _ItemsCopyWithImpl(v, t, t2));
+extension ItemsValueCopy<$R, $Out extends Items>
+    on ObjectCopyWith<$R, Items, $Out> {
+  ItemsCopyWith<$R, Items, $Out> get asItems =>
+      base.as((v, t, t2) => _ItemsCopyWithImpl(v, t, t2));
 }
 
 typedef ItemsCopyWithBound = Items;
-abstract class ItemsCopyWith<$R, $In extends Items, $Out extends Items> implements ObjectCopyWith<$R, $In, $Out> {
-  ItemsCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Items>(Then<Items, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class ItemsCopyWith<$R, $In extends Items, $Out extends Items>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  ItemsCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Items>(
+      Then<Items, $Out2> t, Then<$Out2, $R2> t2);
   ListCopyWith<$R, Item, ItemCopyWith<$R, Item, Item>> get items;
   MapCopyWith<$R, int, Item, ItemCopyWith<$R, Item, Item>> get items2;
   $R call({List<Item>? items, Map<int, Item>? items2});
 }
 
-class _ItemsCopyWithImpl<$R, $Out extends Items> extends CopyWithBase<$R, Items, $Out> implements ItemsCopyWith<$R, Items, $Out> {
+class _ItemsCopyWithImpl<$R, $Out extends Items>
+    extends CopyWithBase<$R, Items, $Out>
+    implements ItemsCopyWith<$R, Items, $Out> {
   _ItemsCopyWithImpl(super.value, super.then, super.then2);
-  @override ItemsCopyWith<$R2, Items, $Out2> chain<$R2, $Out2 extends Items>(Then<Items, $Out2> t, Then<$Out2, $R2> t2) => _ItemsCopyWithImpl($value, t, t2);
+  @override
+  ItemsCopyWith<$R2, Items, $Out2> chain<$R2, $Out2 extends Items>(
+          Then<Items, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ItemsCopyWithImpl($value, t, t2);
 
-  @override ListCopyWith<$R, Item, ItemCopyWith<$R, Item, Item>> get items => ListCopyWith($value.items, (v, t) => v.copyWith.chain<$R, Item>($identity, t), (v) => call(items: v));
-  @override MapCopyWith<$R, int, Item, ItemCopyWith<$R, Item, Item>> get items2 => MapCopyWith($value.items2, (v, t) => v.copyWith.chain<$R, Item>($identity, t), (v) => call(items2: v));
-  @override $R call({List<Item>? items, Map<int, Item>? items2}) => $then(Items(items ?? $value.items, items2 ?? $value.items2));
+  @override
+  ListCopyWith<$R, Item, ItemCopyWith<$R, Item, Item>> get items =>
+      ListCopyWith(
+          $value.items,
+          (v, t) => v.copyWith.chain<$R, Item>($identity, t),
+          (v) => call(items: v));
+  @override
+  MapCopyWith<$R, int, Item, ItemCopyWith<$R, Item, Item>> get items2 =>
+      MapCopyWith(
+          $value.items2,
+          (v, t) => v.copyWith.chain<$R, Item>($identity, t),
+          (v) => call(items2: v));
+  @override
+  $R call({List<Item>? items, Map<int, Item>? items2}) =>
+      $then(Items(items ?? $value.items, items2 ?? $value.items2));
 }
 
 class ItemMapper extends ClassMapperBase<Item> {
@@ -100,6 +132,7 @@ class ItemMapper extends ClassMapperBase<Item> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'Item';
 
@@ -113,6 +146,7 @@ class ItemMapper extends ClassMapperBase<Item> {
   static Item _instantiate(DecodingData data) {
     return Item(data.get(#index));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -120,6 +154,7 @@ class ItemMapper extends ClassMapperBase<Item> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<Item>(map);
   }
+
   static Item fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<Item>(json);
@@ -131,21 +166,28 @@ mixin ItemMappable {
     ItemMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as Item);
   }
+
   Map<String, dynamic> toMap() {
     ItemMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as Item);
   }
-  ItemCopyWith<Item, Item, Item> get copyWith => _ItemCopyWithImpl(this as Item, $identity, $identity);
+
+  ItemCopyWith<Item, Item, Item> get copyWith =>
+      _ItemCopyWithImpl(this as Item, $identity, $identity);
   @override
   String toString() {
     ItemMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     ItemMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     ItemMapper.ensureInitialized();
@@ -153,19 +195,30 @@ mixin ItemMappable {
   }
 }
 
-extension ItemValueCopy<$R, $Out extends Item> on ObjectCopyWith<$R, Item, $Out> {
-  ItemCopyWith<$R, Item, $Out> get asItem => base.as((v, t, t2) => _ItemCopyWithImpl(v, t, t2));
+extension ItemValueCopy<$R, $Out extends Item>
+    on ObjectCopyWith<$R, Item, $Out> {
+  ItemCopyWith<$R, Item, $Out> get asItem =>
+      base.as((v, t, t2) => _ItemCopyWithImpl(v, t, t2));
 }
 
 typedef ItemCopyWithBound = Item;
-abstract class ItemCopyWith<$R, $In extends Item, $Out extends Item> implements ObjectCopyWith<$R, $In, $Out> {
-  ItemCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Item>(Then<Item, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class ItemCopyWith<$R, $In extends Item, $Out extends Item>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  ItemCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Item>(
+      Then<Item, $Out2> t, Then<$Out2, $R2> t2);
   $R call({int? index});
 }
 
-class _ItemCopyWithImpl<$R, $Out extends Item> extends CopyWithBase<$R, Item, $Out> implements ItemCopyWith<$R, Item, $Out> {
+class _ItemCopyWithImpl<$R, $Out extends Item>
+    extends CopyWithBase<$R, Item, $Out>
+    implements ItemCopyWith<$R, Item, $Out> {
   _ItemCopyWithImpl(super.value, super.then, super.then2);
-  @override ItemCopyWith<$R2, Item, $Out2> chain<$R2, $Out2 extends Item>(Then<Item, $Out2> t, Then<$Out2, $R2> t2) => _ItemCopyWithImpl($value, t, t2);
+  @override
+  ItemCopyWith<$R2, Item, $Out2> chain<$R2, $Out2 extends Item>(
+          Then<Item, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ItemCopyWithImpl($value, t, t2);
 
-  @override $R call({int? index}) => $then(Item(index ?? $value.index));
+  @override
+  $R call({int? index}) => $then(Item(index ?? $value.index));
 }

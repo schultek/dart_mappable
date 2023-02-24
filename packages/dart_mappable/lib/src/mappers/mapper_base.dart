@@ -132,7 +132,8 @@ class DecodingContext<V extends Object?> extends MappingContext<V> {
     if (hook == null || (inherited && skipInherited)) {
       return decoder(this);
     } else {
-      return hook.wrapDecoder<T>(this, decoder);
+      return hook.wrapDecode(
+          value, (value) => decoder(change(value)), container);
     }
   }
 
@@ -174,7 +175,8 @@ extension EncodingOptionsWrap<T extends Object, M extends MapperBase<T>>
     if (hook == null) {
       return encoder(this);
     } else {
-      return hook.wrapEncoder<T>(this, encoder);
+      return hook.wrapEncode<T>(
+          value, (value) => encoder(change<T>(value)), container);
     }
   }
 }

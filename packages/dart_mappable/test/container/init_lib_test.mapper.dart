@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element
 
-part of 'model.dart';
+part of 'init_lib_test.dart';
 
 class AMapper extends ClassMapperBase<A> {
   AMapper._();
@@ -97,4 +97,98 @@ class _ACopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, A, $Out>
 
   @override
   $R call() => $then(A());
+}
+
+class BMapper extends ClassMapperBase<B> {
+  BMapper._();
+  static BMapper? _instance;
+  static BMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = BMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'B';
+
+  @override
+  final Map<Symbol, Field<B, dynamic>> fields = const {};
+
+  static B _instantiate(DecodingData data) {
+    return B();
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static B fromMap(Map<String, dynamic> map) {
+    ensureInitialized();
+    return MapperContainer.globals.fromMap<B>(map);
+  }
+
+  static B fromJson(String json) {
+    ensureInitialized();
+    return MapperContainer.globals.fromJson<B>(json);
+  }
+}
+
+mixin BMappable {
+  String toJson() {
+    BMapper.ensureInitialized();
+    return MapperContainer.globals.toJson(this as B);
+  }
+
+  Map<String, dynamic> toMap() {
+    BMapper.ensureInitialized();
+    return MapperContainer.globals.toMap(this as B);
+  }
+
+  BCopyWith<B, B, B> get copyWith =>
+      _BCopyWithImpl(this as B, $identity, $identity);
+  @override
+  String toString() {
+    BMapper.ensureInitialized();
+    return MapperContainer.globals.asString(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    BMapper.ensureInitialized();
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
+  }
+
+  @override
+  int get hashCode {
+    BMapper.ensureInitialized();
+    return MapperContainer.globals.hash(this);
+  }
+}
+
+extension BValueCopy<$R, $Out extends B> on ObjectCopyWith<$R, B, $Out> {
+  BCopyWith<$R, B, $Out> get asB =>
+      base.as((v, t, t2) => _BCopyWithImpl(v, t, t2));
+}
+
+typedef BCopyWithBound = B;
+
+abstract class BCopyWith<$R, $In extends B, $Out extends B>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  BCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends B>(
+      Then<B, $Out2> t, Then<$Out2, $R2> t2);
+  $R call();
+}
+
+class _BCopyWithImpl<$R, $Out extends B> extends CopyWithBase<$R, B, $Out>
+    implements BCopyWith<$R, B, $Out> {
+  _BCopyWithImpl(super.value, super.then, super.then2);
+  @override
+  BCopyWith<$R2, B, $Out2> chain<$R2, $Out2 extends B>(
+          Then<B, $Out2> t, Then<$Out2, $R2> t2) =>
+      _BCopyWithImpl($value, t, t2);
+
+  @override
+  $R call() => $then(B());
 }

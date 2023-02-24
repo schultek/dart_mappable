@@ -1,7 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-import '../utils.dart';
 part 'selective_generation_test.mapper.dart';
 
 @MappableClass(

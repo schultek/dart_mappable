@@ -15,6 +15,7 @@ class AMapper extends ClassMapperBase<A> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'A';
 
@@ -34,8 +35,10 @@ class AMapper extends ClassMapperBase<A> {
   };
 
   static A _instantiate(DecodingData data) {
-    return A(data.get(#a), b: data.get(#b), c: data.get(#c), d: data.get(#d), e: data.get(#e));
+    return A(data.get(#a),
+        b: data.get(#b), c: data.get(#c), d: data.get(#d), e: data.get(#e));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -43,6 +46,7 @@ class AMapper extends ClassMapperBase<A> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<A>(map);
   }
+
   static A fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<A>(json);
@@ -54,21 +58,28 @@ mixin AMappable {
     AMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as A);
   }
+
   Map<String, dynamic> toMap() {
     AMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as A);
   }
-  ACopyWith<A, A, A> get copyWith => _ACopyWithImpl(this as A, $identity, $identity);
+
+  ACopyWith<A, A, A> get copyWith =>
+      _ACopyWithImpl(this as A, $identity, $identity);
   @override
   String toString() {
     AMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     AMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     AMapper.ensureInitialized();
@@ -77,18 +88,32 @@ mixin AMappable {
 }
 
 extension AValueCopy<$R, $Out extends A> on ObjectCopyWith<$R, A, $Out> {
-  ACopyWith<$R, A, $Out> get asA => base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
+  ACopyWith<$R, A, $Out> get asA =>
+      base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
 }
 
 typedef ACopyWithBound = A;
-abstract class ACopyWith<$R, $In extends A, $Out extends A> implements ObjectCopyWith<$R, $In, $Out> {
-  ACopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends A>(Then<A, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class ACopyWith<$R, $In extends A, $Out extends A>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  ACopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends A>(
+      Then<A, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? a, int? b, double? c, bool? d, B? e});
 }
 
-class _ACopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, A, $Out> implements ACopyWith<$R, A, $Out> {
+class _ACopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, A, $Out>
+    implements ACopyWith<$R, A, $Out> {
   _ACopyWithImpl(super.value, super.then, super.then2);
-  @override ACopyWith<$R2, A, $Out2> chain<$R2, $Out2 extends A>(Then<A, $Out2> t, Then<$Out2, $R2> t2) => _ACopyWithImpl($value, t, t2);
+  @override
+  ACopyWith<$R2, A, $Out2> chain<$R2, $Out2 extends A>(
+          Then<A, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ACopyWithImpl($value, t, t2);
 
-  @override $R call({String? a, int? b, Object? c = $none, bool? d, Object? e = $none}) => $then(A(a ?? $value.a, b: b ?? $value.b, c: or(c, $value.c), d: d ?? $value.d, e: or(e, $value.e)));
+  @override
+  $R call({String? a, int? b, Object? c = $none, bool? d, Object? e = $none}) =>
+      $then(A(a ?? $value.a,
+          b: b ?? $value.b,
+          c: or(c, $value.c),
+          d: d ?? $value.d,
+          e: or(e, $value.e)));
 }

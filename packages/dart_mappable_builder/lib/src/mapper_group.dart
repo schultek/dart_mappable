@@ -4,7 +4,7 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart'
-    show DiscoveryMode, GenerateMethods;
+    show GenerateMethods, InitializerScope;
 import 'package:glob/glob.dart';
 import 'package:path/path.dart';
 
@@ -220,15 +220,16 @@ class MapperElementGroup {
 
   Future<List<MapEntry<LibraryElement, Iterable<Element>>>> discover(
       BuildStep buildStep) async {
-    var mode = options.discoveryMode;
+    var scope = options.initializerScope;
 
     bool isMapper(Element e) {
       return (e is ClassElement && classChecker.hasAnnotationOf(e)) ||
           (e is EnumElement && enumChecker.hasAnnotationOf(e));
     }
 
-    if (mode == DiscoveryMode.package || mode == DiscoveryMode.directory) {
-      var glob = mode == DiscoveryMode.package
+    if (scope == InitializerScope.package ||
+        scope == InitializerScope.directory) {
+      var glob = scope == InitializerScope.package
           ? Glob('**.dart')
           : Glob('${dirname(buildStep.inputId.path)}/**.dart');
       return await buildStep
@@ -243,7 +244,7 @@ class MapperElementGroup {
           .map((lib) => MapEntry(lib!, lib.topLevelElements.where(isMapper)))
           .where((e) => e.value.isNotEmpty)
           .toList();
-    } else if (mode == DiscoveryMode.library) {
+    } else if (scope == InitializerScope.library) {
       var lib = await buildStep.inputLibrary;
 
       return [MapEntry(lib, lib.topLevelElements.where(isMapper))];

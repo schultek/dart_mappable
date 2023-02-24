@@ -1,8 +1,5 @@
-import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../elements/class/class_mapper_element.dart';
-import '../elements/mapper_param_element.dart';
 import '../elements/class/target_class_mapper_element.dart';
 
 class EncoderGenerator {

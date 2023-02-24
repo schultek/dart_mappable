@@ -18,6 +18,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'Animal';
 
@@ -29,8 +30,10 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   };
 
   static Animal _instantiate(DecodingData data) {
-    throw MapperException.missingSubclass('Animal', 'type', '${data.value['type']}');
+    throw MapperException.missingSubclass(
+        'Animal', 'type', '${data.value['type']}');
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -38,6 +41,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<Animal>(map);
   }
+
   static Animal fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<Animal>(json);
@@ -51,11 +55,13 @@ mixin AnimalMappable {
 }
 
 typedef AnimalCopyWithBound = Animal;
-abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal> implements ObjectCopyWith<$R, $In, $Out> {
-  AnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(Then<Animal, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  AnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(
+      Then<Animal, $Out2> t, Then<$Out2, $R2> t2);
   $R call();
 }
-
 
 class CatMapper extends DiscriminatorSubClassMapperBase<Cat> {
   CatMapper._();
@@ -67,6 +73,7 @@ class CatMapper extends DiscriminatorSubClassMapperBase<Cat> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'Cat';
 
@@ -86,6 +93,7 @@ class CatMapper extends DiscriminatorSubClassMapperBase<Cat> {
   static Cat _instantiate(DecodingData data) {
     return Cat(data.get(#name), data.get(#color));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -93,6 +101,7 @@ class CatMapper extends DiscriminatorSubClassMapperBase<Cat> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<Cat>(map);
   }
+
   static Cat fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<Cat>(json);
@@ -104,21 +113,28 @@ mixin CatMappable {
     CatMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as Cat);
   }
+
   Map<String, dynamic> toMap() {
     CatMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as Cat);
   }
-  CatCopyWith<Cat, Cat, Cat> get copyWith => _CatCopyWithImpl(this as Cat, $identity, $identity);
+
+  CatCopyWith<Cat, Cat, Cat> get copyWith =>
+      _CatCopyWithImpl(this as Cat, $identity, $identity);
   @override
   String toString() {
     CatMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     CatMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     CatMapper.ensureInitialized();
@@ -126,21 +142,33 @@ mixin CatMappable {
   }
 }
 
-extension CatValueCopy<$R, $Out extends Animal> on ObjectCopyWith<$R, Cat, $Out> {
-  CatCopyWith<$R, Cat, $Out> get asCat => base.as((v, t, t2) => _CatCopyWithImpl(v, t, t2));
+extension CatValueCopy<$R, $Out extends Animal>
+    on ObjectCopyWith<$R, Cat, $Out> {
+  CatCopyWith<$R, Cat, $Out> get asCat =>
+      base.as((v, t, t2) => _CatCopyWithImpl(v, t, t2));
 }
 
 typedef CatCopyWithBound = Animal;
-abstract class CatCopyWith<$R, $In extends Cat, $Out extends Animal> implements AnimalCopyWith<$R, $In, $Out> {
-  CatCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(Then<Cat, $Out2> t, Then<$Out2, $R2> t2);
-  @override $R call({String? name, String? color});
+
+abstract class CatCopyWith<$R, $In extends Cat, $Out extends Animal>
+    implements AnimalCopyWith<$R, $In, $Out> {
+  CatCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(
+      Then<Cat, $Out2> t, Then<$Out2, $R2> t2);
+  @override
+  $R call({String? name, String? color});
 }
 
-class _CatCopyWithImpl<$R, $Out extends Animal> extends CopyWithBase<$R, Cat, $Out> implements CatCopyWith<$R, Cat, $Out> {
+class _CatCopyWithImpl<$R, $Out extends Animal>
+    extends CopyWithBase<$R, Cat, $Out> implements CatCopyWith<$R, Cat, $Out> {
   _CatCopyWithImpl(super.value, super.then, super.then2);
-  @override CatCopyWith<$R2, Cat, $Out2> chain<$R2, $Out2 extends Animal>(Then<Cat, $Out2> t, Then<$Out2, $R2> t2) => _CatCopyWithImpl($value, t, t2);
+  @override
+  CatCopyWith<$R2, Cat, $Out2> chain<$R2, $Out2 extends Animal>(
+          Then<Cat, $Out2> t, Then<$Out2, $R2> t2) =>
+      _CatCopyWithImpl($value, t, t2);
 
-  @override $R call({String? name, String? color}) => $then(Cat(name ?? $value.name, color ?? $value.color));
+  @override
+  $R call({String? name, String? color}) =>
+      $then(Cat(name ?? $value.name, color ?? $value.color));
 }
 
 class DogMapper extends DiscriminatorSubClassMapperBase<Dog> {
@@ -153,6 +181,7 @@ class DogMapper extends DiscriminatorSubClassMapperBase<Dog> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'Dog';
 
@@ -172,6 +201,7 @@ class DogMapper extends DiscriminatorSubClassMapperBase<Dog> {
   static Dog _instantiate(DecodingData data) {
     return Dog(data.get(#age));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -179,6 +209,7 @@ class DogMapper extends DiscriminatorSubClassMapperBase<Dog> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<Dog>(map);
   }
+
   static Dog fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<Dog>(json);
@@ -190,21 +221,28 @@ mixin DogMappable {
     DogMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as Dog);
   }
+
   Map<String, dynamic> toMap() {
     DogMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as Dog);
   }
-  DogCopyWith<Dog, Dog, Dog> get copyWith => _DogCopyWithImpl(this as Dog, $identity, $identity);
+
+  DogCopyWith<Dog, Dog, Dog> get copyWith =>
+      _DogCopyWithImpl(this as Dog, $identity, $identity);
   @override
   String toString() {
     DogMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     DogMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     DogMapper.ensureInitialized();
@@ -212,21 +250,32 @@ mixin DogMappable {
   }
 }
 
-extension DogValueCopy<$R, $Out extends Animal> on ObjectCopyWith<$R, Dog, $Out> {
-  DogCopyWith<$R, Dog, $Out> get asDog => base.as((v, t, t2) => _DogCopyWithImpl(v, t, t2));
+extension DogValueCopy<$R, $Out extends Animal>
+    on ObjectCopyWith<$R, Dog, $Out> {
+  DogCopyWith<$R, Dog, $Out> get asDog =>
+      base.as((v, t, t2) => _DogCopyWithImpl(v, t, t2));
 }
 
 typedef DogCopyWithBound = Animal;
-abstract class DogCopyWith<$R, $In extends Dog, $Out extends Animal> implements AnimalCopyWith<$R, $In, $Out> {
-  DogCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2);
-  @override $R call({int? age});
+
+abstract class DogCopyWith<$R, $In extends Dog, $Out extends Animal>
+    implements AnimalCopyWith<$R, $In, $Out> {
+  DogCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(
+      Then<Dog, $Out2> t, Then<$Out2, $R2> t2);
+  @override
+  $R call({int? age});
 }
 
-class _DogCopyWithImpl<$R, $Out extends Animal> extends CopyWithBase<$R, Dog, $Out> implements DogCopyWith<$R, Dog, $Out> {
+class _DogCopyWithImpl<$R, $Out extends Animal>
+    extends CopyWithBase<$R, Dog, $Out> implements DogCopyWith<$R, Dog, $Out> {
   _DogCopyWithImpl(super.value, super.then, super.then2);
-  @override DogCopyWith<$R2, Dog, $Out2> chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2) => _DogCopyWithImpl($value, t, t2);
+  @override
+  DogCopyWith<$R2, Dog, $Out2> chain<$R2, $Out2 extends Animal>(
+          Then<Dog, $Out2> t, Then<$Out2, $R2> t2) =>
+      _DogCopyWithImpl($value, t, t2);
 
-  @override $R call({int? age}) => $then(Dog(age ?? $value.age));
+  @override
+  $R call({int? age}) => $then(Dog(age ?? $value.age));
 }
 
 class NullAnimalMapper extends DiscriminatorSubClassMapperBase<NullAnimal> {
@@ -239,6 +288,7 @@ class NullAnimalMapper extends DiscriminatorSubClassMapperBase<NullAnimal> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'NullAnimal';
 
@@ -256,6 +306,7 @@ class NullAnimalMapper extends DiscriminatorSubClassMapperBase<NullAnimal> {
   static NullAnimal _instantiate(DecodingData data) {
     return NullAnimal(data.get(#name));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -263,6 +314,7 @@ class NullAnimalMapper extends DiscriminatorSubClassMapperBase<NullAnimal> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<NullAnimal>(map);
   }
+
   static NullAnimal fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<NullAnimal>(json);
@@ -274,21 +326,28 @@ mixin NullAnimalMappable {
     NullAnimalMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as NullAnimal);
   }
+
   Map<String, dynamic> toMap() {
     NullAnimalMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as NullAnimal);
   }
-  NullAnimalCopyWith<NullAnimal, NullAnimal, NullAnimal> get copyWith => _NullAnimalCopyWithImpl(this as NullAnimal, $identity, $identity);
+
+  NullAnimalCopyWith<NullAnimal, NullAnimal, NullAnimal> get copyWith =>
+      _NullAnimalCopyWithImpl(this as NullAnimal, $identity, $identity);
   @override
   String toString() {
     NullAnimalMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     NullAnimalMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     NullAnimalMapper.ensureInitialized();
@@ -296,24 +355,37 @@ mixin NullAnimalMappable {
   }
 }
 
-extension NullAnimalValueCopy<$R, $Out extends Animal> on ObjectCopyWith<$R, NullAnimal, $Out> {
-  NullAnimalCopyWith<$R, NullAnimal, $Out> get asNullAnimal => base.as((v, t, t2) => _NullAnimalCopyWithImpl(v, t, t2));
+extension NullAnimalValueCopy<$R, $Out extends Animal>
+    on ObjectCopyWith<$R, NullAnimal, $Out> {
+  NullAnimalCopyWith<$R, NullAnimal, $Out> get asNullAnimal =>
+      base.as((v, t, t2) => _NullAnimalCopyWithImpl(v, t, t2));
 }
 
 typedef NullAnimalCopyWithBound = Animal;
-abstract class NullAnimalCopyWith<$R, $In extends NullAnimal, $Out extends Animal> implements AnimalCopyWith<$R, $In, $Out> {
-  NullAnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(Then<NullAnimal, $Out2> t, Then<$Out2, $R2> t2);
-  @override $R call({String? name});
+
+abstract class NullAnimalCopyWith<$R, $In extends NullAnimal,
+    $Out extends Animal> implements AnimalCopyWith<$R, $In, $Out> {
+  NullAnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(
+      Then<NullAnimal, $Out2> t, Then<$Out2, $R2> t2);
+  @override
+  $R call({String? name});
 }
 
-class _NullAnimalCopyWithImpl<$R, $Out extends Animal> extends CopyWithBase<$R, NullAnimal, $Out> implements NullAnimalCopyWith<$R, NullAnimal, $Out> {
+class _NullAnimalCopyWithImpl<$R, $Out extends Animal>
+    extends CopyWithBase<$R, NullAnimal, $Out>
+    implements NullAnimalCopyWith<$R, NullAnimal, $Out> {
   _NullAnimalCopyWithImpl(super.value, super.then, super.then2);
-  @override NullAnimalCopyWith<$R2, NullAnimal, $Out2> chain<$R2, $Out2 extends Animal>(Then<NullAnimal, $Out2> t, Then<$Out2, $R2> t2) => _NullAnimalCopyWithImpl($value, t, t2);
+  @override
+  NullAnimalCopyWith<$R2, NullAnimal, $Out2> chain<$R2, $Out2 extends Animal>(
+          Then<NullAnimal, $Out2> t, Then<$Out2, $R2> t2) =>
+      _NullAnimalCopyWithImpl($value, t, t2);
 
-  @override $R call({String? name}) => $then(NullAnimal(name ?? $value.name));
+  @override
+  $R call({String? name}) => $then(NullAnimal(name ?? $value.name));
 }
 
-class DefaultAnimalMapper extends DiscriminatorSubClassMapperBase<DefaultAnimal> {
+class DefaultAnimalMapper
+    extends DiscriminatorSubClassMapperBase<DefaultAnimal> {
   DefaultAnimalMapper._();
   static DefaultAnimalMapper? _instance;
   static DefaultAnimalMapper ensureInitialized() {
@@ -323,6 +395,7 @@ class DefaultAnimalMapper extends DiscriminatorSubClassMapperBase<DefaultAnimal>
     }
     return _instance!;
   }
+
   @override
   final String id = 'DefaultAnimal';
 
@@ -342,6 +415,7 @@ class DefaultAnimalMapper extends DiscriminatorSubClassMapperBase<DefaultAnimal>
   static DefaultAnimal _instantiate(DecodingData data) {
     return DefaultAnimal(data.get(#name), data.get(#type));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -349,6 +423,7 @@ class DefaultAnimalMapper extends DiscriminatorSubClassMapperBase<DefaultAnimal>
     ensureInitialized();
     return MapperContainer.globals.fromMap<DefaultAnimal>(map);
   }
+
   static DefaultAnimal fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<DefaultAnimal>(json);
@@ -360,21 +435,29 @@ mixin DefaultAnimalMappable {
     DefaultAnimalMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as DefaultAnimal);
   }
+
   Map<String, dynamic> toMap() {
     DefaultAnimalMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as DefaultAnimal);
   }
-  DefaultAnimalCopyWith<DefaultAnimal, DefaultAnimal, DefaultAnimal> get copyWith => _DefaultAnimalCopyWithImpl(this as DefaultAnimal, $identity, $identity);
+
+  DefaultAnimalCopyWith<DefaultAnimal, DefaultAnimal, DefaultAnimal>
+      get copyWith => _DefaultAnimalCopyWithImpl(
+          this as DefaultAnimal, $identity, $identity);
   @override
   String toString() {
     DefaultAnimalMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     DefaultAnimalMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     DefaultAnimalMapper.ensureInitialized();
@@ -382,21 +465,35 @@ mixin DefaultAnimalMappable {
   }
 }
 
-extension DefaultAnimalValueCopy<$R, $Out extends Animal> on ObjectCopyWith<$R, DefaultAnimal, $Out> {
-  DefaultAnimalCopyWith<$R, DefaultAnimal, $Out> get asDefaultAnimal => base.as((v, t, t2) => _DefaultAnimalCopyWithImpl(v, t, t2));
+extension DefaultAnimalValueCopy<$R, $Out extends Animal>
+    on ObjectCopyWith<$R, DefaultAnimal, $Out> {
+  DefaultAnimalCopyWith<$R, DefaultAnimal, $Out> get asDefaultAnimal =>
+      base.as((v, t, t2) => _DefaultAnimalCopyWithImpl(v, t, t2));
 }
 
 typedef DefaultAnimalCopyWithBound = Animal;
-abstract class DefaultAnimalCopyWith<$R, $In extends DefaultAnimal, $Out extends Animal> implements AnimalCopyWith<$R, $In, $Out> {
-  DefaultAnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(Then<DefaultAnimal, $Out2> t, Then<$Out2, $R2> t2);
-  @override $R call({String? name, String? type});
+
+abstract class DefaultAnimalCopyWith<$R, $In extends DefaultAnimal,
+    $Out extends Animal> implements AnimalCopyWith<$R, $In, $Out> {
+  DefaultAnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(
+      Then<DefaultAnimal, $Out2> t, Then<$Out2, $R2> t2);
+  @override
+  $R call({String? name, String? type});
 }
 
-class _DefaultAnimalCopyWithImpl<$R, $Out extends Animal> extends CopyWithBase<$R, DefaultAnimal, $Out> implements DefaultAnimalCopyWith<$R, DefaultAnimal, $Out> {
+class _DefaultAnimalCopyWithImpl<$R, $Out extends Animal>
+    extends CopyWithBase<$R, DefaultAnimal, $Out>
+    implements DefaultAnimalCopyWith<$R, DefaultAnimal, $Out> {
   _DefaultAnimalCopyWithImpl(super.value, super.then, super.then2);
-  @override DefaultAnimalCopyWith<$R2, DefaultAnimal, $Out2> chain<$R2, $Out2 extends Animal>(Then<DefaultAnimal, $Out2> t, Then<$Out2, $R2> t2) => _DefaultAnimalCopyWithImpl($value, t, t2);
+  @override
+  DefaultAnimalCopyWith<$R2, DefaultAnimal, $Out2>
+      chain<$R2, $Out2 extends Animal>(
+              Then<DefaultAnimal, $Out2> t, Then<$Out2, $R2> t2) =>
+          _DefaultAnimalCopyWithImpl($value, t, t2);
 
-  @override $R call({String? name, String? type}) => $then(DefaultAnimal(name ?? $value.name, type ?? $value.type));
+  @override
+  $R call({String? name, String? type}) =>
+      $then(DefaultAnimal(name ?? $value.name, type ?? $value.type));
 }
 
 class ZooMapper extends ClassMapperBase<Zoo> {
@@ -409,6 +506,7 @@ class ZooMapper extends ClassMapperBase<Zoo> {
     }
     return _instance!;
   }
+
   @override
   final String id = 'Zoo';
 
@@ -428,6 +526,7 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   static Zoo _instantiate(DecodingData data) {
     return Zoo(data.get(#animal), data.get(#animals), data.get(#animalsMap));
   }
+
   @override
   final Function instantiate = _instantiate;
 
@@ -435,6 +534,7 @@ class ZooMapper extends ClassMapperBase<Zoo> {
     ensureInitialized();
     return MapperContainer.globals.fromMap<Zoo>(map);
   }
+
   static Zoo fromJson(String json) {
     ensureInitialized();
     return MapperContainer.globals.fromJson<Zoo>(json);
@@ -446,21 +546,28 @@ mixin ZooMappable {
     ZooMapper.ensureInitialized();
     return MapperContainer.globals.toJson(this as Zoo);
   }
+
   Map<String, dynamic> toMap() {
     ZooMapper.ensureInitialized();
     return MapperContainer.globals.toMap(this as Zoo);
   }
-  ZooCopyWith<Zoo, Zoo, Zoo> get copyWith => _ZooCopyWithImpl(this as Zoo, $identity, $identity);
+
+  ZooCopyWith<Zoo, Zoo, Zoo> get copyWith =>
+      _ZooCopyWithImpl(this as Zoo, $identity, $identity);
   @override
   String toString() {
     ZooMapper.ensureInitialized();
     return MapperContainer.globals.asString(this);
   }
+
   @override
   bool operator ==(Object other) {
     ZooMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            MapperContainer.globals.isEqual(this, other));
   }
+
   @override
   int get hashCode {
     ZooMapper.ensureInitialized();
@@ -469,24 +576,56 @@ mixin ZooMappable {
 }
 
 extension ZooValueCopy<$R, $Out extends Zoo> on ObjectCopyWith<$R, Zoo, $Out> {
-  ZooCopyWith<$R, Zoo, $Out> get asZoo => base.as((v, t, t2) => _ZooCopyWithImpl(v, t, t2));
+  ZooCopyWith<$R, Zoo, $Out> get asZoo =>
+      base.as((v, t, t2) => _ZooCopyWithImpl(v, t, t2));
 }
 
 typedef ZooCopyWithBound = Zoo;
-abstract class ZooCopyWith<$R, $In extends Zoo, $Out extends Zoo> implements ObjectCopyWith<$R, $In, $Out> {
-  ZooCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Zoo>(Then<Zoo, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class ZooCopyWith<$R, $In extends Zoo, $Out extends Zoo>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  ZooCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Zoo>(
+      Then<Zoo, $Out2> t, Then<$Out2, $R2> t2);
   AnimalCopyWith<$R, Animal, Animal>? get animal;
   ListCopyWith<$R, Animal, AnimalCopyWith<$R, Animal, Animal>>? get animals;
-  MapCopyWith<$R, String, Animal, AnimalCopyWith<$R, Animal, Animal>>? get animalsMap;
-  $R call({Animal? animal, List<Animal>? animals, Map<String, Animal>? animalsMap});
+  MapCopyWith<$R, String, Animal, AnimalCopyWith<$R, Animal, Animal>>?
+      get animalsMap;
+  $R call(
+      {Animal? animal, List<Animal>? animals, Map<String, Animal>? animalsMap});
 }
 
-class _ZooCopyWithImpl<$R, $Out extends Zoo> extends CopyWithBase<$R, Zoo, $Out> implements ZooCopyWith<$R, Zoo, $Out> {
+class _ZooCopyWithImpl<$R, $Out extends Zoo> extends CopyWithBase<$R, Zoo, $Out>
+    implements ZooCopyWith<$R, Zoo, $Out> {
   _ZooCopyWithImpl(super.value, super.then, super.then2);
-  @override ZooCopyWith<$R2, Zoo, $Out2> chain<$R2, $Out2 extends Zoo>(Then<Zoo, $Out2> t, Then<$Out2, $R2> t2) => _ZooCopyWithImpl($value, t, t2);
+  @override
+  ZooCopyWith<$R2, Zoo, $Out2> chain<$R2, $Out2 extends Zoo>(
+          Then<Zoo, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ZooCopyWithImpl($value, t, t2);
 
-  @override AnimalCopyWith<$R, Animal, Animal>? get animal => $value.animal?.copyWith.chain($identity, (v) => call(animal: v));
-  @override ListCopyWith<$R, Animal, AnimalCopyWith<$R, Animal, Animal>>? get animals => $value.animals != null ? ListCopyWith($value.animals!, (v, t) => v.copyWith.chain<$R, Animal>($identity, t), (v) => call(animals: v)) : null;
-  @override MapCopyWith<$R, String, Animal, AnimalCopyWith<$R, Animal, Animal>>? get animalsMap => $value.animalsMap != null ? MapCopyWith($value.animalsMap!, (v, t) => v.copyWith.chain<$R, Animal>($identity, t), (v) => call(animalsMap: v)) : null;
-  @override $R call({Object? animal = $none, Object? animals = $none, Object? animalsMap = $none}) => $then(Zoo(or(animal, $value.animal), or(animals, $value.animals), or(animalsMap, $value.animalsMap)));
+  @override
+  AnimalCopyWith<$R, Animal, Animal>? get animal =>
+      $value.animal?.copyWith.chain($identity, (v) => call(animal: v));
+  @override
+  ListCopyWith<$R, Animal, AnimalCopyWith<$R, Animal, Animal>>? get animals =>
+      $value.animals != null
+          ? ListCopyWith(
+              $value.animals!,
+              (v, t) => v.copyWith.chain<$R, Animal>($identity, t),
+              (v) => call(animals: v))
+          : null;
+  @override
+  MapCopyWith<$R, String, Animal, AnimalCopyWith<$R, Animal, Animal>>?
+      get animalsMap => $value.animalsMap != null
+          ? MapCopyWith(
+              $value.animalsMap!,
+              (v, t) => v.copyWith.chain<$R, Animal>($identity, t),
+              (v) => call(animalsMap: v))
+          : null;
+  @override
+  $R call(
+          {Object? animal = $none,
+          Object? animals = $none,
+          Object? animalsMap = $none}) =>
+      $then(Zoo(or(animal, $value.animal), or(animals, $value.animals),
+          or(animalsMap, $value.animalsMap)));
 }

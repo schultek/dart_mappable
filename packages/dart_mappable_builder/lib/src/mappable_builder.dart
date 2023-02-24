@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart' as p;
 
@@ -49,7 +48,7 @@ class MappableBuilder implements Builder {
 
   @override
   Map<String, List<String>> get buildExtensions => const {
-        '.dart': ['.mapper.dart', '.container.dart']
+        '.dart': ['.mapper.dart', '.init.dart']
       };
 
   Future<MapperElementGroup> createMapperGroup(BuildStep buildStep) async {
@@ -68,54 +67,6 @@ class MappableBuilder implements Builder {
     group.packageName = entryLib.source.uri.pathSegments.first;
 
     return group;
-  }
-
-  Future<void> generateContainerFile(
-      BuildStep buildStep, MapperElementGroup group) async {
-    if (group.options.createCombinedContainer != true) {
-      return;
-    }
-
-    var output = StringBuffer();
-
-    var discovered = await group.discover(buildStep);
-
-    if (discovered.isEmpty) {
-      return;
-    }
-
-    discovered.sortBy((e) => e.key.source.uri.toString());
-
-    output.write(writeImports(
-        buildStep.inputId, discovered.map((e) => e.key.source.uri).toList()));
-
-    var libName = group.library.name;
-    if (libName.startsWith('_')) {
-      libName = libName.substring(1);
-    }
-    var name = CaseStyle.camelCase.transform('${libName}_container');
-
-    output.write('final $name = MapperContainer(linked: {\n');
-
-    for (var i = 0; i < discovered.length; i++) {
-      for (var e in discovered[i].value) {
-        output.write('  p$i.${e.name}Mapper.container,\n');
-      }
-    }
-
-    output.write('});');
-
-    var source = DartFormatter(pageWidth: options.lineLength ?? 80).format(
-      '// coverage:ignore-file\n'
-      '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
-      '// ignore_for_file: type=lint\n'
-      '// ignore_for_file: unused_element\n\n'
-      "import 'package:dart_mappable/dart_mappable.dart';\n"
-      '${output.toString()}\n',
-    );
-
-    var outputId = buildStep.inputId.changeExtension('.container.dart');
-    await buildStep.writeAsString(outputId, source);
   }
 
   Future<void> generateMapperFile(
@@ -139,16 +90,57 @@ class MappableBuilder implements Builder {
 
     var output = await Future.wait(generators.map((g) => g.generate()));
 
-    var source = //DartFormatter(pageWidth: options.lineLength ?? 80).format(
+    var source = DartFormatter(pageWidth: options.lineLength ?? 80)
+        .format('// coverage:ignore-file\n'
+            '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
+            '// ignore_for_file: type=lint\n'
+            '// ignore_for_file: unused_element\n\n'
+            'part of \'${p.basename(buildStep.inputId.uri.toString())}\';\n\n'
+            '${output.join('\n\n')}\n' //,
+            );
+    var outputId = buildStep.inputId.changeExtension('.mapper.dart');
+    await buildStep.writeAsString(outputId, source);
+  }
+
+  Future<void> generateContainerFile(
+      BuildStep buildStep, MapperElementGroup group) async {
+    if (group.options.initializerScope == null) {
+      return;
+    }
+
+    var output = StringBuffer();
+
+    var discovered = await group.discover(buildStep);
+    if (discovered.isEmpty) {
+      return;
+    }
+
+    discovered.sortBy((e) => e.key.source.uri.toString());
+
+    output.write(writeImports(
+      buildStep.inputId,
+      discovered.map((e) => e.key.source.uri).toList(),
+    ));
+
+    output.write('void initializeMappers() {\n');
+
+    for (var i = 0; i < discovered.length; i++) {
+      for (var e in discovered[i].value) {
+        output.write('  p$i.${e.name}Mapper.ensureInitialized();\n');
+      }
+    }
+
+    output.write('}');
+
+    var source = DartFormatter(pageWidth: options.lineLength ?? 80).format(
       '// coverage:ignore-file\n'
       '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
       '// ignore_for_file: type=lint\n'
       '// ignore_for_file: unused_element\n\n'
-      'part of \'${p.basename(buildStep.inputId.uri.toString())}\';\n\n'
-      '${output.join('\n\n')}\n'//,
-    //);
-;
-    var outputId = buildStep.inputId.changeExtension('.mapper.dart');
+      '${output.toString()}\n',
+    );
+
+    var outputId = buildStep.inputId.changeExtension('.init.dart');
     await buildStep.writeAsString(outputId, source);
   }
 }

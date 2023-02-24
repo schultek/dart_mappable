@@ -6,7 +6,7 @@ import 'target_class_mapper_element.dart';
 
 class AliasClassMapperElement extends TargetClassMapperElement {
   AliasClassMapperElement(
-      super.parent, this.alias, super.element, super.options) {}
+      super.parent, this.alias, super.element, super.options);
 
   final TypeAliasElement alias;
 
