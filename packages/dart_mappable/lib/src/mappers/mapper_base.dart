@@ -20,9 +20,6 @@ abstract class MapperBase<T extends Object> {
 
   Type get type => T;
 
-  /// Optional type of the implementations of [T] used for decoding.
-  Type get implType => type;
-
   bool isFor(dynamic v) => v is T;
 
   T decoder(DecodingContext<Object> context) =>
@@ -101,7 +98,7 @@ class MappingContext<V extends Object?> {
   final MapperContainer container;
 
   MappingContext(this.value, {MapperContainer? container, this.args = const []})
-  : container = container ?? MapperContainer.globals;
+      : container = container ?? MapperContainer.globals;
 
   MappingContext<U> checked<U extends Object?>() {
     if (value is U) {
@@ -126,7 +123,8 @@ class DecodingContext<V extends Object?> extends MappingContext<V> {
       {super.container, super.args, this.inherited = false});
 
   DecodingContext<V> inherit({MapperContainer? container}) {
-    return DecodingContext<V>(value, container: container ?? this.container, args: args, inherited: true);
+    return DecodingContext<V>(value,
+        container: container ?? this.container, args: args, inherited: true);
   }
 
   T wrap<T>(Decoder<Object?, T> decoder,
@@ -148,8 +146,8 @@ class DecodingContext<V extends Object?> extends MappingContext<V> {
     if (identical(value, this.value) && $V == V) {
       return this as DecodingContext<$V>;
     }
-    return DecodingContext<$V>(value, container: container,
-        args: args, inherited: inherited);
+    return DecodingContext<$V>(value,
+        container: container, args: args, inherited: inherited);
   }
 }
 

@@ -1,11 +1,10 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:dart_mappable/dart_mappable.dart' hide ClassMapperElement;
+import 'package:dart_mappable/dart_mappable.dart';
 
 import '../mapper_group.dart';
 import '../utils.dart';
-import 'class/alias_class_mapper_element.dart';
 import 'class/class_mapper_element.dart';
 import 'mapper_param_element.dart';
 
@@ -22,8 +21,6 @@ class CopyParamElement {
 
         if (classTarget is! ClassMapperElement ||
             !classTarget.shouldGenerate(GenerateMethods.copy)) return null;
-        if (classTarget is AliasClassMapperElement &&
-            element == classTarget.targetElement) return null;
         if (classTarget.hasCallableConstructor ||
             classTarget.superTarget != null ||
             classTarget.subTargets.isNotEmpty) {
@@ -76,7 +73,7 @@ class CopyParamElement {
           var hasSuperTarget = classConfig.superTarget != null;
 
           var prefixedName =
-              target.parent.prefixOfElement(classConfig.element) +
+              target.parent.prefixOfElement(classConfig.annotatedElement) +
                   classConfig.uniqueClassName;
 
           yield CopyParamElement(

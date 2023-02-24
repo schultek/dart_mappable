@@ -2,10 +2,8 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:ansicolor/ansicolor.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../elements/class/alias_class_mapper_element.dart';
-import '../elements/class/none_class_mapper_element.dart';
-import '../elements/mapper_element.dart';
 import '../elements/class/target_class_mapper_element.dart';
+import '../elements/mapper_element.dart';
 import '../utils.dart';
 import 'copywith_generator.dart';
 import 'decoder_generator.dart';
@@ -62,8 +60,10 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     }
 
     if (isSubClass) {
-      var prefix = target.parent.prefixOfElement(target.superTarget!.element);
-      output.write('      $prefix${target.superTarget!.mapperName}.ensureInitialized().addSubMapper(_instance!);\n');
+      var prefix =
+          target.parent.prefixOfElement(target.superTarget!.annotatedElement);
+      output.write(
+          '      $prefix${target.superTarget!.mapperName}.ensureInitialized().addSubMapper(_instance!);\n');
     }
 
     var linked = target.linkedElements;
@@ -83,11 +83,6 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
 
     if (target.typeParamsList.isNotEmpty) {
       output.write(decoderGen.generateTypeFactory());
-    }
-
-    if (target is AliasClassMapperElement) {
-      output.write('  @override\n'
-          '  Type get implType => ${target.prefixedDecodingClassName};\n');
     }
 
     output.write('\n');

@@ -1,35 +1,21 @@
 // ignore_for_file: overridden_fields
 
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 import 'target_class_mapper_element.dart';
 
 class AliasClassMapperElement extends TargetClassMapperElement {
   AliasClassMapperElement(
-      super.parent, super.element, this.node, super.options) {
-    assert(targetElement == element.supertype!.element);
-  }
+      super.parent, this.alias, super.element, super.options) {}
 
-  final ClassTypeAlias node;
+  final TypeAliasElement alias;
 
   @override
-  late ClassElement targetElement =
-      node.superclass.name.staticElement as ClassElement;
+  String get uniqueClassName => alias.name;
 
   @override
-  late String prefixedDecodingClassName =
-      parent.prefixOfElement(element) + className;
+  Element get annotatedElement => alias;
 
   @override
-  late String selfTypeParam = '$uniqueClassName$typeParams';
-
-  @override
-  late List<String> typesConfigs = () {
-    var types = super.typesConfigs;
-
-    // TODO handle generics
-    types.add(className);
-    return types;
-  }();
+  bool get generateMixin => false;
 }

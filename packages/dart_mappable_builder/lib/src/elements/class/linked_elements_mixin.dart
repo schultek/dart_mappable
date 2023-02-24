@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/element/type.dart';
 
-import 'class_mapper_element.dart';
 import '../mapper_element.dart';
+import 'class_mapper_element.dart';
 import 'none_class_mapper_element.dart';
 
 mixin LinkedElementsMixin on ClassMapperElement {
@@ -10,7 +10,7 @@ mixin LinkedElementsMixin on ClassMapperElement {
 
     for (var target in subTargets) {
       if (target is! NoneClassMapperElement) {
-        var prefix = parent.prefixOfElement(target.element);
+        var prefix = parent.prefixOfElement(target.annotatedElement);
         linked[target] = '$prefix${target.mapperName}';
       }
     }
@@ -19,7 +19,8 @@ mixin LinkedElementsMixin on ClassMapperElement {
       var e = t.element;
       var m = parent.getMapperForElement(e);
       if (m != null && m is! NoneClassMapperElement) {
-        linked[m] = '${parent.prefixOfElement(m.element)}${m.mapperName}';
+        linked[m] =
+            '${parent.prefixOfElement(m.annotatedElement)}${m.mapperName}';
       }
 
       if (t is ParameterizedType) {
@@ -37,7 +38,8 @@ mixin LinkedElementsMixin on ClassMapperElement {
       if (param.bound != null) {
         var m = parent.getMapperForElement(param.bound!.element);
         if (m is ClassMapperElement && m is! NoneClassMapperElement) {
-          linked[m] = '${parent.prefixOfElement(m.element)}${m.mapperName}';
+          linked[m] =
+              '${parent.prefixOfElement(m.annotatedElement)}${m.mapperName}';
         }
       }
     }

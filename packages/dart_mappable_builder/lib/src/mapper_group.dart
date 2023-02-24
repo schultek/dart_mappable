@@ -1,4 +1,3 @@
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
@@ -6,20 +5,20 @@ import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart'
     show DiscoveryMode, GenerateMethods;
+import 'package:glob/glob.dart';
 import 'package:path/path.dart';
 
 import 'builder_options.dart';
 import 'elements/class/alias_class_mapper_element.dart';
 import 'elements/class/class_mapper_element.dart';
 import 'elements/class/dependent_class_mapper_element.dart';
-import 'elements/enum/dependent_enum_mapper_element.dart';
 import 'elements/class/factory_constructor_mapper_element.dart';
-import 'elements/enum/target_enum_mapper_element.dart';
-import 'elements/mapper_element.dart';
 import 'elements/class/none_class_mapper_element.dart';
 import 'elements/class/target_class_mapper_element.dart';
+import 'elements/enum/dependent_enum_mapper_element.dart';
+import 'elements/enum/target_enum_mapper_element.dart';
+import 'elements/mapper_element.dart';
 import 'utils.dart';
-import 'package:glob/glob.dart';
 
 class MapperElementGroup {
   MapperElementGroup(this.library, this.options) {
@@ -43,7 +42,6 @@ class MapperElementGroup {
 
   Map<Element, String> prefixes = {};
   Map<InterfaceElement, MapperElement> targets = {};
-  Map<InterfaceElement, MapperElement> alias = {};
 
   late String packageName;
   bool isPackage(Uri lib) {
@@ -56,9 +54,6 @@ class MapperElementGroup {
 
   Future<T> addMapper<T extends MapperElement>(T mapper) async {
     await mapper.analyze;
-    if (mapper is AliasClassMapperElement) {
-      alias[mapper.targetElement] = mapper;
-    }
     return targets[mapper.element] = mapper;
   }
 
@@ -70,28 +65,28 @@ class MapperElementGroup {
         continue;
       }
 
-      if (element is ClassElement && classChecker.hasAnnotationOf(element)) {
-        var node = await element.getResolvedNode();
-        if (node is ClassTypeAlias) {
-          await addMapper(
-              AliasClassMapperElement(this, element, node, options));
-        } else {
+      if (classChecker.hasAnnotationOf(element)) {
+        if (element is ClassElement) {
           await addMapper(TargetClassMapperElement(this, element, options));
-        }
 
-        for (var c in element.constructors) {
-          if (c.isFactory &&
-              c.redirectedConstructor != null &&
-              classChecker.hasAnnotationOf(c)) {
-            // Disable copy methods for factory elements.
-            var subOptions = options.apply(MappableOptions(
-                generateMethods:
-                    ~(~(options.generateMethods ?? GenerateMethods.all) |
-                        GenerateMethods.copy)));
+          for (var c in element.constructors) {
+            if (c.isFactory &&
+                c.redirectedConstructor != null &&
+                classChecker.hasAnnotationOf(c)) {
+              // Disable copy methods for factory elements.
+              var subOptions = options.apply(MappableOptions(
+                  generateMethods:
+                      ~(~(options.generateMethods ?? GenerateMethods.all) |
+                          GenerateMethods.copy)));
 
-            await addMapper(
-                FactoryConstructorMapperElement(this, c, subOptions));
+              await addMapper(
+                  FactoryConstructorMapperElement(this, c, subOptions));
+            }
           }
+        } else if (element is TypeAliasElement &&
+            element.aliasedType.element is ClassElement) {
+          await addMapper(AliasClassMapperElement(this, element,
+              element.aliasedType.element as ClassElement, options));
         }
       } else if (element is EnumElement &&
           enumChecker.hasAnnotationOf(element)) {
@@ -109,9 +104,9 @@ class MapperElementGroup {
 
     if (target.superTarget == null) {
       ClassElement? superElement;
-      var supertype = target.targetElement.supertype;
+      var supertype = target.element.supertype;
       if (supertype == null || supertype.isDartCoreObject) {
-        supertype = target.targetElement.interfaces.firstOrNull;
+        supertype = target.element.interfaces.firstOrNull;
       }
       if (supertype != null && !supertype.isDartCoreObject) {
         var element = supertype.element;
@@ -167,7 +162,7 @@ class MapperElementGroup {
   }
 
   MapperElement? getMapperForElement(Element? e) {
-    return targets[e] ?? alias[e];
+    return targets[e];
   }
 
   Future<MapperElement?> getOrAddMapperForElement(Element? e,
@@ -215,10 +210,11 @@ class MapperElementGroup {
   }
 
   /// All of the declared classes and enums in this library.
-  Iterable<InterfaceElement> elementsOf(LibraryElement element) sync* {
+  Iterable<Element> elementsOf(LibraryElement element) sync* {
     for (var cu in element.units) {
       yield* cu.enums;
       yield* cu.classes;
+      yield* cu.typeAliases;
     }
   }
 

@@ -15,13 +15,10 @@ abstract class MapperElement<T extends InterfaceElement> {
 
   MapperElement(this.parent, this.element, this.options);
 
-  late T targetElement = element;
   late String className = element.name;
   late String uniqueClassName = className;
 
-  late String targetClassName = targetElement.name;
-  late String prefixedClassName =
-      parent.prefixOfElement(targetElement) + targetClassName;
+  late String prefixedClassName = parent.prefixOfElement(element) + className;
 
   late String mapperName = '${uniqueClassName}Mapper';
 

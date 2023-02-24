@@ -6,9 +6,9 @@ import 'package:meta/meta.dart';
 import 'package:type_plus/src/types_registry.dart' show TypeRegistry;
 import 'package:type_plus/type_plus.dart' hide typeOf;
 
+import 'mapper_exception.dart';
 import 'mappers/default_mappers.dart';
 import 'mappers/mapper_base.dart';
-import 'mapper_exception.dart';
 
 class EncodingOptions {
   EncodingOptions({this.includeTypeId});
@@ -167,12 +167,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     if (_cachedTypeMappers[baseType] != null) {
       return _cachedTypeMappers[baseType];
     }
-    var mapper = _mappers[baseType] ??
-        _mappers.values.where((m) => m.implType.base == baseType).firstOrNull ??
-        _inheritedMappers[baseType] ??
-        _inheritedMappers.values
-            .where((m) => m.implType.base == baseType)
-            .firstOrNull;
+    var mapper = _mappers[baseType] ?? _inheritedMappers[baseType];
 
     if (mapper != null) {
       _cachedTypeMappers[baseType] = mapper;
@@ -225,7 +220,8 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     var mapper = _mapperForType(type);
     if (mapper != null) {
       try {
-        return mapper.decoder(DecodingContext(value, container: this, args: type.args)) as T;
+        return mapper.decoder(
+            DecodingContext(value, container: this, args: type.args)) as T;
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
           MapperException.chain(MapperMethod.decode, '($type)', e),
@@ -249,8 +245,8 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
 
         var includeTypeId = options?.includeTypeId;
         includeTypeId ??= (value.runtimeType != type.nonNull &&
-              value.runtimeType.base != UnresolvedType) && (value is! Map && value is! Iterable) && (mapper.implType == mapper.type ||
-              value.runtimeType != mapper.implType);
+                value.runtimeType.base != UnresolvedType) &&
+            (value is! Map && value is! Iterable);
 
         if (includeTypeId) {
           typeId = value.runtimeType.id;
@@ -264,7 +260,8 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
           typeArgs = fallback;
         }
 
-        var result = mapper.encoder(EncodingContext<Object>(value, container: this, args: typeArgs));
+        var result = mapper.encoder(
+            EncodingContext<Object>(value, container: this, args: typeArgs));
 
         if (result is Map<String, dynamic> && typeId != null) {
           result['__type'] = typeId;

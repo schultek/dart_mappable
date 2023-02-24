@@ -11,16 +11,16 @@ import 'other/other.dart' as o;
 part 'lib_mapping_test.mapper.dart';
 
 @MappableClass()
-class Cake = f.Cake with CakeMappable;
+typedef Cake = f.Cake;
 
 @MappableClass()
-class Person2 = m.Person with Person2Mappable;
+typedef Person2 = m.Person;
 
 @MappableClass(discriminatorKey: 'type')
-abstract class Animal = o.Animal with AnimalMappable;
+typedef Animal = o.Animal;
 
 @MappableClass()
-class Pet = o.Pet with PetMappable implements Animal;
+typedef Pet = o.Pet;
 
 @MappableClass()
 class Person with PersonMappable {
@@ -45,12 +45,14 @@ void main() {
       );
 
       expect(
-        AnimalMapper.fromMap({
-          'type': 'Pet',
-          'owner': {'first_name': 'Clara'},
-          'color': 'Buddy',
-        }),
-        equals(Pet(Person2('Clara'), 'Buddy')),
+        MapperContainer.globals.isEqual(
+            AnimalMapper.fromMap({
+              'type': 'Pet',
+              'owner': {'first_name': 'Clara'},
+              'color': 'Buddy',
+            }),
+            Pet(Person2('Clara'), 'Buddy')),
+        isTrue,
       );
     });
   });

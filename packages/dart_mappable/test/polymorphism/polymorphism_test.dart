@@ -69,7 +69,7 @@ void main() {
       expect((myPet as DefaultAnimal).type, equals('Bear'));
     });
 
-    test('Encode wrapped', skip: true, () {
+    test('Encode wrapped', () {
       var zoo = Zoo(Dog(2), null, null);
       expect(
         zoo.toMap(),

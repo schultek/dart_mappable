@@ -202,10 +202,10 @@ abstract class ClassMapperElement extends MapperElement<ClassElement> {
     return null;
   }
 
-  late ConstructorElement? constructor = targetElement.constructors
+  late ConstructorElement? constructor = element.constructors
           .where((c) => !c.isPrivate && constructorChecker.hasAnnotationOf(c))
           .firstOrNull ??
-      targetElement.constructors
+      element.constructors
           .where((c) => !c.isPrivate && !classChecker.hasAnnotationOf(c))
           .firstOrNull;
 
@@ -226,8 +226,8 @@ abstract class ClassMapperElement extends MapperElement<ClassElement> {
 
   late Future<String?> discriminatorValueCode = () async {
     return (await getAnnotationNode(
-                annotatedElement, MappableClass, 'discriminatorValue'))
-            ?.toSource();
+            annotatedElement, MappableClass, 'discriminatorValue'))
+        ?.toSource();
   }();
 
   late String? hookForClass = () {
@@ -288,7 +288,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement> {
   late bool hasCallableConstructor = constructor != null &&
       !(isAbstract && constructor!.redirectedConstructor == null);
 
-  late bool isAbstract = targetElement.isAbstract;
+  late bool isAbstract = element.isAbstract;
 
   late String typeParams = element.typeParameters.isNotEmpty
       ? '<${element.typeParameters.map((p) => p.name).join(', ')}>'
