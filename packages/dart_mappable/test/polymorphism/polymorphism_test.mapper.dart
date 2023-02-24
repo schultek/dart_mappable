@@ -482,31 +482,34 @@ class ZooMapperElement extends MapperElementBase<Zoo> {
   Function get decoder => decode;
   Zoo decode(dynamic v) =>
       checkedType(v, (Map<String, dynamic> map) => fromMap(map));
-  Zoo fromMap(Map<String, dynamic> map) => Zoo(container.$get(map, 'animal'),
-      container.$get(map, 'animals'), container.$get(map, 'animals2'));
+  Zoo fromMap(Map<String, dynamic> map) => Zoo(container.$getOpt(map, 'animal'),
+      container.$getOpt(map, 'animals'), container.$getOpt(map, 'animalsMap'));
 
   @override
   Function get encoder => encode;
   dynamic encode(Zoo v) => toMap(v);
   Map<String, dynamic> toMap(Zoo z) => {
-        'animal': container.$enc(z.animal, 'animal'),
-        'animals': container.$enc(z.animals, 'animals'),
-        'animals2': container.$enc(z.animals2, 'animals2')
+        if (container.$enc(z.animal, 'animal') != null)
+          'animal': container.$enc(z.animal, 'animal'),
+        if (container.$enc(z.animals, 'animals') != null)
+          'animals': container.$enc(z.animals, 'animals'),
+        if (container.$enc(z.animalsMap, 'animalsMap') != null)
+          'animalsMap': container.$enc(z.animalsMap, 'animalsMap')
       };
 
   @override
   String stringify(Zoo self) =>
-      'Zoo(animal: ${container.asString(self.animal)}, animals: ${container.asString(self.animals)}, animals2: ${container.asString(self.animals2)})';
+      'Zoo(animal: ${container.asString(self.animal)}, animals: ${container.asString(self.animals)}, animalsMap: ${container.asString(self.animalsMap)})';
   @override
   int hash(Zoo self) =>
       container.hash(self.animal) ^
       container.hash(self.animals) ^
-      container.hash(self.animals2);
+      container.hash(self.animalsMap);
   @override
   bool equals(Zoo self, Zoo other) =>
       container.isEqual(self.animal, other.animal) &&
       container.isEqual(self.animals, other.animals) &&
-      container.isEqual(self.animals2, other.animals2);
+      container.isEqual(self.animalsMap, other.animalsMap);
 }
 
 mixin ZooMappable {
@@ -536,12 +539,12 @@ abstract class ZooCopyWith<$R, $In extends Zoo, $Out extends Zoo>
     implements ObjectCopyWith<$R, $In, $Out> {
   ZooCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Zoo>(
       Then<Zoo, $Out2> t, Then<$Out2, $R2> t2);
-  AnimalCopyWith<$R, Animal, Animal> get animal;
-  ListCopyWith<$R, Animal, AnimalCopyWith<$R, Animal, Animal>> get animals;
-  MapCopyWith<$R, String, Animal, AnimalCopyWith<$R, Animal, Animal>>
-      get animals2;
+  AnimalCopyWith<$R, Animal, Animal>? get animal;
+  ListCopyWith<$R, Animal, AnimalCopyWith<$R, Animal, Animal>>? get animals;
+  MapCopyWith<$R, String, Animal, AnimalCopyWith<$R, Animal, Animal>>?
+      get animalsMap;
   $R call(
-      {Animal? animal, List<Animal>? animals, Map<String, Animal>? animals2});
+      {Animal? animal, List<Animal>? animals, Map<String, Animal>? animalsMap});
 }
 
 class _ZooCopyWithImpl<$R, $Out extends Zoo> extends CopyWithBase<$R, Zoo, $Out>
@@ -553,25 +556,29 @@ class _ZooCopyWithImpl<$R, $Out extends Zoo> extends CopyWithBase<$R, Zoo, $Out>
       _ZooCopyWithImpl($value, t, t2);
 
   @override
-  AnimalCopyWith<$R, Animal, Animal> get animal =>
-      $value.animal.copyWith.chain($identity, (v) => call(animal: v));
+  AnimalCopyWith<$R, Animal, Animal>? get animal =>
+      $value.animal?.copyWith.chain($identity, (v) => call(animal: v));
   @override
-  ListCopyWith<$R, Animal, AnimalCopyWith<$R, Animal, Animal>> get animals =>
-      ListCopyWith(
-          $value.animals,
-          (v, t) => v.copyWith.chain<$R, Animal>($identity, t),
-          (v) => call(animals: v));
+  ListCopyWith<$R, Animal, AnimalCopyWith<$R, Animal, Animal>>? get animals =>
+      $value.animals != null
+          ? ListCopyWith(
+              $value.animals!,
+              (v, t) => v.copyWith.chain<$R, Animal>($identity, t),
+              (v) => call(animals: v))
+          : null;
   @override
-  MapCopyWith<$R, String, Animal, AnimalCopyWith<$R, Animal, Animal>>
-      get animals2 => MapCopyWith(
-          $value.animals2,
-          (v, t) => v.copyWith.chain<$R, Animal>($identity, t),
-          (v) => call(animals2: v));
+  MapCopyWith<$R, String, Animal, AnimalCopyWith<$R, Animal, Animal>>?
+      get animalsMap => $value.animalsMap != null
+          ? MapCopyWith(
+              $value.animalsMap!,
+              (v, t) => v.copyWith.chain<$R, Animal>($identity, t),
+              (v) => call(animalsMap: v))
+          : null;
   @override
   $R call(
-          {Animal? animal,
-          List<Animal>? animals,
-          Map<String, Animal>? animals2}) =>
-      $then(Zoo(animal ?? $value.animal, animals ?? $value.animals,
-          animals2 ?? $value.animals2));
+          {Object? animal = $none,
+          Object? animals = $none,
+          Object? animalsMap = $none}) =>
+      $then(Zoo(or(animal, $value.animal), or(animals, $value.animals),
+          or(animalsMap, $value.animalsMap)));
 }

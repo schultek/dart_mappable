@@ -33,13 +33,13 @@ class DefaultAnimal extends Animal with DefaultAnimalMappable {
   DefaultAnimal(String name, this.type) : super(name);
 }
 
-@MappableClass()
+@MappableClass(ignoreNull: true)
 class Zoo with ZooMappable {
-  Animal animal;
-  List<Animal> animals;
-  Map<String, Animal> animals2;
+  Animal? animal;
+  List<Animal>? animals;
+  Map<String, Animal>? animalsMap;
 
-  Zoo(this.animal, this.animals, this.animals2);
+  Zoo(this.animal, this.animals, this.animalsMap);
 }
 
 void main() {
@@ -67,6 +67,16 @@ void main() {
       Animal myPet = AnimalMapper.fromJson('{"name":"Kobi","type":"Bear"}');
       expect(myPet, isA<DefaultAnimal>());
       expect((myPet as DefaultAnimal).type, equals('Bear'));
+    });
+
+    test('Encode wrapped', skip: true, () {
+      var zoo = Zoo(Dog(2), null, null);
+      expect(
+        zoo.toMap(),
+        equals({
+          'animal': {'age': 2, 'type': 1}
+        }),
+      );
     });
   });
 }
