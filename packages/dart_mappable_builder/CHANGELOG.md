@@ -1,3 +1,7 @@
+# 2.0.2
+
+- Fixed an analysis error when using core interfaces.
+
 # 2.0.1
 
 - Fixed generated container for private libraries.
