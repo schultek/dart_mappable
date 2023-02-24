@@ -22,11 +22,13 @@ late Resolver nodeResolver;
 
 extension GetNode on Element {
   Future<AstNode?> getNode() {
-    return nodeResolver.astNodeFor(this, resolve: false);
+    return nodeResolver
+        .astNodeFor(this, resolve: false)
+        .catchError((_) => null);
   }
 
   Future<AstNode?> getResolvedNode() async {
-    return nodeResolver.astNodeFor(this, resolve: true);
+    return nodeResolver.astNodeFor(this, resolve: true).catchError((_) => null);
   }
 }
 
