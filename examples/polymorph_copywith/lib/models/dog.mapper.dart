@@ -5,13 +5,12 @@
 
 part of 'dog.dart';
 
-class DogMapper extends DiscriminatorSubClassMapperBase<Dog> {
+class DogMapper extends SubClassMapperBase<Dog> {
   DogMapper._();
   static DogMapper? _instance;
   static DogMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = DogMapper._());
-      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
       PersonMapper.ensureInitialized();
     }
     return _instance!;
@@ -38,7 +37,10 @@ class DogMapper extends DiscriminatorSubClassMapperBase<Dog> {
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = 1;
+  @override
+  final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Dog _instantiate(DecodingData data) {
     return Dog(data.get(#name), data.get(#age), data.get(#owner));

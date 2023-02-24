@@ -497,13 +497,12 @@ abstract class ItemListCopyWith<$R, $In extends ItemList<T>,
   $R call({List<T>? items});
 }
 
-class BrandListMapper extends DiscriminatorSubClassMapperBase<BrandList> {
+class BrandListMapper extends SubClassMapperBase<BrandList> {
   BrandListMapper._();
   static BrandListMapper? _instance;
   static BrandListMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = BrandListMapper._());
-      ItemListMapper.ensureInitialized().addSubMapper(_instance!);
       BrandMapper.ensureInitialized();
     }
     return _instance!;
@@ -526,7 +525,10 @@ class BrandListMapper extends DiscriminatorSubClassMapperBase<BrandList> {
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = 'BrandList';
+  @override
+  final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
   static BrandList _instantiate(DecodingData data) {
     return BrandList(data.get(#brands));
@@ -610,14 +612,12 @@ class _BrandListCopyWithImpl<$R, $Out extends ItemList>
   $R call({Object? items = $none}) => $then(BrandList(or(items, $value.items)));
 }
 
-class NamedItemListMapper
-    extends DiscriminatorSubClassMapperBase<NamedItemList> {
+class NamedItemListMapper extends SubClassMapperBase<NamedItemList> {
   NamedItemListMapper._();
   static NamedItemListMapper? _instance;
   static NamedItemListMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = NamedItemListMapper._());
-      ItemListMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -645,7 +645,10 @@ class NamedItemListMapper
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = 'NamedItemList';
+  @override
+  final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
   static NamedItemList<T> _instantiate<T>(DecodingData data) {
     return NamedItemList(data.get(#name), data.get(#items));
@@ -732,14 +735,12 @@ class _NamedItemListCopyWithImpl<$R, $Out extends ItemList, T>
       $then(NamedItemList(name ?? $value.name, or(items, $value.items)));
 }
 
-class KeyedItemListMapper
-    extends DiscriminatorSubClassMapperBase<KeyedItemList> {
+class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
   KeyedItemListMapper._();
   static KeyedItemListMapper? _instance;
   static KeyedItemListMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = KeyedItemListMapper._());
-      ItemListMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -768,7 +769,15 @@ class KeyedItemListMapper
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = 'KeyedItemList';
+  @override
+  final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
+
+  @override
+  DecodingContext<Object> inherit(DecodingContext<Object> context) {
+    return context.inherit(args: [dynamic, context.arg(0)]);
+  }
 
   static KeyedItemList<K, T> _instantiate<K, T>(DecodingData data) {
     return KeyedItemList(data.get(#key), data.get(#items));
@@ -859,15 +868,13 @@ class _KeyedItemListCopyWithImpl<$R, $Out extends ItemList, K, T>
       $then(KeyedItemList(key ?? $value.key, or(items, $value.items)));
 }
 
-class ComparableItemListMapper
-    extends DiscriminatorSubClassMapperBase<ComparableItemList> {
+class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
   ComparableItemListMapper._();
   static ComparableItemListMapper? _instance;
   static ComparableItemListMapper ensureInitialized() {
     if (_instance == null) {
       MapperBase.addType<Comparable>();
       MapperContainer.globals.use(_instance = ComparableItemListMapper._());
-      ItemListMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -895,7 +902,10 @@ class ComparableItemListMapper
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = 'ComparableItemList';
+  @override
+  final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
   static ComparableItemList<T> _instantiate<T extends Comparable<dynamic>>(
       DecodingData data) {

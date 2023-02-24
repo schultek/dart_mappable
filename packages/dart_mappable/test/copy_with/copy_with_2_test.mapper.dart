@@ -54,13 +54,12 @@ abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal>
   $R call({String? name});
 }
 
-class CatMapper extends DiscriminatorSubClassMapperBase<Cat> {
+class CatMapper extends SubClassMapperBase<Cat> {
   CatMapper._();
   static CatMapper? _instance;
   static CatMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = CatMapper._());
-      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -84,7 +83,10 @@ class CatMapper extends DiscriminatorSubClassMapperBase<Cat> {
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = 'Cat';
+  @override
+  final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Cat _instantiate(DecodingData data) {
     return Cat(data.get(#name), data.get(#color));
@@ -132,13 +134,12 @@ class _CatCopyWithImpl<$R, $Out extends Animal>
       $then(Cat(name ?? $value.name, color ?? $value.color));
 }
 
-class DogMapper extends DiscriminatorSubClassMapperBase<Dog> {
+class DogMapper extends SubClassMapperBase<Dog> {
   DogMapper._();
   static DogMapper? _instance;
   static DogMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = DogMapper._());
-      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -160,7 +161,10 @@ class DogMapper extends DiscriminatorSubClassMapperBase<Dog> {
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = 'Dog';
+  @override
+  final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Dog _instantiate(DecodingData data) {
     return Dog(data.get(#name));

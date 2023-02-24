@@ -52,10 +52,28 @@ class DecoderGenerator {
   }
 
   Future<String> generateDiscriminatorFields() async {
+    var prefix =
+        element.parent.prefixOfElement(element.superTarget!.annotatedElement);
+
     return '\n'
         '  @override\n'
         "  final String discriminatorKey = '${element.superTarget!.discriminatorKey ?? 'type'}';\n"
-        '  final dynamic discriminatorValue = ${(await element.discriminatorValueCode) ?? "'${element.className}'"};\n';
+        '  @override\n'
+        '  final dynamic discriminatorValue = ${(await element.discriminatorValueCode) ?? "'${element.className}'"};\n'
+        '  @override\n'
+        '  final ClassMapperBase superMapper = $prefix${element.superTarget!.mapperName}.ensureInitialized();\n';
+  }
+
+  String generateInheritOverride() {
+    var args = element.inheritedTypeArgs;
+    if (args == null) {
+      return '';
+    }
+    return '\n'
+        '  @override\n'
+        '  DecodingContext<Object> inherit(DecodingContext<Object> context) {\n'
+        '    return context.inherit(args: [${args.join(', ')}]);\n'
+        '  }';
   }
 
   Future<String> _generateConstructorCall() async {

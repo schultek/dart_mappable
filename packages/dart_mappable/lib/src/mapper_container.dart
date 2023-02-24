@@ -244,9 +244,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
         String? typeId;
 
         var includeTypeId = options?.includeTypeId;
-        includeTypeId ??= (value.runtimeType != type.nonNull &&
-                value.runtimeType.base != UnresolvedType) &&
-            (value is! Map && value is! Iterable);
+        includeTypeId ??= mapper.includeTypeId<T>(value);
 
         if (includeTypeId) {
           typeId = value.runtimeType.id;

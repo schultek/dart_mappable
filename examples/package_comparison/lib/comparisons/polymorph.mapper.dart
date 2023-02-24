@@ -64,13 +64,12 @@ abstract class AnimalBCopyWith<$R, $In extends AnimalB, $Out extends AnimalB>
   $R call({String? name});
 }
 
-class CatBMapper extends DiscriminatorSubClassMapperBase<CatB> {
+class CatBMapper extends SubClassMapperBase<CatB> {
   CatBMapper._();
   static CatBMapper? _instance;
   static CatBMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = CatBMapper._());
-      AnimalBMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -94,7 +93,10 @@ class CatBMapper extends DiscriminatorSubClassMapperBase<CatB> {
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = 'CatB';
+  @override
+  final ClassMapperBase superMapper = AnimalBMapper.ensureInitialized();
 
   static CatB _instantiate(DecodingData data) {
     return CatB(data.get(#name), data.get(#color));
@@ -171,13 +173,12 @@ class _CatBCopyWithImpl<$R, $Out extends AnimalB>
       $then(CatB(name ?? $value.name, color ?? $value.color));
 }
 
-class DogBMapper extends DiscriminatorSubClassMapperBase<DogB> {
+class DogBMapper extends SubClassMapperBase<DogB> {
   DogBMapper._();
   static DogBMapper? _instance;
   static DogBMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = DogBMapper._());
-      AnimalBMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -201,7 +202,10 @@ class DogBMapper extends DiscriminatorSubClassMapperBase<DogB> {
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = 'dog';
+  @override
+  final ClassMapperBase superMapper = AnimalBMapper.ensureInitialized();
 
   static DogB _instantiate(DecodingData data) {
     return DogB(data.get(#name), data.get(#age));

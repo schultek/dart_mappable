@@ -59,13 +59,12 @@ abstract class ACopyWith<$R, $In extends A, $Out extends A>
   $R call();
 }
 
-class BMapper extends DiscriminatorSubClassMapperBase<B> {
+class BMapper extends SubClassMapperBase<B> {
   BMapper._();
   static BMapper? _instance;
   static BMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = BMapper._());
-      AMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -83,7 +82,10 @@ class BMapper extends DiscriminatorSubClassMapperBase<B> {
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = B.checkType;
+  @override
+  final ClassMapperBase superMapper = AMapper.ensureInitialized();
 
   static B _instantiate(DecodingData data) {
     return B();
@@ -157,13 +159,12 @@ class _BCopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, B, $Out>
   $R call() => $then(B());
 }
 
-class CMapper extends DiscriminatorSubClassMapperBase<C> {
+class CMapper extends SubClassMapperBase<C> {
   CMapper._();
   static CMapper? _instance;
   static CMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = CMapper._());
-      AMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -181,7 +182,10 @@ class CMapper extends DiscriminatorSubClassMapperBase<C> {
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = C.checkType;
+  @override
+  final ClassMapperBase superMapper = AMapper.ensureInitialized();
 
   static C _instantiate(DecodingData data) {
     return C();

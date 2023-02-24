@@ -36,7 +36,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     var isSubClass = await target.isDiscriminatingSubclass;
 
     output.write(
-        'class ${target.mapperName} extends ${isSubClass ? 'DiscriminatorSub' : ''}ClassMapperBase<${target.prefixedClassName}> {\n'
+        'class ${target.mapperName} extends ${isSubClass ? 'Sub' : ''}ClassMapperBase<${target.prefixedClassName}> {\n'
         '  ${target.mapperName}._();\n'
         '  static ${target.mapperName}? _instance;\n'
         '  static ${target.mapperName} ensureInitialized() {\n'
@@ -57,13 +57,6 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
       for (var t in customMappers) {
         output.write('      MapperContainer.globals.use($t);\n');
       }
-    }
-
-    if (isSubClass) {
-      var prefix =
-          target.parent.prefixOfElement(target.superTarget!.annotatedElement);
-      output.write(
-          '      $prefix${target.superTarget!.mapperName}.ensureInitialized().addSubMapper(_instance!);\n');
     }
 
     var linked = target.linkedElements;
@@ -118,6 +111,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
 
     if (isSubClass) {
       output.write(await decoderGen.generateDiscriminatorFields());
+      output.write(decoderGen.generateInheritOverride());
     }
 
     output.write(await decoderGen.generateInstantiateMethod());

@@ -65,13 +65,12 @@ abstract class UnionCopyWith<$R, $In extends Union, $Out extends Union>
   $R call();
 }
 
-class DataMapper extends DiscriminatorSubClassMapperBase<Data> {
+class DataMapper extends SubClassMapperBase<Data> {
   DataMapper._();
   static DataMapper? _instance;
   static DataMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = DataMapper._());
-      UnionMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -93,7 +92,10 @@ class DataMapper extends DiscriminatorSubClassMapperBase<Data> {
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = 'data';
+  @override
+  final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
 
   static Data _instantiate(DecodingData data) {
     return Data(data.get(#value));
@@ -121,13 +123,12 @@ extension DataMapperExtension on Data {
   }
 }
 
-class LoadingMapper extends DiscriminatorSubClassMapperBase<Loading> {
+class LoadingMapper extends SubClassMapperBase<Loading> {
   LoadingMapper._();
   static LoadingMapper? _instance;
   static LoadingMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = LoadingMapper._());
-      UnionMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -149,7 +150,10 @@ class LoadingMapper extends DiscriminatorSubClassMapperBase<Loading> {
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = 'loading';
+  @override
+  final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
 
   static Loading _instantiate(DecodingData data) {
     return Loading(data.get(#value));
@@ -177,13 +181,12 @@ extension LoadingMapperExtension on Loading {
   }
 }
 
-class ErrorDetailsMapper extends DiscriminatorSubClassMapperBase<ErrorDetails> {
+class ErrorDetailsMapper extends SubClassMapperBase<ErrorDetails> {
   ErrorDetailsMapper._();
   static ErrorDetailsMapper? _instance;
   static ErrorDetailsMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ErrorDetailsMapper._());
-      UnionMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -207,7 +210,10 @@ class ErrorDetailsMapper extends DiscriminatorSubClassMapperBase<ErrorDetails> {
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = 'error';
+  @override
+  final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
 
   static ErrorDetails _instantiate(DecodingData data) {
     return ErrorDetails(data.get(#value), data.get(#message));

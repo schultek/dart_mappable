@@ -5,13 +5,12 @@
 
 part of 'cat.dart';
 
-class CatMapper extends DiscriminatorSubClassMapperBase<Cat> {
+class CatMapper extends SubClassMapperBase<Cat> {
   CatMapper._();
   static CatMapper? _instance;
   static CatMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = CatMapper._());
-      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
       CatTypeMapper.ensureInitialized();
     }
     return _instance!;
@@ -38,7 +37,10 @@ class CatMapper extends DiscriminatorSubClassMapperBase<Cat> {
 
   @override
   final String discriminatorKey = 'type';
+  @override
   final dynamic discriminatorValue = 'Cat';
+  @override
+  final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Cat _instantiate(DecodingData data) {
     return Cat(data.get(#name), data.get(#breed), data.get(#color));

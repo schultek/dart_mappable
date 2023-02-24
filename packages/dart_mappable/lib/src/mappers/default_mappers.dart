@@ -6,7 +6,8 @@ import 'mapper_base.dart';
 import 'mapper_mixins.dart';
 import 'simple_mapper.dart';
 
-class PrimitiveMapper<T extends Object> extends MapperBase<T> with PrimitiveMethodsMixin<T> {
+class PrimitiveMapper<T extends Object> extends MapperBase<T>
+    with PrimitiveMethodsMixin<T> {
   const PrimitiveMapper([T Function(Object value)? decoder, this.exactType])
       : _decoder = decoder ?? _cast<T>;
 
@@ -47,8 +48,7 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
     } else if (value is num) {
       return DateTime.fromMillisecondsSinceEpoch(value.round());
     } else {
-      throw MapperException.unexpectedType(
-          value.runtimeType, 'String or num');
+      throw MapperException.unexpectedType(value.runtimeType, 'String or num');
     }
   }
 
@@ -67,6 +67,9 @@ class IterableMapper<I extends Iterable> extends MapperBase<I>
 
   @override
   final Function typeFactory;
+
+  @override
+  bool includeTypeId<V>(v) => false;
 
   @override
   I decoder(DecodingContext context) {
@@ -99,6 +102,9 @@ class MapMapper<M extends Map> extends MapperBase<M>
   Map<K, V> Function<K, V>(Map<K, V> map) fromMap;
   @override
   final Function typeFactory;
+
+  @override
+  bool includeTypeId<V>(v) => false;
 
   @override
   M decoder(DecodingContext context) {
@@ -144,6 +150,9 @@ class SerializableMapper<T extends Object, V extends Object>
 
   @override
   late Function typeFactory;
+
+  @override
+  bool includeTypeId<W>(v) => MapperBase.matchesStaticType<W>(v);
 
   SerializableMapper({
     required T Function(V) decode,

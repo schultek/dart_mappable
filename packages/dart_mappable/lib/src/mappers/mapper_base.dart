@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:type_plus/type_plus.dart';
 
 import '../annotations.dart';
@@ -21,6 +22,11 @@ abstract class MapperBase<T extends Object> {
   Type get type => T;
 
   bool isFor(dynamic v) => v is T;
+  bool includeTypeId<V>(dynamic v) => false;
+
+  static bool matchesStaticType<V>(dynamic v) {
+    return v.runtimeType != V.nonNull && v.runtimeType.base != UnresolvedType;
+  }
 
   T decoder(DecodingContext<Object> context) =>
       throw MapperException.unsupportedMethod(MapperMethod.decode, type);
@@ -114,6 +120,14 @@ class MappingContext<V extends Object?> {
     }
     return MappingContext<$V>(value, container: container, args: args);
   }
+
+  Type arg(int index, [List<int> argIndices = const []]) {
+    var a = args[index];
+    if (argIndices.isNotEmpty) {
+      a = argIndices.fold(a, (a, i) => a.args.elementAtOrNull(i) ?? dynamic);
+    }
+    return a;
+  }
 }
 
 class DecodingContext<V extends Object?> extends MappingContext<V> {
@@ -122,9 +136,13 @@ class DecodingContext<V extends Object?> extends MappingContext<V> {
   DecodingContext(super.value,
       {super.container, super.args, this.inherited = false});
 
-  DecodingContext<V> inherit({MapperContainer? container}) {
-    return DecodingContext<V>(value,
-        container: container ?? this.container, args: args, inherited: true);
+  DecodingContext<V> inherit({MapperContainer? container, List<Type>? args}) {
+    return DecodingContext<V>(
+      value,
+      container: container ?? this.container,
+      args: args ?? this.args,
+      inherited: true,
+    );
   }
 
   T wrap<T>(Decoder<Object?, T> decoder,

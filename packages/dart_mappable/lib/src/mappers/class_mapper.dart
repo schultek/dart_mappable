@@ -1,3 +1,5 @@
+import 'package:type_plus/type_plus.dart';
+
 import '../annotations.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
@@ -15,21 +17,22 @@ class DecodingData<T extends Object> {
   }
 }
 
-abstract class DiscriminatorSubClassMapperBase<T extends Object>
-    extends SubClassMapperBase<T> {
+abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
+  SubClassMapperBase() {
+    superMapper.addSubMapper(this);
+  }
+
   String get discriminatorKey;
   dynamic get discriminatorValue;
+  ClassMapperBase get superMapper;
 
-  @override
   bool canDecode(DecodingContext<Map<String, dynamic>> context) {
     var value = discriminatorValue;
     if (identical(value, MappingFlags.useAsDefault)) {
       return true;
     } else if (value is Function) {
       if (value is bool Function(Map<String, dynamic>)) {
-        if (value(context.value)) {
-          return true;
-        }
+        return value(context.value);
       } else {
         throw AssertionError(
             'Discriminator function must be of type "bool Function(Map<String, dynamic>)".');
@@ -37,19 +40,42 @@ abstract class DiscriminatorSubClassMapperBase<T extends Object>
     } else if (value == context.value[discriminatorKey]) {
       return true;
     }
+
+    if (_subMappers.isNotEmpty) {
+      for (var m in _subMappers) {
+        if (m.discriminatorKey == discriminatorKey && m.canDecode(context)) {
+          return true;
+        }
+      }
+    }
+    if (_defaultSubMapper != null &&
+        _defaultSubMapper!.discriminatorKey == discriminatorKey) {
+      return true;
+    }
+
     return false;
   }
 
-  late final bool shouldEncodeDiscriminatorParam = () {
+  late final bool _shouldEncodeDiscriminatorParam = () {
     return _params.every((p) => p.key != discriminatorKey) &&
         !identical(discriminatorValue, MappingFlags.useAsDefault) &&
         discriminatorValue is! Function;
   }();
-}
 
-abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
-  bool canDecode(DecodingContext<Map<String, dynamic>> context) {
-    return false;
+  @override
+  // ignore: overridden_fields
+  late final Map<String, dynamic> _encodedStaticParams = {
+    ...?superMapper._encodedStaticParams,
+    if (_shouldEncodeDiscriminatorParam) discriminatorKey: discriminatorValue
+  };
+
+  @override
+  bool includeTypeId<V>(v) {
+    // Skip type id for non-generic poly types.
+    if (V == superMapper.type && V == superMapper.type.base) {
+      return false;
+    }
+    return super.includeTypeId<V>(v) && superMapper.includeTypeId<V>(v);
   }
 }
 
@@ -63,9 +89,16 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
   SubClassMapperBase<T>? _defaultSubMapper;
   final Set<SubClassMapperBase<T>> _subMappers = {};
 
+  @override
+  bool includeTypeId<V>(v) => MapperBase.matchesStaticType<V>(v);
+
+  DecodingContext<Object> inherit(DecodingContext<Object> context) {
+    return context.inherit();
+  }
+
   void addSubMapper(SubClassMapperBase<T> mapper) {
-    if (mapper is DiscriminatorSubClassMapperBase<T> &&
-        identical(mapper.discriminatorValue, MappingFlags.useAsDefault)) {
+    assert(identical(mapper.superMapper, this));
+    if (identical(mapper.discriminatorValue, MappingFlags.useAsDefault)) {
       assert(_defaultSubMapper == null,
           'Cannot have multiple default mappers for a polymorphic class.');
       _defaultSubMapper = mapper;
@@ -89,29 +122,28 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
         if (_subMappers.isNotEmpty) {
           for (var m in _subMappers) {
             if (m.canDecode(c2)) {
-              return m.decoder(c2.inherit());
+              return m.decoder(m.inherit(c2));
             }
           }
         }
         if (_defaultSubMapper != null) {
-          return _defaultSubMapper!.decoder(c2.inherit());
+          return _defaultSubMapper!.decoder(_defaultSubMapper!.inherit(c2));
         }
         return c.callWith(instantiate, DecodingData<T>(c.checked(), this));
       });
     });
   }
 
+  final Map<String, dynamic>? _encodedStaticParams = null;
+
   @override
   Object? encoder(EncodingContext<Object> context) {
     return context.checked<T>().wrap(hook: superHook, (c) {
       return c.wrap(hook: hook, (c) {
-        var $this = this;
         return {
           for (var f in _params)
             if (!ignoreNull || f.get(c.value) != null) f.key: f.encode(c),
-          if ($this is DiscriminatorSubClassMapperBase<T> &&
-              $this.shouldEncodeDiscriminatorParam)
-            $this.discriminatorKey: $this.discriminatorValue
+          ...?_encodedStaticParams,
         };
       });
     });
