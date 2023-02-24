@@ -75,6 +75,10 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
 
     output.write('    }\n'
         '    return _instance!;\n'
+        '  }\n'
+        '  static T _guard<T>(T Function(MapperContainer) fn) {\n'
+        '    ensureInitialized();\n'
+        '    return fn(MapperContainer.globals);\n'
         '  }');
 
     output.write('\n'
@@ -121,12 +125,10 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     if (target.shouldGenerate(GenerateMethods.decode)) {
       output.write('\n'
           '  static ${target.prefixedDecodingClassName}${target.typeParams} fromMap${target.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
-          '    ensureInitialized();\n'
-          '    return MapperContainer.globals.fromMap<${target.prefixedDecodingClassName}${target.typeParams}>(map);\n'
+          '    return _guard((c) => c.fromMap<${target.prefixedDecodingClassName}${target.typeParams}>(map));\n'
           '  }\n'
           '  static ${target.prefixedDecodingClassName}${target.typeParams} fromJson${target.typeParamsDeclaration}(String json) {\n'
-          '    ensureInitialized();\n'
-          '    return MapperContainer.globals.fromJson<${target.prefixedDecodingClassName}${target.typeParams}>(json);\n'
+          '    return _guard((c) => c.fromJson<${target.prefixedDecodingClassName}${target.typeParams}>(json));\n'
           '  }\n');
     }
 

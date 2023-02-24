@@ -15,6 +15,12 @@ class PersonMapper extends ClassMapperBase<Person> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Person';
 
@@ -32,63 +38,80 @@ class PersonMapper extends ClassMapperBase<Person> {
   static Person _instantiate(DecodingData data) {
     return Person(data.get(#name), age: data.get(#age), car: data.get(#car));
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static Person fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Person>(map);
+    return _guard((c) => c.fromMap<Person>(map));
   }
+
   static Person fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Person>(json);
+    return _guard((c) => c.fromJson<Person>(json));
   }
 }
 
 mixin PersonMappable {
   String toJson() {
-    PersonMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as Person);
+    return PersonMapper._guard((c) => c.toJson(this as Person));
   }
+
   Map<String, dynamic> toMap() {
-    PersonMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as Person);
+    return PersonMapper._guard((c) => c.toMap(this as Person));
   }
-  PersonCopyWith<Person, Person, Person> get copyWith => _PersonCopyWithImpl(this as Person, $identity, $identity);
+
+  PersonCopyWith<Person, Person, Person> get copyWith =>
+      _PersonCopyWithImpl(this as Person, $identity, $identity);
   @override
   String toString() {
-    PersonMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return PersonMapper._guard((c) => c.asString(this));
   }
+
   @override
   bool operator ==(Object other) {
-    PersonMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            PersonMapper._guard((c) => c.isEqual(this, other)));
   }
+
   @override
   int get hashCode {
-    PersonMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return PersonMapper._guard((c) => c.hash(this));
   }
 }
 
-extension PersonValueCopy<$R, $Out extends Person> on ObjectCopyWith<$R, Person, $Out> {
-  PersonCopyWith<$R, Person, $Out> get asPerson => base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
+extension PersonValueCopy<$R, $Out extends Person>
+    on ObjectCopyWith<$R, Person, $Out> {
+  PersonCopyWith<$R, Person, $Out> get asPerson =>
+      base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
 }
 
 typedef PersonCopyWithBound = Person;
-abstract class PersonCopyWith<$R, $In extends Person, $Out extends Person> implements ObjectCopyWith<$R, $In, $Out> {
-  PersonCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Person>(Then<Person, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class PersonCopyWith<$R, $In extends Person, $Out extends Person>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  PersonCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Person>(
+      Then<Person, $Out2> t, Then<$Out2, $R2> t2);
   CarCopyWith<$R, Car, Car>? get car;
   $R call({String? name, int? age, Car? car});
 }
 
-class _PersonCopyWithImpl<$R, $Out extends Person> extends CopyWithBase<$R, Person, $Out> implements PersonCopyWith<$R, Person, $Out> {
+class _PersonCopyWithImpl<$R, $Out extends Person>
+    extends CopyWithBase<$R, Person, $Out>
+    implements PersonCopyWith<$R, Person, $Out> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
-  @override PersonCopyWith<$R2, Person, $Out2> chain<$R2, $Out2 extends Person>(Then<Person, $Out2> t, Then<$Out2, $R2> t2) => _PersonCopyWithImpl($value, t, t2);
+  @override
+  PersonCopyWith<$R2, Person, $Out2> chain<$R2, $Out2 extends Person>(
+          Then<Person, $Out2> t, Then<$Out2, $R2> t2) =>
+      _PersonCopyWithImpl($value, t, t2);
 
-  @override CarCopyWith<$R, Car, Car>? get car => $value.car?.copyWith.chain($identity, (v) => call(car: v));
-  @override $R call({String? name, int? age, Object? car = $none}) => $then(Person(name ?? $value.name, age: age ?? $value.age, car: or(car, $value.car)));
+  @override
+  CarCopyWith<$R, Car, Car>? get car =>
+      $value.car?.copyWith.chain($identity, (v) => call(car: v));
+  @override
+  $R call({String? name, int? age, Object? car = $none}) =>
+      $then(Person(name ?? $value.name,
+          age: age ?? $value.age, car: or(car, $value.car)));
 }
 
 class CarMapper extends ClassMapperBase<Car> {
@@ -101,6 +124,12 @@ class CarMapper extends ClassMapperBase<Car> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Car';
 
@@ -116,61 +145,73 @@ class CarMapper extends ClassMapperBase<Car> {
   static Car _instantiate(DecodingData data) {
     return Car(data.get(#miles), data.get(#brand));
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static Car fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Car>(map);
+    return _guard((c) => c.fromMap<Car>(map));
   }
+
   static Car fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Car>(json);
+    return _guard((c) => c.fromJson<Car>(json));
   }
 }
 
 mixin CarMappable {
   String toJson() {
-    CarMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as Car);
+    return CarMapper._guard((c) => c.toJson(this as Car));
   }
+
   Map<String, dynamic> toMap() {
-    CarMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as Car);
+    return CarMapper._guard((c) => c.toMap(this as Car));
   }
-  CarCopyWith<Car, Car, Car> get copyWith => _CarCopyWithImpl(this as Car, $identity, $identity);
+
+  CarCopyWith<Car, Car, Car> get copyWith =>
+      _CarCopyWithImpl(this as Car, $identity, $identity);
   @override
   String toString() {
-    CarMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return CarMapper._guard((c) => c.asString(this));
   }
+
   @override
   bool operator ==(Object other) {
-    CarMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            CarMapper._guard((c) => c.isEqual(this, other)));
   }
+
   @override
   int get hashCode {
-    CarMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return CarMapper._guard((c) => c.hash(this));
   }
 }
 
 extension CarValueCopy<$R, $Out extends Car> on ObjectCopyWith<$R, Car, $Out> {
-  CarCopyWith<$R, Car, $Out> get asCar => base.as((v, t, t2) => _CarCopyWithImpl(v, t, t2));
+  CarCopyWith<$R, Car, $Out> get asCar =>
+      base.as((v, t, t2) => _CarCopyWithImpl(v, t, t2));
 }
 
 typedef CarCopyWithBound = Car;
-abstract class CarCopyWith<$R, $In extends Car, $Out extends Car> implements ObjectCopyWith<$R, $In, $Out> {
-  CarCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Car>(Then<Car, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class CarCopyWith<$R, $In extends Car, $Out extends Car>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  CarCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Car>(
+      Then<Car, $Out2> t, Then<$Out2, $R2> t2);
   $R call({double? miles, Brand? brand});
 }
 
-class _CarCopyWithImpl<$R, $Out extends Car> extends CopyWithBase<$R, Car, $Out> implements CarCopyWith<$R, Car, $Out> {
+class _CarCopyWithImpl<$R, $Out extends Car> extends CopyWithBase<$R, Car, $Out>
+    implements CarCopyWith<$R, Car, $Out> {
   _CarCopyWithImpl(super.value, super.then, super.then2);
-  @override CarCopyWith<$R2, Car, $Out2> chain<$R2, $Out2 extends Car>(Then<Car, $Out2> t, Then<$Out2, $R2> t2) => _CarCopyWithImpl($value, t, t2);
+  @override
+  CarCopyWith<$R2, Car, $Out2> chain<$R2, $Out2 extends Car>(
+          Then<Car, $Out2> t, Then<$Out2, $R2> t2) =>
+      _CarCopyWithImpl($value, t, t2);
 
-  @override $R call({double? miles, Brand? brand}) => $then(Car(miles ?? $value.miles, brand ?? $value.brand));
+  @override
+  $R call({double? miles, Brand? brand}) =>
+      $then(Car(miles ?? $value.miles, brand ?? $value.brand));
 }
 
 class BoxMapper extends ClassMapperBase<Box> {
@@ -182,6 +223,12 @@ class BoxMapper extends ClassMapperBase<Box> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Box';
   @override
@@ -200,61 +247,75 @@ class BoxMapper extends ClassMapperBase<Box> {
   static Box<T> _instantiate<T>(DecodingData data) {
     return Box(data.get(#size), content: data.get(#content));
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static Box<T> fromMap<T>(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Box<T>>(map);
+    return _guard((c) => c.fromMap<Box<T>>(map));
   }
+
   static Box<T> fromJson<T>(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Box<T>>(json);
+    return _guard((c) => c.fromJson<Box<T>>(json));
   }
 }
 
 mixin BoxMappable<T> {
   String toJson() {
-    BoxMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as Box<T>);
+    return BoxMapper._guard((c) => c.toJson(this as Box<T>));
   }
+
   Map<String, dynamic> toMap() {
-    BoxMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as Box<T>);
+    return BoxMapper._guard((c) => c.toMap(this as Box<T>));
   }
-  BoxCopyWith<Box<T>, Box<T>, Box<T>, T> get copyWith => _BoxCopyWithImpl(this as Box<T>, $identity, $identity);
+
+  BoxCopyWith<Box<T>, Box<T>, Box<T>, T> get copyWith =>
+      _BoxCopyWithImpl(this as Box<T>, $identity, $identity);
   @override
   String toString() {
-    BoxMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return BoxMapper._guard((c) => c.asString(this));
   }
+
   @override
   bool operator ==(Object other) {
-    BoxMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            BoxMapper._guard((c) => c.isEqual(this, other)));
   }
+
   @override
   int get hashCode {
-    BoxMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return BoxMapper._guard((c) => c.hash(this));
   }
 }
 
-extension BoxValueCopy<$R, $Out extends Box, T> on ObjectCopyWith<$R, Box<T>, $Out> {
-  BoxCopyWith<$R, Box<T>, $Out, T> get asBox => base.as((v, t, t2) => _BoxCopyWithImpl(v, t, t2));
+extension BoxValueCopy<$R, $Out extends Box, T>
+    on ObjectCopyWith<$R, Box<T>, $Out> {
+  BoxCopyWith<$R, Box<T>, $Out, T> get asBox =>
+      base.as((v, t, t2) => _BoxCopyWithImpl(v, t, t2));
 }
 
 typedef BoxCopyWithBound = Box;
-abstract class BoxCopyWith<$R, $In extends Box<T>, $Out extends Box, T> implements ObjectCopyWith<$R, $In, $Out> {
-  BoxCopyWith<$R2, $In, $Out2, T> chain<$R2, $Out2 extends Box>(Then<Box<T>, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class BoxCopyWith<$R, $In extends Box<T>, $Out extends Box, T>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  BoxCopyWith<$R2, $In, $Out2, T> chain<$R2, $Out2 extends Box>(
+      Then<Box<T>, $Out2> t, Then<$Out2, $R2> t2);
   $R call({int? size, T? content});
 }
 
-class _BoxCopyWithImpl<$R, $Out extends Box, T> extends CopyWithBase<$R, Box<T>, $Out> implements BoxCopyWith<$R, Box<T>, $Out, T> {
+class _BoxCopyWithImpl<$R, $Out extends Box, T>
+    extends CopyWithBase<$R, Box<T>, $Out>
+    implements BoxCopyWith<$R, Box<T>, $Out, T> {
   _BoxCopyWithImpl(super.value, super.then, super.then2);
-  @override BoxCopyWith<$R2, Box<T>, $Out2, T> chain<$R2, $Out2 extends Box>(Then<Box<T>, $Out2> t, Then<$Out2, $R2> t2) => _BoxCopyWithImpl($value, t, t2);
+  @override
+  BoxCopyWith<$R2, Box<T>, $Out2, T> chain<$R2, $Out2 extends Box>(
+          Then<Box<T>, $Out2> t, Then<$Out2, $R2> t2) =>
+      _BoxCopyWithImpl($value, t, t2);
 
-  @override $R call({int? size, T? content}) => $then(Box(size ?? $value.size, content: content ?? $value.content));
+  @override
+  $R call({int? size, T? content}) =>
+      $then(Box(size ?? $value.size, content: content ?? $value.content));
 }
 
 class ConfettiMapper extends ClassMapperBase<Confetti> {
@@ -266,6 +327,12 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Confetti';
 
@@ -279,61 +346,74 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
   static Confetti _instantiate(DecodingData data) {
     return Confetti(data.get(#color));
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static Confetti fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Confetti>(map);
+    return _guard((c) => c.fromMap<Confetti>(map));
   }
+
   static Confetti fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Confetti>(json);
+    return _guard((c) => c.fromJson<Confetti>(json));
   }
 }
 
 mixin ConfettiMappable {
   String toJson() {
-    ConfettiMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as Confetti);
+    return ConfettiMapper._guard((c) => c.toJson(this as Confetti));
   }
+
   Map<String, dynamic> toMap() {
-    ConfettiMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as Confetti);
+    return ConfettiMapper._guard((c) => c.toMap(this as Confetti));
   }
-  ConfettiCopyWith<Confetti, Confetti, Confetti> get copyWith => _ConfettiCopyWithImpl(this as Confetti, $identity, $identity);
+
+  ConfettiCopyWith<Confetti, Confetti, Confetti> get copyWith =>
+      _ConfettiCopyWithImpl(this as Confetti, $identity, $identity);
   @override
   String toString() {
-    ConfettiMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return ConfettiMapper._guard((c) => c.asString(this));
   }
+
   @override
   bool operator ==(Object other) {
-    ConfettiMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            ConfettiMapper._guard((c) => c.isEqual(this, other)));
   }
+
   @override
   int get hashCode {
-    ConfettiMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return ConfettiMapper._guard((c) => c.hash(this));
   }
 }
 
-extension ConfettiValueCopy<$R, $Out extends Confetti> on ObjectCopyWith<$R, Confetti, $Out> {
-  ConfettiCopyWith<$R, Confetti, $Out> get asConfetti => base.as((v, t, t2) => _ConfettiCopyWithImpl(v, t, t2));
+extension ConfettiValueCopy<$R, $Out extends Confetti>
+    on ObjectCopyWith<$R, Confetti, $Out> {
+  ConfettiCopyWith<$R, Confetti, $Out> get asConfetti =>
+      base.as((v, t, t2) => _ConfettiCopyWithImpl(v, t, t2));
 }
 
 typedef ConfettiCopyWithBound = Confetti;
-abstract class ConfettiCopyWith<$R, $In extends Confetti, $Out extends Confetti> implements ObjectCopyWith<$R, $In, $Out> {
-  ConfettiCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Confetti>(Then<Confetti, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class ConfettiCopyWith<$R, $In extends Confetti, $Out extends Confetti>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  ConfettiCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Confetti>(
+      Then<Confetti, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? color});
 }
 
-class _ConfettiCopyWithImpl<$R, $Out extends Confetti> extends CopyWithBase<$R, Confetti, $Out> implements ConfettiCopyWith<$R, Confetti, $Out> {
+class _ConfettiCopyWithImpl<$R, $Out extends Confetti>
+    extends CopyWithBase<$R, Confetti, $Out>
+    implements ConfettiCopyWith<$R, Confetti, $Out> {
   _ConfettiCopyWithImpl(super.value, super.then, super.then2);
-  @override ConfettiCopyWith<$R2, Confetti, $Out2> chain<$R2, $Out2 extends Confetti>(Then<Confetti, $Out2> t, Then<$Out2, $R2> t2) => _ConfettiCopyWithImpl($value, t, t2);
+  @override
+  ConfettiCopyWith<$R2, Confetti, $Out2> chain<$R2, $Out2 extends Confetti>(
+          Then<Confetti, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ConfettiCopyWithImpl($value, t, t2);
 
-  @override $R call({String? color}) => $then(Confetti(color ?? $value.color));
+  @override
+  $R call({String? color}) => $then(Confetti(color ?? $value.color));
 }
 
 class BrandMapper extends EnumMapper<Brand> {
@@ -354,19 +434,26 @@ class BrandMapper extends EnumMapper<Brand> {
   @override
   Brand decode(dynamic value) {
     switch (value) {
-      case 'Toyota': return Brand.Toyota;
-      case 'Audi': return Brand.Audi;
-      case 'BMW': return Brand.BMW;
-      default: throw MapperException.unknownEnumValue(value);
+      case 'Toyota':
+        return Brand.Toyota;
+      case 'Audi':
+        return Brand.Audi;
+      case 'BMW':
+        return Brand.BMW;
+      default:
+        throw MapperException.unknownEnumValue(value);
     }
   }
 
   @override
   dynamic encode(Brand self) {
     switch (self) {
-      case Brand.Toyota: return 'Toyota';
-      case Brand.Audi: return 'Audi';
-      case Brand.BMW: return 'BMW';
+      case Brand.Toyota:
+        return 'Toyota';
+      case Brand.Audi:
+        return 'Audi';
+      case Brand.BMW:
+        return 'BMW';
     }
   }
 }

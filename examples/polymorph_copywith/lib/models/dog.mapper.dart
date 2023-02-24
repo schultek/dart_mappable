@@ -16,6 +16,12 @@ class DogMapper extends DiscriminatorSubClassMapperBase<Dog> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Dog';
 
@@ -37,61 +43,77 @@ class DogMapper extends DiscriminatorSubClassMapperBase<Dog> {
   static Dog _instantiate(DecodingData data) {
     return Dog(data.get(#name), data.get(#age), data.get(#owner));
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static Dog fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Dog>(map);
+    return _guard((c) => c.fromMap<Dog>(map));
   }
+
   static Dog fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Dog>(json);
+    return _guard((c) => c.fromJson<Dog>(json));
   }
 }
 
 mixin DogMappable {
   String toJson() {
-    DogMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as Dog);
+    return DogMapper._guard((c) => c.toJson(this as Dog));
   }
+
   Map<String, dynamic> toMap() {
-    DogMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as Dog);
+    return DogMapper._guard((c) => c.toMap(this as Dog));
   }
-  DogCopyWith<Dog, Dog, Dog> get copyWith => _DogCopyWithImpl(this as Dog, $identity, $identity);
+
+  DogCopyWith<Dog, Dog, Dog> get copyWith =>
+      _DogCopyWithImpl(this as Dog, $identity, $identity);
   @override
   String toString() {
-    DogMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return DogMapper._guard((c) => c.asString(this));
   }
+
   @override
   bool operator ==(Object other) {
-    DogMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            DogMapper._guard((c) => c.isEqual(this, other)));
   }
+
   @override
   int get hashCode {
-    DogMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return DogMapper._guard((c) => c.hash(this));
   }
 }
 
-extension DogValueCopy<$R, $Out extends Animal> on ObjectCopyWith<$R, Dog, $Out> {
-  DogCopyWith<$R, Dog, $Out> get asDog => base.as((v, t, t2) => _DogCopyWithImpl(v, t, t2));
+extension DogValueCopy<$R, $Out extends Animal>
+    on ObjectCopyWith<$R, Dog, $Out> {
+  DogCopyWith<$R, Dog, $Out> get asDog =>
+      base.as((v, t, t2) => _DogCopyWithImpl(v, t, t2));
 }
 
 typedef DogCopyWithBound = Animal;
-abstract class DogCopyWith<$R, $In extends Dog, $Out extends Animal> implements AnimalCopyWith<$R, $In, $Out> {
-  DogCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class DogCopyWith<$R, $In extends Dog, $Out extends Animal>
+    implements AnimalCopyWith<$R, $In, $Out> {
+  DogCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(
+      Then<Dog, $Out2> t, Then<$Out2, $R2> t2);
   PersonCopyWith<$R, Person, Person> get owner;
-  @override $R call({String? name, int? age, Person? owner});
+  @override
+  $R call({String? name, int? age, Person? owner});
 }
 
-class _DogCopyWithImpl<$R, $Out extends Animal> extends CopyWithBase<$R, Dog, $Out> implements DogCopyWith<$R, Dog, $Out> {
+class _DogCopyWithImpl<$R, $Out extends Animal>
+    extends CopyWithBase<$R, Dog, $Out> implements DogCopyWith<$R, Dog, $Out> {
   _DogCopyWithImpl(super.value, super.then, super.then2);
-  @override DogCopyWith<$R2, Dog, $Out2> chain<$R2, $Out2 extends Animal>(Then<Dog, $Out2> t, Then<$Out2, $R2> t2) => _DogCopyWithImpl($value, t, t2);
+  @override
+  DogCopyWith<$R2, Dog, $Out2> chain<$R2, $Out2 extends Animal>(
+          Then<Dog, $Out2> t, Then<$Out2, $R2> t2) =>
+      _DogCopyWithImpl($value, t, t2);
 
-  @override PersonCopyWith<$R, Person, Person> get owner => $value.owner.copyWith.chain($identity, (v) => call(owner: v));
-  @override $R call({String? name, int? age, Person? owner}) => $then(Dog(name ?? $value.name, age ?? $value.age, owner ?? $value.owner));
+  @override
+  PersonCopyWith<$R, Person, Person> get owner =>
+      $value.owner.copyWith.chain($identity, (v) => call(owner: v));
+  @override
+  $R call({String? name, int? age, Person? owner}) =>
+      $then(Dog(name ?? $value.name, age ?? $value.age, owner ?? $value.owner));
 }

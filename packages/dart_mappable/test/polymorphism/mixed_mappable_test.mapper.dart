@@ -16,6 +16,11 @@ class BaseMapper extends ClassMapperBase<Base> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Base';
 
@@ -38,13 +43,11 @@ class BaseMapper extends ClassMapperBase<Base> {
   final Function instantiate = _instantiate;
 
   static Base fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Base>(map);
+    return _guard((c) => c.fromMap<Base>(map));
   }
 
   static Base fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Base>(json);
+    return _guard((c) => c.fromJson<Base>(json));
   }
 }
 
@@ -75,6 +78,11 @@ class OneMapper extends ClassMapperBase<One> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'One';
 
@@ -98,47 +106,40 @@ class OneMapper extends ClassMapperBase<One> {
   final Function instantiate = _instantiate;
 
   static One fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<One>(map);
+    return _guard((c) => c.fromMap<One>(map));
   }
 
   static One fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<One>(json);
+    return _guard((c) => c.fromJson<One>(json));
   }
 }
 
 mixin OneMappable {
   String toJson() {
-    OneMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as One);
+    return OneMapper._guard((c) => c.toJson(this as One));
   }
 
   Map<String, dynamic> toMap() {
-    OneMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as One);
+    return OneMapper._guard((c) => c.toMap(this as One));
   }
 
   OneCopyWith<One, One, One> get copyWith =>
       _OneCopyWithImpl(this as One, $identity, $identity);
   @override
   String toString() {
-    OneMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return OneMapper._guard((c) => c.asString(this));
   }
 
   @override
   bool operator ==(Object other) {
-    OneMapper.ensureInitialized();
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MapperContainer.globals.isEqual(this, other));
+            OneMapper._guard((c) => c.isEqual(this, other)));
   }
 
   @override
   int get hashCode {
-    OneMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return OneMapper._guard((c) => c.hash(this));
   }
 }
 
@@ -190,6 +191,11 @@ class TwoMapper extends ClassMapperBase<Two> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Two';
 
@@ -210,47 +216,40 @@ class TwoMapper extends ClassMapperBase<Two> {
   final Function instantiate = _instantiate;
 
   static Two fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Two>(map);
+    return _guard((c) => c.fromMap<Two>(map));
   }
 
   static Two fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Two>(json);
+    return _guard((c) => c.fromJson<Two>(json));
   }
 }
 
 mixin TwoMappable {
   String toJson() {
-    TwoMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as Two);
+    return TwoMapper._guard((c) => c.toJson(this as Two));
   }
 
   Map<String, dynamic> toMap() {
-    TwoMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as Two);
+    return TwoMapper._guard((c) => c.toMap(this as Two));
   }
 
   TwoCopyWith<Two, Two, Two> get copyWith =>
       _TwoCopyWithImpl(this as Two, $identity, $identity);
   @override
   String toString() {
-    TwoMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return TwoMapper._guard((c) => c.asString(this));
   }
 
   @override
   bool operator ==(Object other) {
-    TwoMapper.ensureInitialized();
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MapperContainer.globals.isEqual(this, other));
+            TwoMapper._guard((c) => c.isEqual(this, other)));
   }
 
   @override
   int get hashCode {
-    TwoMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return TwoMapper._guard((c) => c.hash(this));
   }
 }
 

@@ -16,6 +16,12 @@ class AnimalBMapper extends ClassMapperBase<AnimalB> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'AnimalB';
 
@@ -27,18 +33,19 @@ class AnimalBMapper extends ClassMapperBase<AnimalB> {
   };
 
   static AnimalB _instantiate(DecodingData data) {
-    throw MapperException.missingSubclass('AnimalB', 'type', '${data.value['type']}');
+    throw MapperException.missingSubclass(
+        'AnimalB', 'type', '${data.value['type']}');
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static AnimalB fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<AnimalB>(map);
+    return _guard((c) => c.fromMap<AnimalB>(map));
   }
+
   static AnimalB fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<AnimalB>(json);
+    return _guard((c) => c.fromJson<AnimalB>(json));
   }
 }
 
@@ -49,11 +56,13 @@ mixin AnimalBMappable {
 }
 
 typedef AnimalBCopyWithBound = AnimalB;
-abstract class AnimalBCopyWith<$R, $In extends AnimalB, $Out extends AnimalB> implements ObjectCopyWith<$R, $In, $Out> {
-  AnimalBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends AnimalB>(Then<AnimalB, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class AnimalBCopyWith<$R, $In extends AnimalB, $Out extends AnimalB>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  AnimalBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends AnimalB>(
+      Then<AnimalB, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? name});
 }
-
 
 class CatBMapper extends DiscriminatorSubClassMapperBase<CatB> {
   CatBMapper._();
@@ -65,6 +74,12 @@ class CatBMapper extends DiscriminatorSubClassMapperBase<CatB> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'CatB';
 
@@ -84,61 +99,76 @@ class CatBMapper extends DiscriminatorSubClassMapperBase<CatB> {
   static CatB _instantiate(DecodingData data) {
     return CatB(data.get(#name), data.get(#color));
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static CatB fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<CatB>(map);
+    return _guard((c) => c.fromMap<CatB>(map));
   }
+
   static CatB fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<CatB>(json);
+    return _guard((c) => c.fromJson<CatB>(json));
   }
 }
 
 mixin CatBMappable {
   String toJson() {
-    CatBMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as CatB);
+    return CatBMapper._guard((c) => c.toJson(this as CatB));
   }
+
   Map<String, dynamic> toMap() {
-    CatBMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as CatB);
+    return CatBMapper._guard((c) => c.toMap(this as CatB));
   }
-  CatBCopyWith<CatB, CatB, CatB> get copyWith => _CatBCopyWithImpl(this as CatB, $identity, $identity);
+
+  CatBCopyWith<CatB, CatB, CatB> get copyWith =>
+      _CatBCopyWithImpl(this as CatB, $identity, $identity);
   @override
   String toString() {
-    CatBMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return CatBMapper._guard((c) => c.asString(this));
   }
+
   @override
   bool operator ==(Object other) {
-    CatBMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            CatBMapper._guard((c) => c.isEqual(this, other)));
   }
+
   @override
   int get hashCode {
-    CatBMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return CatBMapper._guard((c) => c.hash(this));
   }
 }
 
-extension CatBValueCopy<$R, $Out extends AnimalB> on ObjectCopyWith<$R, CatB, $Out> {
-  CatBCopyWith<$R, CatB, $Out> get asCatB => base.as((v, t, t2) => _CatBCopyWithImpl(v, t, t2));
+extension CatBValueCopy<$R, $Out extends AnimalB>
+    on ObjectCopyWith<$R, CatB, $Out> {
+  CatBCopyWith<$R, CatB, $Out> get asCatB =>
+      base.as((v, t, t2) => _CatBCopyWithImpl(v, t, t2));
 }
 
 typedef CatBCopyWithBound = AnimalB;
-abstract class CatBCopyWith<$R, $In extends CatB, $Out extends AnimalB> implements AnimalBCopyWith<$R, $In, $Out> {
-  CatBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends AnimalB>(Then<CatB, $Out2> t, Then<$Out2, $R2> t2);
-  @override $R call({String? name, String? color});
+
+abstract class CatBCopyWith<$R, $In extends CatB, $Out extends AnimalB>
+    implements AnimalBCopyWith<$R, $In, $Out> {
+  CatBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends AnimalB>(
+      Then<CatB, $Out2> t, Then<$Out2, $R2> t2);
+  @override
+  $R call({String? name, String? color});
 }
 
-class _CatBCopyWithImpl<$R, $Out extends AnimalB> extends CopyWithBase<$R, CatB, $Out> implements CatBCopyWith<$R, CatB, $Out> {
+class _CatBCopyWithImpl<$R, $Out extends AnimalB>
+    extends CopyWithBase<$R, CatB, $Out>
+    implements CatBCopyWith<$R, CatB, $Out> {
   _CatBCopyWithImpl(super.value, super.then, super.then2);
-  @override CatBCopyWith<$R2, CatB, $Out2> chain<$R2, $Out2 extends AnimalB>(Then<CatB, $Out2> t, Then<$Out2, $R2> t2) => _CatBCopyWithImpl($value, t, t2);
+  @override
+  CatBCopyWith<$R2, CatB, $Out2> chain<$R2, $Out2 extends AnimalB>(
+          Then<CatB, $Out2> t, Then<$Out2, $R2> t2) =>
+      _CatBCopyWithImpl($value, t, t2);
 
-  @override $R call({String? name, String? color}) => $then(CatB(name ?? $value.name, color ?? $value.color));
+  @override
+  $R call({String? name, String? color}) =>
+      $then(CatB(name ?? $value.name, color ?? $value.color));
 }
 
 class DogBMapper extends DiscriminatorSubClassMapperBase<DogB> {
@@ -151,6 +181,12 @@ class DogBMapper extends DiscriminatorSubClassMapperBase<DogB> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'DogB';
 
@@ -170,59 +206,74 @@ class DogBMapper extends DiscriminatorSubClassMapperBase<DogB> {
   static DogB _instantiate(DecodingData data) {
     return DogB(data.get(#name), data.get(#age));
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static DogB fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<DogB>(map);
+    return _guard((c) => c.fromMap<DogB>(map));
   }
+
   static DogB fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<DogB>(json);
+    return _guard((c) => c.fromJson<DogB>(json));
   }
 }
 
 mixin DogBMappable {
   String toJson() {
-    DogBMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as DogB);
+    return DogBMapper._guard((c) => c.toJson(this as DogB));
   }
+
   Map<String, dynamic> toMap() {
-    DogBMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as DogB);
+    return DogBMapper._guard((c) => c.toMap(this as DogB));
   }
-  DogBCopyWith<DogB, DogB, DogB> get copyWith => _DogBCopyWithImpl(this as DogB, $identity, $identity);
+
+  DogBCopyWith<DogB, DogB, DogB> get copyWith =>
+      _DogBCopyWithImpl(this as DogB, $identity, $identity);
   @override
   String toString() {
-    DogBMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return DogBMapper._guard((c) => c.asString(this));
   }
+
   @override
   bool operator ==(Object other) {
-    DogBMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            DogBMapper._guard((c) => c.isEqual(this, other)));
   }
+
   @override
   int get hashCode {
-    DogBMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return DogBMapper._guard((c) => c.hash(this));
   }
 }
 
-extension DogBValueCopy<$R, $Out extends AnimalB> on ObjectCopyWith<$R, DogB, $Out> {
-  DogBCopyWith<$R, DogB, $Out> get asDogB => base.as((v, t, t2) => _DogBCopyWithImpl(v, t, t2));
+extension DogBValueCopy<$R, $Out extends AnimalB>
+    on ObjectCopyWith<$R, DogB, $Out> {
+  DogBCopyWith<$R, DogB, $Out> get asDogB =>
+      base.as((v, t, t2) => _DogBCopyWithImpl(v, t, t2));
 }
 
 typedef DogBCopyWithBound = AnimalB;
-abstract class DogBCopyWith<$R, $In extends DogB, $Out extends AnimalB> implements AnimalBCopyWith<$R, $In, $Out> {
-  DogBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends AnimalB>(Then<DogB, $Out2> t, Then<$Out2, $R2> t2);
-  @override $R call({String? name, int? age});
+
+abstract class DogBCopyWith<$R, $In extends DogB, $Out extends AnimalB>
+    implements AnimalBCopyWith<$R, $In, $Out> {
+  DogBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends AnimalB>(
+      Then<DogB, $Out2> t, Then<$Out2, $R2> t2);
+  @override
+  $R call({String? name, int? age});
 }
 
-class _DogBCopyWithImpl<$R, $Out extends AnimalB> extends CopyWithBase<$R, DogB, $Out> implements DogBCopyWith<$R, DogB, $Out> {
+class _DogBCopyWithImpl<$R, $Out extends AnimalB>
+    extends CopyWithBase<$R, DogB, $Out>
+    implements DogBCopyWith<$R, DogB, $Out> {
   _DogBCopyWithImpl(super.value, super.then, super.then2);
-  @override DogBCopyWith<$R2, DogB, $Out2> chain<$R2, $Out2 extends AnimalB>(Then<DogB, $Out2> t, Then<$Out2, $R2> t2) => _DogBCopyWithImpl($value, t, t2);
+  @override
+  DogBCopyWith<$R2, DogB, $Out2> chain<$R2, $Out2 extends AnimalB>(
+          Then<DogB, $Out2> t, Then<$Out2, $R2> t2) =>
+      _DogBCopyWithImpl($value, t, t2);
 
-  @override $R call({String? name, int? age}) => $then(DogB(name ?? $value.name, age ?? $value.age));
+  @override
+  $R call({String? name, int? age}) =>
+      $then(DogB(name ?? $value.name, age ?? $value.age));
 }

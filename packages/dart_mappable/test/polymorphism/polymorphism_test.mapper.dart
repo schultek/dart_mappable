@@ -19,6 +19,11 @@ class AnimalMapper extends ClassMapperBase<Animal> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Animal';
 
@@ -38,13 +43,11 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   final Function instantiate = _instantiate;
 
   static Animal fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Animal>(map);
+    return _guard((c) => c.fromMap<Animal>(map));
   }
 
   static Animal fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Animal>(json);
+    return _guard((c) => c.fromJson<Animal>(json));
   }
 }
 
@@ -74,6 +77,11 @@ class CatMapper extends DiscriminatorSubClassMapperBase<Cat> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Cat';
 
@@ -98,47 +106,40 @@ class CatMapper extends DiscriminatorSubClassMapperBase<Cat> {
   final Function instantiate = _instantiate;
 
   static Cat fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Cat>(map);
+    return _guard((c) => c.fromMap<Cat>(map));
   }
 
   static Cat fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Cat>(json);
+    return _guard((c) => c.fromJson<Cat>(json));
   }
 }
 
 mixin CatMappable {
   String toJson() {
-    CatMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as Cat);
+    return CatMapper._guard((c) => c.toJson(this as Cat));
   }
 
   Map<String, dynamic> toMap() {
-    CatMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as Cat);
+    return CatMapper._guard((c) => c.toMap(this as Cat));
   }
 
   CatCopyWith<Cat, Cat, Cat> get copyWith =>
       _CatCopyWithImpl(this as Cat, $identity, $identity);
   @override
   String toString() {
-    CatMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return CatMapper._guard((c) => c.asString(this));
   }
 
   @override
   bool operator ==(Object other) {
-    CatMapper.ensureInitialized();
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MapperContainer.globals.isEqual(this, other));
+            CatMapper._guard((c) => c.isEqual(this, other)));
   }
 
   @override
   int get hashCode {
-    CatMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return CatMapper._guard((c) => c.hash(this));
   }
 }
 
@@ -182,6 +183,11 @@ class DogMapper extends DiscriminatorSubClassMapperBase<Dog> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Dog';
 
@@ -206,47 +212,40 @@ class DogMapper extends DiscriminatorSubClassMapperBase<Dog> {
   final Function instantiate = _instantiate;
 
   static Dog fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Dog>(map);
+    return _guard((c) => c.fromMap<Dog>(map));
   }
 
   static Dog fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Dog>(json);
+    return _guard((c) => c.fromJson<Dog>(json));
   }
 }
 
 mixin DogMappable {
   String toJson() {
-    DogMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as Dog);
+    return DogMapper._guard((c) => c.toJson(this as Dog));
   }
 
   Map<String, dynamic> toMap() {
-    DogMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as Dog);
+    return DogMapper._guard((c) => c.toMap(this as Dog));
   }
 
   DogCopyWith<Dog, Dog, Dog> get copyWith =>
       _DogCopyWithImpl(this as Dog, $identity, $identity);
   @override
   String toString() {
-    DogMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return DogMapper._guard((c) => c.asString(this));
   }
 
   @override
   bool operator ==(Object other) {
-    DogMapper.ensureInitialized();
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MapperContainer.globals.isEqual(this, other));
+            DogMapper._guard((c) => c.isEqual(this, other)));
   }
 
   @override
   int get hashCode {
-    DogMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return DogMapper._guard((c) => c.hash(this));
   }
 }
 
@@ -289,6 +288,11 @@ class NullAnimalMapper extends DiscriminatorSubClassMapperBase<NullAnimal> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'NullAnimal';
 
@@ -311,47 +315,40 @@ class NullAnimalMapper extends DiscriminatorSubClassMapperBase<NullAnimal> {
   final Function instantiate = _instantiate;
 
   static NullAnimal fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<NullAnimal>(map);
+    return _guard((c) => c.fromMap<NullAnimal>(map));
   }
 
   static NullAnimal fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<NullAnimal>(json);
+    return _guard((c) => c.fromJson<NullAnimal>(json));
   }
 }
 
 mixin NullAnimalMappable {
   String toJson() {
-    NullAnimalMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as NullAnimal);
+    return NullAnimalMapper._guard((c) => c.toJson(this as NullAnimal));
   }
 
   Map<String, dynamic> toMap() {
-    NullAnimalMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as NullAnimal);
+    return NullAnimalMapper._guard((c) => c.toMap(this as NullAnimal));
   }
 
   NullAnimalCopyWith<NullAnimal, NullAnimal, NullAnimal> get copyWith =>
       _NullAnimalCopyWithImpl(this as NullAnimal, $identity, $identity);
   @override
   String toString() {
-    NullAnimalMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return NullAnimalMapper._guard((c) => c.asString(this));
   }
 
   @override
   bool operator ==(Object other) {
-    NullAnimalMapper.ensureInitialized();
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MapperContainer.globals.isEqual(this, other));
+            NullAnimalMapper._guard((c) => c.isEqual(this, other)));
   }
 
   @override
   int get hashCode {
-    NullAnimalMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return NullAnimalMapper._guard((c) => c.hash(this));
   }
 }
 
@@ -396,6 +393,11 @@ class DefaultAnimalMapper
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'DefaultAnimal';
 
@@ -420,25 +422,21 @@ class DefaultAnimalMapper
   final Function instantiate = _instantiate;
 
   static DefaultAnimal fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<DefaultAnimal>(map);
+    return _guard((c) => c.fromMap<DefaultAnimal>(map));
   }
 
   static DefaultAnimal fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<DefaultAnimal>(json);
+    return _guard((c) => c.fromJson<DefaultAnimal>(json));
   }
 }
 
 mixin DefaultAnimalMappable {
   String toJson() {
-    DefaultAnimalMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as DefaultAnimal);
+    return DefaultAnimalMapper._guard((c) => c.toJson(this as DefaultAnimal));
   }
 
   Map<String, dynamic> toMap() {
-    DefaultAnimalMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as DefaultAnimal);
+    return DefaultAnimalMapper._guard((c) => c.toMap(this as DefaultAnimal));
   }
 
   DefaultAnimalCopyWith<DefaultAnimal, DefaultAnimal, DefaultAnimal>
@@ -446,22 +444,19 @@ mixin DefaultAnimalMappable {
           this as DefaultAnimal, $identity, $identity);
   @override
   String toString() {
-    DefaultAnimalMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return DefaultAnimalMapper._guard((c) => c.asString(this));
   }
 
   @override
   bool operator ==(Object other) {
-    DefaultAnimalMapper.ensureInitialized();
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MapperContainer.globals.isEqual(this, other));
+            DefaultAnimalMapper._guard((c) => c.isEqual(this, other)));
   }
 
   @override
   int get hashCode {
-    DefaultAnimalMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return DefaultAnimalMapper._guard((c) => c.hash(this));
   }
 }
 
@@ -507,6 +502,11 @@ class ZooMapper extends ClassMapperBase<Zoo> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Zoo';
 
@@ -531,47 +531,40 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   final Function instantiate = _instantiate;
 
   static Zoo fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Zoo>(map);
+    return _guard((c) => c.fromMap<Zoo>(map));
   }
 
   static Zoo fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Zoo>(json);
+    return _guard((c) => c.fromJson<Zoo>(json));
   }
 }
 
 mixin ZooMappable {
   String toJson() {
-    ZooMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as Zoo);
+    return ZooMapper._guard((c) => c.toJson(this as Zoo));
   }
 
   Map<String, dynamic> toMap() {
-    ZooMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as Zoo);
+    return ZooMapper._guard((c) => c.toMap(this as Zoo));
   }
 
   ZooCopyWith<Zoo, Zoo, Zoo> get copyWith =>
       _ZooCopyWithImpl(this as Zoo, $identity, $identity);
   @override
   String toString() {
-    ZooMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return ZooMapper._guard((c) => c.asString(this));
   }
 
   @override
   bool operator ==(Object other) {
-    ZooMapper.ensureInitialized();
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MapperContainer.globals.isEqual(this, other));
+            ZooMapper._guard((c) => c.isEqual(this, other)));
   }
 
   @override
   int get hashCode {
-    ZooMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return ZooMapper._guard((c) => c.hash(this));
   }
 }
 

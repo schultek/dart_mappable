@@ -16,12 +16,10 @@ class EncoderGenerator {
           '  Map<String, dynamic> toMap();\n';
     }
     return '  String toJson() {\n'
-        '    ${target.mapperName}.ensureInitialized();\n'
-        '    return MapperContainer.globals.toJson(this as ${target.selfTypeParam});\n'
+        '    return ${target.mapperName}._guard((c) => c.toJson(this as ${target.selfTypeParam}));\n'
         '  }\n'
         '  Map<String, dynamic> toMap() {\n'
-        '    ${target.mapperName}.ensureInitialized();\n'
-        '    return MapperContainer.globals.toMap(this as ${target.selfTypeParam});\n'
+        '    return ${target.mapperName}._guard((c) => c.toMap(this as ${target.selfTypeParam}));\n'
         '  }\n';
   }
 
@@ -30,12 +28,10 @@ class EncoderGenerator {
       return '';
     }
     return '  String toJson() {\n'
-        '    ${target.mapperName}.ensureInitialized();\n'
-        '    return MapperContainer.globals.toJson(this);\n'
+        '    return ${target.mapperName}._guard((c) => c.toJson(this));\n'
         '  }\n'
         '  Map<String, dynamic> toMap() {\n'
-        '    ${target.mapperName}.ensureInitialized();\n'
-        '    return MapperContainer.globals.toMap(this);\n'
+        '    return ${target.mapperName}._guard((c) => c.toMap(this));\n'
         '  }\n';
   }
 }

@@ -16,6 +16,11 @@ class TestObjMapper extends ClassMapperBase<TestObj> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'TestObj';
 
@@ -39,47 +44,40 @@ class TestObjMapper extends ClassMapperBase<TestObj> {
   final Function instantiate = _instantiate;
 
   static TestObj fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<TestObj>(map);
+    return _guard((c) => c.fromMap<TestObj>(map));
   }
 
   static TestObj fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<TestObj>(json);
+    return _guard((c) => c.fromJson<TestObj>(json));
   }
 }
 
 mixin TestObjMappable {
   String toJson() {
-    TestObjMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as TestObj);
+    return TestObjMapper._guard((c) => c.toJson(this as TestObj));
   }
 
   Map<String, dynamic> toMap() {
-    TestObjMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as TestObj);
+    return TestObjMapper._guard((c) => c.toMap(this as TestObj));
   }
 
   TestObjCopyWith<TestObj, TestObj, TestObj> get copyWith =>
       _TestObjCopyWithImpl(this as TestObj, $identity, $identity);
   @override
   String toString() {
-    TestObjMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return TestObjMapper._guard((c) => c.asString(this));
   }
 
   @override
   bool operator ==(Object other) {
-    TestObjMapper.ensureInitialized();
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MapperContainer.globals.isEqual(this, other));
+            TestObjMapper._guard((c) => c.isEqual(this, other)));
   }
 
   @override
   int get hashCode {
-    TestObjMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return TestObjMapper._guard((c) => c.hash(this));
   }
 }
 

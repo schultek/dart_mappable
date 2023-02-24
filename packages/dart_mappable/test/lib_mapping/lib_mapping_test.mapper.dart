@@ -15,6 +15,11 @@ class PersonMapper extends ClassMapperBase<Person> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Person';
 
@@ -34,47 +39,40 @@ class PersonMapper extends ClassMapperBase<Person> {
   final Function instantiate = _instantiate;
 
   static Person fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Person>(map);
+    return _guard((c) => c.fromMap<Person>(map));
   }
 
   static Person fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Person>(json);
+    return _guard((c) => c.fromJson<Person>(json));
   }
 }
 
 mixin PersonMappable {
   String toJson() {
-    PersonMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as Person);
+    return PersonMapper._guard((c) => c.toJson(this as Person));
   }
 
   Map<String, dynamic> toMap() {
-    PersonMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as Person);
+    return PersonMapper._guard((c) => c.toMap(this as Person));
   }
 
   PersonCopyWith<Person, Person, Person> get copyWith =>
       _PersonCopyWithImpl(this as Person, $identity, $identity);
   @override
   String toString() {
-    PersonMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return PersonMapper._guard((c) => c.asString(this));
   }
 
   @override
   bool operator ==(Object other) {
-    PersonMapper.ensureInitialized();
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MapperContainer.globals.isEqual(this, other));
+            PersonMapper._guard((c) => c.isEqual(this, other)));
   }
 
   @override
   int get hashCode {
-    PersonMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return PersonMapper._guard((c) => c.hash(this));
   }
 }
 
@@ -116,6 +114,11 @@ class CakeMapper extends ClassMapperBase<f.Cake> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Cake';
 
@@ -134,25 +137,21 @@ class CakeMapper extends ClassMapperBase<f.Cake> {
   final Function instantiate = _instantiate;
 
   static f.Cake fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<f.Cake>(map);
+    return _guard((c) => c.fromMap<f.Cake>(map));
   }
 
   static f.Cake fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<f.Cake>(json);
+    return _guard((c) => c.fromJson<f.Cake>(json));
   }
 }
 
 extension CakeMapperExtension on f.Cake {
   String toJson() {
-    CakeMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this);
+    return CakeMapper._guard((c) => c.toJson(this));
   }
 
   Map<String, dynamic> toMap() {
-    CakeMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this);
+    return CakeMapper._guard((c) => c.toMap(this));
   }
 
   CakeCopyWith<f.Cake, f.Cake, f.Cake> get copyWith =>
@@ -197,6 +196,11 @@ class Person2Mapper extends ClassMapperBase<m.Person> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Person';
 
@@ -216,25 +220,21 @@ class Person2Mapper extends ClassMapperBase<m.Person> {
   final Function instantiate = _instantiate;
 
   static m.Person fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<m.Person>(map);
+    return _guard((c) => c.fromMap<m.Person>(map));
   }
 
   static m.Person fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<m.Person>(json);
+    return _guard((c) => c.fromJson<m.Person>(json));
   }
 }
 
 extension Person2MapperExtension on m.Person {
   String toJson() {
-    Person2Mapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this);
+    return Person2Mapper._guard((c) => c.toJson(this));
   }
 
   Map<String, dynamic> toMap() {
-    Person2Mapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this);
+    return Person2Mapper._guard((c) => c.toMap(this));
   }
 
   Person2CopyWith<m.Person, m.Person, m.Person> get copyWith =>
@@ -281,6 +281,11 @@ class AnimalMapper extends ClassMapperBase<o.Animal> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Animal';
 
@@ -300,25 +305,21 @@ class AnimalMapper extends ClassMapperBase<o.Animal> {
   final Function instantiate = _instantiate;
 
   static o.Animal fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<o.Animal>(map);
+    return _guard((c) => c.fromMap<o.Animal>(map));
   }
 
   static o.Animal fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<o.Animal>(json);
+    return _guard((c) => c.fromJson<o.Animal>(json));
   }
 }
 
 extension AnimalMapperExtension on o.Animal {
   String toJson() {
-    AnimalMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this);
+    return AnimalMapper._guard((c) => c.toJson(this));
   }
 
   Map<String, dynamic> toMap() {
-    AnimalMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this);
+    return AnimalMapper._guard((c) => c.toMap(this));
   }
 }
 
@@ -341,6 +342,11 @@ class PetMapper extends DiscriminatorSubClassMapperBase<o.Pet> {
       Person2Mapper.ensureInitialized();
     }
     return _instance!;
+  }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
   }
 
   @override
@@ -367,25 +373,21 @@ class PetMapper extends DiscriminatorSubClassMapperBase<o.Pet> {
   final Function instantiate = _instantiate;
 
   static o.Pet fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<o.Pet>(map);
+    return _guard((c) => c.fromMap<o.Pet>(map));
   }
 
   static o.Pet fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<o.Pet>(json);
+    return _guard((c) => c.fromJson<o.Pet>(json));
   }
 }
 
 extension PetMapperExtension on o.Pet {
   String toJson() {
-    PetMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this);
+    return PetMapper._guard((c) => c.toJson(this));
   }
 
   Map<String, dynamic> toMap() {
-    PetMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this);
+    return PetMapper._guard((c) => c.toMap(this));
   }
 
   PetCopyWith<o.Pet, o.Pet, o.Pet> get copyWith =>

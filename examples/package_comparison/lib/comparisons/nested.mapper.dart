@@ -15,6 +15,12 @@ class GameBMapper extends ClassMapperBase<GameB> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'GameB';
 
@@ -28,63 +34,78 @@ class GameBMapper extends ClassMapperBase<GameB> {
   static GameB _instantiate(DecodingData data) {
     return GameB(player: data.get(#player));
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static GameB fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<GameB>(map);
+    return _guard((c) => c.fromMap<GameB>(map));
   }
+
   static GameB fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<GameB>(json);
+    return _guard((c) => c.fromJson<GameB>(json));
   }
 }
 
 mixin GameBMappable {
   String toJson() {
-    GameBMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as GameB);
+    return GameBMapper._guard((c) => c.toJson(this as GameB));
   }
+
   Map<String, dynamic> toMap() {
-    GameBMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as GameB);
+    return GameBMapper._guard((c) => c.toMap(this as GameB));
   }
-  GameBCopyWith<GameB, GameB, GameB> get copyWith => _GameBCopyWithImpl(this as GameB, $identity, $identity);
+
+  GameBCopyWith<GameB, GameB, GameB> get copyWith =>
+      _GameBCopyWithImpl(this as GameB, $identity, $identity);
   @override
   String toString() {
-    GameBMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return GameBMapper._guard((c) => c.asString(this));
   }
+
   @override
   bool operator ==(Object other) {
-    GameBMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            GameBMapper._guard((c) => c.isEqual(this, other)));
   }
+
   @override
   int get hashCode {
-    GameBMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return GameBMapper._guard((c) => c.hash(this));
   }
 }
 
-extension GameBValueCopy<$R, $Out extends GameB> on ObjectCopyWith<$R, GameB, $Out> {
-  GameBCopyWith<$R, GameB, $Out> get asGameB => base.as((v, t, t2) => _GameBCopyWithImpl(v, t, t2));
+extension GameBValueCopy<$R, $Out extends GameB>
+    on ObjectCopyWith<$R, GameB, $Out> {
+  GameBCopyWith<$R, GameB, $Out> get asGameB =>
+      base.as((v, t, t2) => _GameBCopyWithImpl(v, t, t2));
 }
 
 typedef GameBCopyWithBound = GameB;
-abstract class GameBCopyWith<$R, $In extends GameB, $Out extends GameB> implements ObjectCopyWith<$R, $In, $Out> {
-  GameBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends GameB>(Then<GameB, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class GameBCopyWith<$R, $In extends GameB, $Out extends GameB>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  GameBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends GameB>(
+      Then<GameB, $Out2> t, Then<$Out2, $R2> t2);
   PlayerBCopyWith<$R, PlayerB, PlayerB> get player;
   $R call({PlayerB? player});
 }
 
-class _GameBCopyWithImpl<$R, $Out extends GameB> extends CopyWithBase<$R, GameB, $Out> implements GameBCopyWith<$R, GameB, $Out> {
+class _GameBCopyWithImpl<$R, $Out extends GameB>
+    extends CopyWithBase<$R, GameB, $Out>
+    implements GameBCopyWith<$R, GameB, $Out> {
   _GameBCopyWithImpl(super.value, super.then, super.then2);
-  @override GameBCopyWith<$R2, GameB, $Out2> chain<$R2, $Out2 extends GameB>(Then<GameB, $Out2> t, Then<$Out2, $R2> t2) => _GameBCopyWithImpl($value, t, t2);
+  @override
+  GameBCopyWith<$R2, GameB, $Out2> chain<$R2, $Out2 extends GameB>(
+          Then<GameB, $Out2> t, Then<$Out2, $R2> t2) =>
+      _GameBCopyWithImpl($value, t, t2);
 
-  @override PlayerBCopyWith<$R, PlayerB, PlayerB> get player => $value.player.copyWith.chain($identity, (v) => call(player: v));
-  @override $R call({PlayerB? player}) => $then(GameB(player: player ?? $value.player));
+  @override
+  PlayerBCopyWith<$R, PlayerB, PlayerB> get player =>
+      $value.player.copyWith.chain($identity, (v) => call(player: v));
+  @override
+  $R call({PlayerB? player}) => $then(GameB(player: player ?? $value.player));
 }
 
 class PlayerBMapper extends ClassMapperBase<PlayerB> {
@@ -96,6 +117,12 @@ class PlayerBMapper extends ClassMapperBase<PlayerB> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'PlayerB';
 
@@ -109,59 +136,72 @@ class PlayerBMapper extends ClassMapperBase<PlayerB> {
   static PlayerB _instantiate(DecodingData data) {
     return PlayerB(name: data.get(#name));
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static PlayerB fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<PlayerB>(map);
+    return _guard((c) => c.fromMap<PlayerB>(map));
   }
+
   static PlayerB fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<PlayerB>(json);
+    return _guard((c) => c.fromJson<PlayerB>(json));
   }
 }
 
 mixin PlayerBMappable {
   String toJson() {
-    PlayerBMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as PlayerB);
+    return PlayerBMapper._guard((c) => c.toJson(this as PlayerB));
   }
+
   Map<String, dynamic> toMap() {
-    PlayerBMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as PlayerB);
+    return PlayerBMapper._guard((c) => c.toMap(this as PlayerB));
   }
-  PlayerBCopyWith<PlayerB, PlayerB, PlayerB> get copyWith => _PlayerBCopyWithImpl(this as PlayerB, $identity, $identity);
+
+  PlayerBCopyWith<PlayerB, PlayerB, PlayerB> get copyWith =>
+      _PlayerBCopyWithImpl(this as PlayerB, $identity, $identity);
   @override
   String toString() {
-    PlayerBMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return PlayerBMapper._guard((c) => c.asString(this));
   }
+
   @override
   bool operator ==(Object other) {
-    PlayerBMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            PlayerBMapper._guard((c) => c.isEqual(this, other)));
   }
+
   @override
   int get hashCode {
-    PlayerBMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return PlayerBMapper._guard((c) => c.hash(this));
   }
 }
 
-extension PlayerBValueCopy<$R, $Out extends PlayerB> on ObjectCopyWith<$R, PlayerB, $Out> {
-  PlayerBCopyWith<$R, PlayerB, $Out> get asPlayerB => base.as((v, t, t2) => _PlayerBCopyWithImpl(v, t, t2));
+extension PlayerBValueCopy<$R, $Out extends PlayerB>
+    on ObjectCopyWith<$R, PlayerB, $Out> {
+  PlayerBCopyWith<$R, PlayerB, $Out> get asPlayerB =>
+      base.as((v, t, t2) => _PlayerBCopyWithImpl(v, t, t2));
 }
 
 typedef PlayerBCopyWithBound = PlayerB;
-abstract class PlayerBCopyWith<$R, $In extends PlayerB, $Out extends PlayerB> implements ObjectCopyWith<$R, $In, $Out> {
-  PlayerBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends PlayerB>(Then<PlayerB, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class PlayerBCopyWith<$R, $In extends PlayerB, $Out extends PlayerB>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  PlayerBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends PlayerB>(
+      Then<PlayerB, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? name});
 }
 
-class _PlayerBCopyWithImpl<$R, $Out extends PlayerB> extends CopyWithBase<$R, PlayerB, $Out> implements PlayerBCopyWith<$R, PlayerB, $Out> {
+class _PlayerBCopyWithImpl<$R, $Out extends PlayerB>
+    extends CopyWithBase<$R, PlayerB, $Out>
+    implements PlayerBCopyWith<$R, PlayerB, $Out> {
   _PlayerBCopyWithImpl(super.value, super.then, super.then2);
-  @override PlayerBCopyWith<$R2, PlayerB, $Out2> chain<$R2, $Out2 extends PlayerB>(Then<PlayerB, $Out2> t, Then<$Out2, $R2> t2) => _PlayerBCopyWithImpl($value, t, t2);
+  @override
+  PlayerBCopyWith<$R2, PlayerB, $Out2> chain<$R2, $Out2 extends PlayerB>(
+          Then<PlayerB, $Out2> t, Then<$Out2, $R2> t2) =>
+      _PlayerBCopyWithImpl($value, t, t2);
 
-  @override $R call({String? name}) => $then(PlayerB(name: name ?? $value.name));
+  @override
+  $R call({String? name}) => $then(PlayerB(name: name ?? $value.name));
 }

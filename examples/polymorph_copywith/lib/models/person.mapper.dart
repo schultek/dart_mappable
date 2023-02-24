@@ -14,6 +14,12 @@ class PersonMapper extends ClassMapperBase<Person> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Person';
 
@@ -27,59 +33,72 @@ class PersonMapper extends ClassMapperBase<Person> {
   static Person _instantiate(DecodingData data) {
     return Person(data.get(#name));
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static Person fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Person>(map);
+    return _guard((c) => c.fromMap<Person>(map));
   }
+
   static Person fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Person>(json);
+    return _guard((c) => c.fromJson<Person>(json));
   }
 }
 
 mixin PersonMappable {
   String toJson() {
-    PersonMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as Person);
+    return PersonMapper._guard((c) => c.toJson(this as Person));
   }
+
   Map<String, dynamic> toMap() {
-    PersonMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as Person);
+    return PersonMapper._guard((c) => c.toMap(this as Person));
   }
-  PersonCopyWith<Person, Person, Person> get copyWith => _PersonCopyWithImpl(this as Person, $identity, $identity);
+
+  PersonCopyWith<Person, Person, Person> get copyWith =>
+      _PersonCopyWithImpl(this as Person, $identity, $identity);
   @override
   String toString() {
-    PersonMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return PersonMapper._guard((c) => c.asString(this));
   }
+
   @override
   bool operator ==(Object other) {
-    PersonMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            PersonMapper._guard((c) => c.isEqual(this, other)));
   }
+
   @override
   int get hashCode {
-    PersonMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return PersonMapper._guard((c) => c.hash(this));
   }
 }
 
-extension PersonValueCopy<$R, $Out extends Person> on ObjectCopyWith<$R, Person, $Out> {
-  PersonCopyWith<$R, Person, $Out> get asPerson => base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
+extension PersonValueCopy<$R, $Out extends Person>
+    on ObjectCopyWith<$R, Person, $Out> {
+  PersonCopyWith<$R, Person, $Out> get asPerson =>
+      base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
 }
 
 typedef PersonCopyWithBound = Person;
-abstract class PersonCopyWith<$R, $In extends Person, $Out extends Person> implements ObjectCopyWith<$R, $In, $Out> {
-  PersonCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Person>(Then<Person, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class PersonCopyWith<$R, $In extends Person, $Out extends Person>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  PersonCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Person>(
+      Then<Person, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? name});
 }
 
-class _PersonCopyWithImpl<$R, $Out extends Person> extends CopyWithBase<$R, Person, $Out> implements PersonCopyWith<$R, Person, $Out> {
+class _PersonCopyWithImpl<$R, $Out extends Person>
+    extends CopyWithBase<$R, Person, $Out>
+    implements PersonCopyWith<$R, Person, $Out> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
-  @override PersonCopyWith<$R2, Person, $Out2> chain<$R2, $Out2 extends Person>(Then<Person, $Out2> t, Then<$Out2, $R2> t2) => _PersonCopyWithImpl($value, t, t2);
+  @override
+  PersonCopyWith<$R2, Person, $Out2> chain<$R2, $Out2 extends Person>(
+          Then<Person, $Out2> t, Then<$Out2, $R2> t2) =>
+      _PersonCopyWithImpl($value, t, t2);
 
-  @override $R call({String? name}) => $then(Person(name ?? $value.name));
+  @override
+  $R call({String? name}) => $then(Person(name ?? $value.name));
 }

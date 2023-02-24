@@ -17,6 +17,11 @@ class AMapper extends ClassMapperBase<A> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'A';
 
@@ -31,13 +36,11 @@ class AMapper extends ClassMapperBase<A> {
   final Function instantiate = _instantiate;
 
   static A fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<A>(map);
+    return _guard((c) => c.fromMap<A>(map));
   }
 
   static A fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<A>(json);
+    return _guard((c) => c.fromJson<A>(json));
   }
 }
 
@@ -67,6 +70,11 @@ class BMapper extends DiscriminatorSubClassMapperBase<B> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'B';
 
@@ -85,47 +93,40 @@ class BMapper extends DiscriminatorSubClassMapperBase<B> {
   final Function instantiate = _instantiate;
 
   static B fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<B>(map);
+    return _guard((c) => c.fromMap<B>(map));
   }
 
   static B fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<B>(json);
+    return _guard((c) => c.fromJson<B>(json));
   }
 }
 
 mixin BMappable {
   String toJson() {
-    BMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as B);
+    return BMapper._guard((c) => c.toJson(this as B));
   }
 
   Map<String, dynamic> toMap() {
-    BMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as B);
+    return BMapper._guard((c) => c.toMap(this as B));
   }
 
   BCopyWith<B, B, B> get copyWith =>
       _BCopyWithImpl(this as B, $identity, $identity);
   @override
   String toString() {
-    BMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return BMapper._guard((c) => c.asString(this));
   }
 
   @override
   bool operator ==(Object other) {
-    BMapper.ensureInitialized();
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MapperContainer.globals.isEqual(this, other));
+            BMapper._guard((c) => c.isEqual(this, other)));
   }
 
   @override
   int get hashCode {
-    BMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return BMapper._guard((c) => c.hash(this));
   }
 }
 
@@ -167,6 +168,11 @@ class CMapper extends DiscriminatorSubClassMapperBase<C> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'C';
 
@@ -185,47 +191,40 @@ class CMapper extends DiscriminatorSubClassMapperBase<C> {
   final Function instantiate = _instantiate;
 
   static C fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<C>(map);
+    return _guard((c) => c.fromMap<C>(map));
   }
 
   static C fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<C>(json);
+    return _guard((c) => c.fromJson<C>(json));
   }
 }
 
 mixin CMappable {
   String toJson() {
-    CMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as C);
+    return CMapper._guard((c) => c.toJson(this as C));
   }
 
   Map<String, dynamic> toMap() {
-    CMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as C);
+    return CMapper._guard((c) => c.toMap(this as C));
   }
 
   CCopyWith<C, C, C> get copyWith =>
       _CCopyWithImpl(this as C, $identity, $identity);
   @override
   String toString() {
-    CMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return CMapper._guard((c) => c.asString(this));
   }
 
   @override
   bool operator ==(Object other) {
-    CMapper.ensureInitialized();
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MapperContainer.globals.isEqual(this, other));
+            CMapper._guard((c) => c.isEqual(this, other)));
   }
 
   @override
   int get hashCode {
-    CMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return CMapper._guard((c) => c.hash(this));
   }
 }
 

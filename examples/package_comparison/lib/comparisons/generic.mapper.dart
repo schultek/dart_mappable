@@ -14,6 +14,12 @@ class BoxCMapper extends ClassMapperBase<BoxC> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'BoxC';
   @override
@@ -30,61 +36,74 @@ class BoxCMapper extends ClassMapperBase<BoxC> {
   static BoxC<T> _instantiate<T>(DecodingData data) {
     return BoxC(content: data.get(#content));
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static BoxC<T> fromMap<T>(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<BoxC<T>>(map);
+    return _guard((c) => c.fromMap<BoxC<T>>(map));
   }
+
   static BoxC<T> fromJson<T>(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<BoxC<T>>(json);
+    return _guard((c) => c.fromJson<BoxC<T>>(json));
   }
 }
 
 mixin BoxCMappable<T> {
   String toJson() {
-    BoxCMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as BoxC<T>);
+    return BoxCMapper._guard((c) => c.toJson(this as BoxC<T>));
   }
+
   Map<String, dynamic> toMap() {
-    BoxCMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as BoxC<T>);
+    return BoxCMapper._guard((c) => c.toMap(this as BoxC<T>));
   }
-  BoxCCopyWith<BoxC<T>, BoxC<T>, BoxC<T>, T> get copyWith => _BoxCCopyWithImpl(this as BoxC<T>, $identity, $identity);
+
+  BoxCCopyWith<BoxC<T>, BoxC<T>, BoxC<T>, T> get copyWith =>
+      _BoxCCopyWithImpl(this as BoxC<T>, $identity, $identity);
   @override
   String toString() {
-    BoxCMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return BoxCMapper._guard((c) => c.asString(this));
   }
+
   @override
   bool operator ==(Object other) {
-    BoxCMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            BoxCMapper._guard((c) => c.isEqual(this, other)));
   }
+
   @override
   int get hashCode {
-    BoxCMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return BoxCMapper._guard((c) => c.hash(this));
   }
 }
 
-extension BoxCValueCopy<$R, $Out extends BoxC, T> on ObjectCopyWith<$R, BoxC<T>, $Out> {
-  BoxCCopyWith<$R, BoxC<T>, $Out, T> get asBoxC => base.as((v, t, t2) => _BoxCCopyWithImpl(v, t, t2));
+extension BoxCValueCopy<$R, $Out extends BoxC, T>
+    on ObjectCopyWith<$R, BoxC<T>, $Out> {
+  BoxCCopyWith<$R, BoxC<T>, $Out, T> get asBoxC =>
+      base.as((v, t, t2) => _BoxCCopyWithImpl(v, t, t2));
 }
 
 typedef BoxCCopyWithBound = BoxC;
-abstract class BoxCCopyWith<$R, $In extends BoxC<T>, $Out extends BoxC, T> implements ObjectCopyWith<$R, $In, $Out> {
-  BoxCCopyWith<$R2, $In, $Out2, T> chain<$R2, $Out2 extends BoxC>(Then<BoxC<T>, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class BoxCCopyWith<$R, $In extends BoxC<T>, $Out extends BoxC, T>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  BoxCCopyWith<$R2, $In, $Out2, T> chain<$R2, $Out2 extends BoxC>(
+      Then<BoxC<T>, $Out2> t, Then<$Out2, $R2> t2);
   $R call({T? content});
 }
 
-class _BoxCCopyWithImpl<$R, $Out extends BoxC, T> extends CopyWithBase<$R, BoxC<T>, $Out> implements BoxCCopyWith<$R, BoxC<T>, $Out, T> {
+class _BoxCCopyWithImpl<$R, $Out extends BoxC, T>
+    extends CopyWithBase<$R, BoxC<T>, $Out>
+    implements BoxCCopyWith<$R, BoxC<T>, $Out, T> {
   _BoxCCopyWithImpl(super.value, super.then, super.then2);
-  @override BoxCCopyWith<$R2, BoxC<T>, $Out2, T> chain<$R2, $Out2 extends BoxC>(Then<BoxC<T>, $Out2> t, Then<$Out2, $R2> t2) => _BoxCCopyWithImpl($value, t, t2);
+  @override
+  BoxCCopyWith<$R2, BoxC<T>, $Out2, T> chain<$R2, $Out2 extends BoxC>(
+          Then<BoxC<T>, $Out2> t, Then<$Out2, $R2> t2) =>
+      _BoxCCopyWithImpl($value, t, t2);
 
-  @override $R call({T? content}) => $then(BoxC(content: content ?? $value.content));
+  @override
+  $R call({T? content}) => $then(BoxC(content: content ?? $value.content));
 }
 
 class ContentCMapper extends ClassMapperBase<ContentC> {
@@ -96,6 +115,12 @@ class ContentCMapper extends ClassMapperBase<ContentC> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'ContentC';
 
@@ -109,59 +134,72 @@ class ContentCMapper extends ClassMapperBase<ContentC> {
   static ContentC _instantiate(DecodingData data) {
     return ContentC(data.get(#data));
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static ContentC fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<ContentC>(map);
+    return _guard((c) => c.fromMap<ContentC>(map));
   }
+
   static ContentC fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<ContentC>(json);
+    return _guard((c) => c.fromJson<ContentC>(json));
   }
 }
 
 mixin ContentCMappable {
   String toJson() {
-    ContentCMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as ContentC);
+    return ContentCMapper._guard((c) => c.toJson(this as ContentC));
   }
+
   Map<String, dynamic> toMap() {
-    ContentCMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as ContentC);
+    return ContentCMapper._guard((c) => c.toMap(this as ContentC));
   }
-  ContentCCopyWith<ContentC, ContentC, ContentC> get copyWith => _ContentCCopyWithImpl(this as ContentC, $identity, $identity);
+
+  ContentCCopyWith<ContentC, ContentC, ContentC> get copyWith =>
+      _ContentCCopyWithImpl(this as ContentC, $identity, $identity);
   @override
   String toString() {
-    ContentCMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return ContentCMapper._guard((c) => c.asString(this));
   }
+
   @override
   bool operator ==(Object other) {
-    ContentCMapper.ensureInitialized();
-    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            ContentCMapper._guard((c) => c.isEqual(this, other)));
   }
+
   @override
   int get hashCode {
-    ContentCMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return ContentCMapper._guard((c) => c.hash(this));
   }
 }
 
-extension ContentCValueCopy<$R, $Out extends ContentC> on ObjectCopyWith<$R, ContentC, $Out> {
-  ContentCCopyWith<$R, ContentC, $Out> get asContentC => base.as((v, t, t2) => _ContentCCopyWithImpl(v, t, t2));
+extension ContentCValueCopy<$R, $Out extends ContentC>
+    on ObjectCopyWith<$R, ContentC, $Out> {
+  ContentCCopyWith<$R, ContentC, $Out> get asContentC =>
+      base.as((v, t, t2) => _ContentCCopyWithImpl(v, t, t2));
 }
 
 typedef ContentCCopyWithBound = ContentC;
-abstract class ContentCCopyWith<$R, $In extends ContentC, $Out extends ContentC> implements ObjectCopyWith<$R, $In, $Out> {
-  ContentCCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends ContentC>(Then<ContentC, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class ContentCCopyWith<$R, $In extends ContentC, $Out extends ContentC>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  ContentCCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends ContentC>(
+      Then<ContentC, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? data});
 }
 
-class _ContentCCopyWithImpl<$R, $Out extends ContentC> extends CopyWithBase<$R, ContentC, $Out> implements ContentCCopyWith<$R, ContentC, $Out> {
+class _ContentCCopyWithImpl<$R, $Out extends ContentC>
+    extends CopyWithBase<$R, ContentC, $Out>
+    implements ContentCCopyWith<$R, ContentC, $Out> {
   _ContentCCopyWithImpl(super.value, super.then, super.then2);
-  @override ContentCCopyWith<$R2, ContentC, $Out2> chain<$R2, $Out2 extends ContentC>(Then<ContentC, $Out2> t, Then<$Out2, $R2> t2) => _ContentCCopyWithImpl($value, t, t2);
+  @override
+  ContentCCopyWith<$R2, ContentC, $Out2> chain<$R2, $Out2 extends ContentC>(
+          Then<ContentC, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ContentCCopyWithImpl($value, t, t2);
 
-  @override $R call({String? data}) => $then(ContentC(data ?? $value.data));
+  @override
+  $R call({String? data}) => $then(ContentC(data ?? $value.data));
 }

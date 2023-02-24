@@ -14,8 +14,7 @@ class ToStringGenerator {
     }
     return '  @override\n'
         '  String toString() {\n'
-        '    ${target.mapperName}.ensureInitialized();\n'
-        '    return MapperContainer.globals.asString(this);\n'
+        '    return ${target.mapperName}._guard((c) => c.asString(this));\n'
         '  }\n';
   }
 }

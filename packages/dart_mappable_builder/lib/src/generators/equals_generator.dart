@@ -13,13 +13,13 @@ class EqualsGenerator {
     }
     return '  @override\n'
         '  bool operator ==(Object other) {\n'
-        '    ${target.mapperName}.ensureInitialized();\n'
-        '    return identical(this, other) || (runtimeType == other.runtimeType && MapperContainer.globals.isEqual(this, other));\n'
+        '    return identical(this, other) || ('
+        '      runtimeType == other.runtimeType && '
+        '      ${target.mapperName}._guard((c) => c.isEqual(this, other)));\n'
         '  }\n'
         '  @override\n'
         '  int get hashCode {\n'
-        '    ${target.mapperName}.ensureInitialized();\n'
-        '    return MapperContainer.globals.hash(this);\n'
+        '    return ${target.mapperName}._guard((c) => c.hash(this));\n'
         '  }\n';
   }
 }

@@ -16,6 +16,11 @@ class ItemsMapper extends ClassMapperBase<Items> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Items';
 
@@ -36,47 +41,40 @@ class ItemsMapper extends ClassMapperBase<Items> {
   final Function instantiate = _instantiate;
 
   static Items fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Items>(map);
+    return _guard((c) => c.fromMap<Items>(map));
   }
 
   static Items fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Items>(json);
+    return _guard((c) => c.fromJson<Items>(json));
   }
 }
 
 mixin ItemsMappable {
   String toJson() {
-    ItemsMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as Items);
+    return ItemsMapper._guard((c) => c.toJson(this as Items));
   }
 
   Map<String, dynamic> toMap() {
-    ItemsMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as Items);
+    return ItemsMapper._guard((c) => c.toMap(this as Items));
   }
 
   ItemsCopyWith<Items, Items, Items> get copyWith =>
       _ItemsCopyWithImpl(this as Items, $identity, $identity);
   @override
   String toString() {
-    ItemsMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return ItemsMapper._guard((c) => c.asString(this));
   }
 
   @override
   bool operator ==(Object other) {
-    ItemsMapper.ensureInitialized();
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MapperContainer.globals.isEqual(this, other));
+            ItemsMapper._guard((c) => c.isEqual(this, other)));
   }
 
   @override
   int get hashCode {
-    ItemsMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return ItemsMapper._guard((c) => c.hash(this));
   }
 }
 
@@ -133,6 +131,11 @@ class ItemMapper extends ClassMapperBase<Item> {
     return _instance!;
   }
 
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Item';
 
@@ -151,47 +154,40 @@ class ItemMapper extends ClassMapperBase<Item> {
   final Function instantiate = _instantiate;
 
   static Item fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Item>(map);
+    return _guard((c) => c.fromMap<Item>(map));
   }
 
   static Item fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Item>(json);
+    return _guard((c) => c.fromJson<Item>(json));
   }
 }
 
 mixin ItemMappable {
   String toJson() {
-    ItemMapper.ensureInitialized();
-    return MapperContainer.globals.toJson(this as Item);
+    return ItemMapper._guard((c) => c.toJson(this as Item));
   }
 
   Map<String, dynamic> toMap() {
-    ItemMapper.ensureInitialized();
-    return MapperContainer.globals.toMap(this as Item);
+    return ItemMapper._guard((c) => c.toMap(this as Item));
   }
 
   ItemCopyWith<Item, Item, Item> get copyWith =>
       _ItemCopyWithImpl(this as Item, $identity, $identity);
   @override
   String toString() {
-    ItemMapper.ensureInitialized();
-    return MapperContainer.globals.asString(this);
+    return ItemMapper._guard((c) => c.asString(this));
   }
 
   @override
   bool operator ==(Object other) {
-    ItemMapper.ensureInitialized();
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            MapperContainer.globals.isEqual(this, other));
+            ItemMapper._guard((c) => c.isEqual(this, other)));
   }
 
   @override
   int get hashCode {
-    ItemMapper.ensureInitialized();
-    return MapperContainer.globals.hash(this);
+    return ItemMapper._guard((c) => c.hash(this));
   }
 }
 

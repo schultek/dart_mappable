@@ -16,6 +16,12 @@ class AnimalMapper extends ClassMapperBase<Animal> {
     }
     return _instance!;
   }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
   @override
   final String id = 'Animal';
 
@@ -27,18 +33,19 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   };
 
   static Animal _instantiate(DecodingData data) {
-    throw MapperException.missingSubclass('Animal', 'type', '${data.value['type']}');
+    throw MapperException.missingSubclass(
+        'Animal', 'type', '${data.value['type']}');
   }
+
   @override
   final Function instantiate = _instantiate;
 
   static Animal fromMap(Map<String, dynamic> map) {
-    ensureInitialized();
-    return MapperContainer.globals.fromMap<Animal>(map);
+    return _guard((c) => c.fromMap<Animal>(map));
   }
+
   static Animal fromJson(String json) {
-    ensureInitialized();
-    return MapperContainer.globals.fromJson<Animal>(json);
+    return _guard((c) => c.fromJson<Animal>(json));
   }
 }
 
@@ -49,8 +56,10 @@ mixin AnimalMappable {
 }
 
 typedef AnimalCopyWithBound = Animal;
-abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal> implements ObjectCopyWith<$R, $In, $Out> {
-  AnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(Then<Animal, $Out2> t, Then<$Out2, $R2> t2);
+
+abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal>
+    implements ObjectCopyWith<$R, $In, $Out> {
+  AnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(
+      Then<Animal, $Out2> t, Then<$Out2, $R2> t2);
   $R call({String? name});
 }
-
