@@ -89,7 +89,11 @@ class MappableBuilder implements Builder {
     output.write(writeImports(
         buildStep.inputId, discovered.map((e) => e.key.source.uri).toList()));
 
-    var name = CaseStyle.camelCase.transform('${group.library.name}_container');
+    var libName = group.library.name;
+    if (libName.startsWith('_')) {
+      libName = libName.substring(1);
+    }
+    var name = CaseStyle.camelCase.transform('${libName}_container');
 
     output.write('final $name = MapperContainer(linked: {\n');
 
