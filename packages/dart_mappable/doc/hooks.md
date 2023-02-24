@@ -30,10 +30,10 @@ class Player {
 Now, whenever an instance of `Game` is encoded or decoded, the `GameHook` will be applied to the class and the `PlayerHook` will be applied to the `player` field.
 Inside your hook class, you have four methods that you can override:
 
-- `dynamic beforeDecode(dynamic value)`
-- `dynamic afterDecode(dynamic value)`
-- `dynamic beforeEncode(dynamic value)`
-- `dynamic afterEncode(dynamic value)`
+- `Object? beforeDecode(Object? value)`
+- `Object? afterDecode(Object? value)`
+- `Object? beforeEncode(Object? value)`
+- `Object? afterEncode(Object? value)`
 
 Each method takes a dynamic value and returns an optionally modified value.
 
@@ -49,7 +49,7 @@ class PlayerHook extends MappingHook {
   const PlayerHook();
 
   @override
-  dynamic beforeDecode(dynamic value) {
+  Object? beforeDecode(Object? value) {
     if (value is String) {
       return {'id': value};
     }

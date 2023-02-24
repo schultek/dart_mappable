@@ -32,15 +32,15 @@ stringified enum values. Choose one of the existing styles or specify a custom o
 
 Currently supported are:
 
-| Option | Code | Example `myFieldName` |
-|---|---|---|
-| `none` / `unmodified` | `CaseStyle.none` | myFieldName (unchanged, default) |
-| `camelCase` | `CaseStyle.camelCase` | myFieldName (dart style) |
-| `pascalCase` | `CaseStyle.pascalCase` | MyFieldName |
-| `snakeCase` | `CaseStyle.snakeCase` | my_field_name |
-| `paramCase` | `CaseStyle.paramCase` | my-field-name |
-| `lowerCase` | `CaseStyle.lowerCase` | myfieldname |
-| `upperCase` | `CaseStyle.upperCase` | MYFIELDNAME |
+| Option                | Code                   | Example `myFieldName`            |
+|-----------------------|------------------------|----------------------------------|
+| `none` / `unmodified` | `CaseStyle.none`       | myFieldName (unchanged, default) |
+| `camelCase`           | `CaseStyle.camelCase`  | myFieldName (dart style)         |
+| `pascalCase`          | `CaseStyle.pascalCase` | MyFieldName                      |
+| `snakeCase`           | `CaseStyle.snakeCase`  | my_field_name                    |
+| `paramCase`           | `CaseStyle.paramCase`  | my-field-name                    |
+| `lowerCase`           | `CaseStyle.lowerCase`  | myfieldname                      |
+| `upperCase`           | `CaseStyle.upperCase`  | MYFIELDNAME                      |
 
 You can also specify a **custom case style** using the `custom(ab,c)` syntax or `CaseStyle()` class.
 
@@ -54,11 +54,11 @@ You can also specify a **custom case style** using the `custom(ab,c)` syntax or 
 
 Here are some examples that can be achieved using this syntax:
 
-| Option | Code | Example `myFieldName` |
-|---|---|---|
-| `custom(u,_)` | `CaseStyle(tail: TextTransform.upperCase, separator: '_')` | MY_FIELD_NAME |
-| `custom(uc,+)` | `CaseStyle(head: TextTransform.upperCase, tail: TextTransform.capitalCase, separator: '+')` | MY+Field+Name |
-| `custom(cl,)` | `CaseStyle(head: TextTransform.capitalCase, tail: TextTransform.lowerCase)` |  Myfieldname |
+| Option         | Code                                                                                        | Example `myFieldName` |
+|----------------|---------------------------------------------------------------------------------------------|-----------------------|
+| `custom(u,_)`  | `CaseStyle(tail: TextTransform.upperCase, separator: '_')`                                  | MY_FIELD_NAME         |
+| `custom(uc,+)` | `CaseStyle(head: TextTransform.upperCase, tail: TextTransform.capitalCase, separator: '+')` | MY+Field+Name         |
+| `custom(cl,)`  | `CaseStyle(head: TextTransform.capitalCase, tail: TextTransform.lowerCase)`                 | Myfieldname           |
 
 ## Global options
 

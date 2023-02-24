@@ -17,6 +17,8 @@ A custom mapper for the `Uri` type would look like this:
 
 ```dart
 class UriMapper extends SimpleMapper<Uri> {
+  const UriMapper();
+  
   @override
   Uri decode(dynamic value) {
     return Uri.parse(value as String);
@@ -39,7 +41,7 @@ To use a custom mapper, add it to the `MappableClass.includeCustomMappers` annot
 class:
 
 ```dart
-@MappableClass(includeCustomMappers: [UriMapper])
+@MappableClass(includeCustomMappers: [UriMapper()])
 class Domain {
   final Uri uri;
 
@@ -47,15 +49,13 @@ class Domain {
 }
 ```
 
-Alternatively you can add this manually to any mapper or as the default for all mappers by adding this
-somewhere in your initialization code (e.g. early inside `main()`):
+Alternatively you can add this to the `MapperContainer.globals` to be globally available to all other mappers.
 
 ```dart
-// Add this only for the [Domain] model
-DomainMapper.container.use(UriMapper());
-
-// Add this as the default [Uri] mapper for all models.
-MapperContainer.defaults.use(UriMapper());
+void main() {
+  // Add this as the global [Uri] mapper for all models.
+  MapperContainer.globals.use(UriMapper());
+}
 ```
 
 ***Tip**: Be aware that you can also `unuse()` (and replace) any mappers, both custom, generated, and for primitive types.
@@ -82,7 +82,7 @@ class CustomBoxMapper extends SimpleMapper1<GenericBox> {
   // use the type parameter [T] in the return type [GenericBox<T>]
   GenericBox<T> decode<T>(dynamic value) { 
     // use the type parameter [T] in your decoding logic
-    T content = MapperContainer.defaults.fromValue<T>(value);
+    T content = MapperContainer.globals.fromValue<T>(value);
     return GenericBox<T>(content); 
   }
 
@@ -90,7 +90,7 @@ class CustomBoxMapper extends SimpleMapper1<GenericBox> {
   // use the type parameter [T] in the parameter type [GenericBox<T>]
   dynamic encode<T>(GenericBox<T> self) {
     // use the type parameter [T] in your encoding logic
-    return MapperContainer.defaults.toValue<T>(self.content); 
+    return MapperContainer.globals.toValue<T>(self.content); 
   }
 
   // In case of generic types, we also must specify a type factory. This is a special type of 
@@ -111,18 +111,20 @@ For both you have to provide
 2. a type factory, similar to the one used in generic custom mappers.
 
 ```dart
-MapperContainer.defaults.use(IterableMapper<HashSet>(
-  <T>(Iterable<T> i) => HashSet.of(i),
-  <T>(f) => f<HashSet<T>>(),
-));
+void main() {
+  MapperContainer.globals.use(IterableMapper<HashSet>(
+    <T>(Iterable<T> i) => HashSet.of(i),
+    <T>(f) => f<HashSet<T>>(),
+  ));
 
-MapperContainer.defaults.use(MapMapper<HashMap>(
-  <K, V>(Map<K, V> m) => HashMap.of(m),
-  <K, V>(f) => f<HashMap<K, V>>(),
-));
+  MapperContainer.globals.use(MapMapper<HashMap>(
+    <K, V>(Map<K, V> m) => HashMap.of(m),
+    <K, V>(f) => f<HashMap<K, V>>(),
+  ));
 
-HashSet<String> brands = MapperContainer.defaults.fromJson('["Toyota", "Audi", "Audi"]');
-print(String); // {"Toyota", "Audi"}
+  HashSet<String> brands = MapperContainer.globals.fromJson('["Toyota", "Audi", "Audi"]');
+  print(String); // {"Toyota", "Audi"}
+}
 ```
 
 ## Advanced Uses
@@ -135,52 +137,41 @@ Here the setup requires a bit more boilerplate, but you get full control over yo
 // extend [MapperBase] and provide your type
 class MyClassMapper extends MapperBase<MyClass> {
   
-  // implement the [createElement] method and return your custom element instance
-  @override
-  MyClassMapperElement createElement(MapperContainer container) {
-    return MyClassMapperElement._(this, container);
-  }
-  
   // If your type is generic, specify a type factory. Else this can be skipped.
   @override
   Function get typeFactory => <T>(f) => f<MyClass<T>>();
-}
-
-// extend [MapperElementBase] and provide your type
-class MyClassMapperElement extends MapperElementBase<MyClass> {
-  MyClassMapperElement._(super.mapper, super.container);
-
+  
   // all the following overrides are optional
   
   @override
-  // if your type is generic, make this function also generic
-  Function get decoder => (dynamic value) {
+  MyClass decoder(DecodingContext<Object> context) {
     // your decoding logic here
-    throw UnimplementedError();
-  };
-  
-  @override
-  // if your type is generic, make this function also generic
-  Function get encoder => (MyClass self) {
-    // your encoding logic here
-    throw UnimplementedError();
-  };
-  
-  @override
-  String stringify(MyClass self) {
-    // your stringify logic here
+    // you can access the encoded value using 'context.value'
     throw UnimplementedError();
   }
   
   @override
-  int hash(MyClass self) {
+  Object? encoder(EncodingContext<Object> context) {
+    // your encoding logic here
+    // you can access the decoded value using 'context.value'
+    throw UnimplementedError();
+  }
+  
+  @override
+  bool equals(MappingContext<Object> context, MyClass other) {
+    // your equals logic here
+    throw UnimplementedError();
+  }
+  
+  @override
+  int hash(MappingContext<Object> context) {
     // your hashcode logic here
     throw UnimplementedError();
   }
-  
+
   @override
-  bool equals(MyClass self, MyClass other) {
-    // your equals logic here
+  String stringify(MappingContext<Object> context) {
+    // your stringify logic here
     throw UnimplementedError();
   }
 }

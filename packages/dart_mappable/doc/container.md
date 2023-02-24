@@ -4,7 +4,6 @@ mapper for a type and call its respective method.
 To find the mapper for a given type, the container first looks at its own **set of mappers** and when 
 there is no match it refers to its **linked containers**.
 
-
 ## Working with `MapperContainer`s
 
 **This is an advanced topic.** Usually you don't need to worry about containers, as they are hidden from the user when doing standard
@@ -81,9 +80,9 @@ void main() {
 }
 ```
 
-## Default Container
+## Defaults Container
 
-There is a special **global default** container that can be accessed using `MapperContainer.defaults`. This
+There is a special **global defaults** container that can be accessed using `MapperContainer.defaults`. This
 container initially contains mappers for all **primitive and core types**. Types included are:
 
 `dynamic`, `Object`, `String`, `int`, `double`, `num`, `bool`, `DateTime`, `List`, `Set`, `Map`
@@ -112,13 +111,12 @@ void main() {
 
 ```
 
-## Combined Containers
+## Globals Container
 
-For convenience or when using **generic decoding** you may want to have a container that knows 
-**all classes in your project**. Such a container can be auto-generated using the 
-`@MappableLib(createCombinedContainer: true)` annotation.
+The second special container is the `MapperContainer.globals` container. This
+container is used by all generated mappers for global registration.
 
-This feature is documented [here](../topics/Generics-topic.html).
+A generated mapper adds itself to the globals container when calling `MyMapper.ensureInitialized()`.
 
 ## Encoding Lists, Sets and Maps
 
