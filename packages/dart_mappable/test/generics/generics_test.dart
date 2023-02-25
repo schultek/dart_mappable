@@ -127,6 +127,14 @@ void main() {
           jsonB, equals('{"properties":[1,4],"__type":"SingleSetting<int>"}'));
     });
 
+    test('Unknown type decoding', () {
+      expect(
+        () => MapperContainer.globals.fromMap<Object>({'__type': 'Unknown'}),
+        throwsMapperException(MapperException.chain(MapperMethod.decode,
+            '(Object)', MapperException.unresolvedType('Unknown'))),
+      );
+    });
+
     test('Nullable generic param', () {
       expect(
         AssetMapper.fromJson<dynamic>('{"data": null}').data,

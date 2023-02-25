@@ -321,7 +321,7 @@ void main() {
     encode: (myClass) => myClass.toJson,
   );
   // This makes it accessible by all other mappers.
-  MapperContainer.defaults.use(myClassMapper);
+  MapperContainer.globals.use(myClassMapper);
 }
 ```
 

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element
 
-part of 'lib_mapping_test.dart';
+part of 'external_types_test.dart';
 
 class PersonMapper extends ClassMapperBase<Person> {
   PersonMapper._();

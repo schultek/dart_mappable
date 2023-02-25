@@ -1,6 +1,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
+import '../utils.dart';
+
 part 'multi_poly_test.mapper.dart';
 
 @MappableClass(discriminatorKey: 'type', ignoreNull: true)
@@ -74,6 +76,16 @@ void main() {
       AnimalMapper.ensureInitialized();
       var a = MapperContainer.globals.toMap<dynamic>(Dog(null));
       expect(a, equals({'type': 'Dog', '__type': 'Dog'}));
+    });
+
+    test('Fail decode', () {
+      expect(
+        () => AnimalMapper.fromJson('{}'),
+        throwsMapperException(MapperException.chain(
+            MapperMethod.decode,
+            '(Animal)',
+            MapperException.missingSubclass('Animal', 'type', 'null'))),
+      );
     });
   });
 }

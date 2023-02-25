@@ -72,11 +72,6 @@ class MapperException implements Exception {
     return MapperException._('Cannot resolve type from property "$type". '
         'Invalid or unregistered type.');
   }
-
-  /// Checks if this is an unsupported operation exception
-  bool isUnsupportedOrUnallowed() =>
-      message.startsWith('Unsupported operation') ||
-      message.startsWith('The Mappable mixin');
 }
 
 /// Method indicator used for exceptions
@@ -88,11 +83,6 @@ class _ChainedMapperException implements MapperException {
   final MapperMethod method;
   final String hint;
   final Object error;
-
-  @override
-  bool isUnsupportedOrUnallowed() => error is MapperException
-      ? (error as MapperException).isUnsupportedOrUnallowed()
-      : false;
 
   String get chainedMessage {
     var e = error;

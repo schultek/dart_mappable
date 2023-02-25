@@ -10,6 +10,8 @@
 - Removed `CheckTypesHook` in favor of discriminator functions.
 - Added `.copyWith.$merge()` and `.copyWith.$delta()`.
 
+  For a detailed migration guide, see [this issue](https://github.com/schultek/dart_mappable/issues/71).
+
 # 2.0.3
 
 - Fixed typo in readme (by [@timmaffett](https://github.com/schultek/dart_mappable/pull/67))

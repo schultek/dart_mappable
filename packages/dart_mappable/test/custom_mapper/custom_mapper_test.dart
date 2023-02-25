@@ -1,7 +1,11 @@
 // ignore_for_file: prefer_function_declarations_over_variables
 
+import 'dart:typed_data';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
+
+import '../utils.dart';
 
 part 'custom_mapper_test.mapper.dart';
 
@@ -78,6 +82,8 @@ class BigIntMapper extends PrimitiveMapper<BigInt> {
   const BigIntMapper();
 }
 
+class EmptyMapper extends MapperBase<Uint8List> {}
+
 void main() {
   group('Custom Mappers', () {
     test('Simple Custom Mapper', () {
@@ -106,16 +112,57 @@ void main() {
       var container = MapperContainer(mappers: {UriMapper()});
 
       var uri = Uri(
-          scheme: 'http',
+          scheme: 'https',
           host: 'example.com',
           path: 'some/path',
           query: 'key=value');
 
       var encoded = container.toValue(uri);
-      expect(encoded, equals('http://example.com/some/path?key=value'));
+      expect(encoded, equals('https://example.com/some/path?key=value'));
 
       var decoded = container.fromValue<Uri>(encoded);
       expect(decoded, equals(uri));
+    });
+
+    test('Empty mapper', () {
+      var container = MapperContainer(mappers: {EmptyMapper()});
+
+      expect(
+        () => container.fromValue<Uint8List>([]),
+        throwsMapperException(MapperException.chain(
+            MapperMethod.decode,
+            '(Uint8List)',
+            MapperException.unsupportedMethod(MapperMethod.decode, Uint8List))),
+      );
+
+      expect(
+        () => container.toValue<Uint8List>(Uint8List(0)),
+        throwsMapperException(MapperException.chain(
+            MapperMethod.encode,
+            '(Uint8List)',
+            MapperException.unsupportedMethod(MapperMethod.encode, Uint8List))),
+      );
+
+      expect(
+        () => container.asString(Uint8List(0)),
+        throwsMapperException(MapperException.chain(
+            MapperMethod.stringify,
+            "(Instance of 'Uint8List')",
+            MapperException.unsupportedMethod(
+                MapperMethod.stringify, Uint8List))),
+      );
+
+      expect(
+        () => container.isEqual(Uint8List(0), Uint8List(0)),
+        throwsMapperException(MapperException.chain(MapperMethod.equals, '[[]]',
+            MapperException.unsupportedMethod(MapperMethod.equals, Uint8List))),
+      );
+
+      expect(
+        () => container.hash(Uint8List(0)),
+        throwsMapperException(MapperException.chain(MapperMethod.hash, '[[]]',
+            MapperException.unsupportedMethod(MapperMethod.hash, Uint8List))),
+      );
     });
   });
 

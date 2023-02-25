@@ -2,7 +2,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
 import '../utils.dart';
-import 'model.dart';
 
 part 'basic_serialization_test.mapper.dart';
 
@@ -16,6 +15,9 @@ class A with AMappable {
 
   A(this.a, {this.b = 0, this.c, required this.d, this.e});
 }
+
+@MappableEnum(defaultValue: B.a)
+enum B { a, bB, ccCc }
 
 void main() {
   group('basic serialization', () {

@@ -8,7 +8,7 @@ import 'other/food.dart' as f;
 import 'other/models.dart' as m;
 import 'other/other.dart' as o;
 
-part 'lib_mapping_test.mapper.dart';
+part 'external_types_test.mapper.dart';
 
 @MappableClass()
 typedef Cake = f.Cake;
@@ -30,7 +30,7 @@ class Person with PersonMappable {
 }
 
 void main() {
-  group('Lib mapping', () {
+  group('external types', () {
     test('Mappers are generated correctly', () {
       expect(Person('Tom').toMap(), equals({'first_name': 'Tom'}));
       expect(Cake('Lemon').toMap(), equals({'type': 'Lemon'}));
