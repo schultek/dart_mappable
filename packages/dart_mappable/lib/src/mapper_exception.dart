@@ -72,6 +72,11 @@ class MapperException implements Exception {
     return MapperException._('Cannot resolve type from property "$type". '
         'Invalid or unregistered type.');
   }
+
+  factory MapperException.unsupportedBatchUpdate() {
+    return MapperException._(
+        'Calls to \$update are not supported in batch mode.');
+  }
 }
 
 /// Method indicator used for exceptions
