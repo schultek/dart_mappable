@@ -72,7 +72,7 @@ abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
   @override
   bool includeTypeId<V>(v) {
     // Skip type id for non-generic poly types.
-    if (V == superMapper.type && V == superMapper.type.base) {
+    if (V.nonNull == superMapper.type) {
       return false;
     }
     return super.includeTypeId<V>(v) && superMapper.includeTypeId<V>(v);
@@ -182,7 +182,7 @@ enum FieldMode {
 
 class Field<T extends Object, V> {
   final String name;
-  final V Function(T) get;
+  final V Function(T) getter;
   final String key;
   final FieldMode mode;
   final Function? arg;
@@ -190,7 +190,7 @@ class Field<T extends Object, V> {
   final V? def;
   final MappingHook? hook;
 
-  const Field(this.name, this.get,
+  const Field(this.name, this.getter,
       {String? key,
       this.mode = FieldMode.field,
       this.arg,
@@ -198,6 +198,10 @@ class Field<T extends Object, V> {
       this.def,
       this.hook})
       : key = key ?? name;
+
+  V get(T value) {
+    return getter(value);
+  }
 
   dynamic encode(EncodingContext<T> context) {
     var container = context.container;

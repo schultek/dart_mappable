@@ -27,7 +27,7 @@ extension DataList<$R, $Out extends A> on ACopyWith<$R, A, $Out> {
       (this as CopyWithBase<$R, A, $Out>).as((v, t, t2) =>
           ImmutableListCopyWith(
               v.list,
-              (vv, tt) => vv.copyWith.chain($identity, tt),
+              (vv, tt) => vv.copyWith.$chain($identity, tt),
               (l) => call(list: l)));
 }
 

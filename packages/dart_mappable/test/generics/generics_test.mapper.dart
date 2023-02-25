@@ -84,37 +84,45 @@ mixin BoxMappable<T extends Content> {
 
 extension BoxValueCopy<$R, $Out extends Box, T extends Content>
     on ObjectCopyWith<$R, Box<T>, $Out> {
-  BoxCopyWith<$R, Box<T>, $Out, T> get asBox =>
-      base.as((v, t, t2) => _BoxCopyWithImpl(v, t, t2));
+  BoxCopyWith<$R, Box<T>, $Out, T> get $asBox =>
+      $base.as((v, t, t2) => _BoxCopyWithImpl(v, t, t2));
 }
 
 typedef BoxCopyWithBound = Box;
 
 abstract class BoxCopyWith<$R, $In extends Box<T>, $Out extends Box,
-    T extends Content> implements ObjectCopyWith<$R, $In, $Out> {
-  BoxCopyWith<$R2, $In, $Out2, T> chain<$R2, $Out2 extends Box>(
-      Then<Box<T>, $Out2> t, Then<$Out2, $R2> t2);
+    T extends Content> implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, T, ContentCopyWith<$R, T, T>> get contents;
   $R call({int? size, List<T>? contents});
+  BoxCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2 extends Box>(
+      Then<Box<T>, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _BoxCopyWithImpl<$R, $Out extends Box, T extends Content>
-    extends CopyWithBase<$R, Box<T>, $Out>
+    extends ClassCopyWithBase<$R, Box<T>, $Out>
     implements BoxCopyWith<$R, Box<T>, $Out, T> {
   _BoxCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  BoxCopyWith<$R2, Box<T>, $Out2, T> chain<$R2, $Out2 extends Box>(
-          Then<Box<T>, $Out2> t, Then<$Out2, $R2> t2) =>
-      _BoxCopyWithImpl($value, t, t2);
 
+  @override
+  late final ClassMapperBase<Box> $mapper = BoxMapper.ensureInitialized();
   @override
   ListCopyWith<$R, T, ContentCopyWith<$R, T, T>> get contents => ListCopyWith(
       $value.contents,
-      (v, t) => $cast(v.copyWith.chain<$R, T>($cast, t)),
+      (v, t) => $cast(v.copyWith.$chain<$R, T>($cast, t)),
       (v) => call(contents: v));
   @override
-  $R call({int? size, List<T>? contents}) =>
-      $then(Box(size ?? $value.size, contents: contents ?? $value.contents));
+  $R call({int? size, List<T>? contents}) => $apply(FieldCopyWithData({
+        if (size != null) #size: size,
+        if (contents != null) #contents: contents
+      }));
+  @override
+  Box<T> $make(CopyWithData data) => Box(data.get(#size, or: $value.size),
+      contents: data.get(#contents, or: $value.contents));
+
+  @override
+  BoxCopyWith<$R2, Box<T>, $Out2, T> $chain<$R2, $Out2 extends Box>(
+          Then<Box<T>, $Out2> t, Then<$Out2, $R2> t2) =>
+      _BoxCopyWithImpl($value, t, t2);
 }
 
 class ConfettiMapper extends ClassMapperBase<Confetti> {
@@ -189,31 +197,39 @@ mixin ConfettiMappable {
 
 extension ConfettiValueCopy<$R, $Out extends Content>
     on ObjectCopyWith<$R, Confetti, $Out> {
-  ConfettiCopyWith<$R, Confetti, $Out> get asConfetti =>
-      base.as((v, t, t2) => _ConfettiCopyWithImpl(v, t, t2));
+  ConfettiCopyWith<$R, Confetti, $Out> get $asConfetti =>
+      $base.as((v, t, t2) => _ConfettiCopyWithImpl(v, t, t2));
 }
 
 typedef ConfettiCopyWithBound = Content;
 
 abstract class ConfettiCopyWith<$R, $In extends Confetti, $Out extends Content>
     implements ContentCopyWith<$R, $In, $Out> {
-  ConfettiCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Content>(
-      Then<Confetti, $Out2> t, Then<$Out2, $R2> t2);
   @override
   $R call({String? color});
+  ConfettiCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Content>(
+      Then<Confetti, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _ConfettiCopyWithImpl<$R, $Out extends Content>
-    extends CopyWithBase<$R, Confetti, $Out>
+    extends ClassCopyWithBase<$R, Confetti, $Out>
     implements ConfettiCopyWith<$R, Confetti, $Out> {
   _ConfettiCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  ConfettiCopyWith<$R2, Confetti, $Out2> chain<$R2, $Out2 extends Content>(
-          Then<Confetti, $Out2> t, Then<$Out2, $R2> t2) =>
-      _ConfettiCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? color}) => $then(Confetti(color ?? $value.color));
+  late final ClassMapperBase<Confetti> $mapper =
+      ConfettiMapper.ensureInitialized();
+  @override
+  $R call({String? color}) =>
+      $apply(FieldCopyWithData({if (color != null) #color: color}));
+  @override
+  Confetti $make(CopyWithData data) =>
+      Confetti(data.get(#color, or: $value.color));
+
+  @override
+  ConfettiCopyWith<$R2, Confetti, $Out2> $chain<$R2, $Out2 extends Content>(
+          Then<Confetti, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ConfettiCopyWithImpl($value, t, t2);
 }
 
 class ContentMapper extends ClassMapperBase<Content> {
@@ -285,30 +301,36 @@ mixin ContentMappable {
 
 extension ContentValueCopy<$R, $Out extends Content>
     on ObjectCopyWith<$R, Content, $Out> {
-  ContentCopyWith<$R, Content, $Out> get asContent =>
-      base.as((v, t, t2) => _ContentCopyWithImpl(v, t, t2));
+  ContentCopyWith<$R, Content, $Out> get $asContent =>
+      $base.as((v, t, t2) => _ContentCopyWithImpl(v, t, t2));
 }
 
 typedef ContentCopyWithBound = Content;
 
 abstract class ContentCopyWith<$R, $In extends Content, $Out extends Content>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  ContentCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Content>(
-      Then<Content, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call();
+  ContentCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Content>(
+      Then<Content, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _ContentCopyWithImpl<$R, $Out extends Content>
-    extends CopyWithBase<$R, Content, $Out>
+    extends ClassCopyWithBase<$R, Content, $Out>
     implements ContentCopyWith<$R, Content, $Out> {
   _ContentCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  ContentCopyWith<$R2, Content, $Out2> chain<$R2, $Out2 extends Content>(
-          Then<Content, $Out2> t, Then<$Out2, $R2> t2) =>
-      _ContentCopyWithImpl($value, t, t2);
 
   @override
-  $R call() => $then(Content());
+  late final ClassMapperBase<Content> $mapper =
+      ContentMapper.ensureInitialized();
+  @override
+  $R call() => $apply(FieldCopyWithData({}));
+  @override
+  Content $make(CopyWithData data) => Content();
+
+  @override
+  ContentCopyWith<$R2, Content, $Out2> $chain<$R2, $Out2 extends Content>(
+          Then<Content, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ContentCopyWithImpl($value, t, t2);
 }
 
 class DataMapper extends ClassMapperBase<Data> {
@@ -383,30 +405,36 @@ mixin DataMappable {
 
 extension DataValueCopy<$R, $Out extends Data>
     on ObjectCopyWith<$R, Data, $Out> {
-  DataCopyWith<$R, Data, $Out> get asData =>
-      base.as((v, t, t2) => _DataCopyWithImpl(v, t, t2));
+  DataCopyWith<$R, Data, $Out> get $asData =>
+      $base.as((v, t, t2) => _DataCopyWithImpl(v, t, t2));
 }
 
 typedef DataCopyWithBound = Data;
 
 abstract class DataCopyWith<$R, $In extends Data, $Out extends Data>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  DataCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Data>(
-      Then<Data, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? data});
+  DataCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Data>(
+      Then<Data, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _DataCopyWithImpl<$R, $Out extends Data>
-    extends CopyWithBase<$R, Data, $Out>
+    extends ClassCopyWithBase<$R, Data, $Out>
     implements DataCopyWith<$R, Data, $Out> {
   _DataCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  DataCopyWith<$R2, Data, $Out2> chain<$R2, $Out2 extends Data>(
-          Then<Data, $Out2> t, Then<$Out2, $R2> t2) =>
-      _DataCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? data}) => $then(Data(data ?? $value.data));
+  late final ClassMapperBase<Data> $mapper = DataMapper.ensureInitialized();
+  @override
+  $R call({String? data}) =>
+      $apply(FieldCopyWithData({if (data != null) #data: data}));
+  @override
+  Data $make(CopyWithData data) => Data(data.get(#data, or: $value.data));
+
+  @override
+  DataCopyWith<$R2, Data, $Out2> $chain<$R2, $Out2 extends Data>(
+          Then<Data, $Out2> t, Then<$Out2, $R2> t2) =>
+      _DataCopyWithImpl($value, t, t2);
 }
 
 class SingleSettingMapper extends ClassMapperBase<SingleSetting> {
@@ -488,31 +516,29 @@ mixin SingleSettingMappable<T> {
 
 extension SingleSettingValueCopy<$R, $Out extends SingleSetting, T>
     on ObjectCopyWith<$R, SingleSetting<T>, $Out> {
-  SingleSettingCopyWith<$R, SingleSetting<T>, $Out, T> get asSingleSetting =>
-      base.as((v, t, t2) => _SingleSettingCopyWithImpl(v, t, t2));
+  SingleSettingCopyWith<$R, SingleSetting<T>, $Out, T> get $asSingleSetting =>
+      $base.as((v, t, t2) => _SingleSettingCopyWithImpl(v, t, t2));
 }
 
 typedef SingleSettingCopyWithBound = SingleSetting;
 
 abstract class SingleSettingCopyWith<$R, $In extends SingleSetting<T>,
-    $Out extends SingleSetting, T> implements ObjectCopyWith<$R, $In, $Out> {
-  SingleSettingCopyWith<$R2, $In, $Out2, T>
-      chain<$R2, $Out2 extends SingleSetting>(
-          Then<SingleSetting<T>, $Out2> t, Then<$Out2, $R2> t2);
+    $Out extends SingleSetting, T> implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>>? get properties;
   $R call({List<T>? properties});
+  SingleSettingCopyWith<$R2, $In, $Out2, T>
+      $chain<$R2, $Out2 extends SingleSetting>(
+          Then<SingleSetting<T>, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _SingleSettingCopyWithImpl<$R, $Out extends SingleSetting, T>
-    extends CopyWithBase<$R, SingleSetting<T>, $Out>
+    extends ClassCopyWithBase<$R, SingleSetting<T>, $Out>
     implements SingleSettingCopyWith<$R, SingleSetting<T>, $Out, T> {
   _SingleSettingCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  SingleSettingCopyWith<$R2, SingleSetting<T>, $Out2, T>
-      chain<$R2, $Out2 extends SingleSetting>(
-              Then<SingleSetting<T>, $Out2> t, Then<$Out2, $R2> t2) =>
-          _SingleSettingCopyWithImpl($value, t, t2);
 
+  @override
+  late final ClassMapperBase<SingleSetting> $mapper =
+      SingleSettingMapper.ensureInitialized();
   @override
   ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>>? get properties =>
       $value.properties != null
@@ -522,8 +548,17 @@ class _SingleSettingCopyWithImpl<$R, $Out extends SingleSetting, T>
               (v) => call(properties: v))
           : null;
   @override
-  $R call({Object? properties = $none}) =>
-      $then(SingleSetting(properties: or(properties, $value.properties)));
+  $R call({Object? properties = $none}) => $apply(
+      FieldCopyWithData({if (properties != $none) #properties: properties}));
+  @override
+  SingleSetting<T> $make(CopyWithData data) =>
+      SingleSetting(properties: data.get(#properties, or: $value.properties));
+
+  @override
+  SingleSettingCopyWith<$R2, SingleSetting<T>, $Out2, T>
+      $chain<$R2, $Out2 extends SingleSetting>(
+              Then<SingleSetting<T>, $Out2> t, Then<$Out2, $R2> t2) =>
+          _SingleSettingCopyWithImpl($value, t, t2);
 }
 
 class SettingsMapper extends ClassMapperBase<Settings> {
@@ -604,16 +639,14 @@ mixin SettingsMappable {
 
 extension SettingsValueCopy<$R, $Out extends Settings>
     on ObjectCopyWith<$R, Settings, $Out> {
-  SettingsCopyWith<$R, Settings, $Out> get asSettings =>
-      base.as((v, t, t2) => _SettingsCopyWithImpl(v, t, t2));
+  SettingsCopyWith<$R, Settings, $Out> get $asSettings =>
+      $base.as((v, t, t2) => _SettingsCopyWithImpl(v, t, t2));
 }
 
 typedef SettingsCopyWithBound = Settings;
 
 abstract class SettingsCopyWith<$R, $In extends Settings, $Out extends Settings>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  SettingsCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Settings>(
-      Then<Settings, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<
       $R,
       String,
@@ -621,17 +654,18 @@ abstract class SettingsCopyWith<$R, $In extends Settings, $Out extends Settings>
       SingleSettingCopyWith<$R, SingleSetting<dynamic>, SingleSetting<dynamic>,
           dynamic>>? get settings;
   $R call({Map<String, SingleSetting<dynamic>>? settings});
+  SettingsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Settings>(
+      Then<Settings, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _SettingsCopyWithImpl<$R, $Out extends Settings>
-    extends CopyWithBase<$R, Settings, $Out>
+    extends ClassCopyWithBase<$R, Settings, $Out>
     implements SettingsCopyWith<$R, Settings, $Out> {
   _SettingsCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  SettingsCopyWith<$R2, Settings, $Out2> chain<$R2, $Out2 extends Settings>(
-          Then<Settings, $Out2> t, Then<$Out2, $R2> t2) =>
-      _SettingsCopyWithImpl($value, t, t2);
 
+  @override
+  late final ClassMapperBase<Settings> $mapper =
+      SettingsMapper.ensureInitialized();
   @override
   MapCopyWith<
       $R,
@@ -641,12 +675,20 @@ class _SettingsCopyWithImpl<$R, $Out extends Settings>
           dynamic>>? get settings => $value.settings != null
       ? MapCopyWith(
           $value.settings!,
-          (v, t) => v.copyWith.chain<$R, SingleSetting<dynamic>>($identity, t),
+          (v, t) => v.copyWith.$chain<$R, SingleSetting<dynamic>>($identity, t),
           (v) => call(settings: v))
       : null;
   @override
   $R call({Object? settings = $none}) =>
-      $then(Settings(settings: or(settings, $value.settings)));
+      $apply(FieldCopyWithData({if (settings != $none) #settings: settings}));
+  @override
+  Settings $make(CopyWithData data) =>
+      Settings(settings: data.get(#settings, or: $value.settings));
+
+  @override
+  SettingsCopyWith<$R2, Settings, $Out2> $chain<$R2, $Out2 extends Settings>(
+          Then<Settings, $Out2> t, Then<$Out2, $R2> t2) =>
+      _SettingsCopyWithImpl($value, t, t2);
 }
 
 class AssetMapper extends ClassMapperBase<Asset> {
@@ -724,28 +766,35 @@ mixin AssetMappable<T> {
 
 extension AssetValueCopy<$R, $Out extends Asset, T>
     on ObjectCopyWith<$R, Asset<T>, $Out> {
-  AssetCopyWith<$R, Asset<T>, $Out, T> get asAsset =>
-      base.as((v, t, t2) => _AssetCopyWithImpl(v, t, t2));
+  AssetCopyWith<$R, Asset<T>, $Out, T> get $asAsset =>
+      $base.as((v, t, t2) => _AssetCopyWithImpl(v, t, t2));
 }
 
 typedef AssetCopyWithBound = Asset;
 
 abstract class AssetCopyWith<$R, $In extends Asset<T>, $Out extends Asset, T>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  AssetCopyWith<$R2, $In, $Out2, T> chain<$R2, $Out2 extends Asset>(
-      Then<Asset<T>, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({T? data});
+  AssetCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2 extends Asset>(
+      Then<Asset<T>, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _AssetCopyWithImpl<$R, $Out extends Asset, T>
-    extends CopyWithBase<$R, Asset<T>, $Out>
+    extends ClassCopyWithBase<$R, Asset<T>, $Out>
     implements AssetCopyWith<$R, Asset<T>, $Out, T> {
   _AssetCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  AssetCopyWith<$R2, Asset<T>, $Out2, T> chain<$R2, $Out2 extends Asset>(
-          Then<Asset<T>, $Out2> t, Then<$Out2, $R2> t2) =>
-      _AssetCopyWithImpl($value, t, t2);
 
   @override
-  $R call({T? data}) => $then(Asset(data: data ?? $value.data));
+  late final ClassMapperBase<Asset> $mapper = AssetMapper.ensureInitialized();
+  @override
+  $R call({T? data}) =>
+      $apply(FieldCopyWithData({if (data != null) #data: data}));
+  @override
+  Asset<T> $make(CopyWithData data) =>
+      Asset(data: data.get(#data, or: $value.data));
+
+  @override
+  AssetCopyWith<$R2, Asset<T>, $Out2, T> $chain<$R2, $Out2 extends Asset>(
+          Then<Asset<T>, $Out2> t, Then<$Out2, $R2> t2) =>
+      _AssetCopyWithImpl($value, t, t2);
 }

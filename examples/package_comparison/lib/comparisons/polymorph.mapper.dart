@@ -58,10 +58,10 @@ mixin AnimalBMappable {
 typedef AnimalBCopyWithBound = AnimalB;
 
 abstract class AnimalBCopyWith<$R, $In extends AnimalB, $Out extends AnimalB>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  AnimalBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends AnimalB>(
-      Then<AnimalB, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? name});
+  AnimalBCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends AnimalB>(
+      Then<AnimalB, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class CatBMapper extends SubClassMapperBase<CatB> {
@@ -145,32 +145,38 @@ mixin CatBMappable {
 
 extension CatBValueCopy<$R, $Out extends AnimalB>
     on ObjectCopyWith<$R, CatB, $Out> {
-  CatBCopyWith<$R, CatB, $Out> get asCatB =>
-      base.as((v, t, t2) => _CatBCopyWithImpl(v, t, t2));
+  CatBCopyWith<$R, CatB, $Out> get $asCatB =>
+      $base.as((v, t, t2) => _CatBCopyWithImpl(v, t, t2));
 }
 
 typedef CatBCopyWithBound = AnimalB;
 
 abstract class CatBCopyWith<$R, $In extends CatB, $Out extends AnimalB>
     implements AnimalBCopyWith<$R, $In, $Out> {
-  CatBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends AnimalB>(
-      Then<CatB, $Out2> t, Then<$Out2, $R2> t2);
   @override
   $R call({String? name, String? color});
+  CatBCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends AnimalB>(
+      Then<CatB, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _CatBCopyWithImpl<$R, $Out extends AnimalB>
-    extends CopyWithBase<$R, CatB, $Out>
+    extends ClassCopyWithBase<$R, CatB, $Out>
     implements CatBCopyWith<$R, CatB, $Out> {
   _CatBCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  CatBCopyWith<$R2, CatB, $Out2> chain<$R2, $Out2 extends AnimalB>(
-          Then<CatB, $Out2> t, Then<$Out2, $R2> t2) =>
-      _CatBCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? name, String? color}) =>
-      $then(CatB(name ?? $value.name, color ?? $value.color));
+  late final ClassMapperBase<CatB> $mapper = CatBMapper.ensureInitialized();
+  @override
+  $R call({String? name, String? color}) => $apply(FieldCopyWithData(
+      {if (name != null) #name: name, if (color != null) #color: color}));
+  @override
+  CatB $make(CopyWithData data) => CatB(
+      data.get(#name, or: $value.name), data.get(#color, or: $value.color));
+
+  @override
+  CatBCopyWith<$R2, CatB, $Out2> $chain<$R2, $Out2 extends AnimalB>(
+          Then<CatB, $Out2> t, Then<$Out2, $R2> t2) =>
+      _CatBCopyWithImpl($value, t, t2);
 }
 
 class DogBMapper extends SubClassMapperBase<DogB> {
@@ -254,30 +260,36 @@ mixin DogBMappable {
 
 extension DogBValueCopy<$R, $Out extends AnimalB>
     on ObjectCopyWith<$R, DogB, $Out> {
-  DogBCopyWith<$R, DogB, $Out> get asDogB =>
-      base.as((v, t, t2) => _DogBCopyWithImpl(v, t, t2));
+  DogBCopyWith<$R, DogB, $Out> get $asDogB =>
+      $base.as((v, t, t2) => _DogBCopyWithImpl(v, t, t2));
 }
 
 typedef DogBCopyWithBound = AnimalB;
 
 abstract class DogBCopyWith<$R, $In extends DogB, $Out extends AnimalB>
     implements AnimalBCopyWith<$R, $In, $Out> {
-  DogBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends AnimalB>(
-      Then<DogB, $Out2> t, Then<$Out2, $R2> t2);
   @override
   $R call({String? name, int? age});
+  DogBCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends AnimalB>(
+      Then<DogB, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _DogBCopyWithImpl<$R, $Out extends AnimalB>
-    extends CopyWithBase<$R, DogB, $Out>
+    extends ClassCopyWithBase<$R, DogB, $Out>
     implements DogBCopyWith<$R, DogB, $Out> {
   _DogBCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  DogBCopyWith<$R2, DogB, $Out2> chain<$R2, $Out2 extends AnimalB>(
-          Then<DogB, $Out2> t, Then<$Out2, $R2> t2) =>
-      _DogBCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? name, int? age}) =>
-      $then(DogB(name ?? $value.name, age ?? $value.age));
+  late final ClassMapperBase<DogB> $mapper = DogBMapper.ensureInitialized();
+  @override
+  $R call({String? name, int? age}) => $apply(FieldCopyWithData(
+      {if (name != null) #name: name, if (age != null) #age: age}));
+  @override
+  DogB $make(CopyWithData data) =>
+      DogB(data.get(#name, or: $value.name), data.get(#age, or: $value.age));
+
+  @override
+  DogBCopyWith<$R2, DogB, $Out2> $chain<$R2, $Out2 extends AnimalB>(
+          Then<DogB, $Out2> t, Then<$Out2, $R2> t2) =>
+      _DogBCopyWithImpl($value, t, t2);
 }

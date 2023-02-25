@@ -78,30 +78,37 @@ mixin PersonMappable {
 
 extension PersonValueCopy<$R, $Out extends Person>
     on ObjectCopyWith<$R, Person, $Out> {
-  PersonCopyWith<$R, Person, $Out> get asPerson =>
-      base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
+  PersonCopyWith<$R, Person, $Out> get $asPerson =>
+      $base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
 }
 
 typedef PersonCopyWithBound = Person;
 
 abstract class PersonCopyWith<$R, $In extends Person, $Out extends Person>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  PersonCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Person>(
-      Then<Person, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? firstName});
+  PersonCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Person>(
+      Then<Person, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _PersonCopyWithImpl<$R, $Out extends Person>
-    extends CopyWithBase<$R, Person, $Out>
+    extends ClassCopyWithBase<$R, Person, $Out>
     implements PersonCopyWith<$R, Person, $Out> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  PersonCopyWith<$R2, Person, $Out2> chain<$R2, $Out2 extends Person>(
-          Then<Person, $Out2> t, Then<$Out2, $R2> t2) =>
-      _PersonCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? firstName}) => $then(Person(firstName ?? $value.firstName));
+  late final ClassMapperBase<Person> $mapper = PersonMapper.ensureInitialized();
+  @override
+  $R call({String? firstName}) =>
+      $apply(FieldCopyWithData({if (firstName != null) #firstName: firstName}));
+  @override
+  Person $make(CopyWithData data) =>
+      Person(data.get(#firstName, or: $value.firstName));
+
+  @override
+  PersonCopyWith<$R2, Person, $Out2> $chain<$R2, $Out2 extends Person>(
+          Then<Person, $Out2> t, Then<$Out2, $R2> t2) =>
+      _PersonCopyWithImpl($value, t, t2);
 }
 
 class CakeMapper extends ClassMapperBase<f.Cake> {
@@ -160,30 +167,36 @@ extension CakeMapperExtension on f.Cake {
 
 extension CakeValueCopy<$R, $Out extends f.Cake>
     on ObjectCopyWith<$R, f.Cake, $Out> {
-  CakeCopyWith<$R, f.Cake, $Out> get asCake =>
-      base.as((v, t, t2) => _CakeCopyWithImpl(v, t, t2));
+  CakeCopyWith<$R, f.Cake, $Out> get $asCake =>
+      $base.as((v, t, t2) => _CakeCopyWithImpl(v, t, t2));
 }
 
 typedef CakeCopyWithBound = f.Cake;
 
 abstract class CakeCopyWith<$R, $In extends f.Cake, $Out extends f.Cake>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  CakeCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends f.Cake>(
-      Then<f.Cake, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? type});
+  CakeCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends f.Cake>(
+      Then<f.Cake, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _CakeCopyWithImpl<$R, $Out extends f.Cake>
-    extends CopyWithBase<$R, f.Cake, $Out>
+    extends ClassCopyWithBase<$R, f.Cake, $Out>
     implements CakeCopyWith<$R, f.Cake, $Out> {
   _CakeCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  CakeCopyWith<$R2, f.Cake, $Out2> chain<$R2, $Out2 extends f.Cake>(
-          Then<f.Cake, $Out2> t, Then<$Out2, $R2> t2) =>
-      _CakeCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? type}) => $then(f.Cake(type ?? $value.type));
+  late final ClassMapperBase<f.Cake> $mapper = CakeMapper.ensureInitialized();
+  @override
+  $R call({String? type}) =>
+      $apply(FieldCopyWithData({if (type != null) #type: type}));
+  @override
+  f.Cake $make(CopyWithData data) => f.Cake(data.get(#type, or: $value.type));
+
+  @override
+  CakeCopyWith<$R2, f.Cake, $Out2> $chain<$R2, $Out2 extends f.Cake>(
+          Then<f.Cake, $Out2> t, Then<$Out2, $R2> t2) =>
+      _CakeCopyWithImpl($value, t, t2);
 }
 
 class Person2Mapper extends ClassMapperBase<m.Person> {
@@ -243,31 +256,38 @@ extension Person2MapperExtension on m.Person {
 
 extension Person2ValueCopy<$R, $Out extends m.Person>
     on ObjectCopyWith<$R, m.Person, $Out> {
-  Person2CopyWith<$R, m.Person, $Out> get asPerson =>
-      base.as((v, t, t2) => _Person2CopyWithImpl(v, t, t2));
+  Person2CopyWith<$R, m.Person, $Out> get $asPerson =>
+      $base.as((v, t, t2) => _Person2CopyWithImpl(v, t, t2));
 }
 
 typedef Person2CopyWithBound = m.Person;
 
 abstract class Person2CopyWith<$R, $In extends m.Person, $Out extends m.Person>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  Person2CopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends m.Person>(
-      Then<m.Person, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? firstName});
+  Person2CopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends m.Person>(
+      Then<m.Person, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _Person2CopyWithImpl<$R, $Out extends m.Person>
-    extends CopyWithBase<$R, m.Person, $Out>
+    extends ClassCopyWithBase<$R, m.Person, $Out>
     implements Person2CopyWith<$R, m.Person, $Out> {
   _Person2CopyWithImpl(super.value, super.then, super.then2);
-  @override
-  Person2CopyWith<$R2, m.Person, $Out2> chain<$R2, $Out2 extends m.Person>(
-          Then<m.Person, $Out2> t, Then<$Out2, $R2> t2) =>
-      _Person2CopyWithImpl($value, t, t2);
 
   @override
+  late final ClassMapperBase<m.Person> $mapper =
+      Person2Mapper.ensureInitialized();
+  @override
   $R call({String? firstName}) =>
-      $then(m.Person(firstName ?? $value.firstName));
+      $apply(FieldCopyWithData({if (firstName != null) #firstName: firstName}));
+  @override
+  m.Person $make(CopyWithData data) =>
+      m.Person(data.get(#firstName, or: $value.firstName));
+
+  @override
+  Person2CopyWith<$R2, m.Person, $Out2> $chain<$R2, $Out2 extends m.Person>(
+          Then<m.Person, $Out2> t, Then<$Out2, $R2> t2) =>
+      _Person2CopyWithImpl($value, t, t2);
 }
 
 class AnimalMapper extends ClassMapperBase<o.Animal> {
@@ -326,10 +346,10 @@ extension AnimalMapperExtension on o.Animal {
 typedef AnimalCopyWithBound = o.Animal;
 
 abstract class AnimalCopyWith<$R, $In extends o.Animal, $Out extends o.Animal>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  AnimalCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends o.Animal>(
-      Then<o.Animal, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? color});
+  AnimalCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends o.Animal>(
+      Then<o.Animal, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class PetMapper extends SubClassMapperBase<o.Pet> {
@@ -398,34 +418,40 @@ extension PetMapperExtension on o.Pet {
 
 extension PetValueCopy<$R, $Out extends o.Animal>
     on ObjectCopyWith<$R, o.Pet, $Out> {
-  PetCopyWith<$R, o.Pet, $Out> get asPet =>
-      base.as((v, t, t2) => _PetCopyWithImpl(v, t, t2));
+  PetCopyWith<$R, o.Pet, $Out> get $asPet =>
+      $base.as((v, t, t2) => _PetCopyWithImpl(v, t, t2));
 }
 
 typedef PetCopyWithBound = o.Animal;
 
 abstract class PetCopyWith<$R, $In extends o.Pet, $Out extends o.Animal>
     implements AnimalCopyWith<$R, $In, $Out> {
-  PetCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends o.Animal>(
-      Then<o.Pet, $Out2> t, Then<$Out2, $R2> t2);
   Person2CopyWith<$R, m.Person, m.Person> get owner;
   @override
   $R call({m.Person? owner, String? color});
+  PetCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends o.Animal>(
+      Then<o.Pet, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _PetCopyWithImpl<$R, $Out extends o.Animal>
-    extends CopyWithBase<$R, o.Pet, $Out>
+    extends ClassCopyWithBase<$R, o.Pet, $Out>
     implements PetCopyWith<$R, o.Pet, $Out> {
   _PetCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  PetCopyWith<$R2, o.Pet, $Out2> chain<$R2, $Out2 extends o.Animal>(
-          Then<o.Pet, $Out2> t, Then<$Out2, $R2> t2) =>
-      _PetCopyWithImpl($value, t, t2);
 
   @override
-  Person2CopyWith<$R, m.Person, m.Person> get owner =>
-      $value.owner.copyWith.chain($identity, (v) => call(owner: v));
+  late final ClassMapperBase<o.Pet> $mapper = PetMapper.ensureInitialized();
   @override
-  $R call({m.Person? owner, String? color}) =>
-      $then(o.Pet(owner ?? $value.owner, color ?? $value.color));
+  Person2CopyWith<$R, m.Person, m.Person> get owner =>
+      $value.owner.copyWith.$chain($identity, (v) => call(owner: v));
+  @override
+  $R call({m.Person? owner, String? color}) => $apply(FieldCopyWithData(
+      {if (owner != null) #owner: owner, if (color != null) #color: color}));
+  @override
+  o.Pet $make(CopyWithData data) => o.Pet(
+      data.get(#owner, or: $value.owner), data.get(#color, or: $value.color));
+
+  @override
+  PetCopyWith<$R2, o.Pet, $Out2> $chain<$R2, $Out2 extends o.Animal>(
+          Then<o.Pet, $Out2> t, Then<$Out2, $R2> t2) =>
+      _PetCopyWithImpl($value, t, t2);
 }

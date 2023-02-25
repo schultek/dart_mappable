@@ -34,6 +34,10 @@ extension GetNode on Element {
 
 AstNode? getAnnotationProperty(
     AstNode? node, Type annotationType, dynamic property) {
+  if (node == null) {
+    return null;
+  }
+
   NodeList<Annotation>? annotations;
 
   if (node is VariableDeclaration) {

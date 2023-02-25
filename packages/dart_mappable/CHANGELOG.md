@@ -1,3 +1,9 @@
+# Unreleased Version
+
+- Removed `<MyClass>Mapper.container` in favor of `MapperContainer.globals`
+- Removed `@MappableLib.createCombinedContainer` in favor of `@MappableLib.generateInitializerForScope`
+- Renamed `.copyWith.apply()` method to `.copyWith.$update()`
+
 # 2.0.3
 
 - Fixed typo in readme (by [@timmaffett](https://github.com/schultek/dart_mappable/pull/67))

@@ -88,7 +88,7 @@ void main() {
       expect(p2.car.brand, equals(null));
 
       Person p3 =
-          person.copyWith.car.apply((c) => Car(c.brand, '${c.model}_xx'));
+          person.copyWith.car.$update((c) => Car(c.brand, '${c.model}_xx'));
       expect(p3.car.brand, equals(person.car.brand));
       expect(p3.car.model, equals('A8_xx'));
     });
@@ -157,14 +157,14 @@ void main() {
       list2 = list.copyWith(items: [1]);
       expect(list2, isA<ComparableItemList<int>>());
 
-      var list3 = list.copyWith.items.at(0)!.apply((v) => v + 1);
+      var list3 = list.copyWith.items.at(0)!.$update((v) => v + 1);
       expect(list3, equals(ComparableItemList([3, 5])));
     });
 
     test('Should cast copyWith', () {
       ItemList<Brand> list = NamedItemList('Test', [Brand('Audi')]);
 
-      var l2 = list.copyWith.items.at(0)!.asBrand(name: 'BMW');
+      var l2 = list.copyWith.items.at(0)!.$asBrand(name: 'BMW');
 
       expect(l2.items.first.name, equals('BMW'));
     });

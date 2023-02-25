@@ -80,30 +80,37 @@ mixin BoxCMappable<T> {
 
 extension BoxCValueCopy<$R, $Out extends BoxC, T>
     on ObjectCopyWith<$R, BoxC<T>, $Out> {
-  BoxCCopyWith<$R, BoxC<T>, $Out, T> get asBoxC =>
-      base.as((v, t, t2) => _BoxCCopyWithImpl(v, t, t2));
+  BoxCCopyWith<$R, BoxC<T>, $Out, T> get $asBoxC =>
+      $base.as((v, t, t2) => _BoxCCopyWithImpl(v, t, t2));
 }
 
 typedef BoxCCopyWithBound = BoxC;
 
 abstract class BoxCCopyWith<$R, $In extends BoxC<T>, $Out extends BoxC, T>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  BoxCCopyWith<$R2, $In, $Out2, T> chain<$R2, $Out2 extends BoxC>(
-      Then<BoxC<T>, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({T? content});
+  BoxCCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2 extends BoxC>(
+      Then<BoxC<T>, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _BoxCCopyWithImpl<$R, $Out extends BoxC, T>
-    extends CopyWithBase<$R, BoxC<T>, $Out>
+    extends ClassCopyWithBase<$R, BoxC<T>, $Out>
     implements BoxCCopyWith<$R, BoxC<T>, $Out, T> {
   _BoxCCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  BoxCCopyWith<$R2, BoxC<T>, $Out2, T> chain<$R2, $Out2 extends BoxC>(
-          Then<BoxC<T>, $Out2> t, Then<$Out2, $R2> t2) =>
-      _BoxCCopyWithImpl($value, t, t2);
 
   @override
-  $R call({T? content}) => $then(BoxC(content: content ?? $value.content));
+  late final ClassMapperBase<BoxC> $mapper = BoxCMapper.ensureInitialized();
+  @override
+  $R call({T? content}) =>
+      $apply(FieldCopyWithData({if (content != null) #content: content}));
+  @override
+  BoxC<T> $make(CopyWithData data) =>
+      BoxC(content: data.get(#content, or: $value.content));
+
+  @override
+  BoxCCopyWith<$R2, BoxC<T>, $Out2, T> $chain<$R2, $Out2 extends BoxC>(
+          Then<BoxC<T>, $Out2> t, Then<$Out2, $R2> t2) =>
+      _BoxCCopyWithImpl($value, t, t2);
 }
 
 class ContentCMapper extends ClassMapperBase<ContentC> {
@@ -178,28 +185,36 @@ mixin ContentCMappable {
 
 extension ContentCValueCopy<$R, $Out extends ContentC>
     on ObjectCopyWith<$R, ContentC, $Out> {
-  ContentCCopyWith<$R, ContentC, $Out> get asContentC =>
-      base.as((v, t, t2) => _ContentCCopyWithImpl(v, t, t2));
+  ContentCCopyWith<$R, ContentC, $Out> get $asContentC =>
+      $base.as((v, t, t2) => _ContentCCopyWithImpl(v, t, t2));
 }
 
 typedef ContentCCopyWithBound = ContentC;
 
 abstract class ContentCCopyWith<$R, $In extends ContentC, $Out extends ContentC>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  ContentCCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends ContentC>(
-      Then<ContentC, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? data});
+  ContentCCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends ContentC>(
+      Then<ContentC, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _ContentCCopyWithImpl<$R, $Out extends ContentC>
-    extends CopyWithBase<$R, ContentC, $Out>
+    extends ClassCopyWithBase<$R, ContentC, $Out>
     implements ContentCCopyWith<$R, ContentC, $Out> {
   _ContentCCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  ContentCCopyWith<$R2, ContentC, $Out2> chain<$R2, $Out2 extends ContentC>(
-          Then<ContentC, $Out2> t, Then<$Out2, $R2> t2) =>
-      _ContentCCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? data}) => $then(ContentC(data ?? $value.data));
+  late final ClassMapperBase<ContentC> $mapper =
+      ContentCMapper.ensureInitialized();
+  @override
+  $R call({String? data}) =>
+      $apply(FieldCopyWithData({if (data != null) #data: data}));
+  @override
+  ContentC $make(CopyWithData data) =>
+      ContentC(data.get(#data, or: $value.data));
+
+  @override
+  ContentCCopyWith<$R2, ContentC, $Out2> $chain<$R2, $Out2 extends ContentC>(
+          Then<ContentC, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ContentCCopyWithImpl($value, t, t2);
 }

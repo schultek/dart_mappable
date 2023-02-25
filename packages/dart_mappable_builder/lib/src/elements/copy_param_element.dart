@@ -122,7 +122,7 @@ class CopyParamElement {
       : '';
 
   String get invocation {
-    return '\$value.${a.name}${a.type.isNullable ? '?' : ''}.copyWith.chain(\$identity, $invocationThen)';
+    return '\$value.${a.name}${a.type.isNullable ? '?' : ''}.copyWith.\$chain(\$identity, $invocationThen)';
   }
 }
 
@@ -176,7 +176,7 @@ class CollectionCopyParamElement extends CopyParamElement {
 
       itemInvocation = isBounded ? '\$cast' : '\$identity';
       itemInvocation =
-          'v${itemTypeNullable ? '?' : ''}.copyWith.chain<\$R$itemTypeParam>($itemInvocation, t)';
+          'v${itemTypeNullable ? '?' : ''}.copyWith.\$chain<\$R$itemTypeParam>($itemInvocation, t)';
 
       if (isBounded) {
         itemInvocation = '\$cast($itemInvocation)';

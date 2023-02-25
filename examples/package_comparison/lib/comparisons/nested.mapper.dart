@@ -78,34 +78,41 @@ mixin GameBMappable {
 
 extension GameBValueCopy<$R, $Out extends GameB>
     on ObjectCopyWith<$R, GameB, $Out> {
-  GameBCopyWith<$R, GameB, $Out> get asGameB =>
-      base.as((v, t, t2) => _GameBCopyWithImpl(v, t, t2));
+  GameBCopyWith<$R, GameB, $Out> get $asGameB =>
+      $base.as((v, t, t2) => _GameBCopyWithImpl(v, t, t2));
 }
 
 typedef GameBCopyWithBound = GameB;
 
 abstract class GameBCopyWith<$R, $In extends GameB, $Out extends GameB>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  GameBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends GameB>(
-      Then<GameB, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   PlayerBCopyWith<$R, PlayerB, PlayerB> get player;
   $R call({PlayerB? player});
+  GameBCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends GameB>(
+      Then<GameB, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _GameBCopyWithImpl<$R, $Out extends GameB>
-    extends CopyWithBase<$R, GameB, $Out>
+    extends ClassCopyWithBase<$R, GameB, $Out>
     implements GameBCopyWith<$R, GameB, $Out> {
   _GameBCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  GameBCopyWith<$R2, GameB, $Out2> chain<$R2, $Out2 extends GameB>(
-          Then<GameB, $Out2> t, Then<$Out2, $R2> t2) =>
-      _GameBCopyWithImpl($value, t, t2);
 
   @override
-  PlayerBCopyWith<$R, PlayerB, PlayerB> get player =>
-      $value.player.copyWith.chain($identity, (v) => call(player: v));
+  late final ClassMapperBase<GameB> $mapper = GameBMapper.ensureInitialized();
   @override
-  $R call({PlayerB? player}) => $then(GameB(player: player ?? $value.player));
+  PlayerBCopyWith<$R, PlayerB, PlayerB> get player =>
+      $value.player.copyWith.$chain($identity, (v) => call(player: v));
+  @override
+  $R call({PlayerB? player}) =>
+      $apply(FieldCopyWithData({if (player != null) #player: player}));
+  @override
+  GameB $make(CopyWithData data) =>
+      GameB(player: data.get(#player, or: $value.player));
+
+  @override
+  GameBCopyWith<$R2, GameB, $Out2> $chain<$R2, $Out2 extends GameB>(
+          Then<GameB, $Out2> t, Then<$Out2, $R2> t2) =>
+      _GameBCopyWithImpl($value, t, t2);
 }
 
 class PlayerBMapper extends ClassMapperBase<PlayerB> {
@@ -180,28 +187,36 @@ mixin PlayerBMappable {
 
 extension PlayerBValueCopy<$R, $Out extends PlayerB>
     on ObjectCopyWith<$R, PlayerB, $Out> {
-  PlayerBCopyWith<$R, PlayerB, $Out> get asPlayerB =>
-      base.as((v, t, t2) => _PlayerBCopyWithImpl(v, t, t2));
+  PlayerBCopyWith<$R, PlayerB, $Out> get $asPlayerB =>
+      $base.as((v, t, t2) => _PlayerBCopyWithImpl(v, t, t2));
 }
 
 typedef PlayerBCopyWithBound = PlayerB;
 
 abstract class PlayerBCopyWith<$R, $In extends PlayerB, $Out extends PlayerB>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  PlayerBCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends PlayerB>(
-      Then<PlayerB, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? name});
+  PlayerBCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends PlayerB>(
+      Then<PlayerB, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _PlayerBCopyWithImpl<$R, $Out extends PlayerB>
-    extends CopyWithBase<$R, PlayerB, $Out>
+    extends ClassCopyWithBase<$R, PlayerB, $Out>
     implements PlayerBCopyWith<$R, PlayerB, $Out> {
   _PlayerBCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  PlayerBCopyWith<$R2, PlayerB, $Out2> chain<$R2, $Out2 extends PlayerB>(
-          Then<PlayerB, $Out2> t, Then<$Out2, $R2> t2) =>
-      _PlayerBCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? name}) => $then(PlayerB(name: name ?? $value.name));
+  late final ClassMapperBase<PlayerB> $mapper =
+      PlayerBMapper.ensureInitialized();
+  @override
+  $R call({String? name}) =>
+      $apply(FieldCopyWithData({if (name != null) #name: name}));
+  @override
+  PlayerB $make(CopyWithData data) =>
+      PlayerB(name: data.get(#name, or: $value.name));
+
+  @override
+  PlayerBCopyWith<$R2, PlayerB, $Out2> $chain<$R2, $Out2 extends PlayerB>(
+          Then<PlayerB, $Out2> t, Then<$Out2, $R2> t2) =>
+      _PlayerBCopyWithImpl($value, t, t2);
 }

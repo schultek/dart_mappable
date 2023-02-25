@@ -79,30 +79,28 @@ mixin ClassAMappable {
 
 extension ClassAValueCopy<$R, $Out extends ClassA>
     on ObjectCopyWith<$R, ClassA, $Out> {
-  ClassACopyWith<$R, ClassA, $Out> get asClassA =>
-      base.as((v, t, t2) => _ClassACopyWithImpl(v, t, t2));
+  ClassACopyWith<$R, ClassA, $Out> get $asClassA =>
+      $base.as((v, t, t2) => _ClassACopyWithImpl(v, t, t2));
 }
 
 typedef ClassACopyWithBound = ClassA;
 
 abstract class ClassACopyWith<$R, $In extends ClassA, $Out extends ClassA>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  ClassACopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends ClassA>(
-      Then<ClassA, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, EnumA, bool?, ObjectCopyWith<$R, bool?, bool?>?>
       get someVariable;
   $R call({Map<EnumA, bool?>? someVariable});
+  ClassACopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends ClassA>(
+      Then<ClassA, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _ClassACopyWithImpl<$R, $Out extends ClassA>
-    extends CopyWithBase<$R, ClassA, $Out>
+    extends ClassCopyWithBase<$R, ClassA, $Out>
     implements ClassACopyWith<$R, ClassA, $Out> {
   _ClassACopyWithImpl(super.value, super.then, super.then2);
-  @override
-  ClassACopyWith<$R2, ClassA, $Out2> chain<$R2, $Out2 extends ClassA>(
-          Then<ClassA, $Out2> t, Then<$Out2, $R2> t2) =>
-      _ClassACopyWithImpl($value, t, t2);
 
+  @override
+  late final ClassMapperBase<ClassA> $mapper = ClassAMapper.ensureInitialized();
   @override
   MapCopyWith<$R, EnumA, bool?, ObjectCopyWith<$R, bool?, bool?>?>
       get someVariable => MapCopyWith(
@@ -110,8 +108,16 @@ class _ClassACopyWithImpl<$R, $Out extends ClassA>
           (v, t) => ObjectCopyWith(v, $identity, t),
           (v) => call(someVariable: v));
   @override
-  $R call({Map<EnumA, bool?>? someVariable}) =>
-      $then(ClassA(someVariable ?? $value.someVariable));
+  $R call({Map<EnumA, bool?>? someVariable}) => $apply(FieldCopyWithData(
+      {if (someVariable != null) #someVariable: someVariable}));
+  @override
+  ClassA $make(CopyWithData data) =>
+      ClassA(data.get(#someVariable, or: $value.someVariable));
+
+  @override
+  ClassACopyWith<$R2, ClassA, $Out2> $chain<$R2, $Out2 extends ClassA>(
+          Then<ClassA, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ClassACopyWithImpl($value, t, t2);
 }
 
 class EnumAMapper extends EnumMapper<EnumA> {

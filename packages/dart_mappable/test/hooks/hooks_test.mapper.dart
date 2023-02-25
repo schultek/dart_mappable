@@ -83,34 +83,40 @@ mixin GameMappable {
 
 extension GameValueCopy<$R, $Out extends Game>
     on ObjectCopyWith<$R, Game, $Out> {
-  GameCopyWith<$R, Game, $Out> get asGame =>
-      base.as((v, t, t2) => _GameCopyWithImpl(v, t, t2));
+  GameCopyWith<$R, Game, $Out> get $asGame =>
+      $base.as((v, t, t2) => _GameCopyWithImpl(v, t, t2));
 }
 
 typedef GameCopyWithBound = Game;
 
 abstract class GameCopyWith<$R, $In extends Game, $Out extends Game>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  GameCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Game>(
-      Then<Game, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   PlayerCopyWith<$R, Player, Player> get player;
   $R call({Player? player});
+  GameCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Game>(
+      Then<Game, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _GameCopyWithImpl<$R, $Out extends Game>
-    extends CopyWithBase<$R, Game, $Out>
+    extends ClassCopyWithBase<$R, Game, $Out>
     implements GameCopyWith<$R, Game, $Out> {
   _GameCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  GameCopyWith<$R2, Game, $Out2> chain<$R2, $Out2 extends Game>(
-          Then<Game, $Out2> t, Then<$Out2, $R2> t2) =>
-      _GameCopyWithImpl($value, t, t2);
 
   @override
-  PlayerCopyWith<$R, Player, Player> get player =>
-      $value.player.copyWith.chain($identity, (v) => call(player: v));
+  late final ClassMapperBase<Game> $mapper = GameMapper.ensureInitialized();
   @override
-  $R call({Player? player}) => $then(Game(player ?? $value.player));
+  PlayerCopyWith<$R, Player, Player> get player =>
+      $value.player.copyWith.$chain($identity, (v) => call(player: v));
+  @override
+  $R call({Player? player}) =>
+      $apply(FieldCopyWithData({if (player != null) #player: player}));
+  @override
+  Game $make(CopyWithData data) => Game(data.get(#player, or: $value.player));
+
+  @override
+  GameCopyWith<$R2, Game, $Out2> $chain<$R2, $Out2 extends Game>(
+          Then<Game, $Out2> t, Then<$Out2, $R2> t2) =>
+      _GameCopyWithImpl($value, t, t2);
 }
 
 class CardGameMapper extends ClassMapperBase<CardGame> {
@@ -194,36 +200,44 @@ mixin CardGameMappable {
 
 extension CardGameValueCopy<$R, $Out extends Game>
     on ObjectCopyWith<$R, CardGame, $Out> {
-  CardGameCopyWith<$R, CardGame, $Out> get asCardGame =>
-      base.as((v, t, t2) => _CardGameCopyWithImpl(v, t, t2));
+  CardGameCopyWith<$R, CardGame, $Out> get $asCardGame =>
+      $base.as((v, t, t2) => _CardGameCopyWithImpl(v, t, t2));
 }
 
 typedef CardGameCopyWithBound = Game;
 
 abstract class CardGameCopyWith<$R, $In extends CardGame, $Out extends Game>
     implements GameCopyWith<$R, $In, $Out> {
-  CardGameCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Game>(
-      Then<CardGame, $Out2> t, Then<$Out2, $R2> t2);
   @override
   PlayerCopyWith<$R, Player, Player> get player;
   @override
   $R call({Player? player});
+  CardGameCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Game>(
+      Then<CardGame, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _CardGameCopyWithImpl<$R, $Out extends Game>
-    extends CopyWithBase<$R, CardGame, $Out>
+    extends ClassCopyWithBase<$R, CardGame, $Out>
     implements CardGameCopyWith<$R, CardGame, $Out> {
   _CardGameCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  CardGameCopyWith<$R2, CardGame, $Out2> chain<$R2, $Out2 extends Game>(
-          Then<CardGame, $Out2> t, Then<$Out2, $R2> t2) =>
-      _CardGameCopyWithImpl($value, t, t2);
 
   @override
-  PlayerCopyWith<$R, Player, Player> get player =>
-      $value.player.copyWith.chain($identity, (v) => call(player: v));
+  late final ClassMapperBase<CardGame> $mapper =
+      CardGameMapper.ensureInitialized();
   @override
-  $R call({Player? player}) => $then(CardGame(player ?? $value.player));
+  PlayerCopyWith<$R, Player, Player> get player =>
+      $value.player.copyWith.$chain($identity, (v) => call(player: v));
+  @override
+  $R call({Player? player}) =>
+      $apply(FieldCopyWithData({if (player != null) #player: player}));
+  @override
+  CardGame $make(CopyWithData data) =>
+      CardGame(data.get(#player, or: $value.player));
+
+  @override
+  CardGameCopyWith<$R2, CardGame, $Out2> $chain<$R2, $Out2 extends Game>(
+          Then<CardGame, $Out2> t, Then<$Out2, $R2> t2) =>
+      _CardGameCopyWithImpl($value, t, t2);
 }
 
 class PlayerMapper extends ClassMapperBase<Player> {
@@ -298,30 +312,35 @@ mixin PlayerMappable {
 
 extension PlayerValueCopy<$R, $Out extends Player>
     on ObjectCopyWith<$R, Player, $Out> {
-  PlayerCopyWith<$R, Player, $Out> get asPlayer =>
-      base.as((v, t, t2) => _PlayerCopyWithImpl(v, t, t2));
+  PlayerCopyWith<$R, Player, $Out> get $asPlayer =>
+      $base.as((v, t, t2) => _PlayerCopyWithImpl(v, t, t2));
 }
 
 typedef PlayerCopyWithBound = Player;
 
 abstract class PlayerCopyWith<$R, $In extends Player, $Out extends Player>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  PlayerCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Player>(
-      Then<Player, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? id});
+  PlayerCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Player>(
+      Then<Player, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _PlayerCopyWithImpl<$R, $Out extends Player>
-    extends CopyWithBase<$R, Player, $Out>
+    extends ClassCopyWithBase<$R, Player, $Out>
     implements PlayerCopyWith<$R, Player, $Out> {
   _PlayerCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  PlayerCopyWith<$R2, Player, $Out2> chain<$R2, $Out2 extends Player>(
-          Then<Player, $Out2> t, Then<$Out2, $R2> t2) =>
-      _PlayerCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? id}) => $then(Player(id ?? $value.id));
+  late final ClassMapperBase<Player> $mapper = PlayerMapper.ensureInitialized();
+  @override
+  $R call({String? id}) => $apply(FieldCopyWithData({if (id != null) #id: id}));
+  @override
+  Player $make(CopyWithData data) => Player(data.get(#id, or: $value.id));
+
+  @override
+  PlayerCopyWith<$R2, Player, $Out2> $chain<$R2, $Out2 extends Player>(
+          Then<Player, $Out2> t, Then<$Out2, $R2> t2) =>
+      _PlayerCopyWithImpl($value, t, t2);
 }
 
 class ClothesMapper extends ClassMapperBase<Clothes> {
@@ -402,30 +421,29 @@ mixin ClothesMappable {
 
 extension ClothesValueCopy<$R, $Out extends Clothes>
     on ObjectCopyWith<$R, Clothes, $Out> {
-  ClothesCopyWith<$R, Clothes, $Out> get asClothes =>
-      base.as((v, t, t2) => _ClothesCopyWithImpl(v, t, t2));
+  ClothesCopyWith<$R, Clothes, $Out> get $asClothes =>
+      $base.as((v, t, t2) => _ClothesCopyWithImpl(v, t, t2));
 }
 
 typedef ClothesCopyWithBound = Clothes;
 
 abstract class ClothesCopyWith<$R, $In extends Clothes, $Out extends Clothes>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  ClothesCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Clothes>(
-      Then<Clothes, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
       get unmappedProps;
   $R call({int? size, Map<String, dynamic>? unmappedProps});
+  ClothesCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Clothes>(
+      Then<Clothes, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _ClothesCopyWithImpl<$R, $Out extends Clothes>
-    extends CopyWithBase<$R, Clothes, $Out>
+    extends ClassCopyWithBase<$R, Clothes, $Out>
     implements ClothesCopyWith<$R, Clothes, $Out> {
   _ClothesCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  ClothesCopyWith<$R2, Clothes, $Out2> chain<$R2, $Out2 extends Clothes>(
-          Then<Clothes, $Out2> t, Then<$Out2, $R2> t2) =>
-      _ClothesCopyWithImpl($value, t, t2);
 
+  @override
+  late final ClassMapperBase<Clothes> $mapper =
+      ClothesMapper.ensureInitialized();
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
       get unmappedProps => MapCopyWith(
@@ -434,8 +452,18 @@ class _ClothesCopyWithImpl<$R, $Out extends Clothes>
           (v) => call(unmappedProps: v));
   @override
   $R call({int? size, Map<String, dynamic>? unmappedProps}) =>
-      $then(Clothes(size ?? $value.size,
-          unmappedProps: unmappedProps ?? $value.unmappedProps));
+      $apply(FieldCopyWithData({
+        if (size != null) #size: size,
+        if (unmappedProps != null) #unmappedProps: unmappedProps
+      }));
+  @override
+  Clothes $make(CopyWithData data) => Clothes(data.get(#size, or: $value.size),
+      unmappedProps: data.get(#unmappedProps, or: $value.unmappedProps));
+
+  @override
+  ClothesCopyWith<$R2, Clothes, $Out2> $chain<$R2, $Out2 extends Clothes>(
+          Then<Clothes, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ClothesCopyWithImpl($value, t, t2);
 }
 
 class ComponentMapper extends ClassMapperBase<Component> {
@@ -517,30 +545,29 @@ mixin ComponentMappable {
 
 extension ComponentValueCopy<$R, $Out extends Component>
     on ObjectCopyWith<$R, Component, $Out> {
-  ComponentCopyWith<$R, Component, $Out> get asComponent =>
-      base.as((v, t, t2) => _ComponentCopyWithImpl(v, t, t2));
+  ComponentCopyWith<$R, Component, $Out> get $asComponent =>
+      $base.as((v, t, t2) => _ComponentCopyWithImpl(v, t, t2));
 }
 
 typedef ComponentCopyWithBound = Component;
 
 abstract class ComponentCopyWith<$R, $In extends Component,
-    $Out extends Component> implements ObjectCopyWith<$R, $In, $Out> {
-  ComponentCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Component>(
-      Then<Component, $Out2> t, Then<$Out2, $R2> t2);
+    $Out extends Component> implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
       get unmappedProps;
   $R call({String? id, Map<String, dynamic>? unmappedProps, String? name});
+  ComponentCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Component>(
+      Then<Component, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _ComponentCopyWithImpl<$R, $Out extends Component>
-    extends CopyWithBase<$R, Component, $Out>
+    extends ClassCopyWithBase<$R, Component, $Out>
     implements ComponentCopyWith<$R, Component, $Out> {
   _ComponentCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  ComponentCopyWith<$R2, Component, $Out2> chain<$R2, $Out2 extends Component>(
-          Then<Component, $Out2> t, Then<$Out2, $R2> t2) =>
-      _ComponentCopyWithImpl($value, t, t2);
 
+  @override
+  late final ClassMapperBase<Component> $mapper =
+      ComponentMapper.ensureInitialized();
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
       get unmappedProps => $value.unmappedProps != null
@@ -551,6 +578,19 @@ class _ComponentCopyWithImpl<$R, $Out extends Component>
           : null;
   @override
   $R call({String? id, Object? unmappedProps = $none, String? name}) =>
-      $then(Component(id ?? $value.id, or(unmappedProps, $value.unmappedProps),
-          name ?? $value.name));
+      $apply(FieldCopyWithData({
+        if (id != null) #id: id,
+        if (unmappedProps != $none) #unmappedProps: unmappedProps,
+        if (name != null) #name: name
+      }));
+  @override
+  Component $make(CopyWithData data) => Component(
+      data.get(#id, or: $value.id),
+      data.get(#unmappedProps, or: $value.unmappedProps),
+      data.get(#name, or: $value.name));
+
+  @override
+  ComponentCopyWith<$R2, Component, $Out2> $chain<$R2, $Out2 extends Component>(
+          Then<Component, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ComponentCopyWithImpl($value, t, t2);
 }

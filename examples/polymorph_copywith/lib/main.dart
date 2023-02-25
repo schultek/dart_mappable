@@ -29,7 +29,7 @@ void main() {
 
   Zoo<Dog> zoo4 = Zoo([zoo3.animals[1] as Dog]);
 
-  Zoo<Dog> zoo5 = zoo4.copyWith.animals.at(0).asDog(age: 3);
+  Zoo<Dog> zoo5 = zoo4.copyWith.animals.at(0).$asDog(age: 3);
 
   assert(zoo5.animals.first.age == 3);
 }

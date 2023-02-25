@@ -83,30 +83,29 @@ mixin TestObjMappable {
 
 extension TestObjValueCopy<$R, $Out extends TestObj>
     on ObjectCopyWith<$R, TestObj, $Out> {
-  TestObjCopyWith<$R, TestObj, $Out> get asTestObj =>
-      base.as((v, t, t2) => _TestObjCopyWithImpl(v, t, t2));
+  TestObjCopyWith<$R, TestObj, $Out> get $asTestObj =>
+      $base.as((v, t, t2) => _TestObjCopyWithImpl(v, t, t2));
 }
 
 typedef TestObjCopyWithBound = TestObj;
 
 abstract class TestObjCopyWith<$R, $In extends TestObj, $Out extends TestObj>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  TestObjCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends TestObj>(
-      Then<TestObj, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
       get unmappedProps;
   $R call({BigInt? x, Map<String, dynamic>? unmappedProps});
+  TestObjCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends TestObj>(
+      Then<TestObj, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _TestObjCopyWithImpl<$R, $Out extends TestObj>
-    extends CopyWithBase<$R, TestObj, $Out>
+    extends ClassCopyWithBase<$R, TestObj, $Out>
     implements TestObjCopyWith<$R, TestObj, $Out> {
   _TestObjCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  TestObjCopyWith<$R2, TestObj, $Out2> chain<$R2, $Out2 extends TestObj>(
-          Then<TestObj, $Out2> t, Then<$Out2, $R2> t2) =>
-      _TestObjCopyWithImpl($value, t, t2);
 
+  @override
+  late final ClassMapperBase<TestObj> $mapper =
+      TestObjMapper.ensureInitialized();
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
       get unmappedProps => MapCopyWith(
@@ -114,6 +113,18 @@ class _TestObjCopyWithImpl<$R, $Out extends TestObj>
           (v, t) => ObjectCopyWith(v, $identity, t),
           (v) => call(unmappedProps: v));
   @override
-  $R call({Object? x = $none, Map<String, dynamic>? unmappedProps}) => $then(
-      TestObj.explicit(or(x, $value.x), unmappedProps ?? $value.unmappedProps));
+  $R call({Object? x = $none, Map<String, dynamic>? unmappedProps}) =>
+      $apply(FieldCopyWithData({
+        if (x != $none) #x: x,
+        if (unmappedProps != null) #unmappedProps: unmappedProps
+      }));
+  @override
+  TestObj $make(CopyWithData data) => TestObj.explicit(
+      data.get(#x, or: $value.x),
+      data.get(#unmappedProps, or: $value.unmappedProps));
+
+  @override
+  TestObjCopyWith<$R2, TestObj, $Out2> $chain<$R2, $Out2 extends TestObj>(
+          Then<TestObj, $Out2> t, Then<$Out2, $R2> t2) =>
+      _TestObjCopyWithImpl($value, t, t2);
 }

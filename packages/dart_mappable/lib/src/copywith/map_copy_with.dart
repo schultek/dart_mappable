@@ -30,7 +30,7 @@ abstract class MapCopyWith<Result, Key, Value, Copy> {
   Result removeAt(Key key);
 
   /// Applies any transformer function on the value
-  Result apply(Map<Key, Value> Function(Map<Key, Value>) transform);
+  Result $update(Map<Key, Value> Function(Map<Key, Value>) transform);
 }
 
 class _MapCopyWith<Result, Key, Value, Copy>

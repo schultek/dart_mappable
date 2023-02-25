@@ -77,28 +77,36 @@ mixin PersonCMappable {
 
 extension PersonCValueCopy<$R, $Out extends PersonC>
     on ObjectCopyWith<$R, PersonC, $Out> {
-  PersonCCopyWith<$R, PersonC, $Out> get asPersonC =>
-      base.as((v, t, t2) => _PersonCCopyWithImpl(v, t, t2));
+  PersonCCopyWith<$R, PersonC, $Out> get $asPersonC =>
+      $base.as((v, t, t2) => _PersonCCopyWithImpl(v, t, t2));
 }
 
 typedef PersonCCopyWithBound = PersonC;
 
 abstract class PersonCCopyWith<$R, $In extends PersonC, $Out extends PersonC>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  PersonCCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends PersonC>(
-      Then<PersonC, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? name});
+  PersonCCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends PersonC>(
+      Then<PersonC, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _PersonCCopyWithImpl<$R, $Out extends PersonC>
-    extends CopyWithBase<$R, PersonC, $Out>
+    extends ClassCopyWithBase<$R, PersonC, $Out>
     implements PersonCCopyWith<$R, PersonC, $Out> {
   _PersonCCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  PersonCCopyWith<$R2, PersonC, $Out2> chain<$R2, $Out2 extends PersonC>(
-          Then<PersonC, $Out2> t, Then<$Out2, $R2> t2) =>
-      _PersonCCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? name}) => $then(PersonC(name: name ?? $value.name));
+  late final ClassMapperBase<PersonC> $mapper =
+      PersonCMapper.ensureInitialized();
+  @override
+  $R call({String? name}) =>
+      $apply(FieldCopyWithData({if (name != null) #name: name}));
+  @override
+  PersonC $make(CopyWithData data) =>
+      PersonC(name: data.get(#name, or: $value.name));
+
+  @override
+  PersonCCopyWith<$R2, PersonC, $Out2> $chain<$R2, $Out2 extends PersonC>(
+          Then<PersonC, $Out2> t, Then<$Out2, $R2> t2) =>
+      _PersonCCopyWithImpl($value, t, t2);
 }

@@ -1,3 +1,6 @@
+import '../mappers/class_mapper.dart';
+import 'copywith_data.dart';
+
 class _None {
   const _None();
 }
@@ -19,7 +22,13 @@ abstract class ObjectCopyWith<Result, In, Out> {
   const factory ObjectCopyWith(
       In value, Then<In, Out> then, Then<Out, Result> then2) = CopyWithBase;
 
-  Result apply(Out Function(In) transform);
+  Result $update(Out Function(In) transform);
+}
+
+abstract class ClassCopyWith<Result, In, Out>
+    implements ObjectCopyWith<Result, In, Out> {
+  Result $merge(In value);
+  Result $delta(Map<String, dynamic> delta);
 }
 
 /// {@category Copy-With}
@@ -39,11 +48,30 @@ class CopyWithBase<Result, In, Out> implements ObjectCopyWith<Result, In, Out> {
 
   /// Applies any transformer function on the value
   @override
-  Result apply(Then<In, Out> transform) => $then2(transform($value));
+  Result $update(Then<In, Out> transform) => $then2(transform($value));
+}
+
+abstract class ClassCopyWithBase<Result, In extends Object, Out>
+    extends CopyWithBase<Result, In, Out>
+    implements ClassCopyWith<Result, In, Out> {
+  ClassCopyWithBase(super.$value, super.$then1, super.$then2);
+
+  ClassMapperBase get $mapper;
+
+  @override
+  Result $merge(In value) => $apply(MergeCopyWithData($mapper, value));
+
+  @override
+  Result $delta(Map<String, dynamic> delta) =>
+      $apply(DeltaCopyWithData($mapper, delta));
+
+  Result $apply(CopyWithData data) => $then($make(data));
+
+  In $make(CopyWithData data);
 }
 
 /// {@nodoc}
 extension ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
-  CopyWithBase<Result, In, Out> get base =>
+  CopyWithBase<Result, In, Out> get $base =>
       this as CopyWithBase<Result, In, Out>;
 }

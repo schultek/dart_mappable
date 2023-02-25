@@ -89,31 +89,42 @@ mixin CatMappable {
 
 extension CatValueCopy<$R, $Out extends Animal>
     on ObjectCopyWith<$R, Cat, $Out> {
-  CatCopyWith<$R, Cat, $Out> get asCat =>
-      base.as((v, t, t2) => _CatCopyWithImpl(v, t, t2));
+  CatCopyWith<$R, Cat, $Out> get $asCat =>
+      $base.as((v, t, t2) => _CatCopyWithImpl(v, t, t2));
 }
 
 typedef CatCopyWithBound = Animal;
 
 abstract class CatCopyWith<$R, $In extends Cat, $Out extends Animal>
     implements AnimalCopyWith<$R, $In, $Out> {
-  CatCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Animal>(
-      Then<Cat, $Out2> t, Then<$Out2, $R2> t2);
   @override
   $R call({String? name, CatType? breed, String? color});
+  CatCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Animal>(
+      Then<Cat, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _CatCopyWithImpl<$R, $Out extends Animal>
-    extends CopyWithBase<$R, Cat, $Out> implements CatCopyWith<$R, Cat, $Out> {
+    extends ClassCopyWithBase<$R, Cat, $Out>
+    implements CatCopyWith<$R, Cat, $Out> {
   _CatCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  CatCopyWith<$R2, Cat, $Out2> chain<$R2, $Out2 extends Animal>(
-          Then<Cat, $Out2> t, Then<$Out2, $R2> t2) =>
-      _CatCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? name, CatType? breed, String? color}) => $then(
-      Cat(name ?? $value.name, breed ?? $value.breed, color ?? $value.color));
+  late final ClassMapperBase<Cat> $mapper = CatMapper.ensureInitialized();
+  @override
+  $R call({String? name, CatType? breed, String? color}) =>
+      $apply(FieldCopyWithData({
+        if (name != null) #name: name,
+        if (breed != null) #breed: breed,
+        if (color != null) #color: color
+      }));
+  @override
+  Cat $make(CopyWithData data) => Cat(data.get(#name, or: $value.name),
+      data.get(#breed, or: $value.breed), data.get(#color, or: $value.color));
+
+  @override
+  CatCopyWith<$R2, Cat, $Out2> $chain<$R2, $Out2 extends Animal>(
+          Then<Cat, $Out2> t, Then<$Out2, $R2> t2) =>
+      _CatCopyWithImpl($value, t, t2);
 }
 
 class CatTypeMapper extends EnumMapper<CatType> {

@@ -54,7 +54,7 @@ abstract class ListCopyWith<Result, Elem, Copy> {
   Result sublist(int start, [int? end]);
 
   /// Applies any transformer function on the value
-  Result apply(List<Elem> Function(List<Elem>) transform);
+  Result $update(List<Elem> Function(List<Elem>) transform);
 }
 
 class _ListCopyWith<Result, Elem, Copy>

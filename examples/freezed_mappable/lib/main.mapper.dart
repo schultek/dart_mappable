@@ -59,10 +59,10 @@ extension UnionMapperExtension on Union {
 typedef UnionCopyWithBound = Union;
 
 abstract class UnionCopyWith<$R, $In extends Union, $Out extends Union>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  UnionCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Union>(
-      Then<Union, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call();
+  UnionCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Union>(
+      Then<Union, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class DataMapper extends SubClassMapperBase<Data> {

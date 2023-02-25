@@ -60,12 +60,12 @@ mixin BaseMappable {
 typedef BaseCopyWithBound = Base;
 
 abstract class BaseCopyWith<$R, $In extends Base, $Out extends Base>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  BaseCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Base>(
-      Then<Base, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>?>
       get objects;
   $R call({String? id, String? name, Map<String, dynamic>? objects});
+  BaseCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Base>(
+      Then<Base, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class OneMapper extends ClassMapperBase<One> {
@@ -144,41 +144,51 @@ mixin OneMappable {
 }
 
 extension OneValueCopy<$R, $Out extends Base> on ObjectCopyWith<$R, One, $Out> {
-  OneCopyWith<$R, One, $Out> get asOne =>
-      base.as((v, t, t2) => _OneCopyWithImpl(v, t, t2));
+  OneCopyWith<$R, One, $Out> get $asOne =>
+      $base.as((v, t, t2) => _OneCopyWithImpl(v, t, t2));
 }
 
 typedef OneCopyWithBound = Base;
 
 abstract class OneCopyWith<$R, $In extends One, $Out extends Base>
     implements BaseCopyWith<$R, $In, $Out> {
-  OneCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Base>(
-      Then<One, $Out2> t, Then<$Out2, $R2> t2);
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
       get objects;
   @override
   $R call({String? id, String? name, Map<String, dynamic>? objects});
+  OneCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Base>(
+      Then<One, $Out2> t, Then<$Out2, $R2> t2);
 }
 
 class _OneCopyWithImpl<$R, $Out extends Base>
-    extends CopyWithBase<$R, One, $Out> implements OneCopyWith<$R, One, $Out> {
+    extends ClassCopyWithBase<$R, One, $Out>
+    implements OneCopyWith<$R, One, $Out> {
   _OneCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  OneCopyWith<$R2, One, $Out2> chain<$R2, $Out2 extends Base>(
-          Then<One, $Out2> t, Then<$Out2, $R2> t2) =>
-      _OneCopyWithImpl($value, t, t2);
 
+  @override
+  late final ClassMapperBase<One> $mapper = OneMapper.ensureInitialized();
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
       get objects => MapCopyWith($value.objects,
           (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(objects: v));
   @override
   $R call({String? id, String? name, Map<String, dynamic>? objects}) =>
-      $then(One(
-          id: id ?? $value.id,
-          name: name ?? $value.name,
-          objects: objects ?? $value.objects));
+      $apply(FieldCopyWithData({
+        if (id != null) #id: id,
+        if (name != null) #name: name,
+        if (objects != null) #objects: objects
+      }));
+  @override
+  One $make(CopyWithData data) => One(
+      id: data.get(#id, or: $value.id),
+      name: data.get(#name, or: $value.name),
+      objects: data.get(#objects, or: $value.objects));
+
+  @override
+  OneCopyWith<$R2, One, $Out2> $chain<$R2, $Out2 extends Base>(
+          Then<One, $Out2> t, Then<$Out2, $R2> t2) =>
+      _OneCopyWithImpl($value, t, t2);
 }
 
 class TwoMapper extends ClassMapperBase<Two> {
@@ -254,27 +264,33 @@ mixin TwoMappable {
 }
 
 extension TwoValueCopy<$R, $Out extends Two> on ObjectCopyWith<$R, Two, $Out> {
-  TwoCopyWith<$R, Two, $Out> get asTwo =>
-      base.as((v, t, t2) => _TwoCopyWithImpl(v, t, t2));
+  TwoCopyWith<$R, Two, $Out> get $asTwo =>
+      $base.as((v, t, t2) => _TwoCopyWithImpl(v, t, t2));
 }
 
 typedef TwoCopyWithBound = Two;
 
 abstract class TwoCopyWith<$R, $In extends Two, $Out extends Two>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  TwoCopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends Two>(
-      Then<Two, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? id});
+  TwoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Two>(
+      Then<Two, $Out2> t, Then<$Out2, $R2> t2);
 }
 
-class _TwoCopyWithImpl<$R, $Out extends Two> extends CopyWithBase<$R, Two, $Out>
+class _TwoCopyWithImpl<$R, $Out extends Two>
+    extends ClassCopyWithBase<$R, Two, $Out>
     implements TwoCopyWith<$R, Two, $Out> {
   _TwoCopyWithImpl(super.value, super.then, super.then2);
-  @override
-  TwoCopyWith<$R2, Two, $Out2> chain<$R2, $Out2 extends Two>(
-          Then<Two, $Out2> t, Then<$Out2, $R2> t2) =>
-      _TwoCopyWithImpl($value, t, t2);
 
   @override
-  $R call({String? id}) => $then(Two(id: id ?? $value.id));
+  late final ClassMapperBase<Two> $mapper = TwoMapper.ensureInitialized();
+  @override
+  $R call({String? id}) => $apply(FieldCopyWithData({if (id != null) #id: id}));
+  @override
+  Two $make(CopyWithData data) => Two(id: data.get(#id, or: $value.id));
+
+  @override
+  TwoCopyWith<$R2, Two, $Out2> $chain<$R2, $Out2 extends Two>(
+          Then<Two, $Out2> t, Then<$Out2, $R2> t2) =>
+      _TwoCopyWithImpl($value, t, t2);
 }

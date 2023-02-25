@@ -3,6 +3,7 @@ library dart_mappable;
 export 'src/annotations.dart';
 export 'src/case_style.dart';
 export 'src/copywith/copywith_base.dart';
+export 'src/copywith/copywith_data.dart';
 export 'src/copywith/list_copy_with.dart';
 export 'src/copywith/map_copy_with.dart';
 export 'src/hooks/chained_hook.dart';

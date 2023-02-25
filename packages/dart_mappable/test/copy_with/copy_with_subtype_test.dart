@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-part 'copy_with_2_test.mapper.dart';
+part 'copy_with_subtype_test.mapper.dart';
 
 @MappableClass(
     discriminatorKey: 'type',
@@ -53,7 +53,7 @@ void main() {
     expect(z2.animal, isA<Cat>());
     expect(z2.animal.name, equals('Copied'));
 
-    var z3 = zoo.copyWith.animal.apply((a) => Dog(a.name));
+    var z3 = zoo.copyWith.animal.$update((a) => Dog(a.name));
     expect(z3.animal, isA<Dog>());
     expect(z3.animal.name, equals('Mauzi'));
   });

@@ -86,32 +86,43 @@ mixin AMappable {
 }
 
 extension AValueCopy<$R, $Out extends A> on ObjectCopyWith<$R, A, $Out> {
-  ACopyWith<$R, A, $Out> get asA =>
-      base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
+  ACopyWith<$R, A, $Out> get $asA =>
+      $base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
 }
 
 typedef ACopyWithBound = A;
 
 abstract class ACopyWith<$R, $In extends A, $Out extends A>
-    implements ObjectCopyWith<$R, $In, $Out> {
-  ACopyWith<$R2, $In, $Out2> chain<$R2, $Out2 extends A>(
-      Then<A, $Out2> t, Then<$Out2, $R2> t2);
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? a, int? b, double? c, bool? d, B? e});
+  ACopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends A>(
+      Then<A, $Out2> t, Then<$Out2, $R2> t2);
 }
 
-class _ACopyWithImpl<$R, $Out extends A> extends CopyWithBase<$R, A, $Out>
+class _ACopyWithImpl<$R, $Out extends A> extends ClassCopyWithBase<$R, A, $Out>
     implements ACopyWith<$R, A, $Out> {
   _ACopyWithImpl(super.value, super.then, super.then2);
-  @override
-  ACopyWith<$R2, A, $Out2> chain<$R2, $Out2 extends A>(
-          Then<A, $Out2> t, Then<$Out2, $R2> t2) =>
-      _ACopyWithImpl($value, t, t2);
 
   @override
+  late final ClassMapperBase<A> $mapper = AMapper.ensureInitialized();
+  @override
   $R call({String? a, int? b, Object? c = $none, bool? d, Object? e = $none}) =>
-      $then(A(a ?? $value.a,
-          b: b ?? $value.b,
-          c: or(c, $value.c),
-          d: d ?? $value.d,
-          e: or(e, $value.e)));
+      $apply(FieldCopyWithData({
+        if (a != null) #a: a,
+        if (b != null) #b: b,
+        if (c != $none) #c: c,
+        if (d != null) #d: d,
+        if (e != $none) #e: e
+      }));
+  @override
+  A $make(CopyWithData data) => A(data.get(#a, or: $value.a),
+      b: data.get(#b, or: $value.b),
+      c: data.get(#c, or: $value.c),
+      d: data.get(#d, or: $value.d),
+      e: data.get(#e, or: $value.e));
+
+  @override
+  ACopyWith<$R2, A, $Out2> $chain<$R2, $Out2 extends A>(
+          Then<A, $Out2> t, Then<$Out2, $R2> t2) =>
+      _ACopyWithImpl($value, t, t2);
 }
