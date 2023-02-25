@@ -1,8 +1,14 @@
-# Unreleased Version
+# 3.0.0-dev.0
 
-- Removed `<MyClass>Mapper.container` in favor of `MapperContainer.globals`
-- Removed `@MappableLib.createCombinedContainer` in favor of `@MappableLib.generateInitializerForScope`
-- Renamed `.copyWith.apply()` method to `.copyWith.$update()`
+- Simplified internal mapper implementation and removed `MapperElementBase` class.
+- Added `MappingContext` being passed to mapper methods.
+- Added `EncodingOptions` to `toValue` method.
+- Added support for third-party models by using annotated `typedef`s.
+- Removed `<MyClass>Mapper.container` in favor of `MapperContainer.globals`.
+- Removed `@MappableLib.createCombinedContainer` in favor of `@MappableLib.generateInitializerForScope`.
+- Renamed `.copyWith.apply()` method to `.copyWith.$update()`.
+- Removed `CheckTypesHook` in favor of discriminator functions.
+- Added `.copyWith.$merge()` and `.copyWith.$delta()`.
 
 # 2.0.3
 
