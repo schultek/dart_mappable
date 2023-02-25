@@ -1,4 +1,3 @@
-
 import '../mapper_container.dart';
 import 'mapper_base.dart';
 import 'mapper_mixins.dart';
@@ -69,12 +68,14 @@ abstract class SimpleMapper2<T extends Object> extends _SimpleMapperBase<T> {
   }
 }
 
-abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T> with PrimitiveMethodsMixin<T> {
+abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T>
+    with PrimitiveMethodsMixin<T> {
   const _SimpleMapperBase();
 
   static MapperContainer? _container;
   MapperContainer get container {
-    assert(_container != null, 'SimpleMapper.container can only be accessed inside the decode() or encode() functions.');
+    assert(_container != null,
+        'SimpleMapper.container can only be accessed inside the decode() or encode() functions.');
     return _container!;
   }
 
@@ -97,7 +98,7 @@ abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T> with Pr
   Object? encoder(EncodingContext<Object> context) {
     _container = context.container;
     try {
-    return _encode(context.checked<T>());
+      return _encode(context.checked<T>());
     } finally {
       _container = null;
     }

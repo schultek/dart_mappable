@@ -26,7 +26,8 @@ void main() {
     b.ConfettiMapper.ensureInitialized();
 
     test('Should encode generic objects', () {
-      var boxA = MapperContainer.globals.toJson<dynamic>(Box(10, contents: Content('test')));
+      var boxA = MapperContainer.globals
+          .toJson<dynamic>(Box(10, contents: Content('test')));
       var boxB = MapperContainer.globals.toJson<dynamic>(
           b.Box<b.Confetti>(10, contents: [b.Confetti('Rainbow')]));
 

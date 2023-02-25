@@ -35,7 +35,6 @@ class GenericBox<T> {
 
 // only use the base type here
 class GenericBoxMapper extends SimpleMapper1<GenericBox> {
-
   @override
   Function get typeFactory => <T>(f) => f<GenericBox<T>>();
 

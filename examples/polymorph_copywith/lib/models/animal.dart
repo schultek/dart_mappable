@@ -10,4 +10,3 @@ abstract class Animal with AnimalMappable {
   String name;
   Animal(this.name);
 }
-

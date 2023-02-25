@@ -10,7 +10,6 @@ import '../utils.dart';
 import 'class/class_mapper_element.dart';
 
 class RemoveParamsVisitor extends TypeVisitor<String> {
-
   final MapperElementGroup parent;
 
   RemoveParamsVisitor(this.parent);
@@ -28,13 +27,9 @@ class RemoveParamsVisitor extends TypeVisitor<String> {
 
   @override
   String visitInterfaceType(InterfaceType type) {
-    return '${
-    parent.prefixOfElement(type.element)
-    }${type.element.name}'
+    return '${parent.prefixOfElement(type.element)}${type.element.name}'
         '${type.typeArguments.isNotEmpty ? '<${type.typeArguments.map((t) => t.accept(this)).join(', ')}>' : ''}'
-        '${
-    type.nullabilitySuffix == NullabilitySuffix.question ? '?' : ''
-    }';
+        '${type.nullabilitySuffix == NullabilitySuffix.question ? '?' : ''}';
   }
 
   @override
@@ -57,7 +52,6 @@ class RemoveParamsVisitor extends TypeVisitor<String> {
   String visitVoidType(VoidType type) {
     return 'void';
   }
-
 }
 
 class MapperFieldElement {
@@ -81,7 +75,8 @@ class MapperFieldElement {
     var type = field.type;
 
     if (field.enclosingElement is InterfaceElement) {
-      var it = parent.element.thisType.asInstanceOf(field.enclosingElement as InterfaceElement)!;
+      var it = parent.element.thisType
+          .asInstanceOf(field.enclosingElement as InterfaceElement)!;
       var getter = it.getGetter(field.name);
       type = getter!.type.returnType;
     }
