@@ -11,7 +11,7 @@ import '../main.mapper.g.dart';
 part 'basic.g.dart';
 part 'basic.mapper.dart';
 
-// === json_serializable ===
+// 1️⃣ === json_serializable ===
 
 @JsonSerializable()
 class PersonA {
@@ -27,7 +27,7 @@ class PersonA {
   Map<String, dynamic> toJson() => _$PersonAToJson(this);
 }
 
-// === dart_json_mapper ===
+// 2️⃣ === dart_json_mapper ===
 
 @d.jsonSerializable
 class PersonB {
@@ -36,7 +36,7 @@ class PersonB {
   PersonB({required this.name});
 }
 
-// === dart_mappable ===
+// 3️⃣ === dart_mappable ===
 
 @MappableClass()
 // Required Boilerplate (Mixin)
@@ -44,44 +44,35 @@ class PersonC with PersonCMappable {
   final String name;
 
   PersonC({required this.name});
-
-  // Optional Boilerplate
-  static final fromMap = PersonCMapper.fromMap;
-  static final fromJson = PersonCMapper.fromJson;
 }
 
-// === Comparison ===
+// 🆚 === Comparison ===
 
 void compareBasic() {
   group('basic', () {
     setUpAll(() {
-      // required for dart_json_mapper
+      // 🟠 required for dart_json_mapper
       initializeJsonMapper();
     });
 
-    group('decode from json string', () {
-      test('json_serializable', () {
-        // required to use [jsonDecode] with additional import
+    group('🆚 decode from json string', () {
+      test('1️⃣ json_serializable', () {
+        // 🟠 required to use [jsonDecode] with additional 'dart:convert' import
         expect(
           PersonA.fromJson(jsonDecode('{"name": "Alice"}')),
           predicate<PersonA>((p) => p.name == 'Alice'),
         );
       });
 
-      test('dart_json_mapper', () {
+      test('2️⃣ dart_json_mapper', () {
         expect(
           JsonMapper.fromJson<PersonB>('{"name": "Bob"}'),
           predicate<PersonB>((p) => p.name == 'Bob'),
         );
       });
 
-      test('dart_mappable', () {
-        // allows to use [equals] because of [operator ==] override
-        expect(
-          PersonC.fromJson('{"name": "Clara"}'),
-          equals(PersonC(name: 'Clara')),
-        );
-        // alternative with no boilerplate in model class
+      test('3️⃣ dart_mappable', () {
+        // 🟢 allows to use [equals] because of [operator ==] override
         expect(
           PersonCMapper.fromJson('{"name": "Clara"}'),
           equals(PersonC(name: 'Clara')),
@@ -89,28 +80,23 @@ void compareBasic() {
       });
     });
 
-    group('decode from map', () {
-      test('json_serializable', () {
+    group('🆚 decode from map', () {
+      test('1️⃣ json_serializable', () {
         expect(
           PersonA.fromJson({'name': 'Alice'}),
           predicate<PersonA>((p) => p.name == 'Alice'),
         );
       });
 
-      test('dart_json_mapper', () {
+      test('2️⃣ dart_json_mapper', () {
         expect(
           JsonMapper.fromMap<PersonB>({'name': 'Bob'}),
           predicate<PersonB>((p) => p.name == 'Bob'),
         );
       });
 
-      test('dart_mappable', () {
-        // allows to use [equals] because of [operator ==] override
-        expect(
-          PersonC.fromMap({'name': 'Clara'}),
-          equals(PersonC(name: 'Clara')),
-        );
-        // alternative with no boilerplate in model class
+      test('3️⃣ dart_mappable', () {
+        // 🟢 allows to use [equals] because of [operator ==] override
         expect(
           PersonCMapper.fromMap({'name': 'Clara'}),
           equals(PersonC(name: 'Clara')),
@@ -118,16 +104,16 @@ void compareBasic() {
       });
     });
 
-    group('encode to json string', () {
-      test('json_serializable', () {
-        // required to use [jsonEncode] with additional import
+    group('🆚 encode to json string', () {
+      test('1️⃣ json_serializable', () {
+        // 🟠 required to use [jsonEncode] with additional 'dart:convert' import
         expect(
           jsonEncode(PersonA(name: 'Alice').toJson()),
           equals('{"name":"Alice"}'),
         );
       });
 
-      test('dart_json_mapper', () {
+      test('2️⃣ dart_json_mapper', () {
         expect(
           JsonMapper.toJson(
               PersonB(name: 'Bob'), d.SerializationOptions(indent: '')),
@@ -135,7 +121,7 @@ void compareBasic() {
         );
       });
 
-      test('dart_mappable', () {
+      test('3️⃣ dart_mappable', () {
         expect(
           PersonC(name: 'Clara').toJson(),
           equals('{"name":"Clara"}'),
@@ -143,22 +129,22 @@ void compareBasic() {
       });
     });
 
-    group('encode to map', () {
-      test('json_serializable', () {
+    group('🆚 encode to map', () {
+      test('1️⃣ json_serializable', () {
         expect(
           PersonA(name: 'Alice').toJson(),
           equals({'name': 'Alice'}),
         );
       });
 
-      test('dart_json_mapper', () {
+      test('2️⃣ dart_json_mapper', () {
         expect(
           JsonMapper.toMap(PersonB(name: 'Bob')),
           equals({'name': 'Bob'}),
         );
       });
 
-      test('dart_mappable', () {
+      test('3️⃣ dart_mappable', () {
         expect(
           PersonC(name: 'Clara').toMap(),
           equals({'name': 'Clara'}),

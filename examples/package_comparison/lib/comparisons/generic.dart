@@ -9,7 +9,7 @@ import '../utils.dart';
 part 'generic.g.dart';
 part 'generic.mapper.dart';
 
-// === json_serializable ===
+// 1️⃣ === json_serializable ===
 
 @JsonSerializable(genericArgumentFactories: true)
 class BoxA<T> {
@@ -41,7 +41,7 @@ class ContentA {
   Map<String, dynamic> toJson() => _$ContentAToJson(this);
 }
 
-// === dart_json_mapper ===
+// 2️⃣ === dart_json_mapper ===
 
 @d.jsonSerializable
 class BoxB<T> {
@@ -57,7 +57,7 @@ class ContentB {
   ContentB(this.data);
 }
 
-// === dart_mappable ===
+// 3️⃣ === dart_mappable ===
 
 @MappableClass()
 // Required Boilerplate (Mixin)
@@ -75,21 +75,21 @@ class ContentC with ContentCMappable {
   ContentC(this.data);
 }
 
-// === Comparison ===
+// 🆚 === Comparison ===
 
 void compareGeneric() {
   group('generic', () {
     setUpAll(() {
-      // required for dart_json_mapper
+      // 🟠 required for dart_json_mapper
       initializeJsonMapper();
-      // requires for dart_mappable
+      // 🟠 required for dart_mappable
       ContentCMapper.ensureInitialized();
     });
 
-    group('decode from map', () {
-      test('json_serializable', () {
-        // requires explicit passing of argument decoders
-        // requires manual handling of objects (here: cast to map without type checking)
+    group('🆚 decode from map', () {
+      test('1️⃣ json_serializable', () {
+        // 🟠 requires explicit passing of argument decoders
+        // 🟠 requires manual handling of objects (here: cast to map without type checking)
         expect(
           BoxA.fromJson({
             'content': {'data': 'abcd'}
@@ -98,8 +98,8 @@ void compareGeneric() {
         );
       });
 
-      test('dart_json_mapper', () {
-        // unsupported, only can decode to BoxB<dynamic>
+      test('2️⃣ dart_json_mapper', () {
+        // 🔴 unsupported, only can decode to BoxB<dynamic>
         expect(
           () => d.JsonMapper.fromMap<BoxB<ContentB>>({
             'content': {'data': 'abcd'}
@@ -107,7 +107,7 @@ void compareGeneric() {
           throwsA(isA<TypeError>()),
         );
 
-        // incorrect, doesn't decode ContentB
+        // 🔴 incorrect, doesn't decode ContentB
         expect(
           d.JsonMapper.fromMap<BoxB<dynamic>>({
             'content': {'data': 'abcd'}
@@ -117,8 +117,8 @@ void compareGeneric() {
         );
       });
 
-      test('dart_mappable', () {
-        // allows to use [equals] because of [operator ==] override
+      test('3️⃣ dart_mappable', () {
+        // 🟢 allows to use [equals] because of [operator ==] override
         expect(
           BoxCMapper.fromMap<ContentC>({
             'content': {'data': 'abcd'}
@@ -128,9 +128,9 @@ void compareGeneric() {
       });
     });
 
-    group('encode to map', () {
-      test('json_serializable', () {
-        // requires explicit passing of argument encoders
+    group('🆚 encode to map', () {
+      test('1️⃣ json_serializable', () {
+        // 🟠 requires explicit passing of argument encoders
         expect(
           BoxA(content: ContentA('abcd')).toJson((c) => c.toJson()),
           equals({
@@ -139,7 +139,7 @@ void compareGeneric() {
         );
       });
 
-      test('dart_json_mapper', () {
+      test('2️⃣ dart_json_mapper', () {
         expect(
           d.JsonMapper.toMap(BoxB(content: ContentB('abcd'))),
           equals({
@@ -153,7 +153,7 @@ void compareGeneric() {
         );
       });
 
-      test('dart_mappable', () {
+      test('3️⃣ dart_mappable', () {
         expect(
           BoxC(content: ContentC('abcd')).toMap(),
           equals({
@@ -163,9 +163,9 @@ void compareGeneric() {
       });
     });
 
-    group('decode from faulty map', () {
-      test('json_serializable', () {
-        // requires manual error handling
+    group('🆚 decode from faulty map', () {
+      test('1️⃣ json_serializable', () {
+        // 🟠 requires manual error handling
         expect(
           () => BoxA.fromJson({'content': '123'}, (o) {
             if (o is Map<String, dynamic>) {
@@ -178,12 +178,12 @@ void compareGeneric() {
         );
       });
 
-      test('dart_json_mapper', () {
-        // unsupported, no error handling
+      test('2️⃣ dart_json_mapper', () {
+        // 🔴 unsupported, no error handling
       });
 
-      test('dart_mappable', () {
-        // has integrated error handling with detailed error messages
+      test('3️⃣ dart_mappable', () {
+        // 🟢 has integrated error handling with detailed error messages
         expect(
           () => BoxCMapper.fromMap<ContentC>({'content': '123'}),
           throwsMapperException(
@@ -193,9 +193,9 @@ void compareGeneric() {
       });
     });
 
-    group('decode with generic type argument', () {
-      test('json_serializable', () {
-        // unsupported
+    group('🆚 decode with generic type argument', () {
+      test('1️⃣ json_serializable', () {
+        // 🔴 unsupported
         T decode<T>(Map<String, dynamic> map) {
           // not supported, would require manual `if (T == ...)` cases.
           throw UnsupportedError('Cant decode to generic type $T.');
@@ -204,9 +204,8 @@ void compareGeneric() {
         expect(() => decode<ContentA>({}), throwsUnsupportedError);
       });
 
-      test('dart_json_mapper', () {
-        // built in only for non-generic types
-        // unsupported for generic types
+      test('2️⃣ dart_json_mapper', () {
+        // 🔴/🟠 unsupported for generic types, only for non-generic types
         var decode = d.JsonMapper.fromMap;
 
         // works only for non-generic types
@@ -222,8 +221,8 @@ void compareGeneric() {
         );
       });
 
-      test('dart_mappable', () {
-        // built in
+      test('3️⃣ dart_mappable', () {
+        // 🟢 built in
         var decode = MapperContainer.globals.fromValue;
 
         expect(
@@ -238,7 +237,7 @@ void compareGeneric() {
           equals(BoxC<String>(content: 'abcd')),
         );
 
-        // also works for lists
+        // 🟢 also works for lists
         expect(
           decode<List<int>>([123, '456', 78.9]),
           equals(<int>[123, 456, 79]),

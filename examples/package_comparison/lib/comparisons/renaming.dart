@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 part 'renaming.g.dart';
 part 'renaming.mapper.dart';
 
-// === json_serializable ===
+// 1️⃣ === json_serializable ===
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class PersonA {
@@ -23,7 +23,7 @@ class PersonA {
   Map<String, dynamic> toJson() => _$PersonAToJson(this);
 }
 
-// === dart_mappable ===
+// 3️⃣ === dart_mappable ===
 
 @MappableClass(caseStyle: CaseStyle.snakeCase)
 // Required Boilerplate (Mixin)
@@ -35,36 +35,41 @@ class PersonB with PersonBMappable {
   PersonB({required this.firstName, required this.lastName});
 }
 
-// === Comparison ===
+// 🆚 === Comparison ===
 
 void compareRenaming() {
   group('renaming', () {
-    test('decode from map', () {
-      // json_serializable
-      expect(
-        PersonA.fromJson({'first_name': 'Alice', 'surName': 'A'}),
-        predicate<PersonA>((p) => p.firstName == 'Alice' && p.lastName == 'A'),
-      );
+    group('🆚 decode from map', () {
+      test('1️⃣ json_serializable', () {
+        expect(
+          PersonA.fromJson({'first_name': 'Alice', 'surName': 'A'}),
+          predicate<PersonA>(
+              (p) => p.firstName == 'Alice' && p.lastName == 'A'),
+        );
+      });
 
-      // dart_mappable
-      expect(
-        PersonBMapper.fromMap({'first_name': 'Bob', 'surName': 'B'}),
-        equals(PersonB(firstName: 'Bob', lastName: 'B')),
-      );
+      test('3️⃣ dart_mappable', () {
+        expect(
+          PersonBMapper.fromMap({'first_name': 'Bob', 'surName': 'B'}),
+          equals(PersonB(firstName: 'Bob', lastName: 'B')),
+        );
+      });
     });
 
-    test('encode to map', () {
-      // json_serializable
-      expect(
-        PersonA(firstName: 'Alice', lastName: 'A').toJson(),
-        equals({'first_name': 'Alice', 'surName': 'A'}),
-      );
+    group('🆚 encode to map', () {
+      test('1️⃣ json_serializable', () {
+        expect(
+          PersonA(firstName: 'Alice', lastName: 'A').toJson(),
+          equals({'first_name': 'Alice', 'surName': 'A'}),
+        );
+      });
 
-      // dart_mappable
-      expect(
-        PersonB(firstName: 'Bob', lastName: 'B').toMap(),
-        equals({'first_name': 'Bob', 'surName': 'B'}),
-      );
+      test('3️⃣ dart_mappable', () {
+        expect(
+          PersonB(firstName: 'Bob', lastName: 'B').toMap(),
+          equals({'first_name': 'Bob', 'surName': 'B'}),
+        );
+      });
     });
   });
 }

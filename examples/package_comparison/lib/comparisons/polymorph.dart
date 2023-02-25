@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 part 'polymorph.g.dart';
 part 'polymorph.mapper.dart';
 
-// === json_serializable ===
+// 1️⃣ === json_serializable ===
 
 // Needed to disable [fromJson] generation for abstract class
 @JsonSerializable(createFactory: false)
@@ -46,7 +46,7 @@ class DogA extends AnimalA {
   Map<String, dynamic> toJson() => _$DogAToJson(this);
 }
 
-// === dart_mappable ===
+// 3️⃣ === dart_mappable ===
 
 @MappableClass(discriminatorKey: 'type')
 // Required Boilerplate (Mixin)
@@ -72,38 +72,43 @@ class DogB extends AnimalB with DogBMappable {
   DogB(String name, this.age) : super(name);
 }
 
-// === Comparison ===
+// 🆚 === Comparison ===
 
 void comparePolymorph() {
   group('polymorph', () {
-    test('decode explicit subtype from map', () {
-      // json_serializable
-      expect(
-        CatA.fromJson({'name': 'Kitty', 'color': 'brown'}),
-        predicate<CatA>((c) => c.name == 'Kitty'),
-      );
+    group('🆚 decode explicit subtype from map', () {
+      test('1️⃣ json_serializable', () {
+        expect(
+          CatA.fromJson({'name': 'Kitty', 'color': 'brown'}),
+          predicate<CatA>((c) => c.name == 'Kitty'),
+        );
+      });
 
-      // dart_mappable
-      expect(
-        CatBMapper.fromMap({'name': 'Kitty', 'color': 'brown'}),
-        equals(CatB('Kitty', 'brown')),
-      );
+      test('3️⃣ dart_mappable', () {
+        expect(
+          CatBMapper.fromMap({'name': 'Kitty', 'color': 'brown'}),
+          equals(CatB('Kitty', 'brown')),
+        );
+      });
     });
 
-    test('decode implicitly with discriminator from map', () {
-      // json_serializable
-      // -> not supported
+    group('🆚 decode implicitly with discriminator from map', () {
+      test('1️⃣ json_serializable', () {
+        // 🔴 not supported
+      });
 
-      // dart_mappable
-      expect(
-        AnimalBMapper.fromMap(
-            {'type': 'CatB', 'name': 'Kitty', 'color': 'brown'}),
-        equals(CatB('Kitty', 'brown')),
-      );
-      expect(
-        AnimalBMapper.fromMap({'type': 'dog', 'name': 'Bello', 'age': 2}),
-        equals(DogB('Bello', 2)),
-      );
+      test('3️⃣ dart_mappable', () {
+        // 🟢 built in
+        expect(
+          AnimalBMapper.fromMap(
+              {'type': 'CatB', 'name': 'Kitty', 'color': 'brown'}),
+          equals(CatB('Kitty', 'brown')),
+        );
+        expect(
+          AnimalBMapper.fromMap({'type': 'dog', 'name': 'Bello', 'age': 2}),
+          equals(DogB('Bello', 2)),
+        );
+      });
     });
   });
 }
