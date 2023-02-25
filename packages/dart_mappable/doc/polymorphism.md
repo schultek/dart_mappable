@@ -79,18 +79,20 @@ void main() {
 ## Include Subclasses
 
 The only slight downside of this system is that all sub-classes must be known statically at compile-time. 
-`dart_mappable` handles this in two ways:
+`dart_mappable` handles this in the following ways:
 
-1. All sub-classes defined in the same library as the parent class will be automatically included.
-2. All other sub-classes must be explicitly specified using the `includeSubClasses` property of the `@MappableClass()` annotation:
+1. When a subclass is defined in the same library as the parent class it will be automatically included.
 
-```dart
-// Suppose [Hamster] is defined in some other library than [Animal]
-@MappableClass(discriminatorKey: 'type', includeSubClasses: [Hamster])
-abstract class Animal with AnimalMappable {
-  ...
-}
-```
+2. You can explicitly add a subclass from another library using the `includeSubClasses` property of the `@MappableClass()` annotation:
+    ```dart
+    // Suppose [Hamster] is defined in some other library than [Animal]
+    @MappableClass(discriminatorKey: 'type', includeSubClasses: [Hamster])
+    abstract class Animal with AnimalMappable {
+      ...
+    }
+    ```
+3. Alternatively you can initialize a subclass yourself using `MySubClassMapper.ensureInitialized()` and it will register itself
+   with the superclass.
 
 ## Null and Default Values
 
@@ -127,24 +129,17 @@ void main() {
 
 ## Custom Discriminator Logic
 
-For a more advanced use-case where the discriminator key/value system is not enough, you can use the
-`CheckTypesHook` to define custom discriminator checks on your subclasses.
-
-Instead of giving each subclass a discriminator value, each subclass can have a custom function
-that checks whether the encoded value should be decoded to this subclass and returns a boolean.
+For a more advanced use-case where the discriminator key/value system is not enough, you can also 
+use a custom predicate function as the `discriminatorValue`. This function can check whether the 
+encoded value should be decoded to this subclass and return a boolean.
 
 ```dart
-@MappableClass(
-  hooks: CheckTypesHook({
-    B: B.checkType,
-    C: C.checkType,
-  }),
-)
+@MappableClass()
 abstract class A with AMappable {
   A();
 }
 
-@MappableClass()
+@MappableClass(discriminatorValue: B.checkType)
 class B extends A with BMappable {
   B();
   
@@ -154,7 +149,7 @@ class B extends A with BMappable {
   }
 }
 
-@MappableClass()
+@MappableClass(discriminatorValue: C.checkType)
 class C extends A with CMappable {
   C();
   

@@ -1,5 +1,5 @@
 `dart_mappable` can generate a powerful `copyWith` method for your classes. It supports assigning
-`null` as well as chained deep copies.
+`null` as well as chained deep copies, polymorphic copy, merging objects or applying delta maps.
 
 ```dart
 @MappableClass()
@@ -73,6 +73,50 @@ CopyWith works not only for simple use-cases, but also supports complex class st
 inheritance or generics, like [Polymorphism](../topics/Polymorphism-topic.html).
 
 After reading the next page, check out the [Polymorphic-CopyWith Example](https://github.com/schultek/dart_mappable/tree/main/examples/polymorph_copywith) on Github. 
+
+## Merging Objects
+
+You can also merge classes with nullable fields using the `.copyWith.$merge()` extension:
+
+```dart
+@MappableClass()
+class A with AMappable {
+  A(this.a, this.b);
+  
+  String? a;
+  String? b;
+}
+
+void main() {
+  var a = A('a', null);
+  var b = A(null, 'b');
+  
+  var c = a.copyWith.$merge(b);
+  assert(c == A('a', 'b'));
+}
+```
+
+## Copy Delta
+
+You can also apply a delta map on an object using the `.copyWith.$delta` extension:
+
+```dart
+@MappableClass()
+class A with AMappable {
+  A(this.a, this.b);
+  
+  String? a;
+  String? b;
+}
+
+void main() {
+  var a = A('a', null);
+  var delta = {'b': 'b'};
+  
+  var c = a.copyWith.$delta(delta);
+  assert(c == A('a', 'b'));
+}
+``` 
 
 ---
 
