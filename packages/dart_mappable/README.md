@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://pub.dev/packages/dart_mappable">
-    <img src="https://img.shields.io/pub/v/dart_mappable?label=pub.dev&labelColor=333940&logo=dart">
+    <img src="https://img.shields.io/pub/v/dart_mappable?label=pub.dev&labelColor=333940&logo=dart&color=00589B">
   </a>
   <a href="https://github.com/schultek/dart_mappable/actions/workflows/test.yaml">
     <img src="https://img.shields.io/github/actions/workflow/status/schultek/dart_mappable/test.yaml?branch=main&label=tests&labelColor=333940&logo=github">
@@ -10,17 +10,20 @@
   <a href="https://app.codecov.io/gh/schultek/dart_mappable">
     <img src="https://img.shields.io/codecov/c/github/schultek/dart_mappable?logo=codecov&logoColor=fff&labelColor=333940">
   </a>
-  <!--<a href="https://twitter.com/schultek_dev">
-    <img src="https://img.shields.io/twitter/follow/schultek_dev?style=flat&label=Follow&color=1DA1F2&labelColor=333940&logo=twitter&logoColor=fff">
-  </a>-->
+  <br/>
+  <a href="https://twitter.com/schultek_dev">
+    <img src="https://img.shields.io/badge/follow-%40schultek__dev-1DA1F2?style=flat&label=follow&color=1DA1F2&labelColor=333940&logo=twitter&logoColor=fff">
+  </a>
+  <a href="https://github.com/schultek/dart_mappable">
+    <img src="https://img.shields.io/github/stars/schultek/dart_mappable?style=flat&label=stars&labelColor=333940&color=8957e5&logo=github">
+  </a>
 </p>
 
 <p align="center">
   <a href="#quick-start">Quickstart</a> •
   <a href="https://pub.dev/documentation/dart_mappable/latest/topics/Introduction-topic.html">Documentation</a> •
   <a href="https://pub.dev/packages/dart_mappable/example">Example</a> •
-  <a href="https://github.com/schultek/dart_mappable/tree/main/examples/package_comparison">Package Comparison</a> •
-  <a href="https://github.com/schultek/dart_mappable">Github</a>
+  <a href="https://github.com/schultek/dart_mappable/tree/main/examples/package_comparison">Package Comparison</a>
 </p>
 
 <p align="center">
