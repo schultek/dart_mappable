@@ -5,7 +5,7 @@ import 'mapper_exception.dart';
 /// {@nodoc}
 extension GuardedUtils on MapperContainer {
   T $dec<T>(
-    dynamic value,
+    Object? value,
     String key, [
     MappingHook? hook,
   ]) {

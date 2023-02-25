@@ -26,8 +26,8 @@ abstract class MapCopyWith<Result, Key, Value, Copy> {
   /// Returns a new map with the value at [key] replaced with a new value
   Result replace(Key key, Value v);
 
-  /// Returns a new map without the value at [key]
-  Result removeAt(Key key);
+  /// Returns a new map without [key]
+  Result remove(Key key);
 
   /// Applies any transformer function on the value
   Result $update(Map<Key, Value> Function(Map<Key, Value>) transform);
@@ -59,5 +59,5 @@ class _MapCopyWith<Result, Key, Value, Copy>
   Result replace(Key key, Value v) => $then({...$value, key: v});
 
   @override
-  Result removeAt(Key key) => $then({...$value}..remove(key));
+  Result remove(Key key) => $then({...$value}..remove(key));
 }

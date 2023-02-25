@@ -1,8 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-import 'more_hooks.dart';
-import 'other_hooks.dart';
+import 'game_hooks.dart' as game;
 
 part 'hooks_test.mapper.dart';
 
@@ -26,11 +25,13 @@ class PlayerHook extends MappingHook {
   }
 }
 
-@MappableClass(hook: GameHook())
+@MappableClass(hook: game.GameHook())
 class Game with GameMappable {
   @MappableField(
-      hook:
-          ChainedHook([PlayerHook(), UnmappedPropertiesHook('unmappedProps')]))
+      hook: ChainedHook([
+    PlayerHook(),
+    UnmappedPropertiesHook('unmappedProps'),
+  ]))
   Player player;
 
   Game(this.player);
@@ -38,7 +39,7 @@ class Game with GameMappable {
 
 @MappableClass()
 class CardGame extends Game with CardGameMappable {
-  CardGame(@MappableField(hook: CardPlayerHook()) Player player)
+  CardGame(@MappableField(hook: game.CardPlayerHook()) Player player)
       : super(player);
 }
 
@@ -46,24 +47,6 @@ class CardGame extends Game with CardGameMappable {
 class Player with PlayerMappable {
   String id;
   Player(this.id);
-}
-
-@MappableClass(hook: UnmappedPropertiesHook('unmappedProps'))
-class Clothes with ClothesMappable {
-  int size;
-  Map<String, dynamic> unmappedProps;
-
-  Clothes(this.size, {this.unmappedProps = const {}});
-}
-
-@MappableClass(hook: UnmappedPropertiesHook('unmappedProps'))
-class Component with ComponentMappable {
-  String id;
-  String name;
-
-  Map<String, dynamic>? unmappedProps;
-
-  Component(this.id, this.unmappedProps, this.name);
 }
 
 void main() {
@@ -84,23 +67,6 @@ void main() {
     test('chained field hooks', () {
       var game = CardGameMapper.fromMap({'player': 'Anna'});
       expect(game.player.id, equals('Anna-card'));
-    });
-  });
-
-  group('default hooks', () {
-    test('unmapped properties', () {
-      var clothes = ClothesMapper.fromJson(
-          '{"size": 1, "color": "green",  "quality": 2}');
-      expect(clothes.unmappedProps, equals({'color': 'green', 'quality': 2}));
-      expect(
-          clothes.toMap(), equals({'size': 1, 'color': 'green', 'quality': 2}));
-
-      var component = ComponentMapper.fromJson(
-          '{"id": "some_id", "value": 3, "name": "my_comp"}');
-      expect(component.unmappedProps, equals({'value': 3}));
-      component.name = 'changed';
-      expect(component.toMap(),
-          equals({'id': 'some_id', 'name': 'changed', 'value': 3}));
     });
   });
 }

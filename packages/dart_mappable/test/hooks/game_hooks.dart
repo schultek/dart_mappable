@@ -1,5 +1,9 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
+class GameHook extends MappingHook {
+  const GameHook();
+}
+
 class CardPlayerHook extends MappingHook {
   const CardPlayerHook();
 
