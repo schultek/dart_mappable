@@ -38,11 +38,12 @@ class MergeCopyWithData extends CopyWithData {
 
 class DeltaCopyWithData extends CopyWithData {
   DeltaCopyWithData(this.mapper, this.value)
-      : context = DecodingContext(value, container: MapperContainer.globals);
+      : context = DecodingContext(MapJsonObject(value),
+            container: MapperContainer.globals);
 
   final ClassMapperBase mapper;
   final Map<String, dynamic> value;
-  final DecodingContext<Map<String, dynamic>> context;
+  final DecodingContext<JsonObject> context;
 
   @override
   V get<V>(Symbol name, {Object? or = $none}) {

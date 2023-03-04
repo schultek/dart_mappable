@@ -61,7 +61,6 @@ class MapperFieldElement {
 
   MapperFieldElement(this.param, this.field, this.parent);
 
-  // TODO check nested generic types
   late bool generic = () {
     return staticType != type;
   }();

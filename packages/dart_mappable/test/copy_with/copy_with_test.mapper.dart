@@ -496,7 +496,7 @@ class ItemListMapper extends ClassMapperBase<ItemList> {
 
   static ItemList<T> _instantiate<T>(DecodingData data) {
     throw MapperException.missingSubclass(
-        'ItemList', 'type', '${data.value['type']}');
+        'ItemList', 'type', '${data.value.get('type')}');
   }
 
   @override

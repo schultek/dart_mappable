@@ -1,7 +1,8 @@
 import 'package:collection/collection.dart';
 
-import 'mapper_base.dart';
+import '../internals/mapping_context.dart';
 import '../mapper_container.dart';
+import 'mapper_base.dart';
 
 mixin PrimitiveMethodsMixin<T extends Object> implements MapperBase<T> {
   @override

@@ -36,7 +36,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
 
   static Animal _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
-        'Animal', 'type', '${data.value['type']}');
+        'Animal', 'type', '${data.value.get('type')}');
   }
 
   @override

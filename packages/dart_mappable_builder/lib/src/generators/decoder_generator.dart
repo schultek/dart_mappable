@@ -79,12 +79,19 @@ class DecoderGenerator {
   Future<String> _generateConstructorCall() async {
     if (!element.hasCallableConstructor) {
       if (element.subTargets.isNotEmpty && element.discriminatorKey != null) {
-        return "throw MapperException.missingSubclass('${element.className}', '${element.discriminatorKey}', '\${data.value['${element.discriminatorKey}']}');";
+        return "throw MapperException.missingSubclass('${element.className}', '${element.discriminatorKey}', '\${data.value.get('${element.discriminatorKey}')}');";
       } else {
         return "throw MapperException.missingConstructor('${element.className}');";
       }
     } else {
-      return 'return ${element.prefixedDecodingClassName}${element.constructor!.name != '' ? '.${element.constructor!.name}' : ''}(${await _generateConstructorParams()});';
+      var output = StringBuffer();
+
+      output.writeln('data.load();');
+
+      output.write(
+          'return ${element.prefixedDecodingClassName}${element.constructor!.name != '' ? '.${element.constructor!.name}' : ''}(${await _generateConstructorParams()});');
+
+      return output.toString();
     }
   }
 

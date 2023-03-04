@@ -1,5 +1,7 @@
 import 'package:collection/collection.dart';
+import 'package:type_plus/type_plus.dart';
 
+import '../internals/mapping_context.dart';
 import '../mapper_exception.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
@@ -71,13 +73,19 @@ class IterableMapper<I extends Iterable> extends MapperBase<I>
   @override
   bool includeTypeId<V>(v) => false;
 
+  late DecodingContext<Iterable> _context;
+
   @override
   I decoder(DecodingContext context) {
-    return context.checked<Iterable>().call1(<T>(o) {
-      return fromIterable(o.value.map((v) {
-        return o.container.$dec<T>(v, 'item');
-      })) as I;
-    });
+    _context = context.checked<Iterable>();
+    return _context.args.single.provideTo<Iterable>(_decode) as I;
+  }
+
+  Iterable<T> _decode<T>() {
+    var o = _context;
+    return fromIterable(o.value.map((v) {
+      return o.container.$dec<T>(v, 'item');
+    }));
   }
 
   @override

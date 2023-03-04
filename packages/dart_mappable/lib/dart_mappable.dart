@@ -9,6 +9,8 @@ export 'src/copywith/map_copy_with.dart';
 export 'src/hooks/chained_hook.dart';
 export 'src/hooks/string_hooks.dart';
 export 'src/hooks/unmapped_properties_hook.dart';
+export 'src/internals/json_object.dart';
+export 'src/internals/mapping_context.dart';
 export 'src/mapper_container.dart';
 export 'src/mapper_exception.dart';
 export 'src/mapper_utils.dart';

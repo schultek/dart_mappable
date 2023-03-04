@@ -1,3 +1,4 @@
+import '../internals/mapping_context.dart';
 import '../mapper_container.dart';
 import 'mapper_base.dart';
 import 'mapper_mixins.dart';

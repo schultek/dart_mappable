@@ -1,14 +1,14 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
+import 'package:crimson/crimson.dart';
 import 'package:meta/meta.dart';
 // ignore: implementation_imports
 import 'package:type_plus/src/types_registry.dart' show TypeRegistry;
 import 'package:type_plus/type_plus.dart' hide typeOf;
 
-import 'mapper_exception.dart';
-import 'mappers/default_mappers.dart';
-import 'mappers/mapper_base.dart';
+import '../dart_mappable.dart';
 
 class EncodingOptions {
   EncodingOptions({this.includeTypeId});
@@ -53,6 +53,8 @@ abstract class MapperContainer {
 
   T fromJson<T>(String json);
   String toJson<T>(T object);
+
+  T fromBytes<T>(Uint8List json);
 
   bool isEqual(dynamic value, Object? other);
   int hash(dynamic value);
@@ -315,6 +317,11 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
 
   @override
   String toJson<T>(T object) => jsonEncode(toValue<T>(object));
+
+  @override
+  T fromBytes<T>(Uint8List json) {
+    return fromValue<T>(BytesJsonObject.read(Crimson(json)));
+  }
 
   @override
   bool isEqual(Object? value, Object? other) {
