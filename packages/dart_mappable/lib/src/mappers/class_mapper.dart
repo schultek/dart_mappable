@@ -7,41 +7,6 @@ import '../internals/mapping_context.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
 
-class DecodingData<T extends Object> {
-  DecodingData(this.context, this.mapper);
-
-  final DecodingContext<JsonObject> context;
-  final ClassMapperBase<T> mapper;
-
-  JsonObject get value => context.value;
-  bool _wasLoaded = false;
-  final Map<Symbol, dynamic> _loadedValues = {};
-
-  V get<V>(Symbol name) {
-    if (_wasLoaded) {
-      if (_loadedValues.containsKey(name)) {
-        return _loadedValues[name] as V;
-      } else {
-        return mapper.fields[name]!.decodeValue(context, null) as V;
-      }
-    }
-    return mapper.fields[name]!.decode(context);
-  }
-
-  void load() {
-    var iterator = context.value.iterator;
-    int key = 0;
-
-    while ((key = iterator.nextKey()) != -1) {
-      var f = mapper.fieldsByKey[key];
-      if (f == null || f.mode == FieldMode.member) continue;
-
-      _loadedValues[Symbol(f.name)] = f.decodeValue(context, iterator.current);
-    }
-    _wasLoaded = true;
-  }
-}
-
 abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
   SubClassMapperBase() {
     superMapper.addSubMapper(this);
@@ -51,18 +16,18 @@ abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
   dynamic get discriminatorValue;
   ClassMapperBase get superMapper;
 
-  bool canDecode(DecodingContext<JsonObject> context) {
+  bool canDecode(DecodingContext<DecodingReader> context) {
     var value = discriminatorValue;
     if (identical(value, MappingFlags.useAsDefault)) {
       return true;
     } else if (value is Function) {
-      if (value is bool Function(JsonObject)) {
+      if (value is bool Function(DecodingReader)) {
         return value(context.value);
       } else {
         throw AssertionError(
             'Discriminator function must be of type "bool Function(Map<String, dynamic>)".');
       }
-    } else if (value == context.value.get(discriminatorKey)) {
+    } else if (value == context.value.peek(discriminatorKey)) {
       return true;
     }
 
@@ -146,7 +111,7 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
   T decoder(DecodingContext<Object> context) {
     return context.wrap(hook: superHook, skipInherited: true, (c) {
       return c.wrap(hook: hook, (c) {
-        var c2 = c.change(JsonObject.from(c.value));
+        var c2 = c.change(DecodingReader.from(c.value));
         if (_subMappers.isNotEmpty) {
           for (var m in _subMappers) {
             if (m.canDecode(c2)) {
@@ -157,7 +122,12 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
         if (_defaultSubMapper != null) {
           return _defaultSubMapper!.decoder(_defaultSubMapper!.inherit(c2));
         }
-        return c.callWith(instantiate, DecodingData<T>(c2, this));
+        var o = c2.value.read(c2, this);
+        if (c.args.isEmpty) {
+          return instantiate(o) as T;
+        } else {
+          return c.callWith(instantiate, o);
+        }
       });
     });
   }
@@ -241,22 +211,15 @@ class Field<T extends Object, V> {
     }
   }
 
-  R decode<R>(DecodingContext<JsonObject> context) {
-    var value = opt || def != null
-        ? context.container.$dec<R?>(context.value.get(key), key, hook)
-        : context.container.$dec<R>(context.value.get(key), key, hook);
-    return value ?? (def as R);
-  }
-
-  dynamic decodeValue(DecodingContext<JsonObject> context, Object? v) {
-    if (context.args.isEmpty || this.arg == null) {
+  dynamic decodeValue(DecodingContext<DecodingReader> context, Object? v) {
+    if (context.args.isEmpty || arg == null) {
       return _decodeValue<V>(context, v);
     } else {
       return context.callWith(arg!, <U>() => _decodeValue<U>(context, v));
     }
   }
 
-  R _decodeValue<R>(DecodingContext<JsonObject> context, Object? v) {
+  R _decodeValue<R>(DecodingContext<DecodingReader> context, Object? v) {
     var value = opt || def != null
         ? context.container.$dec<R?>(v, key, hook)
         : context.container.$dec<R>(v, key, hook);

@@ -1,87 +1,126 @@
+import 'dart:collection';
 import 'dart:typed_data';
 
 import 'package:crimson/crimson.dart';
 
 import '../copywith/copywith_base.dart';
 import '../mapper_exception.dart';
+import '../mappers/class_mapper.dart';
+import 'mapping_context.dart';
 
-abstract class JsonObject {
-  Object? get(String key);
-  JsonObjectIterator get iterator;
-
-  factory JsonObject.from(Object? value) {
-    if (value is JsonObject) {
+abstract class DecodingReader {
+  factory DecodingReader.from(Object? value) {
+    if (value is DecodingReader) {
       return value;
     } else if (value is Map<String, dynamic>) {
-      return MapJsonObject(value);
+      return MapReader(value);
     } else if (value is Uint8List) {
-      return BytesJsonObject(Crimson(value));
+      return BytesJsonReader(Crimson(value));
     } else {
       throw MapperException.unexpectedType(
-          value.runtimeType, (JsonObject).toString());
+          value.runtimeType, (DecodingReader).toString());
     }
   }
+
+  dynamic peek(String key);
+
+  DecodingObject read(
+      DecodingContext<DecodingReader> context, ClassMapperBase mapper);
 }
 
-abstract class JsonObjectIterator {
-  int nextKey();
-  Object? get current;
+abstract class DecodingObject implements DecodingReader {
+  V get<V>(Symbol name);
 }
 
-class MapJsonObject implements JsonObject {
-  MapJsonObject(this.value);
+class MapReader with MapMixin<String, dynamic> implements DecodingReader {
+  MapReader(this.value);
 
   final Map<String, dynamic> value;
 
   @override
-  JsonObjectIterator get iterator => MapJsonObjectIterator(value);
+  peek(String key) => value[key];
 
   @override
-  Object? get(String key) {
-    return value[key];
+  MapObject read(DecodingContext<DecodingReader> context,
+          ClassMapperBase<Object> mapper) =>
+      MapObject(value, mapper, context);
+
+  @override
+  operator [](Object? key) => value[key];
+
+  @override
+  void operator []=(String key, value) => this.value[key] = value;
+
+  @override
+  void clear() => value.clear();
+
+  @override
+  Iterable<String> get keys => value.keys;
+
+  @override
+  remove(Object? key) => value.remove(key);
+}
+
+class MapObject extends MapReader implements DecodingObject {
+  MapObject(super.value, this.mapper, this.context);
+
+  final ClassMapperBase<Object> mapper;
+  final DecodingContext<DecodingReader> context;
+
+  @override
+  V get<V>(Symbol name) {
+    var f = mapper.fields[name]!;
+    return f.decodeValue(context, peek(f.key)) as V;
   }
 }
 
-class MapJsonObjectIterator extends JsonObjectIterator {
-  MapJsonObjectIterator(this.value) : keys = value.keys.iterator;
-
-  final Map<String, dynamic> value;
-  final Iterator<String> keys;
-
-  @override
-  Object? get current => value[keys.current];
-
-  @override
-  int nextKey() {
-    if (keys.moveNext()) {
-      return Crimson.hash(keys.current);
-    }
-    return -1;
-  }
-}
-
-class BytesJsonObject implements JsonObject {
-  BytesJsonObject(this.reader, [this.depth = 0]);
+class BytesJsonReader implements DecodingReader {
+  BytesJsonReader(this.reader, [this.depth = 0]);
 
   final Crimson reader;
   final int depth;
 
   @override
-  JsonObjectIterator get iterator => BytesJsonObjectIterator(reader, depth);
-
-  @override
-  Object? get(String key) {
+  dynamic peek(String key) {
+    // TODO: implement peek
     throw UnimplementedError();
   }
 
-  static Object? read(Crimson reader, [int depth = 0]) {
+  @override
+  BytesJsonObject read(
+      DecodingContext<DecodingReader> context, ClassMapperBase mapper) {
+    Map<Symbol, dynamic> values = {};
+
+    Object? current;
+
+    while (true) {
+      if (current == $none) {
+        reader.skip();
+      }
+      current = $none;
+
+      int key = reader.iterObjectHash();
+
+      if (key == -1) {
+        break;
+      }
+
+      var f = mapper.fieldsByKey[key];
+      if (f == null || f.mode == FieldMode.member) continue;
+
+      current = BytesJsonReader.next(reader, depth);
+
+      values[Symbol(f.name)] = f.decodeValue(context, current);
+    }
+
+    return BytesJsonObject(values, reader, context, mapper, depth);
+  }
+
+  static Object? next(Crimson reader, [int depth = 0]) {
     var type = reader.whatIsNext();
 
-    //String prefix = ''.padRight(depth, '-');
-    //print('$prefix READ VALUE $type');
-
     if (type == JsonType.object) {
-      return BytesJsonObject(reader, depth + 1);
+      return BytesJsonReader(reader, depth + 1);
     } else if (type == JsonType.array) {
       return BytesJsonListIterable(reader, depth + 1);
     } else {
@@ -90,30 +129,21 @@ class BytesJsonObject implements JsonObject {
   }
 }
 
-class BytesJsonObjectIterator extends JsonObjectIterator {
-  BytesJsonObjectIterator(this.reader, this.depth);
+class BytesJsonObject extends BytesJsonReader implements DecodingObject {
+  BytesJsonObject(this.values, super.reader, this.context, this.mapper,
+      [super.depth = 0]);
 
-  final Crimson reader;
-  final int depth;
-
-  Object? _current;
-
-  @override
-  Object? get current {
-    if (_current == $none) {
-      _current = BytesJsonObject.read(reader, depth);
-    }
-    return _current;
-  }
+  final Map<Symbol, dynamic> values;
+  final ClassMapperBase mapper;
+  final DecodingContext<DecodingReader> context;
 
   @override
-  int nextKey() {
-    if (_current == $none) {
-      reader.skip();
+  V get<V>(Symbol name) {
+    if (values.containsKey(name)) {
+      return values[name] as V;
     } else {
-      _current = $none;
+      return mapper.fields[name]!.decodeValue(context, null) as V;
     }
-    return reader.iterObjectHash();
   }
 }
 
@@ -138,7 +168,7 @@ class BytesJsonListIterator extends Iterator<Object?> {
   @override
   Object? get current {
     if (_current == $none) {
-      _current = BytesJsonObject.read(reader, depth);
+      _current = BytesJsonReader.next(reader, depth);
     }
     return _current;
   }

@@ -25,7 +25,7 @@ class DecoderGenerator {
     }
 
     s +=
-        '  static ${element.prefixedDecodingClassName}${element.typeParams} _instantiate${element.typeParamsDeclaration}(DecodingData data) {\n'
+        '  static ${element.prefixedDecodingClassName}${element.typeParams} _instantiate${element.typeParamsDeclaration}(DecodingObject data) {\n'
         '    ${await _generateConstructorCall()}\n'
         '  }\n'
         '  @override\n'
@@ -84,14 +84,7 @@ class DecoderGenerator {
         return "throw MapperException.missingConstructor('${element.className}');";
       }
     } else {
-      var output = StringBuffer();
-
-      output.writeln('data.load();');
-
-      output.write(
-          'return ${element.prefixedDecodingClassName}${element.constructor!.name != '' ? '.${element.constructor!.name}' : ''}(${await _generateConstructorParams()});');
-
-      return output.toString();
+      return 'return ${element.prefixedDecodingClassName}${element.constructor!.name != '' ? '.${element.constructor!.name}' : ''}(${await _generateConstructorParams()});';
     }
   }
 

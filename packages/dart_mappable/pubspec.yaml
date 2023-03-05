@@ -14,7 +14,7 @@ dependencies:
   collection: ^1.15.0
   crimson: ^0.2.1
   meta: ^1.8.0
-  type_plus: ^1.0.0
+  type_plus: ^1.1.0
 
 dev_dependencies:
   build_runner: ^2.2.0

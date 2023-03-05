@@ -1,5 +1,5 @@
+import 'dart:collection';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:crimson/crimson.dart';
@@ -54,7 +54,7 @@ abstract class MapperContainer {
   T fromJson<T>(String json);
   String toJson<T>(T object);
 
-  T fromBytes<T>(Uint8List json);
+  T fromBytes<T>(List<int> bytes);
 
   bool isEqual(dynamic value, Object? other);
   int hash(dynamic value);
@@ -105,8 +105,8 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   final Set<MapperContainerBase> _parents = {};
   final Set<MapperContainerBase> _children = {};
 
-  final Map<Type, MapperBase?> _cachedMappers = {};
-  final Map<Type, MapperBase?> _cachedTypeMappers = {};
+  final Map<Type, MapperBase?> _cachedMappers = HashMap();
+  final Map<Type, MapperBase?> _cachedTypeMappers = HashMap();
 
   void _invalidateCachedMappers([Set<MapperContainer>? invalidated]) {
     // for avoiding hanging on circular links
@@ -319,8 +319,8 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   String toJson<T>(T object) => jsonEncode(toValue<T>(object));
 
   @override
-  T fromBytes<T>(Uint8List json) {
-    return fromValue<T>(BytesJsonObject.read(Crimson(json)));
+  T fromBytes<T>(List<int> bytes) {
+    return fromValue<T>(BytesJsonReader.next(Crimson(bytes)));
   }
 
   @override
