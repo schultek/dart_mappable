@@ -31,7 +31,7 @@ class PersonMapper extends ClassMapperBase<Person> {
         Field<Person, String>('firstName', _$firstName, key: 'first_name'),
   };
 
-  static Person _instantiate(DecodingData data) {
+  static Person _instantiate(DecodingObject data) {
     return Person(data.get(#firstName));
   }
 
@@ -136,7 +136,7 @@ class CakeMapper extends ClassMapperBase<f.Cake> {
     #type: Field<f.Cake, String>('type', _$type),
   };
 
-  static f.Cake _instantiate(DecodingData data) {
+  static f.Cake _instantiate(DecodingObject data) {
     return f.Cake(data.get(#type));
   }
 
@@ -225,7 +225,7 @@ class Person2Mapper extends ClassMapperBase<m.Person> {
         Field<m.Person, String>('firstName', _$firstName, key: 'first_name'),
   };
 
-  static m.Person _instantiate(DecodingData data) {
+  static m.Person _instantiate(DecodingObject data) {
     return m.Person(data.get(#firstName));
   }
 
@@ -316,7 +316,7 @@ class AnimalMapper extends ClassMapperBase<o.Animal> {
     #color: Field<o.Animal, String>('color', _$color),
   };
 
-  static o.Animal _instantiate(DecodingData data) {
+  static o.Animal _instantiate(DecodingObject data) {
     throw MapperException.missingSubclass(
         'Animal', 'type', '${data.value.get('type')}');
   }
@@ -387,7 +387,7 @@ class PetMapper extends SubClassMapperBase<o.Pet> {
   @override
   final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
-  static o.Pet _instantiate(DecodingData data) {
+  static o.Pet _instantiate(DecodingObject data) {
     return o.Pet(data.get(#owner), data.get(#color));
   }
 

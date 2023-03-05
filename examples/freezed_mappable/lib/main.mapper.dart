@@ -29,9 +29,9 @@ class UnionMapper extends ClassMapperBase<Union> {
   @override
   final Map<Symbol, Field<Union, dynamic>> fields = const {};
 
-  static Union _instantiate(DecodingData data) {
+  static Union _instantiate(DecodingObject data) {
     throw MapperException.missingSubclass(
-        'Union', 'type', '${data.value['type']}');
+        'Union', 'type', '${data.value.get('type')}');
   }
 
   @override
@@ -97,7 +97,7 @@ class DataMapper extends SubClassMapperBase<Data> {
   @override
   final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
 
-  static Data _instantiate(DecodingData data) {
+  static Data _instantiate(DecodingObject data) {
     return Data(data.get(#value));
   }
 
@@ -155,7 +155,7 @@ class LoadingMapper extends SubClassMapperBase<Loading> {
   @override
   final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
 
-  static Loading _instantiate(DecodingData data) {
+  static Loading _instantiate(DecodingObject data) {
     return Loading(data.get(#value));
   }
 
@@ -215,7 +215,7 @@ class ErrorDetailsMapper extends SubClassMapperBase<ErrorDetails> {
   @override
   final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
 
-  static ErrorDetails _instantiate(DecodingData data) {
+  static ErrorDetails _instantiate(DecodingObject data) {
     return ErrorDetails(data.get(#value), data.get(#message));
   }
 

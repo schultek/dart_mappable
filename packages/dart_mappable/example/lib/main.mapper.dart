@@ -35,7 +35,7 @@ class PersonMapper extends ClassMapperBase<Person> {
     #car: Field<Person, Car?>('car', _$car, opt: true),
   };
 
-  static Person _instantiate(DecodingData data) {
+  static Person _instantiate(DecodingObject data) {
     return Person(data.get(#name), age: data.get(#age), car: data.get(#car));
   }
 
@@ -151,7 +151,7 @@ class CarMapper extends ClassMapperBase<Car> {
     #brand: Field<Car, Brand>('brand', _$brand),
   };
 
-  static Car _instantiate(DecodingData data) {
+  static Car _instantiate(DecodingObject data) {
     return Car(data.get(#miles), data.get(#brand));
   }
 
@@ -260,7 +260,7 @@ class BoxMapper extends ClassMapperBase<Box> {
     #content: Field<Box, dynamic>('content', _$content, arg: _arg$content),
   };
 
-  static Box<T> _instantiate<T>(DecodingData data) {
+  static Box<T> _instantiate<T>(DecodingObject data) {
     return Box(data.get(#size), content: data.get(#content));
   }
 
@@ -365,7 +365,7 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
     #color: Field<Confetti, String>('color', _$color),
   };
 
-  static Confetti _instantiate(DecodingData data) {
+  static Confetti _instantiate(DecodingObject data) {
     return Confetti(data.get(#color));
   }
 

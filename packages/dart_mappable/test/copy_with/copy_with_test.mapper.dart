@@ -33,7 +33,7 @@ class PersonMapper extends ClassMapperBase<Person> {
     #car: Field<Person, Car>('car', _$car),
   };
 
-  static Person _instantiate(DecodingData data) {
+  static Person _instantiate(DecodingObject data) {
     return Person(data.get(#name), data.get(#car));
   }
 
@@ -145,7 +145,7 @@ class CarMapper extends ClassMapperBase<Car> {
     #model: Field<Car, String>('model', _$model),
   };
 
-  static Car _instantiate(DecodingData data) {
+  static Car _instantiate(DecodingObject data) {
     return Car(data.get(#brand), data.get(#model));
   }
 
@@ -253,7 +253,7 @@ class BrandMapper extends ClassMapperBase<Brand> {
     #name: Field<Brand, dynamic>('name', _$name),
   };
 
-  static Brand _instantiate(DecodingData data) {
+  static Brand _instantiate(DecodingObject data) {
     return Brand(data.get(#name));
   }
 
@@ -362,7 +362,7 @@ class DealershipMapper extends ClassMapperBase<Dealership> {
     #salesRep: Field<Dealership, Map<Brand, Person?>>('salesRep', _$salesRep),
   };
 
-  static Dealership _instantiate(DecodingData data) {
+  static Dealership _instantiate(DecodingObject data) {
     return Dealership(data.get(#cars), data.get(#salesRep));
   }
 
@@ -494,7 +494,7 @@ class ItemListMapper extends ClassMapperBase<ItemList> {
     #items: Field<ItemList, List<dynamic>>('items', _$items, arg: _arg$items),
   };
 
-  static ItemList<T> _instantiate<T>(DecodingData data) {
+  static ItemList<T> _instantiate<T>(DecodingObject data) {
     throw MapperException.missingSubclass(
         'ItemList', 'type', '${data.value.get('type')}');
   }
@@ -560,7 +560,7 @@ class BrandListMapper extends SubClassMapperBase<BrandList> {
   @override
   final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
-  static BrandList _instantiate(DecodingData data) {
+  static BrandList _instantiate(DecodingObject data) {
     return BrandList(data.get(#brands));
   }
 
@@ -688,7 +688,7 @@ class NamedItemListMapper extends SubClassMapperBase<NamedItemList> {
   @override
   final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
-  static NamedItemList<T> _instantiate<T>(DecodingData data) {
+  static NamedItemList<T> _instantiate<T>(DecodingObject data) {
     return NamedItemList(data.get(#name), data.get(#items));
   }
 
@@ -824,7 +824,7 @@ class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
     return context.inherit(args: [dynamic, context.arg(0)]);
   }
 
-  static KeyedItemList<K, T> _instantiate<K, T>(DecodingData data) {
+  static KeyedItemList<K, T> _instantiate<K, T>(DecodingObject data) {
     return KeyedItemList(data.get(#key), data.get(#items));
   }
 
@@ -960,7 +960,7 @@ class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
   final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
   static ComparableItemList<T> _instantiate<T extends Comparable<dynamic>>(
-      DecodingData data) {
+      DecodingObject data) {
     return ComparableItemList(data.get(#items));
   }
 

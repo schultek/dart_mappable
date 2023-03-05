@@ -33,7 +33,7 @@ class AMapper extends ClassMapperBase<A> {
     #b: Field<A, B?>('b', _$b),
   };
 
-  static A _instantiate(DecodingData data) {
+  static A _instantiate(DecodingObject data) {
     return A(data.get(#a), data.get(#b));
   }
 
@@ -142,7 +142,7 @@ class BMapper extends ClassMapperBase<B> {
     #b: Field<B, int?>('b', _$b),
   };
 
-  static B _instantiate(DecodingData data) {
+  static B _instantiate(DecodingObject data) {
     return B(data.get(#a), data.get(#b));
   }
 

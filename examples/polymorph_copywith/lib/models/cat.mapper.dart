@@ -42,7 +42,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   @override
   final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
-  static Cat _instantiate(DecodingData data) {
+  static Cat _instantiate(DecodingObject data) {
     return Cat(data.get(#name), data.get(#breed), data.get(#color));
   }
 

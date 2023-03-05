@@ -36,7 +36,7 @@ class BoxMapper extends ClassMapperBase<Box> {
     #contents: Field<Box, Content>('contents', _$contents, arg: _arg$contents),
   };
 
-  static Box<T> _instantiate<T extends Content>(DecodingData data) {
+  static Box<T> _instantiate<T extends Content>(DecodingObject data) {
     return Box(data.get(#size), contents: data.get(#contents));
   }
 
@@ -143,7 +143,7 @@ class ContentMapper extends ClassMapperBase<Content> {
     #data: Field<Content, String>('data', _$data),
   };
 
-  static Content _instantiate(DecodingData data) {
+  static Content _instantiate(DecodingObject data) {
     return Content(data.get(#data));
   }
 

@@ -31,7 +31,7 @@ class AMapper extends ClassMapperBase<A> {
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {};
 
-  static A<T> _instantiate<T>(DecodingData data) {
+  static A<T> _instantiate<T>(DecodingObject data) {
     return A();
   }
 
@@ -138,7 +138,7 @@ class BMapper extends SubClassMapperBase<B> {
   @override
   final ClassMapperBase superMapper = AMapper.ensureInitialized();
 
-  static B<T> _instantiate<T>(DecodingData data) {
+  static B<T> _instantiate<T>(DecodingObject data) {
     return B();
   }
 
@@ -247,7 +247,7 @@ class CMapper extends SubClassMapperBase<C> {
   @override
   final ClassMapperBase superMapper = AMapper.ensureInitialized();
 
-  static C<T> _instantiate<T extends num>(DecodingData data) {
+  static C<T> _instantiate<T extends num>(DecodingObject data) {
     return C();
   }
 
@@ -362,7 +362,7 @@ class DMapper extends SubClassMapperBase<D> {
     return context.inherit(args: [dynamic, context.arg(0)]);
   }
 
-  static D<T, V> _instantiate<T, V>(DecodingData data) {
+  static D<T, V> _instantiate<T, V>(DecodingObject data) {
     return D();
   }
 
@@ -479,7 +479,7 @@ class EMapper extends SubClassMapperBase<E> {
     ]);
   }
 
-  static E<T, V> _instantiate<T, V>(DecodingData data) {
+  static E<T, V> _instantiate<T, V>(DecodingObject data) {
     return E();
   }
 

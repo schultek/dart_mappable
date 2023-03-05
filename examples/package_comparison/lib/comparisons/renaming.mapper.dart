@@ -33,7 +33,7 @@ class PersonBMapper extends ClassMapperBase<PersonB> {
     #lastName: Field<PersonB, String>('lastName', _$lastName, key: 'surName'),
   };
 
-  static PersonB _instantiate(DecodingData data) {
+  static PersonB _instantiate(DecodingObject data) {
     return PersonB(
         firstName: data.get(#firstName), lastName: data.get(#lastName));
   }

@@ -34,7 +34,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   @override
   final bool ignoreNull = true;
 
-  static Animal _instantiate(DecodingData data) {
+  static Animal _instantiate(DecodingObject data) {
     throw MapperException.missingSubclass(
         'Animal', 'type', '${data.value.get('type')}');
   }
@@ -101,7 +101,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   @override
   final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
-  static Cat _instantiate(DecodingData data) {
+  static Cat _instantiate(DecodingObject data) {
     return Cat(data.get(#name));
   }
 
@@ -215,7 +215,7 @@ class SiameseMapper extends SubClassMapperBase<Siamese> {
   @override
   final ClassMapperBase superMapper = CatMapper.ensureInitialized();
 
-  static Siamese _instantiate(DecodingData data) {
+  static Siamese _instantiate(DecodingObject data) {
     return Siamese(data.get(#name));
   }
 
@@ -331,7 +331,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   @override
   final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
-  static Dog _instantiate(DecodingData data) {
+  static Dog _instantiate(DecodingObject data) {
     return Dog(data.get(#name));
   }
 
@@ -445,7 +445,7 @@ class ShepherdMapper extends SubClassMapperBase<Shepherd> {
   @override
   final ClassMapperBase superMapper = DogMapper.ensureInitialized();
 
-  static Shepherd _instantiate(DecodingData data) {
+  static Shepherd _instantiate(DecodingObject data) {
     return Shepherd(data.get(#name));
   }
 

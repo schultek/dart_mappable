@@ -33,7 +33,7 @@ class ItemsMapper extends ClassMapperBase<Items> {
     #items2: Field<Items, Map<int, Item>>('items2', _$items2),
   };
 
-  static Items _instantiate(DecodingData data) {
+  static Items _instantiate(DecodingObject data) {
     return Items(data.get(#items), data.get(#items2));
   }
 
@@ -155,7 +155,7 @@ class ItemMapper extends ClassMapperBase<Item> {
     #index: Field<Item, int>('index', _$index),
   };
 
-  static Item _instantiate(DecodingData data) {
+  static Item _instantiate(DecodingObject data) {
     return Item(data.get(#index));
   }
 

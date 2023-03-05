@@ -34,7 +34,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
     #name: Field<Animal, String>('name', _$name),
   };
 
-  static Animal _instantiate(DecodingData data) {
+  static Animal _instantiate(DecodingObject data) {
     throw MapperException.missingSubclass(
         'Animal', 'type', '${data.value.get('type')}');
   }
@@ -100,7 +100,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   @override
   final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
-  static Cat _instantiate(DecodingData data) {
+  static Cat _instantiate(DecodingObject data) {
     return Cat(data.get(#name), data.get(#color));
   }
 
@@ -215,7 +215,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   @override
   final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
-  static Dog _instantiate(DecodingData data) {
+  static Dog _instantiate(DecodingObject data) {
     return Dog(data.get(#age));
   }
 
@@ -327,7 +327,7 @@ class NullAnimalMapper extends SubClassMapperBase<NullAnimal> {
   @override
   final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
-  static NullAnimal _instantiate(DecodingData data) {
+  static NullAnimal _instantiate(DecodingObject data) {
     return NullAnimal(data.get(#name));
   }
 
@@ -443,7 +443,7 @@ class DefaultAnimalMapper extends SubClassMapperBase<DefaultAnimal> {
   @override
   final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
-  static DefaultAnimal _instantiate(DecodingData data) {
+  static DefaultAnimal _instantiate(DecodingObject data) {
     return DefaultAnimal(data.get(#name), data.get(#type));
   }
 
@@ -559,7 +559,7 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   @override
   final bool ignoreNull = true;
 
-  static Zoo _instantiate(DecodingData data) {
+  static Zoo _instantiate(DecodingObject data) {
     return Zoo(data.get(#animal), data.get(#animals), data.get(#animalsMap));
   }
 

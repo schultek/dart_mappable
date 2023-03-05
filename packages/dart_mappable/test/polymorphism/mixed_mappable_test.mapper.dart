@@ -35,7 +35,7 @@ class BaseMapper extends ClassMapperBase<Base> {
     #objects: Field<Base, Map<String, dynamic>>('objects', _$objects),
   };
 
-  static Base _instantiate(DecodingData data) {
+  static Base _instantiate(DecodingObject data) {
     throw MapperException.missingConstructor('Base');
   }
 
@@ -97,7 +97,7 @@ class OneMapper extends ClassMapperBase<One> {
     #objects: Field<One, Map<String, dynamic>>('objects', _$objects),
   };
 
-  static One _instantiate(DecodingData data) {
+  static One _instantiate(DecodingObject data) {
     return One(
         id: data.get(#id), name: data.get(#name), objects: data.get(#objects));
   }
@@ -218,7 +218,7 @@ class TwoMapper extends ClassMapperBase<Two> {
     #name: Field<Two, String>('name', _$name, mode: FieldMode.member),
   };
 
-  static Two _instantiate(DecodingData data) {
+  static Two _instantiate(DecodingObject data) {
     return Two(id: data.get(#id));
   }
 

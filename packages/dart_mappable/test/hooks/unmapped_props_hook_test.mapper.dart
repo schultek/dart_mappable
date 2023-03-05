@@ -35,7 +35,7 @@ class AMapper extends ClassMapperBase<A> {
 
   @override
   final MappingHook hook = const UnmappedPropertiesHook('unmappedProps');
-  static A _instantiate(DecodingData data) {
+  static A _instantiate(DecodingObject data) {
     return A(data.get(#unmappedProps), data.get(#a));
   }
 

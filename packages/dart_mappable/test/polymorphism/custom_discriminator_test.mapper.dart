@@ -28,7 +28,7 @@ class AMapper extends ClassMapperBase<A> {
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {};
 
-  static A _instantiate(DecodingData data) {
+  static A _instantiate(DecodingObject data) {
     throw MapperException.missingConstructor('A');
   }
 
@@ -87,7 +87,7 @@ class BMapper extends SubClassMapperBase<B> {
   @override
   final ClassMapperBase superMapper = AMapper.ensureInitialized();
 
-  static B _instantiate(DecodingData data) {
+  static B _instantiate(DecodingObject data) {
     return B();
   }
 
@@ -192,7 +192,7 @@ class CMapper extends SubClassMapperBase<C> {
   @override
   final ClassMapperBase superMapper = AMapper.ensureInitialized();
 
-  static C _instantiate(DecodingData data) {
+  static C _instantiate(DecodingObject data) {
     return C();
   }
 

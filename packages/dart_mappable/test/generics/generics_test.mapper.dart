@@ -37,7 +37,7 @@ class BoxMapper extends ClassMapperBase<Box> {
         Field<Box, List<Content>>('contents', _$contents, arg: _arg$contents),
   };
 
-  static Box<T> _instantiate<T extends Content>(DecodingData data) {
+  static Box<T> _instantiate<T extends Content>(DecodingObject data) {
     return Box(data.get(#size), contents: data.get(#contents));
   }
 
@@ -150,7 +150,7 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
     #color: Field<Confetti, String>('color', _$color),
   };
 
-  static Confetti _instantiate(DecodingData data) {
+  static Confetti _instantiate(DecodingObject data) {
     return Confetti(data.get(#color));
   }
 
@@ -254,7 +254,7 @@ class ContentMapper extends ClassMapperBase<Content> {
   @override
   final Map<Symbol, Field<Content, dynamic>> fields = const {};
 
-  static Content _instantiate(DecodingData data) {
+  static Content _instantiate(DecodingObject data) {
     return Content();
   }
 
@@ -358,7 +358,7 @@ class DataMapper extends ClassMapperBase<Data> {
     #data: Field<Data, String>('data', _$data),
   };
 
-  static Data _instantiate(DecodingData data) {
+  static Data _instantiate(DecodingObject data) {
     return Data(data.get(#data));
   }
 
@@ -467,7 +467,7 @@ class SingleSettingMapper extends ClassMapperBase<SingleSetting> {
         opt: true, arg: _arg$properties),
   };
 
-  static SingleSetting<T> _instantiate<T>(DecodingData data) {
+  static SingleSetting<T> _instantiate<T>(DecodingObject data) {
     return SingleSetting(properties: data.get(#properties));
   }
 
@@ -592,7 +592,7 @@ class SettingsMapper extends ClassMapperBase<Settings> {
 
   @override
   final MappingHook hook = const MapHooksAfter();
-  static Settings _instantiate(DecodingData data) {
+  static Settings _instantiate(DecodingObject data) {
     return Settings(settings: data.get(#settings));
   }
 
@@ -719,7 +719,7 @@ class AssetMapper extends ClassMapperBase<Asset> {
     #data: Field<Asset, dynamic>('data', _$data, arg: _arg$data),
   };
 
-  static Asset<T> _instantiate<T>(DecodingData data) {
+  static Asset<T> _instantiate<T>(DecodingObject data) {
     return Asset(data: data.get(#data));
   }
 

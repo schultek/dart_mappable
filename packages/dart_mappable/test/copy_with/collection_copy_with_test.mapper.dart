@@ -33,7 +33,7 @@ class AMapper extends ClassMapperBase<A> {
     #items: Field<A, List<dynamic>>('items', _$items, arg: _arg$items),
   };
 
-  static A<T> _instantiate<T>(DecodingData data) {
+  static A<T> _instantiate<T>(DecodingObject data) {
     return A(data.get(#items));
   }
 
@@ -145,7 +145,7 @@ class BMapper extends ClassMapperBase<B> {
     #items: Field<B, Map<String, dynamic>>('items', _$items, arg: _arg$items),
   };
 
-  static B<T> _instantiate<T>(DecodingData data) {
+  static B<T> _instantiate<T>(DecodingObject data) {
     return B(data.get(#items));
   }
 

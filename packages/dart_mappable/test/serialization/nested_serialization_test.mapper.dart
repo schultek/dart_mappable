@@ -35,7 +35,7 @@ class PersonMapper extends ClassMapperBase<Person> {
     #car: Field<Person, Car?>('car', _$car, opt: true),
   };
 
-  static Person _instantiate(DecodingData data) {
+  static Person _instantiate(DecodingObject data) {
     return Person(data.get(#name), age: data.get(#age), car: data.get(#car));
   }
 
@@ -153,7 +153,7 @@ class CarMapper extends ClassMapperBase<Car> {
     #miles: Field<Car, double>('miles', _$miles, mode: FieldMode.member),
   };
 
-  static Car _instantiate(DecodingData data) {
+  static Car _instantiate(DecodingObject data) {
     return Car(data.get(#drivenKm), data.get(#brand));
   }
 

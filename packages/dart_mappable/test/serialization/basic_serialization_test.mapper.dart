@@ -39,7 +39,7 @@ class AMapper extends ClassMapperBase<A> {
     #e: Field<A, B?>('e', _$e, opt: true),
   };
 
-  static A _instantiate(DecodingData data) {
+  static A _instantiate(DecodingObject data) {
     return A(data.get(#a),
         b: data.get(#b), c: data.get(#c), d: data.get(#d), e: data.get(#e));
   }

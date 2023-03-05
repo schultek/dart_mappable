@@ -32,7 +32,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
     #name: Field<Animal, String>('name', _$name),
   };
 
-  static Animal _instantiate(DecodingData data) {
+  static Animal _instantiate(DecodingObject data) {
     throw MapperException.missingSubclass(
         'Animal', 'type', '${data.value.get('type')}');
   }
@@ -88,9 +88,8 @@ class CatMapper extends SubClassMapperBase<Cat> {
   @override
   final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
-  static Cat _instantiate(DecodingData data) {
-    data.load();
-    return Cat(name, color);
+  static Cat _instantiate(DecodingObject data) {
+    return Cat(data.get(#name), data.get(#color));
   }
 
   @override
@@ -174,7 +173,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   @override
   final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
-  static Dog _instantiate(DecodingData data) {
+  static Dog _instantiate(DecodingObject data) {
     return Dog(data.get(#name));
   }
 
@@ -252,7 +251,7 @@ class ZooMapper extends ClassMapperBase<Zoo> {
     #animal: Field<Zoo, Animal>('animal', _$animal),
   };
 
-  static Zoo _instantiate(DecodingData data) {
+  static Zoo _instantiate(DecodingObject data) {
     return Zoo(data.get(#animal));
   }
 
@@ -330,7 +329,7 @@ class AMapper extends ClassMapperBase<A> {
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {};
 
-  static A<T> _instantiate<T>(DecodingData data) {
+  static A<T> _instantiate<T>(DecodingObject data) {
     return A();
   }
 
@@ -430,7 +429,7 @@ class CMapper extends ClassMapperBase<C> {
   @override
   final Map<Symbol, Field<C, dynamic>> fields = const {};
 
-  static C<T> _instantiate<T>(DecodingData data) {
+  static C<T> _instantiate<T>(DecodingObject data) {
     return C();
   }
 
@@ -536,7 +535,7 @@ class BMapper extends ClassMapperBase<B> {
     #a: Field<B, A<dynamic>?>('a', _$a),
   };
 
-  static B _instantiate(DecodingData data) {
+  static B _instantiate(DecodingObject data) {
     return B(data.get(#list), data.get(#a));
   }
 

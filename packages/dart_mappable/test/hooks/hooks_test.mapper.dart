@@ -36,7 +36,7 @@ class GameMapper extends ClassMapperBase<Game> {
 
   @override
   final MappingHook hook = const game.GameHook();
-  static Game _instantiate(DecodingData data) {
+  static Game _instantiate(DecodingObject data) {
     return Game(data.get(#player));
   }
 
@@ -153,7 +153,7 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
   @override
   final MappingHook superHook = const game.GameHook();
 
-  static CardGame _instantiate(DecodingData data) {
+  static CardGame _instantiate(DecodingObject data) {
     return CardGame(data.get(#player));
   }
 
@@ -265,7 +265,7 @@ class PlayerMapper extends ClassMapperBase<Player> {
     #id: Field<Player, String>('id', _$id),
   };
 
-  static Player _instantiate(DecodingData data) {
+  static Player _instantiate(DecodingObject data) {
     return Player(data.get(#id));
   }
 

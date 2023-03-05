@@ -34,7 +34,7 @@ class ZooMapper extends ClassMapperBase<Zoo> {
     #animals: Field<Zoo, List<Animal>>('animals', _$animals, arg: _arg$animals),
   };
 
-  static Zoo<T> _instantiate<T extends Animal>(DecodingData data) {
+  static Zoo<T> _instantiate<T extends Animal>(DecodingObject data) {
     return Zoo(data.get(#animals));
   }
 

@@ -36,7 +36,7 @@ class TestObjMapper extends ClassMapperBase<TestObj> {
 
   @override
   final MappingHook hook = const UnmappedPropertiesHook('unmappedProps');
-  static TestObj _instantiate(DecodingData data) {
+  static TestObj _instantiate(DecodingObject data) {
     return TestObj.explicit(data.get(#x), data.get(#unmappedProps));
   }
 

@@ -32,7 +32,7 @@ class AMapper extends ClassMapperBase<A> {
     #b: Field<A, String?>('b', _$b, hook: EmptyToNullHook()),
   };
 
-  static A _instantiate(DecodingData data) {
+  static A _instantiate(DecodingObject data) {
     return A(data.get(#a), data.get(#b));
   }
 

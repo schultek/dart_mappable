@@ -32,7 +32,7 @@ class ClassAMapper extends ClassMapperBase<ClassA> {
         Field<ClassA, Map<EnumA, bool?>>('someVariable', _$someVariable),
   };
 
-  static ClassA _instantiate(DecodingData data) {
+  static ClassA _instantiate(DecodingObject data) {
     return ClassA(data.get(#someVariable));
   }
 

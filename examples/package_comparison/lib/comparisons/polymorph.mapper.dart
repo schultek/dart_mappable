@@ -32,9 +32,9 @@ class AnimalBMapper extends ClassMapperBase<AnimalB> {
     #name: Field<AnimalB, String>('name', _$name),
   };
 
-  static AnimalB _instantiate(DecodingData data) {
+  static AnimalB _instantiate(DecodingObject data) {
     throw MapperException.missingSubclass(
-        'AnimalB', 'type', '${data.value['type']}');
+        'AnimalB', 'type', '${data.value.get('type')}');
   }
 
   @override
@@ -98,7 +98,7 @@ class CatBMapper extends SubClassMapperBase<CatB> {
   @override
   final ClassMapperBase superMapper = AnimalBMapper.ensureInitialized();
 
-  static CatB _instantiate(DecodingData data) {
+  static CatB _instantiate(DecodingObject data) {
     return CatB(data.get(#name), data.get(#color));
   }
 
@@ -213,7 +213,7 @@ class DogBMapper extends SubClassMapperBase<DogB> {
   @override
   final ClassMapperBase superMapper = AnimalBMapper.ensureInitialized();
 
-  static DogB _instantiate(DecodingData data) {
+  static DogB _instantiate(DecodingObject data) {
     return DogB(data.get(#name), data.get(#age));
   }
 

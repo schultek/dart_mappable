@@ -42,7 +42,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   @override
   final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
-  static Dog _instantiate(DecodingData data) {
+  static Dog _instantiate(DecodingObject data) {
     return Dog(data.get(#name), data.get(#age), data.get(#owner));
   }
 
