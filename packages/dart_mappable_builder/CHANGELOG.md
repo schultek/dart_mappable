@@ -1,3 +1,7 @@
+# 3.0.0-dev.1
+
+- Bug fixes
+
 # 3.0.0-dev.0
 
 - Simplified internal mapper implementation and removed `MapperElementBase` class.
