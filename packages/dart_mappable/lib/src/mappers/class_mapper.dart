@@ -18,10 +18,6 @@ class DecodingData<T extends Object> {
 }
 
 abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
-  SubClassMapperBase() {
-    superMapper.addSubMapper(this);
-  }
-
   String get discriminatorKey;
   dynamic get discriminatorValue;
   ClassMapperBase get superMapper;

@@ -71,6 +71,7 @@ class DataMapper extends SubClassMapperBase<Data> {
   static DataMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = DataMapper._());
+      UnionMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -95,7 +96,7 @@ class DataMapper extends SubClassMapperBase<Data> {
   @override
   final dynamic discriminatorValue = 'data';
   @override
-  final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
 
   static Data _instantiate(DecodingData data) {
     return Data(data.get(#value));
@@ -129,6 +130,7 @@ class LoadingMapper extends SubClassMapperBase<Loading> {
   static LoadingMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = LoadingMapper._());
+      UnionMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -153,7 +155,7 @@ class LoadingMapper extends SubClassMapperBase<Loading> {
   @override
   final dynamic discriminatorValue = 'loading';
   @override
-  final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
 
   static Loading _instantiate(DecodingData data) {
     return Loading(data.get(#value));
@@ -187,6 +189,7 @@ class ErrorDetailsMapper extends SubClassMapperBase<ErrorDetails> {
   static ErrorDetailsMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ErrorDetailsMapper._());
+      UnionMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -213,7 +216,7 @@ class ErrorDetailsMapper extends SubClassMapperBase<ErrorDetails> {
   @override
   final dynamic discriminatorValue = 'error';
   @override
-  final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
 
   static ErrorDetails _instantiate(DecodingData data) {
     return ErrorDetails(data.get(#value), data.get(#message));

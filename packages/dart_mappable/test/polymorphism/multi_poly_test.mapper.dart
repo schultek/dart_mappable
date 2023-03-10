@@ -72,6 +72,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   static CatMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = CatMapper._());
+      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
       SiameseMapper.ensureInitialized();
     }
     return _instance!;
@@ -99,10 +100,11 @@ class CatMapper extends SubClassMapperBase<Cat> {
   @override
   final dynamic discriminatorValue = 'Cat';
   @override
-  final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Cat _instantiate(DecodingData data) {
-    return Cat(data.get(#name));
+    throw MapperException.missingSubclass(
+        'Cat', 'breed', '${data.value['breed']}');
   }
 
   @override
@@ -118,38 +120,9 @@ class CatMapper extends SubClassMapperBase<Cat> {
 }
 
 mixin CatMappable {
-  String toJson() {
-    return CatMapper._guard((c) => c.toJson(this as Cat));
-  }
-
-  Map<String, dynamic> toMap() {
-    return CatMapper._guard((c) => c.toMap(this as Cat));
-  }
-
-  CatCopyWith<Cat, Cat, Cat> get copyWith =>
-      _CatCopyWithImpl(this as Cat, $identity, $identity);
-  @override
-  String toString() {
-    return CatMapper._guard((c) => c.asString(this));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            CatMapper._guard((c) => c.isEqual(this, other)));
-  }
-
-  @override
-  int get hashCode {
-    return CatMapper._guard((c) => c.hash(this));
-  }
-}
-
-extension CatValueCopy<$R, $Out extends Animal>
-    on ObjectCopyWith<$R, Cat, $Out> {
-  CatCopyWith<$R, Cat, $Out> get $asCat =>
-      $base.as((v, t, t2) => _CatCopyWithImpl(v, t, t2));
+  String toJson();
+  Map<String, dynamic> toMap();
+  CatCopyWith<Cat, Cat, Cat> get copyWith;
 }
 
 typedef CatCopyWithBound = Animal;
@@ -162,31 +135,13 @@ abstract class CatCopyWith<$R, $In extends Cat, $Out extends Animal>
       Then<Cat, $Out2> t, Then<$Out2, $R2> t2);
 }
 
-class _CatCopyWithImpl<$R, $Out extends Animal>
-    extends ClassCopyWithBase<$R, Cat, $Out>
-    implements CatCopyWith<$R, Cat, $Out> {
-  _CatCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<Cat> $mapper = CatMapper.ensureInitialized();
-  @override
-  $R call({Object? name = $none}) =>
-      $apply(FieldCopyWithData({if (name != $none) #name: name}));
-  @override
-  Cat $make(CopyWithData data) => Cat(data.get(#name, or: $value.name));
-
-  @override
-  CatCopyWith<$R2, Cat, $Out2> $chain<$R2, $Out2 extends Animal>(
-          Then<Cat, $Out2> t, Then<$Out2, $R2> t2) =>
-      _CatCopyWithImpl($value, t, t2);
-}
-
 class SiameseMapper extends SubClassMapperBase<Siamese> {
   SiameseMapper._();
   static SiameseMapper? _instance;
   static SiameseMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SiameseMapper._());
+      CatMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -213,7 +168,7 @@ class SiameseMapper extends SubClassMapperBase<Siamese> {
   @override
   final dynamic discriminatorValue = 'Siamese';
   @override
-  final ClassMapperBase superMapper = CatMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = CatMapper.ensureInitialized();
 
   static Siamese _instantiate(DecodingData data) {
     return Siamese(data.get(#name));
@@ -302,6 +257,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   static DogMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = DogMapper._());
+      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
       ShepherdMapper.ensureInitialized();
     }
     return _instance!;
@@ -329,7 +285,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   @override
   final dynamic discriminatorValue = 'Dog';
   @override
-  final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Dog _instantiate(DecodingData data) {
     return Dog(data.get(#name));
@@ -417,6 +373,7 @@ class ShepherdMapper extends SubClassMapperBase<Shepherd> {
   static ShepherdMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ShepherdMapper._());
+      DogMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -443,7 +400,7 @@ class ShepherdMapper extends SubClassMapperBase<Shepherd> {
   @override
   final dynamic discriminatorValue = 'Shepherd';
   @override
-  final ClassMapperBase superMapper = DogMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = DogMapper.ensureInitialized();
 
   static Shepherd _instantiate(DecodingData data) {
     return Shepherd(data.get(#name));
@@ -525,4 +482,113 @@ class _ShepherdCopyWithImpl<$R, $Out extends Animal>
   ShepherdCopyWith<$R2, Shepherd, $Out2> $chain<$R2, $Out2 extends Animal>(
           Then<Shepherd, $Out2> t, Then<$Out2, $R2> t2) =>
       _ShepherdCopyWithImpl($value, t, t2);
+}
+
+class HumanMapper extends ClassMapperBase<Human> {
+  HumanMapper._();
+  static HumanMapper? _instance;
+  static HumanMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = HumanMapper._());
+      CatMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
+  @override
+  final String id = 'Human';
+
+  static Cat _$cat(Human v) => v.cat;
+
+  @override
+  final Map<Symbol, Field<Human, dynamic>> fields = const {
+    #cat: Field<Human, Cat>('cat', _$cat),
+  };
+
+  static Human _instantiate(DecodingData data) {
+    return Human(data.get(#cat));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static Human fromMap(Map<String, dynamic> map) {
+    return _guard((c) => c.fromMap<Human>(map));
+  }
+
+  static Human fromJson(String json) {
+    return _guard((c) => c.fromJson<Human>(json));
+  }
+}
+
+mixin HumanMappable {
+  String toJson() {
+    return HumanMapper._guard((c) => c.toJson(this as Human));
+  }
+
+  Map<String, dynamic> toMap() {
+    return HumanMapper._guard((c) => c.toMap(this as Human));
+  }
+
+  HumanCopyWith<Human, Human, Human> get copyWith =>
+      _HumanCopyWithImpl(this as Human, $identity, $identity);
+  @override
+  String toString() {
+    return HumanMapper._guard((c) => c.asString(this));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            HumanMapper._guard((c) => c.isEqual(this, other)));
+  }
+
+  @override
+  int get hashCode {
+    return HumanMapper._guard((c) => c.hash(this));
+  }
+}
+
+extension HumanValueCopy<$R, $Out extends Human>
+    on ObjectCopyWith<$R, Human, $Out> {
+  HumanCopyWith<$R, Human, $Out> get $asHuman =>
+      $base.as((v, t, t2) => _HumanCopyWithImpl(v, t, t2));
+}
+
+typedef HumanCopyWithBound = Human;
+
+abstract class HumanCopyWith<$R, $In extends Human, $Out extends Human>
+    implements ClassCopyWith<$R, $In, $Out> {
+  CatCopyWith<$R, Cat, Cat> get cat;
+  $R call({Cat? cat});
+  HumanCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Human>(
+      Then<Human, $Out2> t, Then<$Out2, $R2> t2);
+}
+
+class _HumanCopyWithImpl<$R, $Out extends Human>
+    extends ClassCopyWithBase<$R, Human, $Out>
+    implements HumanCopyWith<$R, Human, $Out> {
+  _HumanCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<Human> $mapper = HumanMapper.ensureInitialized();
+  @override
+  CatCopyWith<$R, Cat, Cat> get cat =>
+      $value.cat.copyWith.$chain($identity, (v) => call(cat: v));
+  @override
+  $R call({Cat? cat}) =>
+      $apply(FieldCopyWithData({if (cat != null) #cat: cat}));
+  @override
+  Human $make(CopyWithData data) => Human(data.get(#cat, or: $value.cat));
+
+  @override
+  HumanCopyWith<$R2, Human, $Out2> $chain<$R2, $Out2 extends Human>(
+          Then<Human, $Out2> t, Then<$Out2, $R2> t2) =>
+      _HumanCopyWithImpl($value, t, t2);
 }

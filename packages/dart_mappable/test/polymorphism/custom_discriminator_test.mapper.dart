@@ -65,6 +65,7 @@ class BMapper extends SubClassMapperBase<B> {
   static BMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = BMapper._());
+      AMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -85,7 +86,7 @@ class BMapper extends SubClassMapperBase<B> {
   @override
   final dynamic discriminatorValue = B.checkType;
   @override
-  final ClassMapperBase superMapper = AMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = AMapper.ensureInitialized();
 
   static B _instantiate(DecodingData data) {
     return B();
@@ -170,6 +171,7 @@ class CMapper extends SubClassMapperBase<C> {
   static CMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = CMapper._());
+      AMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -190,7 +192,7 @@ class CMapper extends SubClassMapperBase<C> {
   @override
   final dynamic discriminatorValue = C.checkType;
   @override
-  final ClassMapperBase superMapper = AMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = AMapper.ensureInitialized();
 
   static C _instantiate(DecodingData data) {
     return C();

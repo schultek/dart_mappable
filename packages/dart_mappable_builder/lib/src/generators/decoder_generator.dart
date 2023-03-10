@@ -61,7 +61,7 @@ class DecoderGenerator {
         '  @override\n'
         '  final dynamic discriminatorValue = ${(await element.discriminatorValueCode) ?? "'${element.className}'"};\n'
         '  @override\n'
-        '  final ClassMapperBase superMapper = $prefix${element.superTarget!.mapperName}.ensureInitialized();\n';
+        '  late final ClassMapperBase superMapper = $prefix${element.superTarget!.mapperName}.ensureInitialized();\n';
   }
 
   String generateInheritOverride() {

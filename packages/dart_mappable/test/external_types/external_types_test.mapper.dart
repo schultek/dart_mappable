@@ -358,6 +358,7 @@ class PetMapper extends SubClassMapperBase<o.Pet> {
   static PetMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PetMapper._());
+      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
       Person2Mapper.ensureInitialized();
     }
     return _instance!;
@@ -385,7 +386,7 @@ class PetMapper extends SubClassMapperBase<o.Pet> {
   @override
   final dynamic discriminatorValue = 'Pet';
   @override
-  final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static o.Pet _instantiate(DecodingData data) {
     return o.Pet(data.get(#owner), data.get(#color));

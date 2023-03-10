@@ -12,7 +12,7 @@ abstract class Animal with AnimalMappable {
 }
 
 @MappableClass(discriminatorKey: 'breed')
-class Cat extends Animal with CatMappable {
+abstract class Cat extends Animal with CatMappable {
   Cat(super.name);
 }
 
@@ -31,14 +31,27 @@ class Shepherd extends Dog with ShepherdMappable {
   Shepherd(super.name);
 }
 
+@MappableClass()
+class Human with HumanMappable {
+  const Human(this.cat);
+
+  final Cat cat;
+}
+
 void main() {
   group('Multi Polymorphism', () {
     test('Decode Level 1', () {
-      var a = AnimalMapper.fromMap({'type': 'Cat'});
-      expect(a, isA<Cat>());
-
       var b = AnimalMapper.fromMap({'type': 'Dog'});
       expect(b, isA<Dog>());
+    });
+
+    test('Fail abstract Level 1', () {
+      expect(
+          () => AnimalMapper.fromMap({'type': 'Cat'}),
+          throwsMapperException(MapperException.chain(
+              MapperMethod.decode,
+              '(Animal)',
+              MapperException.missingSubclass('Cat', 'breed', 'null'))));
     });
 
     test('Decode Level 2 Inherit Key', () {
@@ -53,9 +66,6 @@ void main() {
 
     test('Encode Level 1', () {
       AnimalMapper.ensureInitialized();
-      var a = MapperContainer.globals.toMap<Animal>(Cat(null));
-      expect(a, equals({'type': 'Cat'}));
-
       var b = MapperContainer.globals.toMap<Animal>(Dog(null));
       expect(b, equals({'type': 'Dog'}));
     });
@@ -86,6 +96,14 @@ void main() {
             '(Animal)',
             MapperException.missingSubclass('Animal', 'type', 'null'))),
       );
+    });
+
+    test('Decode wrapper', () {
+      final human = HumanMapper.fromMap({
+        'cat': {'breed': 'Siamese'}
+      });
+      expect(human, isA<Human>());
+      expect(human.cat, isA<Siamese>());
     });
   });
 }

@@ -114,6 +114,7 @@ class BMapper extends SubClassMapperBase<B> {
   static BMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = BMapper._());
+      AMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -136,7 +137,7 @@ class BMapper extends SubClassMapperBase<B> {
   @override
   final dynamic discriminatorValue = 'B';
   @override
-  final ClassMapperBase superMapper = AMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = AMapper.ensureInitialized();
 
   static B<T> _instantiate<T>(DecodingData data) {
     return B();
@@ -223,6 +224,7 @@ class CMapper extends SubClassMapperBase<C> {
     if (_instance == null) {
       MapperBase.addType<num>();
       MapperContainer.globals.use(_instance = CMapper._());
+      AMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -245,7 +247,7 @@ class CMapper extends SubClassMapperBase<C> {
   @override
   final dynamic discriminatorValue = 'C';
   @override
-  final ClassMapperBase superMapper = AMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = AMapper.ensureInitialized();
 
   static C<T> _instantiate<T extends num>(DecodingData data) {
     return C();
@@ -332,6 +334,7 @@ class DMapper extends SubClassMapperBase<D> {
   static DMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = DMapper._());
+      AMapper.ensureInitialized().addSubMapper(_instance!);
       EMapper.ensureInitialized();
     }
     return _instance!;
@@ -355,7 +358,7 @@ class DMapper extends SubClassMapperBase<D> {
   @override
   final dynamic discriminatorValue = 'D';
   @override
-  final ClassMapperBase superMapper = AMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = AMapper.ensureInitialized();
 
   @override
   DecodingContext<Object> inherit(DecodingContext<Object> context) {
@@ -447,6 +450,7 @@ class EMapper extends SubClassMapperBase<E> {
   static EMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = EMapper._());
+      DMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -469,7 +473,7 @@ class EMapper extends SubClassMapperBase<E> {
   @override
   final dynamic discriminatorValue = 'E';
   @override
-  final ClassMapperBase superMapper = DMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = DMapper.ensureInitialized();
 
   @override
   DecodingContext<Object> inherit(DecodingContext<Object> context) {

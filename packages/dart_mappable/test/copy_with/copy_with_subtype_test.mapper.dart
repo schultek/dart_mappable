@@ -60,6 +60,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   static CatMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = CatMapper._());
+      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -86,7 +87,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   @override
   final dynamic discriminatorValue = 'Cat';
   @override
-  final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Cat _instantiate(DecodingData data) {
     return Cat(data.get(#name), data.get(#color));
@@ -147,6 +148,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   static DogMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = DogMapper._());
+      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -171,7 +173,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   @override
   final dynamic discriminatorValue = 'Dog';
   @override
-  final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Dog _instantiate(DecodingData data) {
     return Dog(data.get(#name));

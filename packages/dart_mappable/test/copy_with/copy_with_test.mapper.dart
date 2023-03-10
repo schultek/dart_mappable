@@ -533,6 +533,7 @@ class BrandListMapper extends SubClassMapperBase<BrandList> {
   static BrandListMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = BrandListMapper._());
+      ItemListMapper.ensureInitialized().addSubMapper(_instance!);
       BrandMapper.ensureInitialized();
     }
     return _instance!;
@@ -558,7 +559,7 @@ class BrandListMapper extends SubClassMapperBase<BrandList> {
   @override
   final dynamic discriminatorValue = 'BrandList';
   @override
-  final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
   static BrandList _instantiate(DecodingData data) {
     return BrandList(data.get(#brands));
@@ -656,6 +657,7 @@ class NamedItemListMapper extends SubClassMapperBase<NamedItemList> {
   static NamedItemListMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = NamedItemListMapper._());
+      ItemListMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -686,7 +688,7 @@ class NamedItemListMapper extends SubClassMapperBase<NamedItemList> {
   @override
   final dynamic discriminatorValue = 'NamedItemList';
   @override
-  final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
   static NamedItemList<T> _instantiate<T>(DecodingData data) {
     return NamedItemList(data.get(#name), data.get(#items));
@@ -786,6 +788,7 @@ class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
   static KeyedItemListMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = KeyedItemListMapper._());
+      ItemListMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -817,7 +820,7 @@ class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
   @override
   final dynamic discriminatorValue = 'KeyedItemList';
   @override
-  final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
   @override
   DecodingContext<Object> inherit(DecodingContext<Object> context) {
@@ -927,6 +930,7 @@ class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
     if (_instance == null) {
       MapperBase.addType<Comparable>();
       MapperContainer.globals.use(_instance = ComparableItemListMapper._());
+      ItemListMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -957,7 +961,7 @@ class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
   @override
   final dynamic discriminatorValue = 'ComparableItemList';
   @override
-  final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
   static ComparableItemList<T> _instantiate<T extends Comparable<dynamic>>(
       DecodingData data) {

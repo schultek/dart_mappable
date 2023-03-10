@@ -52,6 +52,13 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     output.write(
         '      MapperContainer.globals.use(_instance = ${target.mapperName}._());\n');
 
+    if (isSubClass) {
+      var prefix =
+          target.parent.prefixOfElement(target.superTarget!.annotatedElement);
+      output.write(
+          '      $prefix${target.superTarget!.mapperName}.ensureInitialized().addSubMapper(_instance!);\n');
+    }
+
     var customMappers = await target.customMappers;
     if (customMappers.isNotEmpty) {
       for (var t in customMappers) {

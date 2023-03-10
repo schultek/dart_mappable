@@ -96,6 +96,7 @@ void initializeMappers() {
   p19.SiameseMapper.ensureInitialized();
   p19.DogMapper.ensureInitialized();
   p19.ShepherdMapper.ensureInitialized();
+  p19.HumanMapper.ensureInitialized();
   p20.AnimalMapper.ensureInitialized();
   p20.CatMapper.ensureInitialized();
   p20.DogMapper.ensureInitialized();
