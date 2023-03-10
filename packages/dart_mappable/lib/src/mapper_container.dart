@@ -6,9 +6,7 @@ import 'package:meta/meta.dart';
 import 'package:type_plus/src/types_registry.dart' show TypeRegistry;
 import 'package:type_plus/type_plus.dart' hide typeOf;
 
-import 'mapper_exception.dart';
-import 'mappers/default_mappers.dart';
-import 'mappers/mapper_base.dart';
+import '../dart_mappable.dart';
 
 class EncodingOptions {
   EncodingOptions({this.includeTypeId});
@@ -153,6 +151,9 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
             _inheritedMappers.values.where((m) => m.isFor(value)).firstOrNull;
 
     if (mapper != null) {
+      if (mapper is ClassMapperBase) {
+        mapper = mapper.subOrSelfFor(value);
+      }
       _cachedMappers[baseType] = mapper;
     }
 

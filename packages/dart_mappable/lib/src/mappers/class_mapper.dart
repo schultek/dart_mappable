@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:type_plus/type_plus.dart';
 
 import '../annotations.dart';
@@ -101,6 +102,14 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
     } else {
       _subMappers.add(mapper);
     }
+  }
+
+  MapperBase<Object>? subOrSelfFor(dynamic value) {
+    var m = _defaultSubMapper ?? this;
+    if (_subMappers.isNotEmpty) {
+      m = _subMappers.where((m) => m.isFor(value)).firstOrNull ?? m;
+    }
+    return m;
   }
 
   late final List<Field<T, dynamic>> _members =

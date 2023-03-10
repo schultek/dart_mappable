@@ -19,9 +19,11 @@ void main() {
   var data = Union.data(42);
 
   var dataJson = data.toJson();
-  print(dataJson); // {"mykey":42,"type":"data"}
+  print(dataJson);
+  assert(dataJson == '{"mykey":42,"type":"data"}');
 
   var parsedData = UnionMapper.fromJson(dataJson);
 
-  print(parsedData); // Union.data(value: 42)
+  print(parsedData);
+  assert(parsedData.toString() == 'Union.data(value: 42)');
 }
