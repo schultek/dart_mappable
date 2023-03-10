@@ -251,15 +251,15 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
           type = value.runtimeType;
         }
 
-        var typeArgs = type.args;
+        var typeArgs = type.args.map((t) => t == UnresolvedType ? dynamic : t);
 
         var fallback = mapper.type.base.args;
         if (typeArgs.length != fallback.length) {
           typeArgs = fallback;
         }
 
-        var result = mapper.encoder(
-            EncodingContext<Object>(value, container: this, args: typeArgs));
+        var result = mapper.encoder(EncodingContext<Object>(value,
+            container: this, args: typeArgs.toList()));
 
         if (result is Map<String, dynamic> && typeId != null) {
           result['__type'] = typeId;
