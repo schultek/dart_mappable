@@ -134,7 +134,12 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
         if (_defaultSubMapper != null) {
           return _defaultSubMapper!.decoder(_defaultSubMapper!.inherit(c2));
         }
-        return c.callWith(instantiate, DecodingData<T>(c.checked(), this));
+        var d = DecodingData<T>(c2, this);
+        if (c.args.isEmpty) {
+          return instantiate(d) as T;
+        } else {
+          return c.callWith(instantiate, d);
+        }
       });
     });
   }

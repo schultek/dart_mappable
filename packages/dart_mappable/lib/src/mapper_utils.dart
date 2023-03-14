@@ -19,31 +19,30 @@ extension GuardedUtils on MapperContainer {
       }
     }
 
-    return guard(MapperMethod.decode, '.$key', () {
-      return hook != null
-          ? hook.wrapDecode(value, decode, this)
-          : decode(value);
-    });
+    try {
+      if (hook != null) {
+        return hook.wrapDecode(value, decode, this);
+      }
+      return decode(value);
+    } catch (e, stacktrace) {
+      Error.throwWithStackTrace(
+        MapperException.chain(MapperMethod.decode, '.$key', e),
+        stacktrace,
+      );
+    }
   }
 
   dynamic $enc<T>(T value, String key, [MappingHook? hook]) {
-    return guard(MapperMethod.encode, '.$key', () {
+    try {
       if (hook != null) {
         return hook.wrapEncode(value, toValue<T>, this);
       }
       return toValue<T>(value);
-    });
-  }
-}
-
-/// {@nodoc}
-T guard<T>(MapperMethod method, String hint, T Function() fn) {
-  try {
-    return fn();
-  } catch (e, stacktrace) {
-    Error.throwWithStackTrace(
-      MapperException.chain(method, hint, e),
-      stacktrace,
-    );
+    } catch (e, stacktrace) {
+      Error.throwWithStackTrace(
+        MapperException.chain(MapperMethod.encode, '.$key', e),
+        stacktrace,
+      );
+    }
   }
 }
