@@ -46,3 +46,13 @@ extension GuardedUtils on MapperContainer {
     }
   }
 }
+
+extension TypeCheck<T> on T {
+  V checked<V extends Object?>() {
+    if (this is V) {
+      return this as V;
+    } else {
+      throw MapperException.unexpectedType(runtimeType, V.toString());
+    }
+  }
+}

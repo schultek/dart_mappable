@@ -100,14 +100,15 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
         output.write(
             '  static dynamic _arg\$${f.field.name}${target.typeParamsDeclaration}(f) => f<${f.type}>();\n');
       }
+      output.write(
+          "  static const Field<${target.prefixedClassName}, ${f.staticType}> _f\$${f.field.name} = Field('${f.field.name}', _\$${f.field.name}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook});\n");
     }
 
     output.write(
         '\n  @override\n  final Map<Symbol, Field<${target.prefixedClassName}, dynamic>> fields = const {\n');
 
     for (var f in fields) {
-      output.write(
-          "    #${f.field.name}: Field<${target.prefixedClassName}, ${f.staticType}>('${f.field.name}', _\$${f.field.name}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook}),\n");
+      output.write('    #${f.field.name}: _f\$${f.field.name},\n');
     }
 
     output.write('  };\n');

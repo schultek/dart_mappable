@@ -26,18 +26,19 @@ class GameMapper extends ClassMapperBase<Game> {
   final String id = 'Game';
 
   static Player _$player(Game v) => v.player;
+  static const Field<Game, Player> _f$player = Field('player', _$player,
+      hook:
+          ChainedHook([PlayerHook(), UnmappedPropertiesHook('unmappedProps')]));
 
   @override
   final Map<Symbol, Field<Game, dynamic>> fields = const {
-    #player: Field<Game, Player>('player', _$player,
-        hook: ChainedHook(
-            [PlayerHook(), UnmappedPropertiesHook('unmappedProps')])),
+    #player: _f$player,
   };
 
   @override
   final MappingHook hook = const game.GameHook();
   static Game _instantiate(DecodingData data) {
-    return Game(data.get(#player));
+    return Game(data.dec(_f$player));
   }
 
   @override
@@ -139,22 +140,23 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
   final String id = 'CardGame';
 
   static Player _$player(CardGame v) => v.player;
+  static const Field<CardGame, Player> _f$player = Field('player', _$player,
+      hook: ChainedHook([
+        PlayerHook(),
+        UnmappedPropertiesHook('unmappedProps'),
+        game.CardPlayerHook()
+      ]));
 
   @override
   final Map<Symbol, Field<CardGame, dynamic>> fields = const {
-    #player: Field<CardGame, Player>('player', _$player,
-        hook: ChainedHook([
-          PlayerHook(),
-          UnmappedPropertiesHook('unmappedProps'),
-          game.CardPlayerHook()
-        ])),
+    #player: _f$player,
   };
 
   @override
   final MappingHook superHook = const game.GameHook();
 
   static CardGame _instantiate(DecodingData data) {
-    return CardGame(data.get(#player));
+    return CardGame(data.dec(_f$player));
   }
 
   @override
@@ -259,14 +261,15 @@ class PlayerMapper extends ClassMapperBase<Player> {
   final String id = 'Player';
 
   static String _$id(Player v) => v.id;
+  static const Field<Player, String> _f$id = Field('id', _$id);
 
   @override
   final Map<Symbol, Field<Player, dynamic>> fields = const {
-    #id: Field<Player, String>('id', _$id),
+    #id: _f$id,
   };
 
   static Player _instantiate(DecodingData data) {
-    return Player(data.get(#id));
+    return Player(data.dec(_f$id));
   }
 
   @override

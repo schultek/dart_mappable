@@ -28,10 +28,11 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   final String id = 'Animal';
 
   static String _$name(Animal v) => v.name;
+  static const Field<Animal, String> _f$name = Field('name', _$name);
 
   @override
   final Map<Symbol, Field<Animal, dynamic>> fields = const {
-    #name: Field<Animal, String>('name', _$name),
+    #name: _f$name,
   };
 
   static Animal _instantiate(DecodingData data) {
@@ -86,12 +87,14 @@ class CatMapper extends SubClassMapperBase<Cat> {
   final String id = 'Cat';
 
   static String _$name(Cat v) => v.name;
+  static const Field<Cat, String> _f$name = Field('name', _$name);
   static String _$color(Cat v) => v.color;
+  static const Field<Cat, String> _f$color = Field('color', _$color);
 
   @override
   final Map<Symbol, Field<Cat, dynamic>> fields = const {
-    #name: Field<Cat, String>('name', _$name),
-    #color: Field<Cat, String>('color', _$color),
+    #name: _f$name,
+    #color: _f$color,
   };
 
   @override
@@ -102,7 +105,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Cat _instantiate(DecodingData data) {
-    return Cat(data.get(#name), data.get(#color));
+    return Cat(data.dec(_f$name), data.dec(_f$color));
   }
 
   @override
@@ -202,12 +205,15 @@ class DogMapper extends SubClassMapperBase<Dog> {
   final String id = 'Dog';
 
   static int _$age(Dog v) => v.age;
+  static const Field<Dog, int> _f$age = Field('age', _$age);
   static String _$name(Dog v) => v.name;
+  static const Field<Dog, String> _f$name =
+      Field('name', _$name, mode: FieldMode.member);
 
   @override
   final Map<Symbol, Field<Dog, dynamic>> fields = const {
-    #age: Field<Dog, int>('age', _$age),
-    #name: Field<Dog, String>('name', _$name, mode: FieldMode.member),
+    #age: _f$age,
+    #name: _f$name,
   };
 
   @override
@@ -218,7 +224,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Dog _instantiate(DecodingData data) {
-    return Dog(data.get(#age));
+    return Dog(data.dec(_f$age));
   }
 
   @override
@@ -317,10 +323,11 @@ class NullAnimalMapper extends SubClassMapperBase<NullAnimal> {
   final String id = 'NullAnimal';
 
   static String _$name(NullAnimal v) => v.name;
+  static const Field<NullAnimal, String> _f$name = Field('name', _$name);
 
   @override
   final Map<Symbol, Field<NullAnimal, dynamic>> fields = const {
-    #name: Field<NullAnimal, String>('name', _$name),
+    #name: _f$name,
   };
 
   @override
@@ -331,7 +338,7 @@ class NullAnimalMapper extends SubClassMapperBase<NullAnimal> {
   late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static NullAnimal _instantiate(DecodingData data) {
-    return NullAnimal(data.get(#name));
+    return NullAnimal(data.dec(_f$name));
   }
 
   @override
@@ -432,12 +439,14 @@ class DefaultAnimalMapper extends SubClassMapperBase<DefaultAnimal> {
   final String id = 'DefaultAnimal';
 
   static String _$name(DefaultAnimal v) => v.name;
+  static const Field<DefaultAnimal, String> _f$name = Field('name', _$name);
   static String _$type(DefaultAnimal v) => v.type;
+  static const Field<DefaultAnimal, String> _f$type = Field('type', _$type);
 
   @override
   final Map<Symbol, Field<DefaultAnimal, dynamic>> fields = const {
-    #name: Field<DefaultAnimal, String>('name', _$name),
-    #type: Field<DefaultAnimal, String>('type', _$type),
+    #name: _f$name,
+    #type: _f$type,
   };
 
   @override
@@ -448,7 +457,7 @@ class DefaultAnimalMapper extends SubClassMapperBase<DefaultAnimal> {
   late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static DefaultAnimal _instantiate(DecodingData data) {
-    return DefaultAnimal(data.get(#name), data.get(#type));
+    return DefaultAnimal(data.dec(_f$name), data.dec(_f$type));
   }
 
   @override
@@ -551,20 +560,26 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   final String id = 'Zoo';
 
   static Animal? _$animal(Zoo v) => v.animal;
+  static const Field<Zoo, Animal?> _f$animal = Field('animal', _$animal);
   static List<Animal>? _$animals(Zoo v) => v.animals;
+  static const Field<Zoo, List<Animal>?> _f$animals =
+      Field('animals', _$animals);
   static Map<String, Animal>? _$animalsMap(Zoo v) => v.animalsMap;
+  static const Field<Zoo, Map<String, Animal>?> _f$animalsMap =
+      Field('animalsMap', _$animalsMap);
 
   @override
   final Map<Symbol, Field<Zoo, dynamic>> fields = const {
-    #animal: Field<Zoo, Animal?>('animal', _$animal),
-    #animals: Field<Zoo, List<Animal>?>('animals', _$animals),
-    #animalsMap: Field<Zoo, Map<String, Animal>?>('animalsMap', _$animalsMap),
+    #animal: _f$animal,
+    #animals: _f$animals,
+    #animalsMap: _f$animalsMap,
   };
   @override
   final bool ignoreNull = true;
 
   static Zoo _instantiate(DecodingData data) {
-    return Zoo(data.get(#animal), data.get(#animals), data.get(#animalsMap));
+    return Zoo(
+        data.dec(_f$animal), data.dec(_f$animals), data.dec(_f$animalsMap));
   }
 
   @override

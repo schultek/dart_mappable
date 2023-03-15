@@ -108,21 +108,21 @@ using this package:
 ...
 
 void main() {
-// Decode a [Map] using the [MyClassMapper] class:
-var myClass = MyClassMapper.fromMap({'myValue': 123});
-
-// Or decode directly from json:
-var myClass2 = MyClassMapper.fromJson('{"myValue": 123}');
-
-// Encode an instance of your class using the methods provided by the mixin:
-var json = myClass.toJson(); // or .toMap()
-
-// There are also implementations generated for [operator ==], [hashCode] and [toString]:
-var thisIsTrue = (myClass == myClass2);
-print(myClass);
-
-// Last you can use [copyWith] to create a copy of an object:
-var myClass3 = myClass.copyWith(myValue: 0);
+  // Decode a [Map] using the [MyClassMapper] class:
+  var myClass = MyClassMapper.fromMap({'myValue': 123});
+  
+  // Or decode directly from json:
+  var myClass2 = MyClassMapper.fromJson('{"myValue": 123}');
+  
+  // Encode an instance of your class using the methods provided by the mixin:
+  var json = myClass.toJson(); // or .toMap()
+  
+  // There are also implementations generated for [operator ==], [hashCode] and [toString]:
+  var thisIsTrue = (myClass == myClass2);
+  print(myClass);
+  
+  // Last you can use [copyWith] to create a copy of an object:
+  var myClass3 = myClass.copyWith(myValue: 0);
 }
 ```
 
@@ -210,7 +210,6 @@ Here are again all **six** annotations that you can use in your code:
 
 - `<ClassName>Mapper.fromMap<T>(Map<String, dynamic> map)` will take an encoded map object and return a decoded object of type `ClassName`.
 - `<ClassName>Mapper.fromJson<T>(String json)` internally uses `fromMap` but works with json encoded `String`s.
-- `<ClassName>Mapper.container` exposes the internal [`MapperContainer`](https://pub.dev/documentation/dart_mappable/latest/topics/Mapper%20Container-topic.html) for more advanced uses.
 
 ***Tip**: If you prefer to use `MyClass.fromJson` over `MyClassMapper.fromJson`, add the `fromJson` and
 `fromMap` methods directly to your class like this:*

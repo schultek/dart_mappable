@@ -27,14 +27,16 @@ class BoxCMapper extends ClassMapperBase<BoxC> {
 
   static dynamic _$content(BoxC v) => v.content;
   static dynamic _arg$content<T>(f) => f<T>();
+  static const Field<BoxC, dynamic> _f$content =
+      Field('content', _$content, arg: _arg$content);
 
   @override
   final Map<Symbol, Field<BoxC, dynamic>> fields = const {
-    #content: Field<BoxC, dynamic>('content', _$content, arg: _arg$content),
+    #content: _f$content,
   };
 
   static BoxC<T> _instantiate<T>(DecodingData data) {
-    return BoxC(content: data.get(#content));
+    return BoxC(content: data.dec(_f$content));
   }
 
   @override
@@ -132,14 +134,15 @@ class ContentCMapper extends ClassMapperBase<ContentC> {
   final String id = 'ContentC';
 
   static String _$data(ContentC v) => v.data;
+  static const Field<ContentC, String> _f$data = Field('data', _$data);
 
   @override
   final Map<Symbol, Field<ContentC, dynamic>> fields = const {
-    #data: Field<ContentC, String>('data', _$data),
+    #data: _f$data,
   };
 
   static ContentC _instantiate(DecodingData data) {
-    return ContentC(data.get(#data));
+    return ContentC(data.dec(_f$data));
   }
 
   @override

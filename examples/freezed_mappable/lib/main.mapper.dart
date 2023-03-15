@@ -85,10 +85,12 @@ class DataMapper extends SubClassMapperBase<Data> {
   final String id = 'Data';
 
   static int _$value(Data v) => v.value;
+  static const Field<Data, int> _f$value =
+      Field('value', _$value, key: 'mykey');
 
   @override
   final Map<Symbol, Field<Data, dynamic>> fields = const {
-    #value: Field<Data, int>('value', _$value, key: 'mykey'),
+    #value: _f$value,
   };
 
   @override
@@ -99,7 +101,7 @@ class DataMapper extends SubClassMapperBase<Data> {
   late final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
 
   static Data _instantiate(DecodingData data) {
-    return Data(data.get(#value));
+    return Data(data.dec(_f$value));
   }
 
   @override
@@ -144,10 +146,11 @@ class LoadingMapper extends SubClassMapperBase<Loading> {
   final String id = 'Loading';
 
   static int _$value(Loading v) => v.value;
+  static const Field<Loading, int> _f$value = Field('value', _$value);
 
   @override
   final Map<Symbol, Field<Loading, dynamic>> fields = const {
-    #value: Field<Loading, int>('value', _$value),
+    #value: _f$value,
   };
 
   @override
@@ -158,7 +161,7 @@ class LoadingMapper extends SubClassMapperBase<Loading> {
   late final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
 
   static Loading _instantiate(DecodingData data) {
-    return Loading(data.get(#value));
+    return Loading(data.dec(_f$value));
   }
 
   @override
@@ -203,12 +206,15 @@ class ErrorDetailsMapper extends SubClassMapperBase<ErrorDetails> {
   final String id = 'ErrorDetails';
 
   static int _$value(ErrorDetails v) => v.value;
+  static const Field<ErrorDetails, int> _f$value = Field('value', _$value);
   static String? _$message(ErrorDetails v) => v.message;
+  static const Field<ErrorDetails, String?> _f$message =
+      Field('message', _$message, opt: true);
 
   @override
   final Map<Symbol, Field<ErrorDetails, dynamic>> fields = const {
-    #value: Field<ErrorDetails, int>('value', _$value),
-    #message: Field<ErrorDetails, String?>('message', _$message, opt: true),
+    #value: _f$value,
+    #message: _f$message,
   };
 
   @override
@@ -219,7 +225,7 @@ class ErrorDetailsMapper extends SubClassMapperBase<ErrorDetails> {
   late final ClassMapperBase superMapper = UnionMapper.ensureInitialized();
 
   static ErrorDetails _instantiate(DecodingData data) {
-    return ErrorDetails(data.get(#value), data.get(#message));
+    return ErrorDetails(data.dec(_f$value), data.dec(_f$message));
   }
 
   @override

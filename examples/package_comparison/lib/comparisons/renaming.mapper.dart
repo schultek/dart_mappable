@@ -24,18 +24,21 @@ class PersonBMapper extends ClassMapperBase<PersonB> {
   final String id = 'PersonB';
 
   static String _$firstName(PersonB v) => v.firstName;
+  static const Field<PersonB, String> _f$firstName =
+      Field('firstName', _$firstName, key: 'first_name');
   static String _$lastName(PersonB v) => v.lastName;
+  static const Field<PersonB, String> _f$lastName =
+      Field('lastName', _$lastName, key: 'surName');
 
   @override
   final Map<Symbol, Field<PersonB, dynamic>> fields = const {
-    #firstName:
-        Field<PersonB, String>('firstName', _$firstName, key: 'first_name'),
-    #lastName: Field<PersonB, String>('lastName', _$lastName, key: 'surName'),
+    #firstName: _f$firstName,
+    #lastName: _f$lastName,
   };
 
   static PersonB _instantiate(DecodingData data) {
     return PersonB(
-        firstName: data.get(#firstName), lastName: data.get(#lastName));
+        firstName: data.dec(_f$firstName), lastName: data.dec(_f$lastName));
   }
 
   @override

@@ -25,18 +25,23 @@ class PersonMapper extends ClassMapperBase<Person> {
   final String id = 'Person';
 
   static String _$name(Person v) => v.name;
+  static const Field<Person, String> _f$name = Field('name', _$name);
   static int _$age(Person v) => v.age;
+  static const Field<Person, int> _f$age =
+      Field('age', _$age, opt: true, def: 18);
   static Car? _$car(Person v) => v.car;
+  static const Field<Person, Car?> _f$car = Field('car', _$car, opt: true);
 
   @override
   final Map<Symbol, Field<Person, dynamic>> fields = const {
-    #name: Field<Person, String>('name', _$name),
-    #age: Field<Person, int>('age', _$age, opt: true, def: 18),
-    #car: Field<Person, Car?>('car', _$car, opt: true),
+    #name: _f$name,
+    #age: _f$age,
+    #car: _f$car,
   };
 
   static Person _instantiate(DecodingData data) {
-    return Person(data.get(#name), age: data.get(#age), car: data.get(#car));
+    return Person(data.dec(_f$name),
+        age: data.dec(_f$age), car: data.dec(_f$car));
   }
 
   @override
@@ -143,18 +148,22 @@ class CarMapper extends ClassMapperBase<Car> {
   final String id = 'Car';
 
   static int _$drivenKm(Car v) => v.drivenKm;
+  static const Field<Car, int> _f$drivenKm = Field('drivenKm', _$drivenKm);
   static Brand _$brand(Car v) => v.brand;
+  static const Field<Car, Brand> _f$brand = Field('brand', _$brand);
   static double _$miles(Car v) => v.miles;
+  static const Field<Car, double> _f$miles =
+      Field('miles', _$miles, mode: FieldMode.member);
 
   @override
   final Map<Symbol, Field<Car, dynamic>> fields = const {
-    #drivenKm: Field<Car, int>('drivenKm', _$drivenKm),
-    #brand: Field<Car, Brand>('brand', _$brand),
-    #miles: Field<Car, double>('miles', _$miles, mode: FieldMode.member),
+    #drivenKm: _f$drivenKm,
+    #brand: _f$brand,
+    #miles: _f$miles,
   };
 
   static Car _instantiate(DecodingData data) {
-    return Car(data.get(#drivenKm), data.get(#brand));
+    return Car(data.dec(_f$drivenKm), data.dec(_f$brand));
   }
 
   @override

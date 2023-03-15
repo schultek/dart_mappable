@@ -27,14 +27,16 @@ class AMapper extends ClassMapperBase<A> {
 
   static List<dynamic> _$items(A v) => v.items;
   static dynamic _arg$items<T>(f) => f<List<T>>();
+  static const Field<A, List<dynamic>> _f$items =
+      Field('items', _$items, arg: _arg$items);
 
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {
-    #items: Field<A, List<dynamic>>('items', _$items, arg: _arg$items),
+    #items: _f$items,
   };
 
   static A<T> _instantiate<T>(DecodingData data) {
-    return A(data.get(#items));
+    return A(data.dec(_f$items));
   }
 
   @override
@@ -139,14 +141,16 @@ class BMapper extends ClassMapperBase<B> {
 
   static Map<String, dynamic> _$items(B v) => v.items;
   static dynamic _arg$items<T>(f) => f<Map<String, T>>();
+  static const Field<B, Map<String, dynamic>> _f$items =
+      Field('items', _$items, arg: _arg$items);
 
   @override
   final Map<Symbol, Field<B, dynamic>> fields = const {
-    #items: Field<B, Map<String, dynamic>>('items', _$items, arg: _arg$items),
+    #items: _f$items,
   };
 
   static B<T> _instantiate<T>(DecodingData data) {
-    return B(data.get(#items));
+    return B(data.dec(_f$items));
   }
 
   @override

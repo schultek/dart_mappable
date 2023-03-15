@@ -11,7 +11,6 @@ export 'src/hooks/string_hooks.dart';
 export 'src/hooks/unmapped_properties_hook.dart';
 export 'src/mapper_container.dart';
 export 'src/mapper_exception.dart';
-export 'src/mapper_utils.dart';
 export 'src/mappers/class_mapper.dart';
 export 'src/mappers/default_mappers.dart';
 export 'src/mappers/mapper_base.dart';

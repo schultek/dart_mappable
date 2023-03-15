@@ -24,18 +24,22 @@ class DSOpacityDataMapper extends ClassMapperBase<DSOpacityData> {
   final String id = 'DSOpacityData';
 
   static Map<BaseToken, double> _$data(DSOpacityData v) => v.data;
+  static const Field<DSOpacityData, Map<BaseToken, double>> _f$data = Field(
+      'data', _$data,
+      opt: true, def: const {HOpacity.bzOpacityIntense: 0.4});
   static double _$fallback(DSOpacityData v) => v.fallback;
+  static const Field<DSOpacityData, double> _f$fallback =
+      Field('fallback', _$fallback, opt: true, def: 0.0);
 
   @override
   final Map<Symbol, Field<DSOpacityData, dynamic>> fields = const {
-    #data: Field<DSOpacityData, Map<BaseToken, double>>('data', _$data,
-        opt: true, def: const {HOpacity.bzOpacityIntense: 0.4}),
-    #fallback: Field<DSOpacityData, double>('fallback', _$fallback,
-        opt: true, def: 0.0),
+    #data: _f$data,
+    #fallback: _f$fallback,
   };
 
   static DSOpacityData _instantiate(DecodingData data) {
-    return DSOpacityData(data: data.get(#data), fallback: data.get(#fallback));
+    return DSOpacityData(
+        data: data.dec(_f$data), fallback: data.dec(_f$fallback));
   }
 
   @override

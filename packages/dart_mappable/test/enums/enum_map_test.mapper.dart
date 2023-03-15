@@ -25,15 +25,16 @@ class ClassAMapper extends ClassMapperBase<ClassA> {
   final String id = 'ClassA';
 
   static Map<EnumA, bool?> _$someVariable(ClassA v) => v.someVariable;
+  static const Field<ClassA, Map<EnumA, bool?>> _f$someVariable =
+      Field('someVariable', _$someVariable);
 
   @override
   final Map<Symbol, Field<ClassA, dynamic>> fields = const {
-    #someVariable:
-        Field<ClassA, Map<EnumA, bool?>>('someVariable', _$someVariable),
+    #someVariable: _f$someVariable,
   };
 
   static ClassA _instantiate(DecodingData data) {
-    return ClassA(data.get(#someVariable));
+    return ClassA(data.dec(_f$someVariable));
   }
 
   @override

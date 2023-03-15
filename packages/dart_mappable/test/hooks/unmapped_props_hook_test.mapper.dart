@@ -24,19 +24,21 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   static Map<String, dynamic> _$unmappedProps(A v) => v.unmappedProps;
+  static const Field<A, Map<String, dynamic>> _f$unmappedProps =
+      Field('unmappedProps', _$unmappedProps);
   static String? _$a(A v) => v.a;
+  static const Field<A, String?> _f$a = Field('a', _$a);
 
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {
-    #unmappedProps:
-        Field<A, Map<String, dynamic>>('unmappedProps', _$unmappedProps),
-    #a: Field<A, String?>('a', _$a),
+    #unmappedProps: _f$unmappedProps,
+    #a: _f$a,
   };
 
   @override
   final MappingHook hook = const UnmappedPropertiesHook('unmappedProps');
   static A _instantiate(DecodingData data) {
-    return A(data.get(#unmappedProps), data.get(#a));
+    return A(data.dec(_f$unmappedProps), data.dec(_f$a));
   }
 
   @override

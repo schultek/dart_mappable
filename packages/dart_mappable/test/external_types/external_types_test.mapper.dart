@@ -24,15 +24,16 @@ class PersonMapper extends ClassMapperBase<Person> {
   final String id = 'Person';
 
   static String _$firstName(Person v) => v.firstName;
+  static const Field<Person, String> _f$firstName =
+      Field('firstName', _$firstName, key: 'first_name');
 
   @override
   final Map<Symbol, Field<Person, dynamic>> fields = const {
-    #firstName:
-        Field<Person, String>('firstName', _$firstName, key: 'first_name'),
+    #firstName: _f$firstName,
   };
 
   static Person _instantiate(DecodingData data) {
-    return Person(data.get(#firstName));
+    return Person(data.dec(_f$firstName));
   }
 
   @override
@@ -130,14 +131,15 @@ class CakeMapper extends ClassMapperBase<f.Cake> {
   final String id = 'Cake';
 
   static String _$type(f.Cake v) => v.type;
+  static const Field<f.Cake, String> _f$type = Field('type', _$type);
 
   @override
   final Map<Symbol, Field<f.Cake, dynamic>> fields = const {
-    #type: Field<f.Cake, String>('type', _$type),
+    #type: _f$type,
   };
 
   static f.Cake _instantiate(DecodingData data) {
-    return f.Cake(data.get(#type));
+    return f.Cake(data.dec(_f$type));
   }
 
   @override
@@ -218,15 +220,16 @@ class Person2Mapper extends ClassMapperBase<m.Person> {
   final String id = 'Person';
 
   static String _$firstName(m.Person v) => v.firstName;
+  static const Field<m.Person, String> _f$firstName =
+      Field('firstName', _$firstName, key: 'first_name');
 
   @override
   final Map<Symbol, Field<m.Person, dynamic>> fields = const {
-    #firstName:
-        Field<m.Person, String>('firstName', _$firstName, key: 'first_name'),
+    #firstName: _f$firstName,
   };
 
   static m.Person _instantiate(DecodingData data) {
-    return m.Person(data.get(#firstName));
+    return m.Person(data.dec(_f$firstName));
   }
 
   @override
@@ -310,10 +313,11 @@ class AnimalMapper extends ClassMapperBase<o.Animal> {
   final String id = 'Animal';
 
   static String _$color(o.Animal v) => v.color;
+  static const Field<o.Animal, String> _f$color = Field('color', _$color);
 
   @override
   final Map<Symbol, Field<o.Animal, dynamic>> fields = const {
-    #color: Field<o.Animal, String>('color', _$color),
+    #color: _f$color,
   };
 
   static o.Animal _instantiate(DecodingData data) {
@@ -373,12 +377,14 @@ class PetMapper extends SubClassMapperBase<o.Pet> {
   final String id = 'Pet';
 
   static m.Person _$owner(o.Pet v) => v.owner;
+  static const Field<o.Pet, m.Person> _f$owner = Field('owner', _$owner);
   static String _$color(o.Pet v) => v.color;
+  static const Field<o.Pet, String> _f$color = Field('color', _$color);
 
   @override
   final Map<Symbol, Field<o.Pet, dynamic>> fields = const {
-    #owner: Field<o.Pet, m.Person>('owner', _$owner),
-    #color: Field<o.Pet, String>('color', _$color),
+    #owner: _f$owner,
+    #color: _f$color,
   };
 
   @override
@@ -389,7 +395,7 @@ class PetMapper extends SubClassMapperBase<o.Pet> {
   late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static o.Pet _instantiate(DecodingData data) {
-    return o.Pet(data.get(#owner), data.get(#color));
+    return o.Pet(data.dec(_f$owner), data.dec(_f$color));
   }
 
   @override

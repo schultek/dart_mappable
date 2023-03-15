@@ -27,17 +27,20 @@ class BoxMapper extends ClassMapperBase<Box> {
   Function get typeFactory => <T extends Content>(f) => f<Box<T>>();
 
   static int _$size(Box v) => v.size;
+  static const Field<Box, int> _f$size = Field('size', _$size);
   static Content _$contents(Box v) => v.contents;
   static dynamic _arg$contents<T extends Content>(f) => f<T>();
+  static const Field<Box, Content> _f$contents =
+      Field('contents', _$contents, arg: _arg$contents);
 
   @override
   final Map<Symbol, Field<Box, dynamic>> fields = const {
-    #size: Field<Box, int>('size', _$size),
-    #contents: Field<Box, Content>('contents', _$contents, arg: _arg$contents),
+    #size: _f$size,
+    #contents: _f$contents,
   };
 
   static Box<T> _instantiate<T extends Content>(DecodingData data) {
-    return Box(data.get(#size), contents: data.get(#contents));
+    return Box(data.dec(_f$size), contents: data.dec(_f$contents));
   }
 
   @override
@@ -137,14 +140,15 @@ class ContentMapper extends ClassMapperBase<Content> {
   final String id = 'Content';
 
   static String _$data(Content v) => v.data;
+  static const Field<Content, String> _f$data = Field('data', _$data);
 
   @override
   final Map<Symbol, Field<Content, dynamic>> fields = const {
-    #data: Field<Content, String>('data', _$data),
+    #data: _f$data,
   };
 
   static Content _instantiate(DecodingData data) {
-    return Content(data.get(#data));
+    return Content(data.dec(_f$data));
   }
 
   @override

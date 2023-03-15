@@ -12,13 +12,13 @@ abstract class SimpleMapper<T extends Object> extends _SimpleMapperBase<T> {
   Object? encode(T self);
 
   @override
-  T _decode(DecodingContext<Object> context) {
-    return decode(context.value);
+  T _decode(Object value, DecodingContext context) {
+    return decode(value);
   }
 
   @override
-  Object? _encode(EncodingContext<T> context) {
-    return encode(context.value);
+  Object? _encode(T value, EncodingContext context) {
+    return encode(value);
   }
 }
 
@@ -35,13 +35,13 @@ abstract class SimpleMapper1<T extends Object> extends _SimpleMapperBase<T> {
   Object? encode<A>(covariant T self);
 
   @override
-  T _decode(DecodingContext<Object> context) {
-    return context.callWith1(decode, _$value);
+  T _decode(Object value, DecodingContext context) {
+    return context.callWith1(decode, (_) => value);
   }
 
   @override
-  Object? _encode(EncodingContext<T> context) {
-    return context.callWith1(encode, _$value);
+  Object? _encode(T value, EncodingContext context) {
+    return context.callWith1(encode, (_) => value);
   }
 }
 
@@ -58,13 +58,13 @@ abstract class SimpleMapper2<T extends Object> extends _SimpleMapperBase<T> {
   Object? encode<A, B>(covariant T self);
 
   @override
-  T _decode(DecodingContext<Object> context) {
-    return context.callWith2(decode, _$value);
+  T _decode(Object value, DecodingContext context) {
+    return context.callWith2(decode, (_) => value);
   }
 
   @override
-  Object? _encode(EncodingContext<T> context) {
-    return context.callWith2(encode, _$value);
+  Object? _encode(T value, EncodingContext context) {
+    return context.callWith2(encode, (_) => value);
   }
 }
 
@@ -79,26 +79,24 @@ abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T>
     return _container!;
   }
 
-  T _decode(DecodingContext<Object> context);
-  Object? _encode(EncodingContext<T> context);
-
-  V _$value<V extends Object>(MappingContext<V> o) => o.value;
+  T _decode(Object value, DecodingContext context);
+  Object? _encode(T value, EncodingContext context);
 
   @override
-  T decoder(DecodingContext<Object> context) {
+  T decoder(Object value, DecodingContext context) {
     _container = context.container;
     try {
-      return _decode(context);
+      return _decode(value, context);
     } finally {
       _container = null;
     }
   }
 
   @override
-  Object? encoder(EncodingContext<Object> context) {
+  Object? encoder(T value, EncodingContext context) {
     _container = context.container;
     try {
-      return _encode(context.checked<T>());
+      return _encode(value, context);
     } finally {
       _container = null;
     }

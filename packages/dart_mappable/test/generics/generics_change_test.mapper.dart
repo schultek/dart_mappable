@@ -361,7 +361,7 @@ class DMapper extends SubClassMapperBase<D> {
   late final ClassMapperBase superMapper = AMapper.ensureInitialized();
 
   @override
-  DecodingContext<Object> inherit(DecodingContext<Object> context) {
+  DecodingContext inherit(DecodingContext context) {
     return context.inherit(args: [dynamic, context.arg(0)]);
   }
 
@@ -476,7 +476,7 @@ class EMapper extends SubClassMapperBase<E> {
   late final ClassMapperBase superMapper = DMapper.ensureInitialized();
 
   @override
-  DecodingContext<Object> inherit(DecodingContext<Object> context) {
+  DecodingContext inherit(DecodingContext context) {
     return context.inherit(args: [
       context.arg(1, [0]),
       context.arg(0)

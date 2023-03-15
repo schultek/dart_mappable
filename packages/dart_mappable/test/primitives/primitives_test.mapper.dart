@@ -25,16 +25,19 @@ class ItemsMapper extends ClassMapperBase<Items> {
   final String id = 'Items';
 
   static List<Item> _$items(Items v) => v.items;
+  static const Field<Items, List<Item>> _f$items = Field('items', _$items);
   static Map<int, Item> _$items2(Items v) => v.items2;
+  static const Field<Items, Map<int, Item>> _f$items2 =
+      Field('items2', _$items2);
 
   @override
   final Map<Symbol, Field<Items, dynamic>> fields = const {
-    #items: Field<Items, List<Item>>('items', _$items),
-    #items2: Field<Items, Map<int, Item>>('items2', _$items2),
+    #items: _f$items,
+    #items2: _f$items2,
   };
 
   static Items _instantiate(DecodingData data) {
-    return Items(data.get(#items), data.get(#items2));
+    return Items(data.dec(_f$items), data.dec(_f$items2));
   }
 
   @override
@@ -149,14 +152,15 @@ class ItemMapper extends ClassMapperBase<Item> {
   final String id = 'Item';
 
   static int _$index(Item v) => v.index;
+  static const Field<Item, int> _f$index = Field('index', _$index);
 
   @override
   final Map<Symbol, Field<Item, dynamic>> fields = const {
-    #index: Field<Item, int>('index', _$index),
+    #index: _f$index,
   };
 
   static Item _instantiate(DecodingData data) {
-    return Item(data.get(#index));
+    return Item(data.dec(_f$index));
   }
 
   @override

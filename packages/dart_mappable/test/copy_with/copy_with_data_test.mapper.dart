@@ -25,16 +25,18 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   static String? _$a(A v) => v.a;
+  static const Field<A, String?> _f$a = Field('a', _$a);
   static B? _$b(A v) => v.b;
+  static const Field<A, B?> _f$b = Field('b', _$b);
 
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {
-    #a: Field<A, String?>('a', _$a),
-    #b: Field<A, B?>('b', _$b),
+    #a: _f$a,
+    #b: _f$b,
   };
 
   static A _instantiate(DecodingData data) {
-    return A(data.get(#a), data.get(#b));
+    return A(data.dec(_f$a), data.dec(_f$b));
   }
 
   @override
@@ -134,16 +136,18 @@ class BMapper extends ClassMapperBase<B> {
   final String id = 'B';
 
   static String? _$a(B v) => v.a;
+  static const Field<B, String?> _f$a = Field('a', _$a);
   static int? _$b(B v) => v.b;
+  static const Field<B, int?> _f$b = Field('b', _$b);
 
   @override
   final Map<Symbol, Field<B, dynamic>> fields = const {
-    #a: Field<B, String?>('a', _$a),
-    #b: Field<B, int?>('b', _$b),
+    #a: _f$a,
+    #b: _f$b,
   };
 
   static B _instantiate(DecodingData data) {
-    return B(data.get(#a), data.get(#b));
+    return B(data.dec(_f$a), data.dec(_f$b));
   }
 
   @override

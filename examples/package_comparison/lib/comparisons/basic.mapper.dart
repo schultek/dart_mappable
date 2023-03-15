@@ -24,14 +24,15 @@ class PersonCMapper extends ClassMapperBase<PersonC> {
   final String id = 'PersonC';
 
   static String _$name(PersonC v) => v.name;
+  static const Field<PersonC, String> _f$name = Field('name', _$name);
 
   @override
   final Map<Symbol, Field<PersonC, dynamic>> fields = const {
-    #name: Field<PersonC, String>('name', _$name),
+    #name: _f$name,
   };
 
   static PersonC _instantiate(DecodingData data) {
-    return PersonC(name: data.get(#name));
+    return PersonC(name: data.dec(_f$name));
   }
 
   @override

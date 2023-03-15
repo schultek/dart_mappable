@@ -28,14 +28,16 @@ class ZooMapper extends ClassMapperBase<Zoo> {
 
   static List<Animal> _$animals(Zoo v) => v.animals;
   static dynamic _arg$animals<T extends Animal>(f) => f<List<T>>();
+  static const Field<Zoo, List<Animal>> _f$animals =
+      Field('animals', _$animals, arg: _arg$animals);
 
   @override
   final Map<Symbol, Field<Zoo, dynamic>> fields = const {
-    #animals: Field<Zoo, List<Animal>>('animals', _$animals, arg: _arg$animals),
+    #animals: _f$animals,
   };
 
   static Zoo<T> _instantiate<T extends Animal>(DecodingData data) {
-    return Zoo(data.get(#animals));
+    return Zoo(data.dec(_f$animals));
   }
 
   @override

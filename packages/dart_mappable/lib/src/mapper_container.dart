@@ -222,7 +222,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     if (mapper != null) {
       try {
         return mapper.decoder(
-            DecodingContext(value, container: this, args: type.args)) as T;
+            value, DecodingContext(container: this, args: type.args)) as T;
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
           MapperException.chain(MapperMethod.decode, '($type)', e),
@@ -259,8 +259,8 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
           typeArgs = fallback;
         }
 
-        var result = mapper.encoder(EncodingContext<Object>(value,
-            container: this, args: typeArgs.toList()));
+        var result = mapper.encoder(
+            value, EncodingContext(container: this, args: typeArgs.toList()));
 
         if (result is Map<String, dynamic> && typeId != null) {
           result['__type'] = typeId;
@@ -324,7 +324,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     }
     return guardMappable(
       value,
-      (m, o) => m.isFor(other) && m.equals(o, other!),
+      (m, v, c) => m.isFor(other) && m.equals(v, other!, c),
       () => value == other,
       MapperMethod.equals,
       () => '[$value]',
@@ -338,7 +338,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     }
     return guardMappable(
       value,
-      (m, o) => m.hash(o),
+      (m, v, c) => m.hash(v, c),
       () => value.hashCode,
       MapperMethod.hash,
       () => '[$value]',
@@ -352,7 +352,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     }
     return guardMappable(
       value,
-      (m, o) => m.stringify(o),
+      (m, v, c) => m.stringify(v, c),
       () => value.toString(),
       MapperMethod.stringify,
       () => '(Instance of \'${value.runtimeType}\')',
@@ -361,7 +361,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
 
   T guardMappable<T>(
     Object value,
-    T Function(MapperBase, MappingContext<Object>) fn,
+    T Function(MapperBase, Object, MappingContext) fn,
     T Function() fallback,
     MapperMethod method,
     String Function() hint,
@@ -369,7 +369,7 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     var mapper = _mapperFor(value);
     if (mapper != null) {
       try {
-        return fn(mapper, MappingContext(value, container: this));
+        return fn(mapper, value, MappingContext(container: this));
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
           MapperException.chain(method, hint(), e),

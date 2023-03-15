@@ -25,18 +25,23 @@ class PersonMapper extends ClassMapperBase<Person> {
   final String id = 'Person';
 
   static String _$name(Person v) => v.name;
+  static const Field<Person, String> _f$name = Field('name', _$name);
   static int _$age(Person v) => v.age;
+  static const Field<Person, int> _f$age =
+      Field('age', _$age, opt: true, def: 18);
   static Car? _$car(Person v) => v.car;
+  static const Field<Person, Car?> _f$car = Field('car', _$car, opt: true);
 
   @override
   final Map<Symbol, Field<Person, dynamic>> fields = const {
-    #name: Field<Person, String>('name', _$name),
-    #age: Field<Person, int>('age', _$age, opt: true, def: 18),
-    #car: Field<Person, Car?>('car', _$car, opt: true),
+    #name: _f$name,
+    #age: _f$age,
+    #car: _f$car,
   };
 
   static Person _instantiate(DecodingData data) {
-    return Person(data.get(#name), age: data.get(#age), car: data.get(#car));
+    return Person(data.dec(_f$name),
+        age: data.dec(_f$age), car: data.dec(_f$car));
   }
 
   @override
@@ -143,16 +148,18 @@ class CarMapper extends ClassMapperBase<Car> {
   final String id = 'Car';
 
   static double _$miles(Car v) => v.miles;
+  static const Field<Car, double> _f$miles = Field('miles', _$miles);
   static Brand _$brand(Car v) => v.brand;
+  static const Field<Car, Brand> _f$brand = Field('brand', _$brand);
 
   @override
   final Map<Symbol, Field<Car, dynamic>> fields = const {
-    #miles: Field<Car, double>('miles', _$miles),
-    #brand: Field<Car, Brand>('brand', _$brand),
+    #miles: _f$miles,
+    #brand: _f$brand,
   };
 
   static Car _instantiate(DecodingData data) {
-    return Car(data.get(#miles), data.get(#brand));
+    return Car(data.dec(_f$miles), data.dec(_f$brand));
   }
 
   @override
@@ -251,17 +258,20 @@ class BoxMapper extends ClassMapperBase<Box> {
   Function get typeFactory => <T>(f) => f<Box<T>>();
 
   static int _$size(Box v) => v.size;
+  static const Field<Box, int> _f$size = Field('size', _$size);
   static dynamic _$content(Box v) => v.content;
   static dynamic _arg$content<T>(f) => f<T>();
+  static const Field<Box, dynamic> _f$content =
+      Field('content', _$content, arg: _arg$content);
 
   @override
   final Map<Symbol, Field<Box, dynamic>> fields = const {
-    #size: Field<Box, int>('size', _$size),
-    #content: Field<Box, dynamic>('content', _$content, arg: _arg$content),
+    #size: _f$size,
+    #content: _f$content,
   };
 
   static Box<T> _instantiate<T>(DecodingData data) {
-    return Box(data.get(#size), content: data.get(#content));
+    return Box(data.dec(_f$size), content: data.dec(_f$content));
   }
 
   @override
@@ -359,14 +369,15 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
   final String id = 'Confetti';
 
   static String _$color(Confetti v) => v.color;
+  static const Field<Confetti, String> _f$color = Field('color', _$color);
 
   @override
   final Map<Symbol, Field<Confetti, dynamic>> fields = const {
-    #color: Field<Confetti, String>('color', _$color),
+    #color: _f$color,
   };
 
   static Confetti _instantiate(DecodingData data) {
-    return Confetti(data.get(#color));
+    return Confetti(data.dec(_f$color));
   }
 
   @override

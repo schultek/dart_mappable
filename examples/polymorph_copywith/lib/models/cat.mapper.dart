@@ -26,14 +26,17 @@ class CatMapper extends SubClassMapperBase<Cat> {
   final String id = 'Cat';
 
   static String _$name(Cat v) => v.name;
+  static const Field<Cat, String> _f$name = Field('name', _$name);
   static CatType _$breed(Cat v) => v.breed;
+  static const Field<Cat, CatType> _f$breed = Field('breed', _$breed);
   static String _$color(Cat v) => v.color;
+  static const Field<Cat, String> _f$color = Field('color', _$color);
 
   @override
   final Map<Symbol, Field<Cat, dynamic>> fields = const {
-    #name: Field<Cat, String>('name', _$name),
-    #breed: Field<Cat, CatType>('breed', _$breed),
-    #color: Field<Cat, String>('color', _$color),
+    #name: _f$name,
+    #breed: _f$breed,
+    #color: _f$color,
   };
 
   @override
@@ -44,7 +47,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Cat _instantiate(DecodingData data) {
-    return Cat(data.get(#name), data.get(#breed), data.get(#color));
+    return Cat(data.dec(_f$name), data.dec(_f$breed), data.dec(_f$color));
   }
 
   @override

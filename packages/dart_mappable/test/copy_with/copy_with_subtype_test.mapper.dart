@@ -26,10 +26,11 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   final String id = 'Animal';
 
   static String _$name(Animal v) => v.name;
+  static const Field<Animal, String> _f$name = Field('name', _$name);
 
   @override
   final Map<Symbol, Field<Animal, dynamic>> fields = const {
-    #name: Field<Animal, String>('name', _$name),
+    #name: _f$name,
   };
 
   static Animal _instantiate(DecodingData data) {
@@ -74,12 +75,14 @@ class CatMapper extends SubClassMapperBase<Cat> {
   final String id = 'Cat';
 
   static String _$name(Cat v) => v.name;
+  static const Field<Cat, String> _f$name = Field('name', _$name);
   static String _$color(Cat v) => v.color;
+  static const Field<Cat, String> _f$color = Field('color', _$color);
 
   @override
   final Map<Symbol, Field<Cat, dynamic>> fields = const {
-    #name: Field<Cat, String>('name', _$name),
-    #color: Field<Cat, String>('color', _$color),
+    #name: _f$name,
+    #color: _f$color,
   };
 
   @override
@@ -90,7 +93,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Cat _instantiate(DecodingData data) {
-    return Cat(data.get(#name), data.get(#color));
+    return Cat(data.dec(_f$name), data.dec(_f$color));
   }
 
   @override
@@ -162,10 +165,11 @@ class DogMapper extends SubClassMapperBase<Dog> {
   final String id = 'Dog';
 
   static String _$name(Dog v) => v.name;
+  static const Field<Dog, String> _f$name = Field('name', _$name);
 
   @override
   final Map<Symbol, Field<Dog, dynamic>> fields = const {
-    #name: Field<Dog, String>('name', _$name),
+    #name: _f$name,
   };
 
   @override
@@ -176,7 +180,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Dog _instantiate(DecodingData data) {
-    return Dog(data.get(#name));
+    return Dog(data.dec(_f$name));
   }
 
   @override
@@ -247,14 +251,15 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   final String id = 'Zoo';
 
   static Animal _$animal(Zoo v) => v.animal;
+  static const Field<Zoo, Animal> _f$animal = Field('animal', _$animal);
 
   @override
   final Map<Symbol, Field<Zoo, dynamic>> fields = const {
-    #animal: Field<Zoo, Animal>('animal', _$animal),
+    #animal: _f$animal,
   };
 
   static Zoo _instantiate(DecodingData data) {
-    return Zoo(data.get(#animal));
+    return Zoo(data.dec(_f$animal));
   }
 
   @override
@@ -529,16 +534,18 @@ class BMapper extends ClassMapperBase<B> {
   final String id = 'B';
 
   static List<A<dynamic>?> _$list(B v) => v.list;
+  static const Field<B, List<A<dynamic>?>> _f$list = Field('list', _$list);
   static A<dynamic>? _$a(B v) => v.a;
+  static const Field<B, A<dynamic>?> _f$a = Field('a', _$a);
 
   @override
   final Map<Symbol, Field<B, dynamic>> fields = const {
-    #list: Field<B, List<A<dynamic>?>>('list', _$list),
-    #a: Field<B, A<dynamic>?>('a', _$a),
+    #list: _f$list,
+    #a: _f$a,
   };
 
   static B _instantiate(DecodingData data) {
-    return B(data.get(#list), data.get(#a));
+    return B(data.dec(_f$list), data.dec(_f$a));
   }
 
   @override

@@ -25,16 +25,18 @@ class PersonMapper extends ClassMapperBase<Person> {
   final String id = 'Person';
 
   static String _$name(Person v) => v.name;
+  static const Field<Person, String> _f$name = Field('name', _$name);
   static Car _$car(Person v) => v.car;
+  static const Field<Person, Car> _f$car = Field('car', _$car);
 
   @override
   final Map<Symbol, Field<Person, dynamic>> fields = const {
-    #name: Field<Person, String>('name', _$name),
-    #car: Field<Person, Car>('car', _$car),
+    #name: _f$name,
+    #car: _f$car,
   };
 
   static Person _instantiate(DecodingData data) {
-    return Person(data.get(#name), data.get(#car));
+    return Person(data.dec(_f$name), data.dec(_f$car));
   }
 
   @override
@@ -137,16 +139,18 @@ class CarMapper extends ClassMapperBase<Car> {
   final String id = 'Car';
 
   static Brand? _$brand(Car v) => v.brand;
+  static const Field<Car, Brand?> _f$brand = Field('brand', _$brand);
   static String _$model(Car v) => v.model;
+  static const Field<Car, String> _f$model = Field('model', _$model);
 
   @override
   final Map<Symbol, Field<Car, dynamic>> fields = const {
-    #brand: Field<Car, Brand?>('brand', _$brand),
-    #model: Field<Car, String>('model', _$model),
+    #brand: _f$brand,
+    #model: _f$model,
   };
 
   static Car _instantiate(DecodingData data) {
-    return Car(data.get(#brand), data.get(#model));
+    return Car(data.dec(_f$brand), data.dec(_f$model));
   }
 
   @override
@@ -247,14 +251,15 @@ class BrandMapper extends ClassMapperBase<Brand> {
   final String id = 'Brand';
 
   static dynamic _$name(Brand v) => v.name;
+  static const Field<Brand, dynamic> _f$name = Field('name', _$name);
 
   @override
   final Map<Symbol, Field<Brand, dynamic>> fields = const {
-    #name: Field<Brand, dynamic>('name', _$name),
+    #name: _f$name,
   };
 
   static Brand _instantiate(DecodingData data) {
-    return Brand(data.get(#name));
+    return Brand(data.dec(_f$name));
   }
 
   @override
@@ -354,16 +359,19 @@ class DealershipMapper extends ClassMapperBase<Dealership> {
   final String id = 'Dealership';
 
   static List<Car> _$cars(Dealership v) => v.cars;
+  static const Field<Dealership, List<Car>> _f$cars = Field('cars', _$cars);
   static Map<Brand, Person?> _$salesRep(Dealership v) => v.salesRep;
+  static const Field<Dealership, Map<Brand, Person?>> _f$salesRep =
+      Field('salesRep', _$salesRep);
 
   @override
   final Map<Symbol, Field<Dealership, dynamic>> fields = const {
-    #cars: Field<Dealership, List<Car>>('cars', _$cars),
-    #salesRep: Field<Dealership, Map<Brand, Person?>>('salesRep', _$salesRep),
+    #cars: _f$cars,
+    #salesRep: _f$salesRep,
   };
 
   static Dealership _instantiate(DecodingData data) {
-    return Dealership(data.get(#cars), data.get(#salesRep));
+    return Dealership(data.dec(_f$cars), data.dec(_f$salesRep));
   }
 
   @override
@@ -488,10 +496,12 @@ class ItemListMapper extends ClassMapperBase<ItemList> {
 
   static List<dynamic> _$items(ItemList v) => v.items;
   static dynamic _arg$items<T>(f) => f<List<T>>();
+  static const Field<ItemList, List<dynamic>> _f$items =
+      Field('items', _$items, arg: _arg$items);
 
   @override
   final Map<Symbol, Field<ItemList, dynamic>> fields = const {
-    #items: Field<ItemList, List<dynamic>>('items', _$items, arg: _arg$items),
+    #items: _f$items,
   };
 
   static ItemList<T> _instantiate<T>(DecodingData data) {
@@ -548,10 +558,12 @@ class BrandListMapper extends SubClassMapperBase<BrandList> {
   final String id = 'BrandList';
 
   static List<Brand?> _$items(BrandList v) => v.items;
+  static const Field<BrandList, List<Brand?>> _f$items =
+      Field('items', _$items, key: 'brands');
 
   @override
   final Map<Symbol, Field<BrandList, dynamic>> fields = const {
-    #items: Field<BrandList, List<Brand?>>('items', _$items, key: 'brands'),
+    #items: _f$items,
   };
 
   @override
@@ -562,7 +574,7 @@ class BrandListMapper extends SubClassMapperBase<BrandList> {
   late final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
   static BrandList _instantiate(DecodingData data) {
-    return BrandList(data.get(#brands));
+    return BrandList(data.dec(_f$items));
   }
 
   @override
@@ -673,14 +685,16 @@ class NamedItemListMapper extends SubClassMapperBase<NamedItemList> {
   Function get typeFactory => <T>(f) => f<NamedItemList<T>>();
 
   static String _$name(NamedItemList v) => v.name;
+  static const Field<NamedItemList, String> _f$name = Field('name', _$name);
   static List<dynamic> _$items(NamedItemList v) => v.items;
   static dynamic _arg$items<T>(f) => f<List<T>>();
+  static const Field<NamedItemList, List<dynamic>> _f$items =
+      Field('items', _$items, arg: _arg$items);
 
   @override
   final Map<Symbol, Field<NamedItemList, dynamic>> fields = const {
-    #name: Field<NamedItemList, String>('name', _$name),
-    #items:
-        Field<NamedItemList, List<dynamic>>('items', _$items, arg: _arg$items),
+    #name: _f$name,
+    #items: _f$items,
   };
 
   @override
@@ -691,7 +705,7 @@ class NamedItemListMapper extends SubClassMapperBase<NamedItemList> {
   late final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
   static NamedItemList<T> _instantiate<T>(DecodingData data) {
-    return NamedItemList(data.get(#name), data.get(#items));
+    return NamedItemList(data.dec(_f$name), data.dec(_f$items));
   }
 
   @override
@@ -805,14 +819,17 @@ class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
 
   static dynamic _$key(KeyedItemList v) => v.key;
   static dynamic _arg$key<K, T>(f) => f<K>();
+  static const Field<KeyedItemList, dynamic> _f$key =
+      Field('key', _$key, arg: _arg$key);
   static List<dynamic> _$items(KeyedItemList v) => v.items;
   static dynamic _arg$items<K, T>(f) => f<List<T>>();
+  static const Field<KeyedItemList, List<dynamic>> _f$items =
+      Field('items', _$items, arg: _arg$items);
 
   @override
   final Map<Symbol, Field<KeyedItemList, dynamic>> fields = const {
-    #key: Field<KeyedItemList, dynamic>('key', _$key, arg: _arg$key),
-    #items:
-        Field<KeyedItemList, List<dynamic>>('items', _$items, arg: _arg$items),
+    #key: _f$key,
+    #items: _f$items,
   };
 
   @override
@@ -823,12 +840,12 @@ class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
   late final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
   @override
-  DecodingContext<Object> inherit(DecodingContext<Object> context) {
+  DecodingContext inherit(DecodingContext context) {
     return context.inherit(args: [dynamic, context.arg(0)]);
   }
 
   static KeyedItemList<K, T> _instantiate<K, T>(DecodingData data) {
-    return KeyedItemList(data.get(#key), data.get(#items));
+    return KeyedItemList(data.dec(_f$key), data.dec(_f$items));
   }
 
   @override
@@ -948,12 +965,12 @@ class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
 
   static List<Comparable<dynamic>> _$items(ComparableItemList v) => v.items;
   static dynamic _arg$items<T extends Comparable<dynamic>>(f) => f<List<T>>();
+  static const Field<ComparableItemList, List<Comparable<dynamic>>> _f$items =
+      Field('items', _$items, arg: _arg$items);
 
   @override
   final Map<Symbol, Field<ComparableItemList, dynamic>> fields = const {
-    #items: Field<ComparableItemList, List<Comparable<dynamic>>>(
-        'items', _$items,
-        arg: _arg$items),
+    #items: _f$items,
   };
 
   @override
@@ -965,7 +982,7 @@ class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
 
   static ComparableItemList<T> _instantiate<T extends Comparable<dynamic>>(
       DecodingData data) {
-    return ComparableItemList(data.get(#items));
+    return ComparableItemList(data.dec(_f$items));
   }
 
   @override

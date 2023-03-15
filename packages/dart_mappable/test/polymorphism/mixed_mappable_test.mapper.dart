@@ -25,14 +25,18 @@ class BaseMapper extends ClassMapperBase<Base> {
   final String id = 'Base';
 
   static String _$id(Base v) => v.id;
+  static const Field<Base, String> _f$id = Field('id', _$id);
   static String _$name(Base v) => v.name;
+  static const Field<Base, String> _f$name = Field('name', _$name);
   static Map<String, dynamic> _$objects(Base v) => v.objects;
+  static const Field<Base, Map<String, dynamic>> _f$objects =
+      Field('objects', _$objects);
 
   @override
   final Map<Symbol, Field<Base, dynamic>> fields = const {
-    #id: Field<Base, String>('id', _$id),
-    #name: Field<Base, String>('name', _$name),
-    #objects: Field<Base, Map<String, dynamic>>('objects', _$objects),
+    #id: _f$id,
+    #name: _f$name,
+    #objects: _f$objects,
   };
 
   static Base _instantiate(DecodingData data) {
@@ -87,19 +91,25 @@ class OneMapper extends ClassMapperBase<One> {
   final String id = 'One';
 
   static String _$id(One v) => v.id;
+  static const Field<One, String> _f$id = Field('id', _$id);
   static String _$name(One v) => v.name;
+  static const Field<One, String> _f$name = Field('name', _$name);
   static Map<String, dynamic> _$objects(One v) => v.objects;
+  static const Field<One, Map<String, dynamic>> _f$objects =
+      Field('objects', _$objects);
 
   @override
   final Map<Symbol, Field<One, dynamic>> fields = const {
-    #id: Field<One, String>('id', _$id),
-    #name: Field<One, String>('name', _$name),
-    #objects: Field<One, Map<String, dynamic>>('objects', _$objects),
+    #id: _f$id,
+    #name: _f$name,
+    #objects: _f$objects,
   };
 
   static One _instantiate(DecodingData data) {
     return One(
-        id: data.get(#id), name: data.get(#name), objects: data.get(#objects));
+        id: data.dec(_f$id),
+        name: data.dec(_f$name),
+        objects: data.dec(_f$objects));
   }
 
   @override
@@ -210,16 +220,19 @@ class TwoMapper extends ClassMapperBase<Two> {
   final String id = 'Two';
 
   static String _$id(Two v) => v.id;
+  static const Field<Two, String> _f$id = Field('id', _$id);
   static String _$name(Two v) => v.name;
+  static const Field<Two, String> _f$name =
+      Field('name', _$name, mode: FieldMode.member);
 
   @override
   final Map<Symbol, Field<Two, dynamic>> fields = const {
-    #id: Field<Two, String>('id', _$id),
-    #name: Field<Two, String>('name', _$name, mode: FieldMode.member),
+    #id: _f$id,
+    #name: _f$name,
   };
 
   static Two _instantiate(DecodingData data) {
-    return Two(id: data.get(#id));
+    return Two(id: data.dec(_f$id));
   }
 
   @override

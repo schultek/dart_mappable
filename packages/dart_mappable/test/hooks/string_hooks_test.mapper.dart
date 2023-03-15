@@ -24,16 +24,20 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   static String? _$a(A v) => v.a;
+  static const Field<A, String?> _f$a =
+      Field('a', _$a, hook: UnescapeNewlinesHook());
   static String? _$b(A v) => v.b;
+  static const Field<A, String?> _f$b =
+      Field('b', _$b, hook: EmptyToNullHook());
 
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {
-    #a: Field<A, String?>('a', _$a, hook: UnescapeNewlinesHook()),
-    #b: Field<A, String?>('b', _$b, hook: EmptyToNullHook()),
+    #a: _f$a,
+    #b: _f$b,
   };
 
   static A _instantiate(DecodingData data) {
-    return A(data.get(#a), data.get(#b));
+    return A(data.dec(_f$a), data.dec(_f$b));
   }
 
   @override

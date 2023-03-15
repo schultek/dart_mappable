@@ -6,15 +6,18 @@ import '../mapper_utils.dart';
 import 'mapper_base.dart';
 
 class DecodingData<T extends Object> {
-  DecodingData(this.context, this.mapper);
+  DecodingData(this.value, this.context, this.mapper);
 
-  final DecodingContext<Map<String, dynamic>> context;
+  final Map<String, dynamic> value;
+  final DecodingContext context;
   final ClassMapperBase<T> mapper;
 
-  Map<String, dynamic> get value => context.value;
-
   V get<V>(Symbol name) {
-    return mapper.fields[name]!.decode(context);
+    return mapper.fields[name]!.decode(value, context);
+  }
+
+  V dec<V>(Field f) {
+    return f.decode(value, context);
   }
 }
 
@@ -23,24 +26,24 @@ abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
   dynamic get discriminatorValue;
   ClassMapperBase get superMapper;
 
-  bool canDecode(DecodingContext<Map<String, dynamic>> context) {
-    var value = discriminatorValue;
-    if (identical(value, MappingFlags.useAsDefault)) {
+  bool canDecode(Map<String, dynamic> value) {
+    var discriminator = discriminatorValue;
+    if (identical(discriminator, MappingFlags.useAsDefault)) {
       return true;
-    } else if (value is Function) {
-      if (value is bool Function(Map<String, dynamic>)) {
-        return value(context.value);
+    } else if (discriminator is Function) {
+      if (discriminator is bool Function(Map<String, dynamic>)) {
+        return discriminator(value);
       } else {
         throw AssertionError(
             'Discriminator function must be of type "bool Function(Map<String, dynamic>)".');
       }
-    } else if (value == context.value[discriminatorKey]) {
+    } else if (discriminator == value[discriminatorKey]) {
       return true;
     }
 
     if (_subMappers.isNotEmpty) {
       for (var m in _subMappers) {
-        if (m.discriminatorKey == discriminatorKey && m.canDecode(context)) {
+        if (m.discriminatorKey == discriminatorKey && m.canDecode(value)) {
           return true;
         }
       }
@@ -89,7 +92,7 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
   @override
   bool includeTypeId<V>(v) => MapperBase.matchesStaticType<V>(v);
 
-  DecodingContext<Object> inherit(DecodingContext<Object> context) {
+  DecodingContext inherit(DecodingContext context) {
     return context.inherit();
   }
 
@@ -120,64 +123,113 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
   Function get instantiate;
 
   @override
-  T decoder(DecodingContext<Object> context) {
-    return context.wrap(hook: superHook, skipInherited: true, (c) {
-      return c.wrap(hook: hook, (c) {
-        var c2 = c.checked<Map<String, dynamic>>();
-        if (_subMappers.isNotEmpty) {
-          for (var m in _subMappers) {
-            if (m.canDecode(c2)) {
-              return m.decoder(m.inherit(c2));
-            }
-          }
+  T decoder(Object? value, DecodingContext context) {
+    if (superHook != null && !context.inherited) {
+      value = superHook!.beforeDecode(value);
+
+      if (value is T) {
+        return superHook!.afterDecode(value) as T;
+      }
+    }
+
+    if (hook != null) {
+      value = hook!.beforeDecode(value);
+
+      if (value is T) {
+        return hook!.afterDecode(value) as T;
+      }
+    }
+
+    var result = _decode(value, context);
+
+    if (hook != null) {
+      result = hook!.afterDecode(value) as T;
+    }
+
+    if (superHook != null && !context.inherited) {
+      result = superHook!.afterDecode(value) as T;
+    }
+
+    return result;
+  }
+
+  T _decode(Object? value, DecodingContext context) {
+    var map = value.checked<Map<String, dynamic>>();
+    if (_subMappers.isNotEmpty) {
+      for (var m in _subMappers) {
+        if (m.canDecode(map)) {
+          return m.decoder(map, m.inherit(context));
         }
-        if (_defaultSubMapper != null) {
-          return _defaultSubMapper!.decoder(_defaultSubMapper!.inherit(c2));
-        }
-        var d = DecodingData<T>(c2, this);
-        if (c.args.isEmpty) {
-          return instantiate(d) as T;
-        } else {
-          return c.callWith(instantiate, d);
-        }
-      });
-    });
+      }
+    }
+    if (_defaultSubMapper != null) {
+      return _defaultSubMapper!
+          .decoder(map, _defaultSubMapper!.inherit(context));
+    }
+    var d = DecodingData<T>(map, context, this);
+    if (context.args.isEmpty) {
+      return instantiate(d) as T;
+    } else {
+      return context.callWith(instantiate, d);
+    }
   }
 
   final Map<String, dynamic>? _encodedStaticParams = null;
 
   @override
-  Object? encoder(EncodingContext<Object> context) {
-    return context.checked<T>().wrap(hook: superHook, (c) {
-      return c.wrap(hook: hook, (c) {
-        return {
-          for (var f in _params)
-            if (!ignoreNull || f.get(c.value) != null) f.key: f.encode(c),
-          ...?_encodedStaticParams,
-        };
-      });
-    });
+  Object? encoder(T value, EncodingContext context) {
+    if (superHook != null) {
+      var result = superHook!.beforeEncode(value);
+
+      if (result is! T) {
+        return superHook!.afterEncode(result);
+      }
+      value = result;
+    }
+
+    if (hook != null) {
+      var result = hook!.beforeEncode(value);
+
+      if (result is! T) {
+        return hook!.afterEncode(result);
+      }
+      value = result;
+    }
+
+    Object? result = {
+      for (var f in _params)
+        if (!ignoreNull || f.get(value) != null)
+          f.key: f.encode(value, context),
+      ...?_encodedStaticParams,
+    };
+
+    if (hook != null) {
+      result = hook!.afterEncode(result);
+    }
+
+    if (superHook != null) {
+      result = superHook!.afterEncode(result);
+    }
+
+    return result;
   }
 
   @override
-  String stringify(MappingContext<Object> context) {
-    var value = context.checked<T>().value;
+  String stringify(T value, MappingContext context) {
     return '$id(${_members.map((f) {
       return '${f.name}: ${context.container.asString(f.get(value))}';
     }).join(', ')})';
   }
 
   @override
-  int hash(MappingContext<Object> context) {
-    var value = context.checked<T>().value;
+  int hash(T value, MappingContext context) {
     return Object.hashAll(_members.map((f) {
       return context.container.hash(f.get(value));
     }));
   }
 
   @override
-  bool equals(MappingContext<Object> context, T other) {
-    var value = context.checked<T>().value;
+  bool equals(T value, T other, MappingContext context) {
     return _members.every((f) {
       return context.container.isEqual(f.get(value), f.get(other));
     });
@@ -200,33 +252,35 @@ class Field<T extends Object, V> {
   final V? def;
   final MappingHook? hook;
 
-  const Field(this.name, this.getter,
-      {String? key,
-      this.mode = FieldMode.field,
-      this.arg,
-      this.opt = false,
-      this.def,
-      this.hook})
-      : key = key ?? name;
+  const Field(
+    this.name,
+    this.getter, {
+    String? key,
+    this.mode = FieldMode.field,
+    this.arg,
+    this.opt = false,
+    this.def,
+    this.hook,
+  }) : key = key ?? name;
 
   V get(T value) {
     return getter(value);
   }
 
-  dynamic encode(EncodingContext<T> context) {
+  dynamic encode(T value, EncodingContext context) {
     var container = context.container;
     if (arg == null) {
-      return container.$enc<V>(get(context.value), name, hook);
+      return container.$enc<V>(get(value), name, hook);
     } else {
-      return context.callWith(arg!,
-          <U>() => container.$enc<U>(get(context.value) as U, name, hook));
+      return context.callWith(
+          arg!, <U>() => container.$enc<U>(get(value) as U, name, hook));
     }
   }
 
-  R decode<R>(DecodingContext<Map<String, dynamic>> context) {
-    var value = opt || def != null
-        ? context.container.$dec<R?>(context.value[key], key, hook)
-        : context.container.$dec<R>(context.value[key], key, hook);
-    return value ?? (def as R);
+  R decode<R>(Map<String, dynamic> value, DecodingContext context) {
+    var result = opt || def != null
+        ? context.container.$dec<R?>(value[key], key, hook)
+        : context.container.$dec<R>(value[key], key, hook);
+    return result ?? (def as R);
   }
 }

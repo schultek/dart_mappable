@@ -24,14 +24,15 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   static String _$a(A v) => v.a;
+  static const Field<A, String> _f$a = Field('a', _$a);
 
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {
-    #a: Field<A, String>('a', _$a),
+    #a: _f$a,
   };
 
   static A _instantiate(DecodingData data) {
-    return A(data.get(#a));
+    return A(data.dec(_f$a));
   }
 
   @override
@@ -101,14 +102,15 @@ class BMapper extends ClassMapperBase<B> {
   final String id = 'B';
 
   static String _$b(B v) => v.b;
+  static const Field<B, String> _f$b = Field('b', _$b);
 
   @override
   final Map<Symbol, Field<B, dynamic>> fields = const {
-    #b: Field<B, String>('b', _$b),
+    #b: _f$b,
   };
 
   static B _instantiate(DecodingData data) {
-    return B(data.get(#b));
+    return B(data.dec(_f$b));
   }
 
   @override

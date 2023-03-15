@@ -71,7 +71,7 @@ class DecoderGenerator {
     }
     return '\n'
         '  @override\n'
-        '  DecodingContext<Object> inherit(DecodingContext<Object> context) {\n'
+        '  DecodingContext inherit(DecodingContext context) {\n'
         '    return context.inherit(args: [${args.join(', ')}]);\n'
         '  }';
   }
@@ -93,12 +93,10 @@ class DecoderGenerator {
     for (var param in element.params) {
       var str = '';
 
-      var p = param.parameter;
-
-      if (p.isNamed) {
-        str = '${p.name}: ';
+      if (param.parameter.isNamed) {
+        str = '${param.parameter.name}: ';
       }
-      str += 'data.get(#${p.name})';
+      str += 'data.dec(_f\$${param.accessor.name})';
 
       params.add(str);
     }

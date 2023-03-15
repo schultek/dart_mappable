@@ -25,23 +25,31 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   static String _$a(A v) => v.a;
+  static const Field<A, String> _f$a = Field('a', _$a);
   static int _$b(A v) => v.b;
+  static const Field<A, int> _f$b = Field('b', _$b, opt: true, def: 0);
   static double? _$c(A v) => v.c;
+  static const Field<A, double?> _f$c = Field('c', _$c, opt: true);
   static bool _$d(A v) => v.d;
+  static const Field<A, bool> _f$d = Field('d', _$d);
   static B? _$e(A v) => v.e;
+  static const Field<A, B?> _f$e = Field('e', _$e, opt: true);
 
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {
-    #a: Field<A, String>('a', _$a),
-    #b: Field<A, int>('b', _$b, opt: true, def: 0),
-    #c: Field<A, double?>('c', _$c, opt: true),
-    #d: Field<A, bool>('d', _$d),
-    #e: Field<A, B?>('e', _$e, opt: true),
+    #a: _f$a,
+    #b: _f$b,
+    #c: _f$c,
+    #d: _f$d,
+    #e: _f$e,
   };
 
   static A _instantiate(DecodingData data) {
-    return A(data.get(#a),
-        b: data.get(#b), c: data.get(#c), d: data.get(#d), e: data.get(#e));
+    return A(data.dec(_f$a),
+        b: data.dec(_f$b),
+        c: data.dec(_f$c),
+        d: data.dec(_f$d),
+        e: data.dec(_f$e));
   }
 
   @override

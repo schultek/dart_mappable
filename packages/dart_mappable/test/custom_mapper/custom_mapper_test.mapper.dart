@@ -25,19 +25,21 @@ class TestObjMapper extends ClassMapperBase<TestObj> {
   final String id = 'TestObj';
 
   static BigInt? _$x(TestObj v) => v.x;
+  static const Field<TestObj, BigInt?> _f$x = Field('x', _$x);
   static Map<String, dynamic> _$unmappedProps(TestObj v) => v.unmappedProps;
+  static const Field<TestObj, Map<String, dynamic>> _f$unmappedProps =
+      Field('unmappedProps', _$unmappedProps);
 
   @override
   final Map<Symbol, Field<TestObj, dynamic>> fields = const {
-    #x: Field<TestObj, BigInt?>('x', _$x),
-    #unmappedProps:
-        Field<TestObj, Map<String, dynamic>>('unmappedProps', _$unmappedProps),
+    #x: _f$x,
+    #unmappedProps: _f$unmappedProps,
   };
 
   @override
   final MappingHook hook = const UnmappedPropertiesHook('unmappedProps');
   static TestObj _instantiate(DecodingData data) {
-    return TestObj.explicit(data.get(#x), data.get(#unmappedProps));
+    return TestObj.explicit(data.dec(_f$x), data.dec(_f$unmappedProps));
   }
 
   @override

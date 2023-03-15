@@ -26,10 +26,11 @@ class AnimalBMapper extends ClassMapperBase<AnimalB> {
   final String id = 'AnimalB';
 
   static String _$name(AnimalB v) => v.name;
+  static const Field<AnimalB, String> _f$name = Field('name', _$name);
 
   @override
   final Map<Symbol, Field<AnimalB, dynamic>> fields = const {
-    #name: Field<AnimalB, String>('name', _$name),
+    #name: _f$name,
   };
 
   static AnimalB _instantiate(DecodingData data) {
@@ -84,12 +85,14 @@ class CatBMapper extends SubClassMapperBase<CatB> {
   final String id = 'CatB';
 
   static String _$name(CatB v) => v.name;
+  static const Field<CatB, String> _f$name = Field('name', _$name);
   static String _$color(CatB v) => v.color;
+  static const Field<CatB, String> _f$color = Field('color', _$color);
 
   @override
   final Map<Symbol, Field<CatB, dynamic>> fields = const {
-    #name: Field<CatB, String>('name', _$name),
-    #color: Field<CatB, String>('color', _$color),
+    #name: _f$name,
+    #color: _f$color,
   };
 
   @override
@@ -100,7 +103,7 @@ class CatBMapper extends SubClassMapperBase<CatB> {
   late final ClassMapperBase superMapper = AnimalBMapper.ensureInitialized();
 
   static CatB _instantiate(DecodingData data) {
-    return CatB(data.get(#name), data.get(#color));
+    return CatB(data.dec(_f$name), data.dec(_f$color));
   }
 
   @override
@@ -200,12 +203,14 @@ class DogBMapper extends SubClassMapperBase<DogB> {
   final String id = 'DogB';
 
   static String _$name(DogB v) => v.name;
+  static const Field<DogB, String> _f$name = Field('name', _$name);
   static int _$age(DogB v) => v.age;
+  static const Field<DogB, int> _f$age = Field('age', _$age);
 
   @override
   final Map<Symbol, Field<DogB, dynamic>> fields = const {
-    #name: Field<DogB, String>('name', _$name),
-    #age: Field<DogB, int>('age', _$age),
+    #name: _f$name,
+    #age: _f$age,
   };
 
   @override
@@ -216,7 +221,7 @@ class DogBMapper extends SubClassMapperBase<DogB> {
   late final ClassMapperBase superMapper = AnimalBMapper.ensureInitialized();
 
   static DogB _instantiate(DecodingData data) {
-    return DogB(data.get(#name), data.get(#age));
+    return DogB(data.dec(_f$name), data.dec(_f$age));
   }
 
   @override

@@ -26,10 +26,11 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   final String id = 'Animal';
 
   static String _$name(Animal v) => v.name;
+  static const Field<Animal, String> _f$name = Field('name', _$name);
 
   @override
   final Map<Symbol, Field<Animal, dynamic>> fields = const {
-    #name: Field<Animal, String>('name', _$name),
+    #name: _f$name,
   };
 
   static Animal _instantiate(DecodingData data) {

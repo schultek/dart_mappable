@@ -27,18 +27,20 @@ class BoxMapper extends ClassMapperBase<Box> {
   Function get typeFactory => <T extends Content>(f) => f<Box<T>>();
 
   static int _$size(Box v) => v.size;
+  static const Field<Box, int> _f$size = Field('size', _$size);
   static List<Content> _$contents(Box v) => v.contents;
   static dynamic _arg$contents<T extends Content>(f) => f<List<T>>();
+  static const Field<Box, List<Content>> _f$contents =
+      Field('contents', _$contents, arg: _arg$contents);
 
   @override
   final Map<Symbol, Field<Box, dynamic>> fields = const {
-    #size: Field<Box, int>('size', _$size),
-    #contents:
-        Field<Box, List<Content>>('contents', _$contents, arg: _arg$contents),
+    #size: _f$size,
+    #contents: _f$contents,
   };
 
   static Box<T> _instantiate<T extends Content>(DecodingData data) {
-    return Box(data.get(#size), contents: data.get(#contents));
+    return Box(data.dec(_f$size), contents: data.dec(_f$contents));
   }
 
   @override
@@ -144,14 +146,15 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
   final String id = 'Confetti';
 
   static String _$color(Confetti v) => v.color;
+  static const Field<Confetti, String> _f$color = Field('color', _$color);
 
   @override
   final Map<Symbol, Field<Confetti, dynamic>> fields = const {
-    #color: Field<Confetti, String>('color', _$color),
+    #color: _f$color,
   };
 
   static Confetti _instantiate(DecodingData data) {
-    return Confetti(data.get(#color));
+    return Confetti(data.dec(_f$color));
   }
 
   @override
@@ -352,14 +355,15 @@ class DataMapper extends ClassMapperBase<Data> {
   final String id = 'Data';
 
   static String _$data(Data v) => v.data;
+  static const Field<Data, String> _f$data = Field('data', _$data);
 
   @override
   final Map<Symbol, Field<Data, dynamic>> fields = const {
-    #data: Field<Data, String>('data', _$data),
+    #data: _f$data,
   };
 
   static Data _instantiate(DecodingData data) {
-    return Data(data.get(#data));
+    return Data(data.dec(_f$data));
   }
 
   @override
@@ -459,16 +463,16 @@ class SingleSettingMapper extends ClassMapperBase<SingleSetting> {
 
   static List<dynamic>? _$properties(SingleSetting v) => v.properties;
   static dynamic _arg$properties<T>(f) => f<List<T>?>();
+  static const Field<SingleSetting, List<dynamic>?> _f$properties =
+      Field('properties', _$properties, opt: true, arg: _arg$properties);
 
   @override
   final Map<Symbol, Field<SingleSetting, dynamic>> fields = const {
-    #properties: Field<SingleSetting, List<dynamic>?>(
-        'properties', _$properties,
-        opt: true, arg: _arg$properties),
+    #properties: _f$properties,
   };
 
   static SingleSetting<T> _instantiate<T>(DecodingData data) {
-    return SingleSetting(properties: data.get(#properties));
+    return SingleSetting(properties: data.dec(_f$properties));
   }
 
   @override
@@ -582,18 +586,18 @@ class SettingsMapper extends ClassMapperBase<Settings> {
 
   static Map<String, SingleSetting<dynamic>>? _$settings(Settings v) =>
       v.settings;
+  static const Field<Settings, Map<String, SingleSetting<dynamic>>?>
+      _f$settings = Field('settings', _$settings, opt: true);
 
   @override
   final Map<Symbol, Field<Settings, dynamic>> fields = const {
-    #settings: Field<Settings, Map<String, SingleSetting<dynamic>>?>(
-        'settings', _$settings,
-        opt: true),
+    #settings: _f$settings,
   };
 
   @override
   final MappingHook hook = const MapHooksAfter();
   static Settings _instantiate(DecodingData data) {
-    return Settings(settings: data.get(#settings));
+    return Settings(settings: data.dec(_f$settings));
   }
 
   @override
@@ -713,14 +717,16 @@ class AssetMapper extends ClassMapperBase<Asset> {
 
   static dynamic _$data(Asset v) => v.data;
   static dynamic _arg$data<T>(f) => f<T>();
+  static const Field<Asset, dynamic> _f$data =
+      Field('data', _$data, arg: _arg$data);
 
   @override
   final Map<Symbol, Field<Asset, dynamic>> fields = const {
-    #data: Field<Asset, dynamic>('data', _$data, arg: _arg$data),
+    #data: _f$data,
   };
 
   static Asset<T> _instantiate<T>(DecodingData data) {
-    return Asset(data: data.get(#data));
+    return Asset(data: data.dec(_f$data));
   }
 
   @override

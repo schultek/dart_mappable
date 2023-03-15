@@ -26,10 +26,11 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   final String id = 'Animal';
 
   static String? _$name(Animal v) => v.name;
+  static const Field<Animal, String?> _f$name = Field('name', _$name);
 
   @override
   final Map<Symbol, Field<Animal, dynamic>> fields = const {
-    #name: Field<Animal, String?>('name', _$name),
+    #name: _f$name,
   };
   @override
   final bool ignoreNull = true;
@@ -87,10 +88,11 @@ class CatMapper extends SubClassMapperBase<Cat> {
   final String id = 'Cat';
 
   static String? _$name(Cat v) => v.name;
+  static const Field<Cat, String?> _f$name = Field('name', _$name);
 
   @override
   final Map<Symbol, Field<Cat, dynamic>> fields = const {
-    #name: Field<Cat, String?>('name', _$name),
+    #name: _f$name,
   };
   @override
   final bool ignoreNull = true;
@@ -155,10 +157,11 @@ class SiameseMapper extends SubClassMapperBase<Siamese> {
   final String id = 'Siamese';
 
   static String? _$name(Siamese v) => v.name;
+  static const Field<Siamese, String?> _f$name = Field('name', _$name);
 
   @override
   final Map<Symbol, Field<Siamese, dynamic>> fields = const {
-    #name: Field<Siamese, String?>('name', _$name),
+    #name: _f$name,
   };
   @override
   final bool ignoreNull = true;
@@ -171,7 +174,7 @@ class SiameseMapper extends SubClassMapperBase<Siamese> {
   late final ClassMapperBase superMapper = CatMapper.ensureInitialized();
 
   static Siamese _instantiate(DecodingData data) {
-    return Siamese(data.get(#name));
+    return Siamese(data.dec(_f$name));
   }
 
   @override
@@ -272,10 +275,11 @@ class DogMapper extends SubClassMapperBase<Dog> {
   final String id = 'Dog';
 
   static String? _$name(Dog v) => v.name;
+  static const Field<Dog, String?> _f$name = Field('name', _$name);
 
   @override
   final Map<Symbol, Field<Dog, dynamic>> fields = const {
-    #name: Field<Dog, String?>('name', _$name),
+    #name: _f$name,
   };
   @override
   final bool ignoreNull = true;
@@ -288,7 +292,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Dog _instantiate(DecodingData data) {
-    return Dog(data.get(#name));
+    return Dog(data.dec(_f$name));
   }
 
   @override
@@ -387,10 +391,11 @@ class ShepherdMapper extends SubClassMapperBase<Shepherd> {
   final String id = 'Shepherd';
 
   static String? _$name(Shepherd v) => v.name;
+  static const Field<Shepherd, String?> _f$name = Field('name', _$name);
 
   @override
   final Map<Symbol, Field<Shepherd, dynamic>> fields = const {
-    #name: Field<Shepherd, String?>('name', _$name),
+    #name: _f$name,
   };
   @override
   final bool ignoreNull = true;
@@ -403,7 +408,7 @@ class ShepherdMapper extends SubClassMapperBase<Shepherd> {
   late final ClassMapperBase superMapper = DogMapper.ensureInitialized();
 
   static Shepherd _instantiate(DecodingData data) {
-    return Shepherd(data.get(#name));
+    return Shepherd(data.dec(_f$name));
   }
 
   @override
@@ -504,14 +509,15 @@ class HumanMapper extends ClassMapperBase<Human> {
   final String id = 'Human';
 
   static Cat _$cat(Human v) => v.cat;
+  static const Field<Human, Cat> _f$cat = Field('cat', _$cat);
 
   @override
   final Map<Symbol, Field<Human, dynamic>> fields = const {
-    #cat: Field<Human, Cat>('cat', _$cat),
+    #cat: _f$cat,
   };
 
   static Human _instantiate(DecodingData data) {
-    return Human(data.get(#cat));
+    return Human(data.dec(_f$cat));
   }
 
   @override

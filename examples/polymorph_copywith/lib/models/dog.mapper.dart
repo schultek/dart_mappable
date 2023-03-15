@@ -26,14 +26,17 @@ class DogMapper extends SubClassMapperBase<Dog> {
   final String id = 'Dog';
 
   static String _$name(Dog v) => v.name;
+  static const Field<Dog, String> _f$name = Field('name', _$name);
   static int _$age(Dog v) => v.age;
+  static const Field<Dog, int> _f$age = Field('age', _$age);
   static Person _$owner(Dog v) => v.owner;
+  static const Field<Dog, Person> _f$owner = Field('owner', _$owner);
 
   @override
   final Map<Symbol, Field<Dog, dynamic>> fields = const {
-    #name: Field<Dog, String>('name', _$name),
-    #age: Field<Dog, int>('age', _$age),
-    #owner: Field<Dog, Person>('owner', _$owner),
+    #name: _f$name,
+    #age: _f$age,
+    #owner: _f$owner,
   };
 
   @override
@@ -44,7 +47,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static Dog _instantiate(DecodingData data) {
-    return Dog(data.get(#name), data.get(#age), data.get(#owner));
+    return Dog(data.dec(_f$name), data.dec(_f$age), data.dec(_f$owner));
   }
 
   @override
