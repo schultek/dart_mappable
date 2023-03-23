@@ -153,7 +153,7 @@ typedef SerializableEncoder2<T> = Object Function(
     Function(T);
 
 class SerializableMapper<T extends Object, V extends Object>
-    extends MapperBase<T> {
+    extends MapperBase<T> with PrimitiveMethodsMixin<T> {
   late T Function(V value, DecodingContext context) _decoder;
   late Object Function(T value, EncodingContext context) _encoder;
 
