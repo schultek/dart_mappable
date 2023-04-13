@@ -1,3 +1,7 @@
+# 3.0.0-dev.2
+
+- Performance improvements & bug fixes
+
 # 3.0.0-dev.1
 
 - Bug fixes
