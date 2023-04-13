@@ -1,0 +1,8 @@
+name: dart_mappable_workspace
+publish_to: none
+
+environment:
+  sdk: '>=2.17.0 <3.0.0'
+
+dev_dependencies:
+  melos: ^3.0.1

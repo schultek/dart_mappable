@@ -128,7 +128,9 @@ class DecodingContext extends MappingContext {
 }
 
 class EncodingContext extends MappingContext {
-  EncodingContext({super.container, super.args});
+  EncodingContext({super.container, this.options, super.args});
+
+  final EncodingOptions? options;
 }
 
 typedef TypeFactory0 = Object? Function(Object? Function<V>() f);

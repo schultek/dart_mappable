@@ -13,6 +13,8 @@ export 'src/mapper_container.dart';
 export 'src/mapper_exception.dart';
 export 'src/mappers/class_mapper.dart';
 export 'src/mappers/default_mappers.dart';
+export 'src/mappers/iterable_mapper.dart';
+export 'src/mappers/map_mapper.dart';
 export 'src/mappers/mapper_base.dart';
 export 'src/mappers/mapper_mixins.dart';
 export 'src/mappers/simple_mapper.dart';

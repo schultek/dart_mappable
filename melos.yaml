@@ -11,7 +11,7 @@ command:
 scripts:
   test:
     run: melos exec -- 'dart test'
-    select-package:
+    packageFilters:
       scope:
         - dart_mappable
         - package_comparison
@@ -19,11 +19,11 @@ scripts:
     run: |
       melos exec -- 'dart test --coverage=coverage'
       melos exec -- 'dart pub global run coverage:format_coverage --check-ignore --packages=.dart_tool/package_config.json --report-on=lib --lcov -o "$MELOS_ROOT_PATH/coverage/lcov.info" -i ./coverage'
-    select-package:
+    packageFilters:
       scope: dart_mappable
   build:
     run: melos exec -- 'dart run build_runner build --delete-conflicting-outputs'
-    select-package:
+    packageFilters:
       scope:
   format:
     run: melos exec -- 'dart format . --set-exit-if-changed'

@@ -143,11 +143,11 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
     var result = _decode(value, context);
 
     if (hook != null) {
-      result = hook!.afterDecode(value) as T;
+      result = hook!.afterDecode(result) as T;
     }
 
     if (superHook != null && !context.inherited) {
-      result = superHook!.afterDecode(value) as T;
+      result = superHook!.afterDecode(result) as T;
     }
 
     return result;
@@ -269,11 +269,14 @@ class Field<T extends Object, V> {
 
   dynamic encode(T value, EncodingContext context) {
     var container = context.container;
+    var options = context.options;
     if (arg == null) {
-      return container.$enc<V>(get(value), name, hook);
+      return container.$enc<V>(get(value), name, options, hook);
     } else {
       return context.callWith(
-          arg!, <U>() => container.$enc<U>(get(value) as U, name, hook));
+        arg!,
+        <U>() => container.$enc<U>(get(value) as U, name, options, hook),
+      );
     }
   }
 

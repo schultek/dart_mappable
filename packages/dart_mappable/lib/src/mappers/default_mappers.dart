@@ -1,6 +1,3 @@
-import 'package:collection/collection.dart';
-import 'package:type_plus/type_plus.dart';
-
 import '../mapper_exception.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
@@ -57,89 +54,6 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
   String encode(DateTime self) {
     return self.toUtc().toIso8601String();
   }
-}
-
-/// {@category Custom Mappers}
-class IterableMapper<I extends Iterable> extends MapperBase<I>
-    with MapperEqualityMixin<I> {
-  IterableMapper(this.fromIterable, this.typeFactory);
-
-  final Iterable<U> Function<U>(Iterable<U> iterable) fromIterable;
-
-  @override
-  final Function typeFactory;
-
-  @override
-  bool includeTypeId<V>(v) => false;
-
-  late Iterable _value;
-  late DecodingContext _context;
-
-  @override
-  I decoder(Object value, DecodingContext context) {
-    _value = value.checked<Iterable>();
-    _context = context;
-    return _context.args.single.provideTo<Iterable>(_decode) as I;
-  }
-
-  Iterable<T> _decode<T>() {
-    var o = _context;
-    return fromIterable(_value.map((v) {
-      return o.container.$dec<T>(v, 'item');
-    }));
-  }
-
-  @override
-  Object encoder(I value, EncodingContext context) {
-    return context.call1(<T>(o) =>
-        value.map((v) => o.container.$enc<T>(v as T, 'item')).toList());
-  }
-
-  @override
-  Equality equality(Equality child) => IterableEquality(child);
-
-  @override
-  String stringify(I value, MappingContext context) =>
-      '(${value.map((e) => context.container.asString(e)).join(', ')})';
-}
-
-/// {@category Custom Mappers}
-class MapMapper<M extends Map> extends MapperBase<M>
-    with MapperEqualityMixin<M> {
-  MapMapper(this.fromMap, this.typeFactory);
-
-  Map<K, V> Function<K, V>(Map<K, V> map) fromMap;
-  @override
-  final Function typeFactory;
-
-  @override
-  bool includeTypeId<V>(v) => false;
-
-  @override
-  M decoder(Object value, DecodingContext context) {
-    return context.call2(<K, V>(o) {
-      return fromMap(value.checked<Map>().map((key, value) {
-        return MapEntry(o.container.$dec<K>(key, 'key'),
-            o.container.$dec<V>(value, 'value'));
-      })) as M;
-    });
-  }
-
-  @override
-  Object encoder(M value, EncodingContext context) {
-    return context.call2(<K, V>(o) => value.map((key, value) {
-          return MapEntry(o.container.toValue<K>(key as K),
-              o.container.toValue<V>(value as V));
-        }));
-  }
-
-  @override
-  Equality equality(Equality child) => MapEquality(keys: child, values: child);
-
-  @override
-  String stringify(M value, MappingContext context) =>
-      '{${value.entries.map((e) => '${context.container.asString(e.key)}: '
-          '${context.container.asString(e.value)}').join(', ')}}';
 }
 
 typedef SerializableDecoder1<T, V> = T Function<A>(V, A Function(Object?));

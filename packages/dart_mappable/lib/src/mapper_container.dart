@@ -8,10 +8,13 @@ import 'package:type_plus/type_plus.dart' hide typeOf;
 
 import '../dart_mappable.dart';
 
+/// {@category Generics}
+/// {@category Mapper Container}
 class EncodingOptions {
-  EncodingOptions({this.includeTypeId});
+  EncodingOptions({this.includeTypeId, this.inheritOptions = true});
 
   final bool? includeTypeId;
+  final bool inheritOptions;
 }
 
 /// {@category Generics}
@@ -242,13 +245,11 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     if (mapper != null) {
       try {
         Type type = T;
-        String? typeId;
 
         var includeTypeId = options?.includeTypeId;
         includeTypeId ??= mapper.includeTypeId<T>(value);
 
         if (includeTypeId) {
-          typeId = value.runtimeType.id;
           type = value.runtimeType;
         }
 
@@ -260,10 +261,16 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
         }
 
         var result = mapper.encoder(
-            value, EncodingContext(container: this, args: typeArgs.toList()));
+          value,
+          EncodingContext(
+            container: this,
+            options: options?.inheritOptions ?? false ? options : null,
+            args: typeArgs.toList(),
+          ),
+        );
 
-        if (result is Map<String, dynamic> && typeId != null) {
-          result['__type'] = typeId;
+        if (includeTypeId && result is Map<String, dynamic>) {
+          result['__type'] = value.runtimeType.id;
         }
 
         return result;

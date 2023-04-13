@@ -9,7 +9,7 @@ extension GuardedUtils on MapperContainer {
     String key, [
     MappingHook? hook,
   ]) {
-    decode(value) {
+    T decode(value) {
       if (value != null) {
         return fromValue<T>(value);
       } else if (value is T) {
@@ -32,12 +32,17 @@ extension GuardedUtils on MapperContainer {
     }
   }
 
-  dynamic $enc<T>(T value, String key, [MappingHook? hook]) {
+  dynamic $enc<T>(T value, String key,
+      [EncodingOptions? options, MappingHook? hook]) {
+    dynamic encode(T value) {
+      return toValue<T>(value, options);
+    }
+
     try {
       if (hook != null) {
-        return hook.wrapEncode(value, toValue<T>, this);
+        return hook.wrapEncode(value, encode, this);
       }
-      return toValue<T>(value);
+      return encode(value);
     } catch (e, stacktrace) {
       Error.throwWithStackTrace(
         MapperException.chain(MapperMethod.encode, '.$key', e),
