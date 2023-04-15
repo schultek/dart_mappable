@@ -1,3 +1,7 @@
+# 3.0.0-dev.3
+
+- Fixed bug with null in encoding hook
+
 # 3.0.0-dev.2
 
 - Performance improvements & bug fixes
