@@ -4,6 +4,7 @@ import 'mapper_base.dart';
 import 'mapper_mixins.dart';
 import 'simple_mapper.dart';
 
+/// The mapper implementation used for all primitive types.
 class PrimitiveMapper<T extends Object> extends MapperBase<T>
     with PrimitiveMethodsMixin<T> {
   const PrimitiveMapper([T Function(Object value)? decoder, this.exactType])
@@ -31,11 +32,17 @@ class PrimitiveMapper<T extends Object> extends MapperBase<T>
   }
 }
 
+/// The mapper interface used for all concrete enum mappers.
+///
 /// {@category Custom Mappers}
 abstract class EnumMapper<T extends Enum> extends SimpleMapper<T> {
   const EnumMapper();
 }
 
+/// A mapper that encodes a [DateTime] object into a formatted iso string and
+/// vice versa.
+///
+/// It can also decode numbers in unix milliseconds time.
 class DateTimeMapper extends SimpleMapper<DateTime> {
   const DateTimeMapper();
 
@@ -56,16 +63,25 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
   }
 }
 
+/// The decoding function of a serializable class (`fromJson`) with one generic type parameter.
 typedef SerializableDecoder1<T, V> = T Function<A>(V, A Function(Object?));
+
+/// The encoding function of a serializable class (`toJson`) with one generic type parameter.
 typedef SerializableEncoder1<T> = Object Function(Object? Function(dynamic))
     Function(T);
 
+/// The decoding function of a serializable class (`fromJson`) with two generic type parameters.
 typedef SerializableDecoder2<T, V> = T Function<A, B>(
     V, A Function(Object?), B Function(Object?));
+
+/// The encoding function of a serializable class (`toJson`) with two generic type parameters.
 typedef SerializableEncoder2<T> = Object Function(
         Object? Function(dynamic), Object? Function(dynamic))
     Function(T);
 
+/// A mapper for handling classes that comply with the json_serializable format.
+///
+/// This mapper expects a `fromJson` and `toJson` method on a given class.
 class SerializableMapper<T extends Object, V extends Object>
     extends MapperBase<T> with PrimitiveMethodsMixin<T> {
   late T Function(V value, DecodingContext context) _decoder;
@@ -89,10 +105,10 @@ class SerializableMapper<T extends Object, V extends Object>
     required SerializableEncoder1<T> encode,
     required TypeFactory1 type,
   }) {
-    _decoder =
-        ((v, c) => c.call1(<A>(c) => decode<A>(v, c.container.fromValue<A>)));
-    _encoder = ((v, c) =>
-        c.call1(<A>(c) => encode(v)((o) => c.container.toValue<A>(o as A)))!);
+    _decoder = ((v, c) =>
+        c.callWith1(<A>(_) => decode<A>(v, c.container.fromValue<A>)));
+    _encoder = ((v, c) => c.callWith1(
+        <A>(_) => encode(v)((o) => c.container.toValue<A>(o as A)))!);
     typeFactory = type;
   }
 
@@ -101,9 +117,9 @@ class SerializableMapper<T extends Object, V extends Object>
     required SerializableEncoder2<T> encode,
     required TypeFactory2 type,
   }) {
-    _decoder = ((v, c) => c.call2(<A, B>(c) =>
+    _decoder = ((v, c) => c.callWith2(<A, B>(_) =>
         decode<A, B>(v, c.container.fromValue<A>, c.container.fromValue<B>)));
-    _encoder = ((v, c) => c.call2(<A, B>(c) => encode(v)(
+    _encoder = ((v, c) => c.callWith2(<A, B>(_) => encode(v)(
         (o) => c.container.toValue<A>(o as A),
         (o) => c.container.toValue<B>(o as B))));
     typeFactory = type;

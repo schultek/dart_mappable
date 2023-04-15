@@ -21,7 +21,7 @@ extension GuardedUtils on MapperContainer {
 
     try {
       if (hook != null) {
-        return hook.wrapDecode(value, decode, this);
+        return hook.wrapDecode(value, decode);
       }
       return decode(value);
     } catch (e, stacktrace) {
@@ -40,7 +40,7 @@ extension GuardedUtils on MapperContainer {
 
     try {
       if (hook != null) {
-        return hook.wrapEncode(value, encode, this);
+        return hook.wrapEncode(value, encode);
       }
       return encode(value);
     } catch (e, stacktrace) {
@@ -49,6 +49,20 @@ extension GuardedUtils on MapperContainer {
         stacktrace,
       );
     }
+  }
+}
+
+extension on MappingHook {
+  T wrapDecode<T>(Object? value, T Function(Object? value) fn) {
+    var v = beforeDecode(value);
+    if (v is! T) v = fn(v);
+    return afterDecode(v) as T;
+  }
+
+  Object? wrapEncode<T>(T value, Object? Function(T value) fn) {
+    var v = beforeEncode(value);
+    if (v is T) v = fn(v);
+    return afterEncode(v);
   }
 }
 

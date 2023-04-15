@@ -36,12 +36,12 @@ abstract class SimpleMapper1<T extends Object> extends _SimpleMapperBase<T> {
 
   @override
   T _decode(Object value, DecodingContext context) {
-    return context.callWith1(decode, (_) => value);
+    return context.callWith1(decode, value);
   }
 
   @override
   Object? _encode(T value, EncodingContext context) {
-    return context.callWith1(encode, (_) => value);
+    return context.callWith1(encode, value);
   }
 }
 
@@ -59,12 +59,12 @@ abstract class SimpleMapper2<T extends Object> extends _SimpleMapperBase<T> {
 
   @override
   T _decode(Object value, DecodingContext context) {
-    return context.callWith2(decode, (_) => value);
+    return context.callWith2(decode, value);
   }
 
   @override
   Object? _encode(T value, EncodingContext context) {
-    return context.callWith2(encode, (_) => value);
+    return context.callWith2(encode, value);
   }
 }
 

@@ -49,18 +49,6 @@ typedef Decoder<V extends Object?, T> = T Function(DecodingContext context);
 typedef Encoder<R, V extends Object> = R Function(EncodingContext context);
 
 extension MappingOptionsCall<O extends MappingContext> on O {
-  R call1<R>(R Function<A>(O) fn) {
-    return callWith1(fn, _$identity);
-  }
-
-  R call2<R>(R Function<A, B>(O) fn) {
-    return callWith2(fn, _$identity);
-  }
-
-  R call3<R>(R Function<A, B, C>(O) fn) {
-    return callWith3(fn, _$identity);
-  }
-
   R callWith<R, U>(Function fn, U value) {
     if (args.isEmpty) {
       return fn(value) as R;
@@ -77,24 +65,22 @@ extension MappingOptionsCall<O extends MappingContext> on O {
     }
   }
 
-  R callWith1<R, U>(R Function<A>(U) fn, U Function(O) cb) {
+  R callWith1<R, U>(R Function<A>(U) fn, [U? value]) {
     assert(args.length == 1);
-    return args.first.provideTo(<A>() => fn<A>(cb(this)));
+    return args.first.provideTo(<A>() => fn<A>(value as U));
   }
 
-  R callWith2<R, U>(R Function<A, B>(U) fn, U Function(O) cb) {
+  R callWith2<R, U>(R Function<A, B>(U) fn, [U? value]) {
     assert(args.length == 2);
     return args.first
-        .provideTo(<A>() => args[1].provideTo(<B>() => fn<A, B>(cb(this))));
+        .provideTo(<A>() => args[1].provideTo(<B>() => fn<A, B>(value as U)));
   }
 
-  R callWith3<R, U>(R Function<A, B, C>(U) fn, U Function(O) cb) {
+  R callWith3<R, U>(R Function<A, B, C>(U) fn, [U? value]) {
     assert(args.length == 3);
-    return args.first.provideTo(<A>() => args[1]
-        .provideTo(<B>() => args[2].provideTo(<C>() => fn<A, B, C>(cb(this)))));
+    return args.first.provideTo(<A>() => args[1].provideTo(
+        <B>() => args[2].provideTo(<C>() => fn<A, B, C>(value as U))));
   }
-
-  T _$identity<T>(T value) => value;
 }
 
 class MappingContext {

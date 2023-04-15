@@ -4,11 +4,13 @@ import '../annotations.dart';
 ///
 /// {@category Mapping Hooks}
 class ChainedHook extends MappingHook {
-  /// The provided [MappingHook].
+  const ChainedHook(this.hooks);
+
+  /// The provided [MappingHook]s.
+  ///
   /// These will be applied for both encoding and serialization in the following order:
   /// `first.beforeDecode -> second.beforeDecode -> ... -> decode -> ... -> second.afterDecode -> first.afterDecode`.
   final List<MappingHook> hooks;
-  const ChainedHook(this.hooks);
 
   @override
   dynamic beforeDecode(dynamic value) {

@@ -30,7 +30,7 @@ class MappableOptions {
         ignoreNull = options['ignoreNull'] as bool?,
         discriminatorKey = options['discriminatorKey'] as String?,
         generateMethods =
-            GenerateMethods.parse(toList(options['generateMethods'])),
+            parseGenerateMethods(toList(options['generateMethods'])),
         initializerScope = null,
         lineLength =
             options['lineLength'] as int? ?? options['line_length'] as int?;
@@ -62,4 +62,32 @@ class MappableOptions {
               .values[initScope?.getField('index')?.toIntValue() ?? 0],
     );
   }
+}
+
+int? parseGenerateMethods(List<String>? flags) {
+  if (flags == null) return null;
+  int joinedFlag = 0;
+  for (var flag in flags) {
+    switch (flag) {
+      case 'decode':
+        joinedFlag |= GenerateMethods.decode;
+        break;
+      case 'encode':
+        joinedFlag |= GenerateMethods.encode;
+        break;
+      case 'stringify':
+        joinedFlag |= GenerateMethods.stringify;
+        break;
+      case 'equals':
+        joinedFlag |= GenerateMethods.equals;
+        break;
+      case 'copy':
+        joinedFlag |= GenerateMethods.copy;
+        break;
+      case 'all':
+        joinedFlag |= GenerateMethods.all;
+        break;
+    }
+  }
+  return joinedFlag;
 }
