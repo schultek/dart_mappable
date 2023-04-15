@@ -250,7 +250,7 @@ abstract class MappingHook {
   Object? wrapEncode<T>(
       T value, Object? Function(T value) fn, MapperContainer container) {
     var v = beforeEncode(value);
-    if (v is T) v = fn(v) as Object;
+    if (v is T) v = fn(v);
     return afterEncode(v);
   }
 }
