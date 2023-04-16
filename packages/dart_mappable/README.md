@@ -234,15 +234,15 @@ The generated `<ClassName>Mappable` mixin will come with the following methods:
 See the full documentation [here](https://pub.dev/documentation/dart_mappable/latest/topics/Introduction-topic.html)
 or jump directly to the topic you are looking for:
 
-- [**Models**](https://pub.dev/documentation/dart_mappable/latest/topics/Models-topic.html)
-- [**Enums**](https://pub.dev/documentation/dart_mappable/latest/topics/Enums-topic.html)
-- [**Configuration**](https://pub.dev/documentation/dart_mappable/latest/topics/Configuration-topic.html)
-- [**Copy-With**](https://pub.dev/documentation/dart_mappable/latest/topics/Copy-With-topic.html)
-- [**Polymorphism**](https://pub.dev/documentation/dart_mappable/latest/topics/Polymorphism-topic.html)
-- [**Generics**](https://pub.dev/documentation/dart_mappable/latest/topics/Generics-topic.html)
-- [**Mapping Hooks**](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html)
-- [**Custom Mappers**](https://pub.dev/documentation/dart_mappable/latest/topics/Custom%20Mappers-topic.html)
-- [**Mapper Container**](https://pub.dev/documentation/dart_mappable/latest/topics/Mapper%20Container-topic.html)
+- [**Models**](https://pub.dev/documentation/dart_mappable/latest/topics/Models-topic.html) show you how to structure and annotate your data models.
+- [**Enums**](https://pub.dev/documentation/dart_mappable/latest/topics/Enums-topic.html) show you how to structure and annotate your enums.
+- [**Configuration**](https://pub.dev/documentation/dart_mappable/latest/topics/Configuration-topic.html) goes into the different configuration options you have.
+- [**Copy-With**](https://pub.dev/documentation/dart_mappable/latest/topics/Copy-With-topic.html) describes the copy-with functionalities and how to use them.
+- [**Polymorphism**](https://pub.dev/documentation/dart_mappable/latest/topics/Polymorphism-topic.html) shows how to do polymorphic classes and inheritance.
+- [**Generics**](https://pub.dev/documentation/dart_mappable/latest/topics/Generics-topic.html) explain generic decoding and how to use it.
+- [**Mapping Hooks**](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html) shows how to use hooks to customize your de- and encoding process. 
+- [**Custom Mappers**](https://pub.dev/documentation/dart_mappable/latest/topics/Custom%20Mappers-topic.html) explains how to set up and use (non-generated) custom mappers.
+- [**Mapper Container**](https://pub.dev/documentation/dart_mappable/latest/topics/Mapper%20Container-topic.html) describes the inner workings of mapper containers in more detail.
 
 ## Compatibility
 

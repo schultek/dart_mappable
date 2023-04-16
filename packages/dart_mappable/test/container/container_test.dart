@@ -18,6 +18,15 @@ void main() {
         )),
       );
 
+      expect(
+        () => container.toValue<int>(2),
+        throwsMapperException(MapperException.chain(
+          MapperMethod.encode,
+          '[2]',
+          MapperException.unknownType(int),
+        )),
+      );
+
       MapperContainer.defaults.use(mapper);
 
       expect(container.fromValue<int>('2'), equals(2));
@@ -27,7 +36,7 @@ void main() {
 
       expect(container.fromValue<int>('2'), 20);
 
-      expect(container.getAll(), isEmpty);
+      expect(container.getAll(), hasLength(1));
     });
 
     test('link containers', () {
@@ -52,6 +61,8 @@ void main() {
       containerA.link(containerB);
 
       expect(containerA.fromValue<int>('2'), equals(2));
+
+      MapperContainer.defaults.use(mapper);
     });
 
     test('iterables', () {
@@ -72,6 +83,22 @@ void main() {
         throwsMapperException(
             MapperException.incorrectEncoding(int, 'Iterable', int)),
       );
+    });
+
+    test('equals and tostring', () {
+      var container = MapperContainer();
+
+      var mapper = MapperContainer.defaults.unuse<int>()!;
+
+      expect(container.isEqual(null, 2), isFalse);
+      expect(container.hash(null), equals(null.hashCode));
+      expect(container.asString(null), equals(null.toString()));
+
+      expect(container.isEqual(2, 2), isTrue);
+      expect(container.hash(2), equals(2.hashCode));
+      expect(container.asString(2), equals(2.toString()));
+
+      MapperContainer.defaults.use(mapper);
     });
   });
 }

@@ -117,14 +117,36 @@ void main() {
     });
 
     test('Generic type encoding', () {
-      var jsonA = MapperContainer.globals
-          .toJson(SingleSetting<int>(properties: [2, 3]));
-      expect(jsonA, equals('{"properties":[2,3]}'));
+      SettingsMapper.ensureInitialized();
 
-      var jsonB = MapperContainer.globals
-          .toJson<dynamic>(SingleSetting<int>(properties: [1, 4]));
+      var dataA = MapperContainer.globals
+          .toValue(SingleSetting<int>(properties: [2, 3]));
       expect(
-          jsonB, equals('{"properties":[1,4],"__type":"SingleSetting<int>"}'));
+        dataA,
+        equals({
+          'properties': [2, 3]
+        }),
+      );
+
+      var dataB = MapperContainer.globals
+          .toValue<dynamic>(SingleSetting<int>(properties: [1, 4]));
+      expect(
+        dataB,
+        equals({
+          'properties': [1, 4],
+          '__type': 'SingleSetting<int>'
+        }),
+      );
+
+      var dataC = MapperContainer.globals.toValue<dynamic>(
+          SingleSetting<int>(properties: [1, 4]),
+          EncodingOptions(includeTypeId: false));
+      expect(
+        dataC,
+        equals({
+          'properties': [1, 4],
+        }),
+      );
     });
 
     test('Unknown type decoding', () {
