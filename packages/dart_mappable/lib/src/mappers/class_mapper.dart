@@ -1,20 +1,19 @@
 import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 import 'package:type_plus/type_plus.dart';
 
 import '../annotations.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
 
+/// The decoding data passed to a class mappers `instantiate` method.
+///
+/// This should not be used in non-generated code.
 class DecodingData<T extends Object> {
-  DecodingData(this.value, this.context, this.mapper);
+  DecodingData(this.value, this.context);
 
   final Map<String, dynamic> value;
   final DecodingContext context;
-  final ClassMapperBase<T> mapper;
-
-  V get<V>(Symbol name) {
-    return mapper.fields[name]!.decode(value, context);
-  }
 
   V dec<V>(Field f) {
     return f.decode(value, context);
@@ -79,23 +78,42 @@ abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
   }
 }
 
+/// The mapper interface that all generated class mappers extend.
+///
+/// Class mappers will be generated for any class annotated with `@MappableClass()`.
 abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
+  /// The set of fields this class defines.
   Map<Symbol, Field<T, dynamic>> get fields;
 
+  /// Whether to ignore null values when encoding the fields of this class.
   bool get ignoreNull => false;
+
+  /// The optional mapping hook defined for this class.
   MappingHook? get hook => null;
+
+  /// The optional mapping hook defined for the superclass of this class.
   MappingHook? get superHook => null;
 
+  /// The fallback subclass mapper for this class.
   SubClassMapperBase<T>? _defaultSubMapper;
+
+  /// The set of subclass mappers for this class.
   final Set<SubClassMapperBase<T>> _subMappers = {};
 
   @override
-  bool includeTypeId<V>(v) => MapperBase.matchesStaticType<V>(v);
+  bool includeTypeId<V>(v) => MapperBase.checkStaticType<V>(v);
 
+  /// This will inherit the decoding context when giving over decoding to a
+  /// subclass.
+  ///
+  /// Mappers may override this method to modify the type arguments used for
+  /// decoding.
   DecodingContext inherit(DecodingContext context) {
     return context.inherit();
   }
 
+  /// Adds a subclass mapper to this mapper.
+  @protected
   void addSubMapper(SubClassMapperBase<T> mapper) {
     assert(identical(mapper.superMapper, this));
     if (identical(mapper.discriminatorValue, MappingFlags.useAsDefault)) {
@@ -115,11 +133,22 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
     return m;
   }
 
+  /// The set of class members this class defines.
+  ///
+  /// This excludes constructor parameters that are not assigned to a field.
+  /// See [FieldMode] for more.
   late final List<Field<T, dynamic>> _members =
       fields.values.where((f) => f.mode != FieldMode.param).toList();
+
+  /// The set of constructor parameters of this class.
+  ///
+  /// See [FieldMode] for more.
   late final List<Field<T, dynamic>> _params =
       fields.values.where((f) => f.mode != FieldMode.member).toList();
 
+  /// The instantiate method to create a new instance of this class.
+  ///
+  /// Must be implemented by the generated mapper.
   Function get instantiate;
 
   @override
@@ -166,7 +195,7 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
       return _defaultSubMapper!
           .decoder(map, _defaultSubMapper!.inherit(context));
     }
-    var d = DecodingData<T>(map, context, this);
+    var d = DecodingData<T>(map, context);
     if (context.args.isEmpty) {
       return instantiate(d) as T;
     } else {
@@ -236,20 +265,42 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
   }
 }
 
+/// The mode of a field defined in a class.
 enum FieldMode {
-  field,
+  /// A field that is only defined as a constructor parameter.
+  param,
+
+  /// A field that is only defined as a class member (e.g. getter).
   member,
-  param;
+
+  /// A field that is both a constructor parameter and class member.
+  field;
 }
 
+/// A field defined in a class that is relevant for its mapping.
 class Field<T extends Object, V> {
+  /// The name of the field.
   final String name;
+
+  /// The getter returns the fields value for a given instance.
   final V Function(T) getter;
+
+  /// The mapping key of the field, or the name by default.
   final String key;
+
+  /// The mode of the field.
   final FieldMode mode;
+
+  /// An optional type factory when this field is of a generic type.
   final Function? arg;
+
+  /// Whether this field is optional in the class constructor.
   final bool opt;
+
+  /// An optional default value for this field.
   final V? def;
+
+  /// The optional mapping hook for this field.
   final MappingHook? hook;
 
   const Field(

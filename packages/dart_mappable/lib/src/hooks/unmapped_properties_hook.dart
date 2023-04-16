@@ -6,10 +6,11 @@ import '../annotations.dart';
 ///
 /// {@category Mapping Hooks}
 class UnmappedPropertiesHook extends MappingHook {
-  /// The key of the target property of your class.
-  /// Needs to be specified in the correct case-style
-  final String key;
   const UnmappedPropertiesHook(this.key);
+
+  /// The key of the target property of your class.
+  /// Needs to be specified in the correct case-style.
+  final String key;
 
   @override
   dynamic beforeDecode(dynamic value) {

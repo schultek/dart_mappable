@@ -5,6 +5,8 @@ import '../mapper_utils.dart';
 import 'mapper_base.dart';
 import 'mapper_mixins.dart';
 
+/// The default mapper for iterables like [List] and [Set].
+///
 /// {@category Custom Mappers}
 class IterableMapper<I extends Iterable> extends MapperBase<I>
     with MapperEqualityMixin<I> {

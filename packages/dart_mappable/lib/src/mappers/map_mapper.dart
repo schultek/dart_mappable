@@ -5,6 +5,8 @@ import '../mapper_utils.dart';
 import 'mapper_base.dart';
 import 'mapper_mixins.dart';
 
+/// The default mapper for [Map]s.
+///
 /// {@category Custom Mappers}
 class MapMapper<M extends Map> extends MapperBase<M>
     with MapperEqualityMixin<M> {

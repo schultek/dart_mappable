@@ -2,7 +2,12 @@ import '../mapper_container.dart';
 import 'mapper_base.dart';
 import 'mapper_mixins.dart';
 
-/// Interface to define custom mappers.
+/// An interface to define a custom mapper.
+///
+/// Implementation should extend this interface and implement the [decode] and
+/// [encode] methods.
+/// For a generic type with one or two generic type arguments, extend the
+/// [SimpleMapper1] or [SimpleMapper2] interface instead, respectively.
 ///
 /// {@category Custom Mappers}
 abstract class SimpleMapper<T extends Object> extends _SimpleMapperBase<T> {
@@ -22,7 +27,7 @@ abstract class SimpleMapper<T extends Object> extends _SimpleMapperBase<T> {
   }
 }
 
-/// Interface to define custom mappers for generic types with 1 argument.
+/// An interface to define custom mappers for generic types with 1 argument.
 ///
 /// {@category Custom Mappers}
 abstract class SimpleMapper1<T extends Object> extends _SimpleMapperBase<T> {
@@ -45,7 +50,7 @@ abstract class SimpleMapper1<T extends Object> extends _SimpleMapperBase<T> {
   }
 }
 
-/// Interface to define custom mappers for generic types with 2 arguments.
+/// An interface to define custom mappers for generic types with 2 arguments.
 ///
 /// {@category Custom Mappers}
 abstract class SimpleMapper2<T extends Object> extends _SimpleMapperBase<T> {

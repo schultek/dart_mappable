@@ -70,6 +70,9 @@ typedef SerializableDecoder1<T, V> = T Function<A>(V, A Function(Object?));
 typedef SerializableEncoder1<T> = Object Function(Object? Function(dynamic))
     Function(T);
 
+/// The type factory definition for a generic type with one type argument.
+typedef TypeFactory1 = Object? Function<A>(Object? Function<V>() f);
+
 /// The decoding function of a serializable class (`fromJson`) with two generic type parameters.
 typedef SerializableDecoder2<T, V> = T Function<A, B>(
     V, A Function(Object?), B Function(Object?));
@@ -78,6 +81,9 @@ typedef SerializableDecoder2<T, V> = T Function<A, B>(
 typedef SerializableEncoder2<T> = Object Function(
         Object? Function(dynamic), Object? Function(dynamic))
     Function(T);
+
+/// The type factory definition for a generic type with two type arguments.
+typedef TypeFactory2 = Object? Function<A, B>(Object? Function<V>() f);
 
 /// A mapper for handling classes that comply with the json_serializable format.
 ///
@@ -91,7 +97,7 @@ class SerializableMapper<T extends Object, V extends Object>
   late Function typeFactory;
 
   @override
-  bool includeTypeId<W>(v) => MapperBase.matchesStaticType<W>(v);
+  bool includeTypeId<W>(v) => MapperBase.checkStaticType<W>(v);
 
   SerializableMapper({
     required T Function(V) decode,

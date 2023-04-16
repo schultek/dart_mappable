@@ -8,15 +8,35 @@ import 'package:type_plus/type_plus.dart' hide typeOf;
 
 import '../dart_mappable.dart';
 
+/// Additional options to be passed to [MapperContainer.toValue].
+///
 /// {@category Generics}
 /// {@category Mapper Container}
 class EncodingOptions {
   EncodingOptions({this.includeTypeId, this.inheritOptions = true});
 
+  /// Whether to include the type id of the encoding object.
+  ///
+  /// If set, this adds a '__type' property with the specific runtime type
+  /// of the encoding object.
+  /// If left untouched, the container automatically decides whether to include
+  /// the type id based on the static and dynamic type of an object.
   final bool? includeTypeId;
+
+  /// Whether to inherit this options for nested calls to [MapperContainer.toValue],
+  /// like for encoding fields of a class.
   final bool inheritOptions;
 }
 
+/// The mapper container manages a set of mappers and is the main interface for
+/// accessing mapping functionalities.
+///
+/// `MapperContainer`s are the backbone of `dart_mappable`. A `MapperContainer`s
+/// job is to lookup the correct mapper for a given type or value and call its
+/// respective method.
+/// To find the mapper for a given type, the container first looks at its own
+/// **set of mappers** and when there is no match it refers to its **linked containers**.
+///
 /// {@category Generics}
 /// {@category Mapper Container}
 @sealed
@@ -25,9 +45,13 @@ abstract class MapperContainer {
     Set<MapperBase>? mappers,
     Set<MapperContainer>? linked,
     Map<String, Function>? types,
-  }) = MapperContainerBase;
+  }) = _MapperContainerBase;
 
-  static final MapperContainer defaults = MapperContainerBase._({
+  /// A container that holds the standard set of mappers for all core types,
+  /// including all primitives, List, Set, Map and DateTime.
+  ///
+  /// All other container will automatically be linked to this container.
+  static final MapperContainer defaults = _MapperContainerBase._({
     PrimitiveMapper<Object>((v) => v, dynamic),
     PrimitiveMapper<Object>((v) => v, Object),
     PrimitiveMapper<String>((v) => v.toString()),
@@ -41,37 +65,81 @@ abstract class MapperContainer {
     MapMapper<Map>(<K, V>(map) => map, <K, V>(f) => f<Map<K, V>>()),
   });
 
-  static final MapperContainer globals = MapperContainerBase();
+  /// A container that holds all globally registered mappers.
+  ///
+  /// This container does not define any mappers itself. Rather each generated
+  /// mapper will register itself with this container when calling `ensureInitialized()`.
+  static final MapperContainer globals = _MapperContainerBase();
 
+  /// The core method to decode any value to a given type [T].
   T fromValue<T>(dynamic value);
+
+  /// The core method to encode any value.
   dynamic toValue<T>(T value, [EncodingOptions? options]);
 
+  /// Decodes a map to a given type [T].
+  ///
+  /// This is a typed wrapper around the [fromValue] method.
   T fromMap<T>(Map<String, dynamic> map);
+
+  /// Encodes a value to a map.
+  ///
+  /// This is a typed wrapper around the [toValue] method.
   Map<String, dynamic> toMap<T>(T object);
 
+  /// Decodes an iterable to a given type [T].
+  ///
+  /// This is a typed wrapper around the [fromValue] method.
   T fromIterable<T>(Iterable<dynamic> iterable);
+
+  /// Encodes a value to an iterable.
+  ///
+  /// This is a typed wrapper around the [toValue] method.
   Iterable<dynamic> toIterable<T>(T object);
 
+  /// Decodes a json string to a given type [T].
+  ///
+  /// This is a typed wrapper around the [fromValue] method.
   T fromJson<T>(String json);
+
+  /// Encodes a value to a json string.
+  ///
+  /// This is a typed wrapper around the [toValue] method.
   String toJson<T>(T object);
 
+  /// Checks whether two values are deeply equal.
   bool isEqual(dynamic value, Object? other);
+
+  /// Calculates the hash of a value.
   int hash(dynamic value);
+
+  /// Returns the string representation of a value.
   String asString(dynamic value);
 
+  /// Adds a new mapper to the set of mappers this container holds.
   void use<T extends Object>(MapperBase<T> mapper);
+
+  /// Removes the mapper for type [T] this container currently holds.
   MapperBase<T>? unuse<T extends Object>();
+
+  /// Adds a list of mappers to the set of mappers this container holds.
   void useAll(Iterable<MapperBase> mappers);
 
+  /// Returns the current mapper for type [T] of this container.
   MapperBase<T>? get<T extends Object>([Type? type]);
+
+  /// Returns all mapper this container currently holds.
   List<MapperBase> getAll();
 
+  /// Links another container to this container.
   void link(MapperContainer container);
+
+  /// Links a list of containers to this container.
   void linkAll(Iterable<MapperContainer> containers);
 }
 
-class MapperContainerBase implements MapperContainer, TypeProvider {
-  MapperContainerBase._([
+class _MapperContainerBase implements MapperContainer, TypeProvider {
+  _MapperContainerBase._([
     Set<MapperBase>? mappers,
     Set<MapperContainer>? linked,
     Map<String, Function>? types,
@@ -86,12 +154,12 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
     useAll(mappers ?? {});
   }
 
-  factory MapperContainerBase({
+  factory _MapperContainerBase({
     Set<MapperBase>? mappers,
     Set<MapperContainer>? linked,
     Map<String, Function>? types,
   }) {
-    return MapperContainerBase._(
+    return _MapperContainerBase._(
       mappers ?? {},
       {...?linked, MapperContainer.defaults},
       types ?? {},
@@ -101,8 +169,8 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
   final Map<Type, MapperBase> _mappers = {};
   final Map<String, Function> _types = {};
 
-  final Set<MapperContainerBase> _parents = {};
-  final Set<MapperContainerBase> _children = {};
+  final Set<_MapperContainerBase> _parents = {};
+  final Set<_MapperContainerBase> _children = {};
 
   final Map<Type, MapperBase?> _cachedMappers = {};
   final Map<Type, MapperBase?> _cachedTypeMappers = {};
@@ -419,8 +487,8 @@ class MapperContainerBase implements MapperContainer, TypeProvider {
 
   @override
   void linkAll(Iterable<MapperContainer> containers) {
-    assert(containers.every((c) => c is MapperContainerBase));
-    for (var c in containers.cast<MapperContainerBase>()) {
+    assert(containers.every((c) => c is _MapperContainerBase));
+    for (var c in containers.cast<_MapperContainerBase>()) {
       _children.add(c);
       c._parents.add(this);
     }
