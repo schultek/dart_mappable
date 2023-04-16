@@ -3,35 +3,41 @@ import 'package:dart_mappable/dart_mappable.dart';
 import '../elements/class/target_class_mapper_element.dart';
 
 class EncoderGenerator {
-  final TargetClassMapperElement target;
+  EncoderGenerator(this.element);
 
-  EncoderGenerator(this.target);
+  final TargetClassMapperElement element;
 
   String generateEncoderMixin() {
-    if (!target.shouldGenerate(GenerateMethods.encode)) {
+    if (!element.shouldGenerate(GenerateMethods.encode)) {
       return '';
     }
-    if (target.isAbstract) {
-      return '  String toJson();\n'
-          '  Map<String, dynamic> toMap();\n';
+    if (element.isAbstract) {
+      return '''
+        String toJson();
+        Map<String, dynamic> toMap();
+      ''';
     }
-    return '  String toJson() {\n'
-        '    return ${target.mapperName}._guard((c) => c.toJson(this as ${target.selfTypeParam}));\n'
-        '  }\n'
-        '  Map<String, dynamic> toMap() {\n'
-        '    return ${target.mapperName}._guard((c) => c.toMap(this as ${target.selfTypeParam}));\n'
-        '  }\n';
+    return '''
+      String toJson() {
+        return ${element.mapperName}._guard((c) => c.toJson(this as ${element.selfTypeParam}));
+      }
+      Map<String, dynamic> toMap() {
+        return ${element.mapperName}._guard((c) => c.toMap(this as ${element.selfTypeParam}));
+      }
+    ''';
   }
 
   String generateEncoderExtensions() {
-    if (!target.shouldGenerate(GenerateMethods.encode)) {
+    if (!element.shouldGenerate(GenerateMethods.encode)) {
       return '';
     }
-    return '  String toJson() {\n'
-        '    return ${target.mapperName}._guard((c) => c.toJson(this));\n'
-        '  }\n'
-        '  Map<String, dynamic> toMap() {\n'
-        '    return ${target.mapperName}._guard((c) => c.toMap(this));\n'
-        '  }\n';
+    return '''
+      String toJson() {
+        return ${element.mapperName}._guard((c) => c.toJson(this));
+      }
+      Map<String, dynamic> toMap() {
+        return ${element.mapperName}._guard((c) => c.toMap(this));
+      }
+    ''';
   }
 }

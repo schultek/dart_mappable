@@ -4,6 +4,8 @@ import '../../builder_options.dart';
 import '../../mapper_group.dart';
 import 'target_class_mapper_element.dart';
 
+/// Element interface for an annotated factory constructor in the target
+/// library of [parent].
 class FactoryConstructorMapperElement extends TargetClassMapperElement {
   ConstructorElement factoryConstructor;
 

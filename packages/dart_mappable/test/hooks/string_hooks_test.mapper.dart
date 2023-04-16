@@ -7,6 +7,7 @@ part of 'string_hooks_test.dart';
 
 class AMapper extends ClassMapperBase<A> {
   AMapper._();
+
   static AMapper? _instance;
   static AMapper ensureInitialized() {
     if (_instance == null) {

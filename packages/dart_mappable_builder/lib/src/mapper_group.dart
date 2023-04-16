@@ -53,7 +53,7 @@ class MapperElementGroup {
   }
 
   Future<T> addMapper<T extends MapperElement>(T mapper) async {
-    await mapper.analyze;
+    await mapper.init();
     return targets[mapper.element] = mapper;
   }
 
@@ -99,18 +99,18 @@ class MapperElementGroup {
     }
   }
 
-  Future<void> analyzeElement(MapperElement target) async {
-    if (target is! ClassMapperElement) return;
+  Future<void> analyzeElement(MapperElement element) async {
+    if (element is! ClassMapperElement) return;
 
-    if (target.superTarget == null) {
+    if (element.superElement == null) {
       ClassElement? superElement;
-      var supertype = target.element.supertype;
+      var supertype = element.element.supertype;
       if (supertype == null || supertype.isDartCoreObject) {
-        supertype = target.element.interfaces.firstOrNull;
+        supertype = element.element.interfaces.firstOrNull;
       }
       if (supertype != null && !supertype.isDartCoreObject) {
-        var element = supertype.element;
-        if (element is ClassElement) superElement = element;
+        var e = supertype.element;
+        if (e is ClassElement) superElement = e;
       }
 
       if (superElement != null) {
@@ -118,14 +118,14 @@ class MapperElementGroup {
             await getOrAddMapperForElement(superElement, orNone: true)
                 as ClassMapperElement;
 
-        target.superTarget = superTarget;
-        if (!superTarget.subTargets.contains(target)) {
-          superTarget.subTargets.add(target);
+        element.superElement = superTarget;
+        if (!superTarget.subElements.contains(element)) {
+          superTarget.subElements.add(element);
         }
       }
     }
 
-    for (var elem in target.getSubClasses()) {
+    for (var elem in element.getSubClasses()) {
       ClassMapperElement? subMapper =
           await getOrAddMapperForElement(elem) as ClassMapperElement?;
 
@@ -134,9 +134,9 @@ class MapperElementGroup {
             'since it has no generated mapper.';
       }
 
-      subMapper.superTarget = target;
-      if (!target.subTargets.contains(subMapper)) {
-        target.subTargets.add(subMapper);
+      subMapper.superElement = element;
+      if (!element.subElements.contains(subMapper)) {
+        element.subElements.add(subMapper);
       }
     }
 
@@ -150,11 +150,11 @@ class MapperElementGroup {
       }
     }
 
-    for (var param in target.params) {
+    for (var param in element.params) {
       await checkType(param.parameter.type);
     }
 
-    for (var param in target.element.typeParameters) {
+    for (var param in element.element.typeParameters) {
       if (param.bound != null) {
         await getOrAddMapperForElement(param.bound!.element);
       }

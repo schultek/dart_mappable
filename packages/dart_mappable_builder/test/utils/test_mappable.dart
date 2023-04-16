@@ -1,6 +1,6 @@
 import 'package:build/build.dart';
 import 'package:build_test/build_test.dart';
-import 'package:dart_mappable_builder/src/mappable_builder.dart';
+import 'package:dart_mappable_builder/src/builders/mappable_builder.dart';
 import 'package:test/test.dart';
 
 import 'temp_asset_writer.dart';

@@ -7,6 +7,7 @@ part of 'generics_change_test.dart';
 
 class AMapper extends ClassMapperBase<A> {
   AMapper._();
+
   static AMapper? _instance;
   static AMapper ensureInitialized() {
     if (_instance == null) {
@@ -110,6 +111,7 @@ class _ACopyWithImpl<$R, $Out extends A, T>
 
 class BMapper extends SubClassMapperBase<B> {
   BMapper._();
+
   static BMapper? _instance;
   static BMapper ensureInitialized() {
     if (_instance == null) {
@@ -219,6 +221,7 @@ class _BCopyWithImpl<$R, $Out extends A, T>
 
 class CMapper extends SubClassMapperBase<C> {
   CMapper._();
+
   static CMapper? _instance;
   static CMapper ensureInitialized() {
     if (_instance == null) {
@@ -330,6 +333,7 @@ class _CCopyWithImpl<$R, $Out extends A, T extends num>
 
 class DMapper extends SubClassMapperBase<D> {
   DMapper._();
+
   static DMapper? _instance;
   static DMapper ensureInitialized() {
     if (_instance == null) {
@@ -446,6 +450,7 @@ class _DCopyWithImpl<$R, $Out extends A, T, V>
 
 class EMapper extends SubClassMapperBase<E> {
   EMapper._();
+
   static EMapper? _instance;
   static EMapper ensureInitialized() {
     if (_instance == null) {

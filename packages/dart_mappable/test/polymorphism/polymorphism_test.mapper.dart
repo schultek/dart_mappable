@@ -7,6 +7,7 @@ part of 'polymorphism_test.dart';
 
 class AnimalMapper extends ClassMapperBase<Animal> {
   AnimalMapper._();
+
   static AnimalMapper? _instance;
   static AnimalMapper ensureInitialized() {
     if (_instance == null) {
@@ -69,6 +70,7 @@ abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal>
 
 class CatMapper extends SubClassMapperBase<Cat> {
   CatMapper._();
+
   static CatMapper? _instance;
   static CatMapper ensureInitialized() {
     if (_instance == null) {
@@ -187,6 +189,7 @@ class _CatCopyWithImpl<$R, $Out extends Animal>
 
 class DogMapper extends SubClassMapperBase<Dog> {
   DogMapper._();
+
   static DogMapper? _instance;
   static DogMapper ensureInitialized() {
     if (_instance == null) {
@@ -305,6 +308,7 @@ class _DogCopyWithImpl<$R, $Out extends Animal>
 
 class NullAnimalMapper extends SubClassMapperBase<NullAnimal> {
   NullAnimalMapper._();
+
   static NullAnimalMapper? _instance;
   static NullAnimalMapper ensureInitialized() {
     if (_instance == null) {
@@ -421,6 +425,7 @@ class _NullAnimalCopyWithImpl<$R, $Out extends Animal>
 
 class DefaultAnimalMapper extends SubClassMapperBase<DefaultAnimal> {
   DefaultAnimalMapper._();
+
   static DefaultAnimalMapper? _instance;
   static DefaultAnimalMapper ensureInitialized() {
     if (_instance == null) {
@@ -542,6 +547,7 @@ class _DefaultAnimalCopyWithImpl<$R, $Out extends Animal>
 
 class ZooMapper extends ClassMapperBase<Zoo> {
   ZooMapper._();
+
   static ZooMapper? _instance;
   static ZooMapper ensureInitialized() {
     if (_instance == null) {

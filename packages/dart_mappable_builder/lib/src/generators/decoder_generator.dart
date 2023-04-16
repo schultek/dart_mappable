@@ -13,55 +13,64 @@ class DecoderGenerator {
   Future<String> generateInstantiateMethod() async {
     var s = '\n';
 
-    if (element.hookForClass != null) {
-      s += '  @override\n'
-          '  final MappingHook hook = const ${element.hookForClass};\n';
+    var hook = element.hookForClass;
+    if (hook != null) {
+      s += '''
+        @override
+        final MappingHook hook = const $hook;
+      ''';
     }
 
     var superHooks = _getSuperHooks(element);
     if (superHooks.isNotEmpty) {
-      s += '  @override\n'
-          '  final MappingHook superHook = const ${superHooks.length == 1 ? superHooks.first : 'ChainedHook([${superHooks.join(', ')}])'};\n\n';
+      s += '''
+        @override
+        final MappingHook superHook = const ${superHooks.length == 1 ? superHooks.first : 'ChainedHook([${superHooks.join(', ')}])'};
+        
+      ''';
     }
 
-    s +=
-        '  static ${element.prefixedDecodingClassName}${element.typeParams} _instantiate${element.typeParamsDeclaration}(DecodingData data) {\n'
-        '    ${await _generateConstructorCall()}\n'
-        '  }\n'
-        '  @override\n'
-        '  final Function instantiate = _instantiate;\n';
+    s += '''
+      static ${element.prefixedDecodingClassName}${element.typeParams} _instantiate${element.typeParamsDeclaration}(DecodingData data) {
+        ${await _generateConstructorCall()}
+      }
+      @override
+      final Function instantiate = _instantiate;
+    ''';
 
     return s;
   }
 
   String generateTypeFactory() {
-    return '  @override\n'
-        '  Function get typeFactory => ${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();\n';
+    return '''
+      @override
+      Function get typeFactory => ${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();
+    ''';
   }
 
   List<String> _getSuperHooks(ClassMapperElement element) {
-    if (element.superTarget == null) {
+    if (element.superElement == null) {
       return [];
     } else {
-      return [
-        if (element.superTarget!.hookForClass != null)
-          element.superTarget!.hookForClass!,
-        ..._getSuperHooks(element.superTarget!)
-      ];
+      var hook = element.superElement!.hookForClass;
+      return [if (hook != null) hook, ..._getSuperHooks(element.superElement!)];
     }
   }
 
   Future<String> generateDiscriminatorFields() async {
     var prefix =
-        element.parent.prefixOfElement(element.superTarget!.annotatedElement);
+        element.parent.prefixOfElement(element.superElement!.annotatedElement);
 
-    return '\n'
-        '  @override\n'
-        "  final String discriminatorKey = '${element.superTarget!.discriminatorKey ?? 'type'}';\n"
-        '  @override\n'
-        '  final dynamic discriminatorValue = ${(await element.discriminatorValueCode) ?? "'${element.className}'"};\n'
-        '  @override\n'
-        '  late final ClassMapperBase superMapper = $prefix${element.superTarget!.mapperName}.ensureInitialized();\n';
+    return '''
+    
+      @override
+      final String discriminatorKey = '${element.superElement!.discriminatorKey ?? 'type'}';
+      @override
+      final dynamic discriminatorValue = ${(element.discriminatorValueCode) ?? "'${element.className}'"};
+      @override
+      late final ClassMapperBase superMapper = $prefix${element.superElement!.mapperName}.ensureInitialized();
+      
+    ''';
   }
 
   String generateInheritOverride() {
@@ -69,16 +78,17 @@ class DecoderGenerator {
     if (args == null) {
       return '';
     }
-    return '\n'
-        '  @override\n'
-        '  DecodingContext inherit(DecodingContext context) {\n'
-        '    return context.inherit(args: [${args.join(', ')}]);\n'
-        '  }';
+    return '''
+      @override
+      DecodingContext inherit(DecodingContext context) {
+        return context.inherit(args: [${args.join(', ')}]);
+      }
+    ''';
   }
 
   Future<String> _generateConstructorCall() async {
     if (!element.hasCallableConstructor) {
-      if (element.subTargets.isNotEmpty && element.discriminatorKey != null) {
+      if (element.subElements.isNotEmpty && element.discriminatorKey != null) {
         return "throw MapperException.missingSubclass('${element.className}', '${element.discriminatorKey}', '\${data.value['${element.discriminatorKey}']}');";
       } else {
         return "throw MapperException.missingConstructor('${element.className}');";

@@ -1,78 +1,58 @@
-import 'package:analyzer/dart/element/element.dart';
-import 'package:collection/collection.dart';
-import 'package:dart_mappable/dart_mappable.dart';
-
 import '../elements/enum/target_enum_mapper_element.dart';
-import '../utils.dart';
 import 'class_mapper_generator.dart';
 
-/// Generates code for a specific enum
+/// Generates code for a specific enum.
 class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
   EnumMapperGenerator(super.element);
 
   @override
   Future<String> generate() async {
-    bool hasAllStringValues = target.mode == ValuesMode.named;
-    var values = await Future.wait(target.element.fields //
-        .where((f) => f.isEnumConstant)
-        .mapIndexed((i, f) async {
-      if (valueChecker.hasAnnotationOf(f)) {
-        hasAllStringValues = false;
-        return MapEntry(f.name, await getAnnotatedValue(f));
-      } else {
-        if (target.mode == ValuesMode.named) {
-          return MapEntry(f.name, "'${target.caseStyle.transform(f.name)}'");
-        } else {
-          return MapEntry(f.name, i);
+    return '''
+        class ${element.mapperName} extends EnumMapper<${element.prefixedClassName}> {
+          ${element.mapperName}._();
+          
+          static ${element.mapperName}? _instance;
+          static ${element.mapperName} ensureInitialized() {
+            if (_instance == null) {
+              MapperContainer.globals.use(_instance = ${element.mapperName}._());
+            }
+            return _instance!;
+          }
+          
+          static ${element.prefixedClassName} fromValue(dynamic value) {
+            ensureInitialized();
+            return MapperContainer.globals.fromValue(value);
+          }
+          
+          @override
+          ${element.prefixedClassName} decode(dynamic value) {
+            switch (value) {
+              ${element.values.map((v) => "case ${v.value}: return ${element.prefixedClassName}.${v.key};").join("\n      ")}
+              default: ${_generateDefaultCase()}
+            }
+          }
+          
+          @override
+          dynamic encode(${element.prefixedClassName} self) {
+            switch (self) {
+              ${element.values.map((v) => "case ${element.prefixedClassName}.${v.key}: return ${v.value};").join("\n      ")}
+            }
+          }
         }
-      }
-    }));
-
-    return ''
-        'class ${target.mapperName} extends EnumMapper<${target.prefixedClassName}> {\n'
-        '  ${target.mapperName}._();\n'
-        '  static ${target.mapperName}? _instance;\n'
-        '  static ${target.mapperName} ensureInitialized() {\n'
-        '    if (_instance == null) {\n'
-        '      MapperContainer.globals.use(_instance = ${target.mapperName}._());\n'
-        '    }\n'
-        '    return _instance!;\n'
-        '  }\n\n'
-        '  static ${target.prefixedClassName} fromValue(dynamic value) {\n'
-        '    ensureInitialized();\n'
-        '    return MapperContainer.globals.fromValue(value);\n'
-        '  }\n\n'
-        '  @override\n'
-        '  ${target.prefixedClassName} decode(dynamic value) {\n'
-        '    switch (value) {\n'
-        '      ${values.map((v) => "case ${v.value}: return ${target.prefixedClassName}.${v.key};").join("\n      ")}\n'
-        '      default: ${_generateDefaultCase()}\n'
-        '    }\n'
-        '  }\n\n'
-        '  @override\n'
-        '  dynamic encode(${target.prefixedClassName} self) {\n'
-        '    switch (self) {\n'
-        '      ${values.map((v) => "case ${target.prefixedClassName}.${v.key}: return ${v.value};").join("\n      ")}\n'
-        '    }\n'
-        '  }\n'
-        '}\n\n'
-        'extension ${target.mapperName}Extension on ${target.prefixedClassName} {\n'
-        '  ${hasAllStringValues ? 'String' : 'dynamic'} toValue() {\n'
-        '    ${target.mapperName}.ensureInitialized();\n'
-        '    return MapperContainer.globals.toValue(this)${hasAllStringValues ? ' as String' : ''};\n'
-        '  }\n'
-        '}';
+        
+        extension ${element.mapperName}Extension on ${element.prefixedClassName} {
+          ${element.hasAllStringValues ? 'String' : 'dynamic'} toValue() {
+            ${element.mapperName}.ensureInitialized();
+            return MapperContainer.globals.toValue(this)${element.hasAllStringValues ? ' as String' : ''};
+          }
+        }
+      ''';
   }
 
   String _generateDefaultCase() {
-    if (target.defaultValue != null) {
-      return 'return ${target.prefixedClassName}.values[${target.defaultValue}];';
+    if (element.defaultValue != null) {
+      return 'return ${element.prefixedClassName}.values[${element.defaultValue}];';
     }
     return 'throw MapperException.unknownEnumValue(value);';
-  }
-
-  Future<String> getAnnotatedValue(FieldElement f) async {
-    var node = await getResolvedAnnotationNode(f, MappableValue, 0);
-    return node!.toSource();
   }
 }

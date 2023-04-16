@@ -15,6 +15,10 @@ abstract class MapperElement<T extends InterfaceElement> {
 
   MapperElement(this.parent, this.element, this.options);
 
+  Future<void> init() async {
+    annotatedNode = await annotatedElement.getResolvedNode();
+  }
+
   late String className = element.name;
   late String uniqueClassName = className;
 
@@ -28,8 +32,4 @@ abstract class MapperElement<T extends InterfaceElement> {
   DartObject? getAnnotation();
 
   late AstNode? annotatedNode;
-
-  late Future<void> analyze = () async {
-    annotatedNode = await annotatedElement.getResolvedNode();
-  }();
 }

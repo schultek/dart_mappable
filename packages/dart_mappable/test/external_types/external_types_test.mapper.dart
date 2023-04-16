@@ -7,6 +7,7 @@ part of 'external_types_test.dart';
 
 class PersonMapper extends ClassMapperBase<Person> {
   PersonMapper._();
+
   static PersonMapper? _instance;
   static PersonMapper ensureInitialized() {
     if (_instance == null) {
@@ -114,6 +115,7 @@ class _PersonCopyWithImpl<$R, $Out extends Person>
 
 class CakeMapper extends ClassMapperBase<f.Cake> {
   CakeMapper._();
+
   static CakeMapper? _instance;
   static CakeMapper ensureInitialized() {
     if (_instance == null) {
@@ -203,6 +205,7 @@ class _CakeCopyWithImpl<$R, $Out extends f.Cake>
 
 class Person2Mapper extends ClassMapperBase<m.Person> {
   Person2Mapper._();
+
   static Person2Mapper? _instance;
   static Person2Mapper ensureInitialized() {
     if (_instance == null) {
@@ -295,6 +298,7 @@ class _Person2CopyWithImpl<$R, $Out extends m.Person>
 
 class AnimalMapper extends ClassMapperBase<o.Animal> {
   AnimalMapper._();
+
   static AnimalMapper? _instance;
   static AnimalMapper ensureInitialized() {
     if (_instance == null) {
@@ -358,6 +362,7 @@ abstract class AnimalCopyWith<$R, $In extends o.Animal, $Out extends o.Animal>
 
 class PetMapper extends SubClassMapperBase<o.Pet> {
   PetMapper._();
+
   static PetMapper? _instance;
   static PetMapper ensureInitialized() {
     if (_instance == null) {

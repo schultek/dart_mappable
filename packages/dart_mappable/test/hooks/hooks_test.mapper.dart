@@ -7,6 +7,7 @@ part of 'hooks_test.dart';
 
 class GameMapper extends ClassMapperBase<Game> {
   GameMapper._();
+
   static GameMapper? _instance;
   static GameMapper ensureInitialized() {
     if (_instance == null) {
@@ -122,6 +123,7 @@ class _GameCopyWithImpl<$R, $Out extends Game>
 
 class CardGameMapper extends ClassMapperBase<CardGame> {
   CardGameMapper._();
+
   static CardGameMapper? _instance;
   static CardGameMapper ensureInitialized() {
     if (_instance == null) {
@@ -244,6 +246,7 @@ class _CardGameCopyWithImpl<$R, $Out extends Game>
 
 class PlayerMapper extends ClassMapperBase<Player> {
   PlayerMapper._();
+
   static PlayerMapper? _instance;
   static PlayerMapper ensureInitialized() {
     if (_instance == null) {

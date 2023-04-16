@@ -5,9 +5,9 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_visitor.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../mapper_group.dart';
-import '../utils.dart';
-import 'class/class_mapper_element.dart';
+import '../../mapper_group.dart';
+import '../../utils.dart';
+import '../class/class_mapper_element.dart';
 
 class RemoveParamsVisitor extends TypeVisitor<String> {
   final MapperElementGroup parent;

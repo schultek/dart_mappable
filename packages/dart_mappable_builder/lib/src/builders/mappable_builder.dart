@@ -5,13 +5,13 @@ import 'package:collection/collection.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart' as p;
 
-import 'builder_options.dart';
-import 'elements/class/target_class_mapper_element.dart';
-import 'elements/enum/target_enum_mapper_element.dart';
-import 'generators/class_mapper_generator.dart';
-import 'generators/enum_mapper_generator.dart';
-import 'mapper_group.dart';
-import 'utils.dart';
+import '../builder_options.dart';
+import '../elements/class/target_class_mapper_element.dart';
+import '../elements/enum/target_enum_mapper_element.dart';
+import '../generators/class_mapper_generator.dart';
+import '../generators/enum_mapper_generator.dart';
+import '../mapper_group.dart';
+import '../utils.dart';
 
 /// The main builder used for code generation
 class MappableBuilder implements Builder {
@@ -80,12 +80,11 @@ class MappableBuilder implements Builder {
     }
 
     var generators = <MapperGenerator>[
-      ...mappers
-          .whereType<TargetClassMapperElement>()
-          .map((e) => ClassMapperGenerator(e)),
-      ...mappers
-          .whereType<TargetEnumMapperElement>()
-          .map((e) => EnumMapperGenerator(e)),
+      for (var m in mappers)
+        if (m is TargetClassMapperElement)
+          ClassMapperGenerator(m)
+        else if (m is TargetEnumMapperElement)
+          EnumMapperGenerator(m),
     ];
 
     var output = await Future.wait(generators.map((g) => g.generate()));

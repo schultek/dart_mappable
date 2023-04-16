@@ -7,6 +7,7 @@ part of 'custom_mapper_test.dart';
 
 class TestObjMapper extends ClassMapperBase<TestObj> {
   TestObjMapper._();
+
   static TestObjMapper? _instance;
   static TestObjMapper ensureInitialized() {
     if (_instance == null) {

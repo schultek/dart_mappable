@@ -4,6 +4,7 @@ import 'package:analyzer/dart/element/element.dart';
 
 import 'target_class_mapper_element.dart';
 
+/// Element interface for all annotated type aliases.
 class AliasClassMapperElement extends TargetClassMapperElement {
   AliasClassMapperElement(
       super.parent, this.alias, super.element, super.options);

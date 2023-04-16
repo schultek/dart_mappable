@@ -7,6 +7,7 @@ part of 'collection_copy_with_test.dart';
 
 class AMapper extends ClassMapperBase<A> {
   AMapper._();
+
   static AMapper? _instance;
   static AMapper ensureInitialized() {
     if (_instance == null) {
@@ -121,6 +122,7 @@ class _ACopyWithImpl<$R, $Out extends A, T>
 
 class BMapper extends ClassMapperBase<B> {
   BMapper._();
+
   static BMapper? _instance;
   static BMapper ensureInitialized() {
     if (_instance == null) {

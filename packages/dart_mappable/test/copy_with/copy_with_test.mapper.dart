@@ -7,6 +7,7 @@ part of 'copy_with_test.dart';
 
 class PersonMapper extends ClassMapperBase<Person> {
   PersonMapper._();
+
   static PersonMapper? _instance;
   static PersonMapper ensureInitialized() {
     if (_instance == null) {
@@ -121,6 +122,7 @@ class _PersonCopyWithImpl<$R, $Out extends Person>
 
 class CarMapper extends ClassMapperBase<Car> {
   CarMapper._();
+
   static CarMapper? _instance;
   static CarMapper ensureInitialized() {
     if (_instance == null) {
@@ -234,6 +236,7 @@ class _CarCopyWithImpl<$R, $Out extends Car>
 
 class BrandMapper extends ClassMapperBase<Brand> {
   BrandMapper._();
+
   static BrandMapper? _instance;
   static BrandMapper ensureInitialized() {
     if (_instance == null) {
@@ -339,6 +342,7 @@ class _BrandCopyWithImpl<$R, $Out extends Brand>
 
 class DealershipMapper extends ClassMapperBase<Dealership> {
   DealershipMapper._();
+
   static DealershipMapper? _instance;
   static DealershipMapper ensureInitialized() {
     if (_instance == null) {
@@ -472,6 +476,7 @@ class _DealershipCopyWithImpl<$R, $Out extends Dealership>
 
 class ItemListMapper extends ClassMapperBase<ItemList> {
   ItemListMapper._();
+
   static ItemListMapper? _instance;
   static ItemListMapper ensureInitialized() {
     if (_instance == null) {
@@ -539,6 +544,7 @@ abstract class ItemListCopyWith<$R, $In extends ItemList<T>,
 
 class BrandListMapper extends SubClassMapperBase<BrandList> {
   BrandListMapper._();
+
   static BrandListMapper? _instance;
   static BrandListMapper ensureInitialized() {
     if (_instance == null) {
@@ -665,6 +671,7 @@ class _BrandListCopyWithImpl<$R, $Out extends ItemList>
 
 class NamedItemListMapper extends SubClassMapperBase<NamedItemList> {
   NamedItemListMapper._();
+
   static NamedItemListMapper? _instance;
   static NamedItemListMapper ensureInitialized() {
     if (_instance == null) {
@@ -798,6 +805,7 @@ class _NamedItemListCopyWithImpl<$R, $Out extends ItemList, T>
 
 class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
   KeyedItemListMapper._();
+
   static KeyedItemListMapper? _instance;
   static KeyedItemListMapper ensureInitialized() {
     if (_instance == null) {
@@ -942,6 +950,7 @@ class _KeyedItemListCopyWithImpl<$R, $Out extends ItemList, K, T>
 
 class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
   ComparableItemListMapper._();
+
   static ComparableItemListMapper? _instance;
   static ComparableItemListMapper ensureInitialized() {
     if (_instance == null) {

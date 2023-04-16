@@ -7,6 +7,7 @@ part of 'copy_with_subtype_test.dart';
 
 class AnimalMapper extends ClassMapperBase<Animal> {
   AnimalMapper._();
+
   static AnimalMapper? _instance;
   static AnimalMapper ensureInitialized() {
     if (_instance == null) {
@@ -57,6 +58,7 @@ abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal>
 
 class CatMapper extends SubClassMapperBase<Cat> {
   CatMapper._();
+
   static CatMapper? _instance;
   static CatMapper ensureInitialized() {
     if (_instance == null) {
@@ -147,6 +149,7 @@ class _CatCopyWithImpl<$R, $Out extends Animal>
 
 class DogMapper extends SubClassMapperBase<Dog> {
   DogMapper._();
+
   static DogMapper? _instance;
   static DogMapper ensureInitialized() {
     if (_instance == null) {
@@ -233,6 +236,7 @@ class _DogCopyWithImpl<$R, $Out extends Animal>
 
 class ZooMapper extends ClassMapperBase<Zoo> {
   ZooMapper._();
+
   static ZooMapper? _instance;
   static ZooMapper ensureInitialized() {
     if (_instance == null) {
@@ -314,6 +318,7 @@ class _ZooCopyWithImpl<$R, $Out extends Zoo>
 
 class AMapper extends ClassMapperBase<A> {
   AMapper._();
+
   static AMapper? _instance;
   static AMapper ensureInitialized() {
     if (_instance == null) {
@@ -415,6 +420,7 @@ class _ACopyWithImpl<$R, $Out extends A, T>
 
 class CMapper extends ClassMapperBase<C> {
   CMapper._();
+
   static CMapper? _instance;
   static CMapper ensureInitialized() {
     if (_instance == null) {
@@ -516,6 +522,7 @@ class _CCopyWithImpl<$R, $Out extends A, T>
 
 class BMapper extends ClassMapperBase<B> {
   BMapper._();
+
   static BMapper? _instance;
   static BMapper ensureInitialized() {
     if (_instance == null) {

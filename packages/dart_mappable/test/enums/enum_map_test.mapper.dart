@@ -5,8 +5,59 @@
 
 part of 'enum_map_test.dart';
 
+class EnumAMapper extends EnumMapper<EnumA> {
+  EnumAMapper._();
+
+  static EnumAMapper? _instance;
+  static EnumAMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = EnumAMapper._());
+    }
+    return _instance!;
+  }
+
+  static EnumA fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  EnumA decode(dynamic value) {
+    switch (value) {
+      case 'a':
+        return EnumA.a;
+      case 'aa':
+        return EnumA.aa;
+      case 'unknown':
+        return EnumA.unknown;
+      default:
+        return EnumA.values[2];
+    }
+  }
+
+  @override
+  dynamic encode(EnumA self) {
+    switch (self) {
+      case EnumA.a:
+        return 'a';
+      case EnumA.aa:
+        return 'aa';
+      case EnumA.unknown:
+        return 'unknown';
+    }
+  }
+}
+
+extension EnumAMapperExtension on EnumA {
+  String toValue() {
+    EnumAMapper.ensureInitialized();
+    return MapperContainer.globals.toValue(this) as String;
+  }
+}
+
 class ClassAMapper extends ClassMapperBase<ClassA> {
   ClassAMapper._();
+
   static ClassAMapper? _instance;
   static ClassAMapper ensureInitialized() {
     if (_instance == null) {
@@ -119,53 +170,4 @@ class _ClassACopyWithImpl<$R, $Out extends ClassA>
   ClassACopyWith<$R2, ClassA, $Out2> $chain<$R2, $Out2 extends ClassA>(
           Then<ClassA, $Out2> t, Then<$Out2, $R2> t2) =>
       _ClassACopyWithImpl($value, t, t2);
-}
-
-class EnumAMapper extends EnumMapper<EnumA> {
-  EnumAMapper._();
-  static EnumAMapper? _instance;
-  static EnumAMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = EnumAMapper._());
-    }
-    return _instance!;
-  }
-
-  static EnumA fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  EnumA decode(dynamic value) {
-    switch (value) {
-      case 'a':
-        return EnumA.a;
-      case 'aa':
-        return EnumA.aa;
-      case 'unknown':
-        return EnumA.unknown;
-      default:
-        return EnumA.values[2];
-    }
-  }
-
-  @override
-  dynamic encode(EnumA self) {
-    switch (self) {
-      case EnumA.a:
-        return 'a';
-      case EnumA.aa:
-        return 'aa';
-      case EnumA.unknown:
-        return 'unknown';
-    }
-  }
-}
-
-extension EnumAMapperExtension on EnumA {
-  String toValue() {
-    EnumAMapper.ensureInitialized();
-    return MapperContainer.globals.toValue(this) as String;
-  }
 }

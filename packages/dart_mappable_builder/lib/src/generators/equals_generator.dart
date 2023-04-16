@@ -3,23 +3,28 @@ import 'package:dart_mappable/dart_mappable.dart';
 import '../elements/class/target_class_mapper_element.dart';
 
 class EqualsGenerator {
-  EqualsGenerator(this.target);
+  EqualsGenerator(this.element);
 
-  final TargetClassMapperElement target;
+  final TargetClassMapperElement element;
 
   String generateEqualsMixin() {
-    if (!target.shouldGenerate(GenerateMethods.equals) || target.isAbstract) {
+    if (!element.shouldGenerate(GenerateMethods.equals) || element.isAbstract) {
       return '';
     }
-    return '  @override\n'
-        '  bool operator ==(Object other) {\n'
-        '    return identical(this, other) || ('
-        '      runtimeType == other.runtimeType && '
-        '      ${target.mapperName}._guard((c) => c.isEqual(this, other)));\n'
-        '  }\n'
-        '  @override\n'
-        '  int get hashCode {\n'
-        '    return ${target.mapperName}._guard((c) => c.hash(this));\n'
-        '  }\n';
+
+    return '''
+      @override
+      bool operator ==(Object other) {
+        return identical(this, other) || (
+          runtimeType == other.runtimeType && 
+          ${element.mapperName}._guard((c) => c.isEqual(this, other))
+        );
+      }
+      
+      @override
+      int get hashCode {
+        return ${element.mapperName}._guard((c) => c.hash(this));
+      }
+    ''';
   }
 }

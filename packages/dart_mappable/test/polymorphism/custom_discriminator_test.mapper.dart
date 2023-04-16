@@ -7,6 +7,7 @@ part of 'custom_discriminator_test.dart';
 
 class AMapper extends ClassMapperBase<A> {
   AMapper._();
+
   static AMapper? _instance;
   static AMapper ensureInitialized() {
     if (_instance == null) {
@@ -61,6 +62,7 @@ abstract class ACopyWith<$R, $In extends A, $Out extends A>
 
 class BMapper extends SubClassMapperBase<B> {
   BMapper._();
+
   static BMapper? _instance;
   static BMapper ensureInitialized() {
     if (_instance == null) {
@@ -167,6 +169,7 @@ class _BCopyWithImpl<$R, $Out extends A> extends ClassCopyWithBase<$R, B, $Out>
 
 class CMapper extends SubClassMapperBase<C> {
   CMapper._();
+
   static CMapper? _instance;
   static CMapper ensureInitialized() {
     if (_instance == null) {

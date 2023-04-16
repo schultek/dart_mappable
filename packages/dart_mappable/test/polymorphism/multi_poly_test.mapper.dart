@@ -7,6 +7,7 @@ part of 'multi_poly_test.dart';
 
 class AnimalMapper extends ClassMapperBase<Animal> {
   AnimalMapper._();
+
   static AnimalMapper? _instance;
   static AnimalMapper ensureInitialized() {
     if (_instance == null) {
@@ -69,6 +70,7 @@ abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal>
 
 class CatMapper extends SubClassMapperBase<Cat> {
   CatMapper._();
+
   static CatMapper? _instance;
   static CatMapper ensureInitialized() {
     if (_instance == null) {
@@ -139,6 +141,7 @@ abstract class CatCopyWith<$R, $In extends Cat, $Out extends Animal>
 
 class SiameseMapper extends SubClassMapperBase<Siamese> {
   SiameseMapper._();
+
   static SiameseMapper? _instance;
   static SiameseMapper ensureInitialized() {
     if (_instance == null) {
@@ -256,6 +259,7 @@ class _SiameseCopyWithImpl<$R, $Out extends Animal>
 
 class DogMapper extends SubClassMapperBase<Dog> {
   DogMapper._();
+
   static DogMapper? _instance;
   static DogMapper ensureInitialized() {
     if (_instance == null) {
@@ -373,6 +377,7 @@ class _DogCopyWithImpl<$R, $Out extends Animal>
 
 class ShepherdMapper extends SubClassMapperBase<Shepherd> {
   ShepherdMapper._();
+
   static ShepherdMapper? _instance;
   static ShepherdMapper ensureInitialized() {
     if (_instance == null) {
@@ -491,6 +496,7 @@ class _ShepherdCopyWithImpl<$R, $Out extends Animal>
 
 class HumanMapper extends ClassMapperBase<Human> {
   HumanMapper._();
+
   static HumanMapper? _instance;
   static HumanMapper ensureInitialized() {
     if (_instance == null) {

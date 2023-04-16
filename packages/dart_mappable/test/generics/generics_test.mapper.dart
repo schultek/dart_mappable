@@ -7,6 +7,7 @@ part of 'generics_test.dart';
 
 class BoxMapper extends ClassMapperBase<Box> {
   BoxMapper._();
+
   static BoxMapper? _instance;
   static BoxMapper ensureInitialized() {
     if (_instance == null) {
@@ -129,6 +130,7 @@ class _BoxCopyWithImpl<$R, $Out extends Box, T extends Content>
 
 class ConfettiMapper extends ClassMapperBase<Confetti> {
   ConfettiMapper._();
+
   static ConfettiMapper? _instance;
   static ConfettiMapper ensureInitialized() {
     if (_instance == null) {
@@ -237,6 +239,7 @@ class _ConfettiCopyWithImpl<$R, $Out extends Content>
 
 class ContentMapper extends ClassMapperBase<Content> {
   ContentMapper._();
+
   static ContentMapper? _instance;
   static ContentMapper ensureInitialized() {
     if (_instance == null) {
@@ -338,6 +341,7 @@ class _ContentCopyWithImpl<$R, $Out extends Content>
 
 class DataMapper extends ClassMapperBase<Data> {
   DataMapper._();
+
   static DataMapper? _instance;
   static DataMapper ensureInitialized() {
     if (_instance == null) {
@@ -443,6 +447,7 @@ class _DataCopyWithImpl<$R, $Out extends Data>
 
 class SingleSettingMapper extends ClassMapperBase<SingleSetting> {
   SingleSettingMapper._();
+
   static SingleSettingMapper? _instance;
   static SingleSettingMapper ensureInitialized() {
     if (_instance == null) {
@@ -567,6 +572,7 @@ class _SingleSettingCopyWithImpl<$R, $Out extends SingleSetting, T>
 
 class SettingsMapper extends ClassMapperBase<Settings> {
   SettingsMapper._();
+
   static SettingsMapper? _instance;
   static SettingsMapper ensureInitialized() {
     if (_instance == null) {
@@ -697,6 +703,7 @@ class _SettingsCopyWithImpl<$R, $Out extends Settings>
 
 class AssetMapper extends ClassMapperBase<Asset> {
   AssetMapper._();
+
   static AssetMapper? _instance;
   static AssetMapper ensureInitialized() {
     if (_instance == null) {

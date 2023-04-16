@@ -7,6 +7,7 @@ part of 'mixed_mappable_test.dart';
 
 class BaseMapper extends ClassMapperBase<Base> {
   BaseMapper._();
+
   static BaseMapper? _instance;
   static BaseMapper ensureInitialized() {
     if (_instance == null) {
@@ -74,6 +75,7 @@ abstract class BaseCopyWith<$R, $In extends Base, $Out extends Base>
 
 class OneMapper extends ClassMapperBase<One> {
   OneMapper._();
+
   static OneMapper? _instance;
   static OneMapper ensureInitialized() {
     if (_instance == null) {
@@ -203,6 +205,7 @@ class _OneCopyWithImpl<$R, $Out extends Base>
 
 class TwoMapper extends ClassMapperBase<Two> {
   TwoMapper._();
+
   static TwoMapper? _instance;
   static TwoMapper ensureInitialized() {
     if (_instance == null) {

@@ -7,6 +7,7 @@ part of 'primitives_test.dart';
 
 class ItemsMapper extends ClassMapperBase<Items> {
   ItemsMapper._();
+
   static ItemsMapper? _instance;
   static ItemsMapper ensureInitialized() {
     if (_instance == null) {
@@ -135,6 +136,7 @@ class _ItemsCopyWithImpl<$R, $Out extends Items>
 
 class ItemMapper extends ClassMapperBase<Item> {
   ItemMapper._();
+
   static ItemMapper? _instance;
   static ItemMapper ensureInitialized() {
     if (_instance == null) {

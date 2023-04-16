@@ -7,6 +7,7 @@ part of 'duplicate_names_test.dart';
 
 class BoxMapper extends ClassMapperBase<Box> {
   BoxMapper._();
+
   static BoxMapper? _instance;
   static BoxMapper ensureInitialized() {
     if (_instance == null) {
@@ -123,6 +124,7 @@ class _BoxCopyWithImpl<$R, $Out extends Box, T extends Content>
 
 class ContentMapper extends ClassMapperBase<Content> {
   ContentMapper._();
+
   static ContentMapper? _instance;
   static ContentMapper ensureInitialized() {
     if (_instance == null) {

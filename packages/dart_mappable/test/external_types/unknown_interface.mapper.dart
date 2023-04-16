@@ -5,8 +5,51 @@
 
 part of 'unknown_interface.dart';
 
+class HOpacityMapper extends EnumMapper<HOpacity> {
+  HOpacityMapper._();
+
+  static HOpacityMapper? _instance;
+  static HOpacityMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = HOpacityMapper._());
+    }
+    return _instance!;
+  }
+
+  static HOpacity fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  HOpacity decode(dynamic value) {
+    switch (value) {
+      case 'bzOpacityIntense':
+        return HOpacity.bzOpacityIntense;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(HOpacity self) {
+    switch (self) {
+      case HOpacity.bzOpacityIntense:
+        return 'bzOpacityIntense';
+    }
+  }
+}
+
+extension HOpacityMapperExtension on HOpacity {
+  String toValue() {
+    HOpacityMapper.ensureInitialized();
+    return MapperContainer.globals.toValue(this) as String;
+  }
+}
+
 class DSOpacityDataMapper extends ClassMapperBase<DSOpacityData> {
   DSOpacityDataMapper._();
+
   static DSOpacityDataMapper? _instance;
   static DSOpacityDataMapper ensureInitialized() {
     if (_instance == null) {
@@ -130,45 +173,4 @@ class _DSOpacityDataCopyWithImpl<$R, $Out extends DSOpacityData>
       $chain<$R2, $Out2 extends DSOpacityData>(
               Then<DSOpacityData, $Out2> t, Then<$Out2, $R2> t2) =>
           _DSOpacityDataCopyWithImpl($value, t, t2);
-}
-
-class HOpacityMapper extends EnumMapper<HOpacity> {
-  HOpacityMapper._();
-  static HOpacityMapper? _instance;
-  static HOpacityMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = HOpacityMapper._());
-    }
-    return _instance!;
-  }
-
-  static HOpacity fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  HOpacity decode(dynamic value) {
-    switch (value) {
-      case 'bzOpacityIntense':
-        return HOpacity.bzOpacityIntense;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(HOpacity self) {
-    switch (self) {
-      case HOpacity.bzOpacityIntense:
-        return 'bzOpacityIntense';
-    }
-  }
-}
-
-extension HOpacityMapperExtension on HOpacity {
-  String toValue() {
-    HOpacityMapper.ensureInitialized();
-    return MapperContainer.globals.toValue(this) as String;
-  }
 }

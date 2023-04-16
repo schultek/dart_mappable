@@ -5,8 +5,59 @@
 
 part of 'nested_serialization_test.dart';
 
+class BrandMapper extends EnumMapper<Brand> {
+  BrandMapper._();
+
+  static BrandMapper? _instance;
+  static BrandMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = BrandMapper._());
+    }
+    return _instance!;
+  }
+
+  static Brand fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  Brand decode(dynamic value) {
+    switch (value) {
+      case 'Toyota':
+        return Brand.Toyota;
+      case 'Audi':
+        return Brand.Audi;
+      case 'BMW':
+        return Brand.BMW;
+      default:
+        return Brand.values[1];
+    }
+  }
+
+  @override
+  dynamic encode(Brand self) {
+    switch (self) {
+      case Brand.Toyota:
+        return 'Toyota';
+      case Brand.Audi:
+        return 'Audi';
+      case Brand.BMW:
+        return 'BMW';
+    }
+  }
+}
+
+extension BrandMapperExtension on Brand {
+  String toValue() {
+    BrandMapper.ensureInitialized();
+    return MapperContainer.globals.toValue(this) as String;
+  }
+}
+
 class PersonMapper extends ClassMapperBase<Person> {
   PersonMapper._();
+
   static PersonMapper? _instance;
   static PersonMapper ensureInitialized() {
     if (_instance == null) {
@@ -130,6 +181,7 @@ class _PersonCopyWithImpl<$R, $Out extends Person>
 
 class CarMapper extends ClassMapperBase<Car> {
   CarMapper._();
+
   static CarMapper? _instance;
   static CarMapper ensureInitialized() {
     if (_instance == null) {
@@ -241,53 +293,4 @@ class _CarCopyWithImpl<$R, $Out extends Car>
   CarCopyWith<$R2, Car, $Out2> $chain<$R2, $Out2 extends Car>(
           Then<Car, $Out2> t, Then<$Out2, $R2> t2) =>
       _CarCopyWithImpl($value, t, t2);
-}
-
-class BrandMapper extends EnumMapper<Brand> {
-  BrandMapper._();
-  static BrandMapper? _instance;
-  static BrandMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = BrandMapper._());
-    }
-    return _instance!;
-  }
-
-  static Brand fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  Brand decode(dynamic value) {
-    switch (value) {
-      case 'Toyota':
-        return Brand.Toyota;
-      case 'Audi':
-        return Brand.Audi;
-      case 'BMW':
-        return Brand.BMW;
-      default:
-        return Brand.values[1];
-    }
-  }
-
-  @override
-  dynamic encode(Brand self) {
-    switch (self) {
-      case Brand.Toyota:
-        return 'Toyota';
-      case Brand.Audi:
-        return 'Audi';
-      case Brand.BMW:
-        return 'BMW';
-    }
-  }
-}
-
-extension BrandMapperExtension on Brand {
-  String toValue() {
-    BrandMapper.ensureInitialized();
-    return MapperContainer.globals.toValue(this) as String;
-  }
 }

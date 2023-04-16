@@ -7,6 +7,7 @@ part of 'enums_test.dart';
 
 class StateMapper extends EnumMapper<State> {
   StateMapper._();
+
   static StateMapper? _instance;
   static StateMapper ensureInitialized() {
     if (_instance == null) {
@@ -56,6 +57,7 @@ extension StateMapperExtension on State {
 
 class ColorMapper extends EnumMapper<Color> {
   ColorMapper._();
+
   static ColorMapper? _instance;
   static ColorMapper ensureInitialized() {
     if (_instance == null) {
@@ -105,6 +107,7 @@ extension ColorMapperExtension on Color {
 
 class ItemsMapper extends EnumMapper<Items> {
   ItemsMapper._();
+
   static ItemsMapper? _instance;
   static ItemsMapper ensureInitialized() {
     if (_instance == null) {
@@ -154,6 +157,7 @@ extension ItemsMapperExtension on Items {
 
 class StatusMapper extends EnumMapper<Status> {
   StatusMapper._();
+
   static StatusMapper? _instance;
   static StatusMapper ensureInitialized() {
     if (_instance == null) {

@@ -1,8 +1,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/class/target_class_mapper_element.dart';
-import '../elements/copy_param_element.dart';
-import '../elements/mapper_param_element.dart';
+import '../elements/param/copy_param_element.dart';
+import '../elements/param/mapper_param_element.dart';
 import '../utils.dart';
 
 class CopyWithGenerator {
@@ -15,34 +15,25 @@ class CopyWithGenerator {
   late String classTypeParams =
       element.element.typeParameters.map((p) => ', ${p.name}').join();
 
-  late bool hasSubConfigs = true; //element.subTargets.isNotEmpty;
-  late bool hasSuperTarget = element.superTarget != null &&
-      element.superTarget!.shouldGenerate(GenerateMethods.copy);
-  late bool hasSubOrSuperTargets = hasSubConfigs || hasSuperTarget;
+  late bool hasSuperTarget = element.superElement != null &&
+      element.superElement!.shouldGenerate(GenerateMethods.copy);
 
   late String selfTypeParam = element.selfTypeParam;
   late String superPrefixedClassName = element.superPrefixedClassName;
 
-  late String selfSubTypeParam = hasSubConfigs ? ', $selfTypeParam' : '';
-  late String selfSuperTypeParam =
-      hasSubOrSuperTargets ? ', $selfTypeParam' : '';
+  late String selfSubTypeParam = ', $selfTypeParam';
+  late String selfSuperTypeParam = ', $selfTypeParam';
 
-  late String subTypeParamDef =
-      hasSubConfigs ? ', \$In extends $selfTypeParam' : '';
-  late String subTypeParam = hasSubConfigs ? ', \$In' : '';
-  late String subOrSelfTypeParam =
-      hasSubConfigs ? ', \$In' : ', $selfTypeParam';
+  late String subTypeParamDef = ', \$In extends $selfTypeParam';
+  late String subTypeParam = ', \$In';
+  late String subOrSelfTypeParam = ', \$In';
 
-  late String superTypeParamDef =
-      hasSubOrSuperTargets ? ', \$Out extends $superPrefixedClassName' : '';
-  late String superTypeParamDef2 =
-      hasSubOrSuperTargets ? ', \$Out2 extends $superPrefixedClassName' : '';
-  late String superTypeParam = hasSubOrSuperTargets ? ', \$Out' : '';
-  late String superTypeParam2 = hasSubOrSuperTargets ? ', \$Out2' : '';
-  late String superOrSelfTypeParam =
-      hasSubOrSuperTargets ? ', \$Out' : ', $selfTypeParam';
-  late String superOrSelfTypeParam2 =
-      hasSubOrSuperTargets ? '\$Out2' : selfTypeParam;
+  late String superTypeParamDef = ', \$Out extends $superPrefixedClassName';
+  late String superTypeParamDef2 = ', \$Out2 extends $superPrefixedClassName';
+  late String superTypeParam = ', \$Out';
+  late String superTypeParam2 = ', \$Out2';
+  late String superOrSelfTypeParam = ', \$Out';
+  late String superOrSelfTypeParam2 = '\$Out2';
 
   String generateCopyWithExtension() {
     if (!element.shouldGenerate(GenerateMethods.copy)) return '';
@@ -55,20 +46,14 @@ class CopyWithGenerator {
 
   String generateCopyWithMixin() {
     if (!element.shouldGenerate(GenerateMethods.copy)) return '';
-    if (element.hasCallableConstructor || hasSubConfigs) {
-      return _generateCopyWithMixin();
-    } else {
-      return '';
-    }
+
+    return _generateCopyWithMixin();
   }
 
   String generateCopyWithClasses() {
     if (!element.shouldGenerate(GenerateMethods.copy)) return '';
-    if (element.hasCallableConstructor || hasSubConfigs) {
-      return '\n\n${_generateCopyWithClasses()}';
-    } else {
-      return '';
-    }
+
+    return '\n\n${_generateCopyWithClasses()}';
   }
 
   String _generateCopyWith() {
@@ -105,16 +90,14 @@ class CopyWithGenerator {
       var superClassTypeParams =
           element.superTypeArgs.map((a) => ', $a').join();
       implementsStmt =
-          ' implements ${element.superTarget!.uniqueClassName}CopyWith<\$R$subOrSelfTypeParam$superTypeParam$superClassTypeParams>';
+          ' implements ${element.superElement!.uniqueClassName}CopyWith<\$R$subOrSelfTypeParam$superTypeParam$superClassTypeParams>';
     } else {
       implementsStmt =
           ' implements ClassCopyWith<\$R$subOrSelfTypeParam$superOrSelfTypeParam>';
     }
 
-    if (hasSubConfigs) {
-      output.write(
-          'typedef ${element.superPrefixedClassNameAlias} = $superPrefixedClassName;\n');
-    }
+    output.write(
+        'typedef ${element.superPrefixedClassNameAlias} = $superPrefixedClassName;\n');
 
     output.write(''
         'abstract class ${element.uniqueClassName}CopyWith<\$R$subTypeParamDef$superTypeParamDef$classTypeParamsDef>$implementsStmt {\n');
