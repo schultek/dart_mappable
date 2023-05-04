@@ -12,6 +12,7 @@ class PersonMapper extends ClassMapperBase<Person> {
   static PersonMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PersonMapper._());
+      ClothesMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -26,14 +27,18 @@ class PersonMapper extends ClassMapperBase<Person> {
 
   static String _$name(Person v) => v.name;
   static const Field<Person, String> _f$name = Field('name', _$name);
+  static List<Clothes>? _$clothes(Person v) => v.clothes;
+  static const Field<Person, List<Clothes>?> _f$clothes =
+      Field('clothes', _$clothes, opt: true);
 
   @override
   final Map<Symbol, Field<Person, dynamic>> fields = const {
     #name: _f$name,
+    #clothes: _f$clothes,
   };
 
   static Person _instantiate(DecodingData data) {
-    return Person(data.dec(_f$name));
+    return Person(name: data.dec(_f$name), clothes: data.dec(_f$clothes));
   }
 
   @override
@@ -85,7 +90,8 @@ extension PersonValueCopy<$R, $Out extends Person>
 
 abstract class PersonCopyWith<$R, $In extends Person, $Out extends Person>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? name});
+  ListCopyWith<$R, Clothes, ClothesCopyWith<$R, Clothes, Clothes>>? get clothes;
+  $R call({String? name, List<Clothes>? clothes});
   PersonCopyWith<$R2, $In, $Out> $chain<$R2>(Then<$Out, $R2> t);
 }
 
@@ -97,10 +103,20 @@ class _PersonCopyWithImpl<$R, $Out extends Person>
   @override
   late final ClassMapperBase<Person> $mapper = PersonMapper.ensureInitialized();
   @override
-  $R call({String? name}) =>
-      $apply(FieldCopyWithData({if (name != null) #name: name}));
+  ListCopyWith<$R, Clothes, ClothesCopyWith<$R, Clothes, Clothes>>?
+      get clothes => $value.clothes != null
+          ? ListCopyWith($value.clothes!, (v, t) => v.copyWith.$chain<$R>(t),
+              (v) => call(clothes: v))
+          : null;
   @override
-  Person $make(CopyWithData data) => Person(data.get(#name, or: $value.name));
+  $R call({String? name, Object? clothes = $none}) => $apply(FieldCopyWithData({
+        if (name != null) #name: name,
+        if (clothes != $none) #clothes: clothes
+      }));
+  @override
+  Person $make(CopyWithData data) => Person(
+      name: data.get(#name, or: $value.name),
+      clothes: data.get(#clothes, or: $value.clothes));
 
   @override
   PersonCopyWith<$R2, Person, $Out> $chain<$R2>(Then<$Out, $R2> t) =>

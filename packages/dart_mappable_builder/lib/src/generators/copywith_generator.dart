@@ -19,21 +19,12 @@ class CopyWithGenerator {
       element.superElement!.shouldGenerate(GenerateMethods.copy);
 
   late String selfTypeParam = element.selfTypeParam;
-  late String superPrefixedClassName = element.superPrefixedClassName;
 
-  late String selfSubTypeParam = ', $selfTypeParam';
-  late String selfSuperTypeParam = ', $selfTypeParam';
+  late String subTypeParamDef = '\$In extends $selfTypeParam';
+  late String subTypeParam = '\$In';
 
-  late String subTypeParamDef = ', \$In extends $selfTypeParam';
-  late String subTypeParam = ', \$In';
-  late String subOrSelfTypeParam = ', \$In';
-
-  late String superTypeParamDef = ', \$Out extends $superPrefixedClassName';
-  late String superTypeParamDef2 = ', \$Out2 extends $superPrefixedClassName';
-  late String superTypeParam = ', \$Out';
-  late String superTypeParam2 = ', \$Out2';
-  late String superOrSelfTypeParam = ', \$Out';
-  late String superOrSelfTypeParam2 = '\$Out2';
+  late String superTypeParamDef = '\$Out extends $selfTypeParam';
+  late String superTypeParam = '\$Out';
 
   String generateCopyWithExtension() {
     if (!element.shouldGenerate(GenerateMethods.copy)) return '';
@@ -57,12 +48,12 @@ class CopyWithGenerator {
   }
 
   String _generateCopyWith() {
-    return '${element.uniqueClassName}CopyWith<$selfTypeParam$selfSubTypeParam$selfSuperTypeParam$classTypeParams> get copyWith => _${element.uniqueClassName}CopyWithImpl(this, \$identity, \$identity);';
+    return '${element.uniqueClassName}CopyWith<$selfTypeParam, $selfTypeParam, $selfTypeParam$classTypeParams> get copyWith => _${element.uniqueClassName}CopyWithImpl(this, \$identity, \$identity);';
   }
 
   String _generateCopyWithMixin() {
     var snippet =
-        '  ${element.uniqueClassName}CopyWith<$selfTypeParam$selfSubTypeParam$selfSuperTypeParam$classTypeParams> get copyWith';
+        '  ${element.uniqueClassName}CopyWith<$selfTypeParam, $selfTypeParam, $selfTypeParam$classTypeParams> get copyWith';
 
     if (element.hasCallableConstructor) {
       snippet +=
@@ -79,8 +70,8 @@ class CopyWithGenerator {
 
     if (element.hasCallableConstructor) {
       output.write(
-          'extension ${element.uniqueClassName}ValueCopy<\$R$superTypeParamDef$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam$superOrSelfTypeParam> {\n'
-          '  ${element.uniqueClassName}CopyWith<\$R$selfSubTypeParam$superTypeParam$classTypeParams> get \$as${element.className} => \$base.as((v, t, t2) => _${element.uniqueClassName}CopyWithImpl(v, t, t2));\n'
+          'extension ${element.uniqueClassName}ValueCopy<\$R, $superTypeParamDef$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam, $superTypeParam> {\n'
+          '  ${element.uniqueClassName}CopyWith<\$R, $selfTypeParam, $superTypeParam$classTypeParams> get \$as${element.className} => \$base.as((v, t, t2) => _${element.uniqueClassName}CopyWithImpl(v, t, t2));\n'
           '}\n\n');
     }
 
@@ -90,17 +81,14 @@ class CopyWithGenerator {
       var superClassTypeParams =
           element.superTypeArgs.map((a) => ', $a').join();
       implementsStmt =
-          ' implements ${element.superElement!.uniqueClassName}CopyWith<\$R$subOrSelfTypeParam$superTypeParam$superClassTypeParams>';
+          ' implements ${element.superElement!.uniqueClassName}CopyWith<\$R, $subTypeParam, $superTypeParam$superClassTypeParams>';
     } else {
       implementsStmt =
-          ' implements ClassCopyWith<\$R$subOrSelfTypeParam$superOrSelfTypeParam>';
+          ' implements ClassCopyWith<\$R, $subTypeParam, $superTypeParam>';
     }
 
-    output.write(
-        'typedef ${element.superPrefixedClassNameAlias} = $superPrefixedClassName;\n');
-
     output.write(''
-        'abstract class ${element.uniqueClassName}CopyWith<\$R$subTypeParamDef$superTypeParamDef$classTypeParamsDef>$implementsStmt {\n');
+        'abstract class ${element.uniqueClassName}CopyWith<\$R, $subTypeParamDef, $superTypeParamDef$classTypeParamsDef>$implementsStmt {\n');
 
     var copyParams = CopyParamElement.collectFrom(element.params, element);
 
@@ -114,15 +102,15 @@ class CopyWithGenerator {
         '  ${hasSuperTarget ? '@override ' : ''}\$R call(${_generateCopyWithParams()});\n');
 
     output.write(
-        '  ${element.uniqueClassName}CopyWith<\$R2$subTypeParam$superTypeParam2$classTypeParams> \$chain<\$R2$superTypeParamDef2>(Then<$selfTypeParam, $superOrSelfTypeParam2> t, Then<$superOrSelfTypeParam2, \$R2> t2);\n');
+        '  ${element.uniqueClassName}CopyWith<\$R2, $subTypeParam, $superTypeParam$classTypeParams> \$chain<\$R2>(Then<$superTypeParam, \$R2> t);\n');
 
     output.write('}\n');
 
     if (element.hasCallableConstructor) {
       output.write('\n'
-          'class _${element.uniqueClassName}CopyWithImpl<\$R$superTypeParamDef$classTypeParamsDef> '
-          'extends ClassCopyWithBase<\$R, $selfTypeParam$superOrSelfTypeParam> implements ${element.uniqueClassName}CopyWith'
-          '<\$R$selfSubTypeParam$superTypeParam$classTypeParams> {\n'
+          'class _${element.uniqueClassName}CopyWithImpl<\$R, $superTypeParamDef$classTypeParamsDef> '
+          'extends ClassCopyWithBase<\$R, $selfTypeParam, $superTypeParam> implements ${element.uniqueClassName}CopyWith'
+          '<\$R, $selfTypeParam, $superTypeParam$classTypeParams> {\n'
           '  _${element.uniqueClassName}CopyWithImpl(super.value, super.then, super.then2);\n'
           '\n');
 
@@ -142,9 +130,9 @@ class CopyWithGenerator {
           '  @override $selfTypeParam \$make(CopyWithData data) => ${element.prefixedDecodingClassName}${element.constructor!.name != '' ? '.${element.constructor!.name}' : ''}(${_generateCopyWithConstructorParams()});\n');
 
       output.write('\n'
-          '  @override ${element.uniqueClassName}CopyWith<\$R2$selfSubTypeParam$superTypeParam2$classTypeParams> '
-          '\$chain<\$R2$superTypeParamDef2>(Then<$selfTypeParam, $superOrSelfTypeParam2> t, Then<$superOrSelfTypeParam2, \$R2> t2) '
-          '=> _${element.uniqueClassName}CopyWithImpl(\$value, t, t2);\n');
+          '  @override ${element.uniqueClassName}CopyWith<\$R2, $selfTypeParam, $superTypeParam$classTypeParams> '
+          '\$chain<\$R2>(Then<$superTypeParam, \$R2> t) '
+          '=> _${element.uniqueClassName}CopyWithImpl(\$value, \$cast, t);\n');
 
       output.write('}');
     }
@@ -174,7 +162,8 @@ class CopyWithGenerator {
         if (implVersion && (p.type.isNullable || isDynamic)) {
           params.add('Object? $name = \$none');
         } else {
-          params.add('$type${isDynamic ? '' : '?'} $name');
+          params.add(
+              '${param.isCovariant && !implVersion ? 'covariant ' : ''}$type${isDynamic ? '' : '?'} $name');
         }
       }
     }

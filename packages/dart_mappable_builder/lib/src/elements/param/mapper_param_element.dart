@@ -143,6 +143,8 @@ abstract class MapperParamElement {
 
   String get superName => parameter.name;
 
+  bool get isCovariant => false;
+
   Future<String?> getHook() {
     return _hookFor(parameter);
   }
@@ -165,7 +167,16 @@ abstract class MapperParamElement {
 
 class FieldParamElement extends MapperParamElement {
   final PropertyInducingElement field;
-  FieldParamElement(ParameterElement parameter, this.field) : super(parameter);
+  final PropertyInducingElement? superField;
+
+  FieldParamElement(ParameterElement parameter, this.field, [this.superField])
+      : super(parameter);
+
+  @override
+  bool get isCovariant =>
+      superField != null &&
+      !parameter.library!.typeSystem
+          .isAssignableTo(superField!.type, field.type);
 
   @override
   Future<String?> getHook() async {
@@ -187,6 +198,13 @@ class SuperParamElement extends MapperParamElement {
 
   @override
   String get superName => superParameter.superName;
+
+  @override
+  bool get isCovariant {
+    var isCov = !parameter.library!.typeSystem
+        .isAssignableTo(superParameter.parameter.type, parameter.type);
+    return isCov || superParameter.isCovariant;
+  }
 
   @override
   PropertyInducingElement get accessor => superParameter.accessor;

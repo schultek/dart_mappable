@@ -7,6 +7,7 @@ part of 'animal.dart';
 
 class AnimalMapper extends ClassMapperBase<Animal> {
   AnimalMapper._();
+
   static AnimalMapper? _instance;
   static AnimalMapper ensureInitialized() {
     if (_instance == null) {
@@ -56,11 +57,8 @@ mixin AnimalMappable {
   AnimalCopyWith<Animal, Animal, Animal> get copyWith;
 }
 
-typedef AnimalCopyWithBound = Animal;
-
 abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? name});
-  AnimalCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Animal>(
-      Then<Animal, $Out2> t, Then<$Out2, $R2> t2);
+  AnimalCopyWith<$R2, $In, $Out> $chain<$R2>(Then<$Out, $R2> t);
 }

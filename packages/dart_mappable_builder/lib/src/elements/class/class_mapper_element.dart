@@ -31,19 +31,6 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
   late AstNode? constructorNode;
 
   late String selfTypeParam = '$prefixedClassName$typeParams';
-  late String superPrefixedClassName = () {
-    if (superElement != null && superElement is! NoneClassMapperElement) {
-      if (superElement!.element.isAccessibleIn(parent.library)) {
-        return superElement!.superPrefixedClassName;
-      } else {
-        return superElement!.superPrefixedClassNameAlias;
-      }
-    } else {
-      return prefixedClassName;
-    }
-  }();
-
-  late String superPrefixedClassNameAlias = '${uniqueClassName}CopyWithBound';
 
   late Iterable<FieldElement> allPublicFields = () sync* {
     yield* superElement?.allPublicFields ?? [];
@@ -64,7 +51,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
     }
 
     for (var f in allPublicFields) {
-      if (!fields.containsKey(f)) {
+      if (!fields.containsKey(f) && !fields.keys.any((e) => e.name == f.name)) {
         fields[f] = MapperFieldElement(null, f, this);
       }
     }

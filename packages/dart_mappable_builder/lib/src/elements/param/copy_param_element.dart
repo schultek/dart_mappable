@@ -114,7 +114,7 @@ class CopyParamElement {
       : '';
 
   String get invocation {
-    return '\$value.${a.name}${a.type.isNullable ? '?' : ''}.copyWith.\$chain(\$identity, $invocationThen)';
+    return '\$value.${a.name}${a.type.isNullable ? '?' : ''}.copyWith.\$chain($invocationThen)';
   }
 }
 
@@ -141,6 +141,15 @@ class CollectionCopyParamElement extends CopyParamElement {
   late String itemTypeParam =
       ', ${parent.prefixedType(itemType, withNullability: false)}';
 
+  late String itemSelfTypeParams = () {
+    return itemType is InterfaceType
+        ? (itemType as InterfaceType)
+            .typeArguments
+            .map((t) => ', ${parent.prefixedType(t)}')
+            .join()
+        : '';
+  }();
+
   @override
   String get fieldTypeParams {
     if (itemName == 'Object') {
@@ -148,14 +157,7 @@ class CollectionCopyParamElement extends CopyParamElement {
       return '${super.fieldTypeParams}, ObjectCopyWith<\$R$objectTypeParam$objectTypeParam>${itemTypeNullable || forceNullable ? '?' : ''}';
     }
 
-    var typeParams = itemType is InterfaceType
-        ? (itemType as InterfaceType)
-            .typeArguments
-            .map((t) => ', ${parent.prefixedType(t)}')
-            .join()
-        : '';
-
-    return '${super.fieldTypeParams}, ${itemName}CopyWith<\$R$itemTypeParam$itemTypeParam$typeParams>${itemTypeNullable ? '?' : ''}';
+    return '${super.fieldTypeParams}, ${itemName}CopyWith<\$R$itemTypeParam$itemTypeParam$itemSelfTypeParams>${itemTypeNullable ? '?' : ''}';
   }
 
   @override
@@ -165,16 +167,16 @@ class CollectionCopyParamElement extends CopyParamElement {
       itemInvocation = '(v, t) => ObjectCopyWith(v, \$identity, t)';
     } else {
       var isBounded = itemType is TypeParameterType;
+      var nullMod = itemTypeNullable ? '?' : '';
 
-      itemInvocation = isBounded ? '\$cast' : '\$identity';
-      itemInvocation =
-          'v${itemTypeNullable ? '?' : ''}.copyWith.\$chain<\$R$itemTypeParam>($itemInvocation, t)';
+      itemInvocation = 'v$nullMod.copyWith';
 
       if (isBounded) {
-        itemInvocation = '\$cast($itemInvocation)';
+        itemInvocation =
+            '($itemInvocation as ${itemName}CopyWith<$itemName$itemTypeParam$itemTypeParam$itemSelfTypeParams>$nullMod)$nullMod';
       }
 
-      itemInvocation = '(v, t) => $itemInvocation';
+      itemInvocation = '(v, t) => $itemInvocation.\$chain<\$R>(t)';
     }
 
     var result =

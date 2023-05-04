@@ -5,8 +5,59 @@
 
 part of 'cat.dart';
 
+class CatTypeMapper extends EnumMapper<CatType> {
+  CatTypeMapper._();
+
+  static CatTypeMapper? _instance;
+  static CatTypeMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = CatTypeMapper._());
+    }
+    return _instance!;
+  }
+
+  static CatType fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  CatType decode(dynamic value) {
+    switch (value) {
+      case 'black':
+        return CatType.black;
+      case 'siamese':
+        return CatType.siamese;
+      case 'tiger':
+        return CatType.tiger;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(CatType self) {
+    switch (self) {
+      case CatType.black:
+        return 'black';
+      case CatType.siamese:
+        return 'siamese';
+      case CatType.tiger:
+        return 'tiger';
+    }
+  }
+}
+
+extension CatTypeMapperExtension on CatType {
+  String toValue() {
+    CatTypeMapper.ensureInitialized();
+    return MapperContainer.globals.toValue(this) as String;
+  }
+}
+
 class CatMapper extends SubClassMapperBase<Cat> {
   CatMapper._();
+
   static CatMapper? _instance;
   static CatMapper ensureInitialized() {
     if (_instance == null) {
@@ -91,23 +142,19 @@ mixin CatMappable {
   }
 }
 
-extension CatValueCopy<$R, $Out extends Animal>
-    on ObjectCopyWith<$R, Cat, $Out> {
+extension CatValueCopy<$R, $Out extends Cat> on ObjectCopyWith<$R, Cat, $Out> {
   CatCopyWith<$R, Cat, $Out> get $asCat =>
       $base.as((v, t, t2) => _CatCopyWithImpl(v, t, t2));
 }
 
-typedef CatCopyWithBound = Animal;
-
-abstract class CatCopyWith<$R, $In extends Cat, $Out extends Animal>
+abstract class CatCopyWith<$R, $In extends Cat, $Out extends Cat>
     implements AnimalCopyWith<$R, $In, $Out> {
   @override
   $R call({String? name, CatType? breed, String? color});
-  CatCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Animal>(
-      Then<Cat, $Out2> t, Then<$Out2, $R2> t2);
+  CatCopyWith<$R2, $In, $Out> $chain<$R2>(Then<$Out, $R2> t);
 }
 
-class _CatCopyWithImpl<$R, $Out extends Animal>
+class _CatCopyWithImpl<$R, $Out extends Cat>
     extends ClassCopyWithBase<$R, Cat, $Out>
     implements CatCopyWith<$R, Cat, $Out> {
   _CatCopyWithImpl(super.value, super.then, super.then2);
@@ -126,56 +173,6 @@ class _CatCopyWithImpl<$R, $Out extends Animal>
       data.get(#breed, or: $value.breed), data.get(#color, or: $value.color));
 
   @override
-  CatCopyWith<$R2, Cat, $Out2> $chain<$R2, $Out2 extends Animal>(
-          Then<Cat, $Out2> t, Then<$Out2, $R2> t2) =>
-      _CatCopyWithImpl($value, t, t2);
-}
-
-class CatTypeMapper extends EnumMapper<CatType> {
-  CatTypeMapper._();
-  static CatTypeMapper? _instance;
-  static CatTypeMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = CatTypeMapper._());
-    }
-    return _instance!;
-  }
-
-  static CatType fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  CatType decode(dynamic value) {
-    switch (value) {
-      case 'black':
-        return CatType.black;
-      case 'siamese':
-        return CatType.siamese;
-      case 'tiger':
-        return CatType.tiger;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(CatType self) {
-    switch (self) {
-      case CatType.black:
-        return 'black';
-      case CatType.siamese:
-        return 'siamese';
-      case CatType.tiger:
-        return 'tiger';
-    }
-  }
-}
-
-extension CatTypeMapperExtension on CatType {
-  String toValue() {
-    CatTypeMapper.ensureInitialized();
-    return MapperContainer.globals.toValue(this) as String;
-  }
+  CatCopyWith<$R2, Cat, $Out> $chain<$R2>(Then<$Out, $R2> t) =>
+      _CatCopyWithImpl($value, $cast, t);
 }

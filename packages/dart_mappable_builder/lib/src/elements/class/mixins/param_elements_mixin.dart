@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:collection/collection.dart';
 
 import '../../../utils.dart';
 import '../../mapper_element.dart';
@@ -42,7 +43,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
     var dec = param.declaration;
 
     if (dec is FieldFormalParameterElement) {
-      return FieldParamElement(param, dec.field!);
+      return FieldParamElement(param, dec.field!, getSuperField(dec.field!));
     }
 
     if (dec is SuperFormalParameterElement) {
@@ -137,5 +138,12 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
       }
     }
     return null;
+  }
+
+  PropertyInducingElement? getSuperField(FieldElement field) {
+    return superElement?.fields
+        .where((f) => f.field.name == field.name)
+        .map((f) => f.field)
+        .firstOrNull;
   }
 }
