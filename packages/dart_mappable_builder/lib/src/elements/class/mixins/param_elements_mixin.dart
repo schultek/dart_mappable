@@ -11,6 +11,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
   ConstructorElement? get constructor;
   AstNode? get constructorNode;
   ClassMapperElement? get superElement;
+  List<ClassMapperElement> get interfaceElements;
 
   late List<MapperParamElement> params = () {
     var params = <MapperParamElement>[];
@@ -82,14 +83,16 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
     if (getter != null) {
       var getterType = getter.type.returnType;
       if (getterType == param.type) {
-        return FieldParamElement(param, getter.variable);
+        return FieldParamElement(
+            param, getter.variable, getSuperField(getter.variable));
       }
 
       if (!getterType.isNullable &&
           param.type.isNullable &&
           getterType.getDisplayString(withNullability: false) ==
               param.type.getDisplayString(withNullability: false)) {
-        return FieldParamElement(param, getter.variable);
+        return FieldParamElement(
+            param, getter.variable, getSuperField(getter.variable));
       }
 
       return UnresolvedParamElement(
@@ -140,8 +143,9 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
     return null;
   }
 
-  PropertyInducingElement? getSuperField(FieldElement field) {
-    return superElement?.fields
+  PropertyInducingElement? getSuperField(PropertyInducingElement field) {
+    return [if (superElement != null) superElement!, ...interfaceElements]
+        .expand((e) => e.fields)
         .where((f) => f.field.name == field.name)
         .map((f) => f.field)
         .firstOrNull;

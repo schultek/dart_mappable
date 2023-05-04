@@ -1,56 +1,32 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_visitor.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../../mapper_group.dart';
 import '../../utils.dart';
 import '../class/class_mapper_element.dart';
 
-class RemoveParamsVisitor extends TypeVisitor<String> {
-  final MapperElementGroup parent;
-
-  RemoveParamsVisitor(this.parent);
-
+class IsGenericTypeVisitor extends UnifyingTypeVisitor<bool> {
   @override
-  String visitDynamicType(DynamicType type) {
-    return 'dynamic';
+  bool visitDartType(DartType type) {
+    return false;
   }
 
   @override
-  String visitFunctionType(FunctionType type) {
-    // TODO
-    return type.getDisplayString(withNullability: true);
+  bool visitTypeParameterType(TypeParameterType type) {
+    return true;
   }
 
   @override
-  String visitInterfaceType(InterfaceType type) {
-    return '${parent.prefixOfElement(type.element)}${type.element.name}'
-        '${type.typeArguments.isNotEmpty ? '<${type.typeArguments.map((t) => t.accept(this)).join(', ')}>' : ''}'
-        '${type.nullabilitySuffix == NullabilitySuffix.question ? '?' : ''}';
+  bool visitInterfaceType(InterfaceType type) {
+    return type.typeArguments.any((t) => t.accept(this));
   }
 
   @override
-  String visitNeverType(NeverType type) {
-    return 'Never';
-  }
-
-  @override
-  String visitRecordType(RecordType type) {
-    // TODO
-    return type.getDisplayString(withNullability: true);
-  }
-
-  @override
-  String visitTypeParameterType(TypeParameterType type) {
-    return type.bound.accept(this);
-  }
-
-  @override
-  String visitVoidType(VoidType type) {
-    return 'void';
+  bool visitRecordType(RecordType type) {
+    return type.positionalFields.any((f) => f.type.accept(this)) ||
+        type.namedFields.any((f) => f.type.accept(this));
   }
 }
 
@@ -61,10 +37,10 @@ class MapperFieldElement {
 
   MapperFieldElement(this.param, this.field, this.parent);
 
-  // TODO check nested generic types
   late bool generic = () {
-    return staticType != type;
+    return resolvedType.accept(IsGenericTypeVisitor());
   }();
+
   late String arg = () {
     if (!generic) return '';
 
@@ -72,23 +48,27 @@ class MapperFieldElement {
   }();
 
   late DartType resolvedType = () {
-    var type = field.type;
-
     if (field.enclosingElement is InterfaceElement) {
-      var it = parent.element.thisType
-          .asInstanceOf(field.enclosingElement as InterfaceElement)!;
+      var it = parent.element.thisType;
+      it = it.asInstanceOf(field.enclosingElement as InterfaceElement)!;
       var getter = it.getGetter(field.name);
-      type = getter!.type.returnType;
+      return getter!.type.returnType;
     }
-    return type;
+    return field.type;
   }();
 
-  late String staticType = () {
-    return resolvedType.accept(RemoveParamsVisitor(parent.parent));
+  late String staticGetterType = () {
+    return parent.parent.prefixedType(resolvedType, resolveBounds: true);
   }();
 
-  late String type = () {
-    return parent.parent.prefixedType(resolvedType);
+  late String argType = () {
+    return parent.parent.prefixedType(param?.parameter.type ?? resolvedType,
+        withNullability: false);
+  }();
+
+  late String staticArgType = () {
+    return parent.parent.prefixedType(param?.parameter.type ?? resolvedType,
+        withNullability: false, resolveBounds: true);
   }();
 
   late String mode = () {

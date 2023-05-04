@@ -20,12 +20,6 @@ class CopyWithGenerator {
 
   late String selfTypeParam = element.selfTypeParam;
 
-  late String subTypeParamDef = '\$In extends $selfTypeParam';
-  late String subTypeParam = '\$In';
-
-  late String superTypeParamDef = '\$Out extends $selfTypeParam';
-  late String superTypeParam = '\$Out';
-
   String generateCopyWithExtension() {
     if (!element.shouldGenerate(GenerateMethods.copy)) return '';
     if (element.hasCallableConstructor) {
@@ -70,25 +64,41 @@ class CopyWithGenerator {
 
     if (element.hasCallableConstructor) {
       output.write(
-          'extension ${element.uniqueClassName}ValueCopy<\$R, $superTypeParamDef$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam, $superTypeParam> {\n'
-          '  ${element.uniqueClassName}CopyWith<\$R, $selfTypeParam, $superTypeParam$classTypeParams> get \$as${element.className} => \$base.as((v, t, t2) => _${element.uniqueClassName}CopyWithImpl(v, t, t2));\n'
+          'extension ${element.uniqueClassName}ValueCopy<\$R, \$Out$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam, \$Out> {\n'
+          '  ${element.uniqueClassName}CopyWith<\$R, $selfTypeParam, \$Out$classTypeParams> get \$as${element.className} => \$base.as((v, t, t2) => _${element.uniqueClassName}CopyWithImpl(v, t, t2));\n'
           '}\n\n');
     }
 
-    var implementsStmt = '';
+    var implements = <String>[];
 
     if (hasSuperTarget) {
       var superClassTypeParams =
           element.superTypeArgs.map((a) => ', $a').join();
-      implementsStmt =
-          ' implements ${element.superElement!.uniqueClassName}CopyWith<\$R, $subTypeParam, $superTypeParam$superClassTypeParams>';
-    } else {
-      implementsStmt =
-          ' implements ClassCopyWith<\$R, $subTypeParam, $superTypeParam>';
+      implements.add(
+          '${element.superElement!.uniqueClassName}CopyWith<\$R, \$In, \$Out$superClassTypeParams>');
     }
 
+    for (var interface in element.interfaceElements) {
+      if (interface.shouldGenerate(GenerateMethods.copy)) {
+        var interfaceTypeParams = element.element.interfaces
+            .firstWhere((t) => t.element == interface.element)
+            .typeArguments
+            .map((a) => ', ${element.parent.prefixedType(a)}')
+            .join();
+        implements.add(
+            '${interface.uniqueClassName}CopyWith<\$R, \$In, \$Out$interfaceTypeParams>');
+      }
+    }
+
+    if (implements.isEmpty) {
+      implements.add('ClassCopyWith<\$R, \$In, \$Out>');
+    }
+
+    var implementsStmt =
+        implements.isEmpty ? '' : ' implements ${implements.join(', ')}';
+
     output.write(''
-        'abstract class ${element.uniqueClassName}CopyWith<\$R, $subTypeParamDef, $superTypeParamDef$classTypeParamsDef>$implementsStmt {\n');
+        'abstract class ${element.uniqueClassName}CopyWith<\$R, \$In extends $selfTypeParam, \$Out$classTypeParamsDef>$implementsStmt {\n');
 
     var copyParams = CopyParamElement.collectFrom(element.params, element);
 
@@ -102,15 +112,15 @@ class CopyWithGenerator {
         '  ${hasSuperTarget ? '@override ' : ''}\$R call(${_generateCopyWithParams()});\n');
 
     output.write(
-        '  ${element.uniqueClassName}CopyWith<\$R2, $subTypeParam, $superTypeParam$classTypeParams> \$chain<\$R2>(Then<$superTypeParam, \$R2> t);\n');
+        '  ${element.uniqueClassName}CopyWith<\$R2, \$In, \$Out2$classTypeParams> \$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t);\n');
 
     output.write('}\n');
 
     if (element.hasCallableConstructor) {
       output.write('\n'
-          'class _${element.uniqueClassName}CopyWithImpl<\$R, $superTypeParamDef$classTypeParamsDef> '
-          'extends ClassCopyWithBase<\$R, $selfTypeParam, $superTypeParam> implements ${element.uniqueClassName}CopyWith'
-          '<\$R, $selfTypeParam, $superTypeParam$classTypeParams> {\n'
+          'class _${element.uniqueClassName}CopyWithImpl<\$R, \$Out$classTypeParamsDef> '
+          'extends ClassCopyWithBase<\$R, $selfTypeParam, \$Out> implements ${element.uniqueClassName}CopyWith'
+          '<\$R, $selfTypeParam, \$Out$classTypeParams> {\n'
           '  _${element.uniqueClassName}CopyWithImpl(super.value, super.then, super.then2);\n'
           '\n');
 
@@ -130,8 +140,8 @@ class CopyWithGenerator {
           '  @override $selfTypeParam \$make(CopyWithData data) => ${element.prefixedDecodingClassName}${element.constructor!.name != '' ? '.${element.constructor!.name}' : ''}(${_generateCopyWithConstructorParams()});\n');
 
       output.write('\n'
-          '  @override ${element.uniqueClassName}CopyWith<\$R2, $selfTypeParam, $superTypeParam$classTypeParams> '
-          '\$chain<\$R2>(Then<$superTypeParam, \$R2> t) '
+          '  @override ${element.uniqueClassName}CopyWith<\$R2, $selfTypeParam, \$Out2$classTypeParams> '
+          '\$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t) '
           '=> _${element.uniqueClassName}CopyWithImpl(\$value, \$cast, t);\n');
 
       output.write('}');

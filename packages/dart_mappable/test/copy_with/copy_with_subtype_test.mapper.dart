@@ -47,13 +47,10 @@ mixin AnimalMappable {
   AnimalCopyWith<Animal, Animal, Animal> get copyWith;
 }
 
-typedef AnimalCopyWithBound = Animal;
-
-abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal>
+abstract class AnimalCopyWith<$R, $In extends Animal, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? name});
-  AnimalCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Animal>(
-      Then<Animal, $Out2> t, Then<$Out2, $R2> t2);
+  AnimalCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
 class CatMapper extends SubClassMapperBase<Cat> {
@@ -111,24 +108,19 @@ mixin CatMappable {
   }
 }
 
-extension CatValueCopy<$R, $Out extends Animal>
-    on ObjectCopyWith<$R, Cat, $Out> {
+extension CatValueCopy<$R, $Out> on ObjectCopyWith<$R, Cat, $Out> {
   CatCopyWith<$R, Cat, $Out> get $asCat =>
       $base.as((v, t, t2) => _CatCopyWithImpl(v, t, t2));
 }
 
-typedef CatCopyWithBound = Animal;
-
-abstract class CatCopyWith<$R, $In extends Cat, $Out extends Animal>
+abstract class CatCopyWith<$R, $In extends Cat, $Out>
     implements AnimalCopyWith<$R, $In, $Out> {
   @override
   $R call({String? name, String? color});
-  CatCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Animal>(
-      Then<Cat, $Out2> t, Then<$Out2, $R2> t2);
+  CatCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _CatCopyWithImpl<$R, $Out extends Animal>
-    extends ClassCopyWithBase<$R, Cat, $Out>
+class _CatCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Cat, $Out>
     implements CatCopyWith<$R, Cat, $Out> {
   _CatCopyWithImpl(super.value, super.then, super.then2);
 
@@ -142,9 +134,8 @@ class _CatCopyWithImpl<$R, $Out extends Animal>
       Cat(data.get(#name, or: $value.name), data.get(#color, or: $value.color));
 
   @override
-  CatCopyWith<$R2, Cat, $Out2> $chain<$R2, $Out2 extends Animal>(
-          Then<Cat, $Out2> t, Then<$Out2, $R2> t2) =>
-      _CatCopyWithImpl($value, t, t2);
+  CatCopyWith<$R2, Cat, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _CatCopyWithImpl($value, $cast, t);
 }
 
 class DogMapper extends SubClassMapperBase<Dog> {
@@ -199,24 +190,19 @@ mixin DogMappable {
   }
 }
 
-extension DogValueCopy<$R, $Out extends Animal>
-    on ObjectCopyWith<$R, Dog, $Out> {
+extension DogValueCopy<$R, $Out> on ObjectCopyWith<$R, Dog, $Out> {
   DogCopyWith<$R, Dog, $Out> get $asDog =>
       $base.as((v, t, t2) => _DogCopyWithImpl(v, t, t2));
 }
 
-typedef DogCopyWithBound = Animal;
-
-abstract class DogCopyWith<$R, $In extends Dog, $Out extends Animal>
+abstract class DogCopyWith<$R, $In extends Dog, $Out>
     implements AnimalCopyWith<$R, $In, $Out> {
   @override
   $R call({String? name});
-  DogCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Animal>(
-      Then<Dog, $Out2> t, Then<$Out2, $R2> t2);
+  DogCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _DogCopyWithImpl<$R, $Out extends Animal>
-    extends ClassCopyWithBase<$R, Dog, $Out>
+class _DogCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Dog, $Out>
     implements DogCopyWith<$R, Dog, $Out> {
   _DogCopyWithImpl(super.value, super.then, super.then2);
 
@@ -229,9 +215,8 @@ class _DogCopyWithImpl<$R, $Out extends Animal>
   Dog $make(CopyWithData data) => Dog(data.get(#name, or: $value.name));
 
   @override
-  DogCopyWith<$R2, Dog, $Out2> $chain<$R2, $Out2 extends Animal>(
-          Then<Dog, $Out2> t, Then<$Out2, $R2> t2) =>
-      _DogCopyWithImpl($value, t, t2);
+  DogCopyWith<$R2, Dog, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _DogCopyWithImpl($value, $cast, t);
 }
 
 class ZooMapper extends ClassMapperBase<Zoo> {
@@ -279,23 +264,19 @@ mixin ZooMappable {
   }
 }
 
-extension ZooValueCopy<$R, $Out extends Zoo> on ObjectCopyWith<$R, Zoo, $Out> {
+extension ZooValueCopy<$R, $Out> on ObjectCopyWith<$R, Zoo, $Out> {
   ZooCopyWith<$R, Zoo, $Out> get $asZoo =>
       $base.as((v, t, t2) => _ZooCopyWithImpl(v, t, t2));
 }
 
-typedef ZooCopyWithBound = Zoo;
-
-abstract class ZooCopyWith<$R, $In extends Zoo, $Out extends Zoo>
+abstract class ZooCopyWith<$R, $In extends Zoo, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   AnimalCopyWith<$R, Animal, Animal> get animal;
   $R call({Animal? animal});
-  ZooCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Zoo>(
-      Then<Zoo, $Out2> t, Then<$Out2, $R2> t2);
+  ZooCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _ZooCopyWithImpl<$R, $Out extends Zoo>
-    extends ClassCopyWithBase<$R, Zoo, $Out>
+class _ZooCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Zoo, $Out>
     implements ZooCopyWith<$R, Zoo, $Out> {
   _ZooCopyWithImpl(super.value, super.then, super.then2);
 
@@ -303,7 +284,7 @@ class _ZooCopyWithImpl<$R, $Out extends Zoo>
   late final ClassMapperBase<Zoo> $mapper = ZooMapper.ensureInitialized();
   @override
   AnimalCopyWith<$R, Animal, Animal> get animal =>
-      $value.animal.copyWith.$chain($identity, (v) => call(animal: v));
+      $value.animal.copyWith.$chain((v) => call(animal: v));
   @override
   $R call({Animal? animal}) =>
       $apply(FieldCopyWithData({if (animal != null) #animal: animal}));
@@ -311,9 +292,8 @@ class _ZooCopyWithImpl<$R, $Out extends Zoo>
   Zoo $make(CopyWithData data) => Zoo(data.get(#animal, or: $value.animal));
 
   @override
-  ZooCopyWith<$R2, Zoo, $Out2> $chain<$R2, $Out2 extends Zoo>(
-          Then<Zoo, $Out2> t, Then<$Out2, $R2> t2) =>
-      _ZooCopyWithImpl($value, t, t2);
+  ZooCopyWith<$R2, Zoo, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _ZooCopyWithImpl($value, $cast, t);
 }
 
 class AMapper extends ClassMapperBase<A> {
@@ -386,22 +366,18 @@ mixin AMappable<T> {
   }
 }
 
-extension AValueCopy<$R, $Out extends A, T> on ObjectCopyWith<$R, A<T>, $Out> {
+extension AValueCopy<$R, $Out, T> on ObjectCopyWith<$R, A<T>, $Out> {
   ACopyWith<$R, A<T>, $Out, T> get $asA =>
       $base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
 }
 
-typedef ACopyWithBound = A;
-
-abstract class ACopyWith<$R, $In extends A<T>, $Out extends A, T>
+abstract class ACopyWith<$R, $In extends A<T>, $Out, T>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call();
-  ACopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2 extends A>(
-      Then<A<T>, $Out2> t, Then<$Out2, $R2> t2);
+  ACopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _ACopyWithImpl<$R, $Out extends A, T>
-    extends ClassCopyWithBase<$R, A<T>, $Out>
+class _ACopyWithImpl<$R, $Out, T> extends ClassCopyWithBase<$R, A<T>, $Out>
     implements ACopyWith<$R, A<T>, $Out, T> {
   _ACopyWithImpl(super.value, super.then, super.then2);
 
@@ -413,9 +389,8 @@ class _ACopyWithImpl<$R, $Out extends A, T>
   A<T> $make(CopyWithData data) => A();
 
   @override
-  ACopyWith<$R2, A<T>, $Out2, T> $chain<$R2, $Out2 extends A>(
-          Then<A<T>, $Out2> t, Then<$Out2, $R2> t2) =>
-      _ACopyWithImpl($value, t, t2);
+  ACopyWith<$R2, A<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _ACopyWithImpl($value, $cast, t);
 }
 
 class CMapper extends ClassMapperBase<C> {
@@ -487,23 +462,19 @@ mixin CMappable<T> {
   }
 }
 
-extension CValueCopy<$R, $Out extends A, T> on ObjectCopyWith<$R, C<T>, $Out> {
+extension CValueCopy<$R, $Out, T> on ObjectCopyWith<$R, C<T>, $Out> {
   CCopyWith<$R, C<T>, $Out, T> get $asC =>
       $base.as((v, t, t2) => _CCopyWithImpl(v, t, t2));
 }
 
-typedef CCopyWithBound = A;
-
-abstract class CCopyWith<$R, $In extends C<T>, $Out extends A, T>
+abstract class CCopyWith<$R, $In extends C<T>, $Out, T>
     implements ACopyWith<$R, $In, $Out, T> {
   @override
   $R call();
-  CCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2 extends A>(
-      Then<C<T>, $Out2> t, Then<$Out2, $R2> t2);
+  CCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _CCopyWithImpl<$R, $Out extends A, T>
-    extends ClassCopyWithBase<$R, C<T>, $Out>
+class _CCopyWithImpl<$R, $Out, T> extends ClassCopyWithBase<$R, C<T>, $Out>
     implements CCopyWith<$R, C<T>, $Out, T> {
   _CCopyWithImpl(super.value, super.then, super.then2);
 
@@ -515,9 +486,8 @@ class _CCopyWithImpl<$R, $Out extends A, T>
   C<T> $make(CopyWithData data) => C();
 
   @override
-  CCopyWith<$R2, C<T>, $Out2, T> $chain<$R2, $Out2 extends A>(
-          Then<C<T>, $Out2> t, Then<$Out2, $R2> t2) =>
-      _CCopyWithImpl($value, t, t2);
+  CCopyWith<$R2, C<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _CCopyWithImpl($value, $cast, t);
 }
 
 class BMapper extends ClassMapperBase<B> {
@@ -543,7 +513,7 @@ class BMapper extends ClassMapperBase<B> {
   static List<A<dynamic>?> _$list(B v) => v.list;
   static const Field<B, List<A<dynamic>?>> _f$list = Field('list', _$list);
   static A<dynamic>? _$a(B v) => v.a;
-  static const Field<B, A<dynamic>?> _f$a = Field('a', _$a);
+  static const Field<B, A<dynamic>> _f$a = Field('a', _$a);
 
   @override
   final Map<Symbol, Field<B, dynamic>> fields = const {
@@ -596,24 +566,21 @@ mixin BMappable {
   }
 }
 
-extension BValueCopy<$R, $Out extends B> on ObjectCopyWith<$R, B, $Out> {
+extension BValueCopy<$R, $Out> on ObjectCopyWith<$R, B, $Out> {
   BCopyWith<$R, B, $Out> get $asB =>
       $base.as((v, t, t2) => _BCopyWithImpl(v, t, t2));
 }
 
-typedef BCopyWithBound = B;
-
-abstract class BCopyWith<$R, $In extends B, $Out extends B>
+abstract class BCopyWith<$R, $In extends B, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, A<dynamic>?, ACopyWith<$R, A<dynamic>, A<dynamic>, dynamic>?>
       get list;
   ACopyWith<$R, A<dynamic>, A<dynamic>, dynamic>? get a;
   $R call({List<A<dynamic>?>? list, A<dynamic>? a});
-  BCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends B>(
-      Then<B, $Out2> t, Then<$Out2, $R2> t2);
+  BCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _BCopyWithImpl<$R, $Out extends B> extends ClassCopyWithBase<$R, B, $Out>
+class _BCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, B, $Out>
     implements BCopyWith<$R, B, $Out> {
   _BCopyWithImpl(super.value, super.then, super.then2);
 
@@ -622,12 +589,10 @@ class _BCopyWithImpl<$R, $Out extends B> extends ClassCopyWithBase<$R, B, $Out>
   @override
   ListCopyWith<$R, A<dynamic>?, ACopyWith<$R, A<dynamic>, A<dynamic>, dynamic>?>
       get list => ListCopyWith(
-          $value.list,
-          (v, t) => v?.copyWith.$chain<$R, A<dynamic>>($identity, t),
-          (v) => call(list: v));
+          $value.list, (v, t) => v?.copyWith.$chain(t), (v) => call(list: v));
   @override
   ACopyWith<$R, A<dynamic>, A<dynamic>, dynamic>? get a =>
-      $value.a?.copyWith.$chain($identity, (v) => call(a: v));
+      $value.a?.copyWith.$chain((v) => call(a: v));
   @override
   $R call({List<A<dynamic>?>? list, Object? a = $none}) =>
       $apply(FieldCopyWithData(
@@ -637,7 +602,6 @@ class _BCopyWithImpl<$R, $Out extends B> extends ClassCopyWithBase<$R, B, $Out>
       B(data.get(#list, or: $value.list), data.get(#a, or: $value.a));
 
   @override
-  BCopyWith<$R2, B, $Out2> $chain<$R2, $Out2 extends B>(
-          Then<B, $Out2> t, Then<$Out2, $R2> t2) =>
-      _BCopyWithImpl($value, t, t2);
+  BCopyWith<$R2, B, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _BCopyWithImpl($value, $cast, t);
 }

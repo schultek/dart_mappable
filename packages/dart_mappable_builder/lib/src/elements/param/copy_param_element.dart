@@ -114,7 +114,13 @@ class CopyParamElement {
       : '';
 
   String get invocation {
-    return '\$value.${a.name}${a.type.isNullable ? '?' : ''}.copyWith.\$chain($invocationThen)';
+    var inv = '\$value.${a.name}';
+    var nullMod = a.type.isNullable ? '?' : '';
+    if (p.type != a.type) {
+      inv =
+          '($inv as ${parent.prefixedType(p.type, withNullability: false)}$nullMod)';
+    }
+    return '$inv$nullMod.copyWith.\$chain($invocationThen)';
   }
 }
 
@@ -176,7 +182,7 @@ class CollectionCopyParamElement extends CopyParamElement {
             '($itemInvocation as ${itemName}CopyWith<$itemName$itemTypeParam$itemTypeParam$itemSelfTypeParams>$nullMod)$nullMod';
       }
 
-      itemInvocation = '(v, t) => $itemInvocation.\$chain<\$R>(t)';
+      itemInvocation = '(v, t) => $itemInvocation.\$chain(t)';
     }
 
     var result =

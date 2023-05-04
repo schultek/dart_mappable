@@ -119,8 +119,8 @@ void main() {
     test('Generic type encoding', () {
       SettingsMapper.ensureInitialized();
 
-      var dataA = MapperContainer.globals
-          .toValue(SingleSetting<int>(properties: [2, 3]));
+      var dataA =
+          MapperContainer.globals.toMap(SingleSetting<int>(properties: [2, 3]));
       expect(
         dataA,
         equals({

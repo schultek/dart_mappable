@@ -26,6 +26,8 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
   List<ClassMapperElement> subElements = [];
   @override
   ClassMapperElement? superElement;
+  @override
+  List<ClassMapperElement> interfaceElements = [];
 
   @override
   late AstNode? constructorNode;
@@ -75,7 +77,11 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
           .firstOrNull;
 
   late bool isDiscriminatingSubclass = () {
-    if (superElement == null || superElement is NoneClassMapperElement) {
+    var hasSuperClass =
+        superElement != null && superElement is! NoneClassMapperElement;
+    var hasInterfaces = interfaceElements.isNotEmpty &&
+        interfaceElements.every((e) => e is! NoneClassMapperElement);
+    if (!hasSuperClass && !hasInterfaces) {
       return false;
     }
     if (discriminatorKey == null && discriminatorValueCode == null) {
@@ -151,10 +157,22 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
 
     var safeParams = <MapperParamElement>[];
 
+    bool isCopySafe(MapperParamElement param) {
+      return subElements.every((e) => e.copySafeParams.any((subParam) {
+            if (subParam is SuperParamElement &&
+                subParam.superParameter.parameter == param.parameter) {
+              return true;
+            }
+            if (subParam is FieldParamElement &&
+                subParam.superField == param.accessor) {
+              return true;
+            }
+            return false;
+          }));
+    }
+
     for (var param in params) {
-      if (subElements.every((c) => c.copySafeParams
-          .whereType<SuperParamElement>()
-          .any((p) => p.superParameter.parameter == param.parameter))) {
+      if (isCopySafe(param)) {
         safeParams.add(param);
       }
     }

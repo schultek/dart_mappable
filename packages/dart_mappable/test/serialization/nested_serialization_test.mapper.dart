@@ -81,7 +81,7 @@ class PersonMapper extends ClassMapperBase<Person> {
   static const Field<Person, int> _f$age =
       Field('age', _$age, opt: true, def: 18);
   static Car? _$car(Person v) => v.car;
-  static const Field<Person, Car?> _f$car = Field('car', _$car, opt: true);
+  static const Field<Person, Car> _f$car = Field('car', _$car, opt: true);
 
   @override
   final Map<Symbol, Field<Person, dynamic>> fields = const {
@@ -136,24 +136,19 @@ mixin PersonMappable {
   }
 }
 
-extension PersonValueCopy<$R, $Out extends Person>
-    on ObjectCopyWith<$R, Person, $Out> {
+extension PersonValueCopy<$R, $Out> on ObjectCopyWith<$R, Person, $Out> {
   PersonCopyWith<$R, Person, $Out> get $asPerson =>
       $base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
 }
 
-typedef PersonCopyWithBound = Person;
-
-abstract class PersonCopyWith<$R, $In extends Person, $Out extends Person>
+abstract class PersonCopyWith<$R, $In extends Person, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   CarCopyWith<$R, Car, Car>? get car;
   $R call({String? name, int? age, Car? car});
-  PersonCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Person>(
-      Then<Person, $Out2> t, Then<$Out2, $R2> t2);
+  PersonCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _PersonCopyWithImpl<$R, $Out extends Person>
-    extends ClassCopyWithBase<$R, Person, $Out>
+class _PersonCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Person, $Out>
     implements PersonCopyWith<$R, Person, $Out> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
 
@@ -161,7 +156,7 @@ class _PersonCopyWithImpl<$R, $Out extends Person>
   late final ClassMapperBase<Person> $mapper = PersonMapper.ensureInitialized();
   @override
   CarCopyWith<$R, Car, Car>? get car =>
-      $value.car?.copyWith.$chain($identity, (v) => call(car: v));
+      $value.car?.copyWith.$chain((v) => call(car: v));
   @override
   $R call({String? name, int? age, Object? car = $none}) =>
       $apply(FieldCopyWithData({
@@ -174,9 +169,8 @@ class _PersonCopyWithImpl<$R, $Out extends Person>
       age: data.get(#age, or: $value.age), car: data.get(#car, or: $value.car));
 
   @override
-  PersonCopyWith<$R2, Person, $Out2> $chain<$R2, $Out2 extends Person>(
-          Then<Person, $Out2> t, Then<$Out2, $R2> t2) =>
-      _PersonCopyWithImpl($value, t, t2);
+  PersonCopyWith<$R2, Person, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _PersonCopyWithImpl($value, $cast, t);
 }
 
 class CarMapper extends ClassMapperBase<Car> {
@@ -259,22 +253,18 @@ mixin CarMappable {
   }
 }
 
-extension CarValueCopy<$R, $Out extends Car> on ObjectCopyWith<$R, Car, $Out> {
+extension CarValueCopy<$R, $Out> on ObjectCopyWith<$R, Car, $Out> {
   CarCopyWith<$R, Car, $Out> get $asCar =>
       $base.as((v, t, t2) => _CarCopyWithImpl(v, t, t2));
 }
 
-typedef CarCopyWithBound = Car;
-
-abstract class CarCopyWith<$R, $In extends Car, $Out extends Car>
+abstract class CarCopyWith<$R, $In extends Car, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({int? drivenKm, Brand? brand});
-  CarCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Car>(
-      Then<Car, $Out2> t, Then<$Out2, $R2> t2);
+  CarCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _CarCopyWithImpl<$R, $Out extends Car>
-    extends ClassCopyWithBase<$R, Car, $Out>
+class _CarCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Car, $Out>
     implements CarCopyWith<$R, Car, $Out> {
   _CarCopyWithImpl(super.value, super.then, super.then2);
 
@@ -290,7 +280,6 @@ class _CarCopyWithImpl<$R, $Out extends Car>
       data.get(#brand, or: $value.brand));
 
   @override
-  CarCopyWith<$R2, Car, $Out2> $chain<$R2, $Out2 extends Car>(
-          Then<Car, $Out2> t, Then<$Out2, $R2> t2) =>
-      _CarCopyWithImpl($value, t, t2);
+  CarCopyWith<$R2, Car, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _CarCopyWithImpl($value, $cast, t);
 }

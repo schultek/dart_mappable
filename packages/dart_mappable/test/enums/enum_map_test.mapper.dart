@@ -129,25 +129,20 @@ mixin ClassAMappable {
   }
 }
 
-extension ClassAValueCopy<$R, $Out extends ClassA>
-    on ObjectCopyWith<$R, ClassA, $Out> {
+extension ClassAValueCopy<$R, $Out> on ObjectCopyWith<$R, ClassA, $Out> {
   ClassACopyWith<$R, ClassA, $Out> get $asClassA =>
       $base.as((v, t, t2) => _ClassACopyWithImpl(v, t, t2));
 }
 
-typedef ClassACopyWithBound = ClassA;
-
-abstract class ClassACopyWith<$R, $In extends ClassA, $Out extends ClassA>
+abstract class ClassACopyWith<$R, $In extends ClassA, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, EnumA, bool?, ObjectCopyWith<$R, bool?, bool?>?>
       get someVariable;
   $R call({Map<EnumA, bool?>? someVariable});
-  ClassACopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends ClassA>(
-      Then<ClassA, $Out2> t, Then<$Out2, $R2> t2);
+  ClassACopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _ClassACopyWithImpl<$R, $Out extends ClassA>
-    extends ClassCopyWithBase<$R, ClassA, $Out>
+class _ClassACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, ClassA, $Out>
     implements ClassACopyWith<$R, ClassA, $Out> {
   _ClassACopyWithImpl(super.value, super.then, super.then2);
 
@@ -167,7 +162,6 @@ class _ClassACopyWithImpl<$R, $Out extends ClassA>
       ClassA(data.get(#someVariable, or: $value.someVariable));
 
   @override
-  ClassACopyWith<$R2, ClassA, $Out2> $chain<$R2, $Out2 extends ClassA>(
-          Then<ClassA, $Out2> t, Then<$Out2, $R2> t2) =>
-      _ClassACopyWithImpl($value, t, t2);
+  ClassACopyWith<$R2, ClassA, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _ClassACopyWithImpl($value, $cast, t);
 }

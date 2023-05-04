@@ -127,25 +127,21 @@ mixin DSOpacityDataMappable {
   }
 }
 
-extension DSOpacityDataValueCopy<$R, $Out extends DSOpacityData>
+extension DSOpacityDataValueCopy<$R, $Out>
     on ObjectCopyWith<$R, DSOpacityData, $Out> {
   DSOpacityDataCopyWith<$R, DSOpacityData, $Out> get $asDSOpacityData =>
       $base.as((v, t, t2) => _DSOpacityDataCopyWithImpl(v, t, t2));
 }
 
-typedef DSOpacityDataCopyWithBound = DSOpacityData;
-
-abstract class DSOpacityDataCopyWith<$R, $In extends DSOpacityData,
-    $Out extends DSOpacityData> implements ClassCopyWith<$R, $In, $Out> {
+abstract class DSOpacityDataCopyWith<$R, $In extends DSOpacityData, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, BaseToken, double, ObjectCopyWith<$R, double, double>>
       get data;
   $R call({Map<BaseToken, double>? data, double? fallback});
-  DSOpacityDataCopyWith<$R2, $In, $Out2>
-      $chain<$R2, $Out2 extends DSOpacityData>(
-          Then<DSOpacityData, $Out2> t, Then<$Out2, $R2> t2);
+  DSOpacityDataCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _DSOpacityDataCopyWithImpl<$R, $Out extends DSOpacityData>
+class _DSOpacityDataCopyWithImpl<$R, $Out>
     extends ClassCopyWithBase<$R, DSOpacityData, $Out>
     implements DSOpacityDataCopyWith<$R, DSOpacityData, $Out> {
   _DSOpacityDataCopyWithImpl(super.value, super.then, super.then2);
@@ -169,8 +165,7 @@ class _DSOpacityDataCopyWithImpl<$R, $Out extends DSOpacityData>
       fallback: data.get(#fallback, or: $value.fallback));
 
   @override
-  DSOpacityDataCopyWith<$R2, DSOpacityData, $Out2>
-      $chain<$R2, $Out2 extends DSOpacityData>(
-              Then<DSOpacityData, $Out2> t, Then<$Out2, $R2> t2) =>
-          _DSOpacityDataCopyWithImpl($value, t, t2);
+  DSOpacityDataCopyWith<$R2, DSOpacityData, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _DSOpacityDataCopyWithImpl($value, $cast, t);
 }
