@@ -1,3 +1,10 @@
+# 3.0.0-dev.4
+
+- Chore: Improved docs and tests.
+- Copy-With now supports classes that implement multiple interfaces.
+- Added support for serializing fields that are not part of the constructor
+  when annotated with `@MappableField()`.
+
 # 3.0.0-dev.2
 
 - Performance improvements & bug fixes
