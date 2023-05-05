@@ -7,6 +7,7 @@ part of 'main.dart';
 
 class UnionMapper extends ClassMapperBase<Union> {
   UnionMapper._();
+
   static UnionMapper? _instance;
   static UnionMapper ensureInitialized() {
     if (_instance == null) {
@@ -67,6 +68,7 @@ abstract class UnionCopyWith<$R, $In extends Union, $Out extends Union>
 
 class DataMapper extends SubClassMapperBase<Data> {
   DataMapper._();
+
   static DataMapper? _instance;
   static DataMapper ensureInitialized() {
     if (_instance == null) {
@@ -128,6 +130,7 @@ extension DataMapperExtension on Data {
 
 class LoadingMapper extends SubClassMapperBase<Loading> {
   LoadingMapper._();
+
   static LoadingMapper? _instance;
   static LoadingMapper ensureInitialized() {
     if (_instance == null) {
@@ -188,6 +191,7 @@ extension LoadingMapperExtension on Loading {
 
 class ErrorDetailsMapper extends SubClassMapperBase<ErrorDetails> {
   ErrorDetailsMapper._();
+
   static ErrorDetailsMapper? _instance;
   static ErrorDetailsMapper ensureInitialized() {
     if (_instance == null) {

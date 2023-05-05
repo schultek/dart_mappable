@@ -7,6 +7,7 @@ part of 'renaming.dart';
 
 class PersonBMapper extends ClassMapperBase<PersonB> {
   PersonBMapper._();
+
   static PersonBMapper? _instance;
   static PersonBMapper ensureInitialized() {
     if (_instance == null) {

@@ -7,6 +7,7 @@ part of 'polymorph.dart';
 
 class AnimalBMapper extends ClassMapperBase<AnimalB> {
   AnimalBMapper._();
+
   static AnimalBMapper? _instance;
   static AnimalBMapper ensureInitialized() {
     if (_instance == null) {
@@ -67,6 +68,7 @@ abstract class AnimalBCopyWith<$R, $In extends AnimalB, $Out extends AnimalB>
 
 class CatBMapper extends SubClassMapperBase<CatB> {
   CatBMapper._();
+
   static CatBMapper? _instance;
   static CatBMapper ensureInitialized() {
     if (_instance == null) {
@@ -185,6 +187,7 @@ class _CatBCopyWithImpl<$R, $Out extends AnimalB>
 
 class DogBMapper extends SubClassMapperBase<DogB> {
   DogBMapper._();
+
   static DogBMapper? _instance;
   static DogBMapper ensureInitialized() {
     if (_instance == null) {

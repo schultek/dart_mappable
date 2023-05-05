@@ -7,6 +7,7 @@ part of 'generic.dart';
 
 class BoxCMapper extends ClassMapperBase<BoxC> {
   BoxCMapper._();
+
   static BoxCMapper? _instance;
   static BoxCMapper ensureInitialized() {
     if (_instance == null) {
@@ -117,6 +118,7 @@ class _BoxCCopyWithImpl<$R, $Out extends BoxC, T>
 
 class ContentCMapper extends ClassMapperBase<ContentC> {
   ContentCMapper._();
+
   static ContentCMapper? _instance;
   static ContentCMapper ensureInitialized() {
     if (_instance == null) {

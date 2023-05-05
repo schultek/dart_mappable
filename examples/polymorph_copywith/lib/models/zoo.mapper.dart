@@ -7,6 +7,7 @@ part of 'zoo.dart';
 
 class ZooMapper extends ClassMapperBase<Zoo> {
   ZooMapper._();
+
   static ZooMapper? _instance;
   static ZooMapper ensureInitialized() {
     if (_instance == null) {

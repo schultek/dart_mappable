@@ -7,6 +7,7 @@ part of 'animal.dart';
 
 class AnimalMapper extends ClassMapperBase<Animal> {
   AnimalMapper._();
+
   static AnimalMapper? _instance;
   static AnimalMapper ensureInitialized() {
     if (_instance == null) {

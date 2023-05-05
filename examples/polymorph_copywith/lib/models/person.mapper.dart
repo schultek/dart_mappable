@@ -7,6 +7,7 @@ part of 'person.dart';
 
 class PersonMapper extends ClassMapperBase<Person> {
   PersonMapper._();
+
   static PersonMapper? _instance;
   static PersonMapper ensureInitialized() {
     if (_instance == null) {

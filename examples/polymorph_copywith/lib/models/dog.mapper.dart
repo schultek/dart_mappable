@@ -7,6 +7,7 @@ part of 'dog.dart';
 
 class DogMapper extends SubClassMapperBase<Dog> {
   DogMapper._();
+
   static DogMapper? _instance;
   static DogMapper ensureInitialized() {
     if (_instance == null) {
