@@ -37,8 +37,8 @@ void main() {
       var a2 = a.copyWith.$delta({'a': 'hi'});
       expect(a2, equals(A('hi', B('a', null))));
 
-      var a3 = a2.copyWith.b!.$delta({'b': 3});
-      expect(a3, equals(A('hi', B('a', 3))));
+      var a3 = a2.copyWith.b!.$delta({'b': 3, 'a': null});
+      expect(a3, equals(A('hi', B(null, 3))));
     });
   });
 }

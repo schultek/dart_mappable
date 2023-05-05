@@ -46,7 +46,7 @@ class DeltaCopyWithData extends CopyWithData {
 
   @override
   V get<V>(Symbol name, {Object? or = $none}) {
-    if (value[mapper.fields[name]!.key] != null || or == $none) {
+    if (value.containsKey(mapper.fields[name]!.key) || or == $none) {
       return mapper.fields[name]!.decode(value, context);
     } else {
       return or as V;

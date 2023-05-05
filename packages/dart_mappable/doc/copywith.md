@@ -76,7 +76,9 @@ After reading the next page, check out the [Polymorphic-CopyWith Example](https:
 
 ## Merging Objects
 
-You can also merge classes with nullable fields using the `.copyWith.$merge()` extension:
+You can also merge classes fields using the `.copyWith.$merge()` extension. Here any non-null property of the provided 
+object will override the respective property of the base object. Other than the normal copy-with, this is not 
+null-aware / reversible, meaning a non-null property can never be set back to null using this method.
 
 ```dart
 @MappableClass()
@@ -98,23 +100,25 @@ void main() {
 
 ## Copy Delta
 
-You can also apply a delta map on an object using the `.copyWith.$delta` extension:
+You can also apply a delta map on an object using the `.copyWith.$delta` extension. The delta copy-with is null aware 
+(other than the merging copy-with) meaning that explicit null values in the provided map will override any value in the base object.
 
 ```dart
 @MappableClass()
 class A with AMappable {
-  A(this.a, this.b);
+  A(this.a, this.b, this.c);
   
   String? a;
   String? b;
+  String? c;
 }
 
 void main() {
-  var a = A('a', null);
-  var delta = {'b': 'b'};
+  var a = A('a', null, 'c');
+  var delta = {'b': 'b', 'c': null};
   
   var c = a.copyWith.$delta(delta);
-  assert(c == A('a', 'b'));
+  assert(c == A('a', 'b', null));
 }
 ``` 
 
