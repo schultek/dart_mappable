@@ -1,3 +1,8 @@
+# 3.0.0-dev.5
+
+- Make delta copy-with null aware.
+- Add `renameMethods` to build options.
+
 # 3.0.0-dev.4
 
 - Chore: Improved docs and tests.
