@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:collection/collection.dart';
 
 import '../../../utils.dart';
 import '../../mapper_element.dart';
@@ -9,6 +10,8 @@ import '../class_mapper_element.dart';
 mixin ParamElementsMixin on MapperElement<ClassElement> {
   ConstructorElement? get constructor;
   AstNode? get constructorNode;
+  ClassMapperElement? get extendsElement;
+  List<ClassMapperElement> get interfaceElements;
   ClassMapperElement? get superElement;
 
   late List<MapperParamElement> params = () {
@@ -42,7 +45,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
     var dec = param.declaration;
 
     if (dec is FieldFormalParameterElement) {
-      return FieldParamElement(param, dec.field!);
+      return FieldParamElement(param, dec.field!, getSuperField(dec.field!));
     }
 
     if (dec is SuperFormalParameterElement) {
@@ -81,14 +84,16 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
     if (getter != null) {
       var getterType = getter.type.returnType;
       if (getterType == param.type) {
-        return FieldParamElement(param, getter.variable);
+        return FieldParamElement(
+            param, getter.variable, getSuperField(getter.variable));
       }
 
       if (!getterType.isNullable &&
           param.type.isNullable &&
           getterType.getDisplayString(withNullability: false) ==
               param.type.getDisplayString(withNullability: false)) {
-        return FieldParamElement(param, getter.variable);
+        return FieldParamElement(
+            param, getter.variable, getSuperField(getter.variable));
       }
 
       return UnresolvedParamElement(
@@ -137,5 +142,13 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
       }
     }
     return null;
+  }
+
+  PropertyInducingElement? getSuperField(PropertyInducingElement field) {
+    return [if (extendsElement != null) extendsElement!, ...interfaceElements]
+        .expand((e) => e.fields)
+        .where((f) => f.field.name == field.name)
+        .map((f) => f.field)
+        .firstOrNull;
   }
 }

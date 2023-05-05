@@ -7,7 +7,7 @@ import '../../mapper_element.dart';
 import '../class_mapper_element.dart';
 
 mixin TypeParamsMixin on MapperElement<ClassElement> {
-  ClassMapperElement? get superElement;
+  ClassMapperElement? get extendsElement;
 
   late List<String> typeParamsList = element.typeParameters
       .map((p) =>
@@ -15,7 +15,7 @@ mixin TypeParamsMixin on MapperElement<ClassElement> {
       .toList();
 
   late List<String> superTypeArgs = () {
-    if (superElement == null) return <String>[];
+    if (extendsElement == null) return <String>[];
     return element.supertype?.typeArguments
             .map((a) => parent.prefixedType(a))
             .toList() ??

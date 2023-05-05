@@ -55,10 +55,10 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
         '      MapperContainer.globals.use(_instance = ${element.mapperName}._());\n');
 
     if (isSubClass) {
-      var prefix = element.parent
-          .prefixOfElement(element.superElement!.annotatedElement);
+      var s = element.superElement!;
+      var prefix = element.parent.prefixOfElement(s.annotatedElement);
       output.write(
-          '      $prefix${element.superElement!.mapperName}.ensureInitialized().addSubMapper(_instance!);\n');
+          '      $prefix${s.mapperName}.ensureInitialized().addSubMapper(_instance!);\n');
     }
 
     var customMappers = element.customMappers;
@@ -97,13 +97,13 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
 
     for (var f in fields) {
       output.write(
-          '  static ${f.staticType} _\$${f.field.name}(${element.prefixedClassName} v) => v.${f.field.name};\n');
+          '  static ${f.staticGetterType} _\$${f.field.name}(${element.prefixedClassName} v) => v.${f.field.name};\n');
       if (f.generic) {
         output.write(
-            '  static dynamic _arg\$${f.field.name}${element.typeParamsDeclaration}(f) => f<${f.type}>();\n');
+            '  static dynamic _arg\$${f.field.name}${element.typeParamsDeclaration}(f) => f<${f.argType}>();\n');
       }
       output.write(
-          "  static const Field<${element.prefixedClassName}, ${f.staticType}> _f\$${f.field.name} = Field('${f.field.name}', _\$${f.field.name}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook});\n");
+          "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.field.name} = Field('${f.field.name}', _\$${f.field.name}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook});\n");
     }
 
     output.write(

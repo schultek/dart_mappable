@@ -53,21 +53,18 @@ mixin AMappable {
       _ACopyWithImpl(this as A, $identity, $identity);
 }
 
-extension AValueCopy<$R, $Out extends A> on ObjectCopyWith<$R, A, $Out> {
+extension AValueCopy<$R, $Out> on ObjectCopyWith<$R, A, $Out> {
   ACopyWith<$R, A, $Out> get $asA =>
       $base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
 }
 
-typedef ACopyWithBound = A;
-
-abstract class ACopyWith<$R, $In extends A, $Out extends A>
+abstract class ACopyWith<$R, $In extends A, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? a});
-  ACopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends A>(
-      Then<A, $Out2> t, Then<$Out2, $R2> t2);
+  ACopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _ACopyWithImpl<$R, $Out extends A> extends ClassCopyWithBase<$R, A, $Out>
+class _ACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, A, $Out>
     implements ACopyWith<$R, A, $Out> {
   _ACopyWithImpl(super.value, super.then, super.then2);
 
@@ -79,9 +76,8 @@ class _ACopyWithImpl<$R, $Out extends A> extends ClassCopyWithBase<$R, A, $Out>
   A $make(CopyWithData data) => A(data.get(#a, or: $value.a));
 
   @override
-  ACopyWith<$R2, A, $Out2> $chain<$R2, $Out2 extends A>(
-          Then<A, $Out2> t, Then<$Out2, $R2> t2) =>
-      _ACopyWithImpl($value, t, t2);
+  ACopyWith<$R2, A, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _ACopyWithImpl($value, $cast, t);
 }
 
 class BMapper extends ClassMapperBase<B> {

@@ -57,11 +57,8 @@ mixin AnimalMappable {
   AnimalCopyWith<Animal, Animal, Animal> get copyWith;
 }
 
-typedef AnimalCopyWithBound = Animal;
-
-abstract class AnimalCopyWith<$R, $In extends Animal, $Out extends Animal>
+abstract class AnimalCopyWith<$R, $In extends Animal, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? name});
-  AnimalCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends Animal>(
-      Then<Animal, $Out2> t, Then<$Out2, $R2> t2);
+  AnimalCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
