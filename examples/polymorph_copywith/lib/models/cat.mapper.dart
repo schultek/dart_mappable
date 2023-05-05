@@ -142,20 +142,19 @@ mixin CatMappable {
   }
 }
 
-extension CatValueCopy<$R, $Out extends Cat> on ObjectCopyWith<$R, Cat, $Out> {
+extension CatValueCopy<$R, $Out> on ObjectCopyWith<$R, Cat, $Out> {
   CatCopyWith<$R, Cat, $Out> get $asCat =>
       $base.as((v, t, t2) => _CatCopyWithImpl(v, t, t2));
 }
 
-abstract class CatCopyWith<$R, $In extends Cat, $Out extends Cat>
+abstract class CatCopyWith<$R, $In extends Cat, $Out>
     implements AnimalCopyWith<$R, $In, $Out> {
   @override
   $R call({String? name, CatType? breed, String? color});
-  CatCopyWith<$R2, $In, $Out> $chain<$R2>(Then<$Out, $R2> t);
+  CatCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _CatCopyWithImpl<$R, $Out extends Cat>
-    extends ClassCopyWithBase<$R, Cat, $Out>
+class _CatCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Cat, $Out>
     implements CatCopyWith<$R, Cat, $Out> {
   _CatCopyWithImpl(super.value, super.then, super.then2);
 
@@ -173,6 +172,6 @@ class _CatCopyWithImpl<$R, $Out extends Cat>
       data.get(#breed, or: $value.breed), data.get(#color, or: $value.color));
 
   @override
-  CatCopyWith<$R2, Cat, $Out> $chain<$R2>(Then<$Out, $R2> t) =>
+  CatCopyWith<$R2, Cat, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _CatCopyWithImpl($value, $cast, t);
 }

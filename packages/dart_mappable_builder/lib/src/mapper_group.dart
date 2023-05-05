@@ -108,14 +108,14 @@ class MapperElementGroup {
       return null;
     }
 
-    if (element.superElement == null) {
+    if (element.extendsElement == null) {
       var superElement = getElementFor(element.element.supertype);
       if (superElement != null) {
         ClassMapperElement superTarget =
             await getOrAddMapperForElement(superElement, orNone: true)
                 as ClassMapperElement;
 
-        element.superElement = superTarget;
+        element.extendsElement = superTarget;
         if (!superTarget.subElements.contains(element)) {
           superTarget.subElements.add(element);
         }
@@ -147,7 +147,7 @@ class MapperElementGroup {
       }
 
       if (subMapper.element.supertype == element.element.thisType) {
-        subMapper.superElement = element;
+        subMapper.extendsElement = element;
       } else if (subMapper.element.interfaces
           .contains(element.element.thisType)) {
         if (!subMapper.interfaceElements.contains(element)) {

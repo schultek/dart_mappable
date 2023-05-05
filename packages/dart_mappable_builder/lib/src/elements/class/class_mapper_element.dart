@@ -25,9 +25,12 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
 
   List<ClassMapperElement> subElements = [];
   @override
-  ClassMapperElement? superElement;
+  ClassMapperElement? extendsElement;
   @override
   List<ClassMapperElement> interfaceElements = [];
+
+  ClassMapperElement? get superElement =>
+      extendsElement ?? interfaceElements.firstOrNull;
 
   @override
   late AstNode? constructorNode;
@@ -35,7 +38,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
   late String selfTypeParam = '$prefixedClassName$typeParams';
 
   late Iterable<FieldElement> allPublicFields = () sync* {
-    yield* superElement?.allPublicFields ?? [];
+    yield* extendsElement?.allPublicFields ?? [];
     for (var field in element.fields) {
       if (!field.isStatic &&
           field.isPublic &&
@@ -77,11 +80,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
           .firstOrNull;
 
   late bool isDiscriminatingSubclass = () {
-    var hasSuperClass =
-        superElement != null && superElement is! NoneClassMapperElement;
-    var hasInterfaces = interfaceElements.isNotEmpty &&
-        interfaceElements.every((e) => e is! NoneClassMapperElement);
-    if (!hasSuperClass && !hasInterfaces) {
+    if (superElement == null || superElement is NoneClassMapperElement) {
       return false;
     }
     if (discriminatorKey == null && discriminatorValueCode == null) {

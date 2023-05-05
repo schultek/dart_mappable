@@ -15,6 +15,8 @@ class CopyWithGenerator {
   late String classTypeParams =
       element.element.typeParameters.map((p) => ', ${p.name}').join();
 
+  late bool hasExtendsTarget = element.extendsElement != null &&
+      element.extendsElement!.shouldGenerate(GenerateMethods.copy);
   late bool hasSuperTarget = element.superElement != null &&
       element.superElement!.shouldGenerate(GenerateMethods.copy);
 
@@ -71,11 +73,11 @@ class CopyWithGenerator {
 
     var implements = <String>[];
 
-    if (hasSuperTarget) {
+    if (hasExtendsTarget) {
       var superClassTypeParams =
           element.superTypeArgs.map((a) => ', $a').join();
       implements.add(
-          '${element.superElement!.uniqueClassName}CopyWith<\$R, \$In, \$Out$superClassTypeParams>');
+          '${element.extendsElement!.uniqueClassName}CopyWith<\$R, \$In, \$Out$superClassTypeParams>');
     }
 
     for (var interface in element.interfaceElements) {

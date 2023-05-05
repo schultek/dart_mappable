@@ -77,20 +77,18 @@ mixin PersonMappable {
   }
 }
 
-extension PersonValueCopy<$R, $Out extends Person>
-    on ObjectCopyWith<$R, Person, $Out> {
+extension PersonValueCopy<$R, $Out> on ObjectCopyWith<$R, Person, $Out> {
   PersonCopyWith<$R, Person, $Out> get $asPerson =>
       $base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
 }
 
-abstract class PersonCopyWith<$R, $In extends Person, $Out extends Person>
+abstract class PersonCopyWith<$R, $In extends Person, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? name});
-  PersonCopyWith<$R2, $In, $Out> $chain<$R2>(Then<$Out, $R2> t);
+  PersonCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _PersonCopyWithImpl<$R, $Out extends Person>
-    extends ClassCopyWithBase<$R, Person, $Out>
+class _PersonCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Person, $Out>
     implements PersonCopyWith<$R, Person, $Out> {
   _PersonCopyWithImpl(super.value, super.then, super.then2);
 
@@ -103,6 +101,6 @@ class _PersonCopyWithImpl<$R, $Out extends Person>
   Person $make(CopyWithData data) => Person(data.get(#name, or: $value.name));
 
   @override
-  PersonCopyWith<$R2, Person, $Out> $chain<$R2>(Then<$Out, $R2> t) =>
+  PersonCopyWith<$R2, Person, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _PersonCopyWithImpl($value, $cast, t);
 }

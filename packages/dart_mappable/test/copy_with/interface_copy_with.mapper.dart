@@ -287,6 +287,7 @@ extension CValueCopy<$R, $Out> on ObjectCopyWith<$R, C, $Out> {
 
 abstract class CCopyWith<$R, $In extends C, $Out>
     implements ACopyWith<$R, $In, $Out>, BCopyWith<$R, $In, $Out> {
+  @override
   $R call({covariant int? a, String? b});
   CCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }

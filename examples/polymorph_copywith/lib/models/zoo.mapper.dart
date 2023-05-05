@@ -82,20 +82,20 @@ mixin ZooMappable<T extends Animal> {
   }
 }
 
-extension ZooValueCopy<$R, $Out extends Zoo<T>, T extends Animal>
+extension ZooValueCopy<$R, $Out, T extends Animal>
     on ObjectCopyWith<$R, Zoo<T>, $Out> {
   ZooCopyWith<$R, Zoo<T>, $Out, T> get $asZoo =>
       $base.as((v, t, t2) => _ZooCopyWithImpl(v, t, t2));
 }
 
-abstract class ZooCopyWith<$R, $In extends Zoo<T>, $Out extends Zoo<T>,
-    T extends Animal> implements ClassCopyWith<$R, $In, $Out> {
+abstract class ZooCopyWith<$R, $In extends Zoo<T>, $Out, T extends Animal>
+    implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, T, AnimalCopyWith<$R, T, T>> get animals;
   $R call({List<T>? animals});
-  ZooCopyWith<$R2, $In, $Out, T> $chain<$R2>(Then<$Out, $R2> t);
+  ZooCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _ZooCopyWithImpl<$R, $Out extends Zoo<T>, T extends Animal>
+class _ZooCopyWithImpl<$R, $Out, T extends Animal>
     extends ClassCopyWithBase<$R, Zoo<T>, $Out>
     implements ZooCopyWith<$R, Zoo<T>, $Out, T> {
   _ZooCopyWithImpl(super.value, super.then, super.then2);
@@ -105,7 +105,7 @@ class _ZooCopyWithImpl<$R, $Out extends Zoo<T>, T extends Animal>
   @override
   ListCopyWith<$R, T, AnimalCopyWith<$R, T, T>> get animals => ListCopyWith(
       $value.animals,
-      (v, t) => (v.copyWith as AnimalCopyWith<Animal, T, T>).$chain<$R>(t),
+      (v, t) => (v.copyWith as AnimalCopyWith<Animal, T, T>).$chain(t),
       (v) => call(animals: v));
   @override
   $R call({List<T>? animals}) =>
@@ -115,6 +115,6 @@ class _ZooCopyWithImpl<$R, $Out extends Zoo<T>, T extends Animal>
       Zoo(data.get(#animals, or: $value.animals));
 
   @override
-  ZooCopyWith<$R2, Zoo<T>, $Out, T> $chain<$R2>(Then<$Out, $R2> t) =>
+  ZooCopyWith<$R2, Zoo<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _ZooCopyWithImpl($value, $cast, t);
 }

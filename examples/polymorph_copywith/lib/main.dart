@@ -1,62 +1,35 @@
-import 'package:polymorph_copywith/person/student.dart';
-import 'package:polymorph_copywith/person/student_clothes.dart';
-import 'package:polymorph_copywith/person/student_pants.dart';
-
-import 'person/clothes.dart';
+import 'models/animal.dart';
+import 'models/cat.dart';
+import 'models/dog.dart';
+import 'models/person.dart';
+import 'models/zoo.dart';
 
 void main() {
-  // Animal animal = AnimalMapper.fromMap(
-  //     {'type': 'Cat', 'name': 'Coco', 'color': 'white', 'breed': 'black'});
-  //
-  // assert(animal.runtimeType == Cat);
-  //
-  // Animal animal2 = animal.copyWith(name: 'Kitty');
-  //
-  // assert(animal2.runtimeType == Cat);
-  // assert(animal2.name == 'Kitty');
-  //
-  // Zoo zoo = Zoo([animal2]);
-  //
-  // Zoo zoo2 = zoo.copyWith.animals.add(Dog('Bello', 2, Person('Bob')));
-  //
-  // assert(zoo.animals.length == 1);
-  // assert(zoo2.animals.length == 2);
-  //
-  // Zoo zoo3 = zoo2.copyWith.animals.at(1).call(name: 'Casper');
-  //
-  // assert(zoo3.animals[1].runtimeType == Dog);
-  // assert(zoo3.animals[1].name == 'Casper');
-  //
-  // Zoo<Dog> zoo4 = Zoo([zoo3.animals[1] as Dog]);
-  //
-  // Zoo<Dog> zoo5 = zoo4.copyWith.animals.at(0).$asDog(age: 3);
-  //
-  // assert(zoo5.animals.first.age == 3);
+  Animal animal = AnimalMapper.fromMap(
+      {'type': 'Cat', 'name': 'Coco', 'color': 'white', 'breed': 'black'});
 
-  var student = Student(
-    name: 'Tom',
-    clothes: [
-      StudentClothes(
-        shirt: 'M',
-        pants: [StudentPants(material: 'jeans', extraSomething: 'blue')],
-        badge: 'test',
-      )
-    ],
-    university: 'TUM',
-  );
+  assert(animal.runtimeType == Cat);
 
-  print(student);
+  Animal animal2 = animal.copyWith(name: 'Kitty');
 
-  var s = student.copyWith.clothes!.at(0).pants.at(0).call(material: 'wool');
+  assert(animal2.runtimeType == Cat);
+  assert(animal2.name == 'Kitty');
 
-  print(s);
+  Zoo zoo = Zoo([animal2]);
 
-  var clothes = Clothes(shirt: 'M', pants: [
-    StudentPants(material: 'jeas', extraSomething: 'blue'),
-  ]);
+  Zoo zoo2 = zoo.copyWith.animals.add(Dog('Bello', 2, Person('Bob')));
 
-  print(clothes);
+  assert(zoo.animals.length == 1);
+  assert(zoo2.animals.length == 2);
 
-  var c = clothes.copyWith.pants.at(0).call(material: 'wool');
-  print(c);
+  Zoo zoo3 = zoo2.copyWith.animals.at(1).call(name: 'Casper');
+
+  assert(zoo3.animals[1].runtimeType == Dog);
+  assert(zoo3.animals[1].name == 'Casper');
+
+  Zoo<Dog> zoo4 = Zoo([zoo3.animals[1] as Dog]);
+
+  Zoo<Dog> zoo5 = zoo4.copyWith.animals.at(0).$asDog(age: 3);
+
+  assert(zoo5.animals.first.age == 3);
 }

@@ -10,8 +10,9 @@ import '../class_mapper_element.dart';
 mixin ParamElementsMixin on MapperElement<ClassElement> {
   ConstructorElement? get constructor;
   AstNode? get constructorNode;
-  ClassMapperElement? get superElement;
+  ClassMapperElement? get extendsElement;
   List<ClassMapperElement> get interfaceElements;
+  ClassMapperElement? get superElement;
 
   late List<MapperParamElement> params = () {
     var params = <MapperParamElement>[];
@@ -144,7 +145,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
   }
 
   PropertyInducingElement? getSuperField(PropertyInducingElement field) {
-    return [if (superElement != null) superElement!, ...interfaceElements]
+    return [if (extendsElement != null) extendsElement!, ...interfaceElements]
         .expand((e) => e.fields)
         .where((f) => f.field.name == field.name)
         .map((f) => f.field)

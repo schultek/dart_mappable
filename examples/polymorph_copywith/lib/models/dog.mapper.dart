@@ -92,21 +92,20 @@ mixin DogMappable {
   }
 }
 
-extension DogValueCopy<$R, $Out extends Dog> on ObjectCopyWith<$R, Dog, $Out> {
+extension DogValueCopy<$R, $Out> on ObjectCopyWith<$R, Dog, $Out> {
   DogCopyWith<$R, Dog, $Out> get $asDog =>
       $base.as((v, t, t2) => _DogCopyWithImpl(v, t, t2));
 }
 
-abstract class DogCopyWith<$R, $In extends Dog, $Out extends Dog>
+abstract class DogCopyWith<$R, $In extends Dog, $Out>
     implements AnimalCopyWith<$R, $In, $Out> {
   PersonCopyWith<$R, Person, Person> get owner;
   @override
   $R call({String? name, int? age, Person? owner});
-  DogCopyWith<$R2, $In, $Out> $chain<$R2>(Then<$Out, $R2> t);
+  DogCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _DogCopyWithImpl<$R, $Out extends Dog>
-    extends ClassCopyWithBase<$R, Dog, $Out>
+class _DogCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Dog, $Out>
     implements DogCopyWith<$R, Dog, $Out> {
   _DogCopyWithImpl(super.value, super.then, super.then2);
 
@@ -126,6 +125,6 @@ class _DogCopyWithImpl<$R, $Out extends Dog>
       data.get(#age, or: $value.age), data.get(#owner, or: $value.owner));
 
   @override
-  DogCopyWith<$R2, Dog, $Out> $chain<$R2>(Then<$Out, $R2> t) =>
+  DogCopyWith<$R2, Dog, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _DogCopyWithImpl($value, $cast, t);
 }
