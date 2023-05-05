@@ -29,6 +29,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
   @override
   List<ClassMapperElement> interfaceElements = [];
 
+  @override
   ClassMapperElement? get superElement =>
       extendsElement ?? interfaceElements.firstOrNull;
 
