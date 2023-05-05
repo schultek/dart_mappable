@@ -32,17 +32,13 @@ extension GuardedUtils on MapperContainer {
     }
   }
 
-  dynamic $enc<T>(T value, String key,
+  dynamic $enc<T>(Object? value, String key,
       [EncodingOptions? options, MappingHook? hook]) {
-    dynamic encode(T value) {
-      return toValue<T>(value, options);
-    }
-
     try {
       if (hook != null) {
-        return hook.wrapEncode(value, encode);
+        return hook.wrapEncode(value, (v) => toValue<T>(v, options));
       }
-      return encode(value);
+      return toValue<T>(value, options);
     } catch (e, stacktrace) {
       Error.throwWithStackTrace(
         MapperException.chain(MapperMethod.encode, '.$key', e),
@@ -59,9 +55,9 @@ extension on MappingHook {
     return afterDecode(v) as T;
   }
 
-  Object? wrapEncode<T>(T value, Object? Function(T value) fn) {
+  Object? wrapEncode(Object? value, Object? Function(Object? value) fn) {
     var v = beforeEncode(value);
-    if (v is T) v = fn(v);
+    v = fn(v);
     return afterEncode(v);
   }
 }

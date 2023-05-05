@@ -25,28 +25,21 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
 
   List<ClassMapperElement> subElements = [];
   @override
-  ClassMapperElement? superElement;
+  ClassMapperElement? extendsElement;
+  @override
+  List<ClassMapperElement> interfaceElements = [];
+
+  @override
+  ClassMapperElement? get superElement =>
+      extendsElement ?? interfaceElements.firstOrNull;
 
   @override
   late AstNode? constructorNode;
 
   late String selfTypeParam = '$prefixedClassName$typeParams';
-  late String superPrefixedClassName = () {
-    if (superElement != null && superElement is! NoneClassMapperElement) {
-      if (superElement!.element.isAccessibleIn(parent.library)) {
-        return superElement!.superPrefixedClassName;
-      } else {
-        return superElement!.superPrefixedClassNameAlias;
-      }
-    } else {
-      return prefixedClassName;
-    }
-  }();
-
-  late String superPrefixedClassNameAlias = '${uniqueClassName}CopyWithBound';
 
   late Iterable<FieldElement> allPublicFields = () sync* {
-    yield* superElement?.allPublicFields ?? [];
+    yield* extendsElement?.allPublicFields ?? [];
     for (var field in element.fields) {
       if (!field.isStatic &&
           field.isPublic &&
@@ -64,7 +57,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
     }
 
     for (var f in allPublicFields) {
-      if (!fields.containsKey(f)) {
+      if (!fields.containsKey(f) && !fields.keys.any((e) => e.name == f.name)) {
         fields[f] = MapperFieldElement(null, f, this);
       }
     }
@@ -164,10 +157,22 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
 
     var safeParams = <MapperParamElement>[];
 
+    bool isCopySafe(MapperParamElement param) {
+      return subElements.every((e) => e.copySafeParams.any((subParam) {
+            if (subParam is SuperParamElement &&
+                subParam.superParameter.parameter == param.parameter) {
+              return true;
+            }
+            if (subParam is FieldParamElement &&
+                subParam.superField == param.accessor) {
+              return true;
+            }
+            return false;
+          }));
+    }
+
     for (var param in params) {
-      if (subElements.every((c) => c.copySafeParams
-          .whereType<SuperParamElement>()
-          .any((p) => p.superParameter.parameter == param.parameter))) {
+      if (isCopySafe(param)) {
         safeParams.add(param);
       }
     }

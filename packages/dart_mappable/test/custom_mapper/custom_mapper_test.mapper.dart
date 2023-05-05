@@ -26,7 +26,7 @@ class TestObjMapper extends ClassMapperBase<TestObj> {
   final String id = 'TestObj';
 
   static BigInt? _$x(TestObj v) => v.x;
-  static const Field<TestObj, BigInt?> _f$x = Field('x', _$x);
+  static const Field<TestObj, BigInt> _f$x = Field('x', _$x);
   static Map<String, dynamic> _$unmappedProps(TestObj v) => v.unmappedProps;
   static const Field<TestObj, Map<String, dynamic>> _f$unmappedProps =
       Field('unmappedProps', _$unmappedProps);
@@ -84,24 +84,20 @@ mixin TestObjMappable {
   }
 }
 
-extension TestObjValueCopy<$R, $Out extends TestObj>
-    on ObjectCopyWith<$R, TestObj, $Out> {
+extension TestObjValueCopy<$R, $Out> on ObjectCopyWith<$R, TestObj, $Out> {
   TestObjCopyWith<$R, TestObj, $Out> get $asTestObj =>
       $base.as((v, t, t2) => _TestObjCopyWithImpl(v, t, t2));
 }
 
-typedef TestObjCopyWithBound = TestObj;
-
-abstract class TestObjCopyWith<$R, $In extends TestObj, $Out extends TestObj>
+abstract class TestObjCopyWith<$R, $In extends TestObj, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
       get unmappedProps;
   $R call({BigInt? x, Map<String, dynamic>? unmappedProps});
-  TestObjCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2 extends TestObj>(
-      Then<TestObj, $Out2> t, Then<$Out2, $R2> t2);
+  TestObjCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _TestObjCopyWithImpl<$R, $Out extends TestObj>
+class _TestObjCopyWithImpl<$R, $Out>
     extends ClassCopyWithBase<$R, TestObj, $Out>
     implements TestObjCopyWith<$R, TestObj, $Out> {
   _TestObjCopyWithImpl(super.value, super.then, super.then2);
@@ -127,7 +123,6 @@ class _TestObjCopyWithImpl<$R, $Out extends TestObj>
       data.get(#unmappedProps, or: $value.unmappedProps));
 
   @override
-  TestObjCopyWith<$R2, TestObj, $Out2> $chain<$R2, $Out2 extends TestObj>(
-          Then<TestObj, $Out2> t, Then<$Out2, $R2> t2) =>
-      _TestObjCopyWithImpl($value, t, t2);
+  TestObjCopyWith<$R2, TestObj, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _TestObjCopyWithImpl($value, $cast, t);
 }

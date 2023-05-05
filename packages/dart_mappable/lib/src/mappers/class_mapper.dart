@@ -283,7 +283,7 @@ class Field<T extends Object, V> {
   final String name;
 
   /// The getter returns the fields value for a given instance.
-  final V Function(T) getter;
+  final Object? Function(T) getter;
 
   /// The mapping key of the field, or the name by default.
   final String key;
@@ -314,7 +314,7 @@ class Field<T extends Object, V> {
     this.hook,
   }) : key = key ?? name;
 
-  V get(T value) {
+  Object? get(T value) {
     return getter(value);
   }
 
@@ -326,7 +326,7 @@ class Field<T extends Object, V> {
     } else {
       return context.callWith(
         arg!,
-        <U>() => container.$enc<U>(get(value) as U, name, options, hook),
+        <U>() => container.$enc<U>(get(value), name, options, hook),
       );
     }
   }

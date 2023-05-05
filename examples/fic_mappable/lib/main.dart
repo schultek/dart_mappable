@@ -23,12 +23,10 @@ class B with BMappable {
 /// This makes chained copyWith work on [A.list] using the custom
 /// [ImmutableListCopyWith] implementation.
 extension DataList<$R, $Out extends A> on ACopyWith<$R, A, $Out> {
-  ImmutableListCopyWith<$R, B, BCopyWith<$R, B, B>> get list =>
-      (this as CopyWithBase<$R, A, $Out>).as((v, t, t2) =>
-          ImmutableListCopyWith(
-              v.list,
-              (vv, tt) => vv.copyWith.$chain($identity, tt),
-              (l) => call(list: l)));
+  ImmutableListCopyWith<$R, B, BCopyWith<$R, B, B>> get list => (this
+          as CopyWithBase<$R, A, $Out>)
+      .as((v, t, t2) => ImmutableListCopyWith(
+          v.list, (vv, tt) => vv.copyWith.$chain(tt), (l) => call(list: l)));
 }
 
 void main() {
@@ -41,16 +39,15 @@ void main() {
     ]
   });
 
-  print(a == A(IList([B('hello'), B('world')])));
-  print(a.toJson());
+  assert(a == A(IList([B('hello'), B('world')])));
+  assert(a.toJson() == '{"list":[{"str":"hello"},{"str":"world"}]}');
 
   var a2 = a.copyWith.list.add(B('test'));
   var a3 = a.copyWith.list[1](str: 'tom');
 
-  print(a);
-  print(a2);
-  print(a3);
+  assert(a2.list.length == 3 && a2.list[2].str == 'test');
+  assert(a3.list.length == 2 && a3.list[1].str == 'tom');
 
   var m = IMap({"value": 1000});
-  print(MapperContainer.defaults.toValue(m));
+  assert(MapperContainer.defaults.toJson(m) == '{"value":1000}');
 }

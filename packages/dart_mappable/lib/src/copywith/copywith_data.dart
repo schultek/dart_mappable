@@ -1,7 +1,7 @@
 import '../../dart_mappable.dart';
 
 abstract class CopyWithData {
-  V get<V>(Symbol name, {V or});
+  V get<V>(Symbol name, {Object? or});
 }
 
 class FieldCopyWithData extends CopyWithData {

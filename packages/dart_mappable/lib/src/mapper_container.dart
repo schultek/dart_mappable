@@ -72,10 +72,14 @@ abstract class MapperContainer {
   static final MapperContainer globals = _MapperContainerBase();
 
   /// The core method to decode any value to a given type [T].
-  T fromValue<T>(dynamic value);
+  T fromValue<T>(Object? value);
 
   /// The core method to encode any value.
-  dynamic toValue<T>(T value, [EncodingOptions? options]);
+  ///
+  /// The value is expected to be of type [T], but this is not statically
+  /// enforced. When the exact type of the value is different, a type discriminator
+  /// may be added to the resulting encoded value.
+  dynamic toValue<T>(Object? value, [EncodingOptions? options]);
 
   /// Decodes a map to a given type [T].
   ///
@@ -307,7 +311,7 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   @override
-  dynamic toValue<T>(T value, [EncodingOptions? options]) {
+  dynamic toValue<T>(Object? value, [EncodingOptions? options]) {
     if (value == null) return null;
     var mapper = _mapperFor(value);
     if (mapper != null) {
