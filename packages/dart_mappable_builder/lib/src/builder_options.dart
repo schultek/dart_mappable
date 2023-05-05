@@ -12,6 +12,7 @@ class MappableOptions {
   final int? generateMethods;
   final InitializerScope? initializerScope;
   final int? lineLength;
+  final Map<String, String> renameMethods;
 
   MappableOptions({
     this.caseStyle,
@@ -21,6 +22,7 @@ class MappableOptions {
     this.generateMethods,
     this.initializerScope,
     this.lineLength,
+    this.renameMethods = const {},
   });
 
   MappableOptions.parse(Map options)
@@ -33,7 +35,8 @@ class MappableOptions {
             parseGenerateMethods(toList(options['generateMethods'])),
         initializerScope = null,
         lineLength =
-            options['lineLength'] as int? ?? options['line_length'] as int?;
+            options['lineLength'] as int? ?? options['line_length'] as int?,
+        renameMethods = toMap(options['renameMethods'] ?? {});
 
   MappableOptions apply(MappableOptions? options, {bool forceJoin = true}) {
     if (options == null) return this;
@@ -45,6 +48,7 @@ class MappableOptions {
       discriminatorKey: options.discriminatorKey ?? discriminatorKey,
       generateMethods: options.generateMethods ?? generateMethods,
       initializerScope: options.initializerScope ?? initializerScope,
+      renameMethods: {...renameMethods, ...options.renameMethods},
     );
   }
 

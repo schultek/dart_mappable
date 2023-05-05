@@ -101,9 +101,9 @@ class Prefix {
   }
 }
 
-Map<String, T> toMap<T>(dynamic value, T Function(Map m) fn) {
+Map<String, T> toMap<T>(dynamic value) {
   if (value is Map) {
-    return value.map((k, dynamic v) => MapEntry(k as String, fn(v as Map)));
+    return value.map((k, dynamic v) => MapEntry(k as String, v as T));
   } else {
     return {};
   }

@@ -126,12 +126,15 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
 
     output.write(await decoderGen.generateInstantiateMethod());
 
+    var fromJsonName = element.options.renameMethods['fromJson'] ?? 'fromJson';
+    var fromMapName = element.options.renameMethods['fromMap'] ?? 'fromMap';
+
     if (element.shouldGenerate(GenerateMethods.decode)) {
       output.write('\n'
-          '  static ${element.prefixedDecodingClassName}${element.typeParams} fromMap${element.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
+          '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
           '    return _guard((c) => c.fromMap<${element.prefixedDecodingClassName}${element.typeParams}>(map));\n'
           '  }\n'
-          '  static ${element.prefixedDecodingClassName}${element.typeParams} fromJson${element.typeParamsDeclaration}(String json) {\n'
+          '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromJsonName${element.typeParamsDeclaration}(String json) {\n'
           '    return _guard((c) => c.fromJson<${element.prefixedDecodingClassName}${element.typeParams}>(json));\n'
           '  }\n');
     }
