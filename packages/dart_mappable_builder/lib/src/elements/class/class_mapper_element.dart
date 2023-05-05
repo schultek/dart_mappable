@@ -165,9 +165,11 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
     var safeParams = <MapperParamElement>[];
 
     for (var param in params) {
-      if (subElements.every((c) => c.copySafeParams
-          .whereType<SuperParamElement>()
-          .any((p) => p.superParameter.parameter == param.parameter))) {
+      if (subElements.every((c) {
+        return c.copySafeParams.whereType<SuperParamElement>().any((p) =>
+            p.superParameter.parameter == param.parameter ||
+            p.superParameter.accessor == param.accessor);
+      })) {
         safeParams.add(param);
       }
     }

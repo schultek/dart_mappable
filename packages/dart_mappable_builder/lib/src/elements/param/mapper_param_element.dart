@@ -92,9 +92,9 @@ class MapperFieldElement {
   }();
 
   late String mode = () {
-    if (param == null) {
+    if (param == null && !fieldChecker.hasAnnotationOf(field)) {
       return ', mode: FieldMode.member';
-    } else if (param!.accessor is! FieldElement) {
+    } else if (param != null && param!.accessor is! FieldElement) {
       return ', mode: FieldMode.param';
     } else {
       return '';

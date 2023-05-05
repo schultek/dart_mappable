@@ -203,7 +203,7 @@ class CopyWithGenerator {
 
   String _generateCopyWithConstructorParams() {
     List<String> params = [];
-    for (var param in element.copySafeParams) {
+    for (var param in element.params) {
       var p = param.parameter;
       var str = '';
 

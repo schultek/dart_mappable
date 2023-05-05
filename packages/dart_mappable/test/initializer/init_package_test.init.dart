@@ -26,7 +26,8 @@ import '../polymorphism/polymorphism_test.dart' as p21;
 import '../primitives/primitives_test.dart' as p22;
 import '../selective_generation/selective_generation_test.dart' as p23;
 import '../serialization/basic_serialization_test.dart' as p24;
-import '../serialization/nested_serialization_test.dart' as p25;
+import '../serialization/desync_serialization_test.dart' as p25;
+import '../serialization/nested_serialization_test.dart' as p26;
 import 'init_lib_test.dart' as p16;
 import 'models/model.dart' as p17;
 
@@ -112,7 +113,9 @@ void initializeMappers() {
   p23.BMapper.ensureInitialized();
   p24.AMapper.ensureInitialized();
   p24.BMapper.ensureInitialized();
-  p25.PersonMapper.ensureInitialized();
-  p25.CarMapper.ensureInitialized();
-  p25.BrandMapper.ensureInitialized();
+  p25.AMapper.ensureInitialized();
+  p25.BMapper.ensureInitialized();
+  p26.PersonMapper.ensureInitialized();
+  p26.CarMapper.ensureInitialized();
+  p26.BrandMapper.ensureInitialized();
 }
