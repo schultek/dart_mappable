@@ -88,6 +88,8 @@ typedef TypeFactory2 = Object? Function<A, B>(Object? Function<V>() f);
 /// A mapper for handling classes that comply with the json_serializable format.
 ///
 /// This mapper expects a `fromJson` and `toJson` method on a given class.
+///
+/// {@category Migration and Compatibility}
 class SerializableMapper<T extends Object, V extends Object>
     extends MapperBase<T> with PrimitiveMethodsMixin<T> {
   late T Function(V value, DecodingContext context) _decoder;

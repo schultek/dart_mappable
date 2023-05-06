@@ -20,6 +20,8 @@ dartdoc:
       markdown: "doc/custom.md"
     "Mapper Container":
       markdown: "doc/container.md"
+    "Migration and Compatibility":
+      markdown: "doc/migration.md"
   categoryOrder:
     - "Introduction"
     - "Models"
@@ -31,3 +33,4 @@ dartdoc:
     - "Mapping Hooks"
     - "Custom Mappers"
     - "Mapper Container"
+    - "Migration and Compatibility"
