@@ -87,14 +87,17 @@ class MappingContext {
 
 /// The decoding context passed to the [decoder] method of a mapper.
 class DecodingContext extends MappingContext {
-  final bool inherited;
+  DecodingContext(
+      {super.container, super.args, this.options, this.inherited = false});
 
-  DecodingContext({super.container, super.args, this.inherited = false});
+  final DecodingOptions? options;
+  final bool inherited;
 
   DecodingContext inherit({MapperContainer? container, List<Type>? args}) {
     return DecodingContext(
       container: container ?? this.container,
       args: args ?? this.args,
+      options: options,
       inherited: true,
     );
   }
@@ -111,19 +114,7 @@ class EncodingContext extends MappingContext {
 /// mapping context.
 extension MappingContextCall<O extends MappingContext> on O {
   R callWith<R, U>(Function fn, U value) {
-    if (args.isEmpty) {
-      return fn(value) as R;
-    } else if (args.length == 1) {
-      return args.first.provideTo(<A>() => fn<A>(value) as R);
-    } else if (args.length == 2) {
-      return args.first
-          .provideTo(<A>() => args[1].provideTo(<B>() => fn<A, B>(value) as R));
-    } else if (args.length == 3) {
-      return args.first.provideTo(<A>() => args[1].provideTo(
-          <B>() => args[2].provideTo(<C>() => fn<A, B, C>(value) as R)));
-    } else {
-      throw AssertionError('Max args are 3');
-    }
+    return fn.callWith(parameters: [value], typeArguments: args) as R;
   }
 
   R callWith1<R, U>(R Function<A>(U) fn, [U? value]) {

@@ -13,7 +13,7 @@ import '../dart_mappable.dart';
 /// {@category Generics}
 /// {@category Mapper Container}
 class EncodingOptions {
-  EncodingOptions({this.includeTypeId, this.inheritOptions = true});
+  EncodingOptions({this.includeTypeId, this.inheritOptions = true, this.data});
 
   /// Whether to include the type id of the encoding object.
   ///
@@ -26,6 +26,20 @@ class EncodingOptions {
   /// Whether to inherit this options for nested calls to [MapperContainer.toValue],
   /// like for encoding fields of a class.
   final bool inheritOptions;
+
+  /// Mapper specific data.
+  final Object? data;
+}
+
+/// Additional options to be passed to [MapperContainer.fromValue].
+///
+/// {@category Generics}
+/// {@category Mapper Container}
+class DecodingOptions {
+  DecodingOptions({this.data});
+
+  /// Mapper specific data.
+  final Object? data;
 }
 
 /// The mapper container manages a set of mappers and is the main interface for
@@ -63,6 +77,7 @@ abstract class MapperContainer {
     IterableMapper<List>(<T>(i) => i.toList(), <T>(f) => f<List<T>>()),
     IterableMapper<Set>(<T>(i) => i.toSet(), <T>(f) => f<Set<T>>()),
     MapMapper<Map>(<K, V>(map) => map, <K, V>(f) => f<Map<K, V>>()),
+    ...RecordMapper.defaults,
   });
 
   /// A container that holds all globally registered mappers.
@@ -72,7 +87,7 @@ abstract class MapperContainer {
   static final MapperContainer globals = _MapperContainerBase();
 
   /// The core method to decode any value to a given type [T].
-  T fromValue<T>(Object? value);
+  T fromValue<T>(Object? value, [DecodingOptions? options]);
 
   /// The core method to encode any value.
   ///
@@ -277,7 +292,7 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   @override
-  T fromValue<T>(Object? value) {
+  T fromValue<T>(Object? value, [DecodingOptions? options]) {
     if (value == null) {
       return value as T;
     }
@@ -297,7 +312,9 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     if (mapper != null) {
       try {
         return mapper.decoder(
-            value, DecodingContext(container: this, args: type.args)) as T;
+            value,
+            DecodingContext(
+                container: this, args: type.args, options: options)) as T;
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
           MapperException.chain(MapperMethod.decode, '($type)', e),

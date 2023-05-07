@@ -17,4 +17,5 @@ export 'src/mappers/iterable_mapper.dart';
 export 'src/mappers/map_mapper.dart';
 export 'src/mappers/mapper_base.dart';
 export 'src/mappers/mapper_mixins.dart';
+export 'src/mappers/record_mapper.dart';
 export 'src/mappers/simple_mapper.dart';
