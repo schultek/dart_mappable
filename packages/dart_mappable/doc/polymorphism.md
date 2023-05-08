@@ -38,9 +38,9 @@ two problems arise:
 - When deserializing, we need to make sure that the correct subclass is chosen and instantiated, and
 - when serializing, we need to make sure that the subclass information isn't lost.
   
-To solve these, we need to add a **discriminator property**, that keeps track of the specific *(sub)*-type of the `pet`.
+To solve these, we add a **discriminator property**, that keeps track of the specific *(sub)*-type of the `pet`.
 
-By default no discriminator is applied, but you can change this by setting the `discriminatorKey` annotation property (or globally in the build configuration). 
+By default, no discriminator is applied, but you can change this by setting the `discriminatorKey` annotation property (or globally in the build configuration). 
 
 The value of this property will default to the name of the class, but you can change this as well with the `discriminatorValue` annotation property.
 
