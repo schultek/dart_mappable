@@ -26,10 +26,11 @@ import '../polymorphism/mixed_mappable_test.dart' as p21;
 import '../polymorphism/multi_poly_test.dart' as p22;
 import '../polymorphism/polymorphism_test.dart' as p23;
 import '../primitives/primitives_test.dart' as p24;
-import '../selective_generation/selective_generation_test.dart' as p25;
-import '../serialization/basic_serialization_test.dart' as p26;
-import '../serialization/desync_serialization_test.dart' as p27;
-import '../serialization/nested_serialization_test.dart' as p28;
+import '../records/record_model_test.dart' as p25;
+import '../selective_generation/selective_generation_test.dart' as p26;
+import '../serialization/basic_serialization_test.dart' as p27;
+import '../serialization/desync_serialization_test.dart' as p28;
+import '../serialization/nested_serialization_test.dart' as p29;
 import 'init_lib_test.dart' as p18;
 import 'models/model.dart' as p19;
 
@@ -119,12 +120,14 @@ void initializeMappers() {
   p24.ItemsMapper.ensureInitialized();
   p24.ItemMapper.ensureInitialized();
   p25.AMapper.ensureInitialized();
-  p25.BMapper.ensureInitialized();
+  p25.CMapper.ensureInitialized();
   p26.AMapper.ensureInitialized();
   p26.BMapper.ensureInitialized();
   p27.AMapper.ensureInitialized();
   p27.BMapper.ensureInitialized();
-  p28.PersonMapper.ensureInitialized();
-  p28.CarMapper.ensureInitialized();
-  p28.BrandMapper.ensureInitialized();
+  p28.AMapper.ensureInitialized();
+  p28.BMapper.ensureInitialized();
+  p29.PersonMapper.ensureInitialized();
+  p29.CarMapper.ensureInitialized();
+  p29.BrandMapper.ensureInitialized();
 }

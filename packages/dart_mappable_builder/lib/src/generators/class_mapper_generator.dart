@@ -3,21 +3,13 @@ import 'package:ansicolor/ansicolor.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/class/target_class_mapper_element.dart';
-import '../elements/mapper_element.dart';
 import '../utils.dart';
 import 'copywith_generator.dart';
 import 'decoder_generator.dart';
 import 'encoder_generator.dart';
 import 'equals_generator.dart';
+import 'generator.dart';
 import 'tostring_generator.dart';
-
-abstract class MapperGenerator<T extends MapperElement> {
-  final T element;
-
-  MapperGenerator(this.element);
-
-  Future<String> generate();
-}
 
 /// Generates code for a specific class
 class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
@@ -70,7 +62,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
 
     var linked = element.linkedElements;
     if (linked.isNotEmpty) {
-      for (var l in linked.values) {
+      for (var l in linked) {
         output.write('      $l.ensureInitialized();\n');
       }
     }

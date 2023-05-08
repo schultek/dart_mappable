@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:dart_mappable/dart_mappable.dart'
@@ -17,6 +16,7 @@ import 'elements/class/target_class_mapper_element.dart';
 import 'elements/enum/dependent_enum_mapper_element.dart';
 import 'elements/enum/target_enum_mapper_element.dart';
 import 'elements/mapper_element.dart';
+import 'records_group.dart';
 import 'utils.dart';
 
 class MapperElementGroup {
@@ -41,8 +41,10 @@ class MapperElementGroup {
 
   Map<Element, String> prefixes = {};
   Map<InterfaceElement, MapperElement> targets = {};
+  RecordsGroup records = RecordsGroup();
 
   late String packageName;
+
   bool isPackage(Uri lib) {
     if (lib.scheme == 'package' || lib.scheme == 'asset') {
       return lib.pathSegments.first == packageName;
@@ -169,6 +171,12 @@ class MapperElementGroup {
           await checkType(arg);
         }
       }
+      if (t is RecordType) {
+        records.add(t);
+        for (var f in [...t.positionalFields, ...t.namedFields]) {
+          await checkType(f.type);
+        }
+      }
     }
 
     for (var param in element.params) {
@@ -218,23 +226,58 @@ class MapperElementGroup {
         return prefixedType(t.bound, resolveBounds: resolveBounds);
       }
       return t.element.name;
-    } else if (t is! InterfaceType) {
-      return t.getDisplayString(withNullability: withNullability);
     }
 
-    var typeArgs = '';
-    if (t.typeArguments.isNotEmpty) {
-      typeArgs =
-          '<${t.typeArguments.map((t) => prefixedType(t, resolveBounds: resolveBounds)).join(', ')}>';
+    if (t is InterfaceType) {
+      var typeArgs = '';
+      if (t.typeArguments.isNotEmpty) {
+        typeArgs =
+            '<${t.typeArguments.map((t) => prefixedType(t, resolveBounds: resolveBounds)).join(', ')}>';
+      }
+
+      var type = '${t.element.name}$typeArgs';
+
+      if (withNullability && t.isNullable) {
+        type += '?';
+      }
+
+      return '${prefixOfElement(t.element)}$type';
     }
 
-    var type = '${t.element.name}$typeArgs';
+    if (t is RecordType) {
+      var type = '';
+      var r = records.get(t);
 
-    if (withNullability && t.nullabilitySuffix == NullabilitySuffix.question) {
-      type += '?';
+      if (r != null) {
+        type = '${r.typeAliasName}<';
+        type += [...t.positionalFields, ...t.namedFields]
+            .map((f) => prefixedType(f.type, resolveBounds: resolveBounds))
+            .join(', ');
+        type += '>';
+      } else {
+        type = t.positionalFields
+            .map((f) => prefixedType(f.type, resolveBounds: resolveBounds))
+            .join(', ');
+
+        if (t.namedFields.isNotEmpty) {
+          if (t.positionalFields.isNotEmpty) {
+            type += ', ';
+          }
+          type +=
+              '{${t.namedFields.map((f) => '${prefixedType(f.type, resolveBounds: resolveBounds)} ${f.name}').join(', ')}}';
+        }
+
+        type = '($type)';
+      }
+
+      if (withNullability && t.isNullable) {
+        type += '?';
+      }
+
+      return type;
     }
 
-    return '${prefixOfElement(t.element)}$type';
+    return t.getDisplayString(withNullability: withNullability);
   }
 
   /// All of the declared classes and enums in this library.

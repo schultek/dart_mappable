@@ -1,17 +1,16 @@
 import 'package:analyzer/dart/element/type.dart';
 
-import '../../mapper_element.dart';
 import '../class_mapper_element.dart';
 import '../none_class_mapper_element.dart';
 
 mixin LinkedElementsMixin on ClassMapperElement {
-  late Map<MapperElement, String> linkedElements = () {
-    var linked = <MapperElement, String>{};
+  late List<String> linkedElements = () {
+    var linked = <String>{};
 
     for (var target in subElements) {
       if (target is! NoneClassMapperElement) {
         var prefix = parent.prefixOfElement(target.annotatedElement);
-        linked[target] = '$prefix${target.mapperName}';
+        linked.add('$prefix${target.mapperName}');
       }
     }
 
@@ -19,13 +18,23 @@ mixin LinkedElementsMixin on ClassMapperElement {
       var e = t.element;
       var m = parent.getMapperForElement(e);
       if (m != null && m is! NoneClassMapperElement) {
-        linked[m] =
-            '${parent.prefixOfElement(m.annotatedElement)}${m.mapperName}';
+        linked.add(
+            '${parent.prefixOfElement(m.annotatedElement)}${m.mapperName}');
       }
 
       if (t is ParameterizedType) {
         for (var arg in t.typeArguments) {
           checkType(arg);
+        }
+      }
+
+      if (t is RecordType) {
+        var e = parent.records.get(t);
+        if (e != null) {
+          linked.add(e.mapperName);
+        }
+        for (var f in [...t.positionalFields, ...t.namedFields]) {
+          checkType(f.type);
         }
       }
     }
@@ -38,12 +47,12 @@ mixin LinkedElementsMixin on ClassMapperElement {
       if (param.bound != null) {
         var m = parent.getMapperForElement(param.bound!.element);
         if (m is ClassMapperElement && m is! NoneClassMapperElement) {
-          linked[m] =
-              '${parent.prefixOfElement(m.annotatedElement)}${m.mapperName}';
+          linked.add(
+              '${parent.prefixOfElement(m.annotatedElement)}${m.mapperName}');
         }
       }
     }
 
-    return linked;
+    return linked.toList();
   }();
 }
