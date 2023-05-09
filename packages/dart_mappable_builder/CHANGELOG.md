@@ -1,3 +1,7 @@
+# 3.0.1
+
+- Fixed bug with undetermined `includeSubClasses`.
+
 # 3.0.0
 
 - **Breaking**: Generated mappers no longer have a `.container` property. This was removed in favor

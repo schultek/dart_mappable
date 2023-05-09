@@ -146,10 +146,11 @@ class MapperElementGroup {
             'since it has no generated mapper.';
       }
 
-      if (subMapper.element.supertype == element.element.thisType) {
+      if (subMapper.element.supertype?.element == element.element) {
         subMapper.extendsElement = element;
       } else if (subMapper.element.interfaces
-          .contains(element.element.thisType)) {
+          .map((i) => i.element)
+          .contains(element.element)) {
         if (!subMapper.interfaceElements.contains(element)) {
           subMapper.interfaceElements.add(element);
         }
