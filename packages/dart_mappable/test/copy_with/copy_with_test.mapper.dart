@@ -52,7 +52,7 @@ class PersonMapper extends ClassMapperBase<Person> {
   }
 }
 
-mixin PersonMappable {
+mixin PersonMappable implements Encodable {
   String toJson() {
     return PersonMapper._guard((c) => c.toJson(this as Person));
   }
@@ -161,7 +161,7 @@ class CarMapper extends ClassMapperBase<Car> {
   }
 }
 
-mixin CarMappable {
+mixin CarMappable implements Encodable {
   String toJson() {
     return CarMapper._guard((c) => c.toJson(this as Car));
   }
@@ -266,7 +266,7 @@ class BrandMapper extends ClassMapperBase<Brand> {
   }
 }
 
-mixin BrandMappable {
+mixin BrandMappable implements Encodable {
   String toJson() {
     return BrandMapper._guard((c) => c.toJson(this as Brand));
   }
@@ -373,7 +373,7 @@ class DealershipMapper extends ClassMapperBase<Dealership> {
   }
 }
 
-mixin DealershipMappable {
+mixin DealershipMappable implements Encodable {
   String toJson() {
     return DealershipMapper._guard((c) => c.toJson(this as Dealership));
   }
@@ -501,7 +501,7 @@ class ItemListMapper extends ClassMapperBase<ItemList> {
   }
 }
 
-mixin ItemListMappable<T> {
+mixin ItemListMappable<T> implements Encodable {
   String toJson();
   Map<String, dynamic> toMap();
   ItemListCopyWith<ItemList<T>, ItemList<T>, ItemList<T>, T> get copyWith;
@@ -567,7 +567,7 @@ class BrandListMapper extends SubClassMapperBase<BrandList> {
   }
 }
 
-mixin BrandListMappable {
+mixin BrandListMappable implements Encodable {
   String toJson() {
     return BrandListMapper._guard((c) => c.toJson(this as BrandList));
   }
@@ -693,7 +693,7 @@ class NamedItemListMapper extends SubClassMapperBase<NamedItemList> {
   }
 }
 
-mixin NamedItemListMappable<T> {
+mixin NamedItemListMappable<T> implements Encodable {
   String toJson() {
     return NamedItemListMapper._guard(
         (c) => c.toJson(this as NamedItemList<T>));
@@ -831,7 +831,7 @@ class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
   }
 }
 
-mixin KeyedItemListMappable<K, T> {
+mixin KeyedItemListMappable<K, T> implements Encodable {
   String toJson() {
     return KeyedItemListMapper._guard(
         (c) => c.toJson(this as KeyedItemList<K, T>));
@@ -967,7 +967,8 @@ class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
   }
 }
 
-mixin ComparableItemListMappable<T extends Comparable<dynamic>> {
+mixin ComparableItemListMappable<T extends Comparable<dynamic>>
+    implements Encodable {
   String toJson() {
     return ComparableItemListMapper._guard(
         (c) => c.toJson(this as ComparableItemList<T>));

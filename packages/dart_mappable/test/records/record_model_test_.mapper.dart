@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element
 
-part of 'record_model_test.dart';
+part of 'record_model_test_.dart';
 
 class AMapper extends ClassMapperBase<A> {
   AMapper._();
@@ -58,7 +58,7 @@ class AMapper extends ClassMapperBase<A> {
   }
 }
 
-mixin AMappable<T> {
+mixin AMappable<T> implements Encodable {
   String toJson() {
     return AMapper._guard((c) => c.toJson(this as A<T>));
   }
@@ -163,7 +163,7 @@ class CMapper extends ClassMapperBase<C> {
   }
 }
 
-mixin CMappable {
+mixin CMappable implements Encodable {
   String toJson() {
     return CMapper._guard((c) => c.toJson(this as C));
   }

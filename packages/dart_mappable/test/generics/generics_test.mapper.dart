@@ -56,7 +56,7 @@ class BoxMapper extends ClassMapperBase<Box> {
   }
 }
 
-mixin BoxMappable<T extends Content> {
+mixin BoxMappable<T extends Content> implements Encodable {
   String toJson() {
     return BoxMapper._guard((c) => c.toJson(this as Box<T>));
   }
@@ -167,7 +167,7 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
   }
 }
 
-mixin ConfettiMappable {
+mixin ConfettiMappable implements Encodable {
   String toJson() {
     return ConfettiMapper._guard((c) => c.toJson(this as Confetti));
   }
@@ -268,7 +268,7 @@ class ContentMapper extends ClassMapperBase<Content> {
   }
 }
 
-mixin ContentMappable {
+mixin ContentMappable implements Encodable {
   String toJson() {
     return ContentMapper._guard((c) => c.toJson(this as Content));
   }
@@ -369,7 +369,7 @@ class DataMapper extends ClassMapperBase<Data> {
   }
 }
 
-mixin DataMappable {
+mixin DataMappable implements Encodable {
   String toJson() {
     return DataMapper._guard((c) => c.toJson(this as Data));
   }
@@ -473,7 +473,7 @@ class SingleSettingMapper extends ClassMapperBase<SingleSetting> {
   }
 }
 
-mixin SingleSettingMappable<T> {
+mixin SingleSettingMappable<T> implements Encodable {
   String toJson() {
     return SingleSettingMapper._guard(
         (c) => c.toJson(this as SingleSetting<T>));
@@ -595,7 +595,7 @@ class SettingsMapper extends ClassMapperBase<Settings> {
   }
 }
 
-mixin SettingsMappable {
+mixin SettingsMappable implements Encodable {
   String toJson() {
     return SettingsMapper._guard((c) => c.toJson(this as Settings));
   }
@@ -719,7 +719,7 @@ class AssetMapper extends ClassMapperBase<Asset> {
   }
 }
 
-mixin AssetMappable<T> {
+mixin AssetMappable<T> implements Encodable {
   String toJson() {
     return AssetMapper._guard((c) => c.toJson(this as Asset<T>));
   }

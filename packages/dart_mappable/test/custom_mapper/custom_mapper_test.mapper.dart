@@ -55,7 +55,7 @@ class TestObjMapper extends ClassMapperBase<TestObj> {
   }
 }
 
-mixin TestObjMappable {
+mixin TestObjMappable implements Encodable {
   String toJson() {
     return TestObjMapper._guard((c) => c.toJson(this as TestObj));
   }

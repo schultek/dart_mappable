@@ -49,7 +49,7 @@ class AMapper extends ClassMapperBase<A> {
   }
 }
 
-mixin AMappable {
+mixin AMappable implements Encodable {
   String toJson() {
     return AMapper._guard((c) => c.toJson(this as A));
   }
@@ -149,7 +149,7 @@ class BMapper extends ClassMapperBase<B> {
   }
 }
 
-mixin BMappable {
+mixin BMappable implements Encodable {
   String toJson() {
     return BMapper._guard((c) => c.toJson(this as B));
   }
@@ -251,7 +251,7 @@ class CMapper extends ClassMapperBase<C> {
   }
 }
 
-mixin CMappable {
+mixin CMappable implements Encodable {
   String toJson() {
     return CMapper._guard((c) => c.toJson(this as C));
   }

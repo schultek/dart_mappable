@@ -56,7 +56,7 @@ class BoxMapper extends ClassMapperBase<Box> {
   }
 }
 
-mixin BoxMappable<T extends Content> {
+mixin BoxMappable<T extends Content> implements Encodable {
   String toJson() {
     return BoxMapper._guard((c) => c.toJson(this as Box<T>));
   }
@@ -161,7 +161,7 @@ class ContentMapper extends ClassMapperBase<Content> {
   }
 }
 
-mixin ContentMappable {
+mixin ContentMappable implements Encodable {
   String toJson() {
     return ContentMapper._guard((c) => c.toJson(this as Content));
   }

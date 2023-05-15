@@ -22,7 +22,7 @@ class BMapper extends EnumMapper<B> {
   }
 
   @override
-  B decode(dynamic value) {
+  B decodeValue(dynamic value) {
     switch (value) {
       case 'a':
         return B.a;
@@ -36,7 +36,7 @@ class BMapper extends EnumMapper<B> {
   }
 
   @override
-  dynamic encode(B self) {
+  dynamic encodeValue(B self) {
     switch (self) {
       case B.a:
         return 'a';
@@ -115,13 +115,14 @@ class AMapper extends ClassMapperBase<A> {
   }
 }
 
-mixin AMappable {
+mixin AMappable implements Encodable {
   String toJson() {
     return AMapper._guard((c) => c.toJson(this as A));
   }
 
   Map<String, dynamic> toMap() {
-    return AMapper._guard((c) => c.toMap(this as A));
+    return AMapper.ensureInitialized().encode(this as A)
+        as Map<String, dynamic>;
   }
 
   ACopyWith<A, A, A> get copyWith =>

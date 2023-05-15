@@ -54,7 +54,7 @@ class GameMapper extends ClassMapperBase<Game> {
   }
 }
 
-mixin GameMappable {
+mixin GameMappable implements Encodable {
   String toJson() {
     return GameMapper._guard((c) => c.toJson(this as Game));
   }
@@ -167,7 +167,7 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
   }
 }
 
-mixin CardGameMappable {
+mixin CardGameMappable implements Encodable {
   String toJson() {
     return CardGameMapper._guard((c) => c.toJson(this as CardGame));
   }
@@ -277,7 +277,7 @@ class PlayerMapper extends ClassMapperBase<Player> {
   }
 }
 
-mixin PlayerMappable {
+mixin PlayerMappable implements Encodable {
   String toJson() {
     return PlayerMapper._guard((c) => c.toJson(this as Player));
   }

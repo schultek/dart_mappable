@@ -25,7 +25,7 @@ class EncoderGenerator {
         return ${element.mapperName}._guard((c) => c.toJson(this as ${element.selfTypeParam}));
       }
       Map<String, dynamic> $toMapName() {
-        return ${element.mapperName}._guard((c) => c.toMap(this as ${element.selfTypeParam}));
+        return ${element.mapperName}.ensureInitialized().encode(this as ${element.selfTypeParam}) as Map<String, dynamic>;
       }
     ''';
   }

@@ -53,7 +53,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   }
 }
 
-mixin AnimalMappable {
+mixin AnimalMappable implements Encodable {
   String toJson();
   Map<String, dynamic> toMap();
   AnimalCopyWith<Animal, Animal, Animal> get copyWith;
@@ -120,7 +120,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   }
 }
 
-mixin CatMappable {
+mixin CatMappable implements Encodable {
   String toJson();
   Map<String, dynamic> toMap();
   CatCopyWith<Cat, Cat, Cat> get copyWith;
@@ -186,7 +186,7 @@ class SiameseMapper extends SubClassMapperBase<Siamese> {
   }
 }
 
-mixin SiameseMappable {
+mixin SiameseMappable implements Encodable {
   String toJson() {
     return SiameseMapper._guard((c) => c.toJson(this as Siamese));
   }
@@ -300,7 +300,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   }
 }
 
-mixin DogMappable {
+mixin DogMappable implements Encodable {
   String toJson() {
     return DogMapper._guard((c) => c.toJson(this as Dog));
   }
@@ -411,7 +411,7 @@ class ShepherdMapper extends SubClassMapperBase<Shepherd> {
   }
 }
 
-mixin ShepherdMappable {
+mixin ShepherdMappable implements Encodable {
   String toJson() {
     return ShepherdMapper._guard((c) => c.toJson(this as Shepherd));
   }
@@ -517,7 +517,7 @@ class HumanMapper extends ClassMapperBase<Human> {
   }
 }
 
-mixin HumanMappable {
+mixin HumanMappable implements Encodable {
   String toJson() {
     return HumanMapper._guard((c) => c.toJson(this as Human));
   }

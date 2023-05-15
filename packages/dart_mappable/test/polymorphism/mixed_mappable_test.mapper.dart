@@ -56,7 +56,7 @@ class BaseMapper extends ClassMapperBase<Base> {
   }
 }
 
-mixin BaseMappable {
+mixin BaseMappable implements Encodable {
   String toJson();
   Map<String, dynamic> toMap();
   BaseCopyWith<Base, Base, Base> get copyWith;
@@ -123,7 +123,7 @@ class OneMapper extends ClassMapperBase<One> {
   }
 }
 
-mixin OneMappable {
+mixin OneMappable implements Encodable {
   String toJson() {
     return OneMapper._guard((c) => c.toJson(this as One));
   }
@@ -242,7 +242,7 @@ class TwoMapper extends ClassMapperBase<Two> {
   }
 }
 
-mixin TwoMappable {
+mixin TwoMappable implements Encodable {
   String toJson() {
     return TwoMapper._guard((c) => c.toJson(this as Two));
   }

@@ -16,6 +16,7 @@ import 'elements/class/target_class_mapper_element.dart';
 import 'elements/enum/dependent_enum_mapper_element.dart';
 import 'elements/enum/target_enum_mapper_element.dart';
 import 'elements/mapper_element.dart';
+import 'elements/record/target_record_mapper_element.dart';
 import 'records_group.dart';
 import 'utils.dart';
 
@@ -40,20 +41,10 @@ class MapperElementGroup {
   final MappableOptions options;
 
   Map<Element, String> prefixes = {};
-  Map<InterfaceElement, MapperElement> targets = {};
+  Map<Element, MapperElement> targets = {};
   RecordsGroup records = RecordsGroup();
 
-  late String packageName;
-
-  bool isPackage(Uri lib) {
-    if (lib.scheme == 'package' || lib.scheme == 'asset') {
-      return lib.pathSegments.first == packageName;
-    } else {
-      return false;
-    }
-  }
-
-  Future<T> addMapper<T extends MapperElement>(T mapper) async {
+  Future<T> _addMapper<T extends MapperElement>(T mapper) async {
     await mapper.init();
     return targets[mapper.element] = mapper;
   }
@@ -68,7 +59,7 @@ class MapperElementGroup {
 
       if (classChecker.hasAnnotationOf(element)) {
         if (element is ClassElement) {
-          await addMapper(TargetClassMapperElement(this, element, options));
+          await _addMapper(TargetClassMapperElement(this, element, options));
 
           for (var c in element.constructors) {
             if (c.isFactory &&
@@ -80,29 +71,32 @@ class MapperElementGroup {
                       ~(~(options.generateMethods ?? GenerateMethods.all) |
                           GenerateMethods.copy)));
 
-              await addMapper(
+              await _addMapper(
                   FactoryConstructorMapperElement(this, c, subOptions));
             }
           }
         } else if (element is TypeAliasElement &&
             element.aliasedType.element is ClassElement) {
-          await addMapper(AliasClassMapperElement(this, element,
+          await _addMapper(AliasClassMapperElement(this, element,
               element.aliasedType.element as ClassElement, options));
         }
       } else if (element is EnumElement &&
           enumChecker.hasAnnotationOf(element)) {
-        await addMapper(TargetEnumMapperElement(this, element, options));
+        await _addMapper(TargetEnumMapperElement(this, element, options));
+      } else if (element is TypeAliasElement &&
+          recordChecker.hasAnnotationOf(element)) {
+        await _addMapper(TargetRecordMapperElement(this, element, options));
       }
     }
 
     for (var target in targets.values.toList()) {
-      await analyzeElement(target);
+      if (target is ClassMapperElement) {
+        await _analyzeClassElement(target);
+      }
     }
   }
 
-  Future<void> analyzeElement(MapperElement element) async {
-    if (element is! ClassMapperElement) return;
-
+  Future<void> _analyzeClassElement(ClassMapperElement element) async {
     ClassElement? getElementFor(InterfaceType? t) {
       if (t != null && !t.isDartCoreObject && t.element is ClassElement) {
         return t.element as ClassElement;
@@ -200,15 +194,15 @@ class MapperElementGroup {
     if (m != null) {
       return m;
     } else if (e is ClassElement && classChecker.hasAnnotationOf(e)) {
-      var m = await addMapper(DependentClassMapperElement(this, e, options));
-      await analyzeElement(m);
+      var m = await _addMapper(DependentClassMapperElement(this, e, options));
+      await _analyzeClassElement(m);
       return m;
     } else if (e is ClassElement && orNone) {
-      var m = await addMapper(NoneClassMapperElement(this, e, options));
-      await analyzeElement(m);
+      var m = await _addMapper(NoneClassMapperElement(this, e, options));
+      await _analyzeClassElement(m);
       return m;
     } else if (e is EnumElement && enumChecker.hasAnnotationOf(e)) {
-      var m = await addMapper(DependentEnumMapperElement(this, e, options));
+      var m = await _addMapper(DependentEnumMapperElement(this, e, options));
       return m;
     } else {
       return null;

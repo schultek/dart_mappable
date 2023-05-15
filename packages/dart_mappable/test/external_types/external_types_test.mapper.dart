@@ -49,7 +49,7 @@ class PersonMapper extends ClassMapperBase<Person> {
   }
 }
 
-mixin PersonMappable {
+mixin PersonMappable implements Encodable {
   String toJson() {
     return PersonMapper._guard((c) => c.toJson(this as Person));
   }

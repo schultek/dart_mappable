@@ -45,7 +45,7 @@ class AMapper extends ClassMapperBase<A> {
   }
 }
 
-mixin AMappable {
+mixin AMappable implements Encodable {
   String toJson();
   Map<String, dynamic> toMap();
   ACopyWith<A, A, A> get copyWith;
@@ -103,7 +103,7 @@ class BMapper extends SubClassMapperBase<B> {
   }
 }
 
-mixin BMappable {
+mixin BMappable implements Encodable {
   String toJson() {
     return BMapper._guard((c) => c.toJson(this as B));
   }
@@ -206,7 +206,7 @@ class CMapper extends SubClassMapperBase<C> {
   }
 }
 
-mixin CMappable {
+mixin CMappable implements Encodable {
   String toJson() {
     return CMapper._guard((c) => c.toJson(this as C));
   }

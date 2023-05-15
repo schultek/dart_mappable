@@ -32,6 +32,67 @@ abstract class MapperBase<T extends Object> {
     throw MapperException.unsupportedMethod(MapperMethod.decode, type);
   }
 
+  V decode<V>(Object? value,
+      [DecodingOptions? options, MapperContainer? container]) {
+    if (value == null || (options?.type == null && value is V)) {
+      return value as V;
+    }
+    var type = options?.type ?? V;
+    try {
+      return decoder(
+        value,
+        DecodingContext(
+            container: container, args: type.args, options: options),
+      ) as V;
+    } catch (e, stacktrace) {
+      Error.throwWithStackTrace(
+        MapperException.chain(MapperMethod.decode, '($type)', e),
+        stacktrace,
+      );
+    }
+  }
+
+  Object? encode<V>(T value,
+      [EncodingOptions? options, MapperContainer? container]) {
+    try {
+      Type type = V;
+
+      var includeTypeId = options?.includeTypeId;
+      includeTypeId ??= this.includeTypeId<V>(value);
+
+      if (includeTypeId) {
+        type = value.runtimeType;
+      }
+
+      var typeArgs = type.args.map((t) => t == UnresolvedType ? dynamic : t);
+
+      var fallback = this.type.base.args;
+      if (typeArgs.length != fallback.length) {
+        typeArgs = fallback;
+      }
+
+      var result = this.encoder(
+        value,
+        EncodingContext(
+          container: container,
+          options: options?.inheritOptions ?? false ? options : null,
+          args: typeArgs.toList(),
+        ),
+      );
+
+      if (includeTypeId && result is Map<String, dynamic>) {
+        result['__type'] = value.runtimeType.id;
+      }
+
+      return result;
+    } catch (e, stacktrace) {
+      Error.throwWithStackTrace(
+        MapperException.chain(MapperMethod.encode, '(${value.runtimeType})', e),
+        stacktrace,
+      );
+    }
+  }
+
   /// The mapping method to encode [value] to a serializable value.
   Object? encoder(T value, EncodingContext context) {
     throw MapperException.unsupportedMethod(MapperMethod.encode, type);

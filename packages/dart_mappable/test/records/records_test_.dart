@@ -1,6 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
+@MappableRecord()
 void main() {
   group('records', () {
     late RecordMapper r1Mapper;

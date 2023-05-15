@@ -40,7 +40,7 @@ class AMapper extends ClassMapperBase<A> {
   final Function instantiate = _instantiate;
 }
 
-mixin AMappable {
+mixin AMappable implements Encodable {
   String toJson() {
     return AMapper._guard((c) => c.toJson(this as A));
   }
@@ -115,7 +115,7 @@ class BMapper extends ClassMapperBase<B> {
   final Function instantiate = _instantiate;
 }
 
-mixin BMappable {
+mixin BMappable implements Encodable {
   @override
   String toString() {
     return BMapper._guard((c) => c.asString(this));

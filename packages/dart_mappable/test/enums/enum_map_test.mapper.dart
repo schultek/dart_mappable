@@ -22,7 +22,7 @@ class EnumAMapper extends EnumMapper<EnumA> {
   }
 
   @override
-  EnumA decode(dynamic value) {
+  EnumA decodeValue(dynamic value) {
     switch (value) {
       case 'a':
         return EnumA.a;
@@ -36,7 +36,7 @@ class EnumAMapper extends EnumMapper<EnumA> {
   }
 
   @override
-  dynamic encode(EnumA self) {
+  dynamic encodeValue(EnumA self) {
     switch (self) {
       case EnumA.a:
         return 'a';
@@ -100,7 +100,7 @@ class ClassAMapper extends ClassMapperBase<ClassA> {
   }
 }
 
-mixin ClassAMappable {
+mixin ClassAMappable implements Encodable {
   String toJson() {
     return ClassAMapper._guard((c) => c.toJson(this as ClassA));
   }

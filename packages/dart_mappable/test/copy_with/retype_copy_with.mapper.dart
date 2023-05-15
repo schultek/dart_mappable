@@ -53,7 +53,7 @@ class AMapper extends ClassMapperBase<A> {
   }
 }
 
-mixin AMappable {
+mixin AMappable implements Encodable {
   String toJson() {
     return AMapper._guard((c) => c.toJson(this as A));
   }
@@ -164,7 +164,7 @@ class BMapper extends ClassMapperBase<B> {
   }
 }
 
-mixin BMappable {
+mixin BMappable implements Encodable {
   String toJson() {
     return BMapper._guard((c) => c.toJson(this as B));
   }
@@ -277,7 +277,7 @@ class VMapper extends ClassMapperBase<V> {
   }
 }
 
-mixin VMappable {
+mixin VMappable implements Encodable {
   String toJson() {
     return VMapper._guard((c) => c.toJson(this as V));
   }
@@ -376,7 +376,7 @@ class WMapper extends ClassMapperBase<W> {
   }
 }
 
-mixin WMappable {
+mixin WMappable implements Encodable {
   String toJson() {
     return WMapper._guard((c) => c.toJson(this as W));
   }

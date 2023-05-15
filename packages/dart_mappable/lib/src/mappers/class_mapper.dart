@@ -3,22 +3,10 @@ import 'package:meta/meta.dart';
 import 'package:type_plus/type_plus.dart';
 
 import '../annotations.dart';
+import '../mapper_container.dart';
 import '../mapper_utils.dart';
+import 'interface_mapper.dart';
 import 'mapper_base.dart';
-
-/// The decoding data passed to a class mappers `instantiate` method.
-///
-/// This should not be used in non-generated code.
-class DecodingData<T extends Object> {
-  DecodingData(this.value, this.context);
-
-  final Map<String, dynamic> value;
-  final DecodingContext context;
-
-  V dec<V>(Field f) {
-    return f.decode(value, context);
-  }
-}
 
 abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
   String get discriminatorKey;
@@ -81,16 +69,8 @@ abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
 /// The mapper interface that all generated class mappers extend.
 ///
 /// Class mappers will be generated for any class annotated with `@MappableClass()`.
-abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
-  /// The set of fields this class defines.
-  Map<Symbol, Field<T, dynamic>> get fields;
-
-  /// Whether to ignore null values when encoding the fields of this class.
-  bool get ignoreNull => false;
-
-  /// The optional mapping hook defined for this class.
-  MappingHook? get hook => null;
-
+abstract class ClassMapperBase<T extends Object>
+    extends InterfaceMapperBase<T> {
   /// The optional mapping hook defined for the superclass of this class.
   MappingHook? get superHook => null;
 
@@ -99,9 +79,6 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
 
   /// The set of subclass mappers for this class.
   final Set<SubClassMapperBase<T>> _subMappers = {};
-
-  @override
-  bool includeTypeId<V>(v) => MapperBase.checkStaticType<V>(v);
 
   /// This will inherit the decoding context when giving over decoding to a
   /// subclass.
@@ -125,8 +102,18 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
     }
   }
 
+  @override
+  Object? encode<V>(T value,
+      [EncodingOptions? options, MapperContainer? container]) {
+    var m = subOrSelfFor(value);
+    if (m != null) {
+      return m.encode<V>(value, options, container);
+    }
+    return super.encode<V>(value, options, container);
+  }
+
   MapperBase<Object>? subOrSelfFor(dynamic value) {
-    var m = _defaultSubMapper ?? this;
+    var m = _defaultSubMapper;
     if (_subMappers.isNotEmpty) {
       m = _subMappers.where((m) => m.isFor(value)).firstOrNull ?? m;
     }
@@ -146,11 +133,6 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
   late final List<Field<T, dynamic>> _params =
       fields.values.where((f) => f.mode != FieldMode.member).toList();
 
-  /// The instantiate method to create a new instance of this class.
-  ///
-  /// Must be implemented by the generated mapper.
-  Function get instantiate;
-
   @override
   T decoder(Object? value, DecodingContext context) {
     if (superHook != null && !context.inherited) {
@@ -161,19 +143,7 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
       }
     }
 
-    if (hook != null) {
-      value = hook!.beforeDecode(value);
-
-      if (value is T) {
-        return hook!.afterDecode(value) as T;
-      }
-    }
-
-    var result = _decode(value, context);
-
-    if (hook != null) {
-      result = hook!.afterDecode(result) as T;
-    }
+    var result = super.decoder(value, context);
 
     if (superHook != null && !context.inherited) {
       result = superHook!.afterDecode(result) as T;
@@ -182,7 +152,8 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
     return result;
   }
 
-  T _decode(Object? value, DecodingContext context) {
+  @override
+  T decodeValue(Object? value, DecodingContext context) {
     var map = value.checked<Map<String, dynamic>>();
     if (_subMappers.isNotEmpty) {
       for (var m in _subMappers) {
@@ -195,12 +166,7 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
       return _defaultSubMapper!
           .decoder(map, _defaultSubMapper!.inherit(context));
     }
-    var d = DecodingData<T>(map, context);
-    if (context.args.isEmpty) {
-      return instantiate(d) as T;
-    } else {
-      return context.callWith(instantiate, d);
-    }
+    return super.decodeValue(map, context);
   }
 
   final Map<String, dynamic>? _encodedStaticParams = null;
@@ -216,31 +182,23 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
       value = result;
     }
 
-    if (hook != null) {
-      var result = hook!.beforeEncode(value);
-
-      if (result is! T) {
-        return hook!.afterEncode(result);
-      }
-      value = result;
-    }
-
-    Object? result = {
-      for (var f in _params)
-        if (!ignoreNull || f.get(value) != null)
-          f.key: f.encode(value, context),
-      ...?_encodedStaticParams,
-    };
-
-    if (hook != null) {
-      result = hook!.afterEncode(result);
-    }
+    var result = super.encoder(value, context);
 
     if (superHook != null) {
       result = superHook!.afterEncode(result);
     }
 
     return result;
+  }
+
+  @override
+  Object? encodeValue(T value, EncodingContext context) {
+    return {
+      for (var f in _params)
+        if (!ignoreNull || f.get(value) != null)
+          f.key: f.encode(value, context),
+      ...?_encodedStaticParams,
+    };
   }
 
   @override
@@ -262,79 +220,5 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
     return _members.every((f) {
       return context.container.isEqual(f.get(value), f.get(other));
     });
-  }
-}
-
-/// The mode of a field defined in a class.
-enum FieldMode {
-  /// A field that is only defined as a constructor parameter.
-  param,
-
-  /// A field that is only defined as a class member (e.g. getter).
-  member,
-
-  /// A field that is both a constructor parameter and class member.
-  field;
-}
-
-/// A field defined in a class that is relevant for its mapping.
-class Field<T extends Object, V> {
-  /// The name of the field.
-  final String name;
-
-  /// The getter returns the fields value for a given instance.
-  final Object? Function(T) getter;
-
-  /// The mapping key of the field, or the name by default.
-  final String key;
-
-  /// The mode of the field.
-  final FieldMode mode;
-
-  /// An optional type factory when this field is of a generic type.
-  final Function? arg;
-
-  /// Whether this field is optional in the class constructor.
-  final bool opt;
-
-  /// An optional default value for this field.
-  final V? def;
-
-  /// The optional mapping hook for this field.
-  final MappingHook? hook;
-
-  const Field(
-    this.name,
-    this.getter, {
-    String? key,
-    this.mode = FieldMode.field,
-    this.arg,
-    this.opt = false,
-    this.def,
-    this.hook,
-  }) : key = key ?? name;
-
-  Object? get(T value) {
-    return getter(value);
-  }
-
-  dynamic encode(T value, EncodingContext context) {
-    var container = context.container;
-    var options = context.options;
-    if (arg == null) {
-      return container.$enc<V>(get(value), name, options, hook);
-    } else {
-      return context.callWith(
-        arg!,
-        <U>() => container.$enc<U>(get(value), name, options, hook),
-      );
-    }
-  }
-
-  R decode<R>(Map<String, dynamic> value, DecodingContext context) {
-    var result = opt || def != null
-        ? context.container.$dec<R?>(value[key], key, hook)
-        : context.container.$dec<R>(value[key], key, hook);
-    return result ?? (def as R);
   }
 }

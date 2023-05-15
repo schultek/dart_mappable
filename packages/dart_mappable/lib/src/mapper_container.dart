@@ -13,7 +13,7 @@ import '../dart_mappable.dart';
 /// {@category Generics}
 /// {@category Mapper Container}
 class EncodingOptions {
-  EncodingOptions({this.includeTypeId, this.inheritOptions = true, this.data});
+  EncodingOptions({this.includeTypeId, this.inheritOptions = true});
 
   /// Whether to include the type id of the encoding object.
   ///
@@ -26,9 +26,6 @@ class EncodingOptions {
   /// Whether to inherit this options for nested calls to [MapperContainer.toValue],
   /// like for encoding fields of a class.
   final bool inheritOptions;
-
-  /// Mapper specific data.
-  final Object? data;
 }
 
 /// Additional options to be passed to [MapperContainer.fromValue].
@@ -36,10 +33,10 @@ class EncodingOptions {
 /// {@category Generics}
 /// {@category Mapper Container}
 class DecodingOptions {
-  DecodingOptions({this.data});
+  DecodingOptions({this.type});
 
-  /// Mapper specific data.
-  final Object? data;
+  /// The target type to decode to, if different from the mappers type.
+  final Type? type;
 }
 
 /// The mapper container manages a set of mappers and is the main interface for
@@ -77,7 +74,7 @@ abstract class MapperContainer {
     IterableMapper<List>(<T>(i) => i.toList(), <T>(f) => f<List<T>>()),
     IterableMapper<Set>(<T>(i) => i.toSet(), <T>(f) => f<Set<T>>()),
     MapMapper<Map>(<K, V>(map) => map, <K, V>(f) => f<Map<K, V>>()),
-    ...RecordMapper.defaults,
+    ...RecordMapperBase.defaults,
   });
 
   /// A container that holds all globally registered mappers.
@@ -242,7 +239,7 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
 
     if (mapper != null) {
       if (mapper is ClassMapperBase) {
-        mapper = mapper.subOrSelfFor(value);
+        mapper = mapper.subOrSelfFor(value) ?? mapper;
       }
       _cachedMappers[baseType] = mapper;
     }
@@ -297,7 +294,7 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
       return value as T;
     }
 
-    var type = T;
+    var type = options?.type ?? T;
     if (value is Map<String, dynamic> && value['__type'] != null) {
       type = TypePlus.fromId(value['__type'] as String);
       if (type == UnresolvedType) {
@@ -310,17 +307,7 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
 
     var mapper = _mapperForType(type);
     if (mapper != null) {
-      try {
-        return mapper.decoder(
-            value,
-            DecodingContext(
-                container: this, args: type.args, options: options)) as T;
-      } catch (e, stacktrace) {
-        Error.throwWithStackTrace(
-          MapperException.chain(MapperMethod.decode, '($type)', e),
-          stacktrace,
-        );
-      }
+      return mapper.decode<T>(value, DecodingOptions(type: type), this);
     } else {
       throw MapperException.chain(
           MapperMethod.decode, '($type)', MapperException.unknownType(type));
@@ -332,44 +319,7 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     if (value == null) return null;
     var mapper = _mapperFor(value);
     if (mapper != null) {
-      try {
-        Type type = T;
-
-        var includeTypeId = options?.includeTypeId;
-        includeTypeId ??= mapper.includeTypeId<T>(value);
-
-        if (includeTypeId) {
-          type = value.runtimeType;
-        }
-
-        var typeArgs = type.args.map((t) => t == UnresolvedType ? dynamic : t);
-
-        var fallback = mapper.type.base.args;
-        if (typeArgs.length != fallback.length) {
-          typeArgs = fallback;
-        }
-
-        var result = mapper.encoder(
-          value,
-          EncodingContext(
-            container: this,
-            options: options?.inheritOptions ?? false ? options : null,
-            args: typeArgs.toList(),
-          ),
-        );
-
-        if (includeTypeId && result is Map<String, dynamic>) {
-          result['__type'] = value.runtimeType.id;
-        }
-
-        return result;
-      } catch (e, stacktrace) {
-        Error.throwWithStackTrace(
-          MapperException.chain(
-              MapperMethod.encode, '(${value.runtimeType})', e),
-          stacktrace,
-        );
-      }
+      return mapper.encode<T>(value, options, this);
     } else {
       throw MapperException.chain(
         MapperMethod.encode,

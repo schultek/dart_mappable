@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 
+import '../elements/record/target_record_mapper_element.dart';
 import '../records_group.dart';
 import 'generator.dart';
 
@@ -21,6 +22,18 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
         ),
         <${element.typeArgs}>(f) => f<${element.typeAliasName}<${element.typeArgs}>>(),
       );
+    ''';
+  }
+}
+
+/// Generates code for a specific record.
+class RecordMapperGenerator2
+    extends MapperGenerator<TargetRecordMapperElement> {
+  RecordMapperGenerator2(super.element);
+
+  @override
+  Future<String> generate() async {
+    return '''
     ''';
   }
 }

@@ -54,7 +54,7 @@ class AMapper extends ClassMapperBase<A> {
   }
 }
 
-mixin AMappable {
+mixin AMappable implements Encodable {
   String toJson() {
     return AMapper._guard((c) => c.toJson(this as A));
   }

@@ -72,8 +72,8 @@ class _MapDecoder2<M extends Map, K> {
   Map<K, V> _decode<V>() {
     return mapper.fromMap(value.checked<Map>().map((key, value) {
       return MapEntry(
-        context.container.$dec<K>(key, 'key'),
-        context.container.$dec<V>(value, 'value'),
+        context.$dec<K>(key, 'key'),
+        context.$dec<V>(value, 'value'),
       );
     }));
   }
@@ -113,8 +113,8 @@ class _MapEncoder2<M extends Map, K> {
   Map<dynamic, dynamic> _encode<V>() {
     return value.map((key, value) {
       return MapEntry(
-        context.container.$enc<K>(key as K, 'key', context.options),
-        context.container.$enc<V>(value as V, 'value', context.options),
+        context.$enc<K>(key as K, 'key', context.options),
+        context.$enc<V>(value as V, 'value', context.options),
       );
     });
   }

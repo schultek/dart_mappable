@@ -95,7 +95,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
             '  static dynamic _arg\$${f.field.name}${element.typeParamsDeclaration}(f) => f<${f.argType}>();\n');
       }
       output.write(
-          "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.field.name} = Field('${f.field.name}', _\$${f.field.name}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook});\n");
+          "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.field.name} = Field('${f.field.name}', _\$${f.field.name}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook}${f.map});\n");
     }
 
     output.write(
@@ -137,7 +137,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
       await _checkMixinUsed();
 
       output.write(
-          'mixin ${element.uniqueClassName}Mappable${element.typeParamsDeclaration} {\n');
+          'mixin ${element.uniqueClassName}Mappable${element.typeParamsDeclaration} implements Encodable {\n');
       output.writeAll([
         encoderGen.generateEncoderMixin(),
         copyGen.generateCopyWithMixin(),

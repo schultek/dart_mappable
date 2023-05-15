@@ -43,7 +43,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   final Function instantiate = _instantiate;
 }
 
-mixin AnimalMappable {
+mixin AnimalMappable implements Encodable {
   AnimalCopyWith<Animal, Animal, Animal> get copyWith;
 }
 
@@ -99,7 +99,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   final Function instantiate = _instantiate;
 }
 
-mixin CatMappable {
+mixin CatMappable implements Encodable {
   CatCopyWith<Cat, Cat, Cat> get copyWith =>
       _CatCopyWithImpl(this as Cat, $identity, $identity);
   @override
@@ -181,7 +181,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   final Function instantiate = _instantiate;
 }
 
-mixin DogMappable {
+mixin DogMappable implements Encodable {
   DogCopyWith<Dog, Dog, Dog> get copyWith =>
       _DogCopyWithImpl(this as Dog, $identity, $identity);
   @override
@@ -255,7 +255,7 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   final Function instantiate = _instantiate;
 }
 
-mixin ZooMappable {
+mixin ZooMappable implements Encodable {
   ZooCopyWith<Zoo, Zoo, Zoo> get copyWith =>
       _ZooCopyWithImpl(this as Zoo, $identity, $identity);
   @override
@@ -337,7 +337,7 @@ class AMapper extends ClassMapperBase<A> {
   }
 }
 
-mixin AMappable<T> {
+mixin AMappable<T> implements Encodable {
   String toJson() {
     return AMapper._guard((c) => c.toJson(this as A<T>));
   }
@@ -433,7 +433,7 @@ class CMapper extends ClassMapperBase<C> {
   }
 }
 
-mixin CMappable<T> {
+mixin CMappable<T> implements Encodable {
   String toJson() {
     return CMapper._guard((c) => c.toJson(this as C<T>));
   }
@@ -537,7 +537,7 @@ class BMapper extends ClassMapperBase<B> {
   }
 }
 
-mixin BMappable {
+mixin BMappable implements Encodable {
   String toJson() {
     return BMapper._guard((c) => c.toJson(this as B));
   }

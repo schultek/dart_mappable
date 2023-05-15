@@ -114,6 +114,22 @@ class MapperFieldElement {
     var hook = await param?.getHook();
     return hook != null ? ', hook: $hook' : '';
   }();
+
+  late String map = () {
+    var type = param?.parameter.type ?? resolvedType;
+    if (type is InterfaceType && type.element is EnumElement) {
+      var e = parent.parent.getMapperForElement(type.element);
+      if (e != null) {
+        return ', map: ${e.prefixedClassName}Mapper.ensureInitialized';
+      }
+    } else if (type is RecordType && type.alias != null) {
+      var e = parent.parent.getMapperForElement(type.alias!.element);
+      if (e != null) {
+        return ', map: ${e.prefixedClassName}Mapper.ensureInitialized';
+      }
+    }
+    return '';
+  }();
 }
 
 abstract class MapperParamElement {
@@ -134,8 +150,8 @@ abstract class MapperParamElement {
   String? _keyFor(Element element) {
     return fieldChecker
         .firstAnnotationOf(element)
-        ?.getField('key')!
-        .toStringValue();
+        ?.read('key')
+        ?.toStringValue();
   }
 
   String? get _paramKey => _keyFor(parameter);

@@ -1,17 +1,22 @@
 import 'annotations.dart';
 import 'mapper_container.dart';
 import 'mapper_exception.dart';
+import 'mappers/mapper_base.dart';
 
 /// {@nodoc}
-extension GuardedUtils on MapperContainer {
+extension DecodingUtil on DecodingContext {
   T $dec<T>(
     Object? value,
     String key, [
     MappingHook? hook,
+    MapperBase? mapper,
   ]) {
     T decode(value) {
-      if (value != null) {
-        return fromValue<T>(value);
+      if (value is Object) {
+        if (mapper != null) {
+          return mapper.decode<T>(value);
+        }
+        return container.fromValue<T>(value);
       } else if (value is T) {
         return value;
       } else {
@@ -31,14 +36,32 @@ extension GuardedUtils on MapperContainer {
       );
     }
   }
+}
 
-  dynamic $enc<T>(Object? value, String key,
-      [EncodingOptions? options, MappingHook? hook]) {
+/// {@nodoc}
+extension EncodingUtil on EncodingContext {
+  dynamic $enc<T>(
+    Object? value,
+    String key, [
+    EncodingOptions? options,
+    MappingHook? hook,
+    MapperBase? mapper,
+  ]) {
+    dynamic encode(Object? v) {
+      if (v == null) {
+        return v;
+      } else if (mapper != null) {
+        return mapper.encode<T>(v, options);
+      } else {
+        return container.toValue<T>(v, options);
+      }
+    }
+
     try {
       if (hook != null) {
-        return hook.wrapEncode(value, (v) => toValue<T>(v, options));
+        return hook.wrapEncode(value, encode);
       }
-      return toValue<T>(value, options);
+      return encode(value);
     } catch (e, stacktrace) {
       Error.throwWithStackTrace(
         MapperException.chain(MapperMethod.encode, '.$key', e),

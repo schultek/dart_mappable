@@ -53,7 +53,7 @@ class ItemsMapper extends ClassMapperBase<Items> {
   }
 }
 
-mixin ItemsMappable {
+mixin ItemsMappable implements Encodable {
   String toJson() {
     return ItemsMapper._guard((c) => c.toJson(this as Items));
   }
@@ -167,7 +167,7 @@ class ItemMapper extends ClassMapperBase<Item> {
   }
 }
 
-mixin ItemMappable {
+mixin ItemMappable implements Encodable {
   String toJson() {
     return ItemMapper._guard((c) => c.toJson(this as Item));
   }

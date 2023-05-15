@@ -53,17 +53,17 @@ class MappableOptions {
   }
 
   factory MappableOptions.from(DartObject object) {
-    var initScope = object.getField('generateInitializerForScope');
+    var initScope = object.read('generateInitializerForScope');
     return MappableOptions(
-      caseStyle: caseStyleFromAnnotation(object.getField('caseStyle')),
-      enumCaseStyle: caseStyleFromAnnotation(object.getField('enumCaseStyle')),
-      ignoreNull: object.getField('ignoreNull')?.toBoolValue(),
-      discriminatorKey: object.getField('discriminatorKey')?.toStringValue(),
-      generateMethods: object.getField('generateMethods')?.toIntValue(),
+      caseStyle: caseStyleFromAnnotation(object.read('caseStyle')),
+      enumCaseStyle: caseStyleFromAnnotation(object.read('enumCaseStyle')),
+      ignoreNull: object.read('ignoreNull')?.toBoolValue(),
+      discriminatorKey: object.read('discriminatorKey')?.toStringValue(),
+      generateMethods: object.read('generateMethods')?.toIntValue(),
       initializerScope: initScope?.isNull ?? true
           ? null
           : InitializerScope
-              .values[initScope?.getField('index')?.toIntValue() ?? 0],
+              .values[initScope?.read('index')?.toIntValue() ?? 0],
     );
   }
 }

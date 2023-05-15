@@ -22,7 +22,7 @@ class BrandMapper extends EnumMapper<Brand> {
   }
 
   @override
-  Brand decode(dynamic value) {
+  Brand decodeValue(dynamic value) {
     switch (value) {
       case 'Toyota':
         return Brand.Toyota;
@@ -36,7 +36,7 @@ class BrandMapper extends EnumMapper<Brand> {
   }
 
   @override
-  dynamic encode(Brand self) {
+  dynamic encodeValue(Brand self) {
     switch (self) {
       case Brand.Toyota:
         return 'Toyota';
@@ -107,7 +107,7 @@ class PersonMapper extends ClassMapperBase<Person> {
   }
 }
 
-mixin PersonMappable {
+mixin PersonMappable implements Encodable {
   String toJson() {
     return PersonMapper._guard((c) => c.toJson(this as Person));
   }
@@ -224,7 +224,7 @@ class CarMapper extends ClassMapperBase<Car> {
   }
 }
 
-mixin CarMappable {
+mixin CarMappable implements Encodable {
   String toJson() {
     return CarMapper._guard((c) => c.toJson(this as Car));
   }

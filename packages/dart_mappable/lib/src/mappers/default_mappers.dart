@@ -1,3 +1,4 @@
+import '../mapper_container.dart';
 import '../mapper_exception.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
@@ -16,14 +17,21 @@ class PrimitiveMapper<T extends Object> extends MapperBase<T>
   @override
   Type get type => exactType ?? super.type;
   @override
-  bool isFor(dynamic v) =>
-      exactType != null ? v.runtimeType == exactType : super.isFor(v);
+  bool isFor(dynamic v) {
+    return exactType != null ? v.runtimeType == exactType : super.isFor(v);
+  }
 
   static T _cast<T>(v) => v as T;
 
   @override
   T decoder(Object value, DecodingContext context) {
     return _decoder(value);
+  }
+
+  @override
+  Object? encode<V>(T value,
+      [EncodingOptions? options, MapperContainer? container]) {
+    return value;
   }
 
   @override
@@ -47,7 +55,7 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
   const DateTimeMapper();
 
   @override
-  DateTime decode(dynamic value) {
+  DateTime decodeValue(dynamic value) {
     if (value is String) {
       return DateTime.parse(value);
     } else if (value is num) {
@@ -58,7 +66,7 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
   }
 
   @override
-  String encode(DateTime self) {
+  String encodeValue(DateTime self) {
     return self.toUtc().toIso8601String();
   }
 }
