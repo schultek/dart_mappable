@@ -1,3 +1,8 @@
+# 3.0.2
+
+- Fixed generic decoding when using generic superclass.
+- Fixed unknown-type bug for serialized non-constructor fields.
+
 # 3.0.1
 
 - Fixed bug with undetermined `includeSubClasses`.
