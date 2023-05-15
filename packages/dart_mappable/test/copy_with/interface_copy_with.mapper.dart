@@ -212,6 +212,7 @@ class CMapper extends ClassMapperBase<C> {
   static CMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = CMapper._());
+      AMapper.ensureInitialized();
     }
     return _instance!;
   }

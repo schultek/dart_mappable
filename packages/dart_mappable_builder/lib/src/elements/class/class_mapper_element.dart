@@ -81,10 +81,14 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
           .firstOrNull;
 
   late bool isDiscriminatingSubclass = () {
-    if (superElement == null || superElement is NoneClassMapperElement) {
+    if (discriminatorKey == null && discriminatorValueCode == null) {
       return false;
     }
-    if (discriminatorKey == null && discriminatorValueCode == null) {
+    return isSubclass;
+  }();
+
+  late bool isSubclass = () {
+    if (superElement == null || superElement is NoneClassMapperElement) {
       return false;
     }
     return true;

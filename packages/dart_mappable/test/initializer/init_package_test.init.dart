@@ -125,6 +125,7 @@ void initializeMappers() {
   p26.BMapper.ensureInitialized();
   p27.AMapper.ensureInitialized();
   p27.BMapper.ensureInitialized();
+  p27.CMapper.ensureInitialized();
   p28.PersonMapper.ensureInitialized();
   p28.CarMapper.ensureInitialized();
   p28.BrandMapper.ensureInitialized();

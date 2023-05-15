@@ -131,6 +131,7 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
   static ConfettiMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ConfettiMapper._());
+      ContentMapper.ensureInitialized();
     }
     return _instance!;
   }
