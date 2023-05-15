@@ -24,6 +24,12 @@ mixin TypeParamsMixin on MapperElement<ClassElement> {
 
   late List<String>? inheritedTypeArgs = () {
     bool hasModifiedArgs = false;
+
+    if (element.typeParameters.length !=
+        element.supertype!.typeArguments.length) {
+      hasModifiedArgs = true;
+    }
+
     var args = <String?>[];
 
     for (var p in element.typeParameters) {

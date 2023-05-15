@@ -20,6 +20,9 @@ class D<T, V> extends A<V> with DMappable<T, V> {}
 @MappableClass()
 class E<T, V> extends D<V, List<T>> with EMappable<T, V> {}
 
+@MappableClass()
+class F extends E<int, String> with FMappable {}
+
 void main() {
   group('Generics Change Args', () {
     test('Unchanged Args', () {
@@ -50,6 +53,11 @@ void main() {
               MapperMethod.decode,
               '(A<Map<dynamic, dynamic>>)',
               "type 'E<dynamic, dynamic>' is not a subtype of type 'A<Map<dynamic, dynamic>>' in type cast")));
+    });
+
+    test('Less Args', () {
+      var f = EMapper.fromMap<dynamic, dynamic>({'type': 'F'});
+      expect(f, isA<F>());
     });
   });
 }
