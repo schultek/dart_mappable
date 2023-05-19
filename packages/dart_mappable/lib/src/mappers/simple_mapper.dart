@@ -1,11 +1,12 @@
 import '../mapper_container.dart';
 import 'mapper_base.dart';
 import 'mapper_mixins.dart';
+import 'mapping_context.dart';
 
 /// An interface to define a custom mapper.
 ///
 /// Implementation should extend this interface and implement the
-/// [decodeValue] and [encodeValue] methods.
+/// [decode] and [encode] methods.
 /// For a generic type with one or two generic type arguments, extend the
 /// [SimpleMapper1] or [SimpleMapper2] interface instead, respectively.
 ///
@@ -13,17 +14,17 @@ import 'mapper_mixins.dart';
 abstract class SimpleMapper<T extends Object> extends _SimpleMapperBase<T> {
   const SimpleMapper();
 
-  T decodeValue(Object value);
-  Object? encodeValue(T self);
+  T decode(Object value);
+  Object? encode(T self);
 
   @override
   T _decode(Object value, DecodingContext context) {
-    return decodeValue(value);
+    return decode(value);
   }
 
   @override
   Object? _encode(T value, EncodingContext context) {
-    return encodeValue(value);
+    return encode(value);
   }
 }
 
@@ -33,20 +34,20 @@ abstract class SimpleMapper<T extends Object> extends _SimpleMapperBase<T> {
 abstract class SimpleMapper1<T extends Object> extends _SimpleMapperBase<T> {
   const SimpleMapper1();
 
-  /// Override as `MyClass<A> decodeValue<A>(Object value)`
-  T decodeValue<A>(Object value);
+  /// Override as `MyClass<A> decode<A>(Object value)`
+  T decode<A>(Object value);
 
-  /// Override as `Object encodeValue<A>(MyClass<A> self)`
-  Object? encodeValue<A>(covariant T self);
+  /// Override as `Object encode<A>(MyClass<A> self)`
+  Object? encode<A>(covariant T self);
 
   @override
   T _decode(Object value, DecodingContext context) {
-    return context.callWith1(decodeValue, value);
+    return context.callWith1(decode, value);
   }
 
   @override
   Object? _encode(T value, EncodingContext context) {
-    return context.callWith1(encodeValue, value);
+    return context.callWith1(encode, value);
   }
 }
 
@@ -56,20 +57,20 @@ abstract class SimpleMapper1<T extends Object> extends _SimpleMapperBase<T> {
 abstract class SimpleMapper2<T extends Object> extends _SimpleMapperBase<T> {
   const SimpleMapper2();
 
-  /// Override as `MyClass<A, B> decodeValue<A, B>(Object value)`
-  T decodeValue<A, B>(Object value);
+  /// Override as `MyClass<A, B> decode<A, B>(Object value)`
+  T decode<A, B>(Object value);
 
-  /// Override as `Object? encodeValue<A, B>(MyClass<A, B> self)`
-  Object? encodeValue<A, B>(covariant T self);
+  /// Override as `Object? encode<A, B>(MyClass<A, B> self)`
+  Object? encode<A, B>(covariant T self);
 
   @override
   T _decode(Object value, DecodingContext context) {
-    return context.callWith2(decodeValue, value);
+    return context.callWith2(decode, value);
   }
 
   @override
   Object? _encode(T value, EncodingContext context) {
-    return context.callWith2(encodeValue, value);
+    return context.callWith2(encode, value);
   }
 }
 

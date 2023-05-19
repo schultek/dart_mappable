@@ -22,10 +22,10 @@ class EncoderGenerator {
     }
     return '''
       String $toJsonName() {
-        return ${element.mapperName}._guard((c) => c.toJson(this as ${element.selfTypeParam}));
+        return ${element.mapperName}.ensureInitialized().encodeJson<${element.selfTypeParam}>(this as ${element.selfTypeParam});
       }
       Map<String, dynamic> $toMapName() {
-        return ${element.mapperName}.ensureInitialized().encode(this as ${element.selfTypeParam}) as Map<String, dynamic>;
+        return ${element.mapperName}.ensureInitialized().encodeMap<${element.selfTypeParam}>(this as ${element.selfTypeParam});
       }
     ''';
   }
@@ -36,10 +36,10 @@ class EncoderGenerator {
     }
     return '''
       String $toJsonName() {
-        return ${element.mapperName}._guard((c) => c.toJson(this));
+        return ${element.mapperName}.ensureInitialized().encodeJson(this);
       }
       Map<String, dynamic> $toMapName() {
-        return ${element.mapperName}._guard((c) => c.toMap(this));
+        return ${element.mapperName}.ensureInitialized().encodeMap(this);
       }
     ''';
   }

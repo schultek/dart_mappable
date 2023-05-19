@@ -22,7 +22,7 @@ class HOpacityMapper extends EnumMapper<HOpacity> {
   }
 
   @override
-  HOpacity decodeValue(dynamic value) {
+  HOpacity decode(dynamic value) {
     switch (value) {
       case 'bzOpacityIntense':
         return HOpacity.bzOpacityIntense;
@@ -32,7 +32,7 @@ class HOpacityMapper extends EnumMapper<HOpacity> {
   }
 
   @override
-  dynamic encodeValue(HOpacity self) {
+  dynamic encode(HOpacity self) {
     switch (self) {
       case HOpacity.bzOpacityIntense:
         return 'bzOpacityIntense';
@@ -89,21 +89,23 @@ class DSOpacityDataMapper extends ClassMapperBase<DSOpacityData> {
   final Function instantiate = _instantiate;
 
   static DSOpacityData fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<DSOpacityData>(map));
+    return ensureInitialized().decodeMap<DSOpacityData>(map);
   }
 
   static DSOpacityData fromJson(String json) {
-    return _guard((c) => c.fromJson<DSOpacityData>(json));
+    return ensureInitialized().decodeJson<DSOpacityData>(json);
   }
 }
 
-mixin DSOpacityDataMappable implements Encodable {
+mixin DSOpacityDataMappable {
   String toJson() {
-    return DSOpacityDataMapper._guard((c) => c.toJson(this as DSOpacityData));
+    return DSOpacityDataMapper.ensureInitialized()
+        .encodeJson<DSOpacityData>(this as DSOpacityData);
   }
 
   Map<String, dynamic> toMap() {
-    return DSOpacityDataMapper._guard((c) => c.toMap(this as DSOpacityData));
+    return DSOpacityDataMapper.ensureInitialized()
+        .encodeMap<DSOpacityData>(this as DSOpacityData);
   }
 
   DSOpacityDataCopyWith<DSOpacityData, DSOpacityData, DSOpacityData>
@@ -111,19 +113,22 @@ mixin DSOpacityDataMappable implements Encodable {
           this as DSOpacityData, $identity, $identity);
   @override
   String toString() {
-    return DSOpacityDataMapper._guard((c) => c.asString(this));
+    return DSOpacityDataMapper.ensureInitialized()
+        .stringifyValue(this as DSOpacityData);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            DSOpacityDataMapper._guard((c) => c.isEqual(this, other)));
+            DSOpacityDataMapper.ensureInitialized()
+                .isValueEqual(this as DSOpacityData, other));
   }
 
   @override
   int get hashCode {
-    return DSOpacityDataMapper._guard((c) => c.hash(this));
+    return DSOpacityDataMapper.ensureInitialized()
+        .hashValue(this as DSOpacityData);
   }
 }
 

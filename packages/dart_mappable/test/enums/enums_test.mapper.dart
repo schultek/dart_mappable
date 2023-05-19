@@ -22,7 +22,7 @@ class StateMapper extends EnumMapper<State> {
   }
 
   @override
-  State decodeValue(dynamic value) {
+  State decode(dynamic value) {
     switch (value) {
       case 'On':
         return State.On;
@@ -36,7 +36,7 @@ class StateMapper extends EnumMapper<State> {
   }
 
   @override
-  dynamic encodeValue(State self) {
+  dynamic encode(State self) {
     switch (self) {
       case State.On:
         return 'On';
@@ -72,7 +72,7 @@ class ColorMapper extends EnumMapper<Color> {
   }
 
   @override
-  Color decodeValue(dynamic value) {
+  Color decode(dynamic value) {
     switch (value) {
       case 'green':
         return Color.Green;
@@ -86,7 +86,7 @@ class ColorMapper extends EnumMapper<Color> {
   }
 
   @override
-  dynamic encodeValue(Color self) {
+  dynamic encode(Color self) {
     switch (self) {
       case Color.Green:
         return 'green';
@@ -122,7 +122,7 @@ class ItemsMapper extends EnumMapper<Items> {
   }
 
   @override
-  Items decodeValue(dynamic value) {
+  Items decode(dynamic value) {
     switch (value) {
       case 0:
         return Items.first;
@@ -136,7 +136,7 @@ class ItemsMapper extends EnumMapper<Items> {
   }
 
   @override
-  dynamic encodeValue(Items self) {
+  dynamic encode(Items self) {
     switch (self) {
       case Items.first:
         return 0;
@@ -172,7 +172,7 @@ class StatusMapper extends EnumMapper<Status> {
   }
 
   @override
-  Status decodeValue(dynamic value) {
+  Status decode(dynamic value) {
     switch (value) {
       case 0:
         return Status.zero;
@@ -186,7 +186,7 @@ class StatusMapper extends EnumMapper<Status> {
   }
 
   @override
-  dynamic encodeValue(Status self) {
+  dynamic encode(Status self) {
     switch (self) {
       case Status.zero:
         return 0;

@@ -22,7 +22,7 @@ class BrandMapper extends EnumMapper<Brand> {
   }
 
   @override
-  Brand decodeValue(dynamic value) {
+  Brand decode(dynamic value) {
     switch (value) {
       case 'Toyota':
         return Brand.Toyota;
@@ -36,7 +36,7 @@ class BrandMapper extends EnumMapper<Brand> {
   }
 
   @override
-  dynamic encodeValue(Brand self) {
+  dynamic encode(Brand self) {
     switch (self) {
       case Brand.Toyota:
         return 'Toyota';
@@ -99,40 +99,41 @@ class PersonMapper extends ClassMapperBase<Person> {
   final Function instantiate = _instantiate;
 
   static Person fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Person>(map));
+    return ensureInitialized().decodeMap<Person>(map);
   }
 
   static Person fromJson(String json) {
-    return _guard((c) => c.fromJson<Person>(json));
+    return ensureInitialized().decodeJson<Person>(json);
   }
 }
 
-mixin PersonMappable implements Encodable {
+mixin PersonMappable {
   String toJson() {
-    return PersonMapper._guard((c) => c.toJson(this as Person));
+    return PersonMapper.ensureInitialized().encodeJson<Person>(this as Person);
   }
 
   Map<String, dynamic> toMap() {
-    return PersonMapper._guard((c) => c.toMap(this as Person));
+    return PersonMapper.ensureInitialized().encodeMap<Person>(this as Person);
   }
 
   PersonCopyWith<Person, Person, Person> get copyWith =>
       _PersonCopyWithImpl(this as Person, $identity, $identity);
   @override
   String toString() {
-    return PersonMapper._guard((c) => c.asString(this));
+    return PersonMapper.ensureInitialized().stringifyValue(this as Person);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            PersonMapper._guard((c) => c.isEqual(this, other)));
+            PersonMapper.ensureInitialized()
+                .isValueEqual(this as Person, other));
   }
 
   @override
   int get hashCode {
-    return PersonMapper._guard((c) => c.hash(this));
+    return PersonMapper.ensureInitialized().hashValue(this as Person);
   }
 }
 
@@ -196,7 +197,8 @@ class CarMapper extends ClassMapperBase<Car> {
   static int _$drivenKm(Car v) => v.drivenKm;
   static const Field<Car, int> _f$drivenKm = Field('drivenKm', _$drivenKm);
   static Brand _$brand(Car v) => v.brand;
-  static const Field<Car, Brand> _f$brand = Field('brand', _$brand);
+  static const Field<Car, Brand> _f$brand =
+      Field('brand', _$brand, map: BrandMapper.ensureInitialized);
   static double _$miles(Car v) => v.miles;
   static const Field<Car, double> _f$miles =
       Field('miles', _$miles, mode: FieldMode.member);
@@ -216,40 +218,40 @@ class CarMapper extends ClassMapperBase<Car> {
   final Function instantiate = _instantiate;
 
   static Car fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Car>(map));
+    return ensureInitialized().decodeMap<Car>(map);
   }
 
   static Car fromJson(String json) {
-    return _guard((c) => c.fromJson<Car>(json));
+    return ensureInitialized().decodeJson<Car>(json);
   }
 }
 
-mixin CarMappable implements Encodable {
+mixin CarMappable {
   String toJson() {
-    return CarMapper._guard((c) => c.toJson(this as Car));
+    return CarMapper.ensureInitialized().encodeJson<Car>(this as Car);
   }
 
   Map<String, dynamic> toMap() {
-    return CarMapper._guard((c) => c.toMap(this as Car));
+    return CarMapper.ensureInitialized().encodeMap<Car>(this as Car);
   }
 
   CarCopyWith<Car, Car, Car> get copyWith =>
       _CarCopyWithImpl(this as Car, $identity, $identity);
   @override
   String toString() {
-    return CarMapper._guard((c) => c.asString(this));
+    return CarMapper.ensureInitialized().stringifyValue(this as Car);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            CarMapper._guard((c) => c.isEqual(this, other)));
+            CarMapper.ensureInitialized().isValueEqual(this as Car, other));
   }
 
   @override
   int get hashCode {
-    return CarMapper._guard((c) => c.hash(this));
+    return CarMapper.ensureInitialized().hashValue(this as Car);
   }
 }
 

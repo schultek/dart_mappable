@@ -3,6 +3,7 @@ import '../mapper_exception.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
 import 'mapper_mixins.dart';
+import 'mapping_context.dart';
 import 'simple_mapper.dart';
 
 /// The mapper implementation used for all primitive types.
@@ -55,7 +56,7 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
   const DateTimeMapper();
 
   @override
-  DateTime decodeValue(dynamic value) {
+  DateTime decode(dynamic value) {
     if (value is String) {
       return DateTime.parse(value);
     } else if (value is num) {
@@ -66,7 +67,7 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
   }
 
   @override
-  String encodeValue(DateTime self) {
+  String encode(DateTime self) {
     return self.toUtc().toIso8601String();
   }
 }

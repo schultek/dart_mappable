@@ -41,40 +41,41 @@ class PersonMapper extends ClassMapperBase<Person> {
   final Function instantiate = _instantiate;
 
   static Person fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Person>(map));
+    return ensureInitialized().decodeMap<Person>(map);
   }
 
   static Person fromJson(String json) {
-    return _guard((c) => c.fromJson<Person>(json));
+    return ensureInitialized().decodeJson<Person>(json);
   }
 }
 
-mixin PersonMappable implements Encodable {
+mixin PersonMappable {
   String toJson() {
-    return PersonMapper._guard((c) => c.toJson(this as Person));
+    return PersonMapper.ensureInitialized().encodeJson<Person>(this as Person);
   }
 
   Map<String, dynamic> toMap() {
-    return PersonMapper._guard((c) => c.toMap(this as Person));
+    return PersonMapper.ensureInitialized().encodeMap<Person>(this as Person);
   }
 
   PersonCopyWith<Person, Person, Person> get copyWith =>
       _PersonCopyWithImpl(this as Person, $identity, $identity);
   @override
   String toString() {
-    return PersonMapper._guard((c) => c.asString(this));
+    return PersonMapper.ensureInitialized().stringifyValue(this as Person);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            PersonMapper._guard((c) => c.isEqual(this, other)));
+            PersonMapper.ensureInitialized()
+                .isValueEqual(this as Person, other));
   }
 
   @override
   int get hashCode {
-    return PersonMapper._guard((c) => c.hash(this));
+    return PersonMapper.ensureInitialized().hashValue(this as Person);
   }
 }
 
@@ -142,21 +143,21 @@ class CakeMapper extends ClassMapperBase<f.Cake> {
   final Function instantiate = _instantiate;
 
   static f.Cake fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<f.Cake>(map));
+    return ensureInitialized().decodeMap<f.Cake>(map);
   }
 
   static f.Cake fromJson(String json) {
-    return _guard((c) => c.fromJson<f.Cake>(json));
+    return ensureInitialized().decodeJson<f.Cake>(json);
   }
 }
 
 extension CakeMapperExtension on f.Cake {
   String toJson() {
-    return CakeMapper._guard((c) => c.toJson(this));
+    return CakeMapper.ensureInitialized().encodeJson(this);
   }
 
   Map<String, dynamic> toMap() {
-    return CakeMapper._guard((c) => c.toMap(this));
+    return CakeMapper.ensureInitialized().encodeMap(this);
   }
 
   CakeCopyWith<f.Cake, f.Cake, f.Cake> get copyWith =>
@@ -227,21 +228,21 @@ class Person2Mapper extends ClassMapperBase<m.Person> {
   final Function instantiate = _instantiate;
 
   static m.Person fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<m.Person>(map));
+    return ensureInitialized().decodeMap<m.Person>(map);
   }
 
   static m.Person fromJson(String json) {
-    return _guard((c) => c.fromJson<m.Person>(json));
+    return ensureInitialized().decodeJson<m.Person>(json);
   }
 }
 
 extension Person2MapperExtension on m.Person {
   String toJson() {
-    return Person2Mapper._guard((c) => c.toJson(this));
+    return Person2Mapper.ensureInitialized().encodeJson(this);
   }
 
   Map<String, dynamic> toMap() {
-    return Person2Mapper._guard((c) => c.toMap(this));
+    return Person2Mapper.ensureInitialized().encodeMap(this);
   }
 
   Person2CopyWith<m.Person, m.Person, m.Person> get copyWith =>
@@ -317,21 +318,21 @@ class AnimalMapper extends ClassMapperBase<o.Animal> {
   final Function instantiate = _instantiate;
 
   static o.Animal fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<o.Animal>(map));
+    return ensureInitialized().decodeMap<o.Animal>(map);
   }
 
   static o.Animal fromJson(String json) {
-    return _guard((c) => c.fromJson<o.Animal>(json));
+    return ensureInitialized().decodeJson<o.Animal>(json);
   }
 }
 
 extension AnimalMapperExtension on o.Animal {
   String toJson() {
-    return AnimalMapper._guard((c) => c.toJson(this));
+    return AnimalMapper.ensureInitialized().encodeJson(this);
   }
 
   Map<String, dynamic> toMap() {
-    return AnimalMapper._guard((c) => c.toMap(this));
+    return AnimalMapper.ensureInitialized().encodeMap(this);
   }
 }
 
@@ -388,21 +389,21 @@ class PetMapper extends SubClassMapperBase<o.Pet> {
   final Function instantiate = _instantiate;
 
   static o.Pet fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<o.Pet>(map));
+    return ensureInitialized().decodeMap<o.Pet>(map);
   }
 
   static o.Pet fromJson(String json) {
-    return _guard((c) => c.fromJson<o.Pet>(json));
+    return ensureInitialized().decodeJson<o.Pet>(json);
   }
 }
 
 extension PetMapperExtension on o.Pet {
   String toJson() {
-    return PetMapper._guard((c) => c.toJson(this));
+    return PetMapper.ensureInitialized().encodeJson(this);
   }
 
   Map<String, dynamic> toMap() {
-    return PetMapper._guard((c) => c.toMap(this));
+    return PetMapper.ensureInitialized().encodeMap(this);
   }
 
   PetCopyWith<o.Pet, o.Pet, o.Pet> get copyWith =>

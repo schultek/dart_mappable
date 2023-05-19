@@ -88,10 +88,9 @@ abstract class MapperContainer {
 
   /// The core method to encode any value.
   ///
-  /// The value is expected to be of type [T], but this is not statically
-  /// enforced. When the exact type of the value is different, a type discriminator
-  /// may be added to the resulting encoded value.
-  dynamic toValue<T>(Object? value, [EncodingOptions? options]);
+  /// The value is expected to be of type [T]. When the exact type of the value
+  /// is different, a type identifier may be added to the resulting encoded value.
+  dynamic toValue<T>(T? value, [EncodingOptions? options]);
 
   /// Decodes a map to a given type [T].
   ///
@@ -307,7 +306,7 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
 
     var mapper = _mapperForType(type);
     if (mapper != null) {
-      return mapper.decode<T>(value, DecodingOptions(type: type), this);
+      return mapper.decodeValue<T>(value, DecodingOptions(type: type), this);
     } else {
       throw MapperException.chain(
           MapperMethod.decode, '($type)', MapperException.unknownType(type));
@@ -315,11 +314,11 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   @override
-  dynamic toValue<T>(Object? value, [EncodingOptions? options]) {
+  dynamic toValue<T>(T? value, [EncodingOptions? options]) {
     if (value == null) return null;
     var mapper = _mapperFor(value);
     if (mapper != null) {
-      return mapper.encode<T>(value, options, this);
+      return mapper.encodeValue<T>(value, options, this);
     } else {
       throw MapperException.chain(
         MapperMethod.encode,
@@ -368,13 +367,12 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     if (value == null) {
       return other == null;
     }
-    return guardMappable(
-      value,
-      (m, v, c) => m.isFor(other) && m.equals(v, other!, c),
-      () => value == other,
-      MapperMethod.equals,
-      () => '[$value]',
-    );
+    var mapper = _mapperFor(value);
+    if (mapper != null) {
+      return mapper.isValueEqual(value, other, this);
+    } else {
+      return value == other;
+    }
   }
 
   @override
@@ -382,13 +380,12 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     if (value == null) {
       return value.hashCode;
     }
-    return guardMappable(
-      value,
-      (m, v, c) => m.hash(v, c),
-      () => value.hashCode,
-      MapperMethod.hash,
-      () => '[$value]',
-    );
+    var mapper = _mapperFor(value);
+    if (mapper != null) {
+      return mapper.hashValue(value, this);
+    } else {
+      return value.hashCode;
+    }
   }
 
   @override
@@ -396,13 +393,12 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     if (value == null) {
       return value.toString();
     }
-    return guardMappable(
-      value,
-      (m, v, c) => m.stringify(v, c),
-      () => value.toString(),
-      MapperMethod.stringify,
-      () => '(Instance of \'${value.runtimeType}\')',
-    );
+    var mapper = _mapperFor(value);
+    if (mapper != null) {
+      return mapper.stringifyValue(value, this);
+    } else {
+      return value.toString();
+    }
   }
 
   T guardMappable<T>(

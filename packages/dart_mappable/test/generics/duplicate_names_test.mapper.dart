@@ -48,40 +48,40 @@ class BoxMapper extends ClassMapperBase<Box> {
   final Function instantiate = _instantiate;
 
   static Box<T> fromMap<T extends Content>(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Box<T>>(map));
+    return ensureInitialized().decodeMap<Box<T>>(map);
   }
 
   static Box<T> fromJson<T extends Content>(String json) {
-    return _guard((c) => c.fromJson<Box<T>>(json));
+    return ensureInitialized().decodeJson<Box<T>>(json);
   }
 }
 
-mixin BoxMappable<T extends Content> implements Encodable {
+mixin BoxMappable<T extends Content> {
   String toJson() {
-    return BoxMapper._guard((c) => c.toJson(this as Box<T>));
+    return BoxMapper.ensureInitialized().encodeJson<Box<T>>(this as Box<T>);
   }
 
   Map<String, dynamic> toMap() {
-    return BoxMapper._guard((c) => c.toMap(this as Box<T>));
+    return BoxMapper.ensureInitialized().encodeMap<Box<T>>(this as Box<T>);
   }
 
   BoxCopyWith<Box<T>, Box<T>, Box<T>, T> get copyWith =>
       _BoxCopyWithImpl(this as Box<T>, $identity, $identity);
   @override
   String toString() {
-    return BoxMapper._guard((c) => c.asString(this));
+    return BoxMapper.ensureInitialized().stringifyValue(this as Box<T>);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            BoxMapper._guard((c) => c.isEqual(this, other)));
+            BoxMapper.ensureInitialized().isValueEqual(this as Box<T>, other));
   }
 
   @override
   int get hashCode {
-    return BoxMapper._guard((c) => c.hash(this));
+    return BoxMapper.ensureInitialized().hashValue(this as Box<T>);
   }
 }
 
@@ -153,40 +153,43 @@ class ContentMapper extends ClassMapperBase<Content> {
   final Function instantiate = _instantiate;
 
   static Content fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Content>(map));
+    return ensureInitialized().decodeMap<Content>(map);
   }
 
   static Content fromJson(String json) {
-    return _guard((c) => c.fromJson<Content>(json));
+    return ensureInitialized().decodeJson<Content>(json);
   }
 }
 
-mixin ContentMappable implements Encodable {
+mixin ContentMappable {
   String toJson() {
-    return ContentMapper._guard((c) => c.toJson(this as Content));
+    return ContentMapper.ensureInitialized()
+        .encodeJson<Content>(this as Content);
   }
 
   Map<String, dynamic> toMap() {
-    return ContentMapper._guard((c) => c.toMap(this as Content));
+    return ContentMapper.ensureInitialized()
+        .encodeMap<Content>(this as Content);
   }
 
   ContentCopyWith<Content, Content, Content> get copyWith =>
       _ContentCopyWithImpl(this as Content, $identity, $identity);
   @override
   String toString() {
-    return ContentMapper._guard((c) => c.asString(this));
+    return ContentMapper.ensureInitialized().stringifyValue(this as Content);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            ContentMapper._guard((c) => c.isEqual(this, other)));
+            ContentMapper.ensureInitialized()
+                .isValueEqual(this as Content, other));
   }
 
   @override
   int get hashCode {
-    return ContentMapper._guard((c) => c.hash(this));
+    return ContentMapper.ensureInitialized().hashValue(this as Content);
   }
 }
 

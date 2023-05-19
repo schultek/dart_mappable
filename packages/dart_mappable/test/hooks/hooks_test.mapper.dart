@@ -46,40 +46,40 @@ class GameMapper extends ClassMapperBase<Game> {
   final Function instantiate = _instantiate;
 
   static Game fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Game>(map));
+    return ensureInitialized().decodeMap<Game>(map);
   }
 
   static Game fromJson(String json) {
-    return _guard((c) => c.fromJson<Game>(json));
+    return ensureInitialized().decodeJson<Game>(json);
   }
 }
 
-mixin GameMappable implements Encodable {
+mixin GameMappable {
   String toJson() {
-    return GameMapper._guard((c) => c.toJson(this as Game));
+    return GameMapper.ensureInitialized().encodeJson<Game>(this as Game);
   }
 
   Map<String, dynamic> toMap() {
-    return GameMapper._guard((c) => c.toMap(this as Game));
+    return GameMapper.ensureInitialized().encodeMap<Game>(this as Game);
   }
 
   GameCopyWith<Game, Game, Game> get copyWith =>
       _GameCopyWithImpl(this as Game, $identity, $identity);
   @override
   String toString() {
-    return GameMapper._guard((c) => c.asString(this));
+    return GameMapper.ensureInitialized().stringifyValue(this as Game);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            GameMapper._guard((c) => c.isEqual(this, other)));
+            GameMapper.ensureInitialized().isValueEqual(this as Game, other));
   }
 
   @override
   int get hashCode {
-    return GameMapper._guard((c) => c.hash(this));
+    return GameMapper.ensureInitialized().hashValue(this as Game);
   }
 }
 
@@ -159,40 +159,43 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
   final Function instantiate = _instantiate;
 
   static CardGame fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<CardGame>(map));
+    return ensureInitialized().decodeMap<CardGame>(map);
   }
 
   static CardGame fromJson(String json) {
-    return _guard((c) => c.fromJson<CardGame>(json));
+    return ensureInitialized().decodeJson<CardGame>(json);
   }
 }
 
-mixin CardGameMappable implements Encodable {
+mixin CardGameMappable {
   String toJson() {
-    return CardGameMapper._guard((c) => c.toJson(this as CardGame));
+    return CardGameMapper.ensureInitialized()
+        .encodeJson<CardGame>(this as CardGame);
   }
 
   Map<String, dynamic> toMap() {
-    return CardGameMapper._guard((c) => c.toMap(this as CardGame));
+    return CardGameMapper.ensureInitialized()
+        .encodeMap<CardGame>(this as CardGame);
   }
 
   CardGameCopyWith<CardGame, CardGame, CardGame> get copyWith =>
       _CardGameCopyWithImpl(this as CardGame, $identity, $identity);
   @override
   String toString() {
-    return CardGameMapper._guard((c) => c.asString(this));
+    return CardGameMapper.ensureInitialized().stringifyValue(this as CardGame);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            CardGameMapper._guard((c) => c.isEqual(this, other)));
+            CardGameMapper.ensureInitialized()
+                .isValueEqual(this as CardGame, other));
   }
 
   @override
   int get hashCode {
-    return CardGameMapper._guard((c) => c.hash(this));
+    return CardGameMapper.ensureInitialized().hashValue(this as CardGame);
   }
 }
 
@@ -269,40 +272,41 @@ class PlayerMapper extends ClassMapperBase<Player> {
   final Function instantiate = _instantiate;
 
   static Player fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Player>(map));
+    return ensureInitialized().decodeMap<Player>(map);
   }
 
   static Player fromJson(String json) {
-    return _guard((c) => c.fromJson<Player>(json));
+    return ensureInitialized().decodeJson<Player>(json);
   }
 }
 
-mixin PlayerMappable implements Encodable {
+mixin PlayerMappable {
   String toJson() {
-    return PlayerMapper._guard((c) => c.toJson(this as Player));
+    return PlayerMapper.ensureInitialized().encodeJson<Player>(this as Player);
   }
 
   Map<String, dynamic> toMap() {
-    return PlayerMapper._guard((c) => c.toMap(this as Player));
+    return PlayerMapper.ensureInitialized().encodeMap<Player>(this as Player);
   }
 
   PlayerCopyWith<Player, Player, Player> get copyWith =>
       _PlayerCopyWithImpl(this as Player, $identity, $identity);
   @override
   String toString() {
-    return PlayerMapper._guard((c) => c.asString(this));
+    return PlayerMapper.ensureInitialized().stringifyValue(this as Player);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            PlayerMapper._guard((c) => c.isEqual(this, other)));
+            PlayerMapper.ensureInitialized()
+                .isValueEqual(this as Player, other));
   }
 
   @override
   int get hashCode {
-    return PlayerMapper._guard((c) => c.hash(this));
+    return PlayerMapper.ensureInitialized().hashValue(this as Player);
   }
 }
 

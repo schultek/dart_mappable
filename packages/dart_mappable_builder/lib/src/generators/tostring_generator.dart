@@ -16,7 +16,7 @@ class ToStringGenerator {
     return '''
       @override
       String toString() {
-        return ${element.mapperName}._guard((c) => c.asString(this));
+        return ${element.mapperName}.ensureInitialized().stringifyValue(this as ${element.selfTypeParam});
       }
     ''';
   }

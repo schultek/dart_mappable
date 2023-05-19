@@ -50,40 +50,40 @@ class AMapper extends ClassMapperBase<A> {
   final Function instantiate = _instantiate;
 
   static A<T> fromMap<T>(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<A<T>>(map));
+    return ensureInitialized().decodeMap<A<T>>(map);
   }
 
   static A<T> fromJson<T>(String json) {
-    return _guard((c) => c.fromJson<A<T>>(json));
+    return ensureInitialized().decodeJson<A<T>>(json);
   }
 }
 
-mixin AMappable<T> implements Encodable {
+mixin AMappable<T> {
   String toJson() {
-    return AMapper._guard((c) => c.toJson(this as A<T>));
+    return AMapper.ensureInitialized().encodeJson<A<T>>(this as A<T>);
   }
 
   Map<String, dynamic> toMap() {
-    return AMapper._guard((c) => c.toMap(this as A<T>));
+    return AMapper.ensureInitialized().encodeMap<A<T>>(this as A<T>);
   }
 
   ACopyWith<A<T>, A<T>, A<T>, T> get copyWith =>
       _ACopyWithImpl(this as A<T>, $identity, $identity);
   @override
   String toString() {
-    return AMapper._guard((c) => c.asString(this));
+    return AMapper.ensureInitialized().stringifyValue(this as A<T>);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            AMapper._guard((c) => c.isEqual(this, other)));
+            AMapper.ensureInitialized().isValueEqual(this as A<T>, other));
   }
 
   @override
   int get hashCode {
-    return AMapper._guard((c) => c.hash(this));
+    return AMapper.ensureInitialized().hashValue(this as A<T>);
   }
 }
 
@@ -155,40 +155,40 @@ class CMapper extends ClassMapperBase<C> {
   final Function instantiate = _instantiate;
 
   static C fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<C>(map));
+    return ensureInitialized().decodeMap<C>(map);
   }
 
   static C fromJson(String json) {
-    return _guard((c) => c.fromJson<C>(json));
+    return ensureInitialized().decodeJson<C>(json);
   }
 }
 
-mixin CMappable implements Encodable {
+mixin CMappable {
   String toJson() {
-    return CMapper._guard((c) => c.toJson(this as C));
+    return CMapper.ensureInitialized().encodeJson<C>(this as C);
   }
 
   Map<String, dynamic> toMap() {
-    return CMapper._guard((c) => c.toMap(this as C));
+    return CMapper.ensureInitialized().encodeMap<C>(this as C);
   }
 
   CCopyWith<C, C, C> get copyWith =>
       _CCopyWithImpl(this as C, $identity, $identity);
   @override
   String toString() {
-    return CMapper._guard((c) => c.asString(this));
+    return CMapper.ensureInitialized().stringifyValue(this as C);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            CMapper._guard((c) => c.isEqual(this, other)));
+            CMapper.ensureInitialized().isValueEqual(this as C, other));
   }
 
   @override
   int get hashCode {
-    return CMapper._guard((c) => c.hash(this));
+    return CMapper.ensureInitialized().hashValue(this as C);
   }
 }
 

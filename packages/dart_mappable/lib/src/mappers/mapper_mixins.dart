@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 
 import '../mapper_container.dart';
 import 'mapper_base.dart';
+import 'mapping_context.dart';
 
 /// Overrides for mapper methods based on the primitive implementations
 /// of [operator ==], [hashCode] and [toString].

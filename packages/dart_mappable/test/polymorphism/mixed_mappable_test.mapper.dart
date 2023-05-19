@@ -48,15 +48,15 @@ class BaseMapper extends ClassMapperBase<Base> {
   final Function instantiate = _instantiate;
 
   static Base fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Base>(map));
+    return ensureInitialized().decodeMap<Base>(map);
   }
 
   static Base fromJson(String json) {
-    return _guard((c) => c.fromJson<Base>(json));
+    return ensureInitialized().decodeJson<Base>(json);
   }
 }
 
-mixin BaseMappable implements Encodable {
+mixin BaseMappable {
   String toJson();
   Map<String, dynamic> toMap();
   BaseCopyWith<Base, Base, Base> get copyWith;
@@ -115,40 +115,40 @@ class OneMapper extends ClassMapperBase<One> {
   final Function instantiate = _instantiate;
 
   static One fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<One>(map));
+    return ensureInitialized().decodeMap<One>(map);
   }
 
   static One fromJson(String json) {
-    return _guard((c) => c.fromJson<One>(json));
+    return ensureInitialized().decodeJson<One>(json);
   }
 }
 
-mixin OneMappable implements Encodable {
+mixin OneMappable {
   String toJson() {
-    return OneMapper._guard((c) => c.toJson(this as One));
+    return OneMapper.ensureInitialized().encodeJson<One>(this as One);
   }
 
   Map<String, dynamic> toMap() {
-    return OneMapper._guard((c) => c.toMap(this as One));
+    return OneMapper.ensureInitialized().encodeMap<One>(this as One);
   }
 
   OneCopyWith<One, One, One> get copyWith =>
       _OneCopyWithImpl(this as One, $identity, $identity);
   @override
   String toString() {
-    return OneMapper._guard((c) => c.asString(this));
+    return OneMapper.ensureInitialized().stringifyValue(this as One);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            OneMapper._guard((c) => c.isEqual(this, other)));
+            OneMapper.ensureInitialized().isValueEqual(this as One, other));
   }
 
   @override
   int get hashCode {
-    return OneMapper._guard((c) => c.hash(this));
+    return OneMapper.ensureInitialized().hashValue(this as One);
   }
 }
 
@@ -234,40 +234,40 @@ class TwoMapper extends ClassMapperBase<Two> {
   final Function instantiate = _instantiate;
 
   static Two fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Two>(map));
+    return ensureInitialized().decodeMap<Two>(map);
   }
 
   static Two fromJson(String json) {
-    return _guard((c) => c.fromJson<Two>(json));
+    return ensureInitialized().decodeJson<Two>(json);
   }
 }
 
-mixin TwoMappable implements Encodable {
+mixin TwoMappable {
   String toJson() {
-    return TwoMapper._guard((c) => c.toJson(this as Two));
+    return TwoMapper.ensureInitialized().encodeJson<Two>(this as Two);
   }
 
   Map<String, dynamic> toMap() {
-    return TwoMapper._guard((c) => c.toMap(this as Two));
+    return TwoMapper.ensureInitialized().encodeMap<Two>(this as Two);
   }
 
   TwoCopyWith<Two, Two, Two> get copyWith =>
       _TwoCopyWithImpl(this as Two, $identity, $identity);
   @override
   String toString() {
-    return TwoMapper._guard((c) => c.asString(this));
+    return TwoMapper.ensureInitialized().stringifyValue(this as Two);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            TwoMapper._guard((c) => c.isEqual(this, other)));
+            TwoMapper.ensureInitialized().isValueEqual(this as Two, other));
   }
 
   @override
   int get hashCode {
-    return TwoMapper._guard((c) => c.hash(this));
+    return TwoMapper.ensureInitialized().hashValue(this as Two);
   }
 }
 

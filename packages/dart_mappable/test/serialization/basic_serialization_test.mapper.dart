@@ -22,7 +22,7 @@ class BMapper extends EnumMapper<B> {
   }
 
   @override
-  B decodeValue(dynamic value) {
+  B decode(dynamic value) {
     switch (value) {
       case 'a':
         return B.a;
@@ -36,7 +36,7 @@ class BMapper extends EnumMapper<B> {
   }
 
   @override
-  dynamic encodeValue(B self) {
+  dynamic encode(B self) {
     switch (self) {
       case B.a:
         return 'a';
@@ -84,7 +84,8 @@ class AMapper extends ClassMapperBase<A> {
   static bool _$d(A v) => v.d;
   static const Field<A, bool> _f$d = Field('d', _$d);
   static B? _$e(A v) => v.e;
-  static const Field<A, B> _f$e = Field('e', _$e, opt: true);
+  static const Field<A, B> _f$e =
+      Field('e', _$e, opt: true, map: BMapper.ensureInitialized);
 
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {
@@ -107,41 +108,40 @@ class AMapper extends ClassMapperBase<A> {
   final Function instantiate = _instantiate;
 
   static A fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<A>(map));
+    return ensureInitialized().decodeMap<A>(map);
   }
 
   static A fromJson(String json) {
-    return _guard((c) => c.fromJson<A>(json));
+    return ensureInitialized().decodeJson<A>(json);
   }
 }
 
-mixin AMappable implements Encodable {
+mixin AMappable {
   String toJson() {
-    return AMapper._guard((c) => c.toJson(this as A));
+    return AMapper.ensureInitialized().encodeJson<A>(this as A);
   }
 
   Map<String, dynamic> toMap() {
-    return AMapper.ensureInitialized().encode(this as A)
-        as Map<String, dynamic>;
+    return AMapper.ensureInitialized().encodeMap<A>(this as A);
   }
 
   ACopyWith<A, A, A> get copyWith =>
       _ACopyWithImpl(this as A, $identity, $identity);
   @override
   String toString() {
-    return AMapper._guard((c) => c.asString(this));
+    return AMapper.ensureInitialized().stringifyValue(this as A);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            AMapper._guard((c) => c.isEqual(this, other)));
+            AMapper.ensureInitialized().isValueEqual(this as A, other));
   }
 
   @override
   int get hashCode {
-    return AMapper._guard((c) => c.hash(this));
+    return AMapper.ensureInitialized().hashValue(this as A);
   }
 }
 

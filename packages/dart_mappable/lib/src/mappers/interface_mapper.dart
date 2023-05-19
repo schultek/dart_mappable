@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:meta/meta.dart';
 
 import '../annotations.dart';
+import '../mapper_exception.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
+import 'mapping_context.dart';
 
 /// The mode of a field defined in a class.
 enum FieldMode {
@@ -125,7 +129,7 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
       }
     }
 
-    var result = decodeValue(value, context);
+    var result = decode(value, context);
 
     if (hook != null) {
       result = hook!.afterDecode(result) as T;
@@ -135,7 +139,7 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
   }
 
   @protected
-  T decodeValue(Object? value, DecodingContext context) {
+  T decode(Object? value, DecodingContext context) {
     var map = value.checked<Map<String, dynamic>>();
 
     var d = DecodingData<T>(map, context);
@@ -157,7 +161,7 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
       value = result;
     }
 
-    var result = encodeValue(value, context);
+    var result = encode(value, context);
 
     if (hook != null) {
       result = hook!.afterEncode(result);
@@ -167,11 +171,27 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
   }
 
   @protected
-  Object? encodeValue(T value, EncodingContext context) {
+  Object? encode(T value, EncodingContext context) {
     return {
       for (var f in fields.values)
         if (!ignoreNull || f.get(value) != null)
           f.key: f.encode(value, context),
     };
   }
+
+  V decodeMap<V>(Map<String, dynamic> map) => decodeValue<V>(map);
+
+  Map<String, dynamic> encodeMap<V>(T object) {
+    var value = encodeValue<V>(object);
+    if (value is Map<String, dynamic>) {
+      return value;
+    } else {
+      throw MapperException.incorrectEncoding(
+          object.runtimeType, 'Map', value.runtimeType);
+    }
+  }
+
+  V decodeJson<V>(String json) => decodeValue<V>(jsonDecode(json));
+
+  String encodeJson<V>(T object) => jsonEncode(encodeValue<V>(object));
 }

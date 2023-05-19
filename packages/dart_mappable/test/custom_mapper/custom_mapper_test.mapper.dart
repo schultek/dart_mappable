@@ -47,40 +47,43 @@ class TestObjMapper extends ClassMapperBase<TestObj> {
   final Function instantiate = _instantiate;
 
   static TestObj fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<TestObj>(map));
+    return ensureInitialized().decodeMap<TestObj>(map);
   }
 
   static TestObj fromJson(String json) {
-    return _guard((c) => c.fromJson<TestObj>(json));
+    return ensureInitialized().decodeJson<TestObj>(json);
   }
 }
 
-mixin TestObjMappable implements Encodable {
+mixin TestObjMappable {
   String toJson() {
-    return TestObjMapper._guard((c) => c.toJson(this as TestObj));
+    return TestObjMapper.ensureInitialized()
+        .encodeJson<TestObj>(this as TestObj);
   }
 
   Map<String, dynamic> toMap() {
-    return TestObjMapper._guard((c) => c.toMap(this as TestObj));
+    return TestObjMapper.ensureInitialized()
+        .encodeMap<TestObj>(this as TestObj);
   }
 
   TestObjCopyWith<TestObj, TestObj, TestObj> get copyWith =>
       _TestObjCopyWithImpl(this as TestObj, $identity, $identity);
   @override
   String toString() {
-    return TestObjMapper._guard((c) => c.asString(this));
+    return TestObjMapper.ensureInitialized().stringifyValue(this as TestObj);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            TestObjMapper._guard((c) => c.isEqual(this, other)));
+            TestObjMapper.ensureInitialized()
+                .isValueEqual(this as TestObj, other));
   }
 
   @override
   int get hashCode {
-    return TestObjMapper._guard((c) => c.hash(this));
+    return TestObjMapper.ensureInitialized().hashValue(this as TestObj);
   }
 }
 

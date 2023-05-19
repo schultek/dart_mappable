@@ -25,7 +25,7 @@ class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
           }
           
           @override
-          ${element.prefixedClassName} decodeValue(dynamic value) {
+          ${element.prefixedClassName} decode(dynamic value) {
             switch (value) {
               ${element.values.map((v) => "case ${v.value}: return ${element.prefixedClassName}.${v.key};").join("\n      ")}
               default: ${_generateDefaultCase()}
@@ -33,7 +33,7 @@ class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
           }
           
           @override
-          dynamic encodeValue(${element.prefixedClassName} self) {
+          dynamic encode(${element.prefixedClassName} self) {
             switch (self) {
               ${element.values.map((v) => "case ${element.prefixedClassName}.${v.key}: return ${v.value};").join("\n      ")}
             }

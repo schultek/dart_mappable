@@ -7,6 +7,7 @@ import '../mapper_container.dart';
 import '../mapper_utils.dart';
 import 'interface_mapper.dart';
 import 'mapper_base.dart';
+import 'mapping_context.dart';
 
 abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
   String get discriminatorKey;
@@ -103,13 +104,13 @@ abstract class ClassMapperBase<T extends Object>
   }
 
   @override
-  Object? encode<V>(T value,
+  Object? encodeValue<V>(T value,
       [EncodingOptions? options, MapperContainer? container]) {
     var m = subOrSelfFor(value);
     if (m != null) {
-      return m.encode<V>(value, options, container);
+      return m.encodeValue<V>(value, options, container);
     }
-    return super.encode<V>(value, options, container);
+    return super.encodeValue<V>(value, options, container);
   }
 
   MapperBase<Object>? subOrSelfFor(dynamic value) {
@@ -153,7 +154,7 @@ abstract class ClassMapperBase<T extends Object>
   }
 
   @override
-  T decodeValue(Object? value, DecodingContext context) {
+  T decode(Object? value, DecodingContext context) {
     var map = value.checked<Map<String, dynamic>>();
     if (_subMappers.isNotEmpty) {
       for (var m in _subMappers) {
@@ -166,7 +167,7 @@ abstract class ClassMapperBase<T extends Object>
       return _defaultSubMapper!
           .decoder(map, _defaultSubMapper!.inherit(context));
     }
-    return super.decodeValue(map, context);
+    return super.decode(map, context);
   }
 
   final Map<String, dynamic>? _encodedStaticParams = null;
@@ -192,7 +193,7 @@ abstract class ClassMapperBase<T extends Object>
   }
 
   @override
-  Object? encodeValue(T value, EncodingContext context) {
+  Object? encode(T value, EncodingContext context) {
     return {
       for (var f in _params)
         if (!ignoreNull || f.get(value) != null)

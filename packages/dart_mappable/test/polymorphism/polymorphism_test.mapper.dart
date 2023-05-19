@@ -45,15 +45,15 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   final Function instantiate = _instantiate;
 
   static Animal fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Animal>(map));
+    return ensureInitialized().decodeMap<Animal>(map);
   }
 
   static Animal fromJson(String json) {
-    return _guard((c) => c.fromJson<Animal>(json));
+    return ensureInitialized().decodeJson<Animal>(json);
   }
 }
 
-mixin AnimalMappable implements Encodable {
+mixin AnimalMappable {
   String toJson();
   Map<String, dynamic> toMap();
   AnimalCopyWith<Animal, Animal, Animal> get copyWith;
@@ -111,40 +111,40 @@ class CatMapper extends SubClassMapperBase<Cat> {
   final Function instantiate = _instantiate;
 
   static Cat fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Cat>(map));
+    return ensureInitialized().decodeMap<Cat>(map);
   }
 
   static Cat fromJson(String json) {
-    return _guard((c) => c.fromJson<Cat>(json));
+    return ensureInitialized().decodeJson<Cat>(json);
   }
 }
 
-mixin CatMappable implements Encodable {
+mixin CatMappable {
   String toJson() {
-    return CatMapper._guard((c) => c.toJson(this as Cat));
+    return CatMapper.ensureInitialized().encodeJson<Cat>(this as Cat);
   }
 
   Map<String, dynamic> toMap() {
-    return CatMapper._guard((c) => c.toMap(this as Cat));
+    return CatMapper.ensureInitialized().encodeMap<Cat>(this as Cat);
   }
 
   CatCopyWith<Cat, Cat, Cat> get copyWith =>
       _CatCopyWithImpl(this as Cat, $identity, $identity);
   @override
   String toString() {
-    return CatMapper._guard((c) => c.asString(this));
+    return CatMapper.ensureInitialized().stringifyValue(this as Cat);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            CatMapper._guard((c) => c.isEqual(this, other)));
+            CatMapper.ensureInitialized().isValueEqual(this as Cat, other));
   }
 
   @override
   int get hashCode {
-    return CatMapper._guard((c) => c.hash(this));
+    return CatMapper.ensureInitialized().hashValue(this as Cat);
   }
 }
 
@@ -225,40 +225,40 @@ class DogMapper extends SubClassMapperBase<Dog> {
   final Function instantiate = _instantiate;
 
   static Dog fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Dog>(map));
+    return ensureInitialized().decodeMap<Dog>(map);
   }
 
   static Dog fromJson(String json) {
-    return _guard((c) => c.fromJson<Dog>(json));
+    return ensureInitialized().decodeJson<Dog>(json);
   }
 }
 
-mixin DogMappable implements Encodable {
+mixin DogMappable {
   String toJson() {
-    return DogMapper._guard((c) => c.toJson(this as Dog));
+    return DogMapper.ensureInitialized().encodeJson<Dog>(this as Dog);
   }
 
   Map<String, dynamic> toMap() {
-    return DogMapper._guard((c) => c.toMap(this as Dog));
+    return DogMapper.ensureInitialized().encodeMap<Dog>(this as Dog);
   }
 
   DogCopyWith<Dog, Dog, Dog> get copyWith =>
       _DogCopyWithImpl(this as Dog, $identity, $identity);
   @override
   String toString() {
-    return DogMapper._guard((c) => c.asString(this));
+    return DogMapper.ensureInitialized().stringifyValue(this as Dog);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            DogMapper._guard((c) => c.isEqual(this, other)));
+            DogMapper.ensureInitialized().isValueEqual(this as Dog, other));
   }
 
   @override
   int get hashCode {
-    return DogMapper._guard((c) => c.hash(this));
+    return DogMapper.ensureInitialized().hashValue(this as Dog);
   }
 }
 
@@ -334,40 +334,44 @@ class NullAnimalMapper extends SubClassMapperBase<NullAnimal> {
   final Function instantiate = _instantiate;
 
   static NullAnimal fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<NullAnimal>(map));
+    return ensureInitialized().decodeMap<NullAnimal>(map);
   }
 
   static NullAnimal fromJson(String json) {
-    return _guard((c) => c.fromJson<NullAnimal>(json));
+    return ensureInitialized().decodeJson<NullAnimal>(json);
   }
 }
 
-mixin NullAnimalMappable implements Encodable {
+mixin NullAnimalMappable {
   String toJson() {
-    return NullAnimalMapper._guard((c) => c.toJson(this as NullAnimal));
+    return NullAnimalMapper.ensureInitialized()
+        .encodeJson<NullAnimal>(this as NullAnimal);
   }
 
   Map<String, dynamic> toMap() {
-    return NullAnimalMapper._guard((c) => c.toMap(this as NullAnimal));
+    return NullAnimalMapper.ensureInitialized()
+        .encodeMap<NullAnimal>(this as NullAnimal);
   }
 
   NullAnimalCopyWith<NullAnimal, NullAnimal, NullAnimal> get copyWith =>
       _NullAnimalCopyWithImpl(this as NullAnimal, $identity, $identity);
   @override
   String toString() {
-    return NullAnimalMapper._guard((c) => c.asString(this));
+    return NullAnimalMapper.ensureInitialized()
+        .stringifyValue(this as NullAnimal);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            NullAnimalMapper._guard((c) => c.isEqual(this, other)));
+            NullAnimalMapper.ensureInitialized()
+                .isValueEqual(this as NullAnimal, other));
   }
 
   @override
   int get hashCode {
-    return NullAnimalMapper._guard((c) => c.hash(this));
+    return NullAnimalMapper.ensureInitialized().hashValue(this as NullAnimal);
   }
 }
 
@@ -451,21 +455,23 @@ class DefaultAnimalMapper extends SubClassMapperBase<DefaultAnimal> {
   final Function instantiate = _instantiate;
 
   static DefaultAnimal fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<DefaultAnimal>(map));
+    return ensureInitialized().decodeMap<DefaultAnimal>(map);
   }
 
   static DefaultAnimal fromJson(String json) {
-    return _guard((c) => c.fromJson<DefaultAnimal>(json));
+    return ensureInitialized().decodeJson<DefaultAnimal>(json);
   }
 }
 
-mixin DefaultAnimalMappable implements Encodable {
+mixin DefaultAnimalMappable {
   String toJson() {
-    return DefaultAnimalMapper._guard((c) => c.toJson(this as DefaultAnimal));
+    return DefaultAnimalMapper.ensureInitialized()
+        .encodeJson<DefaultAnimal>(this as DefaultAnimal);
   }
 
   Map<String, dynamic> toMap() {
-    return DefaultAnimalMapper._guard((c) => c.toMap(this as DefaultAnimal));
+    return DefaultAnimalMapper.ensureInitialized()
+        .encodeMap<DefaultAnimal>(this as DefaultAnimal);
   }
 
   DefaultAnimalCopyWith<DefaultAnimal, DefaultAnimal, DefaultAnimal>
@@ -473,19 +479,22 @@ mixin DefaultAnimalMappable implements Encodable {
           this as DefaultAnimal, $identity, $identity);
   @override
   String toString() {
-    return DefaultAnimalMapper._guard((c) => c.asString(this));
+    return DefaultAnimalMapper.ensureInitialized()
+        .stringifyValue(this as DefaultAnimal);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            DefaultAnimalMapper._guard((c) => c.isEqual(this, other)));
+            DefaultAnimalMapper.ensureInitialized()
+                .isValueEqual(this as DefaultAnimal, other));
   }
 
   @override
   int get hashCode {
-    return DefaultAnimalMapper._guard((c) => c.hash(this));
+    return DefaultAnimalMapper.ensureInitialized()
+        .hashValue(this as DefaultAnimal);
   }
 }
 
@@ -570,40 +579,40 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   final Function instantiate = _instantiate;
 
   static Zoo fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Zoo>(map));
+    return ensureInitialized().decodeMap<Zoo>(map);
   }
 
   static Zoo fromJson(String json) {
-    return _guard((c) => c.fromJson<Zoo>(json));
+    return ensureInitialized().decodeJson<Zoo>(json);
   }
 }
 
-mixin ZooMappable implements Encodable {
+mixin ZooMappable {
   String toJson() {
-    return ZooMapper._guard((c) => c.toJson(this as Zoo));
+    return ZooMapper.ensureInitialized().encodeJson<Zoo>(this as Zoo);
   }
 
   Map<String, dynamic> toMap() {
-    return ZooMapper._guard((c) => c.toMap(this as Zoo));
+    return ZooMapper.ensureInitialized().encodeMap<Zoo>(this as Zoo);
   }
 
   ZooCopyWith<Zoo, Zoo, Zoo> get copyWith =>
       _ZooCopyWithImpl(this as Zoo, $identity, $identity);
   @override
   String toString() {
-    return ZooMapper._guard((c) => c.asString(this));
+    return ZooMapper.ensureInitialized().stringifyValue(this as Zoo);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            ZooMapper._guard((c) => c.isEqual(this, other)));
+            ZooMapper.ensureInitialized().isValueEqual(this as Zoo, other));
   }
 
   @override
   int get hashCode {
-    return ZooMapper._guard((c) => c.hash(this));
+    return ZooMapper.ensureInitialized().hashValue(this as Zoo);
   }
 }
 

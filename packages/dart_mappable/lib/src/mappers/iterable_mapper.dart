@@ -4,6 +4,7 @@ import 'package:type_plus/type_plus.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
 import 'mapper_mixins.dart';
+import 'mapping_context.dart';
 
 /// The default mapper for iterables like [List] and [Set].
 ///

@@ -17,12 +17,12 @@ class MyPrivateClass {
 
 class PrivateClassMapper extends SimpleMapper<MyPrivateClass> {
   @override
-  MyPrivateClass decodeValue(dynamic value) {
+  MyPrivateClass decode(dynamic value) {
     return MyPrivateClass(value);
   }
 
   @override
-  dynamic encodeValue(MyPrivateClass self) {
+  dynamic encode(MyPrivateClass self) {
     return self.value;
   }
 
@@ -44,24 +44,24 @@ class GenericBoxMapper extends SimpleMapper1<GenericBox> {
   Function get typeFactory => <T>(f) => f<GenericBox<T>>();
 
   @override
-  GenericBox decodeValue<A>(Object value) {
+  GenericBox decode<A>(Object value) {
     return GenericBox<A>(container.fromValue<A>(value));
   }
 
   @override
-  Object? encodeValue<A>(GenericBox<A> self) {
+  Object? encode<A>(GenericBox<A> self) {
     return container.toValue(self.content);
   }
 }
 
 class UriMapper extends SimpleMapper<Uri> {
   @override
-  Uri decodeValue(dynamic value) {
+  Uri decode(dynamic value) {
     return Uri.parse(value as String);
   }
 
   @override
-  dynamic encodeValue(Uri self) {
+  dynamic encode(Uri self) {
     return self.toString();
   }
 }

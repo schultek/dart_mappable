@@ -37,12 +37,13 @@ class MapperFieldElement {
 
   MapperFieldElement(this.param, this.field, this.parent);
 
-  late bool generic = () {
-    return resolvedType.accept(IsGenericTypeVisitor());
+  late bool needsArg = () {
+    var isGeneric = resolvedType.accept(IsGenericTypeVisitor());
+    return isGeneric || (staticArgType != staticArgGetterType);
   }();
 
   late String arg = () {
-    if (!generic) return '';
+    if (!needsArg) return '';
 
     return ', arg: _arg\$${field.name}';
   }();
@@ -62,12 +63,16 @@ class MapperFieldElement {
   }();
 
   late String argType = () {
-    return parent.parent.prefixedType(param?.parameter.type ?? resolvedType,
-        withNullability: false);
+    return parent.parent.prefixedType(resolvedType, withNullability: false);
   }();
 
   late String staticArgType = () {
     return parent.parent.prefixedType(param?.parameter.type ?? resolvedType,
+        withNullability: false, resolveBounds: true);
+  }();
+
+  late String staticArgGetterType = () {
+    return parent.parent.prefixedType(resolvedType,
         withNullability: false, resolveBounds: true);
   }();
 

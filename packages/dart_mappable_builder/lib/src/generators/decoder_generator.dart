@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/class/class_mapper_element.dart';
 import '../elements/class/target_class_mapper_element.dart';
@@ -120,5 +121,22 @@ class DecoderGenerator {
     }
 
     return p.defaultValueCode!;
+  }
+
+  String generateStaticDecoders() {
+    if (!element.shouldGenerate(GenerateMethods.decode)) {
+      return '';
+    }
+
+    var fromJsonName = element.options.renameMethods['fromJson'] ?? 'fromJson';
+    var fromMapName = element.options.renameMethods['fromMap'] ?? 'fromMap';
+
+    return '\n'
+        '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
+        '    return ensureInitialized().decodeMap<${element.prefixedDecodingClassName}${element.typeParams}>(map);\n'
+        '  }\n'
+        '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromJsonName${element.typeParamsDeclaration}(String json) {\n'
+        '    return ensureInitialized().decodeJson<${element.prefixedDecodingClassName}${element.typeParams}>(json);\n'
+        '  }\n';
   }
 }

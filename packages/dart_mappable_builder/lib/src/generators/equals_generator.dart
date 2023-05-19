@@ -17,13 +17,13 @@ class EqualsGenerator {
       bool operator ==(Object other) {
         return identical(this, other) || (
           runtimeType == other.runtimeType && 
-          ${element.mapperName}._guard((c) => c.isEqual(this, other))
+          ${element.mapperName}.ensureInitialized().isValueEqual(this as ${element.selfTypeParam}, other)
         );
       }
       
       @override
       int get hashCode {
-        return ${element.mapperName}._guard((c) => c.hash(this));
+        return ${element.mapperName}.ensureInitialized().hashValue(this as ${element.selfTypeParam});
       }
     ''';
   }

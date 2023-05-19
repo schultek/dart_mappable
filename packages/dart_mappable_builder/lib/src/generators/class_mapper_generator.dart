@@ -1,6 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:ansicolor/ansicolor.dart';
-import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/class/target_class_mapper_element.dart';
 import '../utils.dart';
@@ -15,15 +14,15 @@ import 'tostring_generator.dart';
 class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
   ClassMapperGenerator(super.element);
 
+  late final encoderGen = EncoderGenerator(element);
+  late final decoderGen = DecoderGenerator(element);
+  late final stringifyGen = ToStringGenerator(element);
+  late final equalsGen = EqualsGenerator(element);
+  late final copyGen = CopyWithGenerator(element);
+
   @override
   Future<String> generate() async {
     var output = StringBuffer();
-
-    var encoderGen = EncoderGenerator(element);
-    var decoderGen = DecoderGenerator(element);
-    var stringifyGen = ToStringGenerator(element);
-    var equalsGen = EqualsGenerator(element);
-    var copyGen = CopyWithGenerator(element);
 
     var isSubClass = element.isDiscriminatingSubclass;
 
@@ -90,7 +89,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     for (var f in fields) {
       output.write(
           '  static ${f.staticGetterType} _\$${f.field.name}(${element.prefixedClassName} v) => v.${f.field.name};\n');
-      if (f.generic) {
+      if (f.needsArg) {
         output.write(
             '  static dynamic _arg\$${f.field.name}${element.typeParamsDeclaration}(f) => f<${f.argType}>();\n');
       }
@@ -118,41 +117,13 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
 
     output.write(await decoderGen.generateInstantiateMethod());
 
-    var fromJsonName = element.options.renameMethods['fromJson'] ?? 'fromJson';
-    var fromMapName = element.options.renameMethods['fromMap'] ?? 'fromMap';
-
-    if (element.shouldGenerate(GenerateMethods.decode)) {
-      output.write('\n'
-          '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
-          '    return _guard((c) => c.fromMap<${element.prefixedDecodingClassName}${element.typeParams}>(map));\n'
-          '  }\n'
-          '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromJsonName${element.typeParamsDeclaration}(String json) {\n'
-          '    return _guard((c) => c.fromJson<${element.prefixedDecodingClassName}${element.typeParams}>(json));\n'
-          '  }\n');
-    }
-
+    output.write(decoderGen.generateStaticDecoders());
     output.write('}\n\n');
 
     if (element.generateAsMixin) {
-      await _checkMixinUsed();
-
-      output.write(
-          'mixin ${element.uniqueClassName}Mappable${element.typeParamsDeclaration} implements Encodable {\n');
-      output.writeAll([
-        encoderGen.generateEncoderMixin(),
-        copyGen.generateCopyWithMixin(),
-        stringifyGen.generateToStringMixin(),
-        equalsGen.generateEqualsMixin(),
-      ]);
-      output.write('}');
+      await _generateMixin(output);
     } else {
-      output.write(
-          'extension ${element.mapperName}Extension${element.typeParamsDeclaration} on ${element.prefixedClassName}${element.typeParams} {\n');
-      output.writeAll([
-        encoderGen.generateEncoderExtensions(),
-        copyGen.generateCopyWithExtension(),
-      ]);
-      output.write('}');
+      _generateExtension(output);
     }
 
     output.writeAll([
@@ -160,6 +131,30 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     ]);
 
     return output.toString();
+  }
+
+  Future<void> _generateMixin(StringBuffer output) async {
+    await _checkMixinUsed();
+
+    output.write(
+        'mixin ${element.uniqueClassName}Mappable${element.typeParamsDeclaration} {\n');
+    output.writeAll([
+      encoderGen.generateEncoderMixin(),
+      copyGen.generateCopyWithMixin(),
+      stringifyGen.generateToStringMixin(),
+      equalsGen.generateEqualsMixin(),
+    ]);
+    output.write('}');
+  }
+
+  void _generateExtension(StringBuffer output) {
+    output.write(
+        'extension ${element.mapperName}Extension${element.typeParamsDeclaration} on ${element.prefixedClassName}${element.typeParams} {\n');
+    output.writeAll([
+      encoderGen.generateEncoderExtensions(),
+      copyGen.generateCopyWithExtension(),
+    ]);
+    output.write('}');
   }
 
   Future<void> _checkMixinUsed() async {
