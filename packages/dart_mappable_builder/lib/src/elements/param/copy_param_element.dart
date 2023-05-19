@@ -15,6 +15,9 @@ class CopyParamElement {
       if (param is UnresolvedParamElement) {
         continue;
       }
+      if (!element.copySafeParams.contains(param)) {
+        continue;
+      }
 
       ClassMapperElement? resolveElement(Element? e) {
         var classTarget = element.parent.getMapperForElement(e);

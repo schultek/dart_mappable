@@ -122,6 +122,7 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
   static CardGameMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = CardGameMapper._());
+      GameMapper.ensureInitialized();
       PlayerMapper.ensureInitialized();
     }
     return _instance!;

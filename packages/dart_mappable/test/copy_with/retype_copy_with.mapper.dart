@@ -124,6 +124,7 @@ class BMapper extends ClassMapperBase<B> {
   static BMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = BMapper._());
+      AMapper.ensureInitialized();
       WMapper.ensureInitialized();
     }
     return _instance!;
@@ -342,6 +343,7 @@ class WMapper extends ClassMapperBase<W> {
   static WMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = WMapper._());
+      VMapper.ensureInitialized();
     }
     return _instance!;
   }

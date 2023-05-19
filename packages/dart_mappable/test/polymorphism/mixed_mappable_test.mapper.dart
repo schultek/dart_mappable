@@ -77,6 +77,7 @@ class OneMapper extends ClassMapperBase<One> {
   static OneMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = OneMapper._());
+      BaseMapper.ensureInitialized();
     }
     return _instance!;
   }

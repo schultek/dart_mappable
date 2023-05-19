@@ -16,7 +16,7 @@ class MappingContext {
   Type arg(int index, [List<int> argIndices = const []]) {
     var a = args[index];
     if (argIndices.isNotEmpty) {
-      a = argIndices.fold(a, (a, i) => a.args.elementAtOrNull(i) ?? dynamic);
+      a = argIndices.fold(a, (a, i) => a.args.skip(i).firstOrNull ?? dynamic);
     }
     return a;
   }

@@ -15,6 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: dart-lang/setup-dart@v1.3
+        with:
+          sdk: 2.19.6
 
       - name: Bootstrap
         run: |

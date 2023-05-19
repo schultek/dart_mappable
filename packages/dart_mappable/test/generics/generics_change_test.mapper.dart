@@ -437,6 +437,7 @@ class EMapper extends SubClassMapperBase<E> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = EMapper._());
       DMapper.ensureInitialized().addSubMapper(_instance!);
+      FMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -541,4 +542,112 @@ class _ECopyWithImpl<$R, $Out, T, V>
   @override
   ECopyWith<$R2, E<T, V>, $Out2, T, V> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _ECopyWithImpl($value, $cast, t);
+}
+
+class FMapper extends SubClassMapperBase<F> {
+  FMapper._();
+
+  static FMapper? _instance;
+  static FMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = FMapper._());
+      EMapper.ensureInitialized().addSubMapper(_instance!);
+    }
+    return _instance!;
+  }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
+  @override
+  final String id = 'F';
+
+  @override
+  final Map<Symbol, Field<F, dynamic>> fields = const {};
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'F';
+  @override
+  late final ClassMapperBase superMapper = EMapper.ensureInitialized();
+
+  @override
+  DecodingContext inherit(DecodingContext context) {
+    return context.inherit(args: []);
+  }
+
+  static F _instantiate(DecodingData data) {
+    return F();
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static F fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<F>(map);
+  }
+
+  static F fromJson(String json) {
+    return ensureInitialized().decodeJson<F>(json);
+  }
+}
+
+mixin FMappable {
+  String toJson() {
+    return FMapper.ensureInitialized().encodeJson<F>(this as F);
+  }
+
+  Map<String, dynamic> toMap() {
+    return FMapper.ensureInitialized().encodeMap<F>(this as F);
+  }
+
+  FCopyWith<F, F, F> get copyWith =>
+      _FCopyWithImpl(this as F, $identity, $identity);
+  @override
+  String toString() {
+    return FMapper.ensureInitialized().stringifyValue(this as F);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            FMapper.ensureInitialized().isValueEqual(this as F, other));
+  }
+
+  @override
+  int get hashCode {
+    return FMapper.ensureInitialized().hashValue(this as F);
+  }
+}
+
+extension FValueCopy<$R, $Out> on ObjectCopyWith<$R, F, $Out> {
+  FCopyWith<$R, F, $Out> get $asF =>
+      $base.as((v, t, t2) => _FCopyWithImpl(v, t, t2));
+}
+
+abstract class FCopyWith<$R, $In extends F, $Out>
+    implements ECopyWith<$R, $In, $Out, int, String> {
+  @override
+  $R call();
+  FCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _FCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, F, $Out>
+    implements FCopyWith<$R, F, $Out> {
+  _FCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<F> $mapper = FMapper.ensureInitialized();
+  @override
+  $R call() => $apply(FieldCopyWithData({}));
+  @override
+  F $make(CopyWithData data) => F();
+
+  @override
+  FCopyWith<$R2, F, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _FCopyWithImpl($value, $cast, t);
 }

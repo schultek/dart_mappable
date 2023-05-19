@@ -1,40 +1,123 @@
-# 3.0.0-dev.5
+# 3.0.1
 
-- Make delta copy-with null aware.
-- Add `renameMethods` to build options.
+- Fixed dependency conflict with `package:collection`.
+- Added topics for pub.dev.
 
-# 3.0.0-dev.4
+# 3.0.0
 
-- Chore: Improved docs and tests.
-- Copy-With now supports classes that implement multiple interfaces.
+- **Breaking**: Generated mappers no longer have a `.container` property. This was removed in favor
+  of the new `MapperContainer.globals` container.
+
+  ```dart
+  // Instead of this:
+  var value = MyClassMapper.container.fromValue(...);
+  // Do this:
+  var value = MapperContainer.globals.fromValue(...);
+  ```
+
+  Mapper initialization and usage is now simplified to the following:
+
+  1. When used explicitly (e.g. through `MyClassMapper.fromMap` or `myClass.toMap()`) no additional
+     initialization is needed.
+  2. When used implicitly (through a generic type e.g. `MapperContainer.globals.fromMap<MyClass>()`) the
+     mapper needs to be initialized once before being used with `MyClassMapper.ensureInitialized()`.
+
+
+- **Breaking**: Changed internal mapper implementation which causes any custom mapper to break.
+  - Removed `MapperElementBase` class.
+  - Added `MappingContext` being passed to mapper methods.
+
+  *See docs on how to use custom mappers in v3.*
+
+
+- **Breaking**: Removed `@MappableLib.createCombinedContainer` in favor of `@MappableLib.generateInitializerForScope`.
+
+  Instead of generating a new container, v3 generates an initialization function for all mappers. Use it early on in your
+  application:
+
+  ```dart
+  @MappableLib(generateInitializerForScope: InitializerScope.package)
+  library main;
+  
+  import 'main.init.dart';
+  
+  void main() {
+    initializeMappers();
+    ...
+  }
+  ```
+
+
+- **Breaking**: Improved support and features for `.copyWith`.
+
+  - Copy-With now supports classes that implement multiple interfaces.
+  - Renamed `.copyWith.apply()` method to `.copyWith.$update()`.
+  - Added `.copyWith.$merge()` and `.copyWith.$delta()`.
+
+  You can now use `.copyWith` with either an existing instance using `.$merge` or a map of values using `.$delta`.
+  
+  ```dart
+  @MappableClass()
+  class A with AMappable {
+    A(this.a, this.b);
+    
+    int? a;
+    int? b;
+  }
+  
+  void main() {
+    var a = A(1, null);
+    
+    var c = a.copyWith.$merge(A(null, 2));
+    assert(c == A(1, 2));
+  
+    var d = a.copyWith.$delta({'b': 2});
+    assert(d == A(1, 2));
+  }
+  ```
+
+
+- **Breaking**: Removed `CheckTypesHook` in favor of discriminator functions.
+
+  You can now use a custom predicate function as the `discriminatorValue` of a class. This function can check
+  whether the encoded value should be decoded to this subclass and return a boolean.
+
+  ```dart
+  @MappableClass()
+  abstract class A with AMappable {
+    A();
+  }
+  
+  @MappableClass(discriminatorValue: B.checkType)
+  class B extends A with BMappable {
+    B();
+    
+    /// checks if [value] should be decoded to [B]
+    static bool checkType(value) {
+      return value is Map && value['isB'] == true;
+    }
+  }
+  
+  @MappableClass(discriminatorValue: C.checkType)
+  class C extends A with CMappable {
+    C();
+    
+    /// checks if [value] should be decoded to [C]
+    static bool checkType(value) {
+      return value is Map && value['isWhat'] == 'C';
+    }
+  }
+  ```
+
+
 - Added support for serializing fields that are not part of the constructor
   when annotated with `@MappableField()`.
-
-# 3.0.0-dev.3
-
-- Fixed bug with null in encoding hook.
-
-# 3.0.0-dev.2
-
-- Performance improvements & bug fixes.
-
-# 3.0.0-dev.1
-
-- Bug fixes.
-
-# 3.0.0-dev.0
-
-- Simplified internal mapper implementation and removed `MapperElementBase` class.
-- Added `MappingContext` being passed to mapper methods.
 - Added `EncodingOptions` to `toValue` method.
 - Added support for third-party models by using annotated `typedef`s.
-- Removed `<MyClass>Mapper.container` in favor of `MapperContainer.globals`.
-- Removed `@MappableLib.createCombinedContainer` in favor of `@MappableLib.generateInitializerForScope`.
-- Renamed `.copyWith.apply()` method to `.copyWith.$update()`.
-- Removed `CheckTypesHook` in favor of discriminator functions.
-- Added `.copyWith.$merge()` and `.copyWith.$delta()`.
+- Added `renameMethods` to build options.
+- Improved performance of generated encoding and decoding methods.
 
-  For a detailed migration guide, see [this issue](https://github.com/schultek/dart_mappable/issues/71).
+For a detailed migration guide, see [this issue](https://github.com/schultek/dart_mappable/issues/71).
 
 # 2.0.3
 

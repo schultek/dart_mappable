@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/class/target_class_mapper_element.dart';
@@ -163,14 +164,14 @@ class CopyWithGenerator {
 
       if (param is UnresolvedParamElement) {
         if (p.type.isNullable) {
-          var isDynamic = p.type.isDynamic;
+          var isDynamic = p.type is DynamicType;
           params.add('$type${isDynamic ? '' : '?'} ${p.name}');
         } else {
           params.add('required $type ${p.name}');
         }
       } else {
         var name = param.superName;
-        var isDynamic = p.type.isDynamic;
+        var isDynamic = p.type is DynamicType;
         if (implVersion && (p.type.isNullable || isDynamic)) {
           params.add('Object? $name = \$none');
         } else {
@@ -190,7 +191,7 @@ class CopyWithGenerator {
 
       if (param is! UnresolvedParamElement) {
         var p = param.parameter;
-        if (p.type.isNullable || p.type.isDynamic) {
+        if (p.type.isNullable || p.type is DynamicType) {
           str = 'if (${param.superName} != \$none) $str';
         } else {
           str = 'if (${param.superName} != null) $str';

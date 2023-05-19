@@ -1,9 +1,8 @@
 include: package:lints/recommended.yaml
 
 analyzer:
-  strong-mode:
-    implicit-casts: false
-    implicit-dynamic: true
+  language:
+    strict-casts: true
 
 linter:
   rules:

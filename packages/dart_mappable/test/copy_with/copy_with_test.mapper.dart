@@ -556,6 +556,11 @@ class BrandListMapper extends SubClassMapperBase<BrandList> {
   @override
   late final ClassMapperBase superMapper = ItemListMapper.ensureInitialized();
 
+  @override
+  DecodingContext inherit(DecodingContext context) {
+    return context.inherit(args: []);
+  }
+
   static BrandList _instantiate(DecodingData data) {
     return BrandList(data.dec(_f$items));
   }

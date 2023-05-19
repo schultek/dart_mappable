@@ -10,6 +10,12 @@ funding:
 environment:
   sdk: '>=3.0.0 <4.0.0'
 
+topics:
+  - json
+  - data-class
+  - codegen
+  - build-runner
+
 dependencies:
   collection: ^1.15.0
   meta: ^1.8.0
