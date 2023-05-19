@@ -36,10 +36,10 @@ class EncoderGenerator {
     }
     return '''
       String $toJsonName() {
-        return ${element.mapperName}.ensureInitialized().encodeJson(this);
+        return ${element.mapperName}.ensureInitialized().encodeJson<${element.selfTypeParam}>(this);
       }
       Map<String, dynamic> $toMapName() {
-        return ${element.mapperName}.ensureInitialized().encodeMap(this);
+        return ${element.mapperName}.ensureInitialized().encodeMap<${element.selfTypeParam}>(this);
       }
     ''';
   }

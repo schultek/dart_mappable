@@ -104,7 +104,7 @@ abstract class ClassMapperBase<T extends Object>
   }
 
   @override
-  Object? encodeValue<V>(T value,
+  Object? encodeValue<V>(V value,
       [EncodingOptions? options, MapperContainer? container]) {
     var m = subOrSelfFor(value);
     if (m != null) {
@@ -114,9 +114,14 @@ abstract class ClassMapperBase<T extends Object>
   }
 
   MapperBase<Object>? subOrSelfFor(dynamic value) {
-    var m = _defaultSubMapper;
+    MapperBase<Object>? m;
     if (_subMappers.isNotEmpty) {
-      m = _subMappers.where((m) => m.isFor(value)).firstOrNull ?? m;
+      m = _subMappers.where((m) => m.isFor(value)).firstOrNull;
+    }
+    if (m == null &&
+        _defaultSubMapper != null &&
+        _defaultSubMapper!.isFor(value)) {
+      m = _defaultSubMapper;
     }
     return m;
   }

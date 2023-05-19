@@ -87,7 +87,7 @@ void main() {
             '{"size":10,"contents":[{"color":"Rainbow"}],"__type":"Box<Confetti>"}'),
       );
 
-      dynamic whatAmI = BoxMapper.fromJson(boxJson);
+      dynamic whatAmI = MapperContainer.globals.fromJson(boxJson);
       expect(whatAmI.runtimeType, equals(type<Box<Confetti>>()));
     });
 

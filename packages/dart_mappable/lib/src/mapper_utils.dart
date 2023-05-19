@@ -59,9 +59,9 @@ extension EncodingUtil on EncodingContext {
       if (hook != null) {
         value = hook.beforeEncode(value);
       }
-      if (value != null) {
+      if (value != null && value is T) {
         if (mapper != null) {
-          value = mapper.encodeValue<T>(value, options);
+          value = mapper.encodeValue<T>(value as T, options);
         } else {
           value = container.toValue<T>(value as T, options);
         }

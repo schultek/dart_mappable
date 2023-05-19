@@ -55,7 +55,7 @@ abstract class MapperBase<T extends Object> {
     }
   }
 
-  Object? encodeValue<V>(T value,
+  Object? encodeValue<V>(V value,
       [EncodingOptions? options, MapperContainer? container]) {
     try {
       Type type = V;
@@ -75,7 +75,7 @@ abstract class MapperBase<T extends Object> {
       }
 
       var result = this.encoder(
-        value,
+        value as T,
         EncodingContext(
           container: container,
           options: options?.inheritOptions ?? false ? options : null,

@@ -153,11 +153,11 @@ class CakeMapper extends ClassMapperBase<f.Cake> {
 
 extension CakeMapperExtension on f.Cake {
   String toJson() {
-    return CakeMapper.ensureInitialized().encodeJson(this);
+    return CakeMapper.ensureInitialized().encodeJson<f.Cake>(this);
   }
 
   Map<String, dynamic> toMap() {
-    return CakeMapper.ensureInitialized().encodeMap(this);
+    return CakeMapper.ensureInitialized().encodeMap<f.Cake>(this);
   }
 
   CakeCopyWith<f.Cake, f.Cake, f.Cake> get copyWith =>
@@ -238,11 +238,11 @@ class Person2Mapper extends ClassMapperBase<m.Person> {
 
 extension Person2MapperExtension on m.Person {
   String toJson() {
-    return Person2Mapper.ensureInitialized().encodeJson(this);
+    return Person2Mapper.ensureInitialized().encodeJson<m.Person>(this);
   }
 
   Map<String, dynamic> toMap() {
-    return Person2Mapper.ensureInitialized().encodeMap(this);
+    return Person2Mapper.ensureInitialized().encodeMap<m.Person>(this);
   }
 
   Person2CopyWith<m.Person, m.Person, m.Person> get copyWith =>
@@ -328,11 +328,11 @@ class AnimalMapper extends ClassMapperBase<o.Animal> {
 
 extension AnimalMapperExtension on o.Animal {
   String toJson() {
-    return AnimalMapper.ensureInitialized().encodeJson(this);
+    return AnimalMapper.ensureInitialized().encodeJson<o.Animal>(this);
   }
 
   Map<String, dynamic> toMap() {
-    return AnimalMapper.ensureInitialized().encodeMap(this);
+    return AnimalMapper.ensureInitialized().encodeMap<o.Animal>(this);
   }
 }
 
@@ -399,11 +399,11 @@ class PetMapper extends SubClassMapperBase<o.Pet> {
 
 extension PetMapperExtension on o.Pet {
   String toJson() {
-    return PetMapper.ensureInitialized().encodeJson(this);
+    return PetMapper.ensureInitialized().encodeJson<o.Pet>(this);
   }
 
   Map<String, dynamic> toMap() {
-    return PetMapper.ensureInitialized().encodeMap(this);
+    return PetMapper.ensureInitialized().encodeMap<o.Pet>(this);
   }
 
   PetCopyWith<o.Pet, o.Pet, o.Pet> get copyWith =>

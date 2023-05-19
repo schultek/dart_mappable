@@ -181,7 +181,7 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
 
   V decodeMap<V>(Map<String, dynamic> map) => decodeValue<V>(map);
 
-  Map<String, dynamic> encodeMap<V>(T object) {
+  Map<String, dynamic> encodeMap<V>(V object) {
     var value = encodeValue<V>(object);
     if (value is Map<String, dynamic>) {
       return value;
@@ -193,5 +193,5 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
 
   V decodeJson<V>(String json) => decodeValue<V>(jsonDecode(json));
 
-  String encodeJson<V>(T object) => jsonEncode(encodeValue<V>(object));
+  String encodeJson<V>(V object) => jsonEncode(encodeValue<V>(object));
 }

@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-part 'record_model_test.mapper.dart';
+part 'record_model_test_.mapper.dart';
 
 @MappableClass()
 class A<T> with AMappable<T> {
