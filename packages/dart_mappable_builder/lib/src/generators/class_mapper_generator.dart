@@ -188,9 +188,11 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
 
     var node = await element.element.getNode();
     if (node is ClassDeclaration) {
-      var hasCopyWithMixin =
-          node.withClause?.mixinTypes.any((t) => t.name.name == mixinName) ??
-              false;
+      var hasCopyWithMixin = node.withClause?.mixinTypes.any((t) {
+            // ignore: deprecated_member_use
+            return t.name.name == mixinName;
+          }) ??
+          false;
 
       if (!hasCopyWithMixin) {
         var classDeclarationSource = 'class $className';
@@ -212,8 +214,10 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
         warnUnusedMixin(classDeclarationSource);
       }
     } else if (node is ClassTypeAlias) {
-      var hasCopyWithMixin =
-          node.withClause.mixinTypes.any((t) => t.name.name == mixinName);
+      var hasCopyWithMixin = node.withClause.mixinTypes.any((t) {
+        // ignore: deprecated_member_use
+        return t.name.name == mixinName;
+      });
 
       if (!hasCopyWithMixin) {
         var classDeclarationSource = 'class $className';
