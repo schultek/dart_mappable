@@ -1,3 +1,8 @@
+# 3.0.1
+
+- Fixed dependency conflict with `package:collection`.
+- Added topics for pub.dev.
+
 # 3.0.0
 
 - **Breaking**: Generated mappers no longer have a `.container` property. This was removed in favor
