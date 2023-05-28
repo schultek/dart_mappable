@@ -12,7 +12,7 @@ class CopyParamElement {
   static Iterable<CopyParamElement> collectFrom(
       List<MapperParamElement> params, ClassMapperElement element) sync* {
     for (var param in element.params) {
-      if (param is UnresolvedParamElement) {
+      if (param.accessor == null) {
         continue;
       }
       if (!element.copySafeParams.contains(param)) {
@@ -98,7 +98,7 @@ class CopyParamElement {
   final bool hasSuperElement;
 
   late ParameterElement p = param.parameter;
-  late PropertyInducingElement a = param.accessor;
+  late PropertyInducingElement a = param.accessor!;
 
   String get fieldTypeParams => p.type is InterfaceType
       ? (p.type as InterfaceType)

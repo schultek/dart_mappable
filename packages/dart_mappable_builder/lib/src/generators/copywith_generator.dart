@@ -217,7 +217,7 @@ class CopyWithGenerator {
         str += 'data.get(#${p.name})';
       } else {
         var name = param.superName;
-        var a = param.accessor;
+        var a = param.accessor!;
         str += 'data.get(#$name, or: \$value.${a.name})';
       }
 

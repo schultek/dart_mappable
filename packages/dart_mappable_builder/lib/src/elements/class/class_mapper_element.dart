@@ -19,7 +19,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
   @override
   Future<void> init() async {
     await super.init();
-    constructorNode = await constructor?.getNode();
+    constructorNode = await constructor?.getResolvedNode();
     discriminatorValueCode = await _getDiscriminatorValueCode();
   }
 
@@ -50,14 +50,17 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
   }();
 
   late List<MapperFieldElement> fields = () {
-    var fields = <PropertyInducingElement, MapperFieldElement>{};
+    var fields = <Element, MapperFieldElement>{};
 
     for (var p in params) {
-      fields[p.accessor] = MapperFieldElement(p, p.accessor, this);
+      fields[p.accessor ?? p.parameter] =
+          MapperFieldElement(p, p.accessor, this);
     }
 
     for (var f in allPublicFields) {
-      if (!fields.containsKey(f) && !fields.keys.any((e) => e.name == f.name)) {
+      if (!fields.containsKey(f) &&
+          !fields.keys
+              .any((e) => e is PropertyInducingElement && e.name == f.name)) {
         fields[f] = MapperFieldElement(null, f, this);
       }
     }

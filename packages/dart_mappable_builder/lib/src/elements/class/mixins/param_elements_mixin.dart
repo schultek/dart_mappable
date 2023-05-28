@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 
@@ -80,6 +81,11 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
       }
     }
 
+    var init = _analyzeInitializers(param);
+    if (init != null) {
+      return init;
+    }
+
     var getter = element.lookUpGetter(param.name, parent.library);
     if (getter != null) {
       var getterType = getter.type.returnType;
@@ -107,6 +113,24 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
       param,
       'Cannot find field or getter related to this parameter.',
     );
+  }
+
+  MapperParamElement? _analyzeInitializers(ParameterElement param) {
+    var node = constructorNode;
+    if (node is! ConstructorDeclaration || node.initializers.isEmpty) {
+      return null;
+    }
+    for (var initializer in node.initializers) {
+      if (initializer is ConstructorFieldInitializer) {
+        var p = initializer.expression.accept(InitializerExpressionVisitor());
+        if (p == param) {
+          var f = initializer.fieldName.staticElement;
+          if (f is PropertyInducingElement) {
+            return FieldParamElement(param, f, getSuperField(f));
+          }
+        }
+      }
+    }
   }
 
   ParameterElement? _findSuperParameter(ParameterElement param) {
@@ -147,8 +171,46 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
   PropertyInducingElement? getSuperField(PropertyInducingElement field) {
     return [if (extendsElement != null) extendsElement!, ...interfaceElements]
         .expand((e) => e.fields)
-        .where((f) => f.field.name == field.name)
+        .where((f) => f.field?.name == field.name)
         .map((f) => f.field)
         .firstOrNull;
+  }
+}
+
+class InitializerExpressionVisitor extends SimpleAstVisitor<Element> {
+  @override
+  Element? visitSimpleIdentifier(SimpleIdentifier node) {
+    return node.staticElement;
+  }
+
+  @override
+  Element? visitAssignedVariablePattern(AssignedVariablePattern node) {
+    return node.element;
+  }
+
+  @override
+  Element? visitParenthesizedExpression(ParenthesizedExpression node) {
+    return node.expression.accept(this);
+  }
+
+  @override
+  Element? visitNullAssertPattern(NullAssertPattern node) {
+    return node.pattern.accept(this);
+  }
+
+  @override
+  Element? visitNullCheckPattern(NullCheckPattern node) {
+    return node.pattern.accept(this);
+  }
+
+  @override
+  Element? visitBinaryExpression(BinaryExpression node) {
+    if (node.operator.lexeme == '??') {
+      var left = node.leftOperand.accept(this);
+      var right = node.rightOperand.accept(this);
+      if (left == null || right == null) {
+        return left ?? right;
+      }
+    }
   }
 }

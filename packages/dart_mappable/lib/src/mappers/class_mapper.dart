@@ -227,7 +227,7 @@ abstract class ClassMapperBase<T extends Object> extends MapperBase<T> {
 
     Object? result = {
       for (var f in _params)
-        if (!ignoreNull || f.get(value) != null)
+        if (f.getter != null && (!ignoreNull || f.get(value) != null))
           f.key: f.encode(value, context),
       ...?_encodedStaticParams,
     };
@@ -283,7 +283,7 @@ class Field<T extends Object, V> {
   final String name;
 
   /// The getter returns the fields value for a given instance.
-  final Object? Function(T) getter;
+  final Object? Function(T)? getter;
 
   /// The mapping key of the field, or the name by default.
   final String key;
@@ -315,7 +315,7 @@ class Field<T extends Object, V> {
   }) : key = key ?? name;
 
   Object? get(T value) {
-    return getter(value);
+    return getter?.call(value);
   }
 
   dynamic encode(T value, EncodingContext context) {
