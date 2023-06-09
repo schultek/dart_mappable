@@ -1,3 +1,7 @@
+# Unreleased patch
+
+- Fixed supporting expressions in `@MappableClass.includeCustomMappers`.
+
 # 3.1.0
 
 - Fixed error when using non-literal values in `@MappableValue()`.

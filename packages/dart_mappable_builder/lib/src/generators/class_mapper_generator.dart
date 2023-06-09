@@ -64,10 +64,8 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     }
 
     var customMappers = element.customMappers;
-    if (customMappers.isNotEmpty) {
-      for (var t in customMappers) {
-        output.write('      MapperContainer.globals.use($t);\n');
-      }
+    if (customMappers != null) {
+      output.write('      MapperContainer.globals.useAll($customMappers);\n');
     }
 
     var linked = element.linkedElements;

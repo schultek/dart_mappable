@@ -12,7 +12,7 @@ class TestObjMapper extends ClassMapperBase<TestObj> {
   static TestObjMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = TestObjMapper._());
-      MapperContainer.globals.use(BigIntMapper());
+      MapperContainer.globals.useAll([BigIntMapper(), ...privateMappers]);
     }
     return _instance!;
   }
