@@ -1,4 +1,4 @@
-# Unreleased patch
+# 3.1.1
 
 - Fixed supporting expressions in `@MappableClass.includeCustomMappers`.
 
