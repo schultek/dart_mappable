@@ -111,11 +111,21 @@ class _MapEncoder2<M extends Map, K> {
   }
 
   Map<dynamic, dynamic> _encode<V>() {
-    return value.map((key, value) {
+    var onlyStringKeys = true;
+    var result = value.map((key, value) {
+      var resultKey =
+          context.container.$enc<K>(key as K, 'key', context.options);
+      if (onlyStringKeys && resultKey is! String) {
+        onlyStringKeys = false;
+      }
       return MapEntry(
-        context.container.$enc<K>(key as K, 'key', context.options),
+        resultKey,
         context.container.$enc<V>(value as V, 'value', context.options),
       );
     });
+    if (onlyStringKeys) {
+      return result.cast<String, dynamic>();
+    }
+    return result;
   }
 }

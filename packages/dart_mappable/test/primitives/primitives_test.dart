@@ -89,6 +89,14 @@ void main() {
       expect(m.fromJson<Map<String, int>>('{"a": 2}'), equals({'a': 2}));
       expect(m.fromValue<Map<String, String>>({'a': MyClass('Tom')}),
           equals({'a': 'MyClass{Tom}'}));
+
+      expect(
+        m.toValue<Map<String, dynamic>>({'a': 2, 'b': 'test'}),
+        allOf(
+          isA<Map<String, dynamic>>(),
+          equals({'a': 2, 'b': 'test'}),
+        ),
+      );
     });
   });
 }

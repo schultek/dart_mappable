@@ -27,8 +27,8 @@ class B with BMappable {
 void main() {
   group('param rewrite', () {
     test('from json succeeds', () {
-      var a = AMapper.fromMap({'a': 1, 'b': 2, 'c': 3});
-      expect(a, equals(A(1, 2, 3)));
+      var a = AMapper.fromMap({'a': 1, 'c': 3});
+      expect(a, equals(A(1, 0, 3)));
     });
 
     test('to json succeeds', () {
