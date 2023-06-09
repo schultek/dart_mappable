@@ -120,6 +120,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
     if (node is! ConstructorDeclaration || node.initializers.isEmpty) {
       return null;
     }
+
     for (var initializer in node.initializers) {
       if (initializer is ConstructorFieldInitializer) {
         var p = initializer.expression.accept(InitializerExpressionVisitor());
@@ -131,6 +132,8 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
         }
       }
     }
+
+    return null;
   }
 
   ParameterElement? _findSuperParameter(ParameterElement param) {
@@ -212,5 +215,7 @@ class InitializerExpressionVisitor extends SimpleAstVisitor<Element> {
         return left ?? right;
       }
     }
+
+    return null;
   }
 }

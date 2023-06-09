@@ -140,15 +140,13 @@ class Person with PersonMappable {
 
   // renamed argument, will be {"years": ...} in json
   Person.renamed(this.name, int years) : age = years;
-  // IMPORTANT: when renaming arguments, make sure to always have a matching getter for serialization (*)
-  int get years => age;
   
   // ignores the age field completely
   Person.ignored(this.name);
  
   // computed name value
   Person.computed(String firstName, String lastName, this.age) : name = '$firstName $lastName';
-  // IMPORTANT (again): have matching getters for all arguments, reversing the computed value (*)
+  // IMPORTANT: have matching getters for all unassigned arguments, reversing the computed value (*)
   String get firstName => name.split(' ')[0];
   String get lastName => name.split(' ')[1];
 }
