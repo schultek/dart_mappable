@@ -178,6 +178,8 @@ class StatusMapper extends EnumMapper<Status> {
         return Status.zero;
       case 200:
         return Status.success;
+      case State.off:
+        return Status.warning;
       case 'error':
         return Status.error;
       default:
@@ -192,6 +194,8 @@ class StatusMapper extends EnumMapper<Status> {
         return 0;
       case Status.success:
         return 200;
+      case Status.warning:
+        return State.off;
       case Status.error:
         return 'error';
     }

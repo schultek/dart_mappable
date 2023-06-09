@@ -32,10 +32,15 @@ class IsGenericTypeVisitor extends UnifyingTypeVisitor<bool> {
 
 class MapperFieldElement {
   final MapperParamElement? param;
-  final PropertyInducingElement field;
+  final PropertyInducingElement? field;
   final ClassMapperElement parent;
 
-  MapperFieldElement(this.param, this.field, this.parent);
+  MapperFieldElement(this.param, this.field, this.parent)
+      : assert(param != null || field != null);
+
+  late String name = field?.name ?? param!.parameter.name;
+
+  late String getter = field != null ? '_\$$name' : 'null';
 
   late bool needsArg = () {
     var isGeneric = resolvedType.accept(IsGenericTypeVisitor());
@@ -45,17 +50,17 @@ class MapperFieldElement {
   late String arg = () {
     if (!needsArg) return '';
 
-    return ', arg: _arg\$${field.name}';
+    return ', arg: _arg\$$name';
   }();
 
   late DartType resolvedType = () {
-    if (field.enclosingElement is InterfaceElement) {
+    if (field?.enclosingElement is InterfaceElement) {
       var it = parent.element.thisType;
-      it = it.asInstanceOf(field.enclosingElement as InterfaceElement)!;
-      var getter = it.getGetter(field.name);
+      it = it.asInstanceOf(field!.enclosingElement as InterfaceElement)!;
+      var getter = it.getGetter(field!.name);
       return getter!.type.returnType;
     }
-    return field.type;
+    return field?.type ?? param!.parameter.type;
   }();
 
   late String staticGetterType = () {
@@ -77,7 +82,9 @@ class MapperFieldElement {
   }();
 
   late String mode = () {
-    if (param == null && !fieldChecker.hasAnnotationOf(field)) {
+    if (param == null &&
+        field != null &&
+        !fieldChecker.hasAnnotationOf(field!)) {
       return ', mode: FieldMode.member';
     } else if (param != null && param!.accessor is! FieldElement) {
       return ', mode: FieldMode.param';
@@ -87,8 +94,8 @@ class MapperFieldElement {
   }();
 
   late String key = () {
-    var key = param?.jsonKey(parent.caseStyle) ?? field.name;
-    if (key != field.name) {
+    var key = param?.jsonKey(parent.caseStyle) ?? name;
+    if (key != name) {
       return ", key: '$key'";
     } else {
       return '';
@@ -150,7 +157,7 @@ abstract class MapperParamElement {
     return _hookFor(parameter);
   }
 
-  PropertyInducingElement get accessor;
+  PropertyInducingElement? get accessor;
 
   String? _keyFor(Element element) {
     return fieldChecker
@@ -208,7 +215,7 @@ class SuperParamElement extends MapperParamElement {
   }
 
   @override
-  PropertyInducingElement get accessor => superParameter.accessor;
+  PropertyInducingElement? get accessor => superParameter.accessor;
 
   @override
   String? get _paramKey => super._paramKey ?? superParameter._paramKey;
@@ -250,8 +257,7 @@ class UnresolvedParamElement extends MapperParamElement {
       : super(parameter);
 
   @override
-  PropertyInducingElement get accessor => throw UnimplementedError(
-      'Tried to call .accessor on unresolved parameter.');
+  PropertyInducingElement? get accessor => null;
 }
 
 Future<String?> _hookFor(Element element) async {

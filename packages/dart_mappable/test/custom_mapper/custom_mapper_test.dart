@@ -16,6 +16,8 @@ class MyPrivateClass {
 }
 
 class PrivateClassMapper extends SimpleMapper<MyPrivateClass> {
+  const PrivateClassMapper();
+
   @override
   MyPrivateClass decode(dynamic value) {
     return MyPrivateClass(value);
@@ -66,9 +68,12 @@ class UriMapper extends SimpleMapper<Uri> {
   }
 }
 
+const privateMappers = [PrivateClassMapper()];
+
 @MappableClass(
-    hook: UnmappedPropertiesHook('unmappedProps'),
-    includeCustomMappers: [BigIntMapper()])
+  hook: UnmappedPropertiesHook('unmappedProps'),
+  includeCustomMappers: [BigIntMapper(), ...privateMappers],
+)
 class TestObj with TestObjMappable {
   BigInt? x;
 

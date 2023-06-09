@@ -55,10 +55,8 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     }
 
     var customMappers = element.customMappers;
-    if (customMappers.isNotEmpty) {
-      for (var t in customMappers) {
-        output.write('      MapperContainer.globals.use($t);\n');
-      }
+    if (customMappers != null) {
+      output.write('      MapperContainer.globals.useAll($customMappers);\n');
     }
 
     var linked = element.linkedElements;
@@ -89,21 +87,23 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     var fields = element.fields;
 
     for (var f in fields) {
-      output.write(
-          '  static ${f.staticGetterType} _\$${f.field.name}(${element.prefixedClassName} v) => v.${f.field.name};\n');
+      if (f.field != null) {
+        output.write(
+            '  static ${f.staticGetterType} _\$${f.name}(${element.prefixedClassName} v) => v.${f.name};\n');
+      }
       if (f.needsArg) {
         output.write(
-            '  static dynamic _arg\$${f.field.name}${element.typeParamsDeclaration}(f) => f<${f.argType}>();\n');
+            '  static dynamic _arg\$${f.name}${element.typeParamsDeclaration}(f) => f<${f.argType}>();\n');
       }
       output.write(
-          "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.field.name} = Field('${f.field.name}', _\$${f.field.name}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook}${f.map});\n");
+          "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.name} = Field('${f.name}', ${f.getter}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook}${f.map});\n");
     }
 
     output.write(
         '\n  @override\n  final Map<Symbol, Field<${element.prefixedClassName}, dynamic>> fields = const {\n');
 
     for (var f in fields) {
-      output.write('    #${f.field.name}: _f\$${f.field.name},\n');
+      output.write('    #${f.name}: _f\$${f.name},\n');
     }
 
     output.write('  };\n');

@@ -1,3 +1,32 @@
+# 3.1.1
+
+- Fixed supporting expressions in `@MappableClass.includeCustomMappers`.
+
+# 3.1.0
+
+- Fixed error when using non-literal values in `@MappableValue()`.
+
+- The builder now respects basic initializer expressions of a constructor. This makes it
+  possible to do field renaming or assigning to private fields without requiring an additional
+  getter matching the parameter.
+
+  The following is now supported out of the box:
+
+  ```dart
+  class MyClass {
+    MyClass(int value, {String? name}) 
+        // Effectively renaming 'value' to 'data'.
+      : data = value,
+        // Assigning to a private field + having a null fallback.
+        _name = name ?? 'Unnamed';
+
+    final int value;
+    final String _name;
+  ```
+
+- Fixed encoding of a map now returns a `Map<String, dynamic>` where possible 
+  (instead of a `Map<dynamic, dynamic>`)
+
 # 3.0.1
 
 - Fixed dependency conflict with `package:collection`.

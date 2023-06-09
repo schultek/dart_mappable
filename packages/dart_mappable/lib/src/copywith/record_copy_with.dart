@@ -1,5 +1,5 @@
-import '../mappers/class_mapper.dart';
-import '../mappers/mapper_base.dart';
+import '../mapper_container.dart';
+import '../mappers/mapping_context.dart';
 import '../mappers/record_mapper.dart';
 import 'copywith_base.dart';
 import 'copywith_data.dart';
@@ -15,7 +15,7 @@ abstract class RecordCopyWithBase<Result, In extends Record, Out>
     implements RecordCopyWith<Result, In, Out> {
   RecordCopyWithBase(super.$value, super.$then1, super.$then2);
 
-  RecordMapper get $mapper;
+  RecordMapperBase get $mapper;
 
   @override
   Result $merge(In value) => $apply(RecordMergeCopyWithData($mapper, value));
@@ -32,8 +32,8 @@ abstract class RecordCopyWithBase<Result, In extends Record, Out>
 class RecordMergeCopyWithData extends CopyWithData {
   RecordMergeCopyWithData(this.mapper, this.value);
 
-  final RecordMapper mapper;
-  final Object value;
+  final RecordMapperBase mapper;
+  final Record value;
 
   @override
   V get<V>(Symbol name, {Object? or = $none}) {
@@ -50,7 +50,7 @@ class RecordDeltaCopyWithData extends CopyWithData {
   RecordDeltaCopyWithData(this.mapper, this.value)
       : context = DecodingContext(container: MapperContainer.globals);
 
-  final RecordMapper mapper;
+  final RecordMapperBase mapper;
   final Map<String, dynamic> value;
   final DecodingContext context;
 

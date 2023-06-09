@@ -65,10 +65,8 @@ AstNode? getAnnotationProperty(
           if (arg.name.label.name == property) {
             return arg.expression;
           }
-        } else if (arg is Literal && property is int) {
-          if (i == property) {
-            return arg;
-          }
+        } else if (property is int && i == property) {
+          return arg;
         }
       }
     }

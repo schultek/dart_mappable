@@ -26,7 +26,7 @@ class Field<T extends Object, V> {
   final String name;
 
   /// The getter returns the fields value for a given instance.
-  final Object? Function(T) getter;
+  final Object? Function(T)? getter;
 
   /// The mapping key of the field, or the name by default.
   final String key;
@@ -61,7 +61,7 @@ class Field<T extends Object, V> {
   }) : key = key ?? name;
 
   Object? get(T value) {
-    return getter(value);
+    return getter?.call(value);
   }
 
   dynamic encode(T value, EncodingContext context) {

@@ -201,7 +201,7 @@ abstract class ClassMapperBase<T extends Object>
   Object? encode(T value, EncodingContext context) {
     return {
       for (var f in _params)
-        if (!ignoreNull || f.get(value) != null)
+        if (f.getter != null && (!ignoreNull || f.get(value) != null))
           f.key: f.encode(value, context),
       ...?_encodedStaticParams,
     };

@@ -1,4 +1,3 @@
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../utils.dart';
@@ -19,16 +18,12 @@ class TargetClassMapperElement extends ClassMapperElement
 
   late String prefixedDecodingClassName = prefixedClassName;
 
-  late List<String> customMappers;
+  late String? customMappers;
 
-  Future<List<String>> _getCustomMappers() async {
+  Future<String?> _getCustomMappers() async {
     var mappers =
         await getAnnotationNode(element, MappableClass, 'includeCustomMappers');
-    if (mappers is ListLiteral) {
-      assert(mappers.elements.every((e) => e is Expression));
-      return mappers.elements.map((e) => e.toSource()).toList();
-    }
-    return <String>[];
+    return mappers?.toSource();
   }
 
   late List<String> typesConfigs = () {

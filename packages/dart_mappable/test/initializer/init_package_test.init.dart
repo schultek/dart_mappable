@@ -31,6 +31,7 @@ import '../selective_generation/selective_generation_test.dart' as p26;
 import '../serialization/basic_serialization_test.dart' as p27;
 import '../serialization/desync_serialization_test.dart' as p28;
 import '../serialization/nested_serialization_test.dart' as p29;
+import '../serialization/param_rewrite_test.dart' as p30;
 import 'init_lib_test.dart' as p18;
 import 'models/model.dart' as p19;
 
@@ -132,4 +133,6 @@ void initializeMappers() {
   p29.PersonMapper.ensureInitialized();
   p29.CarMapper.ensureInitialized();
   p29.BrandMapper.ensureInitialized();
+  p30.AMapper.ensureInitialized();
+  p30.BMapper.ensureInitialized();
 }

@@ -107,7 +107,7 @@ class DecoderGenerator {
       if (param.parameter.isNamed) {
         str = '${param.parameter.name}: ';
       }
-      str += 'data.dec(_f\$${param.accessor.name})';
+      str += 'data.dec(_f\$${param.accessor?.name ?? param.parameter.name})';
 
       params.add(str);
     }
