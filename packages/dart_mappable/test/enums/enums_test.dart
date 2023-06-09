@@ -21,6 +21,8 @@ enum Status {
   zero,
   @MappableValue(200)
   success,
+  @MappableValue(State.off)
+  warning,
   @MappableValue('error')
   error
 }
@@ -49,6 +51,7 @@ void main() {
       test('enum with custom values', () {
         expect(Status.zero.toValue(), equals(0));
         expect(Status.success.toValue(), equals(200));
+        expect(Status.warning.toValue(), equals(State.off));
         expect(Status.error.toValue(), equals('error'));
       });
     });
@@ -91,6 +94,7 @@ void main() {
       test('enum with custom values', () {
         expect(StatusMapper.fromValue(0), equals(Status.zero));
         expect(StatusMapper.fromValue(200), equals(Status.success));
+        expect(StatusMapper.fromValue(State.off), equals(Status.warning));
         expect(StatusMapper.fromValue('error'), equals(Status.error));
 
         expect(
