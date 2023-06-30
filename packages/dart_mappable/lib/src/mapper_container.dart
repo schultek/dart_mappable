@@ -13,7 +13,7 @@ import '../dart_mappable.dart';
 /// {@category Generics}
 /// {@category Mapper Container}
 class EncodingOptions {
-  EncodingOptions({this.includeTypeId, this.inheritOptions = true});
+  EncodingOptions({this.includeTypeId, this.inheritOptions = true, this.data});
 
   /// Whether to include the type id of the encoding object.
   ///
@@ -26,6 +26,16 @@ class EncodingOptions {
   /// Whether to inherit this options for nested calls to [MapperContainer.toValue],
   /// like for encoding fields of a class.
   final bool inheritOptions;
+
+  /// Custom data object passed to the mapper.
+  final Object? data;
+
+  EncodingOptions copyWith({Object? data}) {
+    return EncodingOptions(
+        includeTypeId: includeTypeId,
+        inheritOptions: inheritOptions,
+        data: data ?? this.data);
+  }
 }
 
 /// Additional options to be passed to [MapperContainer.fromValue].
@@ -33,10 +43,13 @@ class EncodingOptions {
 /// {@category Generics}
 /// {@category Mapper Container}
 class DecodingOptions {
-  DecodingOptions({this.type});
+  DecodingOptions({this.type, this.data});
 
   /// The target type to decode to, if different from the mappers type.
   final Type? type;
+
+  /// Custom data object passed to the mapper.
+  final Object? data;
 }
 
 /// The mapper container manages a set of mappers and is the main interface for

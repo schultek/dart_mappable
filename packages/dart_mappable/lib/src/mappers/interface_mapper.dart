@@ -2,11 +2,8 @@ import 'dart:convert';
 
 import 'package:meta/meta.dart';
 
-import '../annotations.dart';
-import '../mapper_exception.dart';
+import '../../dart_mappable.dart';
 import '../mapper_utils.dart';
-import 'mapper_base.dart';
-import 'mapping_context.dart';
 
 /// The mode of a field defined in a class.
 enum FieldMode {
@@ -46,7 +43,7 @@ class Field<T extends Object, V> {
   /// The optional mapping hook for this field.
   final MappingHook? hook;
 
-  final MapperBase Function()? map;
+  final Object? data;
 
   const Field(
     this.name,
@@ -57,7 +54,7 @@ class Field<T extends Object, V> {
     this.opt = false,
     this.def,
     this.hook,
-    this.map,
+    this.data,
   }) : key = key ?? name;
 
   Object? get(T value) {
@@ -66,20 +63,27 @@ class Field<T extends Object, V> {
 
   dynamic encode(T value, EncodingContext context) {
     var options = context.options;
+    if (data != null) {
+      options = options?.copyWith(data: data) ?? EncodingOptions(data: data);
+    }
     if (arg == null) {
-      return context.$enc<V>(get(value), name, options, hook, map?.call());
+      return context.$enc<V>(get(value), name, options, hook);
     } else {
       return context.callWith(
         arg!,
-        <U>() => context.$enc<U>(get(value), name, options, hook, map?.call()),
+        <U>() => context.$enc<U>(get(value), name, options, hook),
       );
     }
   }
 
   R decode<R>(Map<String, dynamic> value, DecodingContext context) {
+    DecodingOptions? options;
+    if (data != null) {
+      options = DecodingOptions(data: data);
+    }
     var result = opt || def != null
-        ? context.$dec<R?>(value[key], key, hook, map?.call())
-        : context.$dec<R>(value[key], key, hook, map?.call());
+        ? context.$dec<R?>(value[key], key, hook, options)
+        : context.$dec<R>(value[key], key, hook, options);
     return result ?? (def as R);
   }
 }
@@ -172,9 +176,15 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
 
   @protected
   Object? encode(T value, EncodingContext context) {
+    return encodeFields(value, fields.values, context);
+  }
+
+  @protected
+  Map<String, dynamic> encodeFields(
+      T value, Iterable<Field<T, dynamic>> fields, EncodingContext context) {
     return {
-      for (var f in fields.values)
-        if (!ignoreNull || f.get(value) != null)
+      for (var f in fields)
+        if (f.getter != null && (!ignoreNull || f.get(value) != null))
           f.key: f.encode(value, context),
     };
   }

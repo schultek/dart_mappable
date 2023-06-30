@@ -34,6 +34,25 @@ class RecordMapperGenerator2
   @override
   Future<String> generate() async {
     return '''
+      class ${element.mapperName} extends RecordMapperBase<_R1> {
+        static dynamic _$1(_R1 v) => v.$1;
+        static const Field<_R1, dynamic> _f$1 = Field('1', _$1);
+      
+        @override
+        final Map<Symbol, Field<_R1, dynamic>> fields = const {
+          #$1: _f$1,
+        };
+      
+        static _R1<A> _instantiate<A>(DecodingData data) {
+          return (data.dec(_f$1));
+        }
+      
+        @override
+        final Function instantiate = _instantiate;
+      
+        @override
+        Function get typeFactory => <A>(f) => f<_R1<A>>();
+      } 
     ''';
   }
 }

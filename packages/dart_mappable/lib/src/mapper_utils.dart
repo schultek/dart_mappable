@@ -14,7 +14,7 @@ extension DecodingUtil on DecodingContext {
     Object? value,
     String key, [
     MappingHook? hook,
-    MapperBase? mapper,
+    DecodingOptions? options,
   ]) {
     try {
       if (hook != null) {
@@ -23,10 +23,7 @@ extension DecodingUtil on DecodingContext {
 
       if (value is! T) {
         if (value != null) {
-          if (mapper != null) {
-            value = mapper.decodeValue<T>(value);
-          }
-          value = container.fromValue<T>(value);
+          value = container.fromValue<T>(value, options);
         } else {
           throw MapperException.missingParameter(key);
         }
@@ -53,18 +50,13 @@ extension EncodingUtil on EncodingContext {
     String key, [
     EncodingOptions? options,
     MappingHook? hook,
-    MapperBase? mapper,
   ]) {
     try {
       if (hook != null) {
         value = hook.beforeEncode(value);
       }
       if (value != null && value is T) {
-        if (mapper != null) {
-          value = mapper.encodeValue<T>(value as T, options);
-        } else {
-          value = container.toValue<T>(value as T, options);
-        }
+        value = container.toValue<T>(value as T, options);
       }
       if (hook != null) {
         value = hook.afterEncode(value);

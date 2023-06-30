@@ -1,5 +1,6 @@
 import 'interface_mapper.dart';
 import 'mapper_mixins.dart';
+import 'mapping_context.dart';
 
 typedef _R1<A> = (A,);
 typedef _R2<A, B> = (A, B);
@@ -19,17 +20,39 @@ abstract class RecordMapperBase<T extends Record> extends InterfaceMapperBase<T>
   ]);
 }
 
+class RecordVariant {
+
+  Object
+  Map<Symbol, Field> get fields;
+
+}
+
 class _R1Mapper extends RecordMapperBase<_R1> {
   static dynamic _$1(_R1 v) => v.$1;
   static const Field<_R1, dynamic> _f$1 = Field('1', _$1);
 
-  @override
-  final Map<Symbol, Field<_R1, dynamic>> fields = const {
+  static const _fields = {
     #$1: _f$1,
   };
 
+  @override
+  final Map<Symbol, Field<_R1, dynamic>> fields = _fields;
+
+  final Iterable<Field<_R1, dynamic>> _f2 = {
+    ..._fields,
+    #$1: _f$1,
+  }.values;
+
   static _R1<A> _instantiate<A>(DecodingData data) {
     return (data.dec(_f$1));
+  }
+
+  @override
+  Object? encode(_R1 value, EncodingContext context) {
+    return switch (context.options?.data) {
+      'f2' => encodeFields(value, _f2, context),
+      _ => super.encode(value, context),
+    };
   }
 
   @override

@@ -199,12 +199,11 @@ abstract class ClassMapperBase<T extends Object>
 
   @override
   Object? encode(T value, EncodingContext context) {
-    return {
-      for (var f in _params)
-        if (f.getter != null && (!ignoreNull || f.get(value) != null))
-          f.key: f.encode(value, context),
-      ...?_encodedStaticParams,
-    };
+    var result = encodeFields(value, _params, context);
+    if (_encodedStaticParams != null) {
+      return {...result, ...?_encodedStaticParams};
+    }
+    return result;
   }
 
   @override
