@@ -10,7 +10,7 @@ import 'mapper_param_element.dart';
 
 class CopyParamElement {
   static Iterable<CopyParamElement> collectFrom(
-      List<MapperParamElement> params, ClassMapperElement element) sync* {
+      List<ClassMapperParamElement> params, ClassMapperElement element) sync* {
     for (var param in element.params) {
       if (param.accessor == null) {
         continue;
@@ -92,7 +92,7 @@ class CopyParamElement {
   });
 
   final MapperElementGroup parent;
-  final MapperParamElement param;
+  final ClassMapperParamElement param;
   final String name;
   final bool hasSubConfigs;
   final bool hasSuperElement;

@@ -124,7 +124,10 @@ abstract class MapperBase<T extends Object> {
   }
 
   /// Registers an additional type [T] to be identifiable by the package.
-  static void addType<T>() {
+  static void addType<T>([Function? factory]) {
+    if (factory != null) {
+      return TypePlus.addFactory(factory);
+    }
     TypePlus.add<T>();
   }
 }

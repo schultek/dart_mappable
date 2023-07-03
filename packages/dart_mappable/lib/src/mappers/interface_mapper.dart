@@ -102,7 +102,7 @@ class DecodingData<T extends Object> {
 
 /// The common mapper interface for class and record mappers.
 ///
-/// See also [ClassMapperBase] and [RecordMapperBase].
+/// See also [ClassMapperBase] and [RecordMapper].
 abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
   const InterfaceMapperBase();
 
@@ -176,12 +176,16 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
 
   @protected
   Object? encode(T value, EncodingContext context) {
-    return encodeFields(value, fields.values, context);
+    return encodeFields(value, fields.values, ignoreNull, context);
   }
 
   @protected
-  Map<String, dynamic> encodeFields(
-      T value, Iterable<Field<T, dynamic>> fields, EncodingContext context) {
+  @pragma('vm:prefer-inline')
+  static Map<String, dynamic> encodeFields<T extends Object>(
+      T value,
+      Iterable<Field<T, dynamic>> fields,
+      bool ignoreNull,
+      EncodingContext context) {
     return {
       for (var f in fields)
         if (f.getter != null && (!ignoreNull || f.get(value) != null))
@@ -191,8 +195,8 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
 
   V decodeMap<V>(Map<String, dynamic> map) => decodeValue<V>(map);
 
-  Map<String, dynamic> encodeMap<V>(V object) {
-    var value = encodeValue<V>(object);
+  Map<String, dynamic> encodeMap<V>(V object, [EncodingOptions? options]) {
+    var value = encodeValue<V>(object, options);
     if (value is Map<String, dynamic>) {
       return value;
     } else {
@@ -203,5 +207,6 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
 
   V decodeJson<V>(String json) => decodeValue<V>(jsonDecode(json));
 
-  String encodeJson<V>(V object) => jsonEncode(encodeValue<V>(object));
+  String encodeJson<V>(V object, [EncodingOptions? options]) =>
+      jsonEncode(encodeValue<V>(object, options));
 }

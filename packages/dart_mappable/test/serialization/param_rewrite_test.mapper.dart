@@ -29,7 +29,7 @@ class AMapper extends ClassMapperBase<A> {
   static int _$b(A v) => v.b;
   static const Field<A, int> _f$b = Field('b', _$b);
   static int _$_c(A v) => v._c;
-  static const Field<A, int> _f$_c = Field('_c', _$_c, key: 'c');
+  static const Field<A, int> _f$_c = Field('_c', _$_c);
 
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {
@@ -132,9 +132,9 @@ class BMapper extends ClassMapperBase<B> {
   final String id = 'B';
 
   static int _$b(B v) => v.b;
-  static const Field<B, int> _f$b = Field('b', _$b, key: 'a');
+  static const Field<B, int> _f$b = Field('b', _$b);
   static int _$a(B v) => v.a;
-  static const Field<B, int> _f$a = Field('a', _$a, key: 'b');
+  static const Field<B, int> _f$a = Field('a', _$a);
 
   @override
   final Map<Symbol, Field<B, dynamic>> fields = const {

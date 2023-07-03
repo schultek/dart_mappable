@@ -146,7 +146,6 @@ class MappableRecord extends MappableInterface {
     super.ignoreNull,
     super.uniqueId,
     super.hook,
-    super.generateMethods,
     super.includeCustomMappers,
   }) : super._();
 }

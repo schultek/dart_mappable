@@ -542,7 +542,7 @@ class BrandListMapper extends SubClassMapperBase<BrandList> {
 
   static List<Brand?> _$items(BrandList v) => v.items;
   static const Field<BrandList, List<Brand?>> _f$items =
-      Field('items', _$items, key: 'brands');
+      Field('items', _$items);
 
   @override
   final Map<Symbol, Field<BrandList, dynamic>> fields = const {

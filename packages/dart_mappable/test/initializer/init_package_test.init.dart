@@ -26,7 +26,7 @@ import '../polymorphism/mixed_mappable_test.dart' as p21;
 import '../polymorphism/multi_poly_test.dart' as p22;
 import '../polymorphism/polymorphism_test.dart' as p23;
 import '../primitives/primitives_test.dart' as p24;
-import '../records/mappable_record.dart' as p25;
+import '../records/mappable_record_test.dart' as p25;
 import '../records/record_model_test_.dart' as p26;
 import '../selective_generation/selective_generation_test.dart' as p27;
 import '../serialization/basic_serialization_test.dart' as p28;

@@ -34,25 +34,81 @@ class RecordMapperGenerator2
   @override
   Future<String> generate() async {
     return '''
-      class ${element.mapperName} extends RecordMapperBase<_R1> {
-        static dynamic _$1(_R1 v) => v.$1;
-        static const Field<_R1, dynamic> _f$1 = Field('1', _$1);
+      class ${element.mapperName} extends RecordMapperVariant<${element.className}> {
       
-        @override
-        final Map<Symbol, Field<_R1, dynamic>> fields = const {
-          #$1: _f$1,
-        };
-      
-        static _R1<A> _instantiate<A>(DecodingData data) {
-          return (data.dec(_f$1));
+        static ${element.mapperName}? _instance;
+        static ${element.mapperName} ensureInitialized() {
+          if (_instance == null) {
+            RecordMapper.variants[${element.mapperName}] = _instance = ${element.mapperName}();
+            MapperBase.addType(<A, B>(f) => f<({A x, B y})>());
+          }
+          RecordMapper.variantByType[${element.className}] = ${element.mapperName};
+          return _instance!;
         }
-      
-        @override
-        final Function instantiate = _instantiate;
-      
-        @override
-        Function get typeFactory => <A>(f) => f<_R1<A>>();
+        
+        ${await generateFields()}
+        
+        ${generateInstantiate()}
       } 
+      
+      extension ${element.className}Mappable on ${element.className} {
+        Map<String, dynamic> toMap() {
+          ${element.mapperName}.ensureInitialized();
+          return RecordMapper().encodeMap(this, EncodingOptions(data: ${element.mapperName}));
+        }
+      }
     ''';
+  }
+
+  Future<String> generateFields() async {
+    var output = StringBuffer();
+
+    var fields = element.fields;
+
+    for (var f in fields) {
+      if (f.needsGetter) {
+        output.write(
+            '  static ${f.staticGetterType} _\$${f.name}(${element.prefixedClassName} v) => v.${f.name};\n');
+      }
+      if (f.needsArg) {
+        output.write(
+            '  static dynamic _arg\$${f.name}${element.typeParamsDeclaration}(f) => f<${f.argType}>();\n');
+      }
+      output.write(
+          "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.name} = Field('${f.name}', ${f.getter}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook}${f.map});\n");
+    }
+
+    output.write(
+        '\n  @override\n  final Map<Symbol, Field<${element.prefixedClassName}, dynamic>> fields = const {\n');
+
+    for (var f in fields) {
+      output.write('    #${f.name}: _f\$${f.name},\n');
+    }
+
+    output.write('  };\n');
+
+    return output.toString();
+  }
+
+  String generateInstantiate() {
+    List<String> params = [];
+    for (var f in element.fields) {
+      var str = '';
+
+      if (!f.param!.name.startsWith(r'$')) {
+        str = '${f.param!.name}: ';
+      }
+      str += 'data.dec(_f\$${f.param!.name})';
+
+      params.add(str);
+    }
+    params.join(', ');
+
+    return '''
+        @override
+        ${element.className} instantiate(DecodingData<Record> data) {
+          return (${params.join(', ')});
+        }
+      ''';
   }
 }

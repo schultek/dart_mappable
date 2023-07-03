@@ -1,10 +1,7 @@
-import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../elements/class/class_mapper_element.dart';
 import '../elements/class/target_class_mapper_element.dart';
-import '../utils.dart';
 
 class DecoderGenerator {
   final TargetClassMapperElement element;
@@ -112,15 +109,6 @@ class DecoderGenerator {
       params.add(str);
     }
     return params.join(', ');
-  }
-
-  Future<String> getPrefixedDefaultValue(ParameterElement p) async {
-    var node = await p.getResolvedNode();
-    if (node is DefaultFormalParameter) {
-      return node.defaultValue!.toSource();
-    }
-
-    return p.defaultValueCode!;
   }
 
   String generateStaticDecoders() {

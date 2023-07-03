@@ -24,8 +24,8 @@ late Resolver nodeResolver;
 extension GetNode on Element {
   Future<AstNode?> getNode() {
     return nodeResolver
-        .astNodeFor(this, resolve: false)
-        .catchError((_) => null);
+        .astNodeFor(this, resolve: false);
+        //.catchError((_) => null);
   }
 
   Future<AstNode?> getResolvedNode() async {

@@ -6,13 +6,14 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../utils.dart';
 import '../mapper_element.dart';
+import '../param/mapper_field_element.dart';
 import '../param/mapper_param_element.dart';
 import 'mixins/param_elements_mixin.dart';
 import 'mixins/type_params_mixin.dart';
 import 'none_class_mapper_element.dart';
 
 /// Element interface for all class mappers.
-abstract class ClassMapperElement extends MapperElement<ClassElement>
+abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
     with ParamElementsMixin, TypeParamsMixin {
   ClassMapperElement(super.parent, super.element, super.options);
 
@@ -124,10 +125,9 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
     return null;
   }();
 
-  late CaseStyle? caseStyle =
-      caseStyleFromAnnotation(annotation?.read('caseStyle')) ??
-          options.caseStyle ??
-          superElement?.caseStyle;
+  @override
+  // ignore: overridden_fields
+  late final CaseStyle? caseStyle = super.caseStyle ?? superElement?.caseStyle;
 
   late bool ignoreNull = annotation?.read('ignoreNull')?.toBoolValue() ??
       options.ignoreNull ??
@@ -162,12 +162,12 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
 
   late bool isAbstract = element.isAbstract;
 
-  late List<MapperParamElement> copySafeParams = (() {
+  late List<ClassMapperParamElement> copySafeParams = (() {
     if (subElements.isEmpty) return params;
 
-    var safeParams = <MapperParamElement>[];
+    var safeParams = <ClassMapperParamElement>[];
 
-    bool isCopySafe(MapperParamElement param) {
+    bool isCopySafe(ClassMapperParamElement param) {
       return subElements.every((e) => e.copySafeParams.any((subParam) {
             if (subParam is SuperParamElement &&
                 (subParam.superParameter.parameter == param.parameter ||

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element
 
-part of 'mappable_record.dart';
+part of 'mappable_record_test.dart';
 
 class LocationMapper extends ClassMapperBase<Location> {
   LocationMapper._();
@@ -30,7 +30,7 @@ class LocationMapper extends ClassMapperBase<Location> {
       Field('point', _$point, map: PointMapper.ensureInitialized);
   static _t$r0<double, double> _$offset(Location v) => v.offset;
   static const Field<Location, _t$r0<double, double>> _f$offset =
-      Field('offset', _$offset);
+      Field('offset', _$offset, map: OffsetMapper.ensureInitialized);
 
   @override
   final Map<Symbol, Field<Location, dynamic>> fields = const {
@@ -121,7 +121,75 @@ class _LocationCopyWithImpl<$R, $Out>
       _LocationCopyWithImpl($value, $cast, t);
 }
 
-class PointMapper
+class PointMapper extends RecordMapperVariant<Point> {
+  static PointMapper? _instance;
+  static PointMapper ensureInitialized() {
+    if (_instance == null) {
+      RecordMapper.variants[PointMapper] = _instance = PointMapper();
+      MapperBase.addType(<A, B>(f) => f<({A x, B y})>());
+    }
+    RecordMapper.variantByType[Point] = PointMapper;
+    return _instance!;
+  }
+
+  static double _$x(Point v) => v.x;
+  static const Field<Point, double> _f$x = Field('x', _$x, key: 'xx');
+  static double _$y(Point v) => v.y;
+  static const Field<Point, double> _f$y = Field('y', _$y);
+
+  @override
+  final Map<Symbol, Field<Point, dynamic>> fields = const {
+    #x: _f$x,
+    #y: _f$y,
+  };
+
+  @override
+  Point instantiate(DecodingData<Record> data) {
+    return (x: data.dec(_f$x), y: data.dec(_f$y));
+  }
+}
+
+extension PointMappable on Point {
+  Map<String, dynamic> toMap() {
+    PointMapper.ensureInitialized();
+    return RecordMapper().encodeMap(this, EncodingOptions(data: PointMapper));
+  }
+}
+
+class OffsetMapper extends RecordMapperVariant<Offset> {
+  static OffsetMapper? _instance;
+  static OffsetMapper ensureInitialized() {
+    if (_instance == null) {
+      RecordMapper.variants[OffsetMapper] = _instance = OffsetMapper();
+      MapperBase.addType(<A, B>(f) => f<({A x, B y})>());
+    }
+    RecordMapper.variantByType[Offset] = OffsetMapper;
+    return _instance!;
+  }
+
+  static double _$x(Offset v) => v.x;
+  static const Field<Offset, double> _f$x = Field('x', _$x);
+  static double _$y(Offset v) => v.y;
+  static const Field<Offset, double> _f$y = Field('y', _$y);
+
+  @override
+  final Map<Symbol, Field<Offset, dynamic>> fields = const {
+    #x: _f$x,
+    #y: _f$y,
+  };
+
+  @override
+  Offset instantiate(DecodingData<Record> data) {
+    return (x: data.dec(_f$x), y: data.dec(_f$y));
+  }
+}
+
+extension OffsetMappable on Offset {
+  Map<String, dynamic> toMap() {
+    OffsetMapper.ensureInitialized();
+    return RecordMapper().encodeMap(this, EncodingOptions(data: OffsetMapper));
+  }
+}
 
 typedef _t$r0<A, B> = ({A x, B y});
 final _m$r0 = RecordMapper<_t$r0>(
