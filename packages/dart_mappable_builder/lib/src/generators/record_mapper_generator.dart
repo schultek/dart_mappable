@@ -1,96 +1,54 @@
-import 'package:analyzer/dart/element/type.dart';
-import 'package:collection/collection.dart';
-
-import '../elements/record/target_record_mapper_element.dart';
-import '../records_group.dart';
+import '../elements/record/record_mapper_element.dart';
 import 'generator.dart';
 
 /// Generates code for a specific record.
-class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
+class RecordMapperGenerator
+    extends InterfaceMapperGenerator<RecordMapperElement> {
   RecordMapperGenerator(super.element);
 
   @override
   Future<String> generate() async {
-    return '''
-      typedef ${element.typeAliasName}<${element.typeArgs}> = ${element.typeDef};
-      final ${element.mapperName} = RecordMapper<${element.typeAliasName}>(
-        <${element.typeArgs}>(RecordData<${element.typeAliasName}> d) => (
-          ${element.fields.mapIndexed((i, f) {
-      var name = f is RecordTypeNamedField ? f.name : null;
-      return '${name != null ? '$name: ' : ''}d<${element.argAt(i)}>(\'${name ?? (i + 1)}\', (r) => r.${name ?? '\$${i + 1}'}),\n';
-    }).join('')}
-        ),
-        <${element.typeArgs}>(f) => f<${element.typeAliasName}<${element.typeArgs}>>(),
-      );
-    ''';
-  }
-}
-
-/// Generates code for a specific record.
-class RecordMapperGenerator2
-    extends MapperGenerator<TargetRecordMapperElement> {
-  RecordMapperGenerator2(super.element);
-
-  @override
-  Future<String> generate() async {
-    return '''
-      class ${element.mapperName} extends RecordMapperVariant<${element.className}> {
-      
-        static ${element.mapperName}? _instance;
-        static ${element.mapperName} ensureInitialized() {
-          if (_instance == null) {
-            RecordMapper.variants[${element.mapperName}] = _instance = ${element.mapperName}();
-            MapperBase.addType(<A, B>(f) => f<({A x, B y})>());
-          }
-          RecordMapper.variantByType[${element.className}] = ${element.mapperName};
-          return _instance!;
-        }
-        
-        ${await generateFields()}
-        
-        ${generateInstantiate()}
-      } 
-      
-      extension ${element.className}Mappable on ${element.className} {
-        Map<String, dynamic> toMap() {
-          ${element.mapperName}.ensureInitialized();
-          return RecordMapper().encodeMap(this, EncodingOptions(data: ${element.mapperName}));
-        }
-      }
-    ''';
-  }
-
-  Future<String> generateFields() async {
     var output = StringBuffer();
 
-    var fields = element.fields;
+    output.write('''
+      ${element.needsTypeDef ? 'typedef ${element.className}${element.typeParamsDeclaration} = ${element.genericRecordDeclaration};' : ''}
+      class ${element.mapperName} extends RecordMapperBase<${element.className}> {
+      
+        static ${element.mapperName}? _instance;
+        ${element.mapperName}._();
+        
+        static ${element.mapperName} ensureInitialized() {
+          if (_instance == null) {
+            MapperContainer.globals.use(_instance = ${element.mapperName}._());
+            MapperBase.addType(${element.genericTypeParamsDeclaration}(f) => f<${element.genericRecordDeclaration}>());
+          }
+          return _instance!;
+        }
+    ''');
 
-    for (var f in fields) {
-      if (f.needsGetter) {
-        output.write(
-            '  static ${f.staticGetterType} _\$${f.name}(${element.prefixedClassName} v) => v.${f.name};\n');
+    await generateFields(output);
+
+    generateApplyOverride(output);
+    generateInstantiate(output);
+
+    output.write('''
+      } 
+      
+      extension ${element.className}Mappable${element.typeParamsDeclaration} on ${element.className}${element.typeParams} {
+        Map<String, dynamic> toMap() {
+          return ${element.mapperName}.ensureInitialized().encodeMap(this);
+        }
+        
+        String toJson() {
+          return ${element.mapperName}.ensureInitialized().encodeJson(this);
+        }
       }
-      if (f.needsArg) {
-        output.write(
-            '  static dynamic _arg\$${f.name}${element.typeParamsDeclaration}(f) => f<${f.argType}>();\n');
-      }
-      output.write(
-          "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.name} = Field('${f.name}', ${f.getter}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook}${f.map});\n");
-    }
-
-    output.write(
-        '\n  @override\n  final Map<Symbol, Field<${element.prefixedClassName}, dynamic>> fields = const {\n');
-
-    for (var f in fields) {
-      output.write('    #${f.name}: _f\$${f.name},\n');
-    }
-
-    output.write('  };\n');
+    ''');
 
     return output.toString();
   }
 
-  String generateInstantiate() {
+  void generateInstantiate(StringBuffer output) {
     List<String> params = [];
     for (var f in element.fields) {
       var str = '';
@@ -104,11 +62,26 @@ class RecordMapperGenerator2
     }
     params.join(', ');
 
-    return '''
-        @override
-        ${element.className} instantiate(DecodingData<Record> data) {
-          return (${params.join(', ')});
-        }
-      ''';
+    output.write('''
+      static ${element.className} _instantiate(DecodingData<${element.className}> data) {
+        return (${params.join(', ')});
+      }
+      
+      @override
+      final Function instantiate = _instantiate;
+    ''');
+  }
+
+  void generateApplyOverride(StringBuffer output) {
+    var args = element.inheritedTypeArgs;
+    if (args == null) {
+      return;
+    }
+    output.write('''
+      @override
+      DecodingContext apply(DecodingContext context) {
+        return context.change(args: [${args.join(', ')}]);
+      }
+    ''');
   }
 }

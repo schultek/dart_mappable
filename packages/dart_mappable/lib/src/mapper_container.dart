@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 // ignore: implementation_imports
-import 'package:type_plus/src/type_info.dart' show TypeInfo, RecordInfo;
-// ignore: implementation_imports
 import 'package:type_plus/src/types_registry.dart' show TypeRegistry;
 import 'package:type_plus/type_plus.dart' hide typeOf;
 
@@ -89,7 +87,7 @@ abstract class MapperContainer {
     IterableMapper<List>(<T>(i) => i.toList(), <T>(f) => f<List<T>>()),
     IterableMapper<Set>(<T>(i) => i.toSet(), <T>(f) => f<Set<T>>()),
     MapMapper<Map>(<K, V>(map) => map, <K, V>(f) => f<Map<K, V>>()),
-    RecordMapper(),
+    //RecordMapper(),
   });
 
   /// A container that holds all globally registered mappers.
@@ -262,20 +260,20 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   MapperBase? _mapperForType(Type type) {
+    if (_cachedMappers[type] case var m?) {
+      return m;
+    }
     var baseType = type.base;
     if (baseType == UnresolvedType) {
       baseType = type;
     }
-    if (_cachedTypeMappers[baseType] != null) {
-      return _cachedTypeMappers[baseType];
+    if (_cachedTypeMappers[baseType] case var m?) {
+      return m;
     }
-    var mapper = _mappers[baseType] ?? _inheritedMappers[baseType];
-
-    if (mapper == null &&
-        baseType != Record &&
-        TypeInfo.fromType(type) is RecordInfo) {
-      mapper = _mapperForType(Record);
-    }
+    var mapper = _mappers[baseType] ??
+        _mappers[type] ??
+        _inheritedMappers[baseType] ??
+        _inheritedMappers[type];
 
     if (mapper != null) {
       _cachedTypeMappers[baseType] = mapper;

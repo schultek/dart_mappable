@@ -12,7 +12,8 @@ class LocationMapper extends ClassMapperBase<Location> {
   static LocationMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = LocationMapper._());
-      _m$r0.ensureInitialized();
+      PointMapper.ensureInitialized();
+      OffsetMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -25,12 +26,11 @@ class LocationMapper extends ClassMapperBase<Location> {
   @override
   final String id = 'Location';
 
-  static _t$r0<double, double> _$point(Location v) => v.point;
-  static const Field<Location, _t$r0<double, double>> _f$point =
-      Field('point', _$point, map: PointMapper.ensureInitialized);
-  static _t$r0<double, double> _$offset(Location v) => v.offset;
-  static const Field<Location, _t$r0<double, double>> _f$offset =
-      Field('offset', _$offset, map: OffsetMapper.ensureInitialized);
+  static Point _$point(Location v) => v.point;
+  static const Field<Location, Point> _f$point = Field('point', _$point);
+  static Offset<dynamic> _$offset(Location v) => v.offset;
+  static const Field<Location, Offset<dynamic>> _f$offset =
+      Field('offset', _$offset);
 
   @override
   final Map<Symbol, Field<Location, dynamic>> fields = const {
@@ -93,7 +93,7 @@ extension LocationValueCopy<$R, $Out> on ObjectCopyWith<$R, Location, $Out> {
 
 abstract class LocationCopyWith<$R, $In extends Location, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({_t$r0<double, double>? point, _t$r0<double, double>? offset});
+  $R call({Point? point, Offset<dynamic>? offset});
   LocationCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -106,11 +106,8 @@ class _LocationCopyWithImpl<$R, $Out>
   late final ClassMapperBase<Location> $mapper =
       LocationMapper.ensureInitialized();
   @override
-  $R call({_t$r0<double, double>? point, _t$r0<double, double>? offset}) =>
-      $apply(FieldCopyWithData({
-        if (point != null) #point: point,
-        if (offset != null) #offset: offset
-      }));
+  $R call({Point? point, Offset<dynamic>? offset}) => $apply(FieldCopyWithData(
+      {if (point != null) #point: point, if (offset != null) #offset: offset}));
   @override
   Location $make(CopyWithData data) => Location(
       data.get(#point, or: $value.point), data.get(#offset, or: $value.offset));
@@ -121,14 +118,15 @@ class _LocationCopyWithImpl<$R, $Out>
       _LocationCopyWithImpl($value, $cast, t);
 }
 
-class PointMapper extends RecordMapperVariant<Point> {
+class PointMapper extends RecordMapperBase<Point> {
   static PointMapper? _instance;
+  PointMapper._();
+
   static PointMapper ensureInitialized() {
     if (_instance == null) {
-      RecordMapper.variants[PointMapper] = _instance = PointMapper();
+      MapperContainer.globals.use(_instance = PointMapper._());
       MapperBase.addType(<A, B>(f) => f<({A x, B y})>());
     }
-    RecordMapper.variantByType[Point] = PointMapper;
     return _instance!;
   }
 
@@ -142,60 +140,70 @@ class PointMapper extends RecordMapperVariant<Point> {
     #x: _f$x,
     #y: _f$y,
   };
-
   @override
-  Point instantiate(DecodingData<Record> data) {
+  DecodingContext apply(DecodingContext context) {
+    return context.change(args: []);
+  }
+
+  static Point _instantiate(DecodingData<Point> data) {
     return (x: data.dec(_f$x), y: data.dec(_f$y));
   }
+
+  @override
+  final Function instantiate = _instantiate;
 }
 
 extension PointMappable on Point {
   Map<String, dynamic> toMap() {
-    PointMapper.ensureInitialized();
-    return RecordMapper().encodeMap(this, EncodingOptions(data: PointMapper));
+    return PointMapper.ensureInitialized().encodeMap(this);
+  }
+
+  String toJson() {
+    return PointMapper.ensureInitialized().encodeJson(this);
   }
 }
 
-class OffsetMapper extends RecordMapperVariant<Offset> {
+class OffsetMapper extends RecordMapperBase<Offset> {
   static OffsetMapper? _instance;
+  OffsetMapper._();
+
   static OffsetMapper ensureInitialized() {
     if (_instance == null) {
-      RecordMapper.variants[OffsetMapper] = _instance = OffsetMapper();
+      MapperContainer.globals.use(_instance = OffsetMapper._());
       MapperBase.addType(<A, B>(f) => f<({A x, B y})>());
     }
-    RecordMapper.variantByType[Offset] = OffsetMapper;
     return _instance!;
   }
 
   static double _$x(Offset v) => v.x;
   static const Field<Offset, double> _f$x = Field('x', _$x);
-  static double _$y(Offset v) => v.y;
-  static const Field<Offset, double> _f$y = Field('y', _$y);
+  static dynamic _$y(Offset v) => v.y;
+  static const Field<Offset, dynamic> _f$y = Field('y', _$y);
 
   @override
   final Map<Symbol, Field<Offset, dynamic>> fields = const {
     #x: _f$x,
     #y: _f$y,
   };
-
   @override
-  Offset instantiate(DecodingData<Record> data) {
+  DecodingContext apply(DecodingContext context) {
+    return context.change(args: [context.arg(1)]);
+  }
+
+  static Offset _instantiate(DecodingData<Offset> data) {
     return (x: data.dec(_f$x), y: data.dec(_f$y));
   }
+
+  @override
+  final Function instantiate = _instantiate;
 }
 
-extension OffsetMappable on Offset {
+extension OffsetMappable<T> on Offset<T> {
   Map<String, dynamic> toMap() {
-    OffsetMapper.ensureInitialized();
-    return RecordMapper().encodeMap(this, EncodingOptions(data: OffsetMapper));
+    return OffsetMapper.ensureInitialized().encodeMap(this);
+  }
+
+  String toJson() {
+    return OffsetMapper.ensureInitialized().encodeJson(this);
   }
 }
-
-typedef _t$r0<A, B> = ({A x, B y});
-final _m$r0 = RecordMapper<_t$r0>(
-  <A, B>(RecordData<_t$r0> d) => (
-    x: d<A>('x', (r) => r.x),
-    y: d<B>('y', (r) => r.y),
-  ),
-  <A, B>(f) => f<_t$r0<A, B>>(),
-);

@@ -480,9 +480,8 @@ class ItemListMapper extends ClassMapperBase<ItemList> {
   Function get typeFactory => <T>(f) => f<ItemList<T>>();
 
   static List<dynamic> _$items(ItemList v) => v.items;
-  static dynamic _arg$items<T>(f) => f<List<T>>();
   static const Field<ItemList, List<dynamic>> _f$items =
-      Field('items', _$items, arg: _arg$items);
+      Field('items', _$items);
 
   @override
   final Map<Symbol, Field<ItemList, dynamic>> fields = const {
@@ -674,9 +673,8 @@ class NamedItemListMapper extends SubClassMapperBase<NamedItemList> {
   static String _$name(NamedItemList v) => v.name;
   static const Field<NamedItemList, String> _f$name = Field('name', _$name);
   static List<dynamic> _$items(NamedItemList v) => v.items;
-  static dynamic _arg$items<T>(f) => f<List<T>>();
   static const Field<NamedItemList, List<dynamic>> _f$items =
-      Field('items', _$items, arg: _arg$items);
+      Field('items', _$items);
 
   @override
   final Map<Symbol, Field<NamedItemList, dynamic>> fields = const {
@@ -807,13 +805,10 @@ class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
   Function get typeFactory => <K, T>(f) => f<KeyedItemList<K, T>>();
 
   static dynamic _$key(KeyedItemList v) => v.key;
-  static dynamic _arg$key<K, T>(f) => f<K>();
-  static const Field<KeyedItemList, dynamic> _f$key =
-      Field('key', _$key, arg: _arg$key);
+  static const Field<KeyedItemList, dynamic> _f$key = Field('key', _$key);
   static List<dynamic> _$items(KeyedItemList v) => v.items;
-  static dynamic _arg$items<K, T>(f) => f<List<T>>();
   static const Field<KeyedItemList, List<dynamic>> _f$items =
-      Field('items', _$items, arg: _arg$items);
+      Field('items', _$items);
 
   @override
   final Map<Symbol, Field<KeyedItemList, dynamic>> fields = const {
@@ -953,9 +948,8 @@ class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
       <T extends Comparable<dynamic>>(f) => f<ComparableItemList<T>>();
 
   static List<Comparable<dynamic>> _$items(ComparableItemList v) => v.items;
-  static dynamic _arg$items<T extends Comparable<dynamic>>(f) => f<List<T>>();
   static const Field<ComparableItemList, List<Comparable<dynamic>>> _f$items =
-      Field('items', _$items, arg: _arg$items);
+      Field('items', _$items);
 
   @override
   final Map<Symbol, Field<ComparableItemList, dynamic>> fields = const {

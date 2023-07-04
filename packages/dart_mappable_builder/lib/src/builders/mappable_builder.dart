@@ -88,7 +88,7 @@ class MappableBuilder implements Builder {
         else if (m is TargetEnumMapperElement)
           EnumMapperGenerator(m)
         else if (m is TargetRecordMapperElement)
-          RecordMapperGenerator2(m),
+          RecordMapperGenerator(m),
       for (var r in group.records.sortedRecords) //
         RecordMapperGenerator(r),
     ];

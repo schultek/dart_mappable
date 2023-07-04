@@ -1,12 +1,9 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../elements/class/target_class_mapper_element.dart';
+import '../../elements/class/target_class_mapper_element.dart';
+import '../generator.dart';
 
-class EqualsGenerator {
-  EqualsGenerator(this.element);
-
-  final TargetClassMapperElement element;
-
+mixin EqualsMixin on MapperGenerator<TargetClassMapperElement> {
   String generateEqualsMixin() {
     if (!element.shouldGenerate(GenerateMethods.equals) || element.isAbstract) {
       return '';

@@ -1,12 +1,9 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../elements/class/target_class_mapper_element.dart';
+import '../../elements/class/target_class_mapper_element.dart';
+import '../generator.dart';
 
-class EncoderGenerator {
-  EncoderGenerator(this.element);
-
-  final TargetClassMapperElement element;
-
+mixin EncodingMixin on MapperGenerator<TargetClassMapperElement> {
   late final toJsonName = element.options.renameMethods['toJson'] ?? 'toJson';
   late final toMapName = element.options.renameMethods['toMap'] ?? 'toMap';
 

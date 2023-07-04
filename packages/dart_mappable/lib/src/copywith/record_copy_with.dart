@@ -15,7 +15,7 @@ abstract class RecordCopyWithBase<Result, In extends Record, Out>
     implements RecordCopyWith<Result, In, Out> {
   RecordCopyWithBase(super.$value, super.$then1, super.$then2);
 
-  RecordMapper get $mapper;
+  RecordMapperBase get $mapper;
 
   @override
   Result $merge(In value) => $apply(RecordMergeCopyWithData($mapper, value));
@@ -32,7 +32,7 @@ abstract class RecordCopyWithBase<Result, In extends Record, Out>
 class RecordMergeCopyWithData extends CopyWithData {
   RecordMergeCopyWithData(this.mapper, this.value);
 
-  final RecordMapper mapper;
+  final RecordMapperBase mapper;
   final Record value;
 
   @override
@@ -50,7 +50,7 @@ class RecordDeltaCopyWithData extends CopyWithData {
   RecordDeltaCopyWithData(this.mapper, this.value)
       : context = DecodingContext(container: MapperContainer.globals);
 
-  final RecordMapper mapper;
+  final RecordMapperBase mapper;
   final Map<String, dynamic> value;
   final DecodingContext context;
 

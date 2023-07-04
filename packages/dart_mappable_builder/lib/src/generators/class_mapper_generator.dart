@@ -3,22 +3,23 @@ import 'package:ansicolor/ansicolor.dart';
 
 import '../elements/class/target_class_mapper_element.dart';
 import '../utils.dart';
-import 'copywith_generator.dart';
-import 'decoder_generator.dart';
-import 'encoder_generator.dart';
-import 'equals_generator.dart';
 import 'generator.dart';
-import 'tostring_generator.dart';
+import 'mixins/copywith_mixin.dart';
+import 'mixins/decoding_mixin.dart';
+import 'mixins/encoding_mixin.dart';
+import 'mixins/equals_mixin.dart';
+import 'mixins/tostring_mixin.dart';
 
 /// Generates code for a specific class
-class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
+class ClassMapperGenerator
+    extends InterfaceMapperGenerator<TargetClassMapperElement>
+    with
+        DecodingMixin,
+        EncodingMixin,
+        CopyWithMixin,
+        EqualsMixin,
+        ToStringMixin {
   ClassMapperGenerator(super.element);
-
-  late final encoderGen = EncoderGenerator(element);
-  late final decoderGen = DecoderGenerator(element);
-  late final stringifyGen = ToStringGenerator(element);
-  late final equalsGen = EqualsGenerator(element);
-  late final copyGen = CopyWithGenerator(element);
 
   @override
   Future<String> generate() async {
@@ -79,47 +80,25 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
         "  final String id = '${element.uniqueId}';\n");
 
     if (element.typeParamsList.isNotEmpty) {
-      output.write(decoderGen.generateTypeFactory());
+      output.write(generateTypeFactory());
     }
 
     output.write('\n');
 
-    var fields = element.fields;
-
-    for (var f in fields) {
-      if (f.field != null) {
-        output.write(
-            '  static ${f.staticGetterType} _\$${f.name}(${element.prefixedClassName} v) => v.${f.name};\n');
-      }
-      if (f.needsArg) {
-        output.write(
-            '  static dynamic _arg\$${f.name}${element.typeParamsDeclaration}(f) => f<${f.argType}>();\n');
-      }
-      output.write(
-          "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.name} = Field('${f.name}', ${f.getter}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook}${f.map});\n");
-    }
-
-    output.write(
-        '\n  @override\n  final Map<Symbol, Field<${element.prefixedClassName}, dynamic>> fields = const {\n');
-
-    for (var f in fields) {
-      output.write('    #${f.name}: _f\$${f.name},\n');
-    }
-
-    output.write('  };\n');
+    await generateFields(output);
 
     if (element.ignoreNull) {
       output.write('  @override\n  final bool ignoreNull = true;\n');
     }
 
     if (element.isDiscriminatingSubclass) {
-      output.write(await decoderGen.generateDiscriminatorFields());
-      output.write(decoderGen.generateInheritOverride());
+      output.write(await generateDiscriminatorFields());
+      output.write(generateInheritOverride());
     }
 
-    output.write(await decoderGen.generateInstantiateMethod());
+    output.write(await generateInstantiateMethod());
 
-    output.write(decoderGen.generateStaticDecoders());
+    output.write(generateStaticDecoders());
     output.write('}\n\n');
 
     if (element.generateAsMixin) {
@@ -129,7 +108,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     }
 
     output.writeAll([
-      copyGen.generateCopyWithClasses(),
+      generateCopyWithClasses(),
     ]);
 
     return output.toString();
@@ -141,10 +120,10 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     output.write(
         'mixin ${element.uniqueClassName}Mappable${element.typeParamsDeclaration} {\n');
     output.writeAll([
-      encoderGen.generateEncoderMixin(),
-      copyGen.generateCopyWithMixin(),
-      stringifyGen.generateToStringMixin(),
-      equalsGen.generateEqualsMixin(),
+      generateEncoderMixin(),
+      generateCopyWithMixin(),
+      generateToStringMixin(),
+      generateEqualsMixin(),
     ]);
     output.write('}');
   }
@@ -153,8 +132,8 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement> {
     output.write(
         'extension ${element.mapperName}Extension${element.typeParamsDeclaration} on ${element.prefixedClassName}${element.typeParams} {\n');
     output.writeAll([
-      encoderGen.generateEncoderExtensions(),
-      copyGen.generateCopyWithExtension(),
+      generateEncoderExtensions(),
+      generateCopyWithExtension(),
     ]);
     output.write('}');
   }

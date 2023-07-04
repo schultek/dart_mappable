@@ -16,6 +16,7 @@ import 'elements/class/target_class_mapper_element.dart';
 import 'elements/enum/dependent_enum_mapper_element.dart';
 import 'elements/enum/target_enum_mapper_element.dart';
 import 'elements/mapper_element.dart';
+import 'elements/record/dependent_record_mapper_element.dart';
 import 'elements/record/target_record_mapper_element.dart';
 import 'records_group.dart';
 import 'utils.dart';
@@ -42,7 +43,7 @@ class MapperElementGroup {
 
   Map<Element, String> prefixes = {};
   Map<Element, MapperElement> targets = {};
-  RecordsGroup records = RecordsGroup();
+  late RecordsGroup records = RecordsGroup(this);
 
   Future<T> _addMapper<T extends MapperElement>(T mapper) async {
     await mapper.init();
@@ -167,6 +168,15 @@ class MapperElementGroup {
         }
       }
       if (t is RecordType) {
+        if (t.alias case var alias?) {
+          var m = await getOrAddMapperForElement(alias.element);
+          if (m != null) {
+            for (var arg in alias.typeArguments) {
+              await checkType(arg);
+            }
+            return;
+          }
+        }
         records.add(t);
         for (var f in [...t.positionalFields, ...t.namedFields]) {
           await checkType(f.type);
@@ -205,6 +215,9 @@ class MapperElementGroup {
     } else if (e is EnumElement && enumChecker.hasAnnotationOf(e)) {
       var m = await _addMapper(DependentEnumMapperElement(this, e, options));
       return m;
+    } else if (e is TypeAliasElement && recordChecker.hasAnnotationOf(e)) {
+      var m = await _addMapper(DependentRecordMapperElement(this, e, options));
+      return m;
     } else {
       return null;
     }
@@ -240,11 +253,25 @@ class MapperElementGroup {
     }
 
     if (t is RecordType) {
+      if (t.alias case var alias?) {
+        var type = alias.element.name;
+
+        if (alias.typeArguments.isNotEmpty) {
+          type +=
+              '<${alias.typeArguments.map((t) => prefixedType(t, resolveBounds: resolveBounds)).join(', ')}>';
+        }
+
+        if (withNullability && t.isNullable) {
+          type += '?';
+        }
+
+        return '${prefixOfElement(alias.element)}$type';
+      }
       var type = '';
       var r = records.get(t);
 
       if (r != null) {
-        type = '${r.typeAliasName}<';
+        type = '${r.className}<';
         type += [...t.positionalFields, ...t.namedFields]
             .map((f) => prefixedType(f.type, resolveBounds: resolveBounds))
             .join(', ');

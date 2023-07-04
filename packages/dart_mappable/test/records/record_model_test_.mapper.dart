@@ -12,9 +12,9 @@ class AMapper extends ClassMapperBase<A> {
   static AMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AMapper._());
-      _m$r0.ensureInitialized();
+      _t$_R0Mapper.ensureInitialized();
       CMapper.ensureInitialized();
-      _m$r1.ensureInitialized();
+      _t$_R1Mapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -31,10 +31,9 @@ class AMapper extends ClassMapperBase<A> {
 
   static String _$a(A v) => v.a;
   static const Field<A, String> _f$a = Field('a', _$a);
-  static _t$r0<int, dynamic, C, _t$r1<double, double>> _$r(A v) => v.r;
-  static dynamic _arg$r<T>(f) => f<_t$r0<int, T, C, _t$r1<double, double>>>();
-  static const Field<A, _t$r0<int, dynamic, C, _t$r1<double, double>>> _f$r =
-      Field('r', _$r, arg: _arg$r);
+  static _t$_R0<int, dynamic, C, _t$_R1<double, double>> _$r(A v) => v.r;
+  static const Field<A, _t$_R0<int, dynamic, C, _t$_R1<double, double>>> _f$r =
+      Field('r', _$r);
 
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {
@@ -94,7 +93,7 @@ extension AValueCopy<$R, $Out, T> on ObjectCopyWith<$R, A<T>, $Out> {
 
 abstract class ACopyWith<$R, $In extends A<T>, $Out, T>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? a, _t$r0<int, T, C, _t$r1<double, double>>? r});
+  $R call({String? a, _t$_R0<int, T, C, _t$_R1<double, double>>? r});
   ACopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -105,7 +104,7 @@ class _ACopyWithImpl<$R, $Out, T> extends ClassCopyWithBase<$R, A<T>, $Out>
   @override
   late final ClassMapperBase<A> $mapper = AMapper.ensureInitialized();
   @override
-  $R call({String? a, _t$r0<int, T, C, _t$r1<double, double>>? r}) =>
+  $R call({String? a, _t$_R0<int, T, C, _t$_R1<double, double>>? r}) =>
       $apply(FieldCopyWithData({if (a != null) #a: a, if (r != null) #r: r}));
   @override
   A<T> $make(CopyWithData data) =>
@@ -123,7 +122,7 @@ class CMapper extends ClassMapperBase<C> {
   static CMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = CMapper._());
-      _m$r1.ensureInitialized();
+      _t$_R1Mapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -138,8 +137,8 @@ class CMapper extends ClassMapperBase<C> {
 
   static String _$c(C v) => v.c;
   static const Field<C, String> _f$c = Field('c', _$c);
-  static _t$r1<String, int> _$d(C v) => v.d;
-  static const Field<C, _t$r1<String, int>> _f$d = Field('d', _$d);
+  static _t$_R1<String, int> _$d(C v) => v.d;
+  static const Field<C, _t$_R1<String, int>> _f$d = Field('d', _$d);
 
   @override
   final Map<Symbol, Field<C, dynamic>> fields = const {
@@ -199,7 +198,7 @@ extension CValueCopy<$R, $Out> on ObjectCopyWith<$R, C, $Out> {
 
 abstract class CCopyWith<$R, $In extends C, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? c, _t$r1<String, int>? d});
+  $R call({String? c, _t$_R1<String, int>? d});
   CCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -210,7 +209,7 @@ class _CCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, C, $Out>
   @override
   late final ClassMapperBase<C> $mapper = CMapper.ensureInitialized();
   @override
-  $R call({String? c, _t$r1<String, int>? d}) =>
+  $R call({String? c, _t$_R1<String, int>? d}) =>
       $apply(FieldCopyWithData({if (c != null) #c: c, if (d != null) #d: d}));
   @override
   C $make(CopyWithData data) =>
@@ -221,22 +220,105 @@ class _CCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, C, $Out>
       _CCopyWithImpl($value, $cast, t);
 }
 
-typedef _t$r1<A, B> = ({A lat, B lng});
-final _m$r1 = RecordMapper<_t$r1>(
-  <A, B>(RecordData<_t$r1> d) => (
-    lat: d<A>('lat', (r) => r.lat),
-    lng: d<B>('lng', (r) => r.lng),
-  ),
-  <A, B>(f) => f<_t$r1<A, B>>(),
-);
+typedef _t$_R1<A, B> = ({A lat, B lng});
 
-typedef _t$r0<A, B, C, D> = (A, {B b, C c, D d});
-final _m$r0 = RecordMapper<_t$r0>(
-  <A, B, C, D>(RecordData<_t$r0> d) => (
-    d<A>('1', (r) => r.$1),
-    b: d<B>('b', (r) => r.b),
-    c: d<C>('c', (r) => r.c),
-    d: d<D>('d', (r) => r.d),
-  ),
-  <A, B, C, D>(f) => f<_t$r0<A, B, C, D>>(),
-);
+class _t$_R1Mapper extends RecordMapperBase<_t$_R1> {
+  static _t$_R1Mapper? _instance;
+  _t$_R1Mapper._();
+
+  static _t$_R1Mapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = _t$_R1Mapper._());
+      MapperBase.addType(<A, B>(f) => f<({A lat, B lng})>());
+    }
+    return _instance!;
+  }
+
+  static dynamic _$lat(_t$_R1 v) => v.lat;
+  static dynamic _arg$lat<A, B>(f) => f<dynamic>();
+  static const Field<_t$_R1, dynamic> _f$lat =
+      Field('lat', _$lat, arg: _arg$lat);
+  static dynamic _$lng(_t$_R1 v) => v.lng;
+  static dynamic _arg$lng<A, B>(f) => f<dynamic>();
+  static const Field<_t$_R1, dynamic> _f$lng =
+      Field('lng', _$lng, arg: _arg$lng);
+
+  @override
+  final Map<Symbol, Field<_t$_R1, dynamic>> fields = const {
+    #lat: _f$lat,
+    #lng: _f$lng,
+  };
+  static _t$_R1 _instantiate(DecodingData<_t$_R1> data) {
+    return (lat: data.dec(_f$lat), lng: data.dec(_f$lng));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+}
+
+extension _t$_R1Mappable<A, B> on _t$_R1<A, B> {
+  Map<String, dynamic> toMap() {
+    return _t$_R1Mapper.ensureInitialized().encodeMap(this);
+  }
+
+  String toJson() {
+    return _t$_R1Mapper.ensureInitialized().encodeJson(this);
+  }
+}
+
+typedef _t$_R0<A, B, C, D> = (A, {B b, C c, D d});
+
+class _t$_R0Mapper extends RecordMapperBase<_t$_R0> {
+  static _t$_R0Mapper? _instance;
+  _t$_R0Mapper._();
+
+  static _t$_R0Mapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = _t$_R0Mapper._());
+      MapperBase.addType(<A, B, C, D>(f) => f<(A, {B b, C c, D d})>());
+    }
+    return _instance!;
+  }
+
+  static dynamic _$$0(_t$_R0 v) => v.$0;
+  static dynamic _arg$$0<A, B, C, D>(f) => f<dynamic>();
+  static const Field<_t$_R0, dynamic> _f$$0 = Field('\$0', _$$0, arg: _arg$$0);
+  static dynamic _$b(_t$_R0 v) => v.b;
+  static dynamic _arg$b<A, B, C, D>(f) => f<dynamic>();
+  static const Field<_t$_R0, dynamic> _f$b = Field('b', _$b, arg: _arg$b);
+  static dynamic _$c(_t$_R0 v) => v.c;
+  static dynamic _arg$c<A, B, C, D>(f) => f<dynamic>();
+  static const Field<_t$_R0, dynamic> _f$c = Field('c', _$c, arg: _arg$c);
+  static dynamic _$d(_t$_R0 v) => v.d;
+  static dynamic _arg$d<A, B, C, D>(f) => f<dynamic>();
+  static const Field<_t$_R0, dynamic> _f$d = Field('d', _$d, arg: _arg$d);
+
+  @override
+  final Map<Symbol, Field<_t$_R0, dynamic>> fields = const {
+    #$0: _f$$0,
+    #b: _f$b,
+    #c: _f$c,
+    #d: _f$d,
+  };
+  static _t$_R0 _instantiate(DecodingData<_t$_R0> data) {
+    return (
+      data.dec(_f$$0),
+      b: data.dec(_f$b),
+      c: data.dec(_f$c),
+      d: data.dec(_f$d)
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+}
+
+extension _t$_R0Mappable<A, B, C, D> on _t$_R0<A, B, C, D> {
+  Map<String, dynamic> toMap() {
+    return _t$_R0Mapper.ensureInitialized().encodeMap(this);
+  }
+
+  String toJson() {
+    return _t$_R0Mapper.ensureInitialized().encodeJson(this);
+  }
+}

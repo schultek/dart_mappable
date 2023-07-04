@@ -1,64 +1,62 @@
-import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
+import 'package:collection/collection.dart';
 
-import '../../utils.dart';
-import '../mapper_element.dart';
-import '../param/mapper_field_element.dart';
-import '../param/mapper_param_element.dart';
+import '../class/mixins/type_params_mixin.dart';
+import 'alias_record_mapper_element.dart';
 
-class TargetRecordMapperElement
-    extends InterfaceMapperElement<TypeAliasElement> {
+class TargetRecordMapperElement extends AliasRecordMapperElement {
   TargetRecordMapperElement(super.parent, super.element, super.options);
 
   @override
-  late final String className = element.name;
+  late List<String>? inheritedTypeArgs = () {
+    bool hasModifiedArgs = false;
 
-  late RecordTypeAnnotation node;
-
-  @override
-  Future<void> init() async {
-    await super.init();
-    var n = await element.enclosingElement.getResolvedNode();
-    n = n as CompilationUnit;
-    for (var d in n.declarations) {
-      if (d is GenericTypeAlias && d.name.lexeme == element.name) {
-        node = d.type as RecordTypeAnnotation;
-      }
-    }
-  }
-
-  @override
-  DartObject? getAnnotation() =>
-      recordChecker.firstAnnotationOf(annotatedElement);
-
-  late List<MapperFieldElement> fields = () {
-    var fields = <MapperFieldElement>[];
-
-    for (var (i, f) in node.positionalFields.indexed) {
-      fields.add(
-          MapperFieldElement(RecordMapperParamElement(f, '\$$i'), null, this));
+    var fields = type.positionalFields.length + type.namedFields.length;
+    if (element.typeParameters.length != fields) {
+      hasModifiedArgs = true;
     }
 
-    if (node.namedFields != null) {
-      for (var f in node.namedFields!.fields) {
-        fields.add(MapperFieldElement(
-            RecordMapperParamElement(f, f.name.lexeme), null, this));
+    var args = <String?>[];
+
+    for (var p in element.typeParameters) {
+      var arg = _findInheritedTypeArg(p);
+      args.add(arg);
+      if (arg != null) {
+        hasModifiedArgs = true;
       }
     }
 
-    return fields;
+    if (hasModifiedArgs) {
+      return args
+          .mapIndexed((index, arg) => arg ?? 'context.arg($index)')
+          .toList();
+    }
+
+    return null;
   }();
 
-  late List<String> typeParamsList = element.typeParameters
-      .map((p) =>
-          '${p.displayName}${p.bound != null ? ' extends ${parent.prefixedType(p.bound!)}' : ''}')
-      .toList();
+  String? _findInheritedTypeArg(TypeParameterElement p) {
+    var params = element.typeParameters;
+    var types = [...type.positionalFields, ...type.namedFields];
 
-  late String typeParams = element.typeParameters.isNotEmpty
-      ? '<${element.typeParameters.map((p) => p.name).join(', ')}>'
-      : '';
+    for (var (i, a) in types.indexed) {
+      if (a.type is TypeParameterType && a.type.element == p) {
+        if (i == params.indexOf(p)) {
+          return null;
+        } else {
+          return 'context.arg($i)';
+        }
+      }
+    }
 
-  late String typeParamsDeclaration =
-      typeParamsList.isNotEmpty ? '<${typeParamsList.join(', ')}>' : '';
+    for (var (i, a) in types.indexed) {
+      var indices = a.type.accept(TypeParamExtractor(p));
+      if (indices.isNotEmpty) {
+        return 'context.arg($i, [${indices.join(', ')}])';
+      }
+    }
+
+    return p.bound != null ? parent.prefixedType(p.bound!) : 'dynamic';
+  }
 }

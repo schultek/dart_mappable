@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/element/type.dart';
 
+import '../../record/target_record_mapper_element.dart';
 import '../class_mapper_element.dart';
 import '../none_class_mapper_element.dart';
 
@@ -28,7 +29,16 @@ mixin LinkedElementsMixin on ClassMapperElement {
         }
       }
 
+      r:
       if (t is RecordType) {
+        if (t.alias != null) {
+          var m = parent.getMapperForElement(t.alias!.element);
+          if (m != null && m is TargetRecordMapperElement) {
+            linked.add(
+                '${parent.prefixOfElement(m.annotatedElement)}${m.mapperName}');
+            break r;
+          }
+        }
         var e = parent.records.get(t);
         if (e != null) {
           linked.add(e.mapperName);

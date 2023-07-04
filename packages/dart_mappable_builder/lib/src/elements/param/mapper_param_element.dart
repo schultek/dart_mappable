@@ -17,6 +17,8 @@ abstract class MapperParamElement {
 
   bool get isOptional => false;
 
+  bool get isGeneric => false;
+
   ParameterElement? get parameter => null;
 
   Future<String?> getHook();
@@ -151,11 +153,17 @@ Future<String?> _hookFor(Element element) async {
 }
 
 class RecordMapperParamElement extends MapperParamElement {
-  final RecordTypeAnnotationField field;
+  RecordMapperParamElement(this.name, this.type, this.metadata, [this.typeArg]);
+
   @override
   final String name;
+  @override
+  final DartType type;
+  final List<Annotation> metadata;
+  final String? typeArg;
 
-  RecordMapperParamElement(this.field, this.name);
+  @override
+  bool get isGeneric => typeArg != null;
 
   @override
   Future<String?> getHook() async {
@@ -163,11 +171,8 @@ class RecordMapperParamElement extends MapperParamElement {
   }
 
   @override
-  DartType get type => field.type.type!;
-
-  @override
   DartObject? get annotation {
-    for (var e in field.metadata) {
+    for (var e in metadata) {
       var o = e.elementAnnotation?.computeConstantValue();
       if (o != null &&
           o.type != null &&

@@ -197,8 +197,7 @@ class CarMapper extends ClassMapperBase<Car> {
   static int _$drivenKm(Car v) => v.drivenKm;
   static const Field<Car, int> _f$drivenKm = Field('drivenKm', _$drivenKm);
   static Brand _$brand(Car v) => v.brand;
-  static const Field<Car, Brand> _f$brand =
-      Field('brand', _$brand, map: BrandMapper.ensureInitialized);
+  static const Field<Car, Brand> _f$brand = Field('brand', _$brand);
   static double _$miles(Car v) => v.miles;
   static const Field<Car, double> _f$miles =
       Field('miles', _$miles, mode: FieldMode.member);

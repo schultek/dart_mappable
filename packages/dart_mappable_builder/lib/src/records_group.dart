@@ -1,10 +1,19 @@
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/dart/element/type_provider.dart';
 import 'package:collection/collection.dart';
 
-class RecordsGroup {
-  final Map<String, RecordMapperElement> records = {};
+import 'elements/record/anonymous_target_record_mapper_element.dart';
+import 'mapper_group.dart';
 
-  List<RecordMapperElement> get sortedRecords =>
+class RecordsGroup {
+  RecordsGroup(this.parent);
+
+  final MapperElementGroup parent;
+
+  final Map<String, AnonymousRecordMapperElement> records = {};
+
+  List<AnonymousRecordMapperElement> get sortedRecords =>
       records.values.sortedBy((r) => r.id);
 
   static String idFor(RecordType type) {
@@ -13,7 +22,7 @@ class RecordsGroup {
     return id;
   }
 
-  RecordMapperElement? get(RecordType type) {
+  AnonymousRecordMapperElement? get(RecordType type) {
     var id = idFor(type);
     return records[id];
   }
@@ -21,57 +30,25 @@ class RecordsGroup {
   void add(RecordType type) {
     var id = idFor(type);
     if (!records.containsKey(id)) {
-      records[id] = RecordMapperElement(id, type, records.length, this);
+      records[id] = AnonymousRecordMapperElement(
+          id, type.getBase(parent.library.typeProvider), records.length, this);
     }
   }
 
   String? typeAliasFor(RecordType t) {
     var id = idFor(t);
-    return records[id]?.typeAliasName;
+    return records[id]?.className;
   }
 }
 
-class RecordMapperElement {
-  final String id;
-  final RecordType type;
-  final int index;
-  final RecordsGroup parent;
-
-  RecordMapperElement(this.id, this.type, this.index, this.parent);
-
-  late String name = 'r$index';
-
-  late String mapperName = '_m\$$name';
-
-  late String typeAliasName = '_t\$$name';
-
-  late String typeArgs = () {
-    var l = type.positionalFields.length + type.namedFields.length;
-    return List.generate(l, argAt).join(', ');
-  }();
-
-  late String typeDef = () {
-    var t = type.positionalFields.mapIndexed((i, f) => argAt(i)).join(', ');
-
-    if (type.namedFields.isNotEmpty) {
-      var i = type.positionalFields.length;
-      if (i != 0) {
-        t += ', ';
-      }
-      t +=
-          '{${type.namedFields.mapIndexed((j, e) => '${argAt(i + j)} ${e.name}').join(', ')}}';
-    }
-
-    t = '($t)';
-
-    return t;
-  }();
-
-  late Iterable<RecordTypeField> fields = type.positionalFields
-      .cast<RecordTypeField>()
-      .followedBy(type.namedFields);
-
-  String argAt(int index) {
-    return String.fromCharCode('A'.codeUnitAt(0) + index);
+extension on RecordType {
+  RecordType getBase(TypeProvider typeProvider) {
+    return RecordType(
+      positional:
+          List.filled(positionalFields.length, typeProvider.dynamicType),
+      named: Map.fromEntries(
+          namedFields.map((f) => MapEntry(f.name, typeProvider.dynamicType))),
+      nullabilitySuffix: NullabilitySuffix.none,
+    );
   }
 }

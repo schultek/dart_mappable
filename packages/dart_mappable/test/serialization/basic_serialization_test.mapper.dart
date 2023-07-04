@@ -84,8 +84,7 @@ class AMapper extends ClassMapperBase<A> {
   static bool _$d(A v) => v.d;
   static const Field<A, bool> _f$d = Field('d', _$d);
   static B? _$e(A v) => v.e;
-  static const Field<A, B> _f$e =
-      Field('e', _$e, opt: true, map: BMapper.ensureInitialized);
+  static const Field<A, B> _f$e = Field('e', _$e, opt: true);
 
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {

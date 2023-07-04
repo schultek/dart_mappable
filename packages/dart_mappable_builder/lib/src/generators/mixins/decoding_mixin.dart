@@ -1,13 +1,10 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../elements/class/class_mapper_element.dart';
-import '../elements/class/target_class_mapper_element.dart';
+import '../../elements/class/class_mapper_element.dart';
+import '../../elements/class/target_class_mapper_element.dart';
+import '../generator.dart';
 
-class DecoderGenerator {
-  final TargetClassMapperElement element;
-
-  DecoderGenerator(this.element);
-
+mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
   Future<String> generateInstantiateMethod() async {
     var s = '\n';
 

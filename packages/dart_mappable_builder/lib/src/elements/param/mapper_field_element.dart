@@ -46,7 +46,9 @@ class MapperFieldElement {
   late String getter = needsGetter ? '_\$$name' : 'null';
 
   late bool needsArg = () {
-    var isGeneric = resolvedType.accept(IsGenericTypeVisitor());
+    var isGeneric = param?.isGeneric ??
+        resolvedType.accept(IsGenericTypeVisitor()) ??
+        false;
     return isGeneric || (staticArgType != staticArgGetterType);
   }();
 
@@ -136,21 +138,5 @@ class MapperFieldElement {
   late Future<String> hook = () async {
     var hook = await param?.getHook();
     return hook != null ? ', hook: $hook' : '';
-  }();
-
-  late String map = () {
-    var type = param?.type ?? resolvedType;
-    if (type is InterfaceType && type.element is EnumElement) {
-      var e = parent.parent.getMapperForElement(type.element);
-      if (e != null) {
-        return ', map: ${e.prefixedClassName}Mapper.ensureInitialized';
-      }
-    } else if (type is RecordType && type.alias != null) {
-      var e = parent.parent.getMapperForElement(type.alias!.element);
-      if (e != null) {
-        return ', map: ${e.prefixedClassName}Mapper.ensureInitialized';
-      }
-    }
-    return '';
   }();
 }

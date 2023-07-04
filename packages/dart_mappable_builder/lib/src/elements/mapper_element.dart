@@ -8,6 +8,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import '../builder_options.dart';
 import '../mapper_group.dart';
 import '../utils.dart';
+import 'param/mapper_field_element.dart';
 
 abstract class MapperElement<T extends Element> {
   MapperElementGroup parent;
@@ -45,4 +46,8 @@ abstract class InterfaceMapperElement<T extends Element>
   late final CaseStyle? caseStyle =
       caseStyleFromAnnotation(annotation?.read('caseStyle')) ??
           options.caseStyle;
+
+  String get typeParamsDeclaration;
+
+  List<MapperFieldElement> get fields;
 }

@@ -30,13 +30,18 @@ class DecodingContext extends MappingContext {
   final DecodingOptions? options;
   final bool inherited;
 
-  DecodingContext inherit({MapperContainer? container, List<Type>? args}) {
+  DecodingContext change(
+      {MapperContainer? container, List<Type>? args, bool? inherited}) {
     return DecodingContext(
       container: container ?? this.container,
       args: args ?? this.args,
       options: options,
-      inherited: true,
+      inherited: inherited ?? this.inherited,
     );
+  }
+
+  DecodingContext inherit({MapperContainer? container, List<Type>? args}) {
+    return change(container: container, args: args, inherited: true);
   }
 }
 

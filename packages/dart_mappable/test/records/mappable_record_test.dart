@@ -7,7 +7,7 @@ part 'mappable_record_test.mapper.dart';
 typedef Point = ({@MappableField(key: 'xx') double x, double y});
 
 @MappableRecord()
-typedef Offset = ({double x, double y});
+typedef Offset<T> = ({double x, T y});
 
 @MappableClass()
 class Location with LocationMappable {
@@ -25,7 +25,7 @@ void main() {
 
       var r = container.fromMap<Point>({'a': 1, 'y': 2});
       print(r);
-      print(r.toMap());
+      print(container.toMap<Point>(r));
     });
   });
 }

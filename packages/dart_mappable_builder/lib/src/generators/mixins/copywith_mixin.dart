@@ -1,16 +1,13 @@
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../elements/class/target_class_mapper_element.dart';
-import '../elements/param/copy_param_element.dart';
-import '../elements/param/mapper_param_element.dart';
-import '../utils.dart';
+import '../../elements/class/target_class_mapper_element.dart';
+import '../../elements/param/copy_param_element.dart';
+import '../../elements/param/mapper_param_element.dart';
+import '../../utils.dart';
+import '../generator.dart';
 
-class CopyWithGenerator {
-  final TargetClassMapperElement element;
-
-  CopyWithGenerator(this.element);
-
+mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
   late String classTypeParamsDef =
       element.typeParamsList.map((p) => ', $p').join();
   late String classTypeParams =
