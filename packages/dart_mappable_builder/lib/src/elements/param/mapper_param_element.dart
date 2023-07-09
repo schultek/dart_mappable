@@ -17,8 +17,6 @@ abstract class MapperParamElement {
 
   bool get isOptional => false;
 
-  bool get isGeneric => false;
-
   ParameterElement? get parameter => null;
 
   Future<String?> getHook();
@@ -162,7 +160,6 @@ class RecordMapperParamElement extends MapperParamElement {
   final List<Annotation> metadata;
   final String? typeArg;
 
-  @override
   bool get isGeneric => typeArg != null;
 
   @override

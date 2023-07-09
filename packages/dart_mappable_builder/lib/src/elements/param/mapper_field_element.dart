@@ -6,6 +6,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../utils.dart';
 import '../mapper_element.dart';
+import '../record/record_mapper_element.dart';
 import 'mapper_param_element.dart';
 
 class IsGenericTypeVisitor extends UnifyingTypeVisitor<bool> {
@@ -31,34 +32,137 @@ class IsGenericTypeVisitor extends UnifyingTypeVisitor<bool> {
   }
 }
 
-class MapperFieldElement {
+abstract class MapperFieldElement {
+  bool get needsGetter;
+
+  String get staticGetterType;
+
+  String get name;
+
+  bool get needsArg;
+
+  String get staticArgType;
+
+  String get argType;
+
+  late String getter = needsGetter ? '_\$$name' : 'null';
+
+  String get key;
+
+  String get mode;
+
+  String get opt;
+
+  Future<String> get def;
+
+  String get arg;
+
+  Future<String> get hook;
+}
+
+class RecordMapperFieldElement extends MapperFieldElement {
+  final RecordMapperParamElement param;
+  final RecordMapperElement parent;
+
+  RecordMapperFieldElement(this.param, this.parent);
+
+  @override
+  String get name => param.name;
+
+  @override
+  bool get needsGetter => true;
+
+  @override
+  late final bool needsArg = () {
+    var isGeneric =
+        param.isGeneric || param.type.accept(IsGenericTypeVisitor());
+    return isGeneric || (staticArgType != staticArgGetterType);
+  }();
+
+  @override
+  String get arg => () {
+        if (!needsArg) return '';
+
+        return ', arg: _arg\$$name';
+      }();
+
+  @override
+  late final String staticGetterType = () {
+    return parent.parent.prefixedType(param.type, resolveBounds: true);
+  }();
+
+  @override
+  late final String argType = () {
+    if (param.typeArg != null) {
+      return param.typeArg!;
+    }
+    return parent.parent.prefixedType(param.type, withNullability: false);
+  }();
+
+  @override
+  late final String staticArgType = () {
+    return parent.parent
+        .prefixedType(param.type, withNullability: false, resolveBounds: true);
+  }();
+
+  late final String staticArgGetterType = () {
+    return parent.parent
+        .prefixedType(param.type, withNullability: false, resolveBounds: true);
+  }();
+
+  @override
+  final String mode = '';
+
+  @override
+  String get opt => '';
+
+  @override
+  late String key = () {
+    String key = param.key ?? parent.caseStyle?.transform(param.name) ?? name;
+
+    if (key != name) {
+      return ", key: '$key'";
+    } else {
+      return '';
+    }
+  }();
+
+  @override
+  final Future<String> def = Future.value('');
+
+  @override
+  final Future<String> hook = Future.value('');
+}
+
+class ClassMapperFieldElement extends MapperFieldElement {
   final MapperParamElement? param;
   final PropertyInducingElement? field;
   final InterfaceMapperElement parent;
 
-  MapperFieldElement(this.param, this.field, this.parent)
+  ClassMapperFieldElement(this.param, this.field, this.parent)
       : assert(param != null || field != null);
 
-  late String name = field?.name ?? param!.name;
+  @override
+  late final String name = field?.name ?? param!.name;
 
-  late bool needsGetter = field != null || param is RecordMapperParamElement;
+  @override
+  late final bool needsGetter =
+      field != null || param is RecordMapperParamElement;
 
-  late String getter = needsGetter ? '_\$$name' : 'null';
-
-  late bool needsArg = () {
-    var isGeneric = param?.isGeneric ??
-        resolvedType.accept(IsGenericTypeVisitor()) ??
-        false;
+  @override
+  late final bool needsArg = () {
+    var isGeneric = resolvedType.accept(IsGenericTypeVisitor());
     return isGeneric || (staticArgType != staticArgGetterType);
   }();
 
-  late String arg = () {
+  @override
+  late final String arg = () {
     if (!needsArg) return '';
 
     return ', arg: _arg\$$name';
   }();
 
-  late DartType resolvedType = () {
+  late final DartType resolvedType = () {
     if (field?.enclosingElement is InterfaceElement) {
       var it = (parent.element as InterfaceElement).thisType;
       it = it.asInstanceOf(field!.enclosingElement as InterfaceElement)!;
@@ -68,39 +172,42 @@ class MapperFieldElement {
     return field?.type ?? param!.type;
   }();
 
-  late String staticGetterType = () {
+  @override
+  late final String staticGetterType = () {
     return parent.parent.prefixedType(resolvedType, resolveBounds: true);
   }();
 
-  late String argType = () {
+  @override
+  late final String argType = () {
     return parent.parent.prefixedType(resolvedType, withNullability: false);
   }();
 
-  late String staticArgType = () {
+  @override
+  late final String staticArgType = () {
     return parent.parent.prefixedType(param?.type ?? resolvedType,
         withNullability: false, resolveBounds: true);
   }();
 
-  late String staticArgGetterType = () {
+  late final String staticArgGetterType = () {
     return parent.parent.prefixedType(resolvedType,
         withNullability: false, resolveBounds: true);
   }();
 
-  late String mode = () {
+  @override
+  late final String mode = () {
     if (param == null &&
         field != null &&
         !fieldChecker.hasAnnotationOf(field!)) {
       return ', mode: FieldMode.member';
-    } else if (param != null &&
-        param!.accessor is! FieldElement &&
-        param is! RecordMapperParamElement) {
+    } else if (param != null && param!.accessor is! FieldElement) {
       return ', mode: FieldMode.param';
     } else {
       return '';
     }
   }();
 
-  late String key = () {
+  @override
+  late final String key = () {
     String key = name;
     if (param case var p?) {
       key = p.key ?? parent.caseStyle?.transform(p.name) ?? name;
@@ -112,9 +219,11 @@ class MapperFieldElement {
     }
   }();
 
-  late String opt = (param?.isOptional ?? false) ? ', opt: true' : '';
+  @override
+  late final String opt = (param?.isOptional ?? false) ? ', opt: true' : '';
 
-  late Future<String> def = () async {
+  @override
+  late final Future<String> def = () async {
     if (param == null) return '';
 
     var p = param!.parameter;
@@ -135,7 +244,8 @@ class MapperFieldElement {
     return '';
   }();
 
-  late Future<String> hook = () async {
+  @override
+  late final Future<String> hook = () async {
     var hook = await param?.getHook();
     return hook != null ? ', hook: $hook' : '';
   }();

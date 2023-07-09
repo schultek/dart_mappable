@@ -50,6 +50,14 @@ class EncodingContext extends MappingContext {
   EncodingContext({super.container, this.options, super.args});
 
   final EncodingOptions? options;
+
+  EncodingContext change({MapperContainer? container, List<Type>? args}) {
+    return EncodingContext(
+      container: container ?? this.container,
+      args: args ?? this.args,
+      options: options,
+    );
+  }
 }
 
 /// Utility methods to call a generic function with the type argument of the

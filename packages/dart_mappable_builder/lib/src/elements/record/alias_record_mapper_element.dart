@@ -34,22 +34,22 @@ abstract class AliasRecordMapperElement
       recordChecker.firstAnnotationOf(annotatedElement);
 
   @override
-  late List<MapperFieldElement> fields = () {
-    var fields = <MapperFieldElement>[];
+  late List<RecordMapperFieldElement> fields = () {
+    var fields = <RecordMapperFieldElement>[];
 
     for (var (i, f) in node.positionalFields.indexed) {
-      fields.add(MapperFieldElement(
-          RecordMapperParamElement('\$$i', f.type.type!, f.metadata),
-          null,
-          this));
+      fields.add(RecordMapperFieldElement(
+        RecordMapperParamElement('\$${i + 1}', f.type.type!, f.metadata),
+        this,
+      ));
     }
 
     if (node.namedFields != null) {
       for (var f in node.namedFields!.fields) {
-        fields.add(MapperFieldElement(
-            RecordMapperParamElement(f.name.lexeme, f.type.type!, f.metadata),
-            null,
-            this));
+        fields.add(RecordMapperFieldElement(
+          RecordMapperParamElement(f.name.lexeme, f.type.type!, f.metadata),
+          this,
+        ));
       }
     }
 

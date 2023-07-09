@@ -7,37 +7,38 @@ mixin EncodingMixin on MapperGenerator<TargetClassMapperElement> {
   late final toJsonName = element.options.renameMethods['toJson'] ?? 'toJson';
   late final toMapName = element.options.renameMethods['toMap'] ?? 'toMap';
 
-  String generateEncoderMixin() {
+  void generateEncoderMixin(StringBuffer output) {
     if (!element.shouldGenerate(GenerateMethods.encode)) {
-      return '';
+      return;
     }
     if (element.isAbstract) {
-      return '''
+      output.write('''
         String $toJsonName();
         Map<String, dynamic> $toMapName();
-      ''';
+      ''');
+      return;
     }
-    return '''
+    output.write('''
       String $toJsonName() {
         return ${element.mapperName}.ensureInitialized().encodeJson<${element.selfTypeParam}>(this as ${element.selfTypeParam});
       }
       Map<String, dynamic> $toMapName() {
         return ${element.mapperName}.ensureInitialized().encodeMap<${element.selfTypeParam}>(this as ${element.selfTypeParam});
       }
-    ''';
+    ''');
   }
 
-  String generateEncoderExtensions() {
+  void generateEncoderExtensions(StringBuffer output) {
     if (!element.shouldGenerate(GenerateMethods.encode)) {
-      return '';
+      return;
     }
-    return '''
+    output.write('''
       String $toJsonName() {
         return ${element.mapperName}.ensureInitialized().encodeJson<${element.selfTypeParam}>(this);
       }
       Map<String, dynamic> $toMapName() {
         return ${element.mapperName}.ensureInitialized().encodeMap<${element.selfTypeParam}>(this);
       }
-    ''';
+    ''');
   }
 }

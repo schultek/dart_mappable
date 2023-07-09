@@ -25,6 +25,7 @@ abstract class MapperBase<T extends Object> {
   Type get type => T;
 
   bool isFor(dynamic v) => v is T;
+  bool isForType(Type type) => type.base == T;
   bool includeTypeId<V>(dynamic v) => false;
 
   /// The mapping method to decode [value] to an instance of this mappers type.

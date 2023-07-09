@@ -3,6 +3,8 @@ import 'package:ansicolor/ansicolor.dart';
 
 import '../elements/class/target_class_mapper_element.dart';
 import '../utils.dart';
+import 'extensions/fields_extension.dart';
+import 'extensions/initializer_extension.dart';
 import 'generator.dart';
 import 'mixins/copywith_mixin.dart';
 import 'mixins/decoding_mixin.dart';
@@ -11,8 +13,7 @@ import 'mixins/equals_mixin.dart';
 import 'mixins/tostring_mixin.dart';
 
 /// Generates code for a specific class
-class ClassMapperGenerator
-    extends InterfaceMapperGenerator<TargetClassMapperElement>
+class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
     with
         DecodingMixin,
         EncodingMixin,
@@ -29,58 +30,16 @@ class ClassMapperGenerator
       class ${element.mapperName} extends ${element.isDiscriminatingSubclass ? 'Sub' : ''}ClassMapperBase<${element.prefixedClassName}> {
         ${element.mapperName}._();
         
-        static ${element.mapperName}? _instance;
-        static ${element.mapperName} ensureInitialized() {
-          if (_instance == null) {   
     ''');
 
-    var typesConfigs = element.typesConfigs;
-    if (typesConfigs.isNotEmpty) {
-      for (var t in typesConfigs) {
-        output.write('      MapperBase.addType<$t>();\n');
-      }
-    }
-
-    output.write(
-        '      MapperContainer.globals.use(_instance = ${element.mapperName}._());\n');
-
-    if (element.isDiscriminatingSubclass) {
-      var s = element.superElement!;
-      var prefix = element.parent.prefixOfElement(s.annotatedElement);
-      output.write(
-          '      $prefix${s.mapperName}.ensureInitialized().addSubMapper(_instance!);\n');
-    } else if (element.isSubclass) {
-      var s = element.superElement!;
-      var prefix = element.parent.prefixOfElement(s.annotatedElement);
-      output.write('      $prefix${s.mapperName}.ensureInitialized();\n');
-    }
-
-    var customMappers = element.customMappers;
-    if (customMappers != null) {
-      output.write('      MapperContainer.globals.useAll($customMappers);\n');
-    }
-
-    var linked = element.linkedElements;
-    if (linked.isNotEmpty) {
-      for (var l in linked) {
-        output.write('      $l.ensureInitialized();\n');
-      }
-    }
-
-    output.write('    }\n'
-        '    return _instance!;\n'
-        '  }\n'
-        '  static T _guard<T>(T Function(MapperContainer) fn) {\n'
-        '    ensureInitialized();\n'
-        '    return fn(MapperContainer.globals);\n'
-        '  }');
+    generateInitializer(output);
 
     output.write('\n'
         '  @override\n'
         "  final String id = '${element.uniqueId}';\n");
 
     if (element.typeParamsList.isNotEmpty) {
-      output.write(generateTypeFactory());
+      generateTypeFactory(output);
     }
 
     output.write('\n');
@@ -92,13 +51,13 @@ class ClassMapperGenerator
     }
 
     if (element.isDiscriminatingSubclass) {
-      output.write(await generateDiscriminatorFields());
-      output.write(generateInheritOverride());
+      await generateDiscriminatorFields(output);
+      generateInheritOverride(output);
     }
 
-    output.write(await generateInstantiateMethod());
+    await generateInstantiateMethod(output);
 
-    output.write(generateStaticDecoders());
+    generateStaticDecoders(output);
     output.write('}\n\n');
 
     if (element.generateAsMixin) {
@@ -119,8 +78,9 @@ class ClassMapperGenerator
 
     output.write(
         'mixin ${element.uniqueClassName}Mappable${element.typeParamsDeclaration} {\n');
+
+    generateEncoderMixin(output);
     output.writeAll([
-      generateEncoderMixin(),
       generateCopyWithMixin(),
       generateToStringMixin(),
       generateEqualsMixin(),
@@ -131,8 +91,8 @@ class ClassMapperGenerator
   void _generateExtension(StringBuffer output) {
     output.write(
         'extension ${element.mapperName}Extension${element.typeParamsDeclaration} on ${element.prefixedClassName}${element.typeParams} {\n');
+    generateEncoderExtensions(output);
     output.writeAll([
-      generateEncoderExtensions(),
       generateCopyWithExtension(),
     ]);
     output.write('}');

@@ -53,19 +53,19 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
     }
   }();
 
-  late List<MapperFieldElement> fields = () {
-    var fields = <Element, MapperFieldElement>{};
+  late List<ClassMapperFieldElement> fields = () {
+    var fields = <Element, ClassMapperFieldElement>{};
 
     for (var p in params) {
       fields[p.accessor ?? p.parameter] =
-          MapperFieldElement(p, p.accessor, this);
+          ClassMapperFieldElement(p, p.accessor, this);
     }
 
     for (var f in allPublicFields) {
       if (!fields.containsKey(f) &&
           !fields.keys
               .any((e) => e is PropertyInducingElement && e.name == f.name)) {
-        fields[f] = MapperFieldElement(null, f, this);
+        fields[f] = ClassMapperFieldElement(null, f, this);
       }
     }
 

@@ -1,9 +1,9 @@
 import '../elements/record/record_mapper_element.dart';
+import 'extensions/fields_extension.dart';
 import 'generator.dart';
 
 /// Generates code for a specific record.
-class RecordMapperGenerator
-    extends InterfaceMapperGenerator<RecordMapperElement> {
+class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
   RecordMapperGenerator(super.element);
 
   @override
@@ -28,8 +28,10 @@ class RecordMapperGenerator
 
     await generateFields(output);
 
+    generateTypeFactory(output);
     generateApplyOverride(output);
     generateInstantiate(output);
+    generateStaticDecoders(output);
 
     output.write('''
       } 
@@ -53,22 +55,31 @@ class RecordMapperGenerator
     for (var f in element.fields) {
       var str = '';
 
-      if (!f.param!.name.startsWith(r'$')) {
-        str = '${f.param!.name}: ';
+      if (!f.name.startsWith(r'$')) {
+        str = '${f.name}: ';
       }
-      str += 'data.dec(_f\$${f.param!.name})';
+      str += 'data.dec(_f\$${f.name})';
 
       params.add(str);
     }
     params.join(', ');
 
     output.write('''
-      static ${element.className} _instantiate(DecodingData<${element.className}> data) {
+    
+      static ${element.className}${element.typeParams} _instantiate${element.typeParamsDeclaration}(DecodingData<${element.className}> data) {
         return (${params.join(', ')});
       }
       
       @override
       final Function instantiate = _instantiate;
+    ''');
+  }
+
+  void generateTypeFactory(StringBuffer output) {
+    output.write('''
+    
+      @override
+      Function get typeFactory => ${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();
     ''');
   }
 
@@ -78,10 +89,24 @@ class RecordMapperGenerator
       return;
     }
     output.write('''
+    
       @override
-      DecodingContext apply(DecodingContext context) {
-        return context.change(args: [${args.join(', ')}]);
+      List<Type> apply(MappingContext context) {
+        return [${args.join(', ')}];
       }
     ''');
+  }
+
+  void generateStaticDecoders(StringBuffer output) {
+    var fromJsonName = element.options.renameMethods['fromJson'] ?? 'fromJson';
+    var fromMapName = element.options.renameMethods['fromMap'] ?? 'fromMap';
+
+    output.write('\n'
+        '  static ${element.className}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
+        '    return ensureInitialized().decodeMap<${element.className}${element.typeParams}>(map);\n'
+        '  }\n'
+        '  static ${element.className}${element.typeParams} $fromJsonName${element.typeParamsDeclaration}(String json) {\n'
+        '    return ensureInitialized().decodeJson<${element.className}${element.typeParams}>(json);\n'
+        '  }\n');
   }
 }

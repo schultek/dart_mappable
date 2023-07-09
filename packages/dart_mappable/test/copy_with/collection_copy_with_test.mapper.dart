@@ -27,7 +27,9 @@ class AMapper extends ClassMapperBase<A> {
   Function get typeFactory => <T>(f) => f<A<T>>();
 
   static List<dynamic> _$items(A v) => v.items;
-  static const Field<A, List<dynamic>> _f$items = Field('items', _$items);
+  static dynamic _arg$items<T>(f) => f<List<T>>();
+  static const Field<A, List<dynamic>> _f$items =
+      Field('items', _$items, arg: _arg$items);
 
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {
@@ -135,8 +137,9 @@ class BMapper extends ClassMapperBase<B> {
   Function get typeFactory => <T>(f) => f<B<T>>();
 
   static Map<String, dynamic> _$items(B v) => v.items;
+  static dynamic _arg$items<T>(f) => f<Map<String, T>>();
   static const Field<B, Map<String, dynamic>> _f$items =
-      Field('items', _$items);
+      Field('items', _$items, arg: _arg$items);
 
   @override
   final Map<Symbol, Field<B, dynamic>> fields = const {

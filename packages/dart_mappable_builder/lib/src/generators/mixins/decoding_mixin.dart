@@ -5,42 +5,40 @@ import '../../elements/class/target_class_mapper_element.dart';
 import '../generator.dart';
 
 mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
-  Future<String> generateInstantiateMethod() async {
-    var s = '\n';
+  Future<void> generateInstantiateMethod(StringBuffer output) async {
+    output.write('\n');
 
     var hook = element.hookForClass;
     if (hook != null) {
-      s += '''
+      output.write('''
         @override
         final MappingHook hook = const $hook;
-      ''';
+      ''');
     }
 
     var superHooks = _getSuperHooks(element);
     if (superHooks.isNotEmpty) {
-      s += '''
+      output.write('''
         @override
         final MappingHook superHook = const ${superHooks.length == 1 ? superHooks.first : 'ChainedHook([${superHooks.join(', ')}])'};
         
-      ''';
+      ''');
     }
 
-    s += '''
+    output.write('''
       static ${element.prefixedDecodingClassName}${element.typeParams} _instantiate${element.typeParamsDeclaration}(DecodingData data) {
         ${await _generateConstructorCall()}
       }
       @override
       final Function instantiate = _instantiate;
-    ''';
-
-    return s;
+    ''');
   }
 
-  String generateTypeFactory() {
-    return '''
+  void generateTypeFactory(StringBuffer output) {
+    output.write('''
       @override
       Function get typeFactory => ${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();
-    ''';
+    ''');
   }
 
   List<String> _getSuperHooks(ClassMapperElement element) {
@@ -52,11 +50,11 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
     }
   }
 
-  Future<String> generateDiscriminatorFields() async {
+  Future<void> generateDiscriminatorFields(StringBuffer output) async {
     var prefix =
         element.parent.prefixOfElement(element.superElement!.annotatedElement);
 
-    return '''
+    output.write('''
     
       @override
       final String discriminatorKey = '${element.superElement!.discriminatorKey ?? 'type'}';
@@ -65,20 +63,20 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
       @override
       late final ClassMapperBase superMapper = $prefix${element.superElement!.mapperName}.ensureInitialized();
       
-    ''';
+    ''');
   }
 
-  String generateInheritOverride() {
+  void generateInheritOverride(StringBuffer output) {
     var args = element.inheritedTypeArgs;
     if (args == null) {
-      return '';
+      return;
     }
-    return '''
+    output.write('''
       @override
       DecodingContext inherit(DecodingContext context) {
         return context.inherit(args: [${args.join(', ')}]);
       }
-    ''';
+    ''');
   }
 
   Future<String> _generateConstructorCall() async {
@@ -108,20 +106,20 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
     return params.join(', ');
   }
 
-  String generateStaticDecoders() {
+  void generateStaticDecoders(StringBuffer output) {
     if (!element.shouldGenerate(GenerateMethods.decode)) {
-      return '';
+      return;
     }
 
     var fromJsonName = element.options.renameMethods['fromJson'] ?? 'fromJson';
     var fromMapName = element.options.renameMethods['fromMap'] ?? 'fromMap';
 
-    return '\n'
+    output.write('\n'
         '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
         '    return ensureInitialized().decodeMap<${element.prefixedDecodingClassName}${element.typeParams}>(map);\n'
         '  }\n'
         '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromJsonName${element.typeParamsDeclaration}(String json) {\n'
         '    return ensureInitialized().decodeJson<${element.prefixedDecodingClassName}${element.typeParams}>(json);\n'
-        '  }\n';
+        '  }\n');
   }
 }

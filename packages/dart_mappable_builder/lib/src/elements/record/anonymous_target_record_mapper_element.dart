@@ -27,20 +27,22 @@ class AnonymousRecordMapperElement extends RecordMapperElement<Element> {
   }
 
   @override
-  late List<MapperFieldElement> fields = () {
-    var fields = <MapperFieldElement>[];
+  late List<RecordMapperFieldElement> fields = () {
+    var fields = <RecordMapperFieldElement>[];
 
     for (var (i, f) in type.positionalFields.indexed) {
-      fields.add(MapperFieldElement(
-          RecordMapperParamElement('\$$i', f.type, [], argAt(i)), null, this));
+      fields.add(RecordMapperFieldElement(
+        RecordMapperParamElement('\$${i + 1}', f.type, [], argAt(i)),
+        this,
+      ));
     }
 
     for (var (i, f) in type.namedFields.indexed) {
-      fields.add(MapperFieldElement(
-          RecordMapperParamElement(
-              f.name, f.type, [], argAt(type.positionalFields.length + i)),
-          null,
-          this));
+      fields.add(RecordMapperFieldElement(
+        RecordMapperParamElement(
+            f.name, f.type, [], argAt(type.positionalFields.length + i)),
+        this,
+      ));
     }
 
     return fields;

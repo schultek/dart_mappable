@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-part 'record_model_test_.mapper.dart';
+part 'record_model_test.mapper.dart';
 
 @MappableClass()
 class A<T> with AMappable<T> {
@@ -35,7 +35,7 @@ void main() {
           equals({
             'a': 'hi',
             'r': {
-              '1': 2,
+              r'$1': 2,
               'b': {'lat': 'hi', 'lng': false},
               'c': {
                 'c': 'ho',

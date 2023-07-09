@@ -131,7 +131,7 @@ class PointMapper extends RecordMapperBase<Point> {
   }
 
   static double _$x(Point v) => v.x;
-  static const Field<Point, double> _f$x = Field('x', _$x, key: 'xx');
+  static const Field<Point, double> _f$x = Field('x', _$x, key: 'a');
   static double _$y(Point v) => v.y;
   static const Field<Point, double> _f$y = Field('y', _$y);
 
@@ -140,9 +140,13 @@ class PointMapper extends RecordMapperBase<Point> {
     #x: _f$x,
     #y: _f$y,
   };
+
   @override
-  DecodingContext apply(DecodingContext context) {
-    return context.change(args: []);
+  Function get typeFactory => (f) => f<Point>();
+
+  @override
+  List<Type> apply(MappingContext context) {
+    return [];
   }
 
   static Point _instantiate(DecodingData<Point> data) {
@@ -151,6 +155,14 @@ class PointMapper extends RecordMapperBase<Point> {
 
   @override
   final Function instantiate = _instantiate;
+
+  static Point fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<Point>(map);
+  }
+
+  static Point fromJson(String json) {
+    return ensureInitialized().decodeJson<Point>(json);
+  }
 }
 
 extension PointMappable on Point {
@@ -178,24 +190,37 @@ class OffsetMapper extends RecordMapperBase<Offset> {
   static double _$x(Offset v) => v.x;
   static const Field<Offset, double> _f$x = Field('x', _$x);
   static dynamic _$y(Offset v) => v.y;
-  static const Field<Offset, dynamic> _f$y = Field('y', _$y);
+  static dynamic _arg$y<T>(f) => f<T>();
+  static const Field<Offset, dynamic> _f$y = Field('y', _$y, arg: _arg$y);
 
   @override
   final Map<Symbol, Field<Offset, dynamic>> fields = const {
     #x: _f$x,
     #y: _f$y,
   };
+
   @override
-  DecodingContext apply(DecodingContext context) {
-    return context.change(args: [context.arg(1)]);
+  Function get typeFactory => <T>(f) => f<Offset<T>>();
+
+  @override
+  List<Type> apply(MappingContext context) {
+    return [context.arg(1)];
   }
 
-  static Offset _instantiate(DecodingData<Offset> data) {
+  static Offset<T> _instantiate<T>(DecodingData<Offset> data) {
     return (x: data.dec(_f$x), y: data.dec(_f$y));
   }
 
   @override
   final Function instantiate = _instantiate;
+
+  static Offset<T> fromMap<T>(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<Offset<T>>(map);
+  }
+
+  static Offset<T> fromJson<T>(String json) {
+    return ensureInitialized().decodeJson<Offset<T>>(json);
+  }
 }
 
 extension OffsetMappable<T> on Offset<T> {

@@ -30,8 +30,9 @@ class BoxMapper extends ClassMapperBase<Box> {
   static int _$size(Box v) => v.size;
   static const Field<Box, int> _f$size = Field('size', _$size);
   static List<Content> _$contents(Box v) => v.contents;
+  static dynamic _arg$contents<T extends Content>(f) => f<List<T>>();
   static const Field<Box, List<Content>> _f$contents =
-      Field('contents', _$contents);
+      Field('contents', _$contents, arg: _arg$contents);
 
   @override
   final Map<Symbol, Field<Box, dynamic>> fields = const {
@@ -454,8 +455,9 @@ class SingleSettingMapper extends ClassMapperBase<SingleSetting> {
   Function get typeFactory => <T>(f) => f<SingleSetting<T>>();
 
   static List<dynamic>? _$properties(SingleSetting v) => v.properties;
+  static dynamic _arg$properties<T>(f) => f<List<T>>();
   static const Field<SingleSetting, List<dynamic>> _f$properties =
-      Field('properties', _$properties, opt: true);
+      Field('properties', _$properties, opt: true, arg: _arg$properties);
 
   @override
   final Map<Symbol, Field<SingleSetting, dynamic>> fields = const {
@@ -706,7 +708,9 @@ class AssetMapper extends ClassMapperBase<Asset> {
   Function get typeFactory => <T>(f) => f<Asset<T>>();
 
   static dynamic _$data(Asset v) => v.data;
-  static const Field<Asset, dynamic> _f$data = Field('data', _$data);
+  static dynamic _arg$data<T>(f) => f<T>();
+  static const Field<Asset, dynamic> _f$data =
+      Field('data', _$data, arg: _arg$data);
 
   @override
   final Map<Symbol, Field<Asset, dynamic>> fields = const {

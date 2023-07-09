@@ -30,7 +30,9 @@ class BoxMapper extends ClassMapperBase<Box> {
   static int _$size(Box v) => v.size;
   static const Field<Box, int> _f$size = Field('size', _$size);
   static Content _$contents(Box v) => v.contents;
-  static const Field<Box, Content> _f$contents = Field('contents', _$contents);
+  static dynamic _arg$contents<T extends Content>(f) => f<T>();
+  static const Field<Box, Content> _f$contents =
+      Field('contents', _$contents, arg: _arg$contents);
 
   @override
   final Map<Symbol, Field<Box, dynamic>> fields = const {

@@ -231,9 +231,13 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   MapperBase? _mapperFor(dynamic value) {
-    var baseType = value.runtimeType.base;
+    var type = value.runtimeType;
+    if (_cachedMappers[type] != null) {
+      return _cachedMappers[type];
+    }
+    var baseType = type.base;
     if (baseType == UnresolvedType) {
-      baseType = value.runtimeType;
+      baseType = type;
     }
     if (_cachedMappers[baseType] != null) {
       return _cachedMappers[baseType];
@@ -253,14 +257,18 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
       if (mapper is ClassMapperBase) {
         mapper = mapper.subOrSelfFor(value) ?? mapper;
       }
-      _cachedMappers[baseType] = mapper;
+      if (baseType == mapper.type) {
+        _cachedMappers[baseType] = mapper;
+      } else {
+        _cachedMappers[type] = mapper;
+      }
     }
 
     return mapper;
   }
 
   MapperBase? _mapperForType(Type type) {
-    if (_cachedMappers[type] case var m?) {
+    if (_cachedTypeMappers[type] case var m?) {
       return m;
     }
     var baseType = type.base;
@@ -271,12 +279,16 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
       return m;
     }
     var mapper = _mappers[baseType] ??
-        _mappers[type] ??
+        _mappers.values.where((m) => m.isForType(type)).firstOrNull ??
         _inheritedMappers[baseType] ??
-        _inheritedMappers[type];
+        _inheritedMappers.values.where((m) => m.isForType(type)).firstOrNull;
 
     if (mapper != null) {
-      _cachedTypeMappers[baseType] = mapper;
+      if (baseType == mapper.type) {
+        _cachedTypeMappers[baseType] = mapper;
+      } else {
+        _cachedTypeMappers[type] = mapper;
+      }
     }
     return mapper;
   }

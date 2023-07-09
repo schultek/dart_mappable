@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element
 
-part of 'record_model_test_.dart';
+part of 'record_model_test.dart';
 
 class AMapper extends ClassMapperBase<A> {
   AMapper._();
@@ -32,8 +32,9 @@ class AMapper extends ClassMapperBase<A> {
   static String _$a(A v) => v.a;
   static const Field<A, String> _f$a = Field('a', _$a);
   static _t$_R0<int, dynamic, C, _t$_R1<double, double>> _$r(A v) => v.r;
+  static dynamic _arg$r<T>(f) => f<_t$_R0<int, T, C, _t$_R1<double, double>>>();
   static const Field<A, _t$_R0<int, dynamic, C, _t$_R1<double, double>>> _f$r =
-      Field('r', _$r);
+      Field('r', _$r, arg: _arg$r);
 
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {
@@ -235,11 +236,11 @@ class _t$_R1Mapper extends RecordMapperBase<_t$_R1> {
   }
 
   static dynamic _$lat(_t$_R1 v) => v.lat;
-  static dynamic _arg$lat<A, B>(f) => f<dynamic>();
+  static dynamic _arg$lat<A, B>(f) => f<A>();
   static const Field<_t$_R1, dynamic> _f$lat =
       Field('lat', _$lat, arg: _arg$lat);
   static dynamic _$lng(_t$_R1 v) => v.lng;
-  static dynamic _arg$lng<A, B>(f) => f<dynamic>();
+  static dynamic _arg$lng<A, B>(f) => f<B>();
   static const Field<_t$_R1, dynamic> _f$lng =
       Field('lng', _$lng, arg: _arg$lng);
 
@@ -248,12 +249,24 @@ class _t$_R1Mapper extends RecordMapperBase<_t$_R1> {
     #lat: _f$lat,
     #lng: _f$lng,
   };
-  static _t$_R1 _instantiate(DecodingData<_t$_R1> data) {
+
+  @override
+  Function get typeFactory => <A, B>(f) => f<_t$_R1<A, B>>();
+
+  static _t$_R1<A, B> _instantiate<A, B>(DecodingData<_t$_R1> data) {
     return (lat: data.dec(_f$lat), lng: data.dec(_f$lng));
   }
 
   @override
   final Function instantiate = _instantiate;
+
+  static _t$_R1<A, B> fromMap<A, B>(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<_t$_R1<A, B>>(map);
+  }
+
+  static _t$_R1<A, B> fromJson<A, B>(String json) {
+    return ensureInitialized().decodeJson<_t$_R1<A, B>>(json);
+  }
 }
 
 extension _t$_R1Mappable<A, B> on _t$_R1<A, B> {
@@ -280,29 +293,34 @@ class _t$_R0Mapper extends RecordMapperBase<_t$_R0> {
     return _instance!;
   }
 
-  static dynamic _$$0(_t$_R0 v) => v.$0;
-  static dynamic _arg$$0<A, B, C, D>(f) => f<dynamic>();
-  static const Field<_t$_R0, dynamic> _f$$0 = Field('\$0', _$$0, arg: _arg$$0);
+  static dynamic _$$1(_t$_R0 v) => v.$1;
+  static dynamic _arg$$1<A, B, C, D>(f) => f<A>();
+  static const Field<_t$_R0, dynamic> _f$$1 = Field('\$1', _$$1, arg: _arg$$1);
   static dynamic _$b(_t$_R0 v) => v.b;
-  static dynamic _arg$b<A, B, C, D>(f) => f<dynamic>();
+  static dynamic _arg$b<A, B, C, D>(f) => f<B>();
   static const Field<_t$_R0, dynamic> _f$b = Field('b', _$b, arg: _arg$b);
   static dynamic _$c(_t$_R0 v) => v.c;
-  static dynamic _arg$c<A, B, C, D>(f) => f<dynamic>();
+  static dynamic _arg$c<A, B, C, D>(f) => f<C>();
   static const Field<_t$_R0, dynamic> _f$c = Field('c', _$c, arg: _arg$c);
   static dynamic _$d(_t$_R0 v) => v.d;
-  static dynamic _arg$d<A, B, C, D>(f) => f<dynamic>();
+  static dynamic _arg$d<A, B, C, D>(f) => f<D>();
   static const Field<_t$_R0, dynamic> _f$d = Field('d', _$d, arg: _arg$d);
 
   @override
   final Map<Symbol, Field<_t$_R0, dynamic>> fields = const {
-    #$0: _f$$0,
+    #$1: _f$$1,
     #b: _f$b,
     #c: _f$c,
     #d: _f$d,
   };
-  static _t$_R0 _instantiate(DecodingData<_t$_R0> data) {
+
+  @override
+  Function get typeFactory => <A, B, C, D>(f) => f<_t$_R0<A, B, C, D>>();
+
+  static _t$_R0<A, B, C, D> _instantiate<A, B, C, D>(
+      DecodingData<_t$_R0> data) {
     return (
-      data.dec(_f$$0),
+      data.dec(_f$$1),
       b: data.dec(_f$b),
       c: data.dec(_f$c),
       d: data.dec(_f$d)
@@ -311,6 +329,14 @@ class _t$_R0Mapper extends RecordMapperBase<_t$_R0> {
 
   @override
   final Function instantiate = _instantiate;
+
+  static _t$_R0<A, B, C, D> fromMap<A, B, C, D>(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<_t$_R0<A, B, C, D>>(map);
+  }
+
+  static _t$_R0<A, B, C, D> fromJson<A, B, C, D>(String json) {
+    return ensureInitialized().decodeJson<_t$_R0<A, B, C, D>>(json);
+  }
 }
 
 extension _t$_R0Mappable<A, B, C, D> on _t$_R0<A, B, C, D> {
