@@ -45,10 +45,6 @@ extension InitializerExtension<T extends TargetClassMapperElement>
 
     output.write('    }\n'
         '    return _instance!;\n'
-        '  }\n'
-        '  static T _guard<T>(T Function(MapperContainer) fn) {\n'
-        '    ensureInitialized();\n'
-        '    return fn(MapperContainer.globals);\n'
         '  }');
   }
 }

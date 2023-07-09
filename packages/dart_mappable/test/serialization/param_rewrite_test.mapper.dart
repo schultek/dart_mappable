@@ -16,11 +16,6 @@ class AMapper extends ClassMapperBase<A> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'A';
 
@@ -29,7 +24,7 @@ class AMapper extends ClassMapperBase<A> {
   static int _$b(A v) => v.b;
   static const Field<A, int> _f$b = Field('b', _$b);
   static int _$_c(A v) => v._c;
-  static const Field<A, int> _f$_c = Field('_c', _$_c);
+  static const Field<A, int> _f$_c = Field('_c', _$_c, key: 'c');
 
   @override
   final Map<Symbol, Field<A, dynamic>> fields = const {
@@ -123,18 +118,13 @@ class BMapper extends ClassMapperBase<B> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'B';
 
   static int _$b(B v) => v.b;
-  static const Field<B, int> _f$b = Field('b', _$b);
+  static const Field<B, int> _f$b = Field('b', _$b, key: 'a');
   static int _$a(B v) => v.a;
-  static const Field<B, int> _f$a = Field('a', _$a);
+  static const Field<B, int> _f$a = Field('a', _$a, key: 'b');
 
   @override
   final Map<Symbol, Field<B, dynamic>> fields = const {

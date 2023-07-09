@@ -18,11 +18,6 @@ class AnimalMapper extends ClassMapperBase<Animal> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Animal';
 
@@ -63,11 +58,6 @@ class CatMapper extends SubClassMapperBase<Cat> {
       AnimalMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -150,11 +140,6 @@ class DogMapper extends SubClassMapperBase<Dog> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Dog';
 
@@ -231,11 +216,6 @@ class ZooMapper extends ClassMapperBase<Zoo> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Zoo';
 
@@ -306,11 +286,6 @@ class AMapper extends ClassMapperBase<A> {
       CMapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -405,11 +380,6 @@ class CMapper extends ClassMapperBase<C> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'C';
   @override
@@ -501,11 +471,6 @@ class BMapper extends ClassMapperBase<B> {
       AMapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override

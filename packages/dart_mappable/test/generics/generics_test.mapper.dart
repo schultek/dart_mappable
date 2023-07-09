@@ -17,11 +17,6 @@ class BoxMapper extends ClassMapperBase<Box> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Box';
   @override
@@ -136,11 +131,6 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Confetti';
 
@@ -245,11 +235,6 @@ class ContentMapper extends ClassMapperBase<Content> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Content';
 
@@ -342,11 +327,6 @@ class DataMapper extends ClassMapperBase<Data> {
       MapperContainer.globals.use(_instance = DataMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -442,11 +422,6 @@ class SingleSettingMapper extends ClassMapperBase<SingleSetting> {
       MapperContainer.globals.use(_instance = SingleSettingMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -570,11 +545,6 @@ class SettingsMapper extends ClassMapperBase<Settings> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Settings';
 
@@ -695,11 +665,6 @@ class AssetMapper extends ClassMapperBase<Asset> {
       MapperContainer.globals.use(_instance = AssetMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override

@@ -17,11 +17,6 @@ class BoxMapper extends ClassMapperBase<Box> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Box2';
   @override
@@ -127,11 +122,6 @@ class ContentMapper extends ClassMapperBase<Content> {
       MapperContainer.globals.use(_instance = ContentMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override

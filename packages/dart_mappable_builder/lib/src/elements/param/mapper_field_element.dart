@@ -210,7 +210,7 @@ class ClassMapperFieldElement extends MapperFieldElement {
   late final String key = () {
     String key = name;
     if (param case var p?) {
-      key = p.key ?? parent.caseStyle?.transform(p.name) ?? name;
+      key = p.key ?? parent.caseStyle.transform(p.name);
     }
     if (key != name) {
       return ", key: '$key'";

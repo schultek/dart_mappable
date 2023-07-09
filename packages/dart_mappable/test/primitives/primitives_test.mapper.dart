@@ -17,11 +17,6 @@ class ItemsMapper extends ClassMapperBase<Items> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Items';
 
@@ -133,11 +128,6 @@ class ItemMapper extends ClassMapperBase<Item> {
       MapperContainer.globals.use(_instance = ItemMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override

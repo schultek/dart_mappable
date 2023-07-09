@@ -16,11 +16,6 @@ class AMapper extends ClassMapperBase<A> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'A';
 

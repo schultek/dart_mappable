@@ -17,11 +17,6 @@ class BaseMapper extends ClassMapperBase<Base> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Base';
 
@@ -80,11 +75,6 @@ class OneMapper extends ClassMapperBase<One> {
       BaseMapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -205,11 +195,6 @@ class TwoMapper extends ClassMapperBase<Two> {
       MapperContainer.globals.use(_instance = TwoMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override

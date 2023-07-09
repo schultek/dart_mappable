@@ -67,11 +67,6 @@ class PersonMapper extends ClassMapperBase<Person> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Person';
 
@@ -184,11 +179,6 @@ class CarMapper extends ClassMapperBase<Car> {
       BrandMapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override

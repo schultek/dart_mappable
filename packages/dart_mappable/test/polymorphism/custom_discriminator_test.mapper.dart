@@ -18,11 +18,6 @@ class AMapper extends ClassMapperBase<A> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'A';
 
@@ -67,11 +62,6 @@ class BMapper extends SubClassMapperBase<B> {
       AMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -170,11 +160,6 @@ class CMapper extends SubClassMapperBase<C> {
       AMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override

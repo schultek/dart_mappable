@@ -17,11 +17,6 @@ class PersonMapper extends ClassMapperBase<Person> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Person';
 
@@ -127,11 +122,6 @@ class CarMapper extends ClassMapperBase<Car> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Car';
 
@@ -235,11 +225,6 @@ class BrandMapper extends ClassMapperBase<Brand> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Brand';
 
@@ -336,11 +321,6 @@ class DealershipMapper extends ClassMapperBase<Dealership> {
       PersonMapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -469,11 +449,6 @@ class ItemListMapper extends ClassMapperBase<ItemList> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'ItemList';
   @override
@@ -532,17 +507,12 @@ class BrandListMapper extends SubClassMapperBase<BrandList> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'BrandList';
 
   static List<Brand?> _$items(BrandList v) => v.items;
   static const Field<BrandList, List<Brand?>> _f$items =
-      Field('items', _$items);
+      Field('items', _$items, key: 'brands');
 
   @override
   final Map<Symbol, Field<BrandList, dynamic>> fields = const {
@@ -659,11 +629,6 @@ class NamedItemListMapper extends SubClassMapperBase<NamedItemList> {
       ItemListMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -794,11 +759,6 @@ class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
       ItemListMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -939,11 +899,6 @@ class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
       ItemListMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override

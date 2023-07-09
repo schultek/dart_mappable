@@ -18,11 +18,6 @@ class LocationMapper extends ClassMapperBase<Location> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Location';
 

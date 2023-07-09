@@ -19,11 +19,6 @@ class AMapper extends ClassMapperBase<A> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'A';
   @override
@@ -114,11 +109,6 @@ class BMapper extends SubClassMapperBase<B> {
       AMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -222,11 +212,6 @@ class CMapper extends SubClassMapperBase<C> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'C';
   @override
@@ -328,11 +313,6 @@ class DMapper extends SubClassMapperBase<D> {
       EMapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -442,11 +422,6 @@ class EMapper extends SubClassMapperBase<E> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'E';
   @override
@@ -554,11 +529,6 @@ class FMapper extends SubClassMapperBase<F> {
       EMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override

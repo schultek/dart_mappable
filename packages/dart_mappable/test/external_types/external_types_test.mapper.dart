@@ -16,11 +16,6 @@ class PersonMapper extends ClassMapperBase<Person> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Person';
 
@@ -119,11 +114,6 @@ class CakeMapper extends ClassMapperBase<f.Cake> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Cake';
 
@@ -201,11 +191,6 @@ class Person2Mapper extends ClassMapperBase<m.Person> {
       MapperContainer.globals.use(_instance = Person2Mapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -293,11 +278,6 @@ class AnimalMapper extends ClassMapperBase<o.Animal> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Animal';
 
@@ -353,11 +333,6 @@ class PetMapper extends SubClassMapperBase<o.Pet> {
       Person2Mapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override

@@ -18,11 +18,6 @@ class GameMapper extends ClassMapperBase<Game> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Game';
 
@@ -126,11 +121,6 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
       PlayerMapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -247,11 +237,6 @@ class PlayerMapper extends ClassMapperBase<Player> {
       MapperContainer.globals.use(_instance = PlayerMapper._());
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
