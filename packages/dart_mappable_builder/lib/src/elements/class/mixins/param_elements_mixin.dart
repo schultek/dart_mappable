@@ -15,8 +15,8 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
   List<ClassMapperElement> get interfaceElements;
   ClassMapperElement? get superElement;
 
-  late List<MapperParamElement> params = () {
-    var params = <MapperParamElement>[];
+  late List<ClassMapperParamElement> params = () {
+    var params = <ClassMapperParamElement>[];
     if (constructor == null) {
       return params;
     }
@@ -42,7 +42,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
     return params;
   }();
 
-  MapperParamElement getParameterConfig(ParameterElement param) {
+  ClassMapperParamElement getParameterConfig(ParameterElement param) {
     var dec = param.declaration;
 
     if (dec is FieldFormalParameterElement) {
@@ -115,7 +115,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
     );
   }
 
-  MapperParamElement? _analyzeInitializers(ParameterElement param) {
+  ClassMapperParamElement? _analyzeInitializers(ParameterElement param) {
     var node = constructorNode;
     if (node is! ConstructorDeclaration || node.initializers.isEmpty) {
       return null;

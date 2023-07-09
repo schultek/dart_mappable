@@ -1,11 +1,12 @@
 import '../mapper_container.dart';
 import 'mapper_base.dart';
 import 'mapper_mixins.dart';
+import 'mapping_context.dart';
 
 /// An interface to define a custom mapper.
 ///
-/// Implementation should extend this interface and implement the [decode] and
-/// [encode] methods.
+/// Implementation should extend this interface and implement the
+/// [decode] and [encode] methods.
 /// For a generic type with one or two generic type arguments, extend the
 /// [SimpleMapper1] or [SimpleMapper2] interface instead, respectively.
 ///
@@ -33,7 +34,7 @@ abstract class SimpleMapper<T extends Object> extends _SimpleMapperBase<T> {
 abstract class SimpleMapper1<T extends Object> extends _SimpleMapperBase<T> {
   const SimpleMapper1();
 
-  /// Override as `MyClass<A> encode<A>(Object value)`
+  /// Override as `MyClass<A> decode<A>(Object value)`
   T decode<A>(Object value);
 
   /// Override as `Object encode<A>(MyClass<A> self)`
@@ -56,7 +57,7 @@ abstract class SimpleMapper1<T extends Object> extends _SimpleMapperBase<T> {
 abstract class SimpleMapper2<T extends Object> extends _SimpleMapperBase<T> {
   const SimpleMapper2();
 
-  /// Override as `MyClass<A, B> encode<A, B>(Object value)`
+  /// Override as `MyClass<A, B> decode<A, B>(Object value)`
   T decode<A, B>(Object value);
 
   /// Override as `Object? encode<A, B>(MyClass<A, B> self)`

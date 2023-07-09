@@ -6,6 +6,8 @@ dartdoc:
       markdown: "doc/models.md"
     "Enums":
       markdown: "doc/enums.md"
+    "Records":
+      markdown: "doc/records.md"
     "Configuration":
       markdown: "doc/configuration.md"
     "Copy-With":
@@ -26,6 +28,7 @@ dartdoc:
     - "Introduction"
     - "Models"
     - "Enums"
+    - "Records"
     - "Configuration"
     - "Copy-With"
     - "Polymorphism"

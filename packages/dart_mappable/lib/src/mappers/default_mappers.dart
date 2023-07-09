@@ -2,6 +2,7 @@ import '../mapper_exception.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
 import 'mapper_mixins.dart';
+import 'mapping_context.dart';
 import 'simple_mapper.dart';
 
 /// The mapper implementation used for all primitive types.
@@ -16,8 +17,9 @@ class PrimitiveMapper<T extends Object> extends MapperBase<T>
   @override
   Type get type => exactType ?? super.type;
   @override
-  bool isFor(dynamic v) =>
-      exactType != null ? v.runtimeType == exactType : super.isFor(v);
+  bool isFor(dynamic v) {
+    return exactType != null ? v.runtimeType == exactType : super.isFor(v);
+  }
 
   static T _cast<T>(v) => v as T;
 

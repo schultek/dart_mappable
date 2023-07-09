@@ -18,11 +18,6 @@ class AnimalMapper extends ClassMapperBase<Animal> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Animal';
 
@@ -43,11 +38,11 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   final Function instantiate = _instantiate;
 
   static Animal fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Animal>(map));
+    return ensureInitialized().decodeMap<Animal>(map);
   }
 
   static Animal fromJson(String json) {
-    return _guard((c) => c.fromJson<Animal>(json));
+    return ensureInitialized().decodeJson<Animal>(json);
   }
 }
 

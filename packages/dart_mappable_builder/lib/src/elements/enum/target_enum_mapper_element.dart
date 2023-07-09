@@ -17,17 +17,17 @@ class TargetEnumMapperElement extends EnumMapperElement {
   late String paramName = className[0].toLowerCase();
 
   late ValuesMode mode = annotation != null
-      ? ValuesMode.values[
-          annotation?.getField('mode')?.getField('index')?.toIntValue() ?? 0]
+      ? ValuesMode
+          .values[annotation?.read('mode')?.read('index')?.toIntValue() ?? 0]
       : ValuesMode.named;
 
   late CaseStyle? caseStyle =
-      annotation != null && !annotation!.getField('caseStyle')!.isNull
-          ? caseStyleFromAnnotation(annotation!.getField('caseStyle')!)
+      annotation != null && !annotation!.read('caseStyle')!.isNull
+          ? caseStyleFromAnnotation(annotation!.read('caseStyle')!)
           : options.enumCaseStyle;
 
   late int? defaultValue =
-      annotation?.getField('defaultValue')!.getField('index')?.toIntValue();
+      annotation?.read('defaultValue')!.read('index')?.toIntValue();
 
   late List<FieldElement> fields =
       element.fields.where((f) => f.isEnumConstant).toList();

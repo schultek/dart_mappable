@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:dart_mappable/dart_mappable.dart'
@@ -17,6 +16,9 @@ import 'elements/class/target_class_mapper_element.dart';
 import 'elements/enum/dependent_enum_mapper_element.dart';
 import 'elements/enum/target_enum_mapper_element.dart';
 import 'elements/mapper_element.dart';
+import 'elements/record/dependent_record_mapper_element.dart';
+import 'elements/record/target_record_mapper_element.dart';
+import 'records_group.dart';
 import 'utils.dart';
 
 class MapperElementGroup {
@@ -40,18 +42,10 @@ class MapperElementGroup {
   final MappableOptions options;
 
   Map<Element, String> prefixes = {};
-  Map<InterfaceElement, MapperElement> targets = {};
+  Map<Element, MapperElement> targets = {};
+  late RecordsGroup records = RecordsGroup(this);
 
-  late String packageName;
-  bool isPackage(Uri lib) {
-    if (lib.scheme == 'package' || lib.scheme == 'asset') {
-      return lib.pathSegments.first == packageName;
-    } else {
-      return false;
-    }
-  }
-
-  Future<T> addMapper<T extends MapperElement>(T mapper) async {
+  Future<T> _addMapper<T extends MapperElement>(T mapper) async {
     await mapper.init();
     return targets[mapper.element] = mapper;
   }
@@ -66,7 +60,7 @@ class MapperElementGroup {
 
       if (classChecker.hasAnnotationOf(element)) {
         if (element is ClassElement) {
-          await addMapper(TargetClassMapperElement(this, element, options));
+          await _addMapper(TargetClassMapperElement(this, element, options));
 
           for (var c in element.constructors) {
             if (c.isFactory &&
@@ -78,29 +72,32 @@ class MapperElementGroup {
                       ~(~(options.generateMethods ?? GenerateMethods.all) |
                           GenerateMethods.copy)));
 
-              await addMapper(
+              await _addMapper(
                   FactoryConstructorMapperElement(this, c, subOptions));
             }
           }
         } else if (element is TypeAliasElement &&
             element.aliasedType.element is ClassElement) {
-          await addMapper(AliasClassMapperElement(this, element,
+          await _addMapper(AliasClassMapperElement(this, element,
               element.aliasedType.element as ClassElement, options));
         }
       } else if (element is EnumElement &&
           enumChecker.hasAnnotationOf(element)) {
-        await addMapper(TargetEnumMapperElement(this, element, options));
+        await _addMapper(TargetEnumMapperElement(this, element, options));
+      } else if (element is TypeAliasElement &&
+          recordChecker.hasAnnotationOf(element)) {
+        await _addMapper(TargetRecordMapperElement(this, element, options));
       }
     }
 
     for (var target in targets.values.toList()) {
-      await analyzeElement(target);
+      if (target is ClassMapperElement) {
+        await _analyzeClassElement(target);
+      }
     }
   }
 
-  Future<void> analyzeElement(MapperElement element) async {
-    if (element is! ClassMapperElement) return;
-
+  Future<void> _analyzeClassElement(ClassMapperElement element) async {
     ClassElement? getElementFor(InterfaceType? t) {
       if (t != null && !t.isDartCoreObject && t.element is ClassElement) {
         return t.element as ClassElement;
@@ -170,6 +167,21 @@ class MapperElementGroup {
           await checkType(arg);
         }
       }
+      if (t is RecordType) {
+        if (t.alias case var alias?) {
+          var m = await getOrAddMapperForElement(alias.element);
+          if (m != null) {
+            for (var arg in alias.typeArguments) {
+              await checkType(arg);
+            }
+            return;
+          }
+        }
+        records.add(t);
+        for (var f in [...t.positionalFields, ...t.namedFields]) {
+          await checkType(f.type);
+        }
+      }
     }
 
     for (var param in element.params) {
@@ -193,15 +205,18 @@ class MapperElementGroup {
     if (m != null) {
       return m;
     } else if (e is ClassElement && classChecker.hasAnnotationOf(e)) {
-      var m = await addMapper(DependentClassMapperElement(this, e, options));
-      await analyzeElement(m);
+      var m = await _addMapper(DependentClassMapperElement(this, e, options));
+      await _analyzeClassElement(m);
       return m;
     } else if (e is ClassElement && orNone) {
-      var m = await addMapper(NoneClassMapperElement(this, e, options));
-      await analyzeElement(m);
+      var m = await _addMapper(NoneClassMapperElement(this, e, options));
+      await _analyzeClassElement(m);
       return m;
     } else if (e is EnumElement && enumChecker.hasAnnotationOf(e)) {
-      var m = await addMapper(DependentEnumMapperElement(this, e, options));
+      var m = await _addMapper(DependentEnumMapperElement(this, e, options));
+      return m;
+    } else if (e is TypeAliasElement && recordChecker.hasAnnotationOf(e)) {
+      var m = await _addMapper(DependentRecordMapperElement(this, e, options));
       return m;
     } else {
       return null;
@@ -219,23 +234,72 @@ class MapperElementGroup {
         return prefixedType(t.bound, resolveBounds: resolveBounds);
       }
       return t.element.name;
-    } else if (t is! InterfaceType) {
-      return t.getDisplayString(withNullability: withNullability);
     }
 
-    var typeArgs = '';
-    if (t.typeArguments.isNotEmpty) {
-      typeArgs =
-          '<${t.typeArguments.map((t) => prefixedType(t, resolveBounds: resolveBounds)).join(', ')}>';
+    if (t is InterfaceType) {
+      var typeArgs = '';
+      if (t.typeArguments.isNotEmpty) {
+        typeArgs =
+            '<${t.typeArguments.map((t) => prefixedType(t, resolveBounds: resolveBounds)).join(', ')}>';
+      }
+
+      var type = '${t.element.name}$typeArgs';
+
+      if (withNullability && t.isNullable) {
+        type += '?';
+      }
+
+      return '${prefixOfElement(t.element)}$type';
     }
 
-    var type = '${t.element.name}$typeArgs';
+    if (t is RecordType) {
+      if (t.alias case var alias?) {
+        var type = alias.element.name;
 
-    if (withNullability && t.nullabilitySuffix == NullabilitySuffix.question) {
-      type += '?';
+        if (alias.typeArguments.isNotEmpty) {
+          type +=
+              '<${alias.typeArguments.map((t) => prefixedType(t, resolveBounds: resolveBounds)).join(', ')}>';
+        }
+
+        if (withNullability && t.isNullable) {
+          type += '?';
+        }
+
+        return '${prefixOfElement(alias.element)}$type';
+      }
+      var type = '';
+      var r = records.get(t);
+
+      if (r != null) {
+        type = '${r.className}<';
+        type += [...t.positionalFields, ...t.namedFields]
+            .map((f) => prefixedType(f.type, resolveBounds: resolveBounds))
+            .join(', ');
+        type += '>';
+      } else {
+        type = t.positionalFields
+            .map((f) => prefixedType(f.type, resolveBounds: resolveBounds))
+            .join(', ');
+
+        if (t.namedFields.isNotEmpty) {
+          if (t.positionalFields.isNotEmpty) {
+            type += ', ';
+          }
+          type +=
+              '{${t.namedFields.map((f) => '${prefixedType(f.type, resolveBounds: resolveBounds)} ${f.name}').join(', ')}}';
+        }
+
+        type = '($type)';
+      }
+
+      if (withNullability && t.isNullable) {
+        type += '?';
+      }
+
+      return type;
     }
 
-    return '${prefixOfElement(t.element)}$type';
+    return t.getDisplayString(withNullability: withNullability);
   }
 
   /// All of the declared classes and enums in this library.

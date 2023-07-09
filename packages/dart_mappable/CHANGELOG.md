@@ -1,3 +1,18 @@
+# 4.0.0-dev.0
+
+- Require `sdk: >=3.0.0`.
+- Added support for **Records**.
+
+  - Fields of a class can now be any record type.
+  - You can annotate toplevel record typedefs:
+  
+    ```dart
+      @MappableRecord()
+      typedef Coordinates = ({double latitude, double longitude});
+    ```
+    
+  For a more detailed usage see the documentation.
+
 # 3.1.1
 
 - Fixed supporting expressions in `@MappableClass.includeCustomMappers`.

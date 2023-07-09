@@ -17,14 +17,14 @@ const classChecker = TypeChecker.fromRuntime(MappableClass);
 const fieldChecker = TypeChecker.fromRuntime(MappableField);
 const libChecker = TypeChecker.fromRuntime(MappableLib);
 const mapperChecker = TypeChecker.fromRuntime(MapperBase);
+const recordChecker = TypeChecker.fromRuntime(MappableRecord);
 
 late Resolver nodeResolver;
 
 extension GetNode on Element {
   Future<AstNode?> getNode() {
-    return nodeResolver
-        .astNodeFor(this, resolve: false)
-        .catchError((_) => null);
+    return nodeResolver.astNodeFor(this, resolve: false);
+    //.catchError((_) => null);
   }
 
   Future<AstNode?> getResolvedNode() async {
@@ -127,15 +127,15 @@ DartObject? fieldAnnotation(ParameterElement param) {
 CaseStyle? caseStyleFromAnnotation(DartObject? obj) {
   return obj != null && !obj.isNull
       ? CaseStyle(
-          head: textTransformFromAnnotation(obj.getField('head')!),
-          tail: textTransformFromAnnotation(obj.getField('tail')!),
-          separator: obj.getField('separator')!.toStringValue() ?? '',
+          head: textTransformFromAnnotation(obj.read('head')),
+          tail: textTransformFromAnnotation(obj.read('tail')),
+          separator: obj.read('separator')?.toStringValue() ?? '',
         )
       : null;
 }
 
-TextTransform? textTransformFromAnnotation(DartObject obj) {
-  var index = obj.getField('index')?.toIntValue();
+TextTransform? textTransformFromAnnotation(DartObject? obj) {
+  var index = obj?.read('index')?.toIntValue();
   return index != null ? TextTransform.values.skip(index).firstOrNull : null;
 }
 
@@ -146,4 +146,20 @@ extension NullableType on DartType {
 extension TypeList on DartObject {
   List<DartType>? toTypeList() =>
       toListValue()?.map((o) => o.toTypeValue()).whereType<DartType>().toList();
+}
+
+extension ObjectReader on DartObject {
+  /// Similar to [DartObject.getField], but traverses super classes.
+  ///
+  /// Returns `null` if ultimately [field] is never found.
+  DartObject? read(String field) {
+    if (isNull) {
+      return null;
+    }
+    final result = getField(field);
+    if (result == null) {
+      return getField('(super)')?.read(field);
+    }
+    return result;
+  }
 }

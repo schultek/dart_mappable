@@ -1,12 +1,9 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../elements/class/target_class_mapper_element.dart';
+import '../../elements/class/target_class_mapper_element.dart';
+import '../generator.dart';
 
-class ToStringGenerator {
-  ToStringGenerator(this.element);
-
-  final TargetClassMapperElement element;
-
+mixin ToStringMixin on MapperGenerator<TargetClassMapperElement> {
   String generateToStringMixin() {
     if (!element.shouldGenerate(GenerateMethods.stringify) ||
         element.isAbstract) {
@@ -16,7 +13,7 @@ class ToStringGenerator {
     return '''
       @override
       String toString() {
-        return ${element.mapperName}._guard((c) => c.asString(this));
+        return ${element.mapperName}.ensureInitialized().stringifyValue(this as ${element.selfTypeParam});
       }
     ''';
   }

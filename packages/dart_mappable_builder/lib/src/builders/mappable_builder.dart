@@ -8,8 +8,11 @@ import 'package:path/path.dart' as p;
 import '../builder_options.dart';
 import '../elements/class/target_class_mapper_element.dart';
 import '../elements/enum/target_enum_mapper_element.dart';
+import '../elements/record/target_record_mapper_element.dart';
 import '../generators/class_mapper_generator.dart';
 import '../generators/enum_mapper_generator.dart';
+import '../generators/generator.dart';
+import '../generators/record_mapper_generator.dart';
 import '../mapper_group.dart';
 import '../utils.dart';
 
@@ -64,7 +67,6 @@ class MappableBuilder implements Builder {
     }
 
     var group = MapperElementGroup(entryLib, options);
-    group.packageName = entryLib.source.uri.pathSegments.first;
 
     return group;
   }
@@ -84,7 +86,11 @@ class MappableBuilder implements Builder {
         if (m is TargetClassMapperElement)
           ClassMapperGenerator(m)
         else if (m is TargetEnumMapperElement)
-          EnumMapperGenerator(m),
+          EnumMapperGenerator(m)
+        else if (m is TargetRecordMapperElement)
+          RecordMapperGenerator(m),
+      for (var r in group.records.sortedRecords) //
+        RecordMapperGenerator(r),
     ];
 
     var output = await Future.wait(generators.map((g) => g.generate()));

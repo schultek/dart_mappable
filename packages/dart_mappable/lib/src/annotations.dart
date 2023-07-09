@@ -9,30 +9,18 @@ import 'mappers/mapper_base.dart';
 /// {@category Polymorphism}
 /// {@category Mapping Hooks}
 /// {@category Custom Mappers}
-class MappableClass {
+class MappableClass extends MappableInterface {
   const MappableClass({
-    this.caseStyle,
-    this.ignoreNull,
-    this.uniqueId,
+    super.caseStyle,
+    super.ignoreNull,
+    super.uniqueId,
     this.discriminatorKey,
     this.discriminatorValue,
-    this.hook,
-    this.generateMethods,
+    super.hook,
+    super.generateMethods,
     this.includeSubClasses,
-    this.includeCustomMappers,
-  });
-
-  /// The case style for the map keys.
-  final CaseStyle? caseStyle;
-
-  /// If true removes all map keys with null values.
-  final bool? ignoreNull;
-
-  /// A unique id representing this class.
-  ///
-  /// This only needs to be set when you have two classes with the same name
-  /// and want to use generic serialization.
-  final String? uniqueId;
+    super.includeCustomMappers,
+  }) : super._();
 
   /// Property key used for type discriminators.
   ///
@@ -47,29 +35,11 @@ class MappableClass {
   /// value matches, use [MappableClass.useAsDefault].
   final dynamic discriminatorValue;
 
-  /// Set a custom hook used only for this class.
-  ///
-  /// Hooks allow you to hook into the decoding and encoding process
-  /// and insert custom logic.
-  final MappingHook? hook;
-
-  /// Specify which methods to generate for this class.
-  ///
-  /// Defaults to all methods.
-  /// Use this with the [GenerateMethods] static properties, like
-  /// [GenerateMethods.decode]. To set multiple methods, combine properties
-  /// using the `|` operator.
-  final int? generateMethods;
-
   /// Specify additional subclasses of this class for polymorphism.
   ///
   /// You only need to add subclasses here that are not in the same library
   /// as the superclass. All others are automatically included.
   final Iterable<Type>? includeSubClasses;
-
-  /// Specify additional custom mappers that should be included for fields
-  /// of this class.
-  final Iterable<MapperBase>? includeCustomMappers;
 
   /// To be used with [discriminatorValue] to signal a default subclass.
   static const useAsDefault = MappingFlags.useAsDefault;
@@ -155,6 +125,7 @@ class MappableConstructor {
 /// Used to annotate a parameter or field to overwrite the mapped key.
 ///
 /// {@category Models}
+/// {@category Records}
 /// {@category Configuration}
 /// {@category Mapping Hooks}
 class MappableField {
@@ -165,6 +136,63 @@ class MappableField {
 
   /// Define custom hooks used only for this field.
   final MappingHook? hook;
+}
+
+/// Used to annotate a record in order to generate mapping code.
+///
+/// {@category Records}
+class MappableRecord extends MappableInterface {
+  const MappableRecord({
+    super.caseStyle,
+    super.ignoreNull,
+    super.uniqueId,
+    super.hook,
+    super.includeCustomMappers,
+  }) : super._();
+}
+
+/// Used to annotate an interface in order to generate mapping code.
+///
+/// {@category Models}
+abstract class MappableInterface {
+  const MappableInterface._({
+    this.caseStyle,
+    this.ignoreNull,
+    this.uniqueId,
+    this.hook,
+    this.generateMethods,
+    this.includeCustomMappers,
+  });
+
+  /// The case style for the map keys.
+  final CaseStyle? caseStyle;
+
+  /// If true removes all map keys with null values.
+  final bool? ignoreNull;
+
+  /// A unique id representing this class.
+  ///
+  /// This only needs to be set when you have two classes with the same name
+  /// and want to use generic serialization.
+  final String? uniqueId;
+
+  /// Set a custom hook used only for this class.
+  ///
+  /// Hooks allow you to hook into the decoding and encoding process
+  /// and insert custom logic.
+  final MappingHook? hook;
+
+  /// Specify which methods to generate for this class.
+  ///
+  /// Defaults to all methods.
+  /// Use this with the [GenerateMethods] static properties, like
+  /// [GenerateMethods.decode]. To set multiple methods, combine properties
+  /// using the `|` operator.
+  final int? generateMethods;
+
+  /// Specify additional custom mappers that should be included for fields
+  /// of this class.
+  final Iterable<MapperBase>? includeCustomMappers;
 }
 
 /// Used to annotate a library to define default values.

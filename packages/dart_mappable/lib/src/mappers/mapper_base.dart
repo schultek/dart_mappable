@@ -1,8 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:type_plus/type_plus.dart';
 
 import '../mapper_container.dart';
 import '../mapper_exception.dart';
+import 'mapping_context.dart';
 
 /// The common super class for all mappers.
 ///
@@ -25,11 +25,76 @@ abstract class MapperBase<T extends Object> {
   Type get type => T;
 
   bool isFor(dynamic v) => v is T;
+  bool isForType(Type type) => type.base == T;
   bool includeTypeId<V>(dynamic v) => false;
 
   /// The mapping method to decode [value] to an instance of this mappers type.
   T decoder(Object value, DecodingContext context) {
     throw MapperException.unsupportedMethod(MapperMethod.decode, type);
+  }
+
+  V decodeValue<V>(Object? value,
+      [DecodingOptions? options, MapperContainer? container]) {
+    if (value == null || (options?.type == null && value is V)) {
+      return value as V;
+    }
+    var type = options?.type ?? V;
+    try {
+      return decoder(
+        value,
+        DecodingContext(
+          container: container,
+          args: type.args,
+          options: options,
+        ),
+      ) as V;
+    } catch (e, stacktrace) {
+      Error.throwWithStackTrace(
+        MapperException.chain(MapperMethod.decode, '($type)', e),
+        stacktrace,
+      );
+    }
+  }
+
+  Object? encodeValue<V>(V value,
+      [EncodingOptions? options, MapperContainer? container]) {
+    try {
+      Type type = V;
+
+      var includeTypeId = options?.includeTypeId;
+      includeTypeId ??= this.includeTypeId<V>(value);
+
+      if (includeTypeId) {
+        type = value.runtimeType;
+      }
+
+      var typeArgs = type.args.map((t) => t == UnresolvedType ? dynamic : t);
+
+      var fallback = this.type.base.args;
+      if (typeArgs.length != fallback.length) {
+        typeArgs = fallback;
+      }
+
+      var result = this.encoder(
+        value as T,
+        EncodingContext(
+          container: container,
+          options: options?.inheritOptions ?? false ? options : null,
+          args: typeArgs.toList(),
+        ),
+      );
+
+      if (includeTypeId && result is Map<String, dynamic>) {
+        result['__type'] = value.runtimeType.id;
+      }
+
+      return result;
+    } catch (e, stacktrace) {
+      Error.throwWithStackTrace(
+        MapperException.chain(MapperMethod.encode, '(${value.runtimeType})', e),
+        stacktrace,
+      );
+    }
   }
 
   /// The mapping method to encode [value] to a serializable value.
@@ -60,86 +125,10 @@ abstract class MapperBase<T extends Object> {
   }
 
   /// Registers an additional type [T] to be identifiable by the package.
-  static void addType<T>() {
+  static void addType<T>([Function? factory]) {
+    if (factory != null) {
+      return TypePlus.addFactory(factory);
+    }
     TypePlus.add<T>();
-  }
-}
-
-/// The mapping context passed to all mapping methods of a mapper.
-class MappingContext {
-  /// The container that is used for this mapping call.
-  final MapperContainer container;
-
-  /// A list of type arguments to get the concrete type for a generic mapper.
-  final List<Type> args;
-
-  MappingContext({MapperContainer? container, this.args = const []})
-      : container = container ?? MapperContainer.globals;
-
-  Type arg(int index, [List<int> argIndices = const []]) {
-    var a = args[index];
-    if (argIndices.isNotEmpty) {
-      a = argIndices.fold(a, (a, i) => a.args.skip(i).firstOrNull ?? dynamic);
-    }
-    return a;
-  }
-}
-
-/// The decoding context passed to the [decoder] method of a mapper.
-class DecodingContext extends MappingContext {
-  final bool inherited;
-
-  DecodingContext({super.container, super.args, this.inherited = false});
-
-  DecodingContext inherit({MapperContainer? container, List<Type>? args}) {
-    return DecodingContext(
-      container: container ?? this.container,
-      args: args ?? this.args,
-      inherited: true,
-    );
-  }
-}
-
-/// The encoding context passed to the [encoder] method of a mapper.
-class EncodingContext extends MappingContext {
-  EncodingContext({super.container, this.options, super.args});
-
-  final EncodingOptions? options;
-}
-
-/// Utility methods to call a generic function with the type argument of the
-/// mapping context.
-extension MappingContextCall<O extends MappingContext> on O {
-  R callWith<R, U>(Function fn, U value) {
-    if (args.isEmpty) {
-      return fn(value) as R;
-    } else if (args.length == 1) {
-      return args.first.provideTo(<A>() => fn<A>(value) as R);
-    } else if (args.length == 2) {
-      return args.first
-          .provideTo(<A>() => args[1].provideTo(<B>() => fn<A, B>(value) as R));
-    } else if (args.length == 3) {
-      return args.first.provideTo(<A>() => args[1].provideTo(
-          <B>() => args[2].provideTo(<C>() => fn<A, B, C>(value) as R)));
-    } else {
-      throw AssertionError('Max args are 3');
-    }
-  }
-
-  R callWith1<R, U>(R Function<A>(U) fn, [U? value]) {
-    assert(args.length == 1);
-    return args.first.provideTo(<A>() => fn<A>(value as U));
-  }
-
-  R callWith2<R, U>(R Function<A, B>(U) fn, [U? value]) {
-    assert(args.length == 2);
-    return args.first
-        .provideTo(<A>() => args[1].provideTo(<B>() => fn<A, B>(value as U)));
-  }
-
-  R callWith3<R, U>(R Function<A, B, C>(U) fn, [U? value]) {
-    assert(args.length == 3);
-    return args.first.provideTo(<A>() => args[1].provideTo(
-        <B>() => args[2].provideTo(<C>() => fn<A, B, C>(value as U))));
   }
 }

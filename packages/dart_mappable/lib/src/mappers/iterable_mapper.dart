@@ -4,6 +4,7 @@ import 'package:type_plus/type_plus.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
 import 'mapper_mixins.dart';
+import 'mapping_context.dart';
 
 /// The default mapper for iterables like [List] and [Set].
 ///
@@ -52,7 +53,7 @@ class _IterableDecoder<I extends Iterable> {
 
   Iterable<T> _decode<T>() {
     return mapper.fromIterable(value.map((v) {
-      return context.container.$dec<T>(v, 'item');
+      return context.$dec<T>(v, 'item');
     }));
   }
 }
@@ -71,7 +72,7 @@ class _IterableEncoder<I extends Iterable> {
 
   Iterable<dynamic> _encode<T>() {
     return value
-        .map((v) => context.container.$enc<T>(v as T, 'item', context.options))
+        .map((v) => context.$enc<T>(v as T, 'item', context.options))
         .toList();
   }
 }

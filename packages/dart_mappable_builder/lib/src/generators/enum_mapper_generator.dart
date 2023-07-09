@@ -1,5 +1,5 @@
 import '../elements/enum/target_enum_mapper_element.dart';
-import 'class_mapper_generator.dart';
+import 'generator.dart';
 
 /// Generates code for a specific enum.
 class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {

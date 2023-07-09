@@ -6,13 +6,14 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../utils.dart';
 import '../mapper_element.dart';
+import '../param/mapper_field_element.dart';
 import '../param/mapper_param_element.dart';
 import 'mixins/param_elements_mixin.dart';
 import 'mixins/type_params_mixin.dart';
 import 'none_class_mapper_element.dart';
 
 /// Element interface for all class mappers.
-abstract class ClassMapperElement extends MapperElement<ClassElement>
+abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
     with ParamElementsMixin, TypeParamsMixin {
   ClassMapperElement(super.parent, super.element, super.options);
 
@@ -22,6 +23,9 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
     constructorNode = await constructor?.getResolvedNode();
     discriminatorValueCode = await _getDiscriminatorValueCode();
   }
+
+  @override
+  late final String className = element.name;
 
   List<ClassMapperElement> subElements = [];
   @override
@@ -49,19 +53,20 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
     }
   }();
 
-  late List<MapperFieldElement> fields = () {
-    var fields = <Element, MapperFieldElement>{};
+  @override
+  late List<ClassMapperFieldElement> fields = () {
+    var fields = <Element, ClassMapperFieldElement>{};
 
     for (var p in params) {
       fields[p.accessor ?? p.parameter] =
-          MapperFieldElement(p, p.accessor, this);
+          ClassMapperFieldElement(p, p.accessor, this);
     }
 
     for (var f in allPublicFields) {
       if (!fields.containsKey(f) &&
           !fields.keys
               .any((e) => e is PropertyInducingElement && e.name == f.name)) {
-        fields[f] = MapperFieldElement(null, f, this);
+        fields[f] = ClassMapperFieldElement(null, f, this);
       }
     }
 
@@ -73,7 +78,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
       classChecker.firstAnnotationOf(annotatedElement);
 
   late String uniqueId =
-      annotation?.getField('uniqueId')?.toStringValue() ?? className;
+      annotation?.read('uniqueId')?.toStringValue() ?? className;
 
   @override
   late ConstructorElement? constructor = element.constructors
@@ -98,7 +103,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
   }();
 
   late String? discriminatorKey =
-      annotation?.getField('discriminatorKey')!.toStringValue() ??
+      annotation?.read('discriminatorKey')?.toStringValue() ??
           options.discriminatorKey ??
           superElement?.discriminatorKey;
 
@@ -111,7 +116,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
   }
 
   late String? hookForClass = () {
-    var hook = annotation?.getField('hook');
+    var hook = annotation?.read('hook');
     if (hook != null && !hook.isNull) {
       var node = getAnnotationProperty(annotatedNode, MappableClass, 'hook');
       if (node != null) {
@@ -121,18 +126,17 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
     return null;
   }();
 
-  late CaseStyle? caseStyle =
-      caseStyleFromAnnotation(annotation?.getField('caseStyle')) ??
-          options.caseStyle ??
-          superElement?.caseStyle;
+  @override
+  // ignore: overridden_fields
+  late final CaseStyle? caseStyle = super.caseStyle ?? superElement?.caseStyle;
 
-  late bool ignoreNull = annotation?.getField('ignoreNull')!.toBoolValue() ??
+  late bool ignoreNull = annotation?.read('ignoreNull')?.toBoolValue() ??
       options.ignoreNull ??
       superElement?.ignoreNull ??
       false;
 
   late int generateMethods =
-      annotation?.getField('generateMethods')!.toIntValue() ??
+      annotation?.read('generateMethods')?.toIntValue() ??
           options.generateMethods ??
           GenerateMethods.all;
 
@@ -142,7 +146,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
 
   List<ClassElement> getSubClasses() {
     return annotation
-            ?.getField('includeSubClasses')
+            ?.read('includeSubClasses')
             ?.toTypeList()
             ?.map((t) => t.element)
             .whereType<ClassElement>()
@@ -159,12 +163,12 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
 
   late bool isAbstract = element.isAbstract;
 
-  late List<MapperParamElement> copySafeParams = (() {
+  late List<ClassMapperParamElement> copySafeParams = (() {
     if (subElements.isEmpty) return params;
 
-    var safeParams = <MapperParamElement>[];
+    var safeParams = <ClassMapperParamElement>[];
 
-    bool isCopySafe(MapperParamElement param) {
+    bool isCopySafe(ClassMapperParamElement param) {
       return subElements.every((e) => e.copySafeParams.any((subParam) {
             if (subParam is SuperParamElement &&
                 (subParam.superParameter.parameter == param.parameter ||

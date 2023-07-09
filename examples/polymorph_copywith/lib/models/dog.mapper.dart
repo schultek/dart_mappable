@@ -18,11 +18,6 @@ class DogMapper extends SubClassMapperBase<Dog> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Dog';
 
@@ -55,40 +50,40 @@ class DogMapper extends SubClassMapperBase<Dog> {
   final Function instantiate = _instantiate;
 
   static Dog fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Dog>(map));
+    return ensureInitialized().decodeMap<Dog>(map);
   }
 
   static Dog fromJson(String json) {
-    return _guard((c) => c.fromJson<Dog>(json));
+    return ensureInitialized().decodeJson<Dog>(json);
   }
 }
 
 mixin DogMappable {
   String toJson() {
-    return DogMapper._guard((c) => c.toJson(this as Dog));
+    return DogMapper.ensureInitialized().encodeJson<Dog>(this as Dog);
   }
 
   Map<String, dynamic> toMap() {
-    return DogMapper._guard((c) => c.toMap(this as Dog));
+    return DogMapper.ensureInitialized().encodeMap<Dog>(this as Dog);
   }
 
   DogCopyWith<Dog, Dog, Dog> get copyWith =>
       _DogCopyWithImpl(this as Dog, $identity, $identity);
   @override
   String toString() {
-    return DogMapper._guard((c) => c.asString(this));
+    return DogMapper.ensureInitialized().stringifyValue(this as Dog);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            DogMapper._guard((c) => c.isEqual(this, other)));
+            DogMapper.ensureInitialized().isValueEqual(this as Dog, other));
   }
 
   @override
   int get hashCode {
-    return DogMapper._guard((c) => c.hash(this));
+    return DogMapper.ensureInitialized().hashValue(this as Dog);
   }
 }
 

@@ -16,11 +16,6 @@ class PersonCMapper extends ClassMapperBase<PersonC> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'PersonC';
 
@@ -40,40 +35,43 @@ class PersonCMapper extends ClassMapperBase<PersonC> {
   final Function instantiate = _instantiate;
 
   static PersonC fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<PersonC>(map));
+    return ensureInitialized().decodeMap<PersonC>(map);
   }
 
   static PersonC fromJson(String json) {
-    return _guard((c) => c.fromJson<PersonC>(json));
+    return ensureInitialized().decodeJson<PersonC>(json);
   }
 }
 
 mixin PersonCMappable {
   String toJson() {
-    return PersonCMapper._guard((c) => c.toJson(this as PersonC));
+    return PersonCMapper.ensureInitialized()
+        .encodeJson<PersonC>(this as PersonC);
   }
 
   Map<String, dynamic> toMap() {
-    return PersonCMapper._guard((c) => c.toMap(this as PersonC));
+    return PersonCMapper.ensureInitialized()
+        .encodeMap<PersonC>(this as PersonC);
   }
 
   PersonCCopyWith<PersonC, PersonC, PersonC> get copyWith =>
       _PersonCCopyWithImpl(this as PersonC, $identity, $identity);
   @override
   String toString() {
-    return PersonCMapper._guard((c) => c.asString(this));
+    return PersonCMapper.ensureInitialized().stringifyValue(this as PersonC);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            PersonCMapper._guard((c) => c.isEqual(this, other)));
+            PersonCMapper.ensureInitialized()
+                .isValueEqual(this as PersonC, other));
   }
 
   @override
   int get hashCode {
-    return PersonCMapper._guard((c) => c.hash(this));
+    return PersonCMapper.ensureInitialized().hashValue(this as PersonC);
   }
 }
 

@@ -29,4 +29,4 @@ enum Status {
 
 ---
 
-<p align="right"><a href="../topics/Configuration-topic.html">Next: Configuration</a></p>
+<p align="right"><a href="../topics/Records-topic.html">Next: Records</a></p>

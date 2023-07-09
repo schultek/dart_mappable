@@ -18,11 +18,6 @@ class AnimalMapper extends ClassMapperBase<Animal> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Animal';
 
@@ -45,11 +40,11 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   final Function instantiate = _instantiate;
 
   static Animal fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Animal>(map));
+    return ensureInitialized().decodeMap<Animal>(map);
   }
 
   static Animal fromJson(String json) {
-    return _guard((c) => c.fromJson<Animal>(json));
+    return ensureInitialized().decodeJson<Animal>(json);
   }
 }
 
@@ -76,11 +71,6 @@ class CatMapper extends SubClassMapperBase<Cat> {
       SiameseMapper.ensureInitialized();
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -112,11 +102,11 @@ class CatMapper extends SubClassMapperBase<Cat> {
   final Function instantiate = _instantiate;
 
   static Cat fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Cat>(map));
+    return ensureInitialized().decodeMap<Cat>(map);
   }
 
   static Cat fromJson(String json) {
-    return _guard((c) => c.fromJson<Cat>(json));
+    return ensureInitialized().decodeJson<Cat>(json);
   }
 }
 
@@ -143,11 +133,6 @@ class SiameseMapper extends SubClassMapperBase<Siamese> {
       CatMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -178,40 +163,43 @@ class SiameseMapper extends SubClassMapperBase<Siamese> {
   final Function instantiate = _instantiate;
 
   static Siamese fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Siamese>(map));
+    return ensureInitialized().decodeMap<Siamese>(map);
   }
 
   static Siamese fromJson(String json) {
-    return _guard((c) => c.fromJson<Siamese>(json));
+    return ensureInitialized().decodeJson<Siamese>(json);
   }
 }
 
 mixin SiameseMappable {
   String toJson() {
-    return SiameseMapper._guard((c) => c.toJson(this as Siamese));
+    return SiameseMapper.ensureInitialized()
+        .encodeJson<Siamese>(this as Siamese);
   }
 
   Map<String, dynamic> toMap() {
-    return SiameseMapper._guard((c) => c.toMap(this as Siamese));
+    return SiameseMapper.ensureInitialized()
+        .encodeMap<Siamese>(this as Siamese);
   }
 
   SiameseCopyWith<Siamese, Siamese, Siamese> get copyWith =>
       _SiameseCopyWithImpl(this as Siamese, $identity, $identity);
   @override
   String toString() {
-    return SiameseMapper._guard((c) => c.asString(this));
+    return SiameseMapper.ensureInitialized().stringifyValue(this as Siamese);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            SiameseMapper._guard((c) => c.isEqual(this, other)));
+            SiameseMapper.ensureInitialized()
+                .isValueEqual(this as Siamese, other));
   }
 
   @override
   int get hashCode {
-    return SiameseMapper._guard((c) => c.hash(this));
+    return SiameseMapper.ensureInitialized().hashValue(this as Siamese);
   }
 }
 
@@ -259,11 +247,6 @@ class DogMapper extends SubClassMapperBase<Dog> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Dog';
 
@@ -292,40 +275,40 @@ class DogMapper extends SubClassMapperBase<Dog> {
   final Function instantiate = _instantiate;
 
   static Dog fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Dog>(map));
+    return ensureInitialized().decodeMap<Dog>(map);
   }
 
   static Dog fromJson(String json) {
-    return _guard((c) => c.fromJson<Dog>(json));
+    return ensureInitialized().decodeJson<Dog>(json);
   }
 }
 
 mixin DogMappable {
   String toJson() {
-    return DogMapper._guard((c) => c.toJson(this as Dog));
+    return DogMapper.ensureInitialized().encodeJson<Dog>(this as Dog);
   }
 
   Map<String, dynamic> toMap() {
-    return DogMapper._guard((c) => c.toMap(this as Dog));
+    return DogMapper.ensureInitialized().encodeMap<Dog>(this as Dog);
   }
 
   DogCopyWith<Dog, Dog, Dog> get copyWith =>
       _DogCopyWithImpl(this as Dog, $identity, $identity);
   @override
   String toString() {
-    return DogMapper._guard((c) => c.asString(this));
+    return DogMapper.ensureInitialized().stringifyValue(this as Dog);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            DogMapper._guard((c) => c.isEqual(this, other)));
+            DogMapper.ensureInitialized().isValueEqual(this as Dog, other));
   }
 
   @override
   int get hashCode {
-    return DogMapper._guard((c) => c.hash(this));
+    return DogMapper.ensureInitialized().hashValue(this as Dog);
   }
 }
 
@@ -370,11 +353,6 @@ class ShepherdMapper extends SubClassMapperBase<Shepherd> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Shepherd';
 
@@ -403,40 +381,43 @@ class ShepherdMapper extends SubClassMapperBase<Shepherd> {
   final Function instantiate = _instantiate;
 
   static Shepherd fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Shepherd>(map));
+    return ensureInitialized().decodeMap<Shepherd>(map);
   }
 
   static Shepherd fromJson(String json) {
-    return _guard((c) => c.fromJson<Shepherd>(json));
+    return ensureInitialized().decodeJson<Shepherd>(json);
   }
 }
 
 mixin ShepherdMappable {
   String toJson() {
-    return ShepherdMapper._guard((c) => c.toJson(this as Shepherd));
+    return ShepherdMapper.ensureInitialized()
+        .encodeJson<Shepherd>(this as Shepherd);
   }
 
   Map<String, dynamic> toMap() {
-    return ShepherdMapper._guard((c) => c.toMap(this as Shepherd));
+    return ShepherdMapper.ensureInitialized()
+        .encodeMap<Shepherd>(this as Shepherd);
   }
 
   ShepherdCopyWith<Shepherd, Shepherd, Shepherd> get copyWith =>
       _ShepherdCopyWithImpl(this as Shepherd, $identity, $identity);
   @override
   String toString() {
-    return ShepherdMapper._guard((c) => c.asString(this));
+    return ShepherdMapper.ensureInitialized().stringifyValue(this as Shepherd);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            ShepherdMapper._guard((c) => c.isEqual(this, other)));
+            ShepherdMapper.ensureInitialized()
+                .isValueEqual(this as Shepherd, other));
   }
 
   @override
   int get hashCode {
-    return ShepherdMapper._guard((c) => c.hash(this));
+    return ShepherdMapper.ensureInitialized().hashValue(this as Shepherd);
   }
 }
 
@@ -485,11 +466,6 @@ class HumanMapper extends ClassMapperBase<Human> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Human';
 
@@ -509,40 +485,40 @@ class HumanMapper extends ClassMapperBase<Human> {
   final Function instantiate = _instantiate;
 
   static Human fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Human>(map));
+    return ensureInitialized().decodeMap<Human>(map);
   }
 
   static Human fromJson(String json) {
-    return _guard((c) => c.fromJson<Human>(json));
+    return ensureInitialized().decodeJson<Human>(json);
   }
 }
 
 mixin HumanMappable {
   String toJson() {
-    return HumanMapper._guard((c) => c.toJson(this as Human));
+    return HumanMapper.ensureInitialized().encodeJson<Human>(this as Human);
   }
 
   Map<String, dynamic> toMap() {
-    return HumanMapper._guard((c) => c.toMap(this as Human));
+    return HumanMapper.ensureInitialized().encodeMap<Human>(this as Human);
   }
 
   HumanCopyWith<Human, Human, Human> get copyWith =>
       _HumanCopyWithImpl(this as Human, $identity, $identity);
   @override
   String toString() {
-    return HumanMapper._guard((c) => c.asString(this));
+    return HumanMapper.ensureInitialized().stringifyValue(this as Human);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            HumanMapper._guard((c) => c.isEqual(this, other)));
+            HumanMapper.ensureInitialized().isValueEqual(this as Human, other));
   }
 
   @override
   int get hashCode {
-    return HumanMapper._guard((c) => c.hash(this));
+    return HumanMapper.ensureInitialized().hashValue(this as Human);
   }
 }
 
