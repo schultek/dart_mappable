@@ -67,11 +67,6 @@ class PersonMapper extends ClassMapperBase<Person> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Person';
 
@@ -99,40 +94,41 @@ class PersonMapper extends ClassMapperBase<Person> {
   final Function instantiate = _instantiate;
 
   static Person fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Person>(map));
+    return ensureInitialized().decodeMap<Person>(map);
   }
 
   static Person fromJson(String json) {
-    return _guard((c) => c.fromJson<Person>(json));
+    return ensureInitialized().decodeJson<Person>(json);
   }
 }
 
 mixin PersonMappable {
   String toJson() {
-    return PersonMapper._guard((c) => c.toJson(this as Person));
+    return PersonMapper.ensureInitialized().encodeJson<Person>(this as Person);
   }
 
   Map<String, dynamic> toMap() {
-    return PersonMapper._guard((c) => c.toMap(this as Person));
+    return PersonMapper.ensureInitialized().encodeMap<Person>(this as Person);
   }
 
   PersonCopyWith<Person, Person, Person> get copyWith =>
       _PersonCopyWithImpl(this as Person, $identity, $identity);
   @override
   String toString() {
-    return PersonMapper._guard((c) => c.asString(this));
+    return PersonMapper.ensureInitialized().stringifyValue(this as Person);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            PersonMapper._guard((c) => c.isEqual(this, other)));
+            PersonMapper.ensureInitialized()
+                .isValueEqual(this as Person, other));
   }
 
   @override
   int get hashCode {
-    return PersonMapper._guard((c) => c.hash(this));
+    return PersonMapper.ensureInitialized().hashValue(this as Person);
   }
 }
 
@@ -185,11 +181,6 @@ class CarMapper extends ClassMapperBase<Car> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Car';
 
@@ -212,40 +203,40 @@ class CarMapper extends ClassMapperBase<Car> {
   final Function instantiate = _instantiate;
 
   static Car fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Car>(map));
+    return ensureInitialized().decodeMap<Car>(map);
   }
 
   static Car fromJson(String json) {
-    return _guard((c) => c.fromJson<Car>(json));
+    return ensureInitialized().decodeJson<Car>(json);
   }
 }
 
 mixin CarMappable {
   String toJson() {
-    return CarMapper._guard((c) => c.toJson(this as Car));
+    return CarMapper.ensureInitialized().encodeJson<Car>(this as Car);
   }
 
   Map<String, dynamic> toMap() {
-    return CarMapper._guard((c) => c.toMap(this as Car));
+    return CarMapper.ensureInitialized().encodeMap<Car>(this as Car);
   }
 
   CarCopyWith<Car, Car, Car> get copyWith =>
       _CarCopyWithImpl(this as Car, $identity, $identity);
   @override
   String toString() {
-    return CarMapper._guard((c) => c.asString(this));
+    return CarMapper.ensureInitialized().stringifyValue(this as Car);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            CarMapper._guard((c) => c.isEqual(this, other)));
+            CarMapper.ensureInitialized().isValueEqual(this as Car, other));
   }
 
   @override
   int get hashCode {
-    return CarMapper._guard((c) => c.hash(this));
+    return CarMapper.ensureInitialized().hashValue(this as Car);
   }
 }
 
@@ -289,11 +280,6 @@ class BoxMapper extends ClassMapperBase<Box> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Box';
   @override
@@ -320,40 +306,40 @@ class BoxMapper extends ClassMapperBase<Box> {
   final Function instantiate = _instantiate;
 
   static Box<T> fromMap<T>(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Box<T>>(map));
+    return ensureInitialized().decodeMap<Box<T>>(map);
   }
 
   static Box<T> fromJson<T>(String json) {
-    return _guard((c) => c.fromJson<Box<T>>(json));
+    return ensureInitialized().decodeJson<Box<T>>(json);
   }
 }
 
 mixin BoxMappable<T> {
   String toJson() {
-    return BoxMapper._guard((c) => c.toJson(this as Box<T>));
+    return BoxMapper.ensureInitialized().encodeJson<Box<T>>(this as Box<T>);
   }
 
   Map<String, dynamic> toMap() {
-    return BoxMapper._guard((c) => c.toMap(this as Box<T>));
+    return BoxMapper.ensureInitialized().encodeMap<Box<T>>(this as Box<T>);
   }
 
   BoxCopyWith<Box<T>, Box<T>, Box<T>, T> get copyWith =>
       _BoxCopyWithImpl(this as Box<T>, $identity, $identity);
   @override
   String toString() {
-    return BoxMapper._guard((c) => c.asString(this));
+    return BoxMapper.ensureInitialized().stringifyValue(this as Box<T>);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            BoxMapper._guard((c) => c.isEqual(this, other)));
+            BoxMapper.ensureInitialized().isValueEqual(this as Box<T>, other));
   }
 
   @override
   int get hashCode {
-    return BoxMapper._guard((c) => c.hash(this));
+    return BoxMapper.ensureInitialized().hashValue(this as Box<T>);
   }
 }
 
@@ -397,11 +383,6 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Confetti';
 
@@ -421,40 +402,43 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
   final Function instantiate = _instantiate;
 
   static Confetti fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Confetti>(map));
+    return ensureInitialized().decodeMap<Confetti>(map);
   }
 
   static Confetti fromJson(String json) {
-    return _guard((c) => c.fromJson<Confetti>(json));
+    return ensureInitialized().decodeJson<Confetti>(json);
   }
 }
 
 mixin ConfettiMappable {
   String toJson() {
-    return ConfettiMapper._guard((c) => c.toJson(this as Confetti));
+    return ConfettiMapper.ensureInitialized()
+        .encodeJson<Confetti>(this as Confetti);
   }
 
   Map<String, dynamic> toMap() {
-    return ConfettiMapper._guard((c) => c.toMap(this as Confetti));
+    return ConfettiMapper.ensureInitialized()
+        .encodeMap<Confetti>(this as Confetti);
   }
 
   ConfettiCopyWith<Confetti, Confetti, Confetti> get copyWith =>
       _ConfettiCopyWithImpl(this as Confetti, $identity, $identity);
   @override
   String toString() {
-    return ConfettiMapper._guard((c) => c.asString(this));
+    return ConfettiMapper.ensureInitialized().stringifyValue(this as Confetti);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            ConfettiMapper._guard((c) => c.isEqual(this, other)));
+            ConfettiMapper.ensureInitialized()
+                .isValueEqual(this as Confetti, other));
   }
 
   @override
   int get hashCode {
-    return ConfettiMapper._guard((c) => c.hash(this));
+    return ConfettiMapper.ensureInitialized().hashValue(this as Confetti);
   }
 }
 

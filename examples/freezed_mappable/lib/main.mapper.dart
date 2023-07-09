@@ -19,11 +19,6 @@ class UnionMapper extends ClassMapperBase<Union> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Union';
 
@@ -39,21 +34,21 @@ class UnionMapper extends ClassMapperBase<Union> {
   final Function instantiate = _instantiate;
 
   static Union fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Union>(map));
+    return ensureInitialized().decodeMap<Union>(map);
   }
 
   static Union fromJson(String json) {
-    return _guard((c) => c.fromJson<Union>(json));
+    return ensureInitialized().decodeJson<Union>(json);
   }
 }
 
 extension UnionMapperExtension on Union {
   String toJson() {
-    return UnionMapper._guard((c) => c.toJson(this));
+    return UnionMapper.ensureInitialized().encodeJson<Union>(this);
   }
 
   Map<String, dynamic> toMap() {
-    return UnionMapper._guard((c) => c.toMap(this));
+    return UnionMapper.ensureInitialized().encodeMap<Union>(this);
   }
 }
 
@@ -73,11 +68,6 @@ class DataMapper extends SubClassMapperBase<Data> {
       UnionMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -107,21 +97,21 @@ class DataMapper extends SubClassMapperBase<Data> {
   final Function instantiate = _instantiate;
 
   static Data fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Data>(map));
+    return ensureInitialized().decodeMap<Data>(map);
   }
 
   static Data fromJson(String json) {
-    return _guard((c) => c.fromJson<Data>(json));
+    return ensureInitialized().decodeJson<Data>(json);
   }
 }
 
 extension DataMapperExtension on Data {
   String toJson() {
-    return DataMapper._guard((c) => c.toJson(this));
+    return DataMapper.ensureInitialized().encodeJson<Data>(this);
   }
 
   Map<String, dynamic> toMap() {
-    return DataMapper._guard((c) => c.toMap(this));
+    return DataMapper.ensureInitialized().encodeMap<Data>(this);
   }
 }
 
@@ -135,11 +125,6 @@ class LoadingMapper extends SubClassMapperBase<Loading> {
       UnionMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -168,21 +153,21 @@ class LoadingMapper extends SubClassMapperBase<Loading> {
   final Function instantiate = _instantiate;
 
   static Loading fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Loading>(map));
+    return ensureInitialized().decodeMap<Loading>(map);
   }
 
   static Loading fromJson(String json) {
-    return _guard((c) => c.fromJson<Loading>(json));
+    return ensureInitialized().decodeJson<Loading>(json);
   }
 }
 
 extension LoadingMapperExtension on Loading {
   String toJson() {
-    return LoadingMapper._guard((c) => c.toJson(this));
+    return LoadingMapper.ensureInitialized().encodeJson<Loading>(this);
   }
 
   Map<String, dynamic> toMap() {
-    return LoadingMapper._guard((c) => c.toMap(this));
+    return LoadingMapper.ensureInitialized().encodeMap<Loading>(this);
   }
 }
 
@@ -196,11 +181,6 @@ class ErrorDetailsMapper extends SubClassMapperBase<ErrorDetails> {
       UnionMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
   }
 
   @override
@@ -233,20 +213,21 @@ class ErrorDetailsMapper extends SubClassMapperBase<ErrorDetails> {
   final Function instantiate = _instantiate;
 
   static ErrorDetails fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<ErrorDetails>(map));
+    return ensureInitialized().decodeMap<ErrorDetails>(map);
   }
 
   static ErrorDetails fromJson(String json) {
-    return _guard((c) => c.fromJson<ErrorDetails>(json));
+    return ensureInitialized().decodeJson<ErrorDetails>(json);
   }
 }
 
 extension ErrorDetailsMapperExtension on ErrorDetails {
   String toJson() {
-    return ErrorDetailsMapper._guard((c) => c.toJson(this));
+    return ErrorDetailsMapper.ensureInitialized()
+        .encodeJson<ErrorDetails>(this);
   }
 
   Map<String, dynamic> toMap() {
-    return ErrorDetailsMapper._guard((c) => c.toMap(this));
+    return ErrorDetailsMapper.ensureInitialized().encodeMap<ErrorDetails>(this);
   }
 }

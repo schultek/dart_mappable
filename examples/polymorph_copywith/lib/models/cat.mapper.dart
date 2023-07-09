@@ -68,11 +68,6 @@ class CatMapper extends SubClassMapperBase<Cat> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Cat';
 
@@ -105,40 +100,40 @@ class CatMapper extends SubClassMapperBase<Cat> {
   final Function instantiate = _instantiate;
 
   static Cat fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Cat>(map));
+    return ensureInitialized().decodeMap<Cat>(map);
   }
 
   static Cat fromJson(String json) {
-    return _guard((c) => c.fromJson<Cat>(json));
+    return ensureInitialized().decodeJson<Cat>(json);
   }
 }
 
 mixin CatMappable {
   String toJson() {
-    return CatMapper._guard((c) => c.toJson(this as Cat));
+    return CatMapper.ensureInitialized().encodeJson<Cat>(this as Cat);
   }
 
   Map<String, dynamic> toMap() {
-    return CatMapper._guard((c) => c.toMap(this as Cat));
+    return CatMapper.ensureInitialized().encodeMap<Cat>(this as Cat);
   }
 
   CatCopyWith<Cat, Cat, Cat> get copyWith =>
       _CatCopyWithImpl(this as Cat, $identity, $identity);
   @override
   String toString() {
-    return CatMapper._guard((c) => c.asString(this));
+    return CatMapper.ensureInitialized().stringifyValue(this as Cat);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            CatMapper._guard((c) => c.isEqual(this, other)));
+            CatMapper.ensureInitialized().isValueEqual(this as Cat, other));
   }
 
   @override
   int get hashCode {
-    return CatMapper._guard((c) => c.hash(this));
+    return CatMapper.ensureInitialized().hashValue(this as Cat);
   }
 }
 

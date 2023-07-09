@@ -17,11 +17,6 @@ class ZooMapper extends ClassMapperBase<Zoo> {
     return _instance!;
   }
 
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
   @override
   final String id = 'Zoo';
   @override
@@ -45,40 +40,40 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   final Function instantiate = _instantiate;
 
   static Zoo<T> fromMap<T extends Animal>(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Zoo<T>>(map));
+    return ensureInitialized().decodeMap<Zoo<T>>(map);
   }
 
   static Zoo<T> fromJson<T extends Animal>(String json) {
-    return _guard((c) => c.fromJson<Zoo<T>>(json));
+    return ensureInitialized().decodeJson<Zoo<T>>(json);
   }
 }
 
 mixin ZooMappable<T extends Animal> {
   String toJson() {
-    return ZooMapper._guard((c) => c.toJson(this as Zoo<T>));
+    return ZooMapper.ensureInitialized().encodeJson<Zoo<T>>(this as Zoo<T>);
   }
 
   Map<String, dynamic> toMap() {
-    return ZooMapper._guard((c) => c.toMap(this as Zoo<T>));
+    return ZooMapper.ensureInitialized().encodeMap<Zoo<T>>(this as Zoo<T>);
   }
 
   ZooCopyWith<Zoo<T>, Zoo<T>, Zoo<T>, T> get copyWith =>
       _ZooCopyWithImpl(this as Zoo<T>, $identity, $identity);
   @override
   String toString() {
-    return ZooMapper._guard((c) => c.asString(this));
+    return ZooMapper.ensureInitialized().stringifyValue(this as Zoo<T>);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            ZooMapper._guard((c) => c.isEqual(this, other)));
+            ZooMapper.ensureInitialized().isValueEqual(this as Zoo<T>, other));
   }
 
   @override
   int get hashCode {
-    return ZooMapper._guard((c) => c.hash(this));
+    return ZooMapper.ensureInitialized().hashValue(this as Zoo<T>);
   }
 }
 
