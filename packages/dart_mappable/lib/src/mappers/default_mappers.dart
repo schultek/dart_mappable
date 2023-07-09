@@ -1,4 +1,3 @@
-import '../mapper_container.dart';
 import '../mapper_exception.dart';
 import '../mapper_utils.dart';
 import 'mapper_base.dart';
@@ -27,12 +26,6 @@ class PrimitiveMapper<T extends Object> extends MapperBase<T>
   @override
   T decoder(Object value, DecodingContext context) {
     return _decoder(value);
-  }
-
-  @override
-  Object? encode<V>(T value,
-      [EncodingOptions? options, MapperContainer? container]) {
-    return value;
   }
 
   @override

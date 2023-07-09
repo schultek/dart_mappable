@@ -53,6 +53,7 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
     }
   }();
 
+  @override
   late List<ClassMapperFieldElement> fields = () {
     var fields = <Element, ClassMapperFieldElement>{};
 
