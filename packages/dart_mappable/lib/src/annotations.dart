@@ -125,6 +125,7 @@ class MappableConstructor {
 /// Used to annotate a parameter or field to overwrite the mapped key.
 ///
 /// {@category Models}
+/// {@category Records}
 /// {@category Configuration}
 /// {@category Mapping Hooks}
 class MappableField {
@@ -139,7 +140,7 @@ class MappableField {
 
 /// Used to annotate a record in order to generate mapping code.
 ///
-/// {@category Models}
+/// {@category Records}
 class MappableRecord extends MappableInterface {
   const MappableRecord({
     super.caseStyle,

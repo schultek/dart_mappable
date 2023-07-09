@@ -10,15 +10,15 @@ part 'model.mapper.dart';
 @MappableClass()
 class Person with PersonMappable {
   
-  final String firstName;
-  final String lastName;
-  final int age;
-  
   const Person({
     required this.firstName, 
     required this.lastName, 
     required this.age,
   });
+
+  final String firstName;
+  final String lastName;
+  final int age;
 
   // optional: links deserialization factories from the generated [PersonMapper] class
   static final fromMap = PersonMapper.fromMap;
