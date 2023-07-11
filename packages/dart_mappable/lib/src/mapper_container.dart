@@ -279,7 +279,12 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
   @override
   T fromValue<T>(Object? value) {
     if (value == null) {
-      return value as T;
+      if (value is T) {
+        return value;
+      } else {
+        throw MapperException.chain(MapperMethod.decode, '($T)',
+            MapperException.unexpectedType(Null, 'Object'));
+      }
     }
 
     var type = T;

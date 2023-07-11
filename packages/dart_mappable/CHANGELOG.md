@@ -1,3 +1,7 @@
+# 3.1.2
+
+- Fixed unexpected type error when decoding `null`.
+
 # 3.1.1
 
 - Fixed supporting expressions in `@MappableClass.includeCustomMappers`.
