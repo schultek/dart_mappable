@@ -259,16 +259,6 @@ class _t$_R1Mapper extends RecordMapperBase<_t$_R1> {
   }
 }
 
-extension _t$_R1Mappable<A, B> on _t$_R1<A, B> {
-  Map<String, dynamic> toMap() {
-    return _t$_R1Mapper.ensureInitialized().encodeMap(this);
-  }
-
-  String toJson() {
-    return _t$_R1Mapper.ensureInitialized().encodeJson(this);
-  }
-}
-
 typedef _t$_R0<A, B, C, D> = (A, {B b, C c, D d});
 
 class _t$_R0Mapper extends RecordMapperBase<_t$_R0> {
@@ -326,15 +316,5 @@ class _t$_R0Mapper extends RecordMapperBase<_t$_R0> {
 
   static _t$_R0<A, B, C, D> fromJson<A, B, C, D>(String json) {
     return ensureInitialized().decodeJson<_t$_R0<A, B, C, D>>(json);
-  }
-}
-
-extension _t$_R0Mappable<A, B, C, D> on _t$_R0<A, B, C, D> {
-  Map<String, dynamic> toMap() {
-    return _t$_R0Mapper.ensureInitialized().encodeMap(this);
-  }
-
-  String toJson() {
-    return _t$_R0Mapper.ensureInitialized().encodeJson(this);
   }
 }

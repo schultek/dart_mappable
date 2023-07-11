@@ -4,21 +4,20 @@ import '../mappers/record_mapper.dart';
 import 'copywith_base.dart';
 import 'copywith_data.dart';
 
-abstract class RecordCopyWith<Result, In extends Record, Out>
-    implements ObjectCopyWith<Result, In, Out> {
-  Result $merge(In value);
+abstract class RecordCopyWith<Result, T extends Record>
+    implements ObjectCopyWith<Result, T, T> {
+  Result $merge(T value);
   Result $delta(Map<String, dynamic> delta);
 }
 
-abstract class RecordCopyWithBase<Result, In extends Record, Out>
-    extends CopyWithBase<Result, In, Out>
-    implements RecordCopyWith<Result, In, Out> {
+abstract class RecordCopyWithBase<Result, T extends Record>
+    extends CopyWithBase<Result, T, T> implements RecordCopyWith<Result, T> {
   RecordCopyWithBase(super.$value, super.$then1, super.$then2);
 
   RecordMapperBase get $mapper;
 
   @override
-  Result $merge(In value) => $apply(RecordMergeCopyWithData($mapper, value));
+  Result $merge(T value) => $apply(RecordMergeCopyWithData($mapper, value));
 
   @override
   Result $delta(Map<String, dynamic> delta) =>
@@ -26,7 +25,7 @@ abstract class RecordCopyWithBase<Result, In extends Record, Out>
 
   Result $apply(CopyWithData data) => $then($make(data));
 
-  In $make(CopyWithData data);
+  T $make(CopyWithData data);
 }
 
 class RecordMergeCopyWithData extends CopyWithData {

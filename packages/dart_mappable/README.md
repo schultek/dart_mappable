@@ -238,6 +238,8 @@ or jump directly to the topic you are looking for:
   show you how to structure and annotate your data models.
 - [**Enums**](https://pub.dev/documentation/dart_mappable/latest/topics/Enums-topic.html) 
   show you how to structure and annotate your enums.
+- [**Records**](https://pub.dev/documentation/dart_mappable/latest/topics/Records-topic.html)
+  show you how to use records as part of your models.
 - [**Configuration**](https://pub.dev/documentation/dart_mappable/latest/topics/Configuration-topic.html) 
   goes into the different configuration options you have.
 - [**Copy-With**](https://pub.dev/documentation/dart_mappable/latest/topics/Copy-With-topic.html) 

@@ -1,5 +1,7 @@
+import '../elements/record/alias_record_mapper_element.dart';
 import '../elements/record/record_mapper_element.dart';
 import 'extensions/fields_extension.dart';
+import 'extensions/record_copywith_extension.dart';
 import 'generator.dart';
 
 /// Generates code for a specific record.
@@ -33,8 +35,10 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
     generateInstantiate(output);
     generateStaticDecoders(output);
 
-    output.write('''
-      } 
+    output.write('}');
+
+    if (element is AliasRecordMapperElement) {
+      output.write('''
       
       extension ${element.className}Mappable${element.typeParamsDeclaration} on ${element.className}${element.typeParams} {
         Map<String, dynamic> toMap() {
@@ -44,8 +48,13 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
         String toJson() {
           return ${element.mapperName}.ensureInitialized().encodeJson(this);
         }
-      }
     ''');
+
+      generateCopyWithExtension(output);
+      output.write('}');
+
+      output.write(generateCopyWithClasses());
+    }
 
     return output.toString();
   }

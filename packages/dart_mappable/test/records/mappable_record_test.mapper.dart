@@ -168,6 +168,37 @@ extension PointMappable on Point {
   String toJson() {
     return PointMapper.ensureInitialized().encodeJson(this);
   }
+
+  PointCopyWith<Point> get copyWith =>
+      _PointCopyWithImpl(this, $identity, $identity);
+}
+
+extension PointValueCopy<$R> on ObjectCopyWith<$R, Point, Point> {
+  PointCopyWith<$R> get $asPoint =>
+      $base.as((v, t, t2) => _PointCopyWithImpl(v, t, t2));
+}
+
+abstract class PointCopyWith<$R> implements RecordCopyWith<$R, Point> {
+  $R call({double? x, double? y});
+  PointCopyWith<$R2> $chain<$R2>(Then<Point, $R2> t);
+}
+
+class _PointCopyWithImpl<$R> extends RecordCopyWithBase<$R, Point>
+    implements PointCopyWith<$R> {
+  _PointCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final RecordMapperBase<Point> $mapper = PointMapper.ensureInitialized();
+  @override
+  $R call({double? x, double? y}) =>
+      $apply(FieldCopyWithData({if (x != null) #x: x, if (y != null) #y: y}));
+  @override
+  Point $make(CopyWithData data) =>
+      (x: data.get(#x, or: $value.x), y: data.get(#y, or: $value.y));
+
+  @override
+  PointCopyWith<$R2> $chain<$R2>(Then<Point, $R2> t) =>
+      _PointCopyWithImpl($value, $cast, t);
 }
 
 class OffsetMapper extends RecordMapperBase<Offset> {
@@ -226,4 +257,36 @@ extension OffsetMappable<T> on Offset<T> {
   String toJson() {
     return OffsetMapper.ensureInitialized().encodeJson(this);
   }
+
+  OffsetCopyWith<Offset<T>, T> get copyWith =>
+      _OffsetCopyWithImpl(this, $identity, $identity);
+}
+
+extension OffsetValueCopy<$R, T> on ObjectCopyWith<$R, Offset<T>, Offset<T>> {
+  OffsetCopyWith<$R, T> get $asOffset =>
+      $base.as((v, t, t2) => _OffsetCopyWithImpl(v, t, t2));
+}
+
+abstract class OffsetCopyWith<$R, T> implements RecordCopyWith<$R, Offset<T>> {
+  $R call({double? x, T? y});
+  OffsetCopyWith<$R2, T> $chain<$R2>(Then<Offset<T>, $R2> t);
+}
+
+class _OffsetCopyWithImpl<$R, T> extends RecordCopyWithBase<$R, Offset<T>>
+    implements OffsetCopyWith<$R, T> {
+  _OffsetCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final RecordMapperBase<Offset> $mapper =
+      OffsetMapper.ensureInitialized();
+  @override
+  $R call({double? x, T? y}) =>
+      $apply(FieldCopyWithData({if (x != null) #x: x, if (y != null) #y: y}));
+  @override
+  Offset<T> $make(CopyWithData data) =>
+      (x: data.get(#x, or: $value.x), y: data.get(#y, or: $value.y));
+
+  @override
+  OffsetCopyWith<$R2, T> $chain<$R2>(Then<Offset<T>, $R2> t) =>
+      _OffsetCopyWithImpl($value, $cast, t);
 }

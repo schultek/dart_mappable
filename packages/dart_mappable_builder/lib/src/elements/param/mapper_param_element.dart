@@ -160,6 +160,8 @@ class RecordMapperParamElement extends MapperParamElement {
   final List<Annotation> metadata;
   final String? typeArg;
 
+  bool get isNamed => !name.startsWith(r'$');
+
   bool get isGeneric => typeArg != null;
 
   @override

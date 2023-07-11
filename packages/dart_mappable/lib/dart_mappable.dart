@@ -7,7 +7,7 @@ export 'src/copywith/copywith_base.dart';
 export 'src/copywith/copywith_data.dart';
 export 'src/copywith/list_copy_with.dart';
 export 'src/copywith/map_copy_with.dart';
-//export 'src/copywith/record_copy_with.dart';
+export 'src/copywith/record_copy_with.dart';
 export 'src/hooks/chained_hook.dart';
 export 'src/hooks/string_hooks.dart';
 export 'src/hooks/unmapped_properties_hook.dart';

@@ -70,6 +70,8 @@ abstract class AliasRecordMapperElement
   late String typeParamsDeclaration =
       typeParamsList.isNotEmpty ? '<${typeParamsList.join(', ')}>' : '';
 
+  late String selfTypeParam = '$prefixedClassName$typeParams';
+
   @override
   bool get needsTypeDef => false;
 
