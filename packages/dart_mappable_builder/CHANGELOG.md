@@ -1,3 +1,7 @@
+# 3.1.2
+
+- Fixed bug with broken mapper generation.
+
 # 3.1.1
 
 - Fixed supporting expressions in `@MappableClass.includeCustomMappers`.
