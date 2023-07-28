@@ -119,6 +119,101 @@ class _BoxCopyWithImpl<$R, $Out, T extends Content>
       _BoxCopyWithImpl($value, $cast, t);
 }
 
+class ContentMapper extends ClassMapperBase<Content> {
+  ContentMapper._();
+
+  static ContentMapper? _instance;
+  static ContentMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ContentMapper._());
+      ConfettiMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'Content';
+
+  @override
+  final Map<Symbol, Field<Content, dynamic>> fields = const {};
+
+  static Content _instantiate(DecodingData data) {
+    return Content();
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static Content fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<Content>(map);
+  }
+
+  static Content fromJson(String json) {
+    return ensureInitialized().decodeJson<Content>(json);
+  }
+}
+
+mixin ContentMappable {
+  String toJson() {
+    return ContentMapper.ensureInitialized()
+        .encodeJson<Content>(this as Content);
+  }
+
+  Map<String, dynamic> toMap() {
+    return ContentMapper.ensureInitialized()
+        .encodeMap<Content>(this as Content);
+  }
+
+  ContentCopyWith<Content, Content, Content> get copyWith =>
+      _ContentCopyWithImpl(this as Content, $identity, $identity);
+  @override
+  String toString() {
+    return ContentMapper.ensureInitialized().stringifyValue(this as Content);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            ContentMapper.ensureInitialized()
+                .isValueEqual(this as Content, other));
+  }
+
+  @override
+  int get hashCode {
+    return ContentMapper.ensureInitialized().hashValue(this as Content);
+  }
+}
+
+extension ContentValueCopy<$R, $Out> on ObjectCopyWith<$R, Content, $Out> {
+  ContentCopyWith<$R, Content, $Out> get $asContent =>
+      $base.as((v, t, t2) => _ContentCopyWithImpl(v, t, t2));
+}
+
+abstract class ContentCopyWith<$R, $In extends Content, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call();
+  ContentCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _ContentCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, Content, $Out>
+    implements ContentCopyWith<$R, Content, $Out> {
+  _ContentCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<Content> $mapper =
+      ContentMapper.ensureInitialized();
+  @override
+  $R call() => $apply(FieldCopyWithData({}));
+  @override
+  Content $make(CopyWithData data) => Content();
+
+  @override
+  ContentCopyWith<$R2, Content, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _ContentCopyWithImpl($value, $cast, t);
+}
+
 class ConfettiMapper extends ClassMapperBase<Confetti> {
   ConfettiMapper._();
 
@@ -221,101 +316,6 @@ class _ConfettiCopyWithImpl<$R, $Out>
   ConfettiCopyWith<$R2, Confetti, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _ConfettiCopyWithImpl($value, $cast, t);
-}
-
-class ContentMapper extends ClassMapperBase<Content> {
-  ContentMapper._();
-
-  static ContentMapper? _instance;
-  static ContentMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = ContentMapper._());
-      ConfettiMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'Content';
-
-  @override
-  final Map<Symbol, Field<Content, dynamic>> fields = const {};
-
-  static Content _instantiate(DecodingData data) {
-    return Content();
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static Content fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<Content>(map);
-  }
-
-  static Content fromJson(String json) {
-    return ensureInitialized().decodeJson<Content>(json);
-  }
-}
-
-mixin ContentMappable {
-  String toJson() {
-    return ContentMapper.ensureInitialized()
-        .encodeJson<Content>(this as Content);
-  }
-
-  Map<String, dynamic> toMap() {
-    return ContentMapper.ensureInitialized()
-        .encodeMap<Content>(this as Content);
-  }
-
-  ContentCopyWith<Content, Content, Content> get copyWith =>
-      _ContentCopyWithImpl(this as Content, $identity, $identity);
-  @override
-  String toString() {
-    return ContentMapper.ensureInitialized().stringifyValue(this as Content);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ContentMapper.ensureInitialized()
-                .isValueEqual(this as Content, other));
-  }
-
-  @override
-  int get hashCode {
-    return ContentMapper.ensureInitialized().hashValue(this as Content);
-  }
-}
-
-extension ContentValueCopy<$R, $Out> on ObjectCopyWith<$R, Content, $Out> {
-  ContentCopyWith<$R, Content, $Out> get $asContent =>
-      $base.as((v, t, t2) => _ContentCopyWithImpl(v, t, t2));
-}
-
-abstract class ContentCopyWith<$R, $In extends Content, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  $R call();
-  ContentCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _ContentCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, Content, $Out>
-    implements ContentCopyWith<$R, Content, $Out> {
-  _ContentCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<Content> $mapper =
-      ContentMapper.ensureInitialized();
-  @override
-  $R call() => $apply(FieldCopyWithData({}));
-  @override
-  Content $make(CopyWithData data) => Content();
-
-  @override
-  ContentCopyWith<$R2, Content, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ContentCopyWithImpl($value, $cast, t);
 }
 
 class DataMapper extends ClassMapperBase<Data> {

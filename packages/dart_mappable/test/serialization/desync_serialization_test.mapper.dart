@@ -108,6 +108,100 @@ class _ACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, A, $Out>
       _ACopyWithImpl($value, $cast, t);
 }
 
+class CMapper extends ClassMapperBase<C> {
+  CMapper._();
+
+  static CMapper? _instance;
+  static CMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = CMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'C';
+
+  static int _$x(C v) => v.x;
+  static const Field<C, int> _f$x = Field('x', _$x);
+
+  @override
+  final Map<Symbol, Field<C, dynamic>> fields = const {
+    #x: _f$x,
+  };
+
+  static C _instantiate(DecodingData data) {
+    return C(data.dec(_f$x));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static C fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<C>(map);
+  }
+
+  static C fromJson(String json) {
+    return ensureInitialized().decodeJson<C>(json);
+  }
+}
+
+mixin CMappable {
+  String toJson() {
+    return CMapper.ensureInitialized().encodeJson<C>(this as C);
+  }
+
+  Map<String, dynamic> toMap() {
+    return CMapper.ensureInitialized().encodeMap<C>(this as C);
+  }
+
+  CCopyWith<C, C, C> get copyWith =>
+      _CCopyWithImpl(this as C, $identity, $identity);
+  @override
+  String toString() {
+    return CMapper.ensureInitialized().stringifyValue(this as C);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            CMapper.ensureInitialized().isValueEqual(this as C, other));
+  }
+
+  @override
+  int get hashCode {
+    return CMapper.ensureInitialized().hashValue(this as C);
+  }
+}
+
+extension CValueCopy<$R, $Out> on ObjectCopyWith<$R, C, $Out> {
+  CCopyWith<$R, C, $Out> get $asC =>
+      $base.as((v, t, t2) => _CCopyWithImpl(v, t, t2));
+}
+
+abstract class CCopyWith<$R, $In extends C, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call({int? x});
+  CCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _CCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, C, $Out>
+    implements CCopyWith<$R, C, $Out> {
+  _CCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<C> $mapper = CMapper.ensureInitialized();
+  @override
+  $R call({int? x}) => $apply(FieldCopyWithData({if (x != null) #x: x}));
+  @override
+  C $make(CopyWithData data) => C(data.get(#x, or: $value.x));
+
+  @override
+  CCopyWith<$R2, C, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _CCopyWithImpl($value, $cast, t);
+}
+
 class BMapper extends ClassMapperBase<B> {
   BMapper._();
 
@@ -213,98 +307,4 @@ class _BCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, B, $Out>
   @override
   BCopyWith<$R2, B, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _BCopyWithImpl($value, $cast, t);
-}
-
-class CMapper extends ClassMapperBase<C> {
-  CMapper._();
-
-  static CMapper? _instance;
-  static CMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = CMapper._());
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'C';
-
-  static int _$x(C v) => v.x;
-  static const Field<C, int> _f$x = Field('x', _$x);
-
-  @override
-  final Map<Symbol, Field<C, dynamic>> fields = const {
-    #x: _f$x,
-  };
-
-  static C _instantiate(DecodingData data) {
-    return C(data.dec(_f$x));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static C fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<C>(map);
-  }
-
-  static C fromJson(String json) {
-    return ensureInitialized().decodeJson<C>(json);
-  }
-}
-
-mixin CMappable {
-  String toJson() {
-    return CMapper.ensureInitialized().encodeJson<C>(this as C);
-  }
-
-  Map<String, dynamic> toMap() {
-    return CMapper.ensureInitialized().encodeMap<C>(this as C);
-  }
-
-  CCopyWith<C, C, C> get copyWith =>
-      _CCopyWithImpl(this as C, $identity, $identity);
-  @override
-  String toString() {
-    return CMapper.ensureInitialized().stringifyValue(this as C);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            CMapper.ensureInitialized().isValueEqual(this as C, other));
-  }
-
-  @override
-  int get hashCode {
-    return CMapper.ensureInitialized().hashValue(this as C);
-  }
-}
-
-extension CValueCopy<$R, $Out> on ObjectCopyWith<$R, C, $Out> {
-  CCopyWith<$R, C, $Out> get $asC =>
-      $base.as((v, t, t2) => _CCopyWithImpl(v, t, t2));
-}
-
-abstract class CCopyWith<$R, $In extends C, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  $R call({int? x});
-  CCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _CCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, C, $Out>
-    implements CCopyWith<$R, C, $Out> {
-  _CCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<C> $mapper = CMapper.ensureInitialized();
-  @override
-  $R call({int? x}) => $apply(FieldCopyWithData({if (x != null) #x: x}));
-  @override
-  C $make(CopyWithData data) => C(data.get(#x, or: $value.x));
-
-  @override
-  CCopyWith<$R2, C, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _CCopyWithImpl($value, $cast, t);
 }

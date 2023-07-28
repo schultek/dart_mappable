@@ -112,6 +112,101 @@ class _ACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, A, $Out>
       _ACopyWithImpl($value, $cast, t);
 }
 
+class VMapper extends ClassMapperBase<V> {
+  VMapper._();
+
+  static VMapper? _instance;
+  static VMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = VMapper._());
+      WMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'V';
+
+  static int _$v(V v) => v.v;
+  static const Field<V, int> _f$v = Field('v', _$v);
+
+  @override
+  final Map<Symbol, Field<V, dynamic>> fields = const {
+    #v: _f$v,
+  };
+
+  static V _instantiate(DecodingData data) {
+    return V(data.dec(_f$v));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static V fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<V>(map);
+  }
+
+  static V fromJson(String json) {
+    return ensureInitialized().decodeJson<V>(json);
+  }
+}
+
+mixin VMappable {
+  String toJson() {
+    return VMapper.ensureInitialized().encodeJson<V>(this as V);
+  }
+
+  Map<String, dynamic> toMap() {
+    return VMapper.ensureInitialized().encodeMap<V>(this as V);
+  }
+
+  VCopyWith<V, V, V> get copyWith =>
+      _VCopyWithImpl(this as V, $identity, $identity);
+  @override
+  String toString() {
+    return VMapper.ensureInitialized().stringifyValue(this as V);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            VMapper.ensureInitialized().isValueEqual(this as V, other));
+  }
+
+  @override
+  int get hashCode {
+    return VMapper.ensureInitialized().hashValue(this as V);
+  }
+}
+
+extension VValueCopy<$R, $Out> on ObjectCopyWith<$R, V, $Out> {
+  VCopyWith<$R, V, $Out> get $asV =>
+      $base.as((v, t, t2) => _VCopyWithImpl(v, t, t2));
+}
+
+abstract class VCopyWith<$R, $In extends V, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call({int? v});
+  VCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _VCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, V, $Out>
+    implements VCopyWith<$R, V, $Out> {
+  _VCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<V> $mapper = VMapper.ensureInitialized();
+  @override
+  $R call({int? v}) => $apply(FieldCopyWithData({if (v != null) #v: v}));
+  @override
+  V $make(CopyWithData data) => V(data.get(#v, or: $value.v));
+
+  @override
+  VCopyWith<$R2, V, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _VCopyWithImpl($value, $cast, t);
+}
+
 class BMapper extends ClassMapperBase<B> {
   BMapper._();
 
@@ -224,101 +319,6 @@ class _BCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, B, $Out>
   @override
   BCopyWith<$R2, B, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _BCopyWithImpl($value, $cast, t);
-}
-
-class VMapper extends ClassMapperBase<V> {
-  VMapper._();
-
-  static VMapper? _instance;
-  static VMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = VMapper._());
-      WMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'V';
-
-  static int _$v(V v) => v.v;
-  static const Field<V, int> _f$v = Field('v', _$v);
-
-  @override
-  final Map<Symbol, Field<V, dynamic>> fields = const {
-    #v: _f$v,
-  };
-
-  static V _instantiate(DecodingData data) {
-    return V(data.dec(_f$v));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static V fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<V>(map);
-  }
-
-  static V fromJson(String json) {
-    return ensureInitialized().decodeJson<V>(json);
-  }
-}
-
-mixin VMappable {
-  String toJson() {
-    return VMapper.ensureInitialized().encodeJson<V>(this as V);
-  }
-
-  Map<String, dynamic> toMap() {
-    return VMapper.ensureInitialized().encodeMap<V>(this as V);
-  }
-
-  VCopyWith<V, V, V> get copyWith =>
-      _VCopyWithImpl(this as V, $identity, $identity);
-  @override
-  String toString() {
-    return VMapper.ensureInitialized().stringifyValue(this as V);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            VMapper.ensureInitialized().isValueEqual(this as V, other));
-  }
-
-  @override
-  int get hashCode {
-    return VMapper.ensureInitialized().hashValue(this as V);
-  }
-}
-
-extension VValueCopy<$R, $Out> on ObjectCopyWith<$R, V, $Out> {
-  VCopyWith<$R, V, $Out> get $asV =>
-      $base.as((v, t, t2) => _VCopyWithImpl(v, t, t2));
-}
-
-abstract class VCopyWith<$R, $In extends V, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  $R call({int? v});
-  VCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _VCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, V, $Out>
-    implements VCopyWith<$R, V, $Out> {
-  _VCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<V> $mapper = VMapper.ensureInitialized();
-  @override
-  $R call({int? v}) => $apply(FieldCopyWithData({if (v != null) #v: v}));
-  @override
-  V $make(CopyWithData data) => V(data.get(#v, or: $value.v));
-
-  @override
-  VCopyWith<$R2, V, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _VCopyWithImpl($value, $cast, t);
 }
 
 class WMapper extends ClassMapperBase<W> {
