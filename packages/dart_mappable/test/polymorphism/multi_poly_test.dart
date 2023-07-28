@@ -5,6 +5,11 @@ import '../utils.dart';
 
 part 'multi_poly_test.mapper.dart';
 
+@MappableClass()
+class Shepherd extends Dog with ShepherdMappable {
+  Shepherd(super.name);
+}
+
 @MappableClass(discriminatorKey: 'type', ignoreNull: true)
 abstract class Animal with AnimalMappable {
   String? name;
@@ -24,11 +29,6 @@ class Siamese extends Cat with SiameseMappable {
 @MappableClass()
 class Dog extends Animal with DogMappable {
   Dog(super.name);
-}
-
-@MappableClass()
-class Shepherd extends Dog with ShepherdMappable {
-  Shepherd(super.name);
 }
 
 @MappableClass()

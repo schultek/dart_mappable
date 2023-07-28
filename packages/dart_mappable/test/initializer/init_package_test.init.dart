@@ -106,11 +106,11 @@ void initializeMappers() {
   p21.BaseMapper.ensureInitialized();
   p21.OneMapper.ensureInitialized();
   p21.TwoMapper.ensureInitialized();
+  p22.ShepherdMapper.ensureInitialized();
   p22.AnimalMapper.ensureInitialized();
   p22.CatMapper.ensureInitialized();
   p22.SiameseMapper.ensureInitialized();
   p22.DogMapper.ensureInitialized();
-  p22.ShepherdMapper.ensureInitialized();
   p22.HumanMapper.ensureInitialized();
   p23.AnimalMapper.ensureInitialized();
   p23.CatMapper.ensureInitialized();

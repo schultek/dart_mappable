@@ -115,6 +115,105 @@ class _GameCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Game, $Out>
       _GameCopyWithImpl($value, $cast, t);
 }
 
+class PlayerMapper extends ClassMapperBase<Player> {
+  PlayerMapper._();
+
+  static PlayerMapper? _instance;
+  static PlayerMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = PlayerMapper._());
+    }
+    return _instance!;
+  }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
+  @override
+  final String id = 'Player';
+
+  static String _$id(Player v) => v.id;
+  static const Field<Player, String> _f$id = Field('id', _$id);
+
+  @override
+  final Map<Symbol, Field<Player, dynamic>> fields = const {
+    #id: _f$id,
+  };
+
+  static Player _instantiate(DecodingData data) {
+    return Player(data.dec(_f$id));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static Player fromMap(Map<String, dynamic> map) {
+    return _guard((c) => c.fromMap<Player>(map));
+  }
+
+  static Player fromJson(String json) {
+    return _guard((c) => c.fromJson<Player>(json));
+  }
+}
+
+mixin PlayerMappable {
+  String toJson() {
+    return PlayerMapper._guard((c) => c.toJson(this as Player));
+  }
+
+  Map<String, dynamic> toMap() {
+    return PlayerMapper._guard((c) => c.toMap(this as Player));
+  }
+
+  PlayerCopyWith<Player, Player, Player> get copyWith =>
+      _PlayerCopyWithImpl(this as Player, $identity, $identity);
+  @override
+  String toString() {
+    return PlayerMapper._guard((c) => c.asString(this));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            PlayerMapper._guard((c) => c.isEqual(this, other)));
+  }
+
+  @override
+  int get hashCode {
+    return PlayerMapper._guard((c) => c.hash(this));
+  }
+}
+
+extension PlayerValueCopy<$R, $Out> on ObjectCopyWith<$R, Player, $Out> {
+  PlayerCopyWith<$R, Player, $Out> get $asPlayer =>
+      $base.as((v, t, t2) => _PlayerCopyWithImpl(v, t, t2));
+}
+
+abstract class PlayerCopyWith<$R, $In extends Player, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call({String? id});
+  PlayerCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _PlayerCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Player, $Out>
+    implements PlayerCopyWith<$R, Player, $Out> {
+  _PlayerCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<Player> $mapper = PlayerMapper.ensureInitialized();
+  @override
+  $R call({String? id}) => $apply(FieldCopyWithData({if (id != null) #id: id}));
+  @override
+  Player $make(CopyWithData data) => Player(data.get(#id, or: $value.id));
+
+  @override
+  PlayerCopyWith<$R2, Player, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _PlayerCopyWithImpl($value, $cast, t);
+}
+
 class CardGameMapper extends ClassMapperBase<CardGame> {
   CardGameMapper._();
 
@@ -233,103 +332,4 @@ class _CardGameCopyWithImpl<$R, $Out>
   CardGameCopyWith<$R2, CardGame, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _CardGameCopyWithImpl($value, $cast, t);
-}
-
-class PlayerMapper extends ClassMapperBase<Player> {
-  PlayerMapper._();
-
-  static PlayerMapper? _instance;
-  static PlayerMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = PlayerMapper._());
-    }
-    return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
-  @override
-  final String id = 'Player';
-
-  static String _$id(Player v) => v.id;
-  static const Field<Player, String> _f$id = Field('id', _$id);
-
-  @override
-  final Map<Symbol, Field<Player, dynamic>> fields = const {
-    #id: _f$id,
-  };
-
-  static Player _instantiate(DecodingData data) {
-    return Player(data.dec(_f$id));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static Player fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Player>(map));
-  }
-
-  static Player fromJson(String json) {
-    return _guard((c) => c.fromJson<Player>(json));
-  }
-}
-
-mixin PlayerMappable {
-  String toJson() {
-    return PlayerMapper._guard((c) => c.toJson(this as Player));
-  }
-
-  Map<String, dynamic> toMap() {
-    return PlayerMapper._guard((c) => c.toMap(this as Player));
-  }
-
-  PlayerCopyWith<Player, Player, Player> get copyWith =>
-      _PlayerCopyWithImpl(this as Player, $identity, $identity);
-  @override
-  String toString() {
-    return PlayerMapper._guard((c) => c.asString(this));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PlayerMapper._guard((c) => c.isEqual(this, other)));
-  }
-
-  @override
-  int get hashCode {
-    return PlayerMapper._guard((c) => c.hash(this));
-  }
-}
-
-extension PlayerValueCopy<$R, $Out> on ObjectCopyWith<$R, Player, $Out> {
-  PlayerCopyWith<$R, Player, $Out> get $asPlayer =>
-      $base.as((v, t, t2) => _PlayerCopyWithImpl(v, t, t2));
-}
-
-abstract class PlayerCopyWith<$R, $In extends Player, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? id});
-  PlayerCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _PlayerCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Player, $Out>
-    implements PlayerCopyWith<$R, Player, $Out> {
-  _PlayerCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<Player> $mapper = PlayerMapper.ensureInitialized();
-  @override
-  $R call({String? id}) => $apply(FieldCopyWithData({if (id != null) #id: id}));
-  @override
-  Player $make(CopyWithData data) => Player(data.get(#id, or: $value.id));
-
-  @override
-  PlayerCopyWith<$R2, Player, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _PlayerCopyWithImpl($value, $cast, t);
 }

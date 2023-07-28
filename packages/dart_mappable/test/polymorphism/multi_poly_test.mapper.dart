@@ -5,6 +5,233 @@
 
 part of 'multi_poly_test.dart';
 
+class ShepherdMapper extends SubClassMapperBase<Shepherd> {
+  ShepherdMapper._();
+
+  static ShepherdMapper? _instance;
+  static ShepherdMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ShepherdMapper._());
+      DogMapper.ensureInitialized().addSubMapper(_instance!);
+    }
+    return _instance!;
+  }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
+  @override
+  final String id = 'Shepherd';
+
+  static String? _$name(Shepherd v) => v.name;
+  static const Field<Shepherd, String> _f$name = Field('name', _$name);
+
+  @override
+  final Map<Symbol, Field<Shepherd, dynamic>> fields = const {
+    #name: _f$name,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'Shepherd';
+  @override
+  late final ClassMapperBase superMapper = DogMapper.ensureInitialized();
+
+  static Shepherd _instantiate(DecodingData data) {
+    return Shepherd(data.dec(_f$name));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static Shepherd fromMap(Map<String, dynamic> map) {
+    return _guard((c) => c.fromMap<Shepherd>(map));
+  }
+
+  static Shepherd fromJson(String json) {
+    return _guard((c) => c.fromJson<Shepherd>(json));
+  }
+}
+
+mixin ShepherdMappable {
+  String toJson() {
+    return ShepherdMapper._guard((c) => c.toJson(this as Shepherd));
+  }
+
+  Map<String, dynamic> toMap() {
+    return ShepherdMapper._guard((c) => c.toMap(this as Shepherd));
+  }
+
+  ShepherdCopyWith<Shepherd, Shepherd, Shepherd> get copyWith =>
+      _ShepherdCopyWithImpl(this as Shepherd, $identity, $identity);
+  @override
+  String toString() {
+    return ShepherdMapper._guard((c) => c.asString(this));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            ShepherdMapper._guard((c) => c.isEqual(this, other)));
+  }
+
+  @override
+  int get hashCode {
+    return ShepherdMapper._guard((c) => c.hash(this));
+  }
+}
+
+extension ShepherdValueCopy<$R, $Out> on ObjectCopyWith<$R, Shepherd, $Out> {
+  ShepherdCopyWith<$R, Shepherd, $Out> get $asShepherd =>
+      $base.as((v, t, t2) => _ShepherdCopyWithImpl(v, t, t2));
+}
+
+abstract class ShepherdCopyWith<$R, $In extends Shepherd, $Out>
+    implements DogCopyWith<$R, $In, $Out> {
+  @override
+  $R call({String? name});
+  ShepherdCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _ShepherdCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, Shepherd, $Out>
+    implements ShepherdCopyWith<$R, Shepherd, $Out> {
+  _ShepherdCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<Shepherd> $mapper =
+      ShepherdMapper.ensureInitialized();
+  @override
+  $R call({Object? name = $none}) =>
+      $apply(FieldCopyWithData({if (name != $none) #name: name}));
+  @override
+  Shepherd $make(CopyWithData data) =>
+      Shepherd(data.get(#name, or: $value.name));
+
+  @override
+  ShepherdCopyWith<$R2, Shepherd, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _ShepherdCopyWithImpl($value, $cast, t);
+}
+
+class DogMapper extends SubClassMapperBase<Dog> {
+  DogMapper._();
+
+  static DogMapper? _instance;
+  static DogMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = DogMapper._());
+      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
+      ShepherdMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
+  @override
+  final String id = 'Dog';
+
+  static String? _$name(Dog v) => v.name;
+  static const Field<Dog, String> _f$name = Field('name', _$name);
+
+  @override
+  final Map<Symbol, Field<Dog, dynamic>> fields = const {
+    #name: _f$name,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'Dog';
+  @override
+  late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
+
+  static Dog _instantiate(DecodingData data) {
+    return Dog(data.dec(_f$name));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static Dog fromMap(Map<String, dynamic> map) {
+    return _guard((c) => c.fromMap<Dog>(map));
+  }
+
+  static Dog fromJson(String json) {
+    return _guard((c) => c.fromJson<Dog>(json));
+  }
+}
+
+mixin DogMappable {
+  String toJson() {
+    return DogMapper._guard((c) => c.toJson(this as Dog));
+  }
+
+  Map<String, dynamic> toMap() {
+    return DogMapper._guard((c) => c.toMap(this as Dog));
+  }
+
+  DogCopyWith<Dog, Dog, Dog> get copyWith =>
+      _DogCopyWithImpl(this as Dog, $identity, $identity);
+  @override
+  String toString() {
+    return DogMapper._guard((c) => c.asString(this));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            DogMapper._guard((c) => c.isEqual(this, other)));
+  }
+
+  @override
+  int get hashCode {
+    return DogMapper._guard((c) => c.hash(this));
+  }
+}
+
+extension DogValueCopy<$R, $Out> on ObjectCopyWith<$R, Dog, $Out> {
+  DogCopyWith<$R, Dog, $Out> get $asDog =>
+      $base.as((v, t, t2) => _DogCopyWithImpl(v, t, t2));
+}
+
+abstract class DogCopyWith<$R, $In extends Dog, $Out>
+    implements AnimalCopyWith<$R, $In, $Out> {
+  @override
+  $R call({String? name});
+  DogCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _DogCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Dog, $Out>
+    implements DogCopyWith<$R, Dog, $Out> {
+  _DogCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<Dog> $mapper = DogMapper.ensureInitialized();
+  @override
+  $R call({Object? name = $none}) =>
+      $apply(FieldCopyWithData({if (name != $none) #name: name}));
+  @override
+  Dog $make(CopyWithData data) => Dog(data.get(#name, or: $value.name));
+
+  @override
+  DogCopyWith<$R2, Dog, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _DogCopyWithImpl($value, $cast, t);
+}
+
 class AnimalMapper extends ClassMapperBase<Animal> {
   AnimalMapper._();
 
@@ -12,8 +239,8 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   static AnimalMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AnimalMapper._());
-      CatMapper.ensureInitialized();
       DogMapper.ensureInitialized();
+      CatMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -244,233 +471,6 @@ class _SiameseCopyWithImpl<$R, $Out>
   @override
   SiameseCopyWith<$R2, Siamese, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _SiameseCopyWithImpl($value, $cast, t);
-}
-
-class DogMapper extends SubClassMapperBase<Dog> {
-  DogMapper._();
-
-  static DogMapper? _instance;
-  static DogMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = DogMapper._());
-      AnimalMapper.ensureInitialized().addSubMapper(_instance!);
-      ShepherdMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
-  @override
-  final String id = 'Dog';
-
-  static String? _$name(Dog v) => v.name;
-  static const Field<Dog, String> _f$name = Field('name', _$name);
-
-  @override
-  final Map<Symbol, Field<Dog, dynamic>> fields = const {
-    #name: _f$name,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = 'Dog';
-  @override
-  late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
-
-  static Dog _instantiate(DecodingData data) {
-    return Dog(data.dec(_f$name));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static Dog fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Dog>(map));
-  }
-
-  static Dog fromJson(String json) {
-    return _guard((c) => c.fromJson<Dog>(json));
-  }
-}
-
-mixin DogMappable {
-  String toJson() {
-    return DogMapper._guard((c) => c.toJson(this as Dog));
-  }
-
-  Map<String, dynamic> toMap() {
-    return DogMapper._guard((c) => c.toMap(this as Dog));
-  }
-
-  DogCopyWith<Dog, Dog, Dog> get copyWith =>
-      _DogCopyWithImpl(this as Dog, $identity, $identity);
-  @override
-  String toString() {
-    return DogMapper._guard((c) => c.asString(this));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DogMapper._guard((c) => c.isEqual(this, other)));
-  }
-
-  @override
-  int get hashCode {
-    return DogMapper._guard((c) => c.hash(this));
-  }
-}
-
-extension DogValueCopy<$R, $Out> on ObjectCopyWith<$R, Dog, $Out> {
-  DogCopyWith<$R, Dog, $Out> get $asDog =>
-      $base.as((v, t, t2) => _DogCopyWithImpl(v, t, t2));
-}
-
-abstract class DogCopyWith<$R, $In extends Dog, $Out>
-    implements AnimalCopyWith<$R, $In, $Out> {
-  @override
-  $R call({String? name});
-  DogCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _DogCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Dog, $Out>
-    implements DogCopyWith<$R, Dog, $Out> {
-  _DogCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<Dog> $mapper = DogMapper.ensureInitialized();
-  @override
-  $R call({Object? name = $none}) =>
-      $apply(FieldCopyWithData({if (name != $none) #name: name}));
-  @override
-  Dog $make(CopyWithData data) => Dog(data.get(#name, or: $value.name));
-
-  @override
-  DogCopyWith<$R2, Dog, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _DogCopyWithImpl($value, $cast, t);
-}
-
-class ShepherdMapper extends SubClassMapperBase<Shepherd> {
-  ShepherdMapper._();
-
-  static ShepherdMapper? _instance;
-  static ShepherdMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = ShepherdMapper._());
-      DogMapper.ensureInitialized().addSubMapper(_instance!);
-    }
-    return _instance!;
-  }
-
-  static T _guard<T>(T Function(MapperContainer) fn) {
-    ensureInitialized();
-    return fn(MapperContainer.globals);
-  }
-
-  @override
-  final String id = 'Shepherd';
-
-  static String? _$name(Shepherd v) => v.name;
-  static const Field<Shepherd, String> _f$name = Field('name', _$name);
-
-  @override
-  final Map<Symbol, Field<Shepherd, dynamic>> fields = const {
-    #name: _f$name,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = 'Shepherd';
-  @override
-  late final ClassMapperBase superMapper = DogMapper.ensureInitialized();
-
-  static Shepherd _instantiate(DecodingData data) {
-    return Shepherd(data.dec(_f$name));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static Shepherd fromMap(Map<String, dynamic> map) {
-    return _guard((c) => c.fromMap<Shepherd>(map));
-  }
-
-  static Shepherd fromJson(String json) {
-    return _guard((c) => c.fromJson<Shepherd>(json));
-  }
-}
-
-mixin ShepherdMappable {
-  String toJson() {
-    return ShepherdMapper._guard((c) => c.toJson(this as Shepherd));
-  }
-
-  Map<String, dynamic> toMap() {
-    return ShepherdMapper._guard((c) => c.toMap(this as Shepherd));
-  }
-
-  ShepherdCopyWith<Shepherd, Shepherd, Shepherd> get copyWith =>
-      _ShepherdCopyWithImpl(this as Shepherd, $identity, $identity);
-  @override
-  String toString() {
-    return ShepherdMapper._guard((c) => c.asString(this));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ShepherdMapper._guard((c) => c.isEqual(this, other)));
-  }
-
-  @override
-  int get hashCode {
-    return ShepherdMapper._guard((c) => c.hash(this));
-  }
-}
-
-extension ShepherdValueCopy<$R, $Out> on ObjectCopyWith<$R, Shepherd, $Out> {
-  ShepherdCopyWith<$R, Shepherd, $Out> get $asShepherd =>
-      $base.as((v, t, t2) => _ShepherdCopyWithImpl(v, t, t2));
-}
-
-abstract class ShepherdCopyWith<$R, $In extends Shepherd, $Out>
-    implements DogCopyWith<$R, $In, $Out> {
-  @override
-  $R call({String? name});
-  ShepherdCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _ShepherdCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, Shepherd, $Out>
-    implements ShepherdCopyWith<$R, Shepherd, $Out> {
-  _ShepherdCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<Shepherd> $mapper =
-      ShepherdMapper.ensureInitialized();
-  @override
-  $R call({Object? name = $none}) =>
-      $apply(FieldCopyWithData({if (name != $none) #name: name}));
-  @override
-  Shepherd $make(CopyWithData data) =>
-      Shepherd(data.get(#name, or: $value.name));
-
-  @override
-  ShepherdCopyWith<$R2, Shepherd, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _ShepherdCopyWithImpl($value, $cast, t);
 }
 
 class HumanMapper extends ClassMapperBase<Human> {
