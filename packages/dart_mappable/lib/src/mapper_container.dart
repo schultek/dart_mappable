@@ -61,7 +61,7 @@ abstract class MapperContainer {
     PrimitiveMapper<bool>((v) => v is num ? v != 0 : v.toString() == 'true'),
     DateTimeMapper(),
     IterableMapper<List>(<T>(i) => i.toList(), <T>(f) => f<List<T>>()),
-    IterableMapper<Set>(<T>(i) => i.toSet(), <T>(f) => f<Set<T>>()),
+    SetMapper<Set>(<T>(i) => i.toSet(), <T>(f) => f<Set<T>>()),
     MapMapper<Map>(<K, V>(map) => map, <K, V>(f) => f<Map<K, V>>()),
   });
 
