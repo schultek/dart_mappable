@@ -6,7 +6,7 @@ import 'mapper_base.dart';
 import 'mapper_mixins.dart';
 import 'mapping_context.dart';
 
-/// The default mapper for iterables like [List] and [Set].
+/// The default mapper for iterables like [List].
 ///
 /// {@category Custom Mappers}
 class IterableMapper<I extends Iterable> extends MapperBase<I>
@@ -37,6 +37,20 @@ class IterableMapper<I extends Iterable> extends MapperBase<I>
   @override
   String stringify(I value, MappingContext context) =>
       '(${value.map((e) => context.container.asString(e)).join(', ')})';
+}
+
+/// The default mapper for [Set]s.
+///
+/// {@category Custom Mappers}
+class SetMapper<S extends Set> extends IterableMapper<S> {
+  SetMapper(super.fromIterable, super.typeFactory);
+
+  @override
+  Equality equality(Equality child) => SetEquality(child);
+
+  @override
+  String stringify(S value, MappingContext context) =>
+      '{${value.map((e) => context.container.asString(e)).join(', ')}}';
 }
 
 /// {@nodoc}
