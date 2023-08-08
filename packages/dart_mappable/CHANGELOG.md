@@ -1,3 +1,7 @@
+# 3.1.3
+
+- Fixed set equality.
+
 # 3.1.2
 
 - Fixed unexpected type error when decoding `null`.
