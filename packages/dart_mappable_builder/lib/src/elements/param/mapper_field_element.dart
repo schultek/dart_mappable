@@ -194,7 +194,7 @@ class ClassMapperFieldElement extends MapperFieldElement {
   }();
 
   late bool isAnnotated = (field != null &&
-      fieldChecker.hasAnnotationOf(field!)) ||
+          fieldChecker.hasAnnotationOf(field!)) ||
       (field?.getter != null && fieldChecker.hasAnnotationOf(field!.getter!));
 
   late String mode = () {

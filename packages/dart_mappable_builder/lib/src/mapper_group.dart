@@ -63,8 +63,8 @@ class MapperElementGroup {
     if (m != null) {
       return m;
     } else if (e is ClassElement) {
-      if (classChecker.hasAnnotationOf(e)) {
-        if (e.library == library && !e.isPrivate) {
+      if (classChecker.hasAnnotationOf(e) && !e.isPrivate) {
+        if (e.library == library) {
           var m = await _addMapper(TargetClassMapperElement(this, e, options));
 
           for (var c in e.constructors) {
@@ -91,8 +91,8 @@ class MapperElementGroup {
         return await _addMapper(NoneClassMapperElement(this, e, options));
       }
     } else if (e is EnumElement) {
-      if (enumChecker.hasAnnotationOf(e)) {
-        if (e.library == library && !e.isPrivate) {
+      if (enumChecker.hasAnnotationOf(e) && !e.isPrivate) {
+        if (e.library == library) {
           return await _addMapper(TargetEnumMapperElement(this, e, options));
         } else {
           return await _addMapper(DependentEnumMapperElement(this, e, options));
