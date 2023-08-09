@@ -193,11 +193,12 @@ class ClassMapperFieldElement extends MapperFieldElement {
         withNullability: false, resolveBounds: true);
   }();
 
-  @override
-  late final String mode = () {
-    if (param == null &&
-        field != null &&
-        !fieldChecker.hasAnnotationOf(field!)) {
+  late bool isAnnotated = (field != null &&
+      fieldChecker.hasAnnotationOf(field!)) ||
+      (field?.getter != null && fieldChecker.hasAnnotationOf(field!.getter!));
+
+  late String mode = () {
+    if (param == null && field != null && !isAnnotated) {
       return ', mode: FieldMode.member';
     } else if (param != null && param!.accessor is! FieldElement) {
       return ', mode: FieldMode.param';

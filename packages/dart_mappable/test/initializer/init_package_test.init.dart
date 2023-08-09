@@ -141,4 +141,5 @@ void initializeMappers() {
   p31.BrandMapper.ensureInitialized();
   p32.AMapper.ensureInitialized();
   p32.BMapper.ensureInitialized();
+  p32.CMapper.ensureInitialized();
 }
