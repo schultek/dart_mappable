@@ -197,6 +197,7 @@ class ClassMapperFieldElement extends MapperFieldElement {
           fieldChecker.hasAnnotationOf(field!)) ||
       (field?.getter != null && fieldChecker.hasAnnotationOf(field!.getter!));
 
+  @override
   late String mode = () {
     if (param == null && field != null && !isAnnotated) {
       return ', mode: FieldMode.member';
