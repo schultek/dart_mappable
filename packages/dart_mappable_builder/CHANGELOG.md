@@ -1,3 +1,8 @@
+# 3.2.0
+
+- Added support for annotating getters with `@MappableField`, which will then be included in the encoding,
+  equality checks, and stringification of that class.
+
 # 3.1.2
 
 - Fixed bug with broken mapper generation.
