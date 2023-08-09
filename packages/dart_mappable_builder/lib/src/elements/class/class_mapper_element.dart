@@ -38,13 +38,17 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
 
   late String selfTypeParam = '$prefixedClassName$typeParams';
 
-  late Iterable<FieldElement> allPublicFields = () sync* {
-    yield* extendsElement?.allPublicFields ?? [];
-    for (var field in element.fields) {
-      if (!field.isStatic &&
-          field.isPublic &&
-          (field.getter?.isSynthetic ?? false)) {
-        yield field;
+  late Iterable<PropertyInducingElement> allFields = () sync* {
+    yield* extendsElement?.allFields ?? [];
+
+    for (var field in element.accessors) {
+      if (field.isStatic) continue;
+      if (!field.isGetter) continue;
+
+      if (field.isPublic && field.isSynthetic) {
+        yield field.variable;
+      } else if (fieldChecker.hasAnnotationOf(field)) {
+        yield field.variable;
       }
     }
   }();
@@ -57,7 +61,7 @@ abstract class ClassMapperElement extends MapperElement<ClassElement>
           MapperFieldElement(p, p.accessor, this);
     }
 
-    for (var f in allPublicFields) {
+    for (var f in allFields) {
       if (!fields.containsKey(f) &&
           !fields.keys
               .any((e) => e is PropertyInducingElement && e.name == f.name)) {

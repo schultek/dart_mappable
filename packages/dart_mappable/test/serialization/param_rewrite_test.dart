@@ -24,6 +24,16 @@ class B with BMappable {
   final int b;
 }
 
+@MappableClass()
+class C with CMappable {
+  const C(this.name);
+
+  final String name;
+
+  @MappableField()
+  String get data => 'world';
+}
+
 void main() {
   group('param rewrite', () {
     test('from json succeeds', () {
@@ -44,6 +54,15 @@ void main() {
     test('swapped to json succeeds', () {
       var b = B(1, 2);
       expect(b.toMap(), equals({'a': 1, 'b': 2}));
+    });
+  });
+
+  group('map getters', () {
+    test('encode annotated getters', () {
+      var c = C('hello');
+      expect(c.toMap(), equals({'name': 'hello', 'data': 'world'}));
+
+      expect(c.toString(), equals('C(name: hello, data: world)'));
     });
   });
 }

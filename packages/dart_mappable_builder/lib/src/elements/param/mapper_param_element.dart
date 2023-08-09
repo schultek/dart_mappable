@@ -76,10 +76,12 @@ class MapperFieldElement {
         withNullability: false, resolveBounds: true);
   }();
 
+  late bool isAnnotated = (field != null &&
+          fieldChecker.hasAnnotationOf(field!)) ||
+      (field?.getter != null && fieldChecker.hasAnnotationOf(field!.getter!));
+
   late String mode = () {
-    if (param == null &&
-        field != null &&
-        !fieldChecker.hasAnnotationOf(field!)) {
+    if (param == null && field != null && !isAnnotated) {
       return ', mode: FieldMode.member';
     } else if (param != null && param!.accessor is! FieldElement) {
       return ', mode: FieldMode.param';
