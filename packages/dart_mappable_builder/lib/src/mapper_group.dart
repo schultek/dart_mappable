@@ -99,12 +99,14 @@ class MapperElementGroup {
         }
       }
     } else if (e is TypeAliasElement) {
-      if (classChecker.hasAnnotationOf(e) && e.aliasedType.element is ClassElement) {
+      if (classChecker.hasAnnotationOf(e) &&
+          e.aliasedType.element is ClassElement) {
         if (e.library == library && !e.isPrivate) {
           return await _addMapper(AliasClassMapperElement(
               this, e, e.aliasedType.element as ClassElement, options));
         }
-      } else if (recordChecker.hasAnnotationOf(e) && e.aliasedType is RecordType) {
+      } else if (recordChecker.hasAnnotationOf(e) &&
+          e.aliasedType is RecordType) {
         if (e.library == library && !e.isPrivate) {
           return await _addMapper(TargetRecordMapperElement(this, e, options));
         } else {
