@@ -1,3 +1,7 @@
+# 3.2.1
+
+- Handle bounded nested type parameters in subclasses.
+
 # 3.2.0
 
 - Added support for annotating getters with `@MappableField`, which will then be included in the encoding,

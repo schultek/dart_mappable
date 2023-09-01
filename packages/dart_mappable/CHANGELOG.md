@@ -1,3 +1,7 @@
+# 3.2.0
+
+- Handle bounded nested type parameters in subclasses.
+
 # 3.1.3
 
 - Fixed set equality.
