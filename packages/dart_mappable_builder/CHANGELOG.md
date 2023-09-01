@@ -1,3 +1,7 @@
+# 4.0.0-dev.1
+
+- Updated prerelease.
+
 # 4.0.0-dev.0
 
 - Require `sdk: >=3.0.0`.
@@ -12,6 +16,19 @@
     ```
     
   For a more detailed usage see the documentation.
+
+# 3.2.1
+
+- Handle bounded nested type parameters in subclasses.
+
+# 3.2.0
+
+- Added support for annotating getters with `@MappableField`, which will then be included in the encoding,
+  equality checks, and stringification of that class.
+
+# 3.1.2
+
+- Fixed bug with broken mapper generation.
 
 # 3.1.1
 

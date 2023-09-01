@@ -1,3 +1,7 @@
+# 4.0.0-dev.1
+
+- Updated prerelease.
+
 # 4.0.0-dev.0
 
 - Require `sdk: >=3.0.0`.
@@ -12,6 +16,18 @@
     ```
     
   For a more detailed usage see the documentation.
+
+# 3.2.0
+
+- Handle bounded nested type parameters in subclasses.
+
+# 3.1.3
+
+- Fixed set equality.
+
+# 3.1.2
+
+- Fixed unexpected type error when decoding `null`.
 
 # 3.1.1
 

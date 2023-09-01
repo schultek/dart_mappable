@@ -20,6 +20,10 @@ class MappingContext {
     }
     return a;
   }
+
+  Type type(Function factory, [List<Type> args = const []]) {
+    return factory.callWith(typeArguments: args) as Type;
+  }
 }
 
 /// The decoding context passed to the [decoder] method of a mapper.

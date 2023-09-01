@@ -15,6 +15,7 @@ class AMapper extends ClassMapperBase<A> {
       BMapper.ensureInitialized();
       CMapper.ensureInitialized();
       DMapper.ensureInitialized();
+      GMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -620,4 +621,115 @@ class _FCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, F, $Out>
   @override
   FCopyWith<$R2, F, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _FCopyWithImpl($value, $cast, t);
+}
+
+class GMapper extends SubClassMapperBase<G> {
+  GMapper._();
+
+  static GMapper? _instance;
+  static GMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = GMapper._());
+      AMapper.ensureInitialized().addSubMapper(_instance!);
+      AMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'G';
+  @override
+  Function get typeFactory => <T, V extends A<T>>(f) => f<G<T, V>>();
+
+  @override
+  final Map<Symbol, Field<G, dynamic>> fields = const {};
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'G';
+  @override
+  late final ClassMapperBase superMapper = AMapper.ensureInitialized();
+
+  @override
+  DecodingContext inherit(DecodingContext context) {
+    return context.inherit(args: [
+      context.arg(0),
+      context.type(<$A>() => A<$A>, [context.arg(0)])
+    ]);
+  }
+
+  static G<T, V> _instantiate<T, V extends A<T>>(DecodingData data) {
+    return G();
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static G<T, V> fromMap<T, V extends A<T>>(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<G<T, V>>(map);
+  }
+
+  static G<T, V> fromJson<T, V extends A<T>>(String json) {
+    return ensureInitialized().decodeJson<G<T, V>>(json);
+  }
+}
+
+mixin GMappable<T, V extends A<T>> {
+  String toJson() {
+    return GMapper.ensureInitialized().encodeJson<G<T, V>>(this as G<T, V>);
+  }
+
+  Map<String, dynamic> toMap() {
+    return GMapper.ensureInitialized().encodeMap<G<T, V>>(this as G<T, V>);
+  }
+
+  GCopyWith<G<T, V>, G<T, V>, G<T, V>, T, V> get copyWith =>
+      _GCopyWithImpl(this as G<T, V>, $identity, $identity);
+  @override
+  String toString() {
+    return GMapper.ensureInitialized().stringifyValue(this as G<T, V>);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            GMapper.ensureInitialized().isValueEqual(this as G<T, V>, other));
+  }
+
+  @override
+  int get hashCode {
+    return GMapper.ensureInitialized().hashValue(this as G<T, V>);
+  }
+}
+
+extension GValueCopy<$R, $Out, T, V extends A<T>>
+    on ObjectCopyWith<$R, G<T, V>, $Out> {
+  GCopyWith<$R, G<T, V>, $Out, T, V> get $asG =>
+      $base.as((v, t, t2) => _GCopyWithImpl(v, t, t2));
+}
+
+abstract class GCopyWith<$R, $In extends G<T, V>, $Out, T, V extends A<T>>
+    implements ACopyWith<$R, $In, $Out, T> {
+  @override
+  $R call();
+  GCopyWith<$R2, $In, $Out2, T, V> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _GCopyWithImpl<$R, $Out, T, V extends A<T>>
+    extends ClassCopyWithBase<$R, G<T, V>, $Out>
+    implements GCopyWith<$R, G<T, V>, $Out, T, V> {
+  _GCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<G> $mapper = GMapper.ensureInitialized();
+  @override
+  $R call() => $apply(FieldCopyWithData({}));
+  @override
+  G<T, V> $make(CopyWithData data) => G();
+
+  @override
+  GCopyWith<$R2, G<T, V>, $Out2, T, V> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _GCopyWithImpl($value, $cast, t);
 }

@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_visitor.dart';
-import 'package:collection/collection.dart';
 
 import '../../mapper_element.dart';
 import '../class_mapper_element.dart';
@@ -22,42 +22,77 @@ mixin TypeParamsMixin on MapperElement<ClassElement> {
         [];
   }();
 
-  late List<String>? inheritedTypeArgs = () {
-    bool hasModifiedArgs = false;
+  bool hasModifiedArgs = false;
 
+  late List<String>? inheritedTypeArgs = () {
     if (element.typeParameters.length !=
         element.supertype!.typeArguments.length) {
       hasModifiedArgs = true;
     }
 
-    var args = <String?>[];
-
+    var args = <String>[];
     for (var p in element.typeParameters) {
-      var arg = _findInheritedTypeArg(p);
-      args.add(arg);
-      if (arg != null) {
-        hasModifiedArgs = true;
-      }
+      args.add(findInheritedTypeArg(p));
     }
 
     if (hasModifiedArgs) {
-      return args
-          .mapIndexed((index, arg) => arg ?? 'context.arg($index)')
-          .toList();
+      return args.toList();
     }
 
     return null;
   }();
 
-  String? _findInheritedTypeArg(TypeParameterElement p) {
+  String resolveInheritedType(DartType t) {
+    if (t is TypeParameterType) {
+      return findInheritedTypeArg(t.element);
+    } else if (t is! InterfaceType) {
+      return t.getDisplayString(withNullability: true);
+    }
+
+    String argParamFor(int index) =>
+        r'$' + String.fromCharCode('A'.codeUnitAt(0) + index);
+    var factoryArgs = <String>[];
+    var inheritedArgs = <String>[];
+
+    String factorizeType(DartType t) {
+      if (t is TypeParameterType) {
+        inheritedArgs.add(findInheritedTypeArg(t.element));
+        var arg = argParamFor(inheritedArgs.length - 1);
+        factoryArgs.add(arg);
+        return arg;
+      } else if (t is! InterfaceType) {
+        return t.getDisplayString(withNullability: true);
+      } else {
+        var typeArgs = '';
+        if (t.typeArguments.isNotEmpty) {
+          typeArgs = '<${t.typeArguments.map(factorizeType).join(', ')}>';
+        }
+
+        var type = '${t.element.name}$typeArgs';
+        if (t.nullabilitySuffix == NullabilitySuffix.question) {
+          type += '?';
+        }
+
+        return '${parent.prefixOfElement(t.element)}$type';
+      }
+    }
+
+    var factorizedType = factorizeType(t);
+
+    return 'context.type(<${factoryArgs.join(', ')}>() => $factorizedType, [${inheritedArgs.join(', ')}])';
+  }
+
+  String findInheritedTypeArg(TypeParameterElement p) {
     var params = element.typeParameters;
+    var index = params.indexOf(p);
     var args = element.supertype!.typeArguments;
 
     for (var a in args) {
       if (a is TypeParameterType && a.element == p) {
-        if (args.indexOf(a) == params.indexOf(p)) {
-          return null;
+        if (args.indexOf(a) == index) {
+          return 'context.arg($index)';
         } else {
+          hasModifiedArgs = true;
           return 'context.arg(${args.indexOf(a)})';
         }
       }
@@ -66,11 +101,18 @@ mixin TypeParamsMixin on MapperElement<ClassElement> {
     for (var a in args) {
       var indices = a.accept(TypeParamExtractor(p));
       if (indices.isNotEmpty) {
+        hasModifiedArgs = true;
         return 'context.arg(${args.indexOf(a)}, [${indices.join(', ')}])';
       }
     }
 
-    return p.bound != null ? parent.prefixedType(p.bound!) : 'dynamic';
+    hasModifiedArgs = true;
+
+    if (p.bound != null) {
+      return resolveInheritedType(p.bound!);
+    }
+
+    return 'dynamic';
   }
 
   late String typeParams = element.typeParameters.isNotEmpty

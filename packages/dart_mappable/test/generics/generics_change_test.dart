@@ -23,6 +23,9 @@ class E<T, V> extends D<V, List<T>> with EMappable<T, V> {}
 @MappableClass()
 class F extends E<int, String> with FMappable {}
 
+@MappableClass()
+class G<T, V extends A<T>> extends A<T> with GMappable<T, V> {}
+
 void main() {
   group('Generics Change Args', () {
     test('Unchanged Args', () {
@@ -58,6 +61,11 @@ void main() {
     test('Less Args', () {
       var f = EMapper.fromMap<dynamic, dynamic>({'type': 'F'});
       expect(f, isA<F>());
+    });
+
+    test('Additional bounded Args', () {
+      var a = AMapper.fromMap<int>({'type': 'G'});
+      expect(a, isA<G<int, A<int>>>());
     });
   });
 }
