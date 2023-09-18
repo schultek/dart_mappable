@@ -16,6 +16,8 @@ class AMapper extends ClassMapperBase<A> {
       CMapper.ensureInitialized();
       DMapper.ensureInitialized();
       GMapper.ensureInitialized();
+      HMapper.ensureInitialized();
+      IMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -327,6 +329,7 @@ class DMapper extends SubClassMapperBase<D> {
       MapperContainer.globals.use(_instance = DMapper._());
       AMapper.ensureInitialized().addSubMapper(_instance!);
       EMapper.ensureInitialized();
+      JMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -767,4 +770,362 @@ class _GCopyWithImpl<$R, $Out, T, V extends A<T>>
   @override
   GCopyWith<$R2, G<T, V>, $Out2, T, V> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _GCopyWithImpl($value, $cast, t);
+}
+
+class HMapper extends SubClassMapperBase<H> {
+  HMapper._();
+
+  static HMapper? _instance;
+  static HMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperBase.addType<num>();
+      MapperContainer.globals.use(_instance = HMapper._());
+      AMapper.ensureInitialized().addSubMapper(_instance!);
+      CMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
+  @override
+  final String id = 'H';
+  @override
+  Function get typeFactory => <T extends C<num>>(f) => f<H<T>>();
+
+  @override
+  final Map<Symbol, Field<H, dynamic>> fields = const {};
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'H';
+  @override
+  late final ClassMapperBase superMapper = AMapper.ensureInitialized();
+
+  @override
+  DecodingContext inherit(DecodingContext context) {
+    return context.inherit(args: [C<num>]);
+  }
+
+  static H<T> _instantiate<T extends C<num>>(DecodingData data) {
+    return H();
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static H<T> fromMap<T extends C<num>>(Map<String, dynamic> map) {
+    return _guard((c) => c.fromMap<H<T>>(map));
+  }
+
+  static H<T> fromJson<T extends C<num>>(String json) {
+    return _guard((c) => c.fromJson<H<T>>(json));
+  }
+}
+
+mixin HMappable<T extends C<num>> {
+  String toJson() {
+    return HMapper._guard((c) => c.toJson(this as H<T>));
+  }
+
+  Map<String, dynamic> toMap() {
+    return HMapper._guard((c) => c.toMap(this as H<T>));
+  }
+
+  HCopyWith<H<T>, H<T>, H<T>, T> get copyWith =>
+      _HCopyWithImpl(this as H<T>, $identity, $identity);
+  @override
+  String toString() {
+    return HMapper._guard((c) => c.asString(this));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            HMapper._guard((c) => c.isEqual(this, other)));
+  }
+
+  @override
+  int get hashCode {
+    return HMapper._guard((c) => c.hash(this));
+  }
+}
+
+extension HValueCopy<$R, $Out, T extends C<num>>
+    on ObjectCopyWith<$R, H<T>, $Out> {
+  HCopyWith<$R, H<T>, $Out, T> get $asH =>
+      $base.as((v, t, t2) => _HCopyWithImpl(v, t, t2));
+}
+
+abstract class HCopyWith<$R, $In extends H<T>, $Out, T extends C<num>>
+    implements ACopyWith<$R, $In, $Out, dynamic> {
+  @override
+  $R call();
+  HCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _HCopyWithImpl<$R, $Out, T extends C<num>>
+    extends ClassCopyWithBase<$R, H<T>, $Out>
+    implements HCopyWith<$R, H<T>, $Out, T> {
+  _HCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<H> $mapper = HMapper.ensureInitialized();
+  @override
+  $R call() => $apply(FieldCopyWithData({}));
+  @override
+  H<T> $make(CopyWithData data) => H();
+
+  @override
+  HCopyWith<$R2, H<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _HCopyWithImpl($value, $cast, t);
+}
+
+class IMapper extends SubClassMapperBase<I> {
+  IMapper._();
+
+  static IMapper? _instance;
+  static IMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperBase.addType<num>();
+      MapperContainer.globals.use(_instance = IMapper._());
+      AMapper.ensureInitialized().addSubMapper(_instance!);
+      CMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
+  @override
+  final String id = 'I';
+  @override
+  Function get typeFactory =>
+      <T extends C<V>, V extends num>(f) => f<I<T, V>>();
+
+  @override
+  final Map<Symbol, Field<I, dynamic>> fields = const {};
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'I';
+  @override
+  late final ClassMapperBase superMapper = AMapper.ensureInitialized();
+
+  @override
+  DecodingContext inherit(DecodingContext context) {
+    return context.inherit(args: [
+      context.type(<$A extends num>() => C<$A>, [context.arg(0)]),
+      context.arg(0)
+    ]);
+  }
+
+  static I<T, V> _instantiate<T extends C<V>, V extends num>(
+      DecodingData data) {
+    return I();
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static I<T, V> fromMap<T extends C<V>, V extends num>(
+      Map<String, dynamic> map) {
+    return _guard((c) => c.fromMap<I<T, V>>(map));
+  }
+
+  static I<T, V> fromJson<T extends C<V>, V extends num>(String json) {
+    return _guard((c) => c.fromJson<I<T, V>>(json));
+  }
+}
+
+mixin IMappable<T extends C<V>, V extends num> {
+  String toJson() {
+    return IMapper._guard((c) => c.toJson(this as I<T, V>));
+  }
+
+  Map<String, dynamic> toMap() {
+    return IMapper._guard((c) => c.toMap(this as I<T, V>));
+  }
+
+  ICopyWith<I<T, V>, I<T, V>, I<T, V>, T, V> get copyWith =>
+      _ICopyWithImpl(this as I<T, V>, $identity, $identity);
+  @override
+  String toString() {
+    return IMapper._guard((c) => c.asString(this));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            IMapper._guard((c) => c.isEqual(this, other)));
+  }
+
+  @override
+  int get hashCode {
+    return IMapper._guard((c) => c.hash(this));
+  }
+}
+
+extension IValueCopy<$R, $Out, T extends C<V>, V extends num>
+    on ObjectCopyWith<$R, I<T, V>, $Out> {
+  ICopyWith<$R, I<T, V>, $Out, T, V> get $asI =>
+      $base.as((v, t, t2) => _ICopyWithImpl(v, t, t2));
+}
+
+abstract class ICopyWith<$R, $In extends I<T, V>, $Out, T extends C<V>,
+    V extends num> implements ACopyWith<$R, $In, $Out, V> {
+  @override
+  $R call();
+  ICopyWith<$R2, $In, $Out2, T, V> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _ICopyWithImpl<$R, $Out, T extends C<V>, V extends num>
+    extends ClassCopyWithBase<$R, I<T, V>, $Out>
+    implements ICopyWith<$R, I<T, V>, $Out, T, V> {
+  _ICopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<I> $mapper = IMapper.ensureInitialized();
+  @override
+  $R call() => $apply(FieldCopyWithData({}));
+  @override
+  I<T, V> $make(CopyWithData data) => I();
+
+  @override
+  ICopyWith<$R2, I<T, V>, $Out2, T, V> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _ICopyWithImpl($value, $cast, t);
+}
+
+class JMapper extends SubClassMapperBase<J> {
+  JMapper._();
+
+  static JMapper? _instance;
+  static JMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperBase.addType<num>();
+      MapperContainer.globals.use(_instance = JMapper._());
+      DMapper.ensureInitialized().addSubMapper(_instance!);
+      CMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  static T _guard<T>(T Function(MapperContainer) fn) {
+    ensureInitialized();
+    return fn(MapperContainer.globals);
+  }
+
+  @override
+  final String id = 'J';
+  @override
+  Function get typeFactory =>
+      <T extends C<V>, V extends U, U extends num>(f) => f<J<T, V, U>>();
+
+  @override
+  final Map<Symbol, Field<J, dynamic>> fields = const {};
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'J';
+  @override
+  late final ClassMapperBase superMapper = DMapper.ensureInitialized();
+
+  @override
+  DecodingContext inherit(DecodingContext context) {
+    return context.inherit(args: [
+      context.type(<$A extends $B, $B extends num>() => C<$A>,
+          [context.arg(0), context.arg(1)]),
+      context.arg(0),
+      context.arg(1)
+    ]);
+  }
+
+  static J<T, V, U> _instantiate<T extends C<V>, V extends U, U extends num>(
+      DecodingData data) {
+    return J();
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static J<T, V, U> fromMap<T extends C<V>, V extends U, U extends num>(
+      Map<String, dynamic> map) {
+    return _guard((c) => c.fromMap<J<T, V, U>>(map));
+  }
+
+  static J<T, V, U> fromJson<T extends C<V>, V extends U, U extends num>(
+      String json) {
+    return _guard((c) => c.fromJson<J<T, V, U>>(json));
+  }
+}
+
+mixin JMappable<T extends C<V>, V extends U, U extends num> {
+  String toJson() {
+    return JMapper._guard((c) => c.toJson(this as J<T, V, U>));
+  }
+
+  Map<String, dynamic> toMap() {
+    return JMapper._guard((c) => c.toMap(this as J<T, V, U>));
+  }
+
+  JCopyWith<J<T, V, U>, J<T, V, U>, J<T, V, U>, T, V, U> get copyWith =>
+      _JCopyWithImpl(this as J<T, V, U>, $identity, $identity);
+  @override
+  String toString() {
+    return JMapper._guard((c) => c.asString(this));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            JMapper._guard((c) => c.isEqual(this, other)));
+  }
+
+  @override
+  int get hashCode {
+    return JMapper._guard((c) => c.hash(this));
+  }
+}
+
+extension JValueCopy<$R, $Out, T extends C<V>, V extends U, U extends num>
+    on ObjectCopyWith<$R, J<T, V, U>, $Out> {
+  JCopyWith<$R, J<T, V, U>, $Out, T, V, U> get $asJ =>
+      $base.as((v, t, t2) => _JCopyWithImpl(v, t, t2));
+}
+
+abstract class JCopyWith<$R, $In extends J<T, V, U>, $Out, T extends C<V>,
+    V extends U, U extends num> implements DCopyWith<$R, $In, $Out, V, U> {
+  @override
+  $R call();
+  JCopyWith<$R2, $In, $Out2, T, V, U> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _JCopyWithImpl<$R, $Out, T extends C<V>, V extends U, U extends num>
+    extends ClassCopyWithBase<$R, J<T, V, U>, $Out>
+    implements JCopyWith<$R, J<T, V, U>, $Out, T, V, U> {
+  _JCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<J> $mapper = JMapper.ensureInitialized();
+  @override
+  $R call() => $apply(FieldCopyWithData({}));
+  @override
+  J<T, V, U> $make(CopyWithData data) => J();
+
+  @override
+  JCopyWith<$R2, J<T, V, U>, $Out2, T, V, U> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _JCopyWithImpl($value, $cast, t);
 }

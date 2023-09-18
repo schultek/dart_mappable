@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../utils.dart';
@@ -29,13 +30,23 @@ class TargetClassMapperElement extends ClassMapperElement
   late List<String> typesConfigs = () {
     var types = <String>[];
 
+    void addMissingType(DartType type) {
+      if (type is InterfaceType) {
+        var e = type.element;
+        var m = parent.getMapperForElement(e);
+        if ((m == null || m is NoneClassMapperElement)) {
+          types.add(e.name);
+        }
+
+        for (var arg in type.typeArguments) {
+          addMissingType(arg);
+        }
+      }
+    }
+
     for (var param in element.typeParameters) {
       if (param.bound != null) {
-        var e = param.bound!.element;
-        var m = parent.getMapperForElement(e);
-        if (e != null && (m == null || m is NoneClassMapperElement)) {
-          types.add(e.name!);
-        }
+        addMissingType(param.bound!);
       }
     }
 
