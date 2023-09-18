@@ -17,6 +17,10 @@
     
   For a more detailed usage see the documentation.
 
+# 3.2.2
+
+- Handle even more cases for generic subclassing.
+
 # 3.2.1
 
 - Handle bounded nested type parameters in subclasses.

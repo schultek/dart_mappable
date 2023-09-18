@@ -26,6 +26,16 @@ class F extends E<int, String> with FMappable {}
 @MappableClass()
 class G<T, V extends A<T>> extends A<T> with GMappable<T, V> {}
 
+@MappableClass()
+class H<T extends C> extends A with HMappable<T> {}
+
+@MappableClass()
+class I<T extends C<V>, V extends num> extends A<V> with IMappable<T, V> {}
+
+@MappableClass()
+class J<T extends C<V>, V extends U, U extends num> extends D<V, U>
+    with JMappable<T, V, U> {}
+
 void main() {
   group('Generics Change Args', () {
     test('Unchanged Args', () {
@@ -66,6 +76,22 @@ void main() {
     test('Additional bounded Args', () {
       var a = AMapper.fromMap<int>({'type': 'G'});
       expect(a, isA<G<int, A<int>>>());
+    });
+
+    test('Unspecified Args', () {
+      var a = AMapper.fromMap({'type': 'H'});
+      expect(a, isA<H<C<num>>>());
+      expect(a, isNot(isA<H<C<int>>>()));
+    });
+
+    test('Double bounded Args', () {
+      var a = AMapper.fromMap<int>({'type': 'I'});
+      expect(a, isA<I<C<int>, int>>());
+    });
+
+    test('Triple bounded Args', () {
+      var d = DMapper.fromMap<int, int>({'type': 'J'});
+      expect(d, isA<J<C<int>, int, int>>());
     });
   });
 }

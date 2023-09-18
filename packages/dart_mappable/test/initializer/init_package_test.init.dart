@@ -92,6 +92,9 @@ void initializeMappers() {
   p14.EMapper.ensureInitialized();
   p14.FMapper.ensureInitialized();
   p14.GMapper.ensureInitialized();
+  p14.HMapper.ensureInitialized();
+  p14.IMapper.ensureInitialized();
+  p14.JMapper.ensureInitialized();
   p15.BoxMapper.ensureInitialized();
   p15.ConfettiMapper.ensureInitialized();
   p15.ContentMapper.ensureInitialized();

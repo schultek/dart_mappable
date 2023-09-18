@@ -56,9 +56,14 @@ mixin TypeParamsMixin on MapperElement<ClassElement> {
 
     String factorizeType(DartType t) {
       if (t is TypeParameterType) {
+        var index = inheritedArgs.length;
         inheritedArgs.add(findInheritedTypeArg(t.element));
-        var arg = argParamFor(inheritedArgs.length - 1);
+        var arg = argParamFor(index);
         factoryArgs.add(arg);
+        if (t.bound is! DynamicType) {
+          var bound = factorizeType(t.bound);
+          factoryArgs[index] = '$arg extends $bound';
+        }
         return arg;
       } else if (t is! InterfaceType) {
         return t.getDisplayString(withNullability: true);
@@ -78,6 +83,10 @@ mixin TypeParamsMixin on MapperElement<ClassElement> {
     }
 
     var factorizedType = factorizeType(t);
+
+    if (factoryArgs.isEmpty) {
+      return factorizedType;
+    }
 
     return 'context.type(<${factoryArgs.join(', ')}>() => $factorizedType, [${inheritedArgs.join(', ')}])';
   }
