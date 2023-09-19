@@ -91,7 +91,10 @@ class MapperFieldElement {
   }();
 
   late String key = () {
-    var key = param?.jsonKey(parent.caseStyle) ?? name;
+    var key = param?.jsonKey(parent.caseStyle) ??
+        _keyFor(field) ??
+        _keyFor(field?.getter) ??
+        parent.caseStyle.transform(name);
     if (key != name) {
       return ", key: '$key'";
     } else {
@@ -120,7 +123,9 @@ class MapperFieldElement {
   }();
 
   late Future<String> hook = () async {
-    var hook = await param?.getHook();
+    var hook = (await param?.getHook()) ??
+        (await _hookFor(field)) ??
+        (await _hookFor(field?.getter));
     return hook != null ? ', hook: $hook' : '';
   }();
 }
@@ -139,13 +144,6 @@ abstract class MapperParamElement {
   }
 
   PropertyInducingElement? get accessor;
-
-  String? _keyFor(Element element) {
-    return fieldChecker
-        .firstAnnotationOf(element)
-        ?.getField('key')!
-        .toStringValue();
-  }
 
   String? get _paramKey => _keyFor(parameter);
 
@@ -241,7 +239,20 @@ class UnresolvedParamElement extends MapperParamElement {
   PropertyInducingElement? get accessor => null;
 }
 
-Future<String?> _hookFor(Element element) async {
+String? _keyFor(Element? element) {
+  if (element == null) {
+    return null;
+  }
+  return fieldChecker
+      .firstAnnotationOf(element)
+      ?.getField('key')!
+      .toStringValue();
+}
+
+Future<String?> _hookFor(Element? element) async {
+  if (element == null) {
+    return null;
+  }
   if (fieldChecker.hasAnnotationOf(element)) {
     var node = await getResolvedAnnotationNode(element, MappableField, 'hook');
     if (node != null) {
