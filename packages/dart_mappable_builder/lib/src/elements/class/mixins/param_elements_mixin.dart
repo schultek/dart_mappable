@@ -55,16 +55,16 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
           'Cannot resolve formal super parameter',
         );
       }
-        var superConfig =
-            superElement!.getParameterConfig(dec.superConstructorParameter!);
-        if (superConfig is UnresolvedParamElement) {
-          return UnresolvedParamElement(
-            param,
-            'Problem in super constructor: ${superConfig.message}',
-          );
-        } else {
-          return SuperParamElement(param, superConfig);
-        }
+      var superConfig =
+          superElement!.getParameterConfig(dec.superConstructorParameter!);
+      if (superConfig is UnresolvedParamElement) {
+        return UnresolvedParamElement(
+          param,
+          'Problem in super constructor: ${superConfig.message}',
+        );
+      } else {
+        return SuperParamElement(param, superConfig);
+      }
     }
 
     ParameterElement? superParameter = _findSuperParameter(param);
