@@ -10,7 +10,6 @@ import '../param/mapper_field_element.dart';
 import '../param/mapper_param_element.dart';
 import 'mixins/param_elements_mixin.dart';
 import 'mixins/type_params_mixin.dart';
-import 'none_class_mapper_element.dart';
 
 /// Element interface for all class mappers.
 abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
@@ -100,7 +99,7 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
   }();
 
   late bool isSubclass = () {
-    if (superElement == null || superElement is NoneClassMapperElement) {
+    if (superElement == null) {
       return false;
     }
     return true;

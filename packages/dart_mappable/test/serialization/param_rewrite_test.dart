@@ -30,7 +30,7 @@ class C with CMappable {
 
   final String name;
 
-  @MappableField()
+  @MappableField(key: 'd')
   String get data => 'world';
 }
 
@@ -60,7 +60,7 @@ void main() {
   group('map getters', () {
     test('encode annotated getters', () {
       var c = C('hello');
-      expect(c.toMap(), equals({'name': 'hello', 'data': 'world'}));
+      expect(c.toMap(), equals({'name': 'hello', 'd': 'world'}));
 
       expect(c.toString(), equals('C(name: hello, data: world)'));
     });

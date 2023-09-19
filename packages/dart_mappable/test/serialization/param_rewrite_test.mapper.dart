@@ -223,7 +223,7 @@ class CMapper extends ClassMapperBase<C> {
   static String _$name(C v) => v.name;
   static const Field<C, String> _f$name = Field('name', _$name);
   static String _$data(C v) => v.data;
-  static const Field<C, String> _f$data = Field('data', _$data);
+  static const Field<C, String> _f$data = Field('data', _$data, key: 'd');
 
   @override
   final Map<Symbol, Field<C, dynamic>> fields = const {

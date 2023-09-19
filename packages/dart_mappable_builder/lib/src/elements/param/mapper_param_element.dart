@@ -2,9 +2,9 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../utils.dart';
+import 'mapper_field_element.dart';
 
 abstract class MapperParamElement {
   String get name;
@@ -45,7 +45,7 @@ abstract class ClassMapperParamElement extends MapperParamElement {
 
   @override
   Future<String?> getHook() {
-    return _hookFor(parameter);
+    return hookFor(parameter);
   }
 
   @override
@@ -67,7 +67,7 @@ class FieldParamElement extends ClassMapperParamElement {
 
   @override
   Future<String?> getHook() async {
-    return (await _hookFor(field)) ?? await super.getHook();
+    return (await hookFor(field)) ?? await super.getHook();
   }
 
   @override
@@ -138,16 +138,6 @@ class UnresolvedParamElement extends ClassMapperParamElement {
 
   @override
   PropertyInducingElement? get accessor => null;
-}
-
-Future<String?> _hookFor(Element element) async {
-  if (fieldChecker.hasAnnotationOf(element)) {
-    var node = await getResolvedAnnotationNode(element, MappableField, 'hook');
-    if (node != null) {
-      return node.toSource();
-    }
-  }
-  return null;
 }
 
 class RecordMapperParamElement extends MapperParamElement {

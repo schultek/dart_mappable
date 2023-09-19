@@ -210,10 +210,13 @@ class ClassMapperFieldElement extends MapperFieldElement {
 
   @override
   late final String key = () {
-    String key = name;
+    String? key;
     if (param case var p?) {
       key = p.key ?? parent.caseStyle.transform(p.name);
     }
+    key ??= _keyFor(field) ??
+        _keyFor(field?.getter) ??
+        parent.caseStyle.transform(name);
     if (key != name) {
       return ", key: '$key'";
     } else {
@@ -248,7 +251,32 @@ class ClassMapperFieldElement extends MapperFieldElement {
 
   @override
   late final Future<String> hook = () async {
-    var hook = await param?.getHook();
+    var hook = (await param?.getHook()) ??
+        (await hookFor(field)) ??
+        (await hookFor(field?.getter));
     return hook != null ? ', hook: $hook' : '';
   }();
+}
+
+String? _keyFor(Element? element) {
+  if (element == null) {
+    return null;
+  }
+  return fieldChecker
+      .firstAnnotationOf(element)
+      ?.getField('key')!
+      .toStringValue();
+}
+
+Future<String?> hookFor(Element? element) async {
+  if (element == null) {
+    return null;
+  }
+  if (fieldChecker.hasAnnotationOf(element)) {
+    var node = await getResolvedAnnotationNode(element, MappableField, 'hook');
+    if (node != null) {
+      return node.toSource();
+    }
+  }
+  return null;
 }

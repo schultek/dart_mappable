@@ -2,23 +2,20 @@ import 'package:analyzer/dart/element/type.dart';
 
 import '../../record/target_record_mapper_element.dart';
 import '../class_mapper_element.dart';
-import '../none_class_mapper_element.dart';
 
 mixin LinkedElementsMixin on ClassMapperElement {
   late List<String> linkedElements = () {
     var linked = <String>{};
 
     for (var target in subElements) {
-      if (target is! NoneClassMapperElement) {
-        var prefix = parent.prefixOfElement(target.annotatedElement);
-        linked.add('$prefix${target.mapperName}');
-      }
+      var prefix = parent.prefixOfElement(target.annotatedElement);
+      linked.add('$prefix${target.mapperName}');
     }
 
     void checkType(DartType t) {
       var e = t.element;
       var m = parent.getMapperForElement(e);
-      if (m != null && m is! NoneClassMapperElement) {
+      if (m != null) {
         linked.add(
             '${parent.prefixOfElement(m.annotatedElement)}${m.mapperName}');
       }
@@ -56,7 +53,7 @@ mixin LinkedElementsMixin on ClassMapperElement {
     for (var param in element.typeParameters) {
       if (param.bound != null) {
         var m = parent.getMapperForElement(param.bound!.element);
-        if (m is ClassMapperElement && m is! NoneClassMapperElement) {
+        if (m is ClassMapperElement) {
           linked.add(
               '${parent.prefixOfElement(m.annotatedElement)}${m.mapperName}');
         }

@@ -17,6 +17,10 @@
     
   For a more detailed usage see the documentation.
 
+# 3.2.3
+
+- Respect keys and hooks for annotated getters.
+
 # 3.2.2
 
 - Handle even more cases for generic subclassing.
