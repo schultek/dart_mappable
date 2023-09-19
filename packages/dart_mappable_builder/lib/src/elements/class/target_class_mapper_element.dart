@@ -4,7 +4,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 import '../../utils.dart';
 import 'class_mapper_element.dart';
 import 'mixins/linked_elements_mixin.dart';
-import 'none_class_mapper_element.dart';
 
 /// Element interface for an annotated class in the target library of [parent].
 class TargetClassMapperElement extends ClassMapperElement
@@ -34,7 +33,7 @@ class TargetClassMapperElement extends ClassMapperElement
       if (type is InterfaceType) {
         var e = type.element;
         var m = parent.getMapperForElement(e);
-        if ((m == null || m is NoneClassMapperElement)) {
+        if (m == null) {
           types.add(e.name);
         }
 

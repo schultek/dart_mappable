@@ -217,14 +217,10 @@ class TwoMapper extends ClassMapperBase<Two> {
 
   static String _$id(Two v) => v.id;
   static const Field<Two, String> _f$id = Field('id', _$id);
-  static String _$name(Two v) => v.name;
-  static const Field<Two, String> _f$name =
-      Field('name', _$name, mode: FieldMode.member);
 
   @override
   final Map<Symbol, Field<Two, dynamic>> fields = const {
     #id: _f$id,
-    #name: _f$name,
   };
 
   static Two _instantiate(DecodingData data) {

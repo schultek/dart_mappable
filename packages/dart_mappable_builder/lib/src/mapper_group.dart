@@ -12,7 +12,6 @@ import 'elements/class/alias_class_mapper_element.dart';
 import 'elements/class/class_mapper_element.dart';
 import 'elements/class/dependent_class_mapper_element.dart';
 import 'elements/class/factory_constructor_mapper_element.dart';
-import 'elements/class/none_class_mapper_element.dart';
 import 'elements/class/target_class_mapper_element.dart';
 import 'elements/enum/dependent_enum_mapper_element.dart';
 import 'elements/enum/target_enum_mapper_element.dart';
@@ -93,8 +92,6 @@ class MapperElementGroup {
           return await _addMapper(
               DependentClassMapperElement(this, e, options));
         }
-      } else if (orNone) {
-        return await _addMapper(NoneClassMapperElement(this, e, options));
       }
     } else if (e is EnumElement) {
       if (enumChecker.hasAnnotationOf(e)) {
@@ -132,13 +129,14 @@ class MapperElementGroup {
       if (element.extendsElement == null) {
         var superElement = getElementFor(element.element.supertype);
         if (superElement != null) {
-          ClassMapperElement superTarget =
-              await getOrAddMapperForElement(superElement, orNone: true)
-                  as ClassMapperElement;
+          var superTarget = await getOrAddMapperForElement(superElement)
+              as ClassMapperElement?;
 
-          element.extendsElement = superTarget;
-          if (!superTarget.subElements.contains(element)) {
-            superTarget.subElements.add(element);
+          if (superTarget != null) {
+            element.extendsElement = superTarget;
+            if (!superTarget.subElements.contains(element)) {
+              superTarget.subElements.add(element);
+            }
           }
         }
       }
@@ -146,13 +144,14 @@ class MapperElementGroup {
         for (var interface in element.element.interfaces) {
           var interfaceElement = getElementFor(interface);
           if (interfaceElement != null) {
-            ClassMapperElement interfaceTarget =
-                await getOrAddMapperForElement(interfaceElement, orNone: true)
-                    as ClassMapperElement;
-
-            element.interfaceElements.add(interfaceTarget);
-            if (!interfaceTarget.subElements.contains(element)) {
-              interfaceTarget.subElements.add(element);
+            var interfaceTarget =
+                await getOrAddMapperForElement(interfaceElement)
+                    as ClassMapperElement?;
+            if (interfaceTarget != null) {
+              element.interfaceElements.add(interfaceTarget);
+              if (!interfaceTarget.subElements.contains(element)) {
+                interfaceTarget.subElements.add(element);
+              }
             }
           }
         }
