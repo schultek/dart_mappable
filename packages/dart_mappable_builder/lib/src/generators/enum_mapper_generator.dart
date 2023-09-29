@@ -7,6 +7,8 @@ class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
 
   @override
   Future<String> generate() async {
+    final extensionReturnType = element.hasAllStringValues ? 'String' : 'dynamic';
+    
     return '''
         class ${element.mapperName} extends EnumMapper<${element.prefixedClassName}> {
           ${element.mapperName}._();
@@ -41,9 +43,9 @@ class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
         }
         
         extension ${element.mapperName}Extension on ${element.prefixedClassName} {
-          ${element.hasAllStringValues ? 'String' : 'dynamic'} toValue() {
+          ${extensionReturnType} toValue() {
             ${element.mapperName}.ensureInitialized();
-            return MapperContainer.globals.toValue(this)${element.hasAllStringValues ? ' as String' : ''};
+            return MapperContainer.globals.toValue<${extensionReturnType}>(this)${element.hasAllStringValues ? ' as String' : ''};
           }
         }
       ''';
