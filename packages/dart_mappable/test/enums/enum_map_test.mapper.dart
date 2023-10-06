@@ -51,7 +51,7 @@ class EnumAMapper extends EnumMapper<EnumA> {
 extension EnumAMapperExtension on EnumA {
   String toValue() {
     EnumAMapper.ensureInitialized();
-    return MapperContainer.globals.toValue(this) as String;
+    return MapperContainer.globals.toValue<EnumA>(this) as String;
   }
 }
 

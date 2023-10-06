@@ -51,7 +51,7 @@ class StateMapper extends EnumMapper<State> {
 extension StateMapperExtension on State {
   String toValue() {
     StateMapper.ensureInitialized();
-    return MapperContainer.globals.toValue(this) as String;
+    return MapperContainer.globals.toValue<State>(this) as String;
   }
 }
 
@@ -101,7 +101,7 @@ class ColorMapper extends EnumMapper<Color> {
 extension ColorMapperExtension on Color {
   String toValue() {
     ColorMapper.ensureInitialized();
-    return MapperContainer.globals.toValue(this) as String;
+    return MapperContainer.globals.toValue<Color>(this) as String;
   }
 }
 
@@ -151,7 +151,7 @@ class ItemsMapper extends EnumMapper<Items> {
 extension ItemsMapperExtension on Items {
   dynamic toValue() {
     ItemsMapper.ensureInitialized();
-    return MapperContainer.globals.toValue(this);
+    return MapperContainer.globals.toValue<Items>(this);
   }
 }
 
@@ -205,6 +205,6 @@ class StatusMapper extends EnumMapper<Status> {
 extension StatusMapperExtension on Status {
   dynamic toValue() {
     StatusMapper.ensureInitialized();
-    return MapperContainer.globals.toValue(this);
+    return MapperContainer.globals.toValue<Status>(this);
   }
 }

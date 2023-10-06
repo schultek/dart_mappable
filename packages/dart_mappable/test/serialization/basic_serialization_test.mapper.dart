@@ -51,7 +51,7 @@ class BMapper extends EnumMapper<B> {
 extension BMapperExtension on B {
   String toValue() {
     BMapper.ensureInitialized();
-    return MapperContainer.globals.toValue(this) as String;
+    return MapperContainer.globals.toValue<B>(this) as String;
   }
 }
 
