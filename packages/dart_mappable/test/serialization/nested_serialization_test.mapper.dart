@@ -51,7 +51,7 @@ class BrandMapper extends EnumMapper<Brand> {
 extension BrandMapperExtension on Brand {
   String toValue() {
     BrandMapper.ensureInitialized();
-    return MapperContainer.globals.toValue(this) as String;
+    return MapperContainer.globals.toValue<Brand>(this) as String;
   }
 }
 

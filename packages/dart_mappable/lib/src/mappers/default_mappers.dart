@@ -41,12 +41,19 @@ abstract class EnumMapper<T extends Enum> extends SimpleMapper<T> {
   const EnumMapper();
 }
 
-/// A mapper that encodes a [DateTime] object into a formatted iso string and
-/// vice versa.
+/// A mapper that encodes a [DateTime] object into a serializable date format
+/// and vice versa.
 ///
-/// It can also decode numbers in unix milliseconds time.
+/// The encoding mode can be specified using the [DateTimeMapper.encodingMode]
+/// flag as either a Iso8601 String, a UTC Iso8601 String or a unix milliseconds integer.
+///
+/// {@category Models}
 class DateTimeMapper extends SimpleMapper<DateTime> {
   const DateTimeMapper();
+
+  /// Defines how a [DateTime] object is encoded. See [DateTimeEncoding] for all
+  /// possible values.
+  static DateTimeEncoding encodingMode = DateTimeEncoding.utcIso8601String;
 
   @override
   DateTime decode(dynamic value) {
@@ -60,9 +67,27 @@ class DateTimeMapper extends SimpleMapper<DateTime> {
   }
 
   @override
-  String encode(DateTime self) {
-    return self.toUtc().toIso8601String();
+  Object encode(DateTime self) {
+    return switch (encodingMode) {
+      DateTimeEncoding.iso8601String => self.toIso8601String(),
+      DateTimeEncoding.utcIso8601String => self.toUtc().toIso8601String(),
+      DateTimeEncoding.millisSinceEpoc => self.millisecondsSinceEpoch
+    };
   }
+}
+
+/// Options for encoding a [DateTime].
+///
+/// {@category Models}
+enum DateTimeEncoding {
+  /// Encodes as a Iso8601 String.
+  iso8601String,
+
+  /// Encodes as a UTC Iso8601 String.
+  utcIso8601String,
+
+  /// Encodes as a unix milliseconds integer.
+  millisSinceEpoc,
 }
 
 /// The decoding function of a serializable class (`fromJson`) with one generic type parameter.

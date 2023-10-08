@@ -43,7 +43,7 @@ class HOpacityMapper extends EnumMapper<HOpacity> {
 extension HOpacityMapperExtension on HOpacity {
   String toValue() {
     HOpacityMapper.ensureInitialized();
-    return MapperContainer.globals.toValue(this) as String;
+    return MapperContainer.globals.toValue<HOpacity>(this) as String;
   }
 }
 

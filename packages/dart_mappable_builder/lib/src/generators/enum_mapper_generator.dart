@@ -43,7 +43,7 @@ class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
         extension ${element.mapperName}Extension on ${element.prefixedClassName} {
           ${element.hasAllStringValues ? 'String' : 'dynamic'} toValue() {
             ${element.mapperName}.ensureInitialized();
-            return MapperContainer.globals.toValue(this)${element.hasAllStringValues ? ' as String' : ''};
+            return MapperContainer.globals.toValue<${element.prefixedClassName}>(this)${element.hasAllStringValues ? ' as String' : ''};
           }
         }
       ''';
