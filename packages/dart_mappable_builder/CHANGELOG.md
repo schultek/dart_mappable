@@ -1,3 +1,8 @@
+# 3.3.0
+
+- Make enum encoding explicitly typed.
+- Update analyzer to '>=5.11.0 <7.0.0'
+
 # 3.2.3
 
 - Respect keys and hooks for annotated getters.

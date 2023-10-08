@@ -1,3 +1,7 @@
+# 3.3.0
+
+- Make `DateTime` encoding configurable through `DateTimeMapper.encodingMode`.
+
 # 3.2.0
 
 - Handle bounded nested type parameters in subclasses.
