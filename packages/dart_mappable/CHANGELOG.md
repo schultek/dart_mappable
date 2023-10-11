@@ -1,3 +1,7 @@
+# 3.3.1
+
+- Improved migration docs regarding `json_serializable` and the difference of `toJson()`.
+
 # 3.3.0
 
 - Make `DateTime` encoding configurable through `DateTimeMapper.encodingMode`.
