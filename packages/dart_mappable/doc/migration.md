@@ -1,5 +1,84 @@
-`dart_mappable` tries to be compatible with other code-generation packages. Check the `examples` directory for some 
-common use-cases. Following are some popular packages that you can use together with `dart_mappable`.
+`dart_mappable` is meant as an alternative to other popular serialization and data-class packages. To make migration
+away from these easier it provides basic compatibility and configuration options to enable partial migration.
+
+### json_serializable
+
+[json_serializable](https://pub.dev/packages/json_serializable) is a popular serialization package
+for simple applications. 
+
+There are two migration cases related to this package:
+
+1. You want to migrate your own classes to `dart_mappable` and away from `json_serializable`.
+2. You want to make (your own or external) classes that use `json_serializable` compatible with `dart_mappable`.
+
+This also allows for partially migrating only a subset of your classes to `dart_mappable` while still being able to
+include and access your *legacy* models.
+
+#### Migrating classes to `dart_mappable`
+
+To migrate your classes to `dart_mappable` follow the normal steps outlined in the [Models](../topics/Models-topic.html) page.
+
+A **very important difference** between the packages is that the `toJson()` method returns
+- a `String` in `dart_mappable`,
+- a `Map<String, dynamic>` in `json_serializable`.
+
+The equivalent in `dart_mappable` is instead named `toMap()` to better reflect the return type.
+
+Thereby, `dart_mappable` provides the following equivalent of methods when coming from `json_serializable`:
+
+- `toJson()` from `json_serializable` is equivalent to `toMap()` in `dart_mappable` and returns a `Map<String, dynamic>`
+- `jsonEncode(toJson())` from `json_serializable` is equivalent to `.toJson()` in `dart_mappable` and returns a `String`
+
+It is **recommended** that you adapt any code that previously used the `toJson()` method of any class to instead use `toMap()`.
+
+--- 
+
+Because we recognize that this might be tedious for a larger codebase, we provide a faster migration path by allowing
+a configuration override to change the naming of the generated methods to the `json_serializable` way. This however
+is **not recommended** as a permanent solution, but meant as a temporary workaround to ease the migration path. 
+
+To change the naming of the generated methods, add the following to the `build.yaml` file in your project root:
+
+```yaml
+global_options:
+  dart_mappable_builder:
+    options:
+      renameMethods:
+        fromJson: fromJsonString
+        toJson: toJsonString
+        fromMap: fromJson
+        toMap: toJson
+```
+
+This generates `Map<String, dynamic> toJson()` instead of `Map<String, dynamic> toMap()` and changes other methods accordingly.
+Again this feature is **not recommended** as a permanent solution and might be removed in a future version.
+
+#### Add compatibility for classes using `json_serializable`
+
+Classes using `json_serializable` always have the same structure:
+
+1. A factory constructor `MyClass.fromJson(Map<String, Object?> json)` to deserialize an instance of the class, and
+2. A `Map<String, dynamic> toJson()` method to serialize an instance of your class.
+
+To use these classes with `dart_mappable`, you can use the `SerializableMapper` like this:
+
+```dart
+void main() {
+  // Create a compatibe mapper for your class.
+  var myClassMapper = SerializableMapper<MyClass, Map<String, dynamic>>(
+    // Pass the 'fromJson' method (without parenteses!).
+    decode: MyClass.fromJson,
+    // Pass an arrow function returning the 'toJson' method (without parenteses!).
+    encode: (myClass) => myClass.toJson,
+  );
+  
+  // Make it accessible by all other mappers (Including being used as fields on other classes).
+  MapperContainer.globals.use(myClassMapper);
+}
+```
+
+For generic classes with one or two type parameters, use the `SerializableMapper.arg1` or
+`SerializableMapper.arg2` constructors respectively.
 
 ### freezed
 
@@ -57,38 +136,6 @@ void main() {
 ```
 
 For the full example and generated files, check out the `examples/example_freezed` directory.
-
-### json_serializable
-
-[json_serializable](https://pub.dev/packages/json_serializable) is a popular serialization package
-for simple applications. 
-
-While this package was designed as a replacement / alternative for `json_serializable`, you may come across 
-situations where you need to deal with classes that either use this package directly, or are designed to be compatible with it.
-
-Also when you want to switch from `json_serializable` to `dart_mappable`, you have an easy migration path where you can 
-start by only partly migrating models over to `dart_mappable` while still having full access to your *legacy* models.
-
-Classes using `json_serializable` always have the same structure:
-
-1. A factory constructor `MyClass.fromJson(Map<String, Object?> json)` to decode json to an instance of the class, and
-2. A `myClass.toJson()` method to encode an instance to json.
-
-To use these classes with `dart_mappable`, you can use the `SerializableMapper` like this:
-
-```dart
-void main() {
-  var myClassMapper = SerializableMapper<MyClass, Map<String, dynamic>>(
-    decode: MyClass.fromJson,
-    encode: (myClass) => myClass.toJson,
-  );
-  // This makes it accessible by all other mappers.
-  MapperContainer.globals.use(myClassMapper);
-}
-```
-
-For generic classes with one or two type parameters, use the `SerializableMapper.arg1` or
-`SerializableMapper.arg2` constructors respectively.
 
 ### fast_immutable_collections
 
