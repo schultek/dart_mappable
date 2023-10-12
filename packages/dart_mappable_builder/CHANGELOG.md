@@ -1,8 +1,4 @@
-# 4.0.0-dev.2
-
-- Updated prerelease.
-
-# 4.0.0-dev.0
+# 4.0.0
 
 - Require `sdk: >=3.0.0`.
 - Added support for **Records**.
