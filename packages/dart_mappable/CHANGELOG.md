@@ -1,8 +1,4 @@
-# 4.0.0-dev.1
-
-- Updated prerelease.
-
-# 4.0.0-dev.0
+# 4.0.0
 
 - Require `sdk: >=3.0.0`.
 - Added support for **Records**.
@@ -16,6 +12,10 @@
     ```
     
   For a more detailed usage see the documentation.
+
+# 3.3.1
+
+- Improved migration docs regarding `json_serializable` and the difference of `toJson()`.
 
 # 3.3.0
 

@@ -109,22 +109,28 @@ using this package:
 
 void main() {
   // Decode a [Map] using the [MyClassMapper] class:
-  var myClass = MyClassMapper.fromMap({'myValue': 123});
+  MyClass myClass = MyClassMapper.fromMap({'myValue': 123});
   
   // Or decode directly from json:
-  var myClass2 = MyClassMapper.fromJson('{"myValue": 123}');
+  MyClass myClass2 = MyClassMapper.fromJson('{"myValue": 123}');
   
   // Encode an instance of your class using the methods provided by the mixin:
-  var json = myClass.toJson(); // or .toMap()
+  Map<String, dynamic> map = myClass.toMap();
+  String json = myClass.toJson();
   
   // There are also implementations generated for [operator ==], [hashCode] and [toString]:
-  var thisIsTrue = (myClass == myClass2);
+  bool thisIsTrue = (myClass == myClass2);
   print(myClass);
   
   // Last you can use [copyWith] to create a copy of an object:
-  var myClass3 = myClass.copyWith(myValue: 0);
+  MyClass myClass3 = myClass.copyWith(myValue: 0);
 }
 ```
+
+***Beware**: The `.toJson()` method returns a `String`. If you are migrating from `json_serializable`, you might
+be used to this returning a `Map<String, dynamic>` instead. Make sure to properly adapt your code to this change, 
+as not doing so might lead to unexpected behavior. Find more about the recommended migration path 
+[here](https://pub.dev/documentation/dart_mappable/latest/topics/Migration%20and%20Compatibility-topic.html)*.
 
 ## Overview
 
