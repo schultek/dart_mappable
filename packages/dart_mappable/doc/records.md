@@ -55,19 +55,13 @@ void main() {
 }
 ```
 
-## Renaming Record Properties
+### Renaming Record Properties
 
-You can also annotate individual fields of a record alias to change the key:
+You can also annotate individual fields of a record alias to change the key or add a hook:
 
 ```dart
 @MappableRecord()
-typedef FullName = (@MappableField(key: 'firstName') String, @MappableField(key: 'lastName') String);
-```
-
-This would serialize to:
-
-```json
-{"firstName": "John", "lastName": "Doe"}
+typedef FullName = (@MappableField(key: 'firstName') String, @MappableField(hook: MyHook()) String);
 ```
 
 This will only work on annotated record type aliases, not inline record fields. 
