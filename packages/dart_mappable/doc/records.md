@@ -1,12 +1,13 @@
-`dart_mappable` supports record fields out of the box.
+## Record Fields
 
-When you define a class, any record field will be automatically included in the serialization.
+`dart_mappable` supports record fields out of the box.
+When you define a class, any field using a record type will be automatically included in the serialization.
 
 ```dart
 @MappableClass()
-class Location with PersonMappable {
+class Location with LocationMappable {
   
-  const Position({
+  const Location({
     required this.name,
     required this.coordinates, 
   });
@@ -40,30 +41,36 @@ Additionally, you can create record type aliases using annotated typedefs:
 typedef Coordinates = ({double lat, double lng});
 ```
 
-This allows you to serialize records using the standalone generated mapper class as well as the generated extension methods:
+When using this type for a field of another class, it will be serialized as expected.
+
+This also allows you to serialize records using the standalone generated mapper class as well as the generated extension methods:
 
 ```dart
 void main() {
   // Using the generated mapper class.
-  var coords  = CoordinatesMapper.fromJson('{"lat": 123, "lng": 456}');
+  Coordinates coords  = CoordinatesMapper.fromJson('{"lat": 123, "lng": 456}');
   
   // Using the generated extension methods.
-  var json = coords.toJson();
+  String json = coords.toJson();
 }
 ```
 
-You can also annotate individual fields of a record to e.g. change the key:
+## Renaming Record Properties
+
+You can also annotate individual fields of a record alias to change the key:
 
 ```dart
 @MappableRecord()
-typedef FullName = (@MappableField(key: 'firstName') String, String);
+typedef FullName = (@MappableField(key: 'firstName') String, @MappableField(key: 'lastName') String);
 ```
 
 This would serialize to:
 
 ```json
-{"firstName": "John", "$2": "Doe"}
+{"firstName": "John", "lastName": "Doe"}
 ```
+
+This will only work on annotated record type aliases, not inline record fields. 
 
 ***Note:** Since typedefs are just an alias for a type, you cannot define two aliases for the same type 
 with different `@MappableField()` modifiers. Only one will be used for serialization.*

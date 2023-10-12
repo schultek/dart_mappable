@@ -32,7 +32,7 @@ class AnonymousRecordMapperElement extends RecordMapperElement<Element> {
 
     for (var (i, f) in type.positionalFields.indexed) {
       fields.add(RecordMapperFieldElement(
-        RecordMapperParamElement('\$${i + 1}', f.type, [], argAt(i)),
+        RecordMapperParamElement('\$${i + 1}', f.type, null, argAt(i)),
         this,
       ));
     }
@@ -40,7 +40,7 @@ class AnonymousRecordMapperElement extends RecordMapperElement<Element> {
     for (var (i, f) in type.namedFields.indexed) {
       fields.add(RecordMapperFieldElement(
         RecordMapperParamElement(
-            f.name, f.type, [], argAt(type.positionalFields.length + i)),
+            f.name, f.type, null, argAt(type.positionalFields.length + i)),
         this,
       ));
     }

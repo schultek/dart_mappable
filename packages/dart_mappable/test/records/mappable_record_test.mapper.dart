@@ -126,7 +126,8 @@ class PointMapper extends RecordMapperBase<Point> {
   }
 
   static double _$x(Point v) => v.x;
-  static const Field<Point, double> _f$x = Field('x', _$x, key: 'a');
+  static const Field<Point, double> _f$x =
+      Field('x', _$x, key: 'a', hook: RoundingHook());
   static double _$y(Point v) => v.y;
   static const Field<Point, double> _f$y = Field('y', _$y);
 

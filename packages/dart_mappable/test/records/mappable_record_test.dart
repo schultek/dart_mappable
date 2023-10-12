@@ -4,10 +4,22 @@ import 'package:test/test.dart';
 part 'mappable_record_test.mapper.dart';
 
 @MappableRecord()
-typedef Point = ({@MappableField(key: 'a') double x, double y});
+typedef Point = ({
+  @MappableField(key: 'a', hook: RoundingHook()) double x,
+  double y
+});
 
 @MappableRecord()
 typedef Offset<T> = ({double x, T y});
+
+class RoundingHook extends MappingHook {
+  const RoundingHook();
+
+  @override
+  Object? beforeDecode(Object? value) {
+    return (value as num).round();
+  }
+}
 
 @MappableClass()
 class Location with LocationMappable {
@@ -25,7 +37,7 @@ void main() {
 
       PointMapper.ensureInitialized();
 
-      var p = decode<Point>({'a': 1, 'y': 2});
+      var p = decode<Point>({'a': 1.3, 'y': 2});
       expect(p, equals((x: 1, y: 2)));
       expect(encode(p), equals({'a': 1, 'y': 2}));
     });

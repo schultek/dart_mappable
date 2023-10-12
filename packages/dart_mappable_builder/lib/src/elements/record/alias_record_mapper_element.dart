@@ -39,7 +39,7 @@ abstract class AliasRecordMapperElement
 
     for (var (i, f) in node.positionalFields.indexed) {
       fields.add(RecordMapperFieldElement(
-        RecordMapperParamElement('\$${i + 1}', f.type.type!, f.metadata),
+        RecordMapperParamElement('\$${i + 1}', f.type.type!, f),
         this,
       ));
     }
@@ -47,7 +47,7 @@ abstract class AliasRecordMapperElement
     if (node.namedFields != null) {
       for (var f in node.namedFields!.fields) {
         fields.add(RecordMapperFieldElement(
-          RecordMapperParamElement(f.name.lexeme, f.type.type!, f.metadata),
+          RecordMapperParamElement(f.name.lexeme, f.type.type!, f),
           this,
         ));
       }

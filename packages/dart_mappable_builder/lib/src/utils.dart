@@ -49,6 +49,8 @@ AstNode? getAnnotationProperty(
     annotations = node.metadata;
   } else if (node is Declaration) {
     annotations = node.metadata;
+  } else if (node is RecordTypeAnnotationField) {
+    annotations = node.metadata;
   }
 
   if (annotations == null) {
