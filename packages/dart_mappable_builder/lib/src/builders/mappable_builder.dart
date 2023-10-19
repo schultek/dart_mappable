@@ -99,6 +99,8 @@ class MappableBuilder implements Builder {
         .format('// coverage:ignore-file\n'
             '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
             '// ignore_for_file: type=lint\n'
+            '// ignore_for_file: strict_raw_type\n'
+            '// ignore_for_file: inference_failure_on_untyped_parameter\n'
             '// ignore_for_file: unused_element\n\n'
             'part of \'${p.basename(buildStep.inputId.uri.toString())}\';\n\n'
             '${output.join('\n\n')}\n' //,
@@ -141,6 +143,8 @@ class MappableBuilder implements Builder {
       '// coverage:ignore-file\n'
       '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
       '// ignore_for_file: type=lint\n'
+      '// ignore_for_file: strict_raw_type\n'
+      '// ignore_for_file: inference_failure_on_untyped_parameter\n'
       '// ignore_for_file: unused_element\n\n'
       '${output.toString()}\n',
     );
