@@ -95,14 +95,15 @@ class MappableBuilder implements Builder {
 
     var output = await Future.wait(generators.map((g) => g.generate()));
 
-    var source = DartFormatter(pageWidth: options.lineLength ?? 80)
-        .format('// coverage:ignore-file\n'
-            '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
-            '// ignore_for_file: type=lint\n'
-            '// ignore_for_file: unused_element\n\n'
-            'part of \'${p.basename(buildStep.inputId.uri.toString())}\';\n\n'
-            '${output.join('\n\n')}\n' //,
-            );
+    var source = DartFormatter(pageWidth: options.lineLength ?? 80).format(
+        '// coverage:ignore-file\n'
+        '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
+        '// ignore_for_file: type=lint\n'
+        '// ignore_for_file: unused_element, unnecessary_cast\n'
+        '// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter\n\n'
+        'part of \'${p.basename(buildStep.inputId.uri.toString())}\';\n\n'
+        '${output.join('\n\n')}\n' //,
+        );
     var outputId = buildStep.inputId.changeExtension('.mapper.dart');
     await buildStep.writeAsString(outputId, source);
   }
