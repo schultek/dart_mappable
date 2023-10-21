@@ -1,3 +1,7 @@
+# 4.0.1
+
+- Added support for generic typed parameters for deep copyWith.
+
 # 4.0.0
 
 - Require `sdk: >=3.0.0`.

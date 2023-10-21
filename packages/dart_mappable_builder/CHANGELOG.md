@@ -1,3 +1,8 @@
+# 4.0.1
+
+- Added support for generic typed parameters for deep copyWith.
+- Added lint ignores for 'unnecessary_cast', 'strict_raw_type' and 'inference_failure_on_untyped_parameter'
+
 # 4.0.0
 
 - Require `sdk: >=3.0.0`.
