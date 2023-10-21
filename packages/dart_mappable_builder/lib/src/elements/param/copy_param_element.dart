@@ -20,6 +20,10 @@ class CopyParamElement {
       }
 
       ClassMapperElement? resolveElement(Element? e) {
+        if (e is TypeParameterElement && e.bound != null) {
+          return resolveElement(e.bound!.element);
+        }
+
         var classTarget = element.parent.getMapperForElement(e);
 
         if (classTarget is! ClassMapperElement ||
@@ -110,7 +114,7 @@ class CopyParamElement {
   String get invocationThen => '(v) => call(${param.superName}: v)';
 
   String get subTypeParam => hasSubConfigs
-      ? ', ${parent.prefixedType(p.type, withNullability: false)}'
+      ? ', ${parent.prefixedType(p.type, withNullability: false, resolveBounds: true)}'
       : '';
   String get superTypeParam => hasSubConfigs || hasSuperElement
       ? ', ${parent.prefixedType(p.type, withNullability: false)}'

@@ -174,8 +174,10 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
     bool isCopySafe(ClassMapperParamElement param) {
       return subElements.every((e) => e.copySafeParams.any((subParam) {
             if (subParam is SuperParamElement &&
-                (subParam.superParameter.parameter == param.parameter ||
-                    subParam.superParameter.accessor == param.accessor)) {
+                (subParam.superParameter.parameter.declaration ==
+                        param.parameter.declaration ||
+                    subParam.superParameter.accessor?.declaration ==
+                        param.accessor?.declaration)) {
               return true;
             }
             if (subParam is FieldParamElement &&

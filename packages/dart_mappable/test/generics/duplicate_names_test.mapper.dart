@@ -88,6 +88,7 @@ extension BoxValueCopy<$R, $Out, T extends Content>
 
 abstract class BoxCopyWith<$R, $In extends Box<T>, $Out, T extends Content>
     implements ClassCopyWith<$R, $In, $Out> {
+  ContentCopyWith<$R, Content, T> get contents;
   $R call({int? size, T? contents});
   BoxCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -99,6 +100,9 @@ class _BoxCopyWithImpl<$R, $Out, T extends Content>
 
   @override
   late final ClassMapperBase<Box> $mapper = BoxMapper.ensureInitialized();
+  @override
+  ContentCopyWith<$R, Content, T> get contents =>
+      $value.contents.copyWith.$chain((v) => call(contents: v));
   @override
   $R call({int? size, T? contents}) => $apply(FieldCopyWithData({
         if (size != null) #size: size,
