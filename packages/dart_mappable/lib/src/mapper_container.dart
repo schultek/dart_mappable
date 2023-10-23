@@ -13,7 +13,7 @@ import '../dart_mappable.dart';
 /// {@category Generics}
 /// {@category Mapper Container}
 class EncodingOptions {
-  EncodingOptions({this.includeTypeId, this.inheritOptions = true, this.data});
+  EncodingOptions({this.includeTypeId, this.inheritOptions = true, this.shallow, this.data});
 
   /// Whether to include the type id of the encoding object.
   ///
@@ -27,6 +27,9 @@ class EncodingOptions {
   /// like for encoding fields of a class.
   final bool inheritOptions;
 
+  /// Whether to encode nested objects or just one level deep.
+  final bool? shallow;
+
   /// Custom data object passed to the mapper.
   final Object? data;
 
@@ -34,7 +37,9 @@ class EncodingOptions {
     return EncodingOptions(
         includeTypeId: includeTypeId,
         inheritOptions: inheritOptions,
-        data: data ?? this.data);
+        shallow: shallow,
+        data: data ?? this.data
+    );
   }
 }
 

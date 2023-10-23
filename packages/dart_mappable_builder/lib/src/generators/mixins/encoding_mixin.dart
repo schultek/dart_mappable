@@ -6,6 +6,7 @@ import '../generator.dart';
 mixin EncodingMixin on MapperGenerator<TargetClassMapperElement> {
   late final toJsonName = element.options.renameMethods['toJson'] ?? 'toJson';
   late final toMapName = element.options.renameMethods['toMap'] ?? 'toMap';
+  late final toShallowMapName = element.options.renameMethods['toShallowMap'] ?? 'toShallowMap';
 
   void generateEncoderMixin(StringBuffer output) {
     if (!element.shouldGenerate(GenerateMethods.encode)) {
@@ -25,6 +26,9 @@ mixin EncodingMixin on MapperGenerator<TargetClassMapperElement> {
       Map<String, dynamic> $toMapName() {
         return ${element.mapperName}.ensureInitialized().encodeMap<${element.selfTypeParam}>(this as ${element.selfTypeParam});
       }
+      Map<String, dynamic> $toShallowMapName() {
+        return ${element.mapperName}.ensureInitialized().encodeMap<${element.selfTypeParam}>(this as ${element.selfTypeParam}, EncodingOptions(shallow: true));
+      }
     ''');
   }
 
@@ -38,6 +42,9 @@ mixin EncodingMixin on MapperGenerator<TargetClassMapperElement> {
       }
       Map<String, dynamic> $toMapName() {
         return ${element.mapperName}.ensureInitialized().encodeMap<${element.selfTypeParam}>(this);
+      }
+      Map<String, dynamic> $toShallowMapName() {
+        return ${element.mapperName}.ensureInitialized().encodeMap<${element.selfTypeParam}>(this, EncodingOptions(shallow: true));
       }
     ''');
   }
