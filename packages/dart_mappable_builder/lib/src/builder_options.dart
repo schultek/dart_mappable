@@ -3,6 +3,10 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import 'utils.dart';
 
+const _defaultExtensions = {
+  '.dart': ['.mapper.dart', '.init.dart']
+};
+
 /// The builder options for a specific library
 class MappableOptions {
   final CaseStyle? caseStyle;
@@ -13,6 +17,7 @@ class MappableOptions {
   final InitializerScope? initializerScope;
   final int? lineLength;
   final Map<String, String> renameMethods;
+  final Map<String, List<String>> buildExtensions;
 
   MappableOptions({
     this.caseStyle,
@@ -23,6 +28,7 @@ class MappableOptions {
     this.initializerScope,
     this.lineLength,
     this.renameMethods = const {},
+    this.buildExtensions = _defaultExtensions,
   });
 
   MappableOptions.parse(Map options)
@@ -36,7 +42,9 @@ class MappableOptions {
         initializerScope = null,
         lineLength =
             options['lineLength'] as int? ?? options['line_length'] as int?,
-        renameMethods = toMap(options['renameMethods'] ?? {});
+        renameMethods = toMap(options['renameMethods'] ?? {}),
+        buildExtensions =
+            validatedBuildExtensionsFrom(options, _defaultExtensions);
 
   MappableOptions apply(MappableOptions? options, {bool forceJoin = true}) {
     if (options == null) return this;

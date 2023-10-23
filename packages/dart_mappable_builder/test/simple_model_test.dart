@@ -1,3 +1,5 @@
+import 'package:build/build.dart';
+import 'package:dart_mappable_builder/src/utils.dart';
 import 'package:test/test.dart';
 
 import 'utils/test_mappable.dart';
@@ -30,6 +32,15 @@ void main() {
               equals({'a': 'hi', 'b': 1, 'c': null, 'd': false}),
         },
       );
+    });
+
+    test('uriOfPartial', () {
+      AssetId input = AssetId('package', 'lib/models/model.dart');
+      AssetId output = AssetId('package',
+          'lib/models/subfolder1/subfolder2/subfolder3/model.mapper.dart');
+      expect(uriOfPartial(input, output), '../../../model.dart');
+      expect(uriOfPartial(output, input),
+          'subfolder1/subfolder2/subfolder3/model.mapper.dart');
     });
   });
 }

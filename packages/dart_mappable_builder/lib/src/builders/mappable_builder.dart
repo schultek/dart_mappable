@@ -50,9 +50,7 @@ class MappableBuilder implements Builder {
   }
 
   @override
-  Map<String, List<String>> get buildExtensions => const {
-        '.dart': ['.mapper.dart', '.init.dart']
-      };
+  Map<String, List<String>> get buildExtensions => options.buildExtensions;
 
   Future<MapperElementGroup> createMapperGroup(BuildStep buildStep) async {
     var entryLib = await buildStep.inputLibrary;
@@ -95,16 +93,17 @@ class MappableBuilder implements Builder {
 
     var output = await Future.wait(generators.map((g) => g.generate()));
 
+    final outputId = buildStep.allowedOutputs.first;
     var source = DartFormatter(pageWidth: options.lineLength ?? 80).format(
         '// coverage:ignore-file\n'
         '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
         '// ignore_for_file: type=lint\n'
         '// ignore_for_file: unused_element, unnecessary_cast\n'
         '// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter\n\n'
-        'part of \'${p.basename(buildStep.inputId.uri.toString())}\';\n\n'
+        'part of \'${uriOfPartial(buildStep.inputId, outputId)}\';\n\n'
         '${output.join('\n\n')}\n' //,
         );
-    var outputId = buildStep.inputId.changeExtension('.mapper.dart');
+
     await buildStep.writeAsString(outputId, source);
   }
 
@@ -138,6 +137,7 @@ class MappableBuilder implements Builder {
 
     output.write('}');
 
+    final outputId = buildStep.allowedOutputs.last;
     var source = DartFormatter(pageWidth: options.lineLength ?? 80).format(
       '// coverage:ignore-file\n'
       '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
@@ -146,7 +146,6 @@ class MappableBuilder implements Builder {
       '${output.toString()}\n',
     );
 
-    var outputId = buildStep.inputId.changeExtension('.init.dart');
     await buildStep.writeAsString(outputId, source);
   }
 }
