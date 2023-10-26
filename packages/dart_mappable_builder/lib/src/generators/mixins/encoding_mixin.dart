@@ -16,6 +16,7 @@ mixin EncodingMixin on MapperGenerator<TargetClassMapperElement> {
       output.write('''
         String $toJsonName();
         Map<String, dynamic> $toMapName();
+        Map<String, dynamic> $toShallowMapName();
       ''');
       return;
     }
