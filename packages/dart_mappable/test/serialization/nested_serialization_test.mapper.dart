@@ -112,11 +112,6 @@ mixin PersonMappable {
     return PersonMapper.ensureInitialized().encodeMap<Person>(this as Person);
   }
 
-  Map<String, dynamic> toShallowMap() {
-    return PersonMapper.ensureInitialized()
-        .encodeMap<Person>(this as Person, EncodingOptions(shallow: true));
-  }
-
   PersonCopyWith<Person, Person, Person> get copyWith =>
       _PersonCopyWithImpl(this as Person, $identity, $identity);
   @override
@@ -230,10 +225,6 @@ mixin CarMappable {
     return CarMapper.ensureInitialized().encodeMap<Car>(this as Car);
   }
 
-  Map<String, dynamic> toShallowMap() {
-    return CarMapper.ensureInitialized()
-        .encodeMap<Car>(this as Car, EncodingOptions(shallow: true));
-  }
 
   CarCopyWith<Car, Car, Car> get copyWith =>
       _CarCopyWithImpl(this as Car, $identity, $identity);

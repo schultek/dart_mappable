@@ -81,16 +81,5 @@ void main() {
         }),
       );
     });
-
-    test('to shallow map succeeds', () {
-      expect(
-        Person('Max', car: const Car(1000, Brand.Audi)).toShallowMap(),
-        equals({
-          'name': 'Max',
-          'age': 18,
-          'car': const Car(1000, Brand.Audi)
-        }),
-      );
-    });
   });
 }
