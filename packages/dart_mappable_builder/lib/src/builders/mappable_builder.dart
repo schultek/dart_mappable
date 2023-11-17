@@ -122,9 +122,12 @@ class MappableBuilder implements Builder {
 
     discovered.sortBy((e) => e.key.source.uri.toString());
 
+    final outputId = buildStep.allowedOutputs.last;
+
     output.write(writeImports(
       buildStep.inputId,
       discovered.map((e) => e.key.source.uri).toList(),
+      outputId.path,
     ));
 
     output.write('void initializeMappers() {\n');
@@ -137,7 +140,6 @@ class MappableBuilder implements Builder {
 
     output.write('}');
 
-    final outputId = buildStep.allowedOutputs.last;
     var source = DartFormatter(pageWidth: options.lineLength ?? 80).format(
       '// coverage:ignore-file\n'
       '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
@@ -150,7 +152,7 @@ class MappableBuilder implements Builder {
   }
 }
 
-String writeImports(AssetId input, List<Uri> imports) {
+String writeImports(AssetId input, List<Uri> imports, String outputDirectory) {
   List<String> package = [], relative = [];
   var prefixes = <String, int?>{};
 
@@ -193,5 +195,6 @@ String writeImports(AssetId input, List<Uri> imports) {
       ? '${s.map((s) => "import '$s'${prefixes[s] != null ? ' as p${prefixes[s]}' : ''};").join('\n')}\n\n'
       : '';
 
-  return joined(package) + joined(relative);
+  return joined(package) +
+      joined(relative.map((r) => p.join(outputDirectory, r)).toList());
 }
