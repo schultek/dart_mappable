@@ -41,6 +41,14 @@ void main() {
       expect(uriOfPartial(input, output), '../../../model.dart');
       expect(uriOfPartial(output, input),
           'subfolder1/subfolder2/subfolder3/model.mapper.dart');
+
+      //add test for default path
+      input = AssetId('package', 'lib/model.dart');
+      output = AssetId('package', 'lib/model.mapper.dart');
+      expect(uriOfPartial(input, output), 'model.dart');
+      expect(uriOfPartial(output, input), 'model.mapper.dart');
     });
+
+
   });
 }
