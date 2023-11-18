@@ -22,6 +22,10 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
         ToStringMixin {
   ClassMapperGenerator(super.element);
 
+  String escapeText(String text) {
+    return text.replaceAll('\$', '\\\$').replaceAll("(?<!\\)'", "\\'");
+  }
+
   @override
   Future<String> generate() async {
     var output = StringBuffer();
@@ -36,7 +40,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
 
     output.write('\n'
         '  @override\n'
-        "  final String id = '${element.uniqueId}';\n");
+        "  final String id = '${escapeText(element.uniqueId)}';\n");
 
     if (element.typeParamsList.isNotEmpty) {
       generateTypeFactory(output);
