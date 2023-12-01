@@ -1,3 +1,5 @@
+- Added unordered equality for check Iterables
+
 # 4.0.1
 
 - Added support for generic typed parameters for deep copyWith.

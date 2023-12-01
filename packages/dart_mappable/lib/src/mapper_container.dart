@@ -403,6 +403,9 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     if (value == null) {
       return other == null;
     }
+    if (value is Iterable && other is Iterable) {
+      return const UnorderedIterableEquality().equals(value, other);
+    }
     var mapper = _mapperFor(value);
     if (mapper != null) {
       return mapper.isValueEqual(value, other, this);
