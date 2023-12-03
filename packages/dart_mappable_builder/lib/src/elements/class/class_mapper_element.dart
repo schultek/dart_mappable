@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
@@ -11,17 +10,43 @@ import '../param/mapper_param_element.dart';
 import 'mixins/param_elements_mixin.dart';
 import 'mixins/type_params_mixin.dart';
 
+class ConstructorMapperElement {
+  const ConstructorMapperElement(this.element, this.node);
+
+  final ConstructorElement? element;
+  final AstNode? node;
+
+  static Future<ConstructorMapperElement> fromClass(
+      ClassElement element) async {
+    var constructor = getConstructorFor(element);
+    return ConstructorMapperElement.from(constructor);
+  }
+
+  static Future<ConstructorMapperElement> from(
+      ConstructorElement? constructor) async {
+    var node = await constructor?.getResolvedNode();
+    return ConstructorMapperElement(constructor, node);
+  }
+}
+
 /// Element interface for all class mappers.
+///
+///
+/// Subtypes are:
+///
+/// - Annotated not in lib: DependentClassMapperElement
+/// - Annotated in lib: TargetClassMapperElement
+///   - As alias: AliasClassMapperElement
+///   - As factory: FactoryConstructorMapperElement
+///
+///
 abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
     with ParamElementsMixin, TypeParamsMixin {
-  ClassMapperElement(super.parent, super.element, super.options);
+  ClassMapperElement(super.parent, super.element, super.options,
+      super.annotation, this.constructor);
 
   @override
-  Future<void> init() async {
-    await super.init();
-    constructorNode = await constructor?.getResolvedNode();
-    discriminatorValueCode = await _getDiscriminatorValueCode();
-  }
+  final ConstructorMapperElement constructor;
 
   @override
   late final String className = element.name;
@@ -35,9 +60,6 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
   @override
   ClassMapperElement? get superElement =>
       extendsElement ?? interfaceElements.firstOrNull;
-
-  @override
-  late AstNode? constructorNode;
 
   late String selfTypeParam = '$prefixedClassName$typeParams';
 
@@ -76,20 +98,8 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
     return fields.values.toList();
   }();
 
-  @override
-  DartObject? getAnnotation() =>
-      classChecker.firstAnnotationOf(annotatedElement);
-
   late String uniqueId =
-      annotation?.read('uniqueId')?.toStringValue() ?? className;
-
-  @override
-  late ConstructorElement? constructor = element.constructors
-          .where((c) => !c.isPrivate && constructorChecker.hasAnnotationOf(c))
-          .firstOrNull ??
-      element.constructors
-          .where((c) => !c.isPrivate && !classChecker.hasAnnotationOf(c))
-          .firstOrNull;
+      annotation.value?.read('uniqueId')?.toStringValue() ?? className;
 
   late bool isDiscriminatingSubclass = () {
     if (discriminatorKey == null && discriminatorValueCode == null) {
@@ -106,22 +116,17 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
   }();
 
   late String? discriminatorKey =
-      annotation?.read('discriminatorKey')?.toStringValue() ??
+      annotation.value?.read('discriminatorKey')?.toStringValue() ??
           options.discriminatorKey ??
           superElement?.discriminatorKey;
 
-  late String? discriminatorValueCode;
-
-  Future<String?> _getDiscriminatorValueCode() async {
-    return (await getAnnotationNode(
-            annotatedElement, MappableClass, 'discriminatorValue'))
-        ?.toSource();
-  }
+  late String? discriminatorValueCode =
+      annotation.annotation?.getPropertyNode('discriminatorValue')?.toSource();
 
   late String? hookForClass = () {
-    var hook = annotation?.read('hook');
+    var hook = annotation.value?.read('hook');
     if (hook != null && !hook.isNull) {
-      var node = getAnnotationProperty(annotatedNode, MappableClass, 'hook');
+      var node = annotation.annotation?.getPropertyNode('hook');
       if (node != null) {
         return node.toSource();
       }
@@ -133,22 +138,20 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
   // ignore: overridden_fields
   late final CaseStyle? caseStyle = super.caseStyle ?? superElement?.caseStyle;
 
-  late bool ignoreNull = annotation?.read('ignoreNull')?.toBoolValue() ??
+  late bool ignoreNull = annotation.value?.read('ignoreNull')?.toBoolValue() ??
       options.ignoreNull ??
       superElement?.ignoreNull ??
       false;
 
   late int generateMethods =
-      annotation?.read('generateMethods')?.toIntValue() ??
+      annotation.value?.read('generateMethods')?.toIntValue() ??
           options.generateMethods ??
           GenerateMethods.all;
 
-  late bool generateMixin = () {
-    return annotation != null && annotatedElement is! ConstructorElement;
-  }();
+  late bool generateMixin = annotation.value != null;
 
   List<ClassElement> getSubClasses() {
-    return annotation
+    return annotation.value
             ?.read('includeSubClasses')
             ?.toTypeList()
             ?.map((t) => t.element)
@@ -161,8 +164,8 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
     return (generateMethods & method) != 0;
   }
 
-  late bool hasCallableConstructor = constructor != null &&
-      !(isAbstract && constructor!.redirectedConstructor == null);
+  late bool hasCallableConstructor = constructor.element != null &&
+      !(isAbstract && constructor.element!.redirectedConstructor == null);
 
   late bool isAbstract = element.isAbstract;
 
@@ -199,4 +202,10 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
 
   late bool generateAsMixin =
       generateMixin && subElements.every((c) => c.generateAsMixin);
+}
+
+ConstructorElement? getConstructorFor(ClassElement element) {
+  var constructors = element.constructors.where((c) => !c.isPrivate);
+  return constructors.where(constructorChecker.hasAnnotationOf).firstOrNull ??
+      constructors.where((c) => !classChecker.hasAnnotationOf(c)).firstOrNull;
 }

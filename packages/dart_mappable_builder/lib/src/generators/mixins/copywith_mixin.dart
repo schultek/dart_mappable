@@ -137,7 +137,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
           '  @override \$R call(${_generateCopyWithParams(implVersion: true)}) => \$apply(FieldCopyWithData({${_generateCopyWithFields()}}));\n');
 
       output.write(
-          '  @override $selfTypeParam \$make(CopyWithData data) => ${element.prefixedDecodingClassName}${element.constructor!.name != '' ? '.${element.constructor!.name}' : ''}(${_generateCopyWithConstructorParams()});\n');
+          '  @override $selfTypeParam \$make(CopyWithData data) => ${element.prefixedDecodingClassName}${element.constructor.element!.name != '' ? '.${element.constructor.element!.name}' : ''}(${_generateCopyWithConstructorParams()});\n');
 
       output.write('\n'
           '  @override ${element.uniqueClassName}CopyWith<\$R2, $selfTypeParam, \$Out2$classTypeParams> '

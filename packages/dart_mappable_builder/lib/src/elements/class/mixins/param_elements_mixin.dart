@@ -8,19 +8,18 @@ import '../../param/mapper_param_element.dart';
 import '../class_mapper_element.dart';
 
 mixin ParamElementsMixin on MapperElement<ClassElement> {
-  ConstructorElement? get constructor;
-  AstNode? get constructorNode;
+  ConstructorMapperElement get constructor;
   ClassMapperElement? get extendsElement;
   List<ClassMapperElement> get interfaceElements;
   ClassMapperElement? get superElement;
 
   late List<ClassMapperParamElement> params = () {
     var params = <ClassMapperParamElement>[];
-    if (constructor == null) {
+    if (constructor.element == null) {
       return params;
     }
 
-    for (var param in constructor!.parameters) {
+    for (var param in constructor.element!.parameters) {
       params.add(getParameterConfig(param));
     }
 
@@ -109,7 +108,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
   }
 
   ClassMapperParamElement? _analyzeInitializers(ParameterElement param) {
-    var node = constructorNode;
+    var node = constructor.node;
     if (node is! ConstructorDeclaration || node.initializers.isEmpty) {
       return null;
     }
@@ -132,7 +131,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
   ParameterElement? _findSuperParameter(ParameterElement param) {
     if (superElement == null) return null;
 
-    var node = constructorNode;
+    var node = constructor.node;
     if (node is ConstructorDeclaration && node.initializers.isNotEmpty) {
       var last = node.initializers.last;
       if (last is SuperConstructorInvocation) {

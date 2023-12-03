@@ -32,8 +32,7 @@ extension GetNode on Element {
   }
 }
 
-AstNode? getAnnotationProperty(
-    AstNode? node, Type annotationType, dynamic property) {
+Annotation? getAnnotation(AstNode? node, Type annotationType) {
   if (node == null) {
     return null;
   }
@@ -45,9 +44,9 @@ AstNode? getAnnotationProperty(
     if (parent is FieldDeclaration) {
       annotations = parent.metadata;
     }
-  } else if (node is FormalParameter) {
+  } else if (node is AnnotatedNode) {
     annotations = node.metadata;
-  } else if (node is Declaration) {
+  } else if (node is FormalParameter) {
     annotations = node.metadata;
   } else if (node is RecordTypeAnnotationField) {
     annotations = node.metadata;
@@ -58,21 +57,41 @@ AstNode? getAnnotationProperty(
     return null;
   }
 
-  for (var annotation in annotations) {
-    if (annotation.name.name == annotationType.toString()) {
-      for (var i = 0; i < annotation.arguments!.arguments.length; i++) {
-        var arg = annotation.arguments!.arguments[i];
-        if (arg is NamedExpression && property is String) {
-          if (arg.name.label.name == property) {
-            return arg.expression;
-          }
-        } else if (property is int && i == property) {
-          return arg;
+  var type = annotationType.toString();
+  return annotations.where((a) => a.name.name == type).firstOrNull;
+}
+
+extension AnnotationProperty on Annotation {
+  AstNode? getPropertyNode(dynamic property) {
+    for (var i = 0; i < arguments!.arguments.length; i++) {
+      var arg = arguments!.arguments[i];
+      if (arg is NamedExpression && property is String) {
+        if (arg.name.label.name == property) {
+          return arg.expression;
         }
+      } else if (property is int && i == property) {
+        return arg;
+      }
+    }
+    return null;
+  }
+}
+
+AstNode? getAnnotationProperty(
+    AstNode? node, Type annotationType, dynamic property) {
+  var annotation = getAnnotation(node, annotationType);
+  if (annotation != null) {
+    for (var i = 0; i < annotation.arguments!.arguments.length; i++) {
+      var arg = annotation.arguments!.arguments[i];
+      if (arg is NamedExpression && property is String) {
+        if (arg.name.label.name == property) {
+          return arg.expression;
+        }
+      } else if (property is int && i == property) {
+        return arg;
       }
     }
   }
-
   return null;
 }
 

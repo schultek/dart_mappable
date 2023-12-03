@@ -6,7 +6,8 @@ import '../mapper_element.dart';
 
 abstract class RecordMapperElement<T extends Element>
     extends InterfaceMapperElement<T> {
-  RecordMapperElement(super.parent, super.element, super.options);
+  RecordMapperElement(
+      super.parent, super.element, super.options, super.annotation);
 
   RecordType get type;
 

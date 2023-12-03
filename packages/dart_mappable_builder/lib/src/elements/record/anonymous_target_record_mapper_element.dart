@@ -1,8 +1,11 @@
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/dart/element/type_provider.dart';
 
 import '../../records_group.dart';
+import '../mapper_element.dart';
 import '../param/mapper_field_element.dart';
 import '../param/mapper_param_element.dart';
 import 'record_mapper_element.dart';
@@ -14,8 +17,23 @@ class AnonymousRecordMapperElement extends RecordMapperElement<Element> {
   final int index;
   final RecordsGroup group;
 
-  AnonymousRecordMapperElement(this.id, this.type, this.index, this.group)
-      : super(group.parent, group.parent.library, group.parent.options);
+  AnonymousRecordMapperElement._(
+      this.id, this.type, this.index, this.group, MapperAnnotation annotation)
+      : super(group.parent, group.parent.library, group.parent.options,
+            annotation);
+
+  factory AnonymousRecordMapperElement.from(
+      RecordsGroup group, RecordType type) {
+    var id = RecordsGroup.idFor(type);
+    var annotation = MapperAnnotation.empty(group.parent.library);
+    return AnonymousRecordMapperElement._(
+      id,
+      type.getBase(group.parent.library.typeProvider),
+      group.records.length,
+      group,
+      annotation,
+    );
+  }
 
   late String name = '_R$index';
 
@@ -59,4 +77,16 @@ class AnonymousRecordMapperElement extends RecordMapperElement<Element> {
 
   @override
   bool get needsTypeDef => true;
+}
+
+extension on RecordType {
+  RecordType getBase(TypeProvider typeProvider) {
+    return RecordType(
+      positional:
+          List.filled(positionalFields.length, typeProvider.dynamicType),
+      named: Map.fromEntries(
+          namedFields.map((f) => MapEntry(f.name, typeProvider.dynamicType))),
+      nullabilitySuffix: NullabilitySuffix.none,
+    );
+  }
 }

@@ -68,7 +68,8 @@ class MapperElementGroup {
     if (e is ClassElement) {
       if (classChecker.hasAnnotationOf(e)) {
         if (e.library == library) {
-          var m = await _addMapper(TargetClassMapperElement(this, e, options));
+          var m = await _addMapper(
+              await TargetClassMapperElement.from(this, e, options));
 
           for (var c in e.constructors) {
             if (c.isFactory &&
@@ -80,39 +81,42 @@ class MapperElementGroup {
                       ~(~(options.generateMethods ?? GenerateMethods.all) |
                           GenerateMethods.copy)));
 
-              await _addMapper(
-                  FactoryConstructorMapperElement(this, c, subOptions));
+              await _addMapper(await FactoryConstructorMapperElement.from(
+                  this, c, subOptions));
             }
           }
 
           return m;
         } else {
           return await _addMapper(
-              DependentClassMapperElement(this, e, options));
+              await DependentClassMapperElement.from(this, e, options));
         }
       }
     } else if (e is EnumElement) {
       if (enumChecker.hasAnnotationOf(e)) {
         if (e.library == library) {
-          return await _addMapper(TargetEnumMapperElement(this, e, options));
+          return await _addMapper(
+              await TargetEnumMapperElement.from(this, e, options));
         } else {
-          return await _addMapper(DependentEnumMapperElement(this, e, options));
+          return await _addMapper(
+              await DependentEnumMapperElement.from(this, e, options));
         }
       }
     } else if (e is TypeAliasElement) {
       if (classChecker.hasAnnotationOf(e) &&
           e.aliasedType.element is ClassElement) {
         if (e.library == library) {
-          return await _addMapper(AliasClassMapperElement(
-              this, e, e.aliasedType.element as ClassElement, options));
+          return await _addMapper(
+              await AliasClassMapperElement.from(this, e, options));
         }
       } else if (recordChecker.hasAnnotationOf(e) &&
           e.aliasedType is RecordType) {
         if (e.library == library) {
-          return await _addMapper(TargetRecordMapperElement(this, e, options));
+          return await _addMapper(
+              await TargetRecordMapperElement.from(this, e, options));
         } else {
           return await _addMapper(
-              DependentRecordMapperElement(this, e, options));
+              await DependentRecordMapperElement.from(this, e, options));
         }
       }
     }
@@ -120,7 +124,6 @@ class MapperElementGroup {
   }
 
   Future<T> _addMapper<T extends MapperElement>(T mapper) async {
-    await mapper.init();
     targets[mapper.element] = mapper;
 
     if (mapper is ClassMapperElement) {

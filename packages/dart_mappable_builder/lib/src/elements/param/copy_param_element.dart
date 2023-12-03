@@ -73,7 +73,7 @@ class CopyParamElement {
 
         if (classConfig != null) {
           var prefixedName =
-              element.parent.prefixOfElement(classConfig.annotatedElement) +
+              element.parent.prefixOfElement(classConfig.annotation.element) +
                   classConfig.uniqueClassName;
 
           yield CopyParamElement(

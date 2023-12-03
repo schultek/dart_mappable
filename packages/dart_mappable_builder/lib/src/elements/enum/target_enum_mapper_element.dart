@@ -1,33 +1,42 @@
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
+import '../../builder_options.dart';
+import '../../mapper_group.dart';
 import '../../utils.dart';
+import '../mapper_element.dart';
 import 'enum_mapper_element.dart';
 
 class TargetEnumMapperElement extends EnumMapperElement {
-  TargetEnumMapperElement(super.parent, super.element, super.options);
+  TargetEnumMapperElement._(super.parent, super.element, super.options,
+      super.annotation, this.valueNodes);
 
-  @override
-  Future<void> init() async {
-    super.init();
-    values = await _getValues();
+  static Future<TargetEnumMapperElement> from(MapperElementGroup parent,
+      EnumElement element, MappableOptions options) async {
+    var annotation = await MapperAnnotation.from<MappableEnum>(element);
+    var valueNodes = await _getValues(element);
+
+    return TargetEnumMapperElement._(
+        parent, element, options, annotation, valueNodes);
   }
+
+  final List<(FieldElement, AstNode?)> valueNodes;
 
   late String paramName = className[0].toLowerCase();
 
-  late ValuesMode mode = annotation != null
-      ? ValuesMode
-          .values[annotation?.read('mode')?.read('index')?.toIntValue() ?? 0]
-      : ValuesMode.named;
+  late ValuesMode mode = ValuesMode.values[
+      annotation.value?.read('mode')?.read('index')?.toIntValue() ??
+          ValuesMode.named.index];
 
   late CaseStyle? caseStyle =
-      annotation != null && !annotation!.read('caseStyle')!.isNull
-          ? caseStyleFromAnnotation(annotation!.read('caseStyle')!)
+      annotation.value != null && !annotation.value!.read('caseStyle')!.isNull
+          ? caseStyleFromAnnotation(annotation.value!.read('caseStyle')!)
           : options.enumCaseStyle;
 
   late int? defaultValue =
-      annotation?.read('defaultValue')!.read('index')?.toIntValue();
+      annotation.value?.read('defaultValue')!.read('index')?.toIntValue();
 
   late List<FieldElement> fields =
       element.fields.where((f) => f.isEnumConstant).toList();
@@ -35,24 +44,28 @@ class TargetEnumMapperElement extends EnumMapperElement {
   late bool hasAllStringValues = mode == ValuesMode.named &&
       fields.every((f) => !enumValueChecker.hasAnnotationOf(f));
 
-  late List<MapEntry<String, dynamic>> values;
+  late List<({String name, dynamic value})> values =
+      valueNodes.mapIndexed((i, v) {
+    var name = v.$1.name;
+    if (v.$2 != null) {
+      return (name: name, value: v.$2!.toSource());
+    } else if (mode == ValuesMode.named) {
+      return (name: name, value: "'${caseStyle.transform(name)}'");
+    } else {
+      return (name: name, value: i);
+    }
+  }).toList();
 
-  Future<List<MapEntry<String, dynamic>>> _getValues() async {
+  static Future<List<(FieldElement, AstNode?)>> _getValues(
+      EnumElement element) async {
+    var fields = element.fields.where((f) => f.isEnumConstant).toList();
     return Future.wait(fields.mapIndexed((i, f) async {
       if (enumValueChecker.hasAnnotationOf(f)) {
-        return MapEntry(f.name, await getAnnotatedValue(f));
+        var node = await getResolvedAnnotationNode(f, MappableValue, 0);
+        return (f, node);
       } else {
-        if (mode == ValuesMode.named) {
-          return MapEntry(f.name, "'${caseStyle.transform(f.name)}'");
-        } else {
-          return MapEntry(f.name, i);
-        }
+        return (f, null);
       }
     }));
-  }
-
-  Future<String> getAnnotatedValue(FieldElement f) async {
-    var node = await getResolvedAnnotationNode(f, MappableValue, 0);
-    return node!.toSource();
   }
 }

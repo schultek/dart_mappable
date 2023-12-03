@@ -8,7 +8,7 @@ mixin LinkedElementsMixin on ClassMapperElement {
     var linked = <String>{};
 
     for (var target in subElements) {
-      var prefix = parent.prefixOfElement(target.annotatedElement);
+      var prefix = parent.prefixOfElement(target.annotation.element);
       linked.add('$prefix${target.mapperName}');
     }
 
@@ -17,7 +17,7 @@ mixin LinkedElementsMixin on ClassMapperElement {
       var m = parent.getMapperForElement(e);
       if (m != null) {
         linked.add(
-            '${parent.prefixOfElement(m.annotatedElement)}${m.mapperName}');
+            '${parent.prefixOfElement(m.annotation.element)}${m.mapperName}');
       }
 
       if (t is ParameterizedType) {
@@ -32,7 +32,7 @@ mixin LinkedElementsMixin on ClassMapperElement {
           var m = parent.getMapperForElement(t.alias!.element);
           if (m != null && m is TargetRecordMapperElement) {
             linked.add(
-                '${parent.prefixOfElement(m.annotatedElement)}${m.mapperName}');
+                '${parent.prefixOfElement(m.annotation.element)}${m.mapperName}');
             break r;
           }
         }
@@ -55,7 +55,7 @@ mixin LinkedElementsMixin on ClassMapperElement {
         var m = parent.getMapperForElement(param.bound!.element);
         if (m is ClassMapperElement) {
           linked.add(
-              '${parent.prefixOfElement(m.annotatedElement)}${m.mapperName}');
+              '${parent.prefixOfElement(m.annotation.element)}${m.mapperName}');
         }
       }
     }
