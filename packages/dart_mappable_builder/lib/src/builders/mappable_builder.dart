@@ -94,13 +94,16 @@ class MappableBuilder implements Builder {
     var output = await Future.wait(generators.map((g) => g.generate()));
 
     final outputId = buildStep.allowedOutputs.first;
+
+    var libraryPath =
+        p.relative(buildStep.inputId.path, from: p.dirname(outputId.path));
     var source = DartFormatter(pageWidth: options.lineLength ?? 80).format(
         '// coverage:ignore-file\n'
         '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
         '// ignore_for_file: type=lint\n'
         '// ignore_for_file: unused_element, unnecessary_cast\n'
         '// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter\n\n'
-        'part of \'${uriOfPartial(buildStep.inputId, outputId)}\';\n\n'
+        'part of \'$libraryPath\';\n\n'
         '${output.join('\n\n')}\n' //,
         );
 
@@ -127,7 +130,7 @@ class MappableBuilder implements Builder {
     output.write(writeImports(
       buildStep.inputId,
       discovered.map((e) => e.key.source.uri).toList(),
-      outputId.path,
+      p.dirname(outputId.uri.path),
     ));
 
     output.write('void initializeMappers() {\n');
@@ -161,21 +164,14 @@ String writeImports(AssetId input, List<Uri> imports, String outputDirectory) {
   for (var i = 0; i < imports.length; i++) {
     var import = imports[i];
     if (import.isScheme('asset')) {
-      var relativePath =
-          path.relative(import.path, from: path.dirname(input.uri.path));
+      var relativePath = path.relative(import.path, from: outputDirectory);
 
       relative.add(relativePath);
       prefixes[relativePath] = i;
     } else if (import.isScheme('package') &&
         import.pathSegments.first == input.package &&
         input.pathSegments.first == 'lib') {
-      var libPath =
-          import.replace(pathSegments: import.pathSegments.skip(1)).path;
-
-      var inputPath =
-          input.uri.replace(pathSegments: input.uri.pathSegments.skip(1)).path;
-
-      var relativePath = path.relative(libPath, from: path.dirname(inputPath));
+      var relativePath = path.relative(import.path, from: outputDirectory);
 
       relative.add(relativePath);
       prefixes[relativePath] = i;
@@ -195,6 +191,5 @@ String writeImports(AssetId input, List<Uri> imports, String outputDirectory) {
       ? '${s.map((s) => "import '$s'${prefixes[s] != null ? ' as p${prefixes[s]}' : ''};").join('\n')}\n\n'
       : '';
 
-  return joined(package) +
-      joined(relative.map((r) => p.join(outputDirectory, r)).toList());
+  return joined(package) + joined(relative);
 }

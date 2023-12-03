@@ -214,33 +214,3 @@ Map<String, List<String>> validatedBuildExtensionsFrom(
   }
   return result;
 }
-
-String uriOfPartial(AssetId source, AssetId output) {
-  assert(source.package == output.package);
-  String sourcePath = source.path;
-  String outputPath = output.path;
-
-  // Split the paths into individual segments.
-  List<String> sourceSegments = sourcePath.split('/');
-  List<String> outputSegments = outputPath.split('/');
-
-  // Find the common prefix between source and output paths.
-  int commonIndex = 0;
-  for (int i = 0; i < sourceSegments.length && i < outputSegments.length; i++) {
-    if (sourceSegments[i] != outputSegments[i]) {
-      break;
-    }
-    commonIndex = i;
-  }
-
-  // Calculate the relative path.
-  List<String> relativeSegments = List.generate(
-    outputSegments.length - commonIndex - 2,
-    (_) => '..',
-  );
-  relativeSegments.addAll(sourceSegments.sublist(commonIndex + 1));
-
-  // Join the segments to form the relative path.
-  String relativePath = relativeSegments.join('/');
-  return relativePath;
-}
