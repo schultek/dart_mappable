@@ -5,8 +5,8 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../builder_options.dart';
 import '../../mapper_group.dart';
+import '../constructor/constructor_mapper_element.dart';
 import '../mapper_element.dart';
-import 'class_mapper_element.dart';
 import 'target_class_mapper_element.dart';
 
 /// Element interface for all annotated type aliases.
@@ -27,8 +27,8 @@ class AliasClassMapperElement extends TargetClassMapperElement {
   }
 
   @override
-  String get uniqueClassName => alias.name;
+  late final String uniqueClassName = alias.name;
 
   @override
-  bool get generateMixin => false;
+  final bool generateMixin = false;
 }

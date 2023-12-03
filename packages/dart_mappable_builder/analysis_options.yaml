@@ -9,3 +9,4 @@ linter:
     sort_pub_dependencies: true
     prefer_relative_imports: true
     prefer_single_quotes: true
+    overridden_fields: false

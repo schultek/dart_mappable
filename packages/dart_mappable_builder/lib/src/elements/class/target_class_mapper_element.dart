@@ -5,6 +5,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import '../../builder_options.dart';
 import '../../mapper_group.dart';
 import '../../utils.dart';
+import '../constructor/constructor_mapper_element.dart';
 import '../mapper_element.dart';
 import 'class_mapper_element.dart';
 import 'mixins/linked_elements_mixin.dart';
@@ -24,13 +25,13 @@ class TargetClassMapperElement extends ClassMapperElement
         parent, element, options, annotation, constructor);
   }
 
-  late String prefixedDecodingClassName = prefixedClassName;
+  late final String prefixedDecodingClassName = prefixedClassName;
 
-  late String? customMappers = annotation.annotation
+  late final String? customMappers = annotation.annotation
       ?.getPropertyNode('includeCustomMappers')
       ?.toSource();
 
-  late List<String> typesConfigs = () {
+  late final List<String> customTypes = () {
     var types = <String>[];
 
     void addMissingType(DartType type) {

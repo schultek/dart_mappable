@@ -3,8 +3,9 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 
+import '../../constructor/constructor_mapper_element.dart';
 import '../../mapper_element.dart';
-import '../../param/mapper_param_element.dart';
+import '../../param/class_mapper_param_element.dart';
 import '../class_mapper_element.dart';
 
 mixin ParamElementsMixin on MapperElement<ClassElement> {

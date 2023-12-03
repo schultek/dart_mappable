@@ -5,9 +5,9 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:source_gen/source_gen.dart';
 
 import '../../utils.dart';
+import '../field/record_mapper_field_element.dart';
 import '../mapper_element.dart';
-import '../param/mapper_field_element.dart';
-import '../param/mapper_param_element.dart';
+import '../param/record_mapper_param_element.dart';
 import 'record_mapper_element.dart';
 
 class RecordMapperAnnotation extends MapperAnnotation {

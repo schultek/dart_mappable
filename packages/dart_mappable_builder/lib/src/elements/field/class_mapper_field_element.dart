@@ -1,141 +1,13 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/dart/element/type_visitor.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../utils.dart';
+import '../field/mapper_field_element.dart';
 import '../mapper_element.dart';
-import '../record/record_mapper_element.dart';
-import 'mapper_param_element.dart';
-
-class IsGenericTypeVisitor extends UnifyingTypeVisitor<bool> {
-  @override
-  bool visitDartType(DartType type) {
-    return false;
-  }
-
-  @override
-  bool visitTypeParameterType(TypeParameterType type) {
-    return true;
-  }
-
-  @override
-  bool visitInterfaceType(InterfaceType type) {
-    return type.typeArguments.any((t) => t.accept(this));
-  }
-
-  @override
-  bool visitRecordType(RecordType type) {
-    return type.positionalFields.any((f) => f.type.accept(this)) ||
-        type.namedFields.any((f) => f.type.accept(this));
-  }
-}
-
-abstract class MapperFieldElement {
-  bool get needsGetter;
-
-  String get staticGetterType;
-
-  String get name;
-
-  bool get needsArg;
-
-  String get staticArgType;
-
-  String get argType;
-
-  late String getter = needsGetter ? '_\$$name' : 'null';
-
-  String get key;
-
-  String get mode;
-
-  String get opt;
-
-  Future<String> get def;
-
-  String get arg;
-
-  Future<String> get hook;
-}
-
-class RecordMapperFieldElement extends MapperFieldElement {
-  final RecordMapperParamElement param;
-  final RecordMapperElement parent;
-
-  RecordMapperFieldElement(this.param, this.parent);
-
-  @override
-  String get name => param.name;
-
-  @override
-  bool get needsGetter => true;
-
-  @override
-  late final bool needsArg = () {
-    var isGeneric =
-        param.isGeneric || param.type.accept(IsGenericTypeVisitor());
-    return isGeneric || (staticArgType != staticArgGetterType);
-  }();
-
-  @override
-  String get arg => () {
-        if (!needsArg) return '';
-
-        return ', arg: _arg\$$name';
-      }();
-
-  @override
-  late final String staticGetterType = () {
-    return parent.parent.prefixedType(param.type, resolveBounds: true);
-  }();
-
-  @override
-  late final String argType = () {
-    if (param.typeArg != null) {
-      return param.typeArg!;
-    }
-    return parent.parent.prefixedType(param.type, withNullability: false);
-  }();
-
-  @override
-  late final String staticArgType = () {
-    return parent.parent
-        .prefixedType(param.type, withNullability: false, resolveBounds: true);
-  }();
-
-  late final String staticArgGetterType = () {
-    return parent.parent
-        .prefixedType(param.type, withNullability: false, resolveBounds: true);
-  }();
-
-  @override
-  final String mode = '';
-
-  @override
-  String get opt => '';
-
-  @override
-  late String key = () {
-    String key = param.key ?? parent.caseStyle?.transform(param.name) ?? name;
-
-    if (key != name) {
-      return ", key: '$key'";
-    } else {
-      return '';
-    }
-  }();
-
-  @override
-  final Future<String> def = Future.value('');
-
-  @override
-  late final Future<String> hook = () async {
-    var hook = await param.getHook();
-    return hook != null ? ', hook: $hook' : '';
-  }();
-}
+import '../param/mapper_param_element.dart';
+import '../param/record_mapper_param_element.dart';
 
 class ClassMapperFieldElement extends MapperFieldElement {
   final MapperParamElement? param;
@@ -269,17 +141,4 @@ String? _keyFor(Element? element) {
       .firstAnnotationOf(element)
       ?.getField('key')!
       .toStringValue();
-}
-
-Future<String?> hookFor(Element? element) async {
-  if (element == null) {
-    return null;
-  }
-  if (fieldChecker.hasAnnotationOf(element)) {
-    var node = await getResolvedAnnotationNode(element, MappableField, 'hook');
-    if (node != null) {
-      return node.toSource();
-    }
-  }
-  return null;
 }

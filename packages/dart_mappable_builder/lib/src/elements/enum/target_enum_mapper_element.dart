@@ -24,27 +24,27 @@ class TargetEnumMapperElement extends EnumMapperElement {
 
   final List<(FieldElement, AstNode?)> valueNodes;
 
-  late String paramName = className[0].toLowerCase();
+  late final String paramName = className[0].toLowerCase();
 
-  late ValuesMode mode = ValuesMode.values[
+  late final ValuesMode mode = ValuesMode.values[
       annotation.value?.read('mode')?.read('index')?.toIntValue() ??
           ValuesMode.named.index];
 
-  late CaseStyle? caseStyle =
+  late final CaseStyle? caseStyle =
       annotation.value != null && !annotation.value!.read('caseStyle')!.isNull
           ? caseStyleFromAnnotation(annotation.value!.read('caseStyle')!)
           : options.enumCaseStyle;
 
-  late int? defaultValue =
+  late final int? defaultValue =
       annotation.value?.read('defaultValue')!.read('index')?.toIntValue();
 
-  late List<FieldElement> fields =
+  late final List<FieldElement> fields =
       element.fields.where((f) => f.isEnumConstant).toList();
 
-  late bool hasAllStringValues = mode == ValuesMode.named &&
+  late final bool hasAllStringValues = mode == ValuesMode.named &&
       fields.every((f) => !enumValueChecker.hasAnnotationOf(f));
 
-  late List<({String name, dynamic value})> values =
+  late final List<({String name, dynamic value})> values =
       valueNodes.mapIndexed((i, v) {
     var name = v.$1.name;
     if (v.$2 != null) {

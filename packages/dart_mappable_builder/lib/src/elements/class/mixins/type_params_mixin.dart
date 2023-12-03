@@ -9,6 +9,8 @@ import '../class_mapper_element.dart';
 mixin TypeParamsMixin on MapperElement<ClassElement> {
   ClassMapperElement? get extendsElement;
 
+  late String selfTypeParam = '$prefixedClassName$typeParams';
+
   late List<String> typeParamsList = element.typeParameters
       .map((p) =>
           '${p.displayName}${p.bound != null ? ' extends ${parent.prefixedType(p.bound!)}' : ''}')

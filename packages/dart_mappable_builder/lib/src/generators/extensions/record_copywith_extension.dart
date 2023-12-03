@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/element/type.dart';
 
-import '../../elements/param/mapper_param_element.dart';
+import '../../elements/param/class_mapper_param_element.dart';
 import '../../elements/record/record_mapper_element.dart';
 import '../../elements/record/target_record_mapper_element.dart';
 import '../../utils.dart';

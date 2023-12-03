@@ -9,7 +9,7 @@ import 'package:source_gen/source_gen.dart';
 import '../builder_options.dart';
 import '../mapper_group.dart';
 import '../utils.dart';
-import 'param/mapper_field_element.dart';
+import 'field/mapper_field_element.dart';
 
 class MapperAnnotation {
   const MapperAnnotation.empty(this.element)

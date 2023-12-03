@@ -1,13 +1,12 @@
-import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_provider.dart';
 
 import '../../records_group.dart';
+import '../field/record_mapper_field_element.dart';
 import '../mapper_element.dart';
-import '../param/mapper_field_element.dart';
-import '../param/mapper_param_element.dart';
+import '../param/record_mapper_param_element.dart';
 import 'record_mapper_element.dart';
 
 class AnonymousRecordMapperElement extends RecordMapperElement<Element> {
@@ -65,9 +64,6 @@ class AnonymousRecordMapperElement extends RecordMapperElement<Element> {
 
     return fields;
   }();
-
-  @override
-  DartObject? getAnnotation() => null;
 
   @override
   late String typeParamsDeclaration = genericTypeParamsDeclaration;

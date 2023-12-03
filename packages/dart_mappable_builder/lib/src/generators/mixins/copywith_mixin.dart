@@ -2,8 +2,8 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../elements/class/target_class_mapper_element.dart';
+import '../../elements/param/class_mapper_param_element.dart';
 import '../../elements/param/copy_param_element.dart';
-import '../../elements/param/mapper_param_element.dart';
 import '../../utils.dart';
 import '../generator.dart';
 

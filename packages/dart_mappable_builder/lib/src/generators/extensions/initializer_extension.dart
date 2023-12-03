@@ -10,7 +10,7 @@ extension InitializerExtension<T extends TargetClassMapperElement>
         if (_instance == null) {   
     ''');
 
-    var typesConfigs = element.typesConfigs;
+    var typesConfigs = element.customTypes;
     if (typesConfigs.isNotEmpty) {
       for (var t in typesConfigs) {
         output.write('      MapperBase.addType<$t>();\n');
