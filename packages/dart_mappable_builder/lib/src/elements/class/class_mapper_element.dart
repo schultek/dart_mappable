@@ -37,7 +37,9 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
   late final String className = element.name;
 
   late final String uniqueId =
-      annotation.value?.read('uniqueId')?.toStringValue() ?? className;
+      (annotation.value?.read('uniqueId')?.toStringValue() ?? className)
+          .replaceAll('\$', '\\\$')
+          .replaceAll("(?<!\\)'", "\\'");
 
   // --- Generator configuration ---
 
