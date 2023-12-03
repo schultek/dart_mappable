@@ -37,7 +37,7 @@ class MappableBuilder implements Builder {
 
       await Future.wait([
         generateMapperFile(buildStep, group),
-        generateContainerFile(buildStep, group),
+        generateInitFile(buildStep, group),
       ]);
     } catch (e, st) {
       print('An unexpected error occurred.\n'
@@ -110,7 +110,7 @@ class MappableBuilder implements Builder {
     await buildStep.writeAsString(outputId, source);
   }
 
-  Future<void> generateContainerFile(
+  Future<void> generateInitFile(
       BuildStep buildStep, MapperElementGroup group) async {
     if (group.options.initializerScope == null) {
       return;
