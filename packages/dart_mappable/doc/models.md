@@ -171,6 +171,12 @@ can customize how `DateTime` values are encoded. You can choose between:
 
 To change the mode, set `DateTimeMapper.encodingMode` to any value of the `DateTimeEncoding` enum.
 
+## List Equality
+
+`dart_mappable` automatically handles equality for `List`s (or any `Iterable`). You can change between an ordered and unordered 
+list equality by setting `IterableMapper.equalityMode` to either `IterableEqualityMode.ordered` (default) 
+or `IterableEqualityMode.unordered`.
+
 ---
 
 <p align="right"><a href="../topics/Enums-topic.html">Next: Enums</a></p>

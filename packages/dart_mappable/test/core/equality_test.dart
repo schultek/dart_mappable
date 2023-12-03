@@ -35,7 +35,14 @@ void main() {
     test('list', () {
       final list1 = ListWrapper(['UK - Solar', 'Italy PUN - Solar']);
       final list2 = ListWrapper(['UK - Solar', 'Italy PUN - Solar']);
+      final list3 = ListWrapper(['Italy PUN - Solar', 'UK - Solar']);
       expect(list1, equals(list2));
+      expect(list1, isNot(equals(list3)));
+
+      IterableMapper.equalityMode = IterableEqualityMode.unordered;
+
+      expect(list1, equals(list2));
+      expect(list1, equals(list3));
     });
 
     test('map', () {

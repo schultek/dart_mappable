@@ -13,6 +13,10 @@ class IterableMapper<I extends Iterable> extends MapperBase<I>
     with MapperEqualityMixin<I> {
   IterableMapper(this.fromIterable, this.typeFactory);
 
+  /// Defines how an [Iterable] object is checked for equality. See [IterableEqualityMode] for all
+  /// possible values.
+  static IterableEqualityMode equalityMode = IterableEqualityMode.ordered;
+
   final Iterable<U> Function<U>(Iterable<U> iterable) fromIterable;
 
   @override
@@ -32,11 +36,25 @@ class IterableMapper<I extends Iterable> extends MapperBase<I>
   }
 
   @override
-  Equality equality(Equality child) => IterableEquality(child);
+  Equality equality(Equality child) => switch (equalityMode) {
+        IterableEqualityMode.ordered => IterableEquality(child),
+        IterableEqualityMode.unordered => UnorderedIterableEquality(child),
+      };
 
   @override
   String stringify(I value, MappingContext context) =>
       '(${value.map((e) => context.container.asString(e)).join(', ')})';
+}
+
+/// Options for comparing an [Iterable].
+///
+/// {@category Custom Mappers}
+enum IterableEqualityMode {
+  /// Two iterables are considered equal if they have the same elements in the same order.
+  ordered,
+
+  /// Two iterables are considered equal if they have the same elements in any order.
+  unordered;
 }
 
 /// The default mapper for [Set]s.
