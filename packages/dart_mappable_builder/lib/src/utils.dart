@@ -184,3 +184,52 @@ extension ObjectReader on DartObject {
     return result;
   }
 }
+
+Map<String, List<String>> validatedBuildExtensionsFrom(
+  Map? optionsMap,
+  Map<String, List<String>> defaultExtensions,
+) {
+  final extensionsOption = optionsMap?.remove('build_extensions');
+  if (extensionsOption == null) {
+    // defaultExtensions are provided by the builder author, not the end user.
+    // It should be safe to skip validation.
+    return defaultExtensions;
+  }
+
+  if (extensionsOption is! Map) {
+    throw ArgumentError(
+      'Configured build_extensions should be a map from inputs to outputs.',
+    );
+  }
+
+  final result = <String, List<String>>{};
+
+  for (final entry in extensionsOption.entries) {
+    final input = entry.key;
+    if (input is! String || !input.endsWith('.dart')) {
+      throw ArgumentError(
+        'Invalid key in build_extensions option: `$input` '
+        'should be a string ending with `.dart`',
+      );
+    }
+
+    final output = (entry.value is List) ? entry.value as List : [entry.value];
+
+    for (var i = 0; i < output.length; i++) {
+      final o = output[i];
+      if (o is! String || (i == 0 && !o.endsWith('.dart'))) {
+        throw ArgumentError(
+          'Invalid output extension `${entry.value}`. It should be a string '
+          'or a list of strings with the first ending with `.dart`',
+        );
+      }
+    }
+
+    result[input] = output.cast<String>().toList();
+  }
+
+  if (result.isEmpty) {
+    throw ArgumentError('Configured build_extensions must not be empty.');
+  }
+  return result;
+}

@@ -81,6 +81,26 @@ global_options:
       generateMethods: [decode, encode, copy, stringify, equals]
 ```
 
+### `build_extensions`
+
+The `build_extensions` option allows you to specify custom paths for the generated files. This is particularly useful when working with certain code generation scenarios. It takes a map where keys are paths to source files and values are lists of corresponding generated file paths.
+
+#### Example:
+
+Here is an example to write in a build.yaml file to generate the generated files in a `generated` folder:
+```yaml
+targets:
+  $default:
+    builders:
+      # only to resolve build_runner conflicts
+      dart_mappable_builder:
+        options:
+          build_extensions:
+            'lib/{{path}}/{{file}}.dart':
+              - 'lib/{{path}}/generated/{{file}}.mapper.dart'
+              - 'lib/{{path}}/generated/{{file}}.init.dart'
+```
+
 ---
 
 <p align="right"><a href="../topics/Copy-With-topic.html">Next: Copy-With</a></p>
