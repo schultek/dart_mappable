@@ -225,7 +225,6 @@ mixin CarMappable {
     return CarMapper.ensureInitialized().encodeMap<Car>(this as Car);
   }
 
-
   CarCopyWith<Car, Car, Car> get copyWith =>
       _CarCopyWithImpl(this as Car, $identity, $identity);
   @override

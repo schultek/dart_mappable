@@ -13,7 +13,12 @@ import '../dart_mappable.dart';
 /// {@category Generics}
 /// {@category Mapper Container}
 class EncodingOptions {
-  EncodingOptions({this.includeTypeId, this.inheritOptions = true, this.shallow, this.data});
+  EncodingOptions({
+    this.includeTypeId,
+    this.inheritOptions = true,
+    this.shallow,
+    this.data,
+  });
 
   /// Whether to include the type id of the encoding object.
   ///
@@ -35,10 +40,10 @@ class EncodingOptions {
 
   EncodingOptions copyWith({Object? data}) {
     return EncodingOptions(
-        includeTypeId: includeTypeId,
-        inheritOptions: inheritOptions,
-        shallow: shallow,
-        data: data ?? this.data
+      includeTypeId: includeTypeId,
+      inheritOptions: inheritOptions,
+      shallow: shallow,
+      data: data ?? this.data,
     );
   }
 }
