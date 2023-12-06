@@ -186,10 +186,11 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
       Iterable<Field<T, dynamic>> fields,
       bool ignoreNull,
       EncodingContext context) {
+    bool shallow = context.options?.shallow ?? false;
     return {
       for (var f in fields)
         if (f.getter != null && (!ignoreNull || f.get(value) != null))
-          f.key: f.encode(value, context),
+          f.key: shallow ? f.get(value) : f.encode(value, context),
     };
   }
 
