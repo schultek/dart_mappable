@@ -1,3 +1,12 @@
+# 4.1.0
+
+- Added support for shallow encoding a class:
+  - `MyClassMapper.ensureInitialized().encodeMap<MyClass>(myClass, EncodingOptions(shallow: true))`
+- Correctly escape `$` in class names.
+- Added option to use unordered list equality with iterables:
+  - `IterableMapper.equalityMode = IterableEqualityMode.unordered`
+- Added [`build_extensions`](https://pub.dev/documentation/dart_mappable/latest/topics/Configuration-topic.html#buildextensions) option to builder configuration.
+
 # 4.0.1
 
 - Added support for generic typed parameters for deep copyWith.
