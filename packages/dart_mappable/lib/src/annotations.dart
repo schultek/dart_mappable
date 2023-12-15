@@ -18,6 +18,7 @@ class MappableClass extends MappableInterface {
     this.discriminatorValue,
     super.hook,
     super.generateMethods,
+    super.dartCompatible,
     this.includeSubClasses,
     super.includeCustomMappers,
   }) : super._();
@@ -148,6 +149,7 @@ class MappableRecord extends MappableInterface {
     super.uniqueId,
     super.hook,
     super.includeCustomMappers,
+    super.dartCompatible,
   }) : super._();
 }
 
@@ -161,6 +163,7 @@ abstract class MappableInterface {
     this.uniqueId,
     this.hook,
     this.generateMethods,
+    this.dartCompatible,
     this.includeCustomMappers,
   });
 
@@ -190,6 +193,20 @@ abstract class MappableInterface {
   /// using the `|` operator.
   final int? generateMethods;
 
+  /// Affects to/fromJson and to/fromMap methods
+  ///
+  /// Defaults to false, which is backwards-compatible with dart_mappable
+  /// to/fromJson converts to/from String, and to/fromMap converts to/from Map
+  ///
+  /// However this differs from the standard Dart API where
+  /// to/fromJson converts to/from Map
+  ///
+  /// When 'true', methods will be to/fromJson (works with Maps)
+  /// and serialize/deserialize (works with Strings)
+  ///
+  /// see this issue for more information: https://github.com/schultek/dart_mappable/issues/82
+  final bool? dartCompatible;
+
   /// Specify additional custom mappers that should be included for fields
   /// of this class.
   final Iterable<MapperBase>? includeCustomMappers;
@@ -207,6 +224,7 @@ class MappableLib {
     this.ignoreNull,
     this.discriminatorKey,
     this.generateMethods,
+    this.dartCompatible,
     this.generateInitializerForScope,
   });
 
@@ -224,6 +242,9 @@ class MappableLib {
 
   /// Specify which methods to generate for classes.
   final int? generateMethods;
+
+  /// Specify what to name to/fromJson and to/fromMap methods.
+  final bool? dartCompatible;
 
   /// Will generated a new <filename>.init.dart file with an initializer
   /// method that automatically registers all mappers in the scope.

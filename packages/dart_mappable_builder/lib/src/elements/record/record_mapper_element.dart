@@ -2,6 +2,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 
+import '../../utils.dart';
 import '../mapper_element.dart';
 
 abstract class RecordMapperElement<T extends Element>
@@ -43,4 +44,9 @@ abstract class RecordMapperElement<T extends Element>
   String genericArgAt(int index) {
     return String.fromCharCode('A'.codeUnitAt(0) + index);
   }
+
+  late final bool dartCompatible =
+      annotation.value?.read('dartCompatible')?.toBoolValue() ??
+          options.dartCompatible ??
+          false;
 }

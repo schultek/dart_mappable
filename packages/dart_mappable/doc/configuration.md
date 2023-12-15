@@ -79,6 +79,8 @@ global_options:
       discriminatorKey: type
       # used to specify which methods to generate (all by default)
       generateMethods: [decode, encode, copy, stringify, equals]
+      # determines name of to/fromJson and to/fromMap methods
+      dartCompatible: false
 ```
 
 ### `build_extensions`

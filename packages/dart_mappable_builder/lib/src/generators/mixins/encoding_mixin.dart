@@ -4,8 +4,10 @@ import '../../elements/class/target_class_mapper_element.dart';
 import '../generator.dart';
 
 mixin EncodingMixin on MapperGenerator<TargetClassMapperElement> {
-  late final toJsonName = element.options.renameMethods['toJson'] ?? 'toJson';
-  late final toMapName = element.options.renameMethods['toMap'] ?? 'toMap';
+  late final toJsonName =
+      element.options.renameMethods['toJson'] ?? (element.dartCompatible ? 'serialize' : 'toJson');
+  late final toMapName =
+      element.options.renameMethods['toMap'] ?? (element.dartCompatible ? 'toJson' : 'toMap');
 
   void generateEncoderMixin(StringBuffer output) {
     if (!element.shouldGenerate(GenerateMethods.encode)) {

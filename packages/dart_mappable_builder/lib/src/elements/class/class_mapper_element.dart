@@ -69,6 +69,12 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
           options.generateMethods ??
           GenerateMethods.all;
 
+  late final bool dartCompatible =
+      annotation.value?.read('dartCompatible')?.toBoolValue() ??
+          options.dartCompatible ??
+          superElement?.dartCompatible ??
+          false;
+
   late final String? hookForClass = () {
     var hook = annotation.value?.read('hook');
     if (hook != null && !hook.isNull) {

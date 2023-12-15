@@ -107,8 +107,10 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
   }
 
   void generateStaticDecoders(StringBuffer output) {
-    var fromJsonName = element.options.renameMethods['fromJson'] ?? 'fromJson';
-    var fromMapName = element.options.renameMethods['fromMap'] ?? 'fromMap';
+    var fromJsonName =
+        element.options.renameMethods['fromJson'] ?? (element.dartCompatible ? 'deserialize' : 'fromJson');
+    var fromMapName =
+        element.options.renameMethods['fromMap'] ?? (element.dartCompatible ? 'fromJson' : 'fromMap');
 
     output.write('\n'
         '  static ${element.className}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<String, dynamic> map) {\n'

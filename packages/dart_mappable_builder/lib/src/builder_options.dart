@@ -14,6 +14,7 @@ class MappableOptions {
   final bool? ignoreNull;
   final String? discriminatorKey;
   final int? generateMethods;
+  final bool? dartCompatible;
   final InitializerScope? initializerScope;
   final int? lineLength;
   final Map<String, String> renameMethods;
@@ -25,6 +26,7 @@ class MappableOptions {
     this.ignoreNull,
     this.discriminatorKey,
     this.generateMethods,
+    this.dartCompatible,
     this.initializerScope,
     this.lineLength,
     this.renameMethods = const {},
@@ -39,6 +41,7 @@ class MappableOptions {
         discriminatorKey = options['discriminatorKey'] as String?,
         generateMethods =
             parseGenerateMethods(toList(options['generateMethods'])),
+        dartCompatible = options['dartCompatible'] as bool?,
         initializerScope = null,
         lineLength =
             options['lineLength'] as int? ?? options['line_length'] as int?,
@@ -55,6 +58,7 @@ class MappableOptions {
       ignoreNull: options.ignoreNull ?? ignoreNull,
       discriminatorKey: options.discriminatorKey ?? discriminatorKey,
       generateMethods: options.generateMethods ?? generateMethods,
+      dartCompatible: options.dartCompatible ?? dartCompatible,
       initializerScope: options.initializerScope ?? initializerScope,
       renameMethods: {...renameMethods, ...options.renameMethods},
     );
@@ -68,6 +72,7 @@ class MappableOptions {
       ignoreNull: object.read('ignoreNull')?.toBoolValue(),
       discriminatorKey: object.read('discriminatorKey')?.toStringValue(),
       generateMethods: object.read('generateMethods')?.toIntValue(),
+      dartCompatible: object.read('dartCompatible')?.toBoolValue(),
       initializerScope: initScope?.isNull ?? true
           ? null
           : InitializerScope
