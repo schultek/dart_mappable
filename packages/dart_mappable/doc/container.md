@@ -11,11 +11,8 @@ things like decoding or encoding from json or using the generated mixins `toStri
 
 *You don't need to know this for most use-cases. But feel free to read on if you are interested.*
 
-However each generated mapper internally defines and uses its own `MapperContainer`, which you can access using
-the `<ClassName>Mapper.container` getter.
-
-When you look at the interface of a mapper, you can see all the respective methods for serialization and mapping, 
-like `fromJson`, `toJson`, `isEqual`, `hash` and `asString`. You can use these methods with any object as long
+By default there is only the globally accessible `MapperContainer.globals`. The interface of a container contains all the respective methods for 
+serialization and mapping, like `fromJson`, `toJson`, `isEqual`, `hash` and `asString`. You can use these methods with any object as long
 as the container can resolve a mapper for it.
 
 To control which types a `MapperContainer` can resolve see the following methods:
@@ -27,7 +24,12 @@ To control which types a `MapperContainer` can resolve see the following methods
 - `get<T>()` will return the current mapper for type `T`.
 - `getAll()` will return all currently registered mappers.
 
-Additionally to controlling mappers manually for a single container, you can also link a container to 
+The `MapperContainer.global` has a default set of mappers for all core Dart types. When calling `MyClassMapper.ensureInitialized()`
+on a generated mapper, it will add itself to the global container and from thereon be usable through it.
+
+Additionally to using the preconfigured containers, you can also create one yourself using the `MapperContainer()` constructor.
+
+In extension to controlling mappers manually for a single container, you can also link a container to 
 another. That way container A can use all mappers of container B implicitly.
 
 - `link(MapperContainer container)` links the provided container to the current one.
@@ -45,11 +47,15 @@ class BMapper extends MapperBase<B> {} // generated
 
 void main() {
   
-  // succeeds - generated mappers have their own container
-  AMapper.container.toJson(A());
+  AMapper.ensureInitialized();
   
-  // fails - generated mappers only work with their respective types
-  BMapper.container.toJson(A());
+  // succeeds - AMapper was added to the globals container.
+  MapperContainer.globals.toJson(A());
+  
+  // fails - B is not initialized yet.
+  MapperContainer.globals.toJson(A());
+
+  BMapper.ensureInitialized();
   
   // creates a new empty container
   var containerX = MapperContainer();
@@ -140,17 +146,19 @@ class Box<T> with BoxMappable<T> {
 void main() {
   // Case 1: Simple list.
   // We use the default container since we only use core types.
-  List<int> nums = MapperContainer.defaults.fromJson('[2, 4, 105]');
+  List<int> nums = MapperContainer.globals.fromJson('[2, 4, 105]');
   print(nums); // [2, 4, 105]
 
   // Case 2: Set of objects.
   // We use the generated container for [Dog], but with a set of objects.
-  Set<Dog> dogs = DogMapper.container.fromJson('[{"name": "Thor"}, {"name": "Lasse"}, {"name": "Thor"}]');
+  DogMapper.ensureInitialized();
+  Set<Dog> dogs = MapperContainer.globals.fromJson('[{"name": "Thor"}, {"name": "Lasse"}, {"name": "Thor"}]');
   print(dogs); // {Dog(name: Thor), Dog(name: Lasse)}
 
   // Case 3: More complex lists, like generics.
   // We use the generated container for [Box], but with a list of generic objects.
-  List<Box<double>> boxes = BoxMapper.container.fromJson('[{"content": 0.1}, {"content": 12.34}]');
+  BoxMapper.ensureInitialized();
+  List<Box<double>> boxes = MapperContainer.globals.fromJson('[{"content": 0.1}, {"content": 12.34}]');
   print(boxes); // [Box(content: 0.1), Box(content: 12.34)]
 }
 ```
@@ -159,7 +167,7 @@ There is also the `MapperContainer.fromIterable` method. This can be used if you
 Additionally this can get handy to decode a dynamic list of partly-encoded values:
 
 ```dart
-List<double> myNumbers = MapperContainer.defaults.fromIterable([2.312, '1.32', 500, '1e4']);
+List<double> myNumbers = MapperContainer.globals.fromIterable([2.312, '1.32', 500, '1e4']);
 print(myNumbers); // [2.312, 1.32, 500.0, 10000.0]
 ```
 
@@ -174,10 +182,11 @@ var encodedMap = {
   {'name': 'Clyde'}: 5,
 };
 
-Map<Dog, int> treatsPerDog = DogMapper.container.fromValue(encodedMap);
+DogMapper.ensureInitialized();
+Map<Dog, int> treatsPerDog = MapperContainer.globals.fromValue(encodedMap);
 print(treatsPerDog[Dog('Clyde')]!); // 5
 
-var myMap = DogMapper.container.toValue(treatsPerDog);
+var myMap = MapperContainer.globals.toValue(treatsPerDog);
 print(myMap); // {{name: Bonny}: 1, {name: Clyde}: 5}
 ```
 
