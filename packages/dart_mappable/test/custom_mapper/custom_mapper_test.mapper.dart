@@ -28,7 +28,7 @@ class TestObjMapper extends ClassMapperBase<TestObj> {
       Field('unmappedProps', _$unmappedProps);
 
   @override
-  final Map<Symbol, Field<TestObj, dynamic>> fields = const {
+  final MappableFields<TestObj> fields = const {
     #x: _f$x,
     #unmappedProps: _f$unmappedProps,
   };

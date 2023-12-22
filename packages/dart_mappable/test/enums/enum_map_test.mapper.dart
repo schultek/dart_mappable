@@ -76,7 +76,7 @@ class ClassAMapper extends ClassMapperBase<ClassA> {
       Field('someVariable', _$someVariable);
 
   @override
-  final Map<Symbol, Field<ClassA, dynamic>> fields = const {
+  final MappableFields<ClassA> fields = const {
     #someVariable: _f$someVariable,
   };
 

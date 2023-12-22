@@ -31,7 +31,7 @@ class BoxMapper extends ClassMapperBase<Box> {
       Field('contents', _$contents, arg: _arg$contents);
 
   @override
-  final Map<Symbol, Field<Box, dynamic>> fields = const {
+  final MappableFields<Box> fields = const {
     #size: _f$size,
     #contents: _f$contents,
   };
@@ -136,7 +136,7 @@ class ContentMapper extends ClassMapperBase<Content> {
   static const Field<Content, String> _f$data = Field('data', _$data);
 
   @override
-  final Map<Symbol, Field<Content, dynamic>> fields = const {
+  final MappableFields<Content> fields = const {
     #data: _f$data,
   };
 

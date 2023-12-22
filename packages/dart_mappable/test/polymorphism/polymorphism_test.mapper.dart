@@ -28,7 +28,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   static const Field<Animal, String> _f$name = Field('name', _$name);
 
   @override
-  final Map<Symbol, Field<Animal, dynamic>> fields = const {
+  final MappableFields<Animal> fields = const {
     #name: _f$name,
   };
 
@@ -82,7 +82,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   static const Field<Cat, String> _f$color = Field('color', _$color);
 
   @override
-  final Map<Symbol, Field<Cat, dynamic>> fields = const {
+  final MappableFields<Cat> fields = const {
     #name: _f$name,
     #color: _f$color,
   };
@@ -191,7 +191,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
       Field('name', _$name, mode: FieldMode.member);
 
   @override
-  final Map<Symbol, Field<Dog, dynamic>> fields = const {
+  final MappableFields<Dog> fields = const {
     #age: _f$age,
     #name: _f$name,
   };
@@ -296,7 +296,7 @@ class NullAnimalMapper extends SubClassMapperBase<NullAnimal> {
   static const Field<NullAnimal, String> _f$name = Field('name', _$name);
 
   @override
-  final Map<Symbol, Field<NullAnimal, dynamic>> fields = const {
+  final MappableFields<NullAnimal> fields = const {
     #name: _f$name,
   };
 
@@ -411,7 +411,7 @@ class DefaultAnimalMapper extends SubClassMapperBase<DefaultAnimal> {
   static const Field<DefaultAnimal, String> _f$type = Field('type', _$type);
 
   @override
-  final Map<Symbol, Field<DefaultAnimal, dynamic>> fields = const {
+  final MappableFields<DefaultAnimal> fields = const {
     #name: _f$name,
     #type: _f$type,
   };
@@ -533,7 +533,7 @@ class ZooMapper extends ClassMapperBase<Zoo> {
       Field('animalsMap', _$animalsMap);
 
   @override
-  final Map<Symbol, Field<Zoo, dynamic>> fields = const {
+  final MappableFields<Zoo> fields = const {
     #animal: _f$animal,
     #animals: _f$animals,
     #animalsMap: _f$animalsMap,

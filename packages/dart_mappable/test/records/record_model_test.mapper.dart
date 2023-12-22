@@ -33,7 +33,7 @@ class AMapper extends ClassMapperBase<A> {
       Field('r', _$r, arg: _arg$r);
 
   @override
-  final Map<Symbol, Field<A, dynamic>> fields = const {
+  final MappableFields<A> fields = const {
     #a: _f$a,
     #r: _f$r,
   };
@@ -133,7 +133,7 @@ class CMapper extends ClassMapperBase<C> {
   static const Field<C, _t$_R1<String, int>> _f$d = Field('d', _$d);
 
   @override
-  final Map<Symbol, Field<C, dynamic>> fields = const {
+  final MappableFields<C> fields = const {
     #c: _f$c,
     #d: _f$d,
   };
@@ -236,7 +236,7 @@ class _t$_R1Mapper extends RecordMapperBase<_t$_R1> {
       Field('lng', _$lng, arg: _arg$lng);
 
   @override
-  final Map<Symbol, Field<_t$_R1, dynamic>> fields = const {
+  final MappableFields<_t$_R1> fields = const {
     #lat: _f$lat,
     #lng: _f$lng,
   };
@@ -288,7 +288,7 @@ class _t$_R0Mapper extends RecordMapperBase<_t$_R0> {
   static const Field<_t$_R0, dynamic> _f$d = Field('d', _$d, arg: _arg$d);
 
   @override
-  final Map<Symbol, Field<_t$_R0, dynamic>> fields = const {
+  final MappableFields<_t$_R0> fields = const {
     #$1: _f$$1,
     #b: _f$b,
     #c: _f$c,

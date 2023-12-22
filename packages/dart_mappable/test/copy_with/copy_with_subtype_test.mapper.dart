@@ -26,7 +26,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   static const Field<Animal, String> _f$name = Field('name', _$name);
 
   @override
-  final Map<Symbol, Field<Animal, dynamic>> fields = const {
+  final MappableFields<Animal> fields = const {
     #name: _f$name,
   };
 
@@ -70,7 +70,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   static const Field<Cat, String> _f$color = Field('color', _$color);
 
   @override
-  final Map<Symbol, Field<Cat, dynamic>> fields = const {
+  final MappableFields<Cat> fields = const {
     #name: _f$name,
     #color: _f$color,
   };
@@ -148,7 +148,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   static const Field<Dog, String> _f$name = Field('name', _$name);
 
   @override
-  final Map<Symbol, Field<Dog, dynamic>> fields = const {
+  final MappableFields<Dog> fields = const {
     #name: _f$name,
   };
 
@@ -224,7 +224,7 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   static const Field<Zoo, Animal> _f$animal = Field('animal', _$animal);
 
   @override
-  final Map<Symbol, Field<Zoo, dynamic>> fields = const {
+  final MappableFields<Zoo> fields = const {
     #animal: _f$animal,
   };
 
@@ -295,7 +295,7 @@ class AMapper extends ClassMapperBase<A> {
   Function get typeFactory => <T>(f) => f<A<T>>();
 
   @override
-  final Map<Symbol, Field<A, dynamic>> fields = const {};
+  final MappableFields<A> fields = const {};
 
   static A<T> _instantiate<T>(DecodingData data) {
     return A();
@@ -387,7 +387,7 @@ class CMapper extends ClassMapperBase<C> {
   Function get typeFactory => <T>(f) => f<C<T>>();
 
   @override
-  final Map<Symbol, Field<C, dynamic>> fields = const {};
+  final MappableFields<C> fields = const {};
 
   static C<T> _instantiate<T>(DecodingData data) {
     return C();
@@ -483,7 +483,7 @@ class BMapper extends ClassMapperBase<B> {
   static const Field<B, A<dynamic>> _f$a = Field('a', _$a);
 
   @override
-  final Map<Symbol, Field<B, dynamic>> fields = const {
+  final MappableFields<B> fields = const {
     #list: _f$list,
     #a: _f$a,
   };

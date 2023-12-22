@@ -28,7 +28,7 @@ class AMapper extends ClassMapperBase<A> {
       Field('items', _$items, arg: _arg$items);
 
   @override
-  final Map<Symbol, Field<A, dynamic>> fields = const {
+  final MappableFields<A> fields = const {
     #items: _f$items,
   };
 
@@ -133,7 +133,7 @@ class BMapper extends ClassMapperBase<B> {
       Field('items', _$items, arg: _arg$items);
 
   @override
-  final Map<Symbol, Field<B, dynamic>> fields = const {
+  final MappableFields<B> fields = const {
     #items: _f$items,
   };
 

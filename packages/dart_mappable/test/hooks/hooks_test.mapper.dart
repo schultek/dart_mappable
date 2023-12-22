@@ -28,7 +28,7 @@ class GameMapper extends ClassMapperBase<Game> {
           ChainedHook([PlayerHook(), UnmappedPropertiesHook('unmappedProps')]));
 
   @override
-  final Map<Symbol, Field<Game, dynamic>> fields = const {
+  final MappableFields<Game> fields = const {
     #player: _f$player,
   };
 
@@ -129,7 +129,7 @@ class PlayerMapper extends ClassMapperBase<Player> {
   static const Field<Player, String> _f$id = Field('id', _$id);
 
   @override
-  final Map<Symbol, Field<Player, dynamic>> fields = const {
+  final MappableFields<Player> fields = const {
     #id: _f$id,
   };
 
@@ -231,7 +231,7 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
       ]));
 
   @override
-  final Map<Symbol, Field<CardGame, dynamic>> fields = const {
+  final MappableFields<CardGame> fields = const {
     #player: _f$player,
   };
 

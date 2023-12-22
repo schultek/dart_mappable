@@ -28,7 +28,7 @@ class ItemsMapper extends ClassMapperBase<Items> {
       Field('items2', _$items2);
 
   @override
-  final Map<Symbol, Field<Items, dynamic>> fields = const {
+  final MappableFields<Items> fields = const {
     #items: _f$items,
     #items2: _f$items2,
   };
@@ -138,7 +138,7 @@ class ItemMapper extends ClassMapperBase<Item> {
   static const Field<Item, int> _f$index = Field('index', _$index);
 
   @override
-  final Map<Symbol, Field<Item, dynamic>> fields = const {
+  final MappableFields<Item> fields = const {
     #index: _f$index,
   };
 

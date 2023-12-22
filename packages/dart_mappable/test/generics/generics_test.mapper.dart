@@ -31,7 +31,7 @@ class BoxMapper extends ClassMapperBase<Box> {
       Field('contents', _$contents, arg: _arg$contents);
 
   @override
-  final Map<Symbol, Field<Box, dynamic>> fields = const {
+  final MappableFields<Box> fields = const {
     #size: _f$size,
     #contents: _f$contents,
   };
@@ -136,7 +136,7 @@ class ContentMapper extends ClassMapperBase<Content> {
   final String id = 'Content';
 
   @override
-  final Map<Symbol, Field<Content, dynamic>> fields = const {};
+  final MappableFields<Content> fields = const {};
 
   static Content _instantiate(DecodingData data) {
     return Content();
@@ -234,7 +234,7 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
   static const Field<Confetti, String> _f$color = Field('color', _$color);
 
   @override
-  final Map<Symbol, Field<Confetti, dynamic>> fields = const {
+  final MappableFields<Confetti> fields = const {
     #color: _f$color,
   };
 
@@ -337,7 +337,7 @@ class DataMapper extends ClassMapperBase<Data> {
   static const Field<Data, String> _f$data = Field('data', _$data);
 
   @override
-  final Map<Symbol, Field<Data, dynamic>> fields = const {
+  final MappableFields<Data> fields = const {
     #data: _f$data,
   };
 
@@ -436,7 +436,7 @@ class SingleSettingMapper extends ClassMapperBase<SingleSetting> {
       Field('properties', _$properties, opt: true, arg: _arg$properties);
 
   @override
-  final Map<Symbol, Field<SingleSetting, dynamic>> fields = const {
+  final MappableFields<SingleSetting> fields = const {
     #properties: _f$properties,
   };
 
@@ -555,7 +555,7 @@ class SettingsMapper extends ClassMapperBase<Settings> {
       _f$settings = Field('settings', _$settings, opt: true);
 
   @override
-  final Map<Symbol, Field<Settings, dynamic>> fields = const {
+  final MappableFields<Settings> fields = const {
     #settings: _f$settings,
   };
 
@@ -679,7 +679,7 @@ class AssetMapper extends ClassMapperBase<Asset> {
       Field('data', _$data, arg: _arg$data);
 
   @override
-  final Map<Symbol, Field<Asset, dynamic>> fields = const {
+  final MappableFields<Asset> fields = const {
     #data: _f$data,
   };
 

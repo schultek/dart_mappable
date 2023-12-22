@@ -30,7 +30,7 @@ class BaseMapper extends ClassMapperBase<Base> {
       Field('objects', _$objects);
 
   @override
-  final Map<Symbol, Field<Base, dynamic>> fields = const {
+  final MappableFields<Base> fields = const {
     #id: _f$id,
     #name: _f$name,
     #objects: _f$objects,
@@ -90,7 +90,7 @@ class OneMapper extends ClassMapperBase<One> {
       Field('objects', _$objects);
 
   @override
-  final Map<Symbol, Field<One, dynamic>> fields = const {
+  final MappableFields<One> fields = const {
     #id: _f$id,
     #name: _f$name,
     #objects: _f$objects,
@@ -205,7 +205,7 @@ class TwoMapper extends ClassMapperBase<Two> {
   static const Field<Two, String> _f$id = Field('id', _$id);
 
   @override
-  final Map<Symbol, Field<Two, dynamic>> fields = const {
+  final MappableFields<Two> fields = const {
     #id: _f$id,
   };
 

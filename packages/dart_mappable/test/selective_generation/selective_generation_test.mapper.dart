@@ -24,7 +24,7 @@ class AMapper extends ClassMapperBase<A> {
   static const Field<A, String> _f$a = Field('a', _$a);
 
   @override
-  final Map<Symbol, Field<A, dynamic>> fields = const {
+  final MappableFields<A> fields = const {
     #a: _f$a,
   };
 
@@ -94,7 +94,7 @@ class BMapper extends ClassMapperBase<B> {
   static const Field<B, String> _f$b = Field('b', _$b);
 
   @override
-  final Map<Symbol, Field<B, dynamic>> fields = const {
+  final MappableFields<B> fields = const {
     #b: _f$b,
   };
 

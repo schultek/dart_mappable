@@ -25,7 +25,7 @@ class SetWrapperMapper extends ClassMapperBase<SetWrapper> {
       Field('values', _$values);
 
   @override
-  final Map<Symbol, Field<SetWrapper, dynamic>> fields = const {
+  final MappableFields<SetWrapper> fields = const {
     #values: _f$values,
   };
 
@@ -130,7 +130,7 @@ class ListWrapperMapper extends ClassMapperBase<ListWrapper> {
       Field('values', _$values);
 
   @override
-  final Map<Symbol, Field<ListWrapper, dynamic>> fields = const {
+  final MappableFields<ListWrapper> fields = const {
     #values: _f$values,
   };
 
@@ -240,7 +240,7 @@ class MapWrapperMapper extends ClassMapperBase<MapWrapper> {
       Field('values', _$values);
 
   @override
-  final Map<Symbol, Field<MapWrapper, dynamic>> fields = const {
+  final MappableFields<MapWrapper> fields = const {
     #values: _f$values,
   };
 

@@ -20,7 +20,7 @@ extension FieldsExtension<T extends InterfaceMapperElement>
     }
 
     output.write(
-        '\n  @override\n  final Map<Symbol, Field<${element.prefixedClassName}, dynamic>> fields = const {\n');
+        '\n  @override\n  final MappableFields<${element.prefixedClassName}> fields = const {\n');
 
     for (var f in fields) {
       output.write('    #${f.name}: _f\$${f.name},\n');

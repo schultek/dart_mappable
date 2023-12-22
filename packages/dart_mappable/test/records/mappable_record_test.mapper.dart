@@ -29,7 +29,7 @@ class LocationMapper extends ClassMapperBase<Location> {
       Field('offset', _$offset);
 
   @override
-  final Map<Symbol, Field<Location, dynamic>> fields = const {
+  final MappableFields<Location> fields = const {
     #point: _f$point,
     #offset: _f$offset,
   };
@@ -133,7 +133,7 @@ class PointMapper extends RecordMapperBase<Point> {
   static const Field<Point, double> _f$y = Field('y', _$y);
 
   @override
-  final Map<Symbol, Field<Point, dynamic>> fields = const {
+  final MappableFields<Point> fields = const {
     #x: _f$x,
     #y: _f$y,
   };
@@ -222,7 +222,7 @@ class OffsetMapper extends RecordMapperBase<Offset> {
   static const Field<Offset, dynamic> _f$y = Field('y', _$y, arg: _arg$y);
 
   @override
-  final Map<Symbol, Field<Offset, dynamic>> fields = const {
+  final MappableFields<Offset> fields = const {
     #x: _f$x,
     #y: _f$y,
   };

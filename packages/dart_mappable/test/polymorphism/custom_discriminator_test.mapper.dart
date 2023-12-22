@@ -23,7 +23,7 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   @override
-  final Map<Symbol, Field<A, dynamic>> fields = const {};
+  final MappableFields<A> fields = const {};
 
   static A _instantiate(DecodingData data) {
     throw MapperException.missingConstructor('A');
@@ -69,7 +69,7 @@ class BMapper extends SubClassMapperBase<B> {
   final String id = 'B';
 
   @override
-  final Map<Symbol, Field<B, dynamic>> fields = const {};
+  final MappableFields<B> fields = const {};
 
   @override
   final String discriminatorKey = 'type';
@@ -167,7 +167,7 @@ class CMapper extends SubClassMapperBase<C> {
   final String id = 'C';
 
   @override
-  final Map<Symbol, Field<C, dynamic>> fields = const {};
+  final MappableFields<C> fields = const {};
 
   @override
   final String discriminatorKey = 'type';

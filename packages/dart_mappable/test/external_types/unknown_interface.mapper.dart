@@ -71,7 +71,7 @@ class DSOpacityDataMapper extends ClassMapperBase<DSOpacityData> {
       Field('fallback', _$fallback, opt: true, def: 0.0);
 
   @override
-  final Map<Symbol, Field<DSOpacityData, dynamic>> fields = const {
+  final MappableFields<DSOpacityData> fields = const {
     #data: _f$data,
     #fallback: _f$fallback,
   };

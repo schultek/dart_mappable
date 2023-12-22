@@ -30,7 +30,7 @@ class AMapper extends ClassMapperBase<A> {
       Field('c', _$c, hook: StringMapHook());
 
   @override
-  final Map<Symbol, Field<A, dynamic>> fields = const {
+  final MappableFields<A> fields = const {
     #a: _f$a,
     #b: _f$b,
     #c: _f$c,

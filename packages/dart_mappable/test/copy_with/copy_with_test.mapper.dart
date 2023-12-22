@@ -27,7 +27,7 @@ class PersonMapper extends ClassMapperBase<Person> {
   static const Field<Person, Car> _f$car = Field('car', _$car);
 
   @override
-  final Map<Symbol, Field<Person, dynamic>> fields = const {
+  final MappableFields<Person> fields = const {
     #name: _f$name,
     #car: _f$car,
   };
@@ -132,7 +132,7 @@ class CarMapper extends ClassMapperBase<Car> {
   static const Field<Car, String> _f$model = Field('model', _$model);
 
   @override
-  final Map<Symbol, Field<Car, dynamic>> fields = const {
+  final MappableFields<Car> fields = const {
     #brand: _f$brand,
     #model: _f$model,
   };
@@ -233,7 +233,7 @@ class BrandMapper extends ClassMapperBase<Brand> {
   static const Field<Brand, dynamic> _f$name = Field('name', _$name);
 
   @override
-  final Map<Symbol, Field<Brand, dynamic>> fields = const {
+  final MappableFields<Brand> fields = const {
     #name: _f$name,
   };
 
@@ -334,7 +334,7 @@ class DealershipMapper extends ClassMapperBase<Dealership> {
       Field('salesRep', _$salesRep);
 
   @override
-  final Map<Symbol, Field<Dealership, dynamic>> fields = const {
+  final MappableFields<Dealership> fields = const {
     #cars: _f$cars,
     #salesRep: _f$salesRep,
   };
@@ -461,7 +461,7 @@ class ItemListMapper extends ClassMapperBase<ItemList> {
       Field('items', _$items, arg: _arg$items);
 
   @override
-  final Map<Symbol, Field<ItemList, dynamic>> fields = const {
+  final MappableFields<ItemList> fields = const {
     #items: _f$items,
   };
 
@@ -516,7 +516,7 @@ class BrandListMapper extends SubClassMapperBase<BrandList> {
       Field('items', _$items, key: 'brands');
 
   @override
-  final Map<Symbol, Field<BrandList, dynamic>> fields = const {
+  final MappableFields<BrandList> fields = const {
     #items: _f$items,
   };
 
@@ -645,7 +645,7 @@ class NamedItemListMapper extends SubClassMapperBase<NamedItemList> {
       Field('items', _$items, arg: _arg$items);
 
   @override
-  final Map<Symbol, Field<NamedItemList, dynamic>> fields = const {
+  final MappableFields<NamedItemList> fields = const {
     #name: _f$name,
     #items: _f$items,
   };
@@ -777,7 +777,7 @@ class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
       Field('items', _$items, arg: _arg$items);
 
   @override
-  final Map<Symbol, Field<KeyedItemList, dynamic>> fields = const {
+  final MappableFields<KeyedItemList> fields = const {
     #key: _f$key,
     #items: _f$items,
   };
@@ -914,7 +914,7 @@ class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
       Field('items', _$items, arg: _arg$items);
 
   @override
-  final Map<Symbol, Field<ComparableItemList, dynamic>> fields = const {
+  final MappableFields<ComparableItemList> fields = const {
     #items: _f$items,
   };
 

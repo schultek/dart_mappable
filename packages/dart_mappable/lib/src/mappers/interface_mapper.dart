@@ -100,6 +100,8 @@ class DecodingData<T extends Object> {
   V dec<V>(Field f) => f.decode(value, context);
 }
 
+typedef MappableFields<T extends Object> = Map<Symbol, Field<T, dynamic>>;
+
 /// The common mapper interface for class and record mappers.
 ///
 /// See also [ClassMapperBase] and [RecordMapper].
@@ -107,7 +109,7 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
   const InterfaceMapperBase();
 
   /// The set of fields this interface defines.
-  Map<Symbol, Field<T, dynamic>> get fields;
+  MappableFields<T> get fields;
 
   /// Whether to ignore null values when encoding the fields of this interface.
   bool get ignoreNull => false;

@@ -21,7 +21,7 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   @override
-  final Map<Symbol, Field<A, dynamic>> fields = const {};
+  final MappableFields<A> fields = const {};
 
   static A _instantiate(DecodingData data) {
     return A();
