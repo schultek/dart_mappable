@@ -4,6 +4,14 @@ mapper for a type and call its respective method.
 To find the mapper for a given type, the container first looks at its own **set of mappers** and when 
 there is no match it refers to its **linked containers**.
 
+---
+# 🚨 Important!
+
+**A lot of this may be removed in a future version.**
+See https://github.com/schultek/dart_mappable/issues/159 for more details.
+
+---
+
 ## Working with `MapperContainer`s
 
 **This is an advanced topic.** Usually you don't need to worry about containers, as they are hidden from the user when doing standard
