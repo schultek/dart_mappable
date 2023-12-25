@@ -3,7 +3,7 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 
 void initializeFICMappers() {
   // This makes all mappers work with immutable collections
-  MapperContainer.defaults.useAll([
+  MapperContainer.globals.useAll([
     // mapper for immutable lists
     SerializableMapper<IList, Object>.arg1(
       decode: IList.fromJson,

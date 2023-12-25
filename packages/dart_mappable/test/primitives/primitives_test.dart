@@ -29,7 +29,7 @@ class Item with ItemMappable {
 }
 
 void main() {
-  var m = MapperContainer.defaults;
+  var m = MapperContainer.globals;
   group('Mapping of primitive types', () {
     test('Mapping of strings', () {
       expect(m.fromValue<String>('abc'), equals('abc'));

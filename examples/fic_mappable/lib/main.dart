@@ -49,5 +49,5 @@ void main() {
   assert(a3.list.length == 2 && a3.list[1].str == 'tom');
 
   var m = IMap({"value": 1000});
-  assert(MapperContainer.defaults.toJson(m) == '{"value":1000}');
+  assert(MapperContainer.globals.toJson(m) == '{"value":1000}');
 }

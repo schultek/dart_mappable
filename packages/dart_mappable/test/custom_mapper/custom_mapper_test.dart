@@ -93,29 +93,30 @@ class EmptyMapper extends MapperBase<Uint8List> {}
 void main() {
   group('Custom Mappers', () {
     test('Simple Custom Mapper', () {
-      var container = MapperContainer(mappers: {PrivateClassMapper()});
+      MapperContainer.globals.use(PrivateClassMapper());
 
-      MyPrivateClass c = container.fromValue('test');
+      MyPrivateClass c = MapperContainer.globals.fromValue('test');
       expect(c.value, equals('test'));
 
-      var s = container.toValue(c);
+      var s = MapperContainer.globals.toValue(c);
       expect(s, equals('test'));
 
-      expect(container.isEqual(c, MyPrivateClass('test')), isTrue);
+      expect(
+          MapperContainer.globals.isEqual(c, MyPrivateClass('test')), isTrue);
     });
 
     test('Generic custom Mapper', () {
-      var container = MapperContainer(mappers: {GenericBoxMapper()});
+      MapperContainer.globals.use(GenericBoxMapper());
 
-      GenericBox<int> box = container.fromValue('2');
+      GenericBox<int> box = MapperContainer.globals.fromValue('2');
       expect(box.content, equals(2));
 
-      var json = container.toJson(box);
+      var json = MapperContainer.globals.toJson(box);
       expect(json, equals('2'));
     });
 
     test('Custom Uri Mapper', () {
-      var container = MapperContainer(mappers: {UriMapper()});
+      MapperContainer.globals.use(UriMapper());
 
       var uri = Uri(
           scheme: 'https',
@@ -123,18 +124,18 @@ void main() {
           path: 'some/path',
           query: 'key=value');
 
-      var encoded = container.toValue(uri);
+      var encoded = MapperContainer.globals.toValue(uri);
       expect(encoded, equals('https://example.com/some/path?key=value'));
 
-      var decoded = container.fromValue<Uri>(encoded);
+      var decoded = MapperContainer.globals.fromValue<Uri>(encoded);
       expect(decoded, equals(uri));
     });
 
     test('Empty mapper', () {
-      var container = MapperContainer(mappers: {EmptyMapper()});
+      MapperContainer.globals.use(EmptyMapper());
 
       expect(
-        () => container.fromValue<Uint8List>([]),
+        () => MapperContainer.globals.fromValue<Uint8List>([]),
         throwsMapperException(MapperException.chain(
             MapperMethod.decode,
             '(Uint8List)',
@@ -142,7 +143,7 @@ void main() {
       );
 
       expect(
-        () => container.toValue<Uint8List>(Uint8List(0)),
+        () => MapperContainer.globals.toValue<Uint8List>(Uint8List(0)),
         throwsMapperException(MapperException.chain(
             MapperMethod.encode,
             '(Uint8List)',
@@ -150,7 +151,7 @@ void main() {
       );
 
       expect(
-        () => container.asString(Uint8List(0)),
+        () => MapperContainer.globals.asString(Uint8List(0)),
         throwsMapperException(MapperException.chain(
             MapperMethod.stringify,
             "(Instance of 'Uint8List')",
@@ -159,13 +160,13 @@ void main() {
       );
 
       expect(
-        () => container.isEqual(Uint8List(0), Uint8List(0)),
+        () => MapperContainer.globals.isEqual(Uint8List(0), Uint8List(0)),
         throwsMapperException(MapperException.chain(MapperMethod.equals, '[[]]',
             MapperException.unsupportedMethod(MapperMethod.equals, Uint8List))),
       );
 
       expect(
-        () => container.hash(Uint8List(0)),
+        () => MapperContainer.globals.hash(Uint8List(0)),
         throwsMapperException(MapperException.chain(MapperMethod.hash, '[[]]',
             MapperException.unsupportedMethod(MapperMethod.hash, Uint8List))),
       );

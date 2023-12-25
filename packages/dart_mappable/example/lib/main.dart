@@ -77,6 +77,6 @@ void main() {
   print(whatAmI.runtimeType); // Box<Confetti>
 
   // also works with lists and sets
-  List<int> numbers = MapperContainer().fromJson('[2, 4, 105]');
+  List<int> numbers = MapperContainer.globals.fromJson('[2, 4, 105]');
   print(numbers); // [2, 4, 105]
 }

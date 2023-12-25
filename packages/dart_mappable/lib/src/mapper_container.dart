@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
@@ -7,6 +9,12 @@ import 'package:type_plus/src/types_registry.dart' show TypeRegistry;
 import 'package:type_plus/type_plus.dart' hide typeOf;
 
 import '../dart_mappable.dart';
+
+const _containerIssueLink =
+    'https://github.com/schultek/dart_mappable/issues/159';
+const _containerDeprecationMessage =
+    'If you are using this check out the following issue for discussion: $_containerIssueLink. '
+    'May be removed in a future version.';
 
 /// Additional options to be passed to [MapperContainer.toValue].
 ///
@@ -75,6 +83,7 @@ class DecodingOptions {
 /// {@category Mapper Container}
 @sealed
 abstract class MapperContainer {
+  @Deprecated(_containerDeprecationMessage)
   factory MapperContainer({
     Set<MapperBase>? mappers,
     Set<MapperContainer>? linked,
@@ -85,6 +94,9 @@ abstract class MapperContainer {
   /// including all primitives, List, Set, Map and DateTime.
   ///
   /// All other container will automatically be linked to this container.
+  @Deprecated(
+      'Use `MapperContainer.globals` instead. See $_containerIssueLink. '
+      'May be removed in a future version.')
   static final MapperContainer defaults = _MapperContainerBase._({
     PrimitiveMapper<Object>((v) => v, dynamic),
     PrimitiveMapper<Object>((v) => v, Object),
@@ -170,9 +182,11 @@ abstract class MapperContainer {
   List<MapperBase> getAll();
 
   /// Links another container to this container.
+  @Deprecated(_containerDeprecationMessage)
   void link(MapperContainer container);
 
   /// Links a list of containers to this container.
+  @Deprecated(_containerDeprecationMessage)
   void linkAll(Iterable<MapperContainer> containers);
 }
 
