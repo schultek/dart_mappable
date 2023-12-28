@@ -1,3 +1,9 @@
+# 4.2.0
+
+- Added custom typedef for mapping fields to resolve naming conflict.
+- Deprecated creating and linking custom `MapperContainer`s. 
+  If you are affected by this see https://github.com/schultek/dart_mappable/issues/159.
+
 # 4.1.0
 
 - Added support for shallow encoding a class:
