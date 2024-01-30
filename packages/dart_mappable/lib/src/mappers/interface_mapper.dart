@@ -188,11 +188,11 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
       EncodingContext context) {
     bool shallow = context.options?.shallow ?? false;
     if (shallow) {
-    return {
-      for (var f in fields)
+      return {
+        for (var f in fields)
           if (!ignoreNull || f.get(value) != null) f.key: f.get(value),
-    };
-  }
+      };
+    }
     if (ignoreNull) {
       return {
         for (var f in fields)

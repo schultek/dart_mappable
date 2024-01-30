@@ -70,16 +70,16 @@ abstract class MapperBase<T extends Object> {
           args: () {
             Type type = V;
             if (includeTypeId ?? false) {
-        type = value.runtimeType;
-      }
+              type = value.runtimeType;
+            }
 
             var typeArgs =
                 type.args.map((t) => t == UnresolvedType ? dynamic : t);
 
-      var fallback = this.type.base.args;
-      if (typeArgs.length != fallback.length) {
-        typeArgs = fallback;
-      }
+            var fallback = this.type.base.args;
+            if (typeArgs.length != fallback.length) {
+              typeArgs = fallback;
+            }
             return typeArgs.toList();
           },
         ),
