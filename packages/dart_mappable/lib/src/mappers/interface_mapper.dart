@@ -196,7 +196,7 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
     if (ignoreNull) {
       return {
         for (var f in fields)
-          if (f.get(value) != null) f.key: f.get(value),
+          if (f.get(value) != null) f.key: f.encode(value, context),
       };
     }
     return {for (var f in fields) f.key: f.encode(value, context)};
