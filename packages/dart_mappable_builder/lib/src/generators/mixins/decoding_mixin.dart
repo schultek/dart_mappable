@@ -74,7 +74,7 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
     output.write('''
       @override
       DecodingContext inherit(DecodingContext context) {
-        return context.inherit(args: [${args.join(', ')}]);
+        return context.inherit(args: () => [${args.join(', ')}]);
       }
     ''');
   }

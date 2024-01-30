@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:type_plus/type_plus.dart';
 
 import 'annotations.dart';
@@ -81,25 +79,6 @@ extension TypeCheck<T> on T {
   }
 }
 
-class LazyList<T> with ListMixin<T> {
-  LazyList(this.create);
-
-  final Iterable<T> Function() create;
-
-  late final List<T> _list = create().toList();
-
-  @override
-  int get length => _list.length;
-  @override
-  set length(int newLength) => _list.length = newLength;
-
-  @override
-  T operator [](int index) => _list[index];
-
-  @override
-  void operator []=(int index, T value) => _list[index] = value;
-}
-
 extension MapperUtils<T extends Object> on MapperBase<T> {
   bool isValueEqual(T? value, Object? other, [MapperContainer? container]) {
     if (value == null) {
@@ -109,8 +88,9 @@ extension MapperUtils<T extends Object> on MapperBase<T> {
       if (!isFor(other)) return false;
       var context = MappingContext(
         container: container,
-        args: LazyList(() => value.runtimeType.args
-            .map((t) => t == UnresolvedType ? dynamic : t)),
+        args: () => value.runtimeType.args
+            .map((t) => t == UnresolvedType ? dynamic : t)
+            .toList(),
       );
       return equals(value, other as T, context);
     } catch (e, stacktrace) {
@@ -128,8 +108,9 @@ extension MapperUtils<T extends Object> on MapperBase<T> {
     try {
       var context = MappingContext(
         container: container,
-        args: LazyList(() => value.runtimeType.args
-            .map((t) => t == UnresolvedType ? dynamic : t)),
+        args: () => value.runtimeType.args
+            .map((t) => t == UnresolvedType ? dynamic : t)
+            .toList(),
       );
       return hash(value, context);
     } catch (e, stacktrace) {
@@ -147,8 +128,9 @@ extension MapperUtils<T extends Object> on MapperBase<T> {
     try {
       var context = MappingContext(
         container: container,
-        args: LazyList(() => value.runtimeType.args
-            .map((t) => t == UnresolvedType ? dynamic : t)),
+        args: () => value.runtimeType.args
+            .map((t) => t == UnresolvedType ? dynamic : t)
+            .toList(),
       );
       return stringify(value, context);
     } catch (e, stacktrace) {

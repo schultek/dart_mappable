@@ -177,9 +177,7 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
   }
 
   @protected
-  Object? encode(T value, EncodingContext context) {
-    return encodeFields(value, fields.values, ignoreNull, context);
-  }
+  Object? encode(T value, EncodingContext context);
 
   @protected
   @pragma('vm:prefer-inline')
@@ -189,11 +187,19 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
       bool ignoreNull,
       EncodingContext context) {
     bool shallow = context.options?.shallow ?? false;
+    if (shallow) {
     return {
       for (var f in fields)
-        if (f.getter != null && (!ignoreNull || f.get(value) != null))
-          f.key: shallow ? f.get(value) : f.encode(value, context),
+          if (!ignoreNull || f.get(value) != null) f.key: f.get(value),
     };
+  }
+    if (ignoreNull) {
+      return {
+        for (var f in fields)
+          if (f.get(value) != null) f.key: f.get(value),
+      };
+    }
+    return {for (var f in fields) f.key: f.encode(value, context)};
   }
 
   V decodeMap<V>(Map<String, dynamic> map) => decodeValue<V>(map);

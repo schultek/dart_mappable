@@ -44,7 +44,7 @@ abstract class MapperBase<T extends Object> {
         value,
         DecodingContext(
           container: container,
-          args: type.args,
+          args: () => type.args,
           options: options,
         ),
       ) as V;
@@ -59,28 +59,29 @@ abstract class MapperBase<T extends Object> {
   Object? encodeValue<V>(V value,
       [EncodingOptions? options, MapperContainer? container]) {
     try {
-      Type type = V;
-
       var includeTypeId = options?.includeTypeId;
       includeTypeId ??= this.includeTypeId<V>(value);
-
-      if (includeTypeId) {
-        type = value.runtimeType;
-      }
-
-      var typeArgs = type.args.map((t) => t == UnresolvedType ? dynamic : t);
-
-      var fallback = this.type.base.args;
-      if (typeArgs.length != fallback.length) {
-        typeArgs = fallback;
-      }
 
       var result = this.encoder(
         value as T,
         EncodingContext(
           container: container,
           options: options?.inheritOptions ?? false ? options : null,
-          args: typeArgs.toList(),
+          args: () {
+            Type type = V;
+            if (includeTypeId ?? false) {
+        type = value.runtimeType;
+      }
+
+            var typeArgs =
+                type.args.map((t) => t == UnresolvedType ? dynamic : t);
+
+      var fallback = this.type.base.args;
+      if (typeArgs.length != fallback.length) {
+        typeArgs = fallback;
+      }
+            return typeArgs.toList();
+          },
         ),
       );
 
