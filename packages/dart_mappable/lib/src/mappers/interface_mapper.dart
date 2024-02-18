@@ -71,7 +71,8 @@ class Field<T extends Object, V> {
     if (data != null) {
       options = options?.copyWith(data: data) ?? EncodingOptions(data: data);
     }
-    if (customMapper != null && customMapper!.isForType(T)) {
+    final v = get(value);
+    if (customMapper != null && customMapper!.isFor(v)) {
       try {
         if (hook != null) {
           value = hook!.beforeEncode(value) as T;
@@ -88,11 +89,11 @@ class Field<T extends Object, V> {
       }
     } else {
       if (arg == null) {
-        result = context.$enc<V>(get(value), name, options, hook);
+        result = context.$enc<V>(v, name, options, hook);
       } else {
         result = context.callWith(
           arg!,
-          <U>() => context.$enc<U>(get(value), name, options, hook),
+          <U>() => context.$enc<U>(v, name, options, hook),
         );
       }
     }
@@ -101,16 +102,16 @@ class Field<T extends Object, V> {
 
   R decode<R>(Map<String, dynamic> value, DecodingContext context) {
     DecodingOptions? options;
-    R? result;
     if (data != null) {
       options = DecodingOptions(data: data);
     }
-    if (customMapper != null && customMapper!.isForType(R)) {
+    var result = value[key];
+    if (customMapper != null && customMapper!.isFor(result)) {
       try {
         if (hook != null) {
-          value = hook!.beforeDecode(value) as Map<String, dynamic>;
+          result = hook!.beforeDecode(result) as Map<String, dynamic>;
         }
-        result = customMapper!.decoder(value[key] as Object, context) as R?;
+        result = customMapper!.decoder(result as Object, context) as R?;
         if (hook != null) {
           result = hook!.afterDecode(result) as R?;
         }
@@ -122,10 +123,10 @@ class Field<T extends Object, V> {
       }
     } else {
       result = opt || def != null
-          ? context.$dec<R?>(value[key], key, hook, options)
-          : context.$dec<R>(value[key], key, hook, options);
+          ? context.$dec<R?>(result, key, hook, options)
+          : context.$dec<R>(result, key, hook, options);
     }
-    return result ?? (def as R);
+    return result as R ?? (def as R);
   }
 }
 
