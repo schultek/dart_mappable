@@ -30,7 +30,24 @@ abstract class MapperFieldElement {
 
   String get arg;
 
+  Future<String> get customMapper;
+
   Future<String> get hook;
+}
+
+Future<String?> customMapperFor(Element? element) async {
+  if (element == null) return null;
+  if (fieldChecker.hasAnnotationOf(element)) {
+    final node = await getResolvedAnnotationNode(
+      element,
+      MappableField,
+      'customMapper',
+    );
+    if (node != null) {
+      return node.toSource();
+    }
+  }
+  return null;
 }
 
 Future<String?> hookFor(Element? element) async {

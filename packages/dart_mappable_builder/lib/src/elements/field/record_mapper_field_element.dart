@@ -79,4 +79,10 @@ class RecordMapperFieldElement extends MapperFieldElement {
     var hook = await param.getHook();
     return hook != null ? ', hook: $hook' : '';
   }();
+
+  @override
+  late final Future<String> customMapper = () async {
+    var customMapper = await param.getCustomMapper();
+    return customMapper != null ? ', customMapper: $customMapper' : '';
+  }();
 }

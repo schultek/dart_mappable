@@ -79,7 +79,7 @@ extension TypeCheck<T> on T {
   }
 }
 
-extension MapperUtils<T extends Object> on MapperBase<T> {
+extension MapperUtils<T> on MapperBase<T> {
   bool isValueEqual(T? value, Object? other, [MapperContainer? container]) {
     if (value == null) {
       return other == null;

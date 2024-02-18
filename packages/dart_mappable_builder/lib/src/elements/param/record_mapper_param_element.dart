@@ -20,6 +20,15 @@ class RecordMapperParamElement extends MapperParamElement {
 
   bool get isGeneric => typeArg != null;
 
+  Future<String?> getCustomMapper() async {
+    final node = getAnnotationProperty(
+      param,
+      MappableField,
+      'customMapper',
+    );
+    return node?.toSource();
+  }
+
   @override
   Future<String?> getHook() async {
     var node = getAnnotationProperty(param, MappableField, 'hook');

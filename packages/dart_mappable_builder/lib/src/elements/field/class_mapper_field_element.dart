@@ -131,6 +131,13 @@ class ClassMapperFieldElement extends MapperFieldElement {
         (await hookFor(field?.getter));
     return hook != null ? ', hook: $hook' : '';
   }();
+
+  @override
+  late final Future<String> customMapper = () async {
+    final customMapper =
+        (await customMapperFor(field) ?? await customMapperFor(field?.getter));
+    return customMapper != null ? ', customMapper: $customMapper' : '';
+  }();
 }
 
 String? _keyFor(Element? element) {

@@ -14,7 +14,9 @@ dependencies:
   ansicolor: ^2.0.1
   build: ^2.0.0
   collection: ^1.15.0
-  dart_mappable: ^4.2.0
+  # dart_mappable: ^4.2.1
+  dart_mappable:
+    path: ../dart_mappable
   dart_style: ^2.2.4
   glob: ^2.1.0
   path: ^1.8.0

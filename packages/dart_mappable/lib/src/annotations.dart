@@ -122,20 +122,25 @@ class MappableConstructor {
   const MappableConstructor();
 }
 
-/// Used to annotate a parameter or field to overwrite the mapped key.
+/// Used to annotate a parameter or field to overwrite the mapped key or the
+/// mapper used for that field.
 ///
 /// {@category Models}
 /// {@category Records}
 /// {@category Configuration}
 /// {@category Mapping Hooks}
+/// {@category Custom Mappers}
 class MappableField {
-  const MappableField({this.key, this.hook});
+  const MappableField({this.key, this.hook, this.customMapper});
 
   /// Use this key instead of the field name.
   final String? key;
 
   /// Define custom hooks used only for this field.
   final MappingHook? hook;
+
+  /// Specify a custom mapper that should be used for this field.
+  final MapperBase? customMapper;
 }
 
 /// Used to annotate a record in order to generate mapping code.

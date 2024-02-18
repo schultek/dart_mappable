@@ -167,10 +167,10 @@ abstract class MapperContainer {
   String asString(dynamic value);
 
   /// Adds a new mapper to the set of mappers this container holds.
-  void use<T extends Object>(MapperBase<T> mapper);
+  void use<T>(MapperBase<T> mapper);
 
   /// Removes the mapper for type [T] this container currently holds.
-  MapperBase<T>? unuse<T extends Object>();
+  MapperBase<T>? unuse<T>();
 
   /// Adds a list of mappers to the set of mappers this container holds.
   void useAll(Iterable<MapperBase> mappers);
@@ -494,10 +494,10 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   @override
-  void use<T extends Object>(MapperBase<T> mapper) => useAll([mapper]);
+  void use<T>(MapperBase<T> mapper) => useAll([mapper]);
 
   @override
-  MapperBase<T>? unuse<T extends Object>() {
+  MapperBase<T>? unuse<T>() {
     var mapper = _mappers.remove(T.base) as MapperBase<T>?;
     _invalidateCachedMappers();
     return mapper;

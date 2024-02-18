@@ -10,7 +10,7 @@ import 'mapping_context.dart';
 /// It defaults to throwing unsupported exceptions for all methods.
 ///
 /// {@category Custom Mappers}
-abstract class MapperBase<T extends Object> {
+abstract class MapperBase<T> {
   const MapperBase();
 
   /// A unique id for this type, defaults to the name of the type.

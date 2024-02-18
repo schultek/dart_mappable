@@ -43,6 +43,9 @@ class Field<T extends Object, V> {
   /// The optional mapping hook for this field.
   final MappingHook? hook;
 
+  /// The optional mapping hook for this field.
+  final MapperBase<V>? customMapper;
+
   final Object? data;
 
   const Field(
@@ -54,6 +57,7 @@ class Field<T extends Object, V> {
     this.opt = false,
     this.def,
     this.hook,
+    this.customMapper,
     this.data,
   }) : key = key ?? name;
 
@@ -62,28 +66,65 @@ class Field<T extends Object, V> {
   }
 
   dynamic encode(T value, EncodingContext context) {
+    dynamic result;
     var options = context.options;
     if (data != null) {
       options = options?.copyWith(data: data) ?? EncodingOptions(data: data);
     }
-    if (arg == null) {
-      return context.$enc<V>(get(value), name, options, hook);
+    if (customMapper != null && customMapper!.isForType(T)) {
+      try {
+        if (hook != null) {
+          value = hook!.beforeEncode(value) as T;
+        }
+        result = customMapper!.encoder(get(value) as V, context);
+        if (hook != null) {
+          result = hook!.afterEncode(result);
+        }
+      } catch (e, stacktrace) {
+        Error.throwWithStackTrace(
+          MapperException.chain(MapperMethod.encode, '.$key', e),
+          stacktrace,
+        );
+      }
     } else {
-      return context.callWith(
-        arg!,
-        <U>() => context.$enc<U>(get(value), name, options, hook),
-      );
+      if (arg == null) {
+        result = context.$enc<V>(get(value), name, options, hook);
+      } else {
+        result = context.callWith(
+          arg!,
+          <U>() => context.$enc<U>(get(value), name, options, hook),
+        );
+      }
     }
+    return result;
   }
 
   R decode<R>(Map<String, dynamic> value, DecodingContext context) {
     DecodingOptions? options;
+    R? result;
     if (data != null) {
       options = DecodingOptions(data: data);
     }
-    var result = opt || def != null
-        ? context.$dec<R?>(value[key], key, hook, options)
-        : context.$dec<R>(value[key], key, hook, options);
+    if (customMapper != null && customMapper!.isForType(R)) {
+      try {
+        if (hook != null) {
+          value = hook!.beforeDecode(value) as Map<String, dynamic>;
+        }
+        result = customMapper!.decoder(value[key] as Object, context) as R?;
+        if (hook != null) {
+          result = hook!.afterDecode(result) as R?;
+        }
+      } catch (e, stacktrace) {
+        Error.throwWithStackTrace(
+          MapperException.chain(MapperMethod.encode, '.$key', e),
+          stacktrace,
+        );
+      }
+    } else {
+      result = opt || def != null
+          ? context.$dec<R?>(value[key], key, hook, options)
+          : context.$dec<R>(value[key], key, hook, options);
+    }
     return result ?? (def as R);
   }
 }

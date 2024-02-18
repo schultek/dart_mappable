@@ -16,7 +16,7 @@ extension FieldsExtension<T extends InterfaceMapperElement>
             '  static dynamic _arg\$${f.name}${element.typeParamsDeclaration}(f) => f<${f.argType}>();\n');
       }
       output.write(
-          "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.name} = Field('${f.name.replaceAll(r'$', r'\$')}', ${f.getter}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook});\n");
+          "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.name} = Field('${f.name.replaceAll(r'$', r'\$')}', ${f.getter}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook}${await f.customMapper});\n");
     }
 
     output.write(
