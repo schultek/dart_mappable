@@ -34,8 +34,7 @@ It is **recommended** that you adapt any code that previously used the `toJson()
 --- 
 
 Because we recognize that this might be tedious for a larger codebase, we provide a faster migration path by allowing
-a configuration override to change the naming of the generated methods to the `json_serializable` way. This however
-is **not recommended** as a permanent solution, but meant as a temporary workaround to ease the migration path. 
+a configuration override to change the naming of the generated methods to the `json_serializable` way.
 
 To change the naming of the generated methods, add the following to the `build.yaml` file in your project root:
 
@@ -51,7 +50,6 @@ global_options:
 ```
 
 This generates `Map<String, dynamic> toJson()` instead of `Map<String, dynamic> toMap()` and changes other methods accordingly.
-Again this feature is **not recommended** as a permanent solution and might be removed in a future version.
 
 #### Add compatibility for classes using `json_serializable`
 
