@@ -42,6 +42,7 @@ To change the naming of the generated methods, add the following to the `build.y
 global_options:
   dart_mappable_builder:
     options:
+      # ... other dart_mappable options
       renameMethods:
         fromJson: fromJsonString
         toJson: toJsonString
@@ -50,6 +51,26 @@ global_options:
 ```
 
 This generates `Map<String, dynamic> toJson()` instead of `Map<String, dynamic> toMap()` and changes other methods accordingly.
+
+#### Add compatibility for packages requiring `json_serializable`
+
+By now there are a number of packages on pub.dev that expect the `json_serializable`s version of the `toJson()` method
+when dealing with data classes, for example packages like `retrofit` or `chopper`.
+
+To make your data classes using `dart_mappable` work well with these packages, you need to use the same 
+`renameMethods` config as shown above. Additionally, you need to make sure that the `dart_mappable` code generator runs
+before the other code generators of these packages. To do that, adjust your `build.yaml` to the following:
+
+```yaml
+global_options:
+  dart_mappable_builder:
+    runs_before:
+      # list the generator packages you depend on, e.g.
+      - retrofit_generator
+      - chopper_generator
+    options:
+      # ... other dart_mappable options, including 'renameMethods'
+```
 
 #### Add compatibility for classes using `json_serializable`
 
