@@ -1,3 +1,7 @@
+# 4.2.1
+
+- Performance improvements.
+
 # 4.2.0
 
 - Added custom typedef for mapping fields to resolve naming conflict.
