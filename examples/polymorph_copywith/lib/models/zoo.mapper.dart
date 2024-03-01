@@ -29,7 +29,7 @@ class ZooMapper extends ClassMapperBase<Zoo> {
       Field('animals', _$animals, arg: _arg$animals);
 
   @override
-  final Map<Symbol, Field<Zoo, dynamic>> fields = const {
+  final MappableFields<Zoo> fields = const {
     #animals: _f$animals,
   };
 

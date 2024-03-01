@@ -25,7 +25,7 @@ class AMapper extends ClassMapperBase<A> {
   static const Field<A, IList<B>> _f$list = Field('list', _$list);
 
   @override
-  final Map<Symbol, Field<A, dynamic>> fields = const {
+  final MappableFields<A> fields = const {
     #list: _f$list,
   };
 
@@ -120,7 +120,7 @@ class BMapper extends ClassMapperBase<B> {
   static const Field<B, String> _f$str = Field('str', _$str);
 
   @override
-  final Map<Symbol, Field<B, dynamic>> fields = const {
+  final MappableFields<B> fields = const {
     #str: _f$str,
   };
 

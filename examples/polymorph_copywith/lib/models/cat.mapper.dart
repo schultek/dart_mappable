@@ -80,7 +80,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   static const Field<Cat, String> _f$color = Field('color', _$color);
 
   @override
-  final Map<Symbol, Field<Cat, dynamic>> fields = const {
+  final MappableFields<Cat> fields = const {
     #name: _f$name,
     #breed: _f$breed,
     #color: _f$color,

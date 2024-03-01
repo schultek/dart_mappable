@@ -24,7 +24,7 @@ class PersonMapper extends ClassMapperBase<Person> {
   static const Field<Person, String> _f$name = Field('name', _$name);
 
   @override
-  final Map<Symbol, Field<Person, dynamic>> fields = const {
+  final MappableFields<Person> fields = const {
     #name: _f$name,
   };
 

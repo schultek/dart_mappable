@@ -24,7 +24,7 @@ class UnionMapper extends ClassMapperBase<Union> {
   final String id = 'Union';
 
   @override
-  final Map<Symbol, Field<Union, dynamic>> fields = const {};
+  final MappableFields<Union> fields = const {};
 
   static Union _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
@@ -79,7 +79,7 @@ class DataMapper extends SubClassMapperBase<Data> {
       Field('value', _$value, key: 'mykey');
 
   @override
-  final Map<Symbol, Field<Data, dynamic>> fields = const {
+  final MappableFields<Data> fields = const {
     #value: _f$value,
   };
 
@@ -135,7 +135,7 @@ class LoadingMapper extends SubClassMapperBase<Loading> {
   static const Field<Loading, int> _f$value = Field('value', _$value);
 
   @override
-  final Map<Symbol, Field<Loading, dynamic>> fields = const {
+  final MappableFields<Loading> fields = const {
     #value: _f$value,
   };
 
@@ -194,7 +194,7 @@ class ErrorDetailsMapper extends SubClassMapperBase<ErrorDetails> {
       Field('message', _$message, opt: true);
 
   @override
-  final Map<Symbol, Field<ErrorDetails, dynamic>> fields = const {
+  final MappableFields<ErrorDetails> fields = const {
     #value: _f$value,
     #message: _f$message,
   };

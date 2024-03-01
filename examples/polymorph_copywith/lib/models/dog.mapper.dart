@@ -30,7 +30,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   static const Field<Dog, Person> _f$owner = Field('owner', _$owner);
 
   @override
-  final Map<Symbol, Field<Dog, dynamic>> fields = const {
+  final MappableFields<Dog> fields = const {
     #name: _f$name,
     #age: _f$age,
     #owner: _f$owner,

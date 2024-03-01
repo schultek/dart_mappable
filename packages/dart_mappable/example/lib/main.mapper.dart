@@ -80,7 +80,7 @@ class PersonMapper extends ClassMapperBase<Person> {
   static const Field<Person, Car> _f$car = Field('car', _$car, opt: true);
 
   @override
-  final Map<Symbol, Field<Person, dynamic>> fields = const {
+  final MappableFields<Person> fields = const {
     #name: _f$name,
     #age: _f$age,
     #car: _f$car,
@@ -191,7 +191,7 @@ class CarMapper extends ClassMapperBase<Car> {
   static const Field<Car, Brand> _f$brand = Field('brand', _$brand);
 
   @override
-  final Map<Symbol, Field<Car, dynamic>> fields = const {
+  final MappableFields<Car> fields = const {
     #miles: _f$miles,
     #brand: _f$brand,
   };
@@ -294,7 +294,7 @@ class BoxMapper extends ClassMapperBase<Box> {
       Field('content', _$content, arg: _arg$content);
 
   @override
-  final Map<Symbol, Field<Box, dynamic>> fields = const {
+  final MappableFields<Box> fields = const {
     #size: _f$size,
     #content: _f$content,
   };
@@ -391,7 +391,7 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
   static const Field<Confetti, String> _f$color = Field('color', _$color);
 
   @override
-  final Map<Symbol, Field<Confetti, dynamic>> fields = const {
+  final MappableFields<Confetti> fields = const {
     #color: _f$color,
   };
 

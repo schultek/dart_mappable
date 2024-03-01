@@ -26,7 +26,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   static const Field<Animal, String> _f$name = Field('name', _$name);
 
   @override
-  final Map<Symbol, Field<Animal, dynamic>> fields = const {
+  final MappableFields<Animal> fields = const {
     #name: _f$name,
   };
 
