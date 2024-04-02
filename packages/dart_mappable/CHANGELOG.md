@@ -1,3 +1,9 @@
+# 4.2.2
+
+- Added `CaseStyle.upperSnakeCase`.
+- Fixed issues with adding unnecessary '__type' property for nullable generics. 
+- Improved serialization consistency and equality handling.
+
 # 4.2.1
 
 - Performance improvements.
