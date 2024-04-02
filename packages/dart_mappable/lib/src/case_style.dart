@@ -89,6 +89,10 @@ class CaseStyle {
 
   /// Transforms to 'FIELDNAME'
   static const upperCase = CaseStyle(tail: TextTransform.upperCase);
+
+  /// Transforms to 'FIELD_NAME'
+  static const upperSnakeCase =
+      CaseStyle(tail: TextTransform.upperCase, separator: '_');
 }
 
 extension CaseStyleTransform on CaseStyle? {
