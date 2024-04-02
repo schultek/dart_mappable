@@ -70,9 +70,7 @@ mixin BoxMappable<T extends Content> {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            BoxMapper.ensureInitialized().isValueEqual(this as Box<T>, other));
+    return BoxMapper.ensureInitialized().equalsValue(this as Box<T>, other);
   }
 
   @override
@@ -176,10 +174,8 @@ mixin ContentMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ContentMapper.ensureInitialized()
-                .isValueEqual(this as Content, other));
+    return ContentMapper.ensureInitialized()
+        .equalsValue(this as Content, other);
   }
 
   @override

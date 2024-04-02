@@ -66,10 +66,7 @@ mixin BoxCMappable<T> {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            BoxCMapper.ensureInitialized()
-                .isValueEqual(this as BoxC<T>, other));
+    return BoxCMapper.ensureInitialized().equalsValue(this as BoxC<T>, other);
   }
 
   @override
@@ -166,10 +163,8 @@ mixin ContentCMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ContentCMapper.ensureInitialized()
-                .isValueEqual(this as ContentC, other));
+    return ContentCMapper.ensureInitialized()
+        .equalsValue(this as ContentC, other);
   }
 
   @override

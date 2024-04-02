@@ -121,10 +121,7 @@ mixin PersonMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PersonMapper.ensureInitialized()
-                .isValueEqual(this as Person, other));
+    return PersonMapper.ensureInitialized().equalsValue(this as Person, other);
   }
 
   @override
@@ -230,9 +227,7 @@ mixin CarMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            CarMapper.ensureInitialized().isValueEqual(this as Car, other));
+    return CarMapper.ensureInitialized().equalsValue(this as Car, other);
   }
 
   @override
@@ -333,9 +328,7 @@ mixin BoxMappable<T> {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            BoxMapper.ensureInitialized().isValueEqual(this as Box<T>, other));
+    return BoxMapper.ensureInitialized().equalsValue(this as Box<T>, other);
   }
 
   @override
@@ -431,10 +424,8 @@ mixin ConfettiMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ConfettiMapper.ensureInitialized()
-                .isValueEqual(this as Confetti, other));
+    return ConfettiMapper.ensureInitialized()
+        .equalsValue(this as Confetti, other);
   }
 
   @override

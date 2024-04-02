@@ -12,10 +12,7 @@ mixin EqualsMixin on MapperGenerator<TargetClassMapperElement> {
     return '''
       @override
       bool operator ==(Object other) {
-        return identical(this, other) || (
-          runtimeType == other.runtimeType && 
-          ${element.mapperName}.ensureInitialized().isValueEqual(this as ${element.selfTypeParam}, other)
-        );
+        return ${element.mapperName}.ensureInitialized().equalsValue(this as ${element.selfTypeParam}, other);
       }
       
       @override

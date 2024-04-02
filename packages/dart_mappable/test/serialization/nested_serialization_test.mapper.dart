@@ -121,10 +121,7 @@ mixin PersonMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PersonMapper.ensureInitialized()
-                .isValueEqual(this as Person, other));
+    return PersonMapper.ensureInitialized().equalsValue(this as Person, other);
   }
 
   @override
@@ -234,9 +231,7 @@ mixin CarMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            CarMapper.ensureInitialized().isValueEqual(this as Car, other));
+    return CarMapper.ensureInitialized().equalsValue(this as Car, other);
   }
 
   @override

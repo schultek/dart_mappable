@@ -1,6 +1,5 @@
 import '../mapper_container.dart';
 import 'mapper_base.dart';
-import 'mapper_mixins.dart';
 import 'mapping_context.dart';
 
 /// An interface to define a custom mapper.
@@ -74,8 +73,7 @@ abstract class SimpleMapper2<T extends Object> extends _SimpleMapperBase<T> {
   }
 }
 
-abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T>
-    with PrimitiveMethodsMixin<T> {
+abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T> {
   const _SimpleMapperBase();
 
   static MapperContainer? _container;
@@ -107,4 +105,13 @@ abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T>
       _container = null;
     }
   }
+
+  @override
+  bool equals(value, other, MappingContext context) => value == other;
+
+  @override
+  int hash(T value, MappingContext context) => value.hashCode;
+
+  @override
+  String stringify(T value, MappingContext context) => value.toString();
 }

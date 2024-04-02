@@ -114,10 +114,7 @@ mixin ClassAMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ClassAMapper.ensureInitialized()
-                .isValueEqual(this as ClassA, other));
+    return ClassAMapper.ensureInitialized().equalsValue(this as ClassA, other);
   }
 
   @override

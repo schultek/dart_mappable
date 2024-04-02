@@ -71,10 +71,8 @@ mixin TestObjMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TestObjMapper.ensureInitialized()
-                .isValueEqual(this as TestObj, other));
+    return TestObjMapper.ensureInitialized()
+        .equalsValue(this as TestObj, other);
   }
 
   @override

@@ -67,9 +67,7 @@ mixin ZooMappable<T extends Animal> {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ZooMapper.ensureInitialized().isValueEqual(this as Zoo<T>, other));
+    return ZooMapper.ensureInitialized().equalsValue(this as Zoo<T>, other);
   }
 
   @override

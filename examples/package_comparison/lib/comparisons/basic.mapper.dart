@@ -64,10 +64,8 @@ mixin PersonCMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PersonCMapper.ensureInitialized()
-                .isValueEqual(this as PersonC, other));
+    return PersonCMapper.ensureInitialized()
+        .equalsValue(this as PersonC, other);
   }
 
   @override

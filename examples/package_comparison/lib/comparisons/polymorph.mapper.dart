@@ -126,9 +126,7 @@ mixin CatBMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            CatBMapper.ensureInitialized().isValueEqual(this as CatB, other));
+    return CatBMapper.ensureInitialized().equalsValue(this as CatB, other);
   }
 
   @override
@@ -234,9 +232,7 @@ mixin DogBMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DogBMapper.ensureInitialized().isValueEqual(this as DogB, other));
+    return DogBMapper.ensureInitialized().equalsValue(this as DogB, other);
   }
 
   @override

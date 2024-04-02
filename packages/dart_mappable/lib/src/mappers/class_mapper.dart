@@ -224,6 +224,9 @@ abstract class ClassMapperBase<T extends Object>
 
   @override
   bool equals(T value, T other, MappingContext context) {
+    if (value.runtimeType.base != other.runtimeType.base) {
+      return false;
+    }
     return _members.every((f) {
       return context.container.isEqual(f.get(value), f.get(other));
     });

@@ -70,10 +70,8 @@ mixin PersonBMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PersonBMapper.ensureInitialized()
-                .isValueEqual(this as PersonB, other));
+    return PersonBMapper.ensureInitialized()
+        .equalsValue(this as PersonB, other);
   }
 
   @override
