@@ -4,7 +4,7 @@
 // ignore_for_file: unused_element, unnecessary_cast
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
-part of 'equality_test.dart';
+part of 'collection_equality_test.dart';
 
 class SetWrapperMapper extends ClassMapperBase<SetWrapper> {
   SetWrapperMapper._();
@@ -66,10 +66,8 @@ mixin SetWrapperMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SetWrapperMapper.ensureInitialized()
-                .isValueEqual(this as SetWrapper, other));
+    return SetWrapperMapper.ensureInitialized()
+        .equalsValue(this as SetWrapper, other);
   }
 
   @override
@@ -171,10 +169,8 @@ mixin ListWrapperMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ListWrapperMapper.ensureInitialized()
-                .isValueEqual(this as ListWrapper, other));
+    return ListWrapperMapper.ensureInitialized()
+        .equalsValue(this as ListWrapper, other);
   }
 
   @override
@@ -281,10 +277,8 @@ mixin MapWrapperMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            MapWrapperMapper.ensureInitialized()
-                .isValueEqual(this as MapWrapper, other));
+    return MapWrapperMapper.ensureInitialized()
+        .equalsValue(this as MapWrapper, other);
   }
 
   @override

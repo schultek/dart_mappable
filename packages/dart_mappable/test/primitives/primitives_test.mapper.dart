@@ -67,9 +67,7 @@ mixin ItemsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ItemsMapper.ensureInitialized().isValueEqual(this as Items, other));
+    return ItemsMapper.ensureInitialized().equalsValue(this as Items, other);
   }
 
   @override
@@ -176,9 +174,7 @@ mixin ItemMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ItemMapper.ensureInitialized().isValueEqual(this as Item, other));
+    return ItemMapper.ensureInitialized().equalsValue(this as Item, other);
   }
 
   @override

@@ -8,11 +8,19 @@ import 'mapping_context.dart';
 /// of [operator ==], [hashCode] and [toString].
 mixin PrimitiveMethodsMixin<T extends Object> implements MapperBase<T> {
   @override
-  bool equals(T value, T other, MappingContext context) => value == other;
+  bool equals(value, other, MappingContext context) => value == other;
+  @override
+  bool equalsValue(value, Object? other, [MapperContainer? container]) =>
+      value == other;
   @override
   int hash(T value, MappingContext context) => value.hashCode;
   @override
+  int hashValue(value, [MapperContainer? container]) => value.hashCode;
+  @override
   String stringify(T value, MappingContext context) => value.toString();
+  @override
+  String stringifyValue(value, [MapperContainer? container]) =>
+      value.toString();
 }
 
 /// Overrides for mapper methods using a collection [Equality].

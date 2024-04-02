@@ -74,10 +74,8 @@ mixin ShepherdMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ShepherdMapper.ensureInitialized()
-                .isValueEqual(this as Shepherd, other));
+    return ShepherdMapper.ensureInitialized()
+        .equalsValue(this as Shepherd, other);
   }
 
   @override
@@ -186,9 +184,7 @@ mixin DogMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DogMapper.ensureInitialized().isValueEqual(this as Dog, other));
+    return DogMapper.ensureInitialized().equalsValue(this as Dog, other);
   }
 
   @override
@@ -412,10 +408,8 @@ mixin SiameseMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SiameseMapper.ensureInitialized()
-                .isValueEqual(this as Siamese, other));
+    return SiameseMapper.ensureInitialized()
+        .equalsValue(this as Siamese, other);
   }
 
   @override
@@ -512,9 +506,7 @@ mixin HumanMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            HumanMapper.ensureInitialized().isValueEqual(this as Human, other));
+    return HumanMapper.ensureInitialized().equalsValue(this as Human, other);
   }
 
   @override

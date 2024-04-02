@@ -68,9 +68,7 @@ mixin GameMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            GameMapper.ensureInitialized().isValueEqual(this as Game, other));
+    return GameMapper.ensureInitialized().equalsValue(this as Game, other);
   }
 
   @override
@@ -167,10 +165,7 @@ mixin PlayerMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PlayerMapper.ensureInitialized()
-                .isValueEqual(this as Player, other));
+    return PlayerMapper.ensureInitialized().equalsValue(this as Player, other);
   }
 
   @override
@@ -274,10 +269,8 @@ mixin CardGameMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            CardGameMapper.ensureInitialized()
-                .isValueEqual(this as CardGame, other));
+    return CardGameMapper.ensureInitialized()
+        .equalsValue(this as CardGame, other);
   }
 
   @override

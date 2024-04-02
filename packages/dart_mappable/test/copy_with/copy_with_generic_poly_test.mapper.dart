@@ -67,9 +67,7 @@ mixin AMappable<T extends C> {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AMapper.ensureInitialized().isValueEqual(this as A<T>, other));
+    return AMapper.ensureInitialized().equalsValue(this as A<T>, other);
   }
 
   @override
@@ -220,9 +218,7 @@ mixin BMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            BMapper.ensureInitialized().isValueEqual(this as B, other));
+    return BMapper.ensureInitialized().equalsValue(this as B, other);
   }
 
   @override
@@ -322,9 +318,7 @@ mixin DMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DMapper.ensureInitialized().isValueEqual(this as D, other));
+    return DMapper.ensureInitialized().equalsValue(this as D, other);
   }
 
   @override

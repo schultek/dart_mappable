@@ -66,10 +66,7 @@ mixin PersonMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PersonMapper.ensureInitialized()
-                .isValueEqual(this as Person, other));
+    return PersonMapper.ensureInitialized().equalsValue(this as Person, other);
   }
 
   @override
@@ -171,9 +168,7 @@ mixin CarMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            CarMapper.ensureInitialized().isValueEqual(this as Car, other));
+    return CarMapper.ensureInitialized().equalsValue(this as Car, other);
   }
 
   @override
@@ -271,9 +266,7 @@ mixin BrandMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            BrandMapper.ensureInitialized().isValueEqual(this as Brand, other));
+    return BrandMapper.ensureInitialized().equalsValue(this as Brand, other);
   }
 
   @override
@@ -376,10 +369,8 @@ mixin DealershipMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DealershipMapper.ensureInitialized()
-                .isValueEqual(this as Dealership, other));
+    return DealershipMapper.ensureInitialized()
+        .equalsValue(this as Dealership, other);
   }
 
   @override
@@ -569,10 +560,8 @@ mixin BrandListMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            BrandListMapper.ensureInitialized()
-                .isValueEqual(this as BrandList, other));
+    return BrandListMapper.ensureInitialized()
+        .equalsValue(this as BrandList, other);
   }
 
   @override
@@ -695,10 +684,8 @@ mixin NamedItemListMappable<T> {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            NamedItemListMapper.ensureInitialized()
-                .isValueEqual(this as NamedItemList<T>, other));
+    return NamedItemListMapper.ensureInitialized()
+        .equalsValue(this as NamedItemList<T>, other);
   }
 
   @override
@@ -833,10 +820,8 @@ mixin KeyedItemListMappable<K, T> {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            KeyedItemListMapper.ensureInitialized()
-                .isValueEqual(this as KeyedItemList<K, T>, other));
+    return KeyedItemListMapper.ensureInitialized()
+        .equalsValue(this as KeyedItemList<K, T>, other);
   }
 
   @override
@@ -967,10 +952,8 @@ mixin ComparableItemListMappable<T extends Comparable<dynamic>> {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ComparableItemListMapper.ensureInitialized()
-                .isValueEqual(this as ComparableItemList<T>, other));
+    return ComparableItemListMapper.ensureInitialized()
+        .equalsValue(this as ComparableItemList<T>, other);
   }
 
   @override

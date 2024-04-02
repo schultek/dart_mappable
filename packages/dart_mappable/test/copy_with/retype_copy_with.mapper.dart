@@ -67,9 +67,7 @@ mixin AMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AMapper.ensureInitialized().isValueEqual(this as A, other));
+    return AMapper.ensureInitialized().equalsValue(this as A, other);
   }
 
   @override
@@ -170,9 +168,7 @@ mixin VMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            VMapper.ensureInitialized().isValueEqual(this as V, other));
+    return VMapper.ensureInitialized().equalsValue(this as V, other);
   }
 
   @override
@@ -271,9 +267,7 @@ mixin BMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            BMapper.ensureInitialized().isValueEqual(this as B, other));
+    return BMapper.ensureInitialized().equalsValue(this as B, other);
   }
 
   @override
@@ -379,9 +373,7 @@ mixin WMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            WMapper.ensureInitialized().isValueEqual(this as W, other));
+    return WMapper.ensureInitialized().equalsValue(this as W, other);
   }
 
   @override

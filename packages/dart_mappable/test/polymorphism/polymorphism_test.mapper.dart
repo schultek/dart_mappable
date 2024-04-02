@@ -128,9 +128,7 @@ mixin CatMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            CatMapper.ensureInitialized().isValueEqual(this as Cat, other));
+    return CatMapper.ensureInitialized().equalsValue(this as Cat, other);
   }
 
   @override
@@ -237,9 +235,7 @@ mixin DogMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DogMapper.ensureInitialized().isValueEqual(this as Dog, other));
+    return DogMapper.ensureInitialized().equalsValue(this as Dog, other);
   }
 
   @override
@@ -344,10 +340,8 @@ mixin NullAnimalMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            NullAnimalMapper.ensureInitialized()
-                .isValueEqual(this as NullAnimal, other));
+    return NullAnimalMapper.ensureInitialized()
+        .equalsValue(this as NullAnimal, other);
   }
 
   @override
@@ -461,10 +455,8 @@ mixin DefaultAnimalMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DefaultAnimalMapper.ensureInitialized()
-                .isValueEqual(this as DefaultAnimal, other));
+    return DefaultAnimalMapper.ensureInitialized()
+        .equalsValue(this as DefaultAnimal, other);
   }
 
   @override
@@ -576,9 +568,7 @@ mixin ZooMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ZooMapper.ensureInitialized().isValueEqual(this as Zoo, other));
+    return ZooMapper.ensureInitialized().equalsValue(this as Zoo, other);
   }
 
   @override

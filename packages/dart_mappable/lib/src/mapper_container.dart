@@ -429,7 +429,7 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     }
     var mapper = _mapperFor(value);
     if (mapper != null) {
-      return mapper.isValueEqual(value, other, this);
+      return mapper.equalsValue(value, other, this);
     } else {
       return value == other;
     }

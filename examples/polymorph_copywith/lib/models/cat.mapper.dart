@@ -127,9 +127,7 @@ mixin CatMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            CatMapper.ensureInitialized().isValueEqual(this as Cat, other));
+    return CatMapper.ensureInitialized().equalsValue(this as Cat, other);
   }
 
   @override

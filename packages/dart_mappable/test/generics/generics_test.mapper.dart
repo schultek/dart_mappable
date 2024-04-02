@@ -70,9 +70,7 @@ mixin BoxMappable<T extends Content> {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            BoxMapper.ensureInitialized().isValueEqual(this as Box<T>, other));
+    return BoxMapper.ensureInitialized().equalsValue(this as Box<T>, other);
   }
 
   @override
@@ -174,10 +172,8 @@ mixin ContentMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ContentMapper.ensureInitialized()
-                .isValueEqual(this as Content, other));
+    return ContentMapper.ensureInitialized()
+        .equalsValue(this as Content, other);
   }
 
   @override
@@ -274,10 +270,8 @@ mixin ConfettiMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ConfettiMapper.ensureInitialized()
-                .isValueEqual(this as Confetti, other));
+    return ConfettiMapper.ensureInitialized()
+        .equalsValue(this as Confetti, other);
   }
 
   @override
@@ -375,9 +369,7 @@ mixin DataMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DataMapper.ensureInitialized().isValueEqual(this as Data, other));
+    return DataMapper.ensureInitialized().equalsValue(this as Data, other);
   }
 
   @override
@@ -478,10 +470,8 @@ mixin SingleSettingMappable<T> {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SingleSettingMapper.ensureInitialized()
-                .isValueEqual(this as SingleSetting<T>, other));
+    return SingleSettingMapper.ensureInitialized()
+        .equalsValue(this as SingleSetting<T>, other);
   }
 
   @override
@@ -597,10 +587,8 @@ mixin SettingsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SettingsMapper.ensureInitialized()
-                .isValueEqual(this as Settings, other));
+    return SettingsMapper.ensureInitialized()
+        .equalsValue(this as Settings, other);
   }
 
   @override
@@ -719,10 +707,7 @@ mixin AssetMappable<T> {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AssetMapper.ensureInitialized()
-                .isValueEqual(this as Asset<T>, other));
+    return AssetMapper.ensureInitialized().equalsValue(this as Asset<T>, other);
   }
 
   @override

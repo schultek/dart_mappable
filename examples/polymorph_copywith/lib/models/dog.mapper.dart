@@ -77,9 +77,7 @@ mixin DogMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DogMapper.ensureInitialized().isValueEqual(this as Dog, other));
+    return DogMapper.ensureInitialized().equalsValue(this as Dog, other);
   }
 
   @override

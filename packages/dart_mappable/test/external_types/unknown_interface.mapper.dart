@@ -115,10 +115,8 @@ mixin DSOpacityDataMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DSOpacityDataMapper.ensureInitialized()
-                .isValueEqual(this as DSOpacityData, other));
+    return DSOpacityDataMapper.ensureInitialized()
+        .equalsValue(this as DSOpacityData, other);
   }
 
   @override
