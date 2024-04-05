@@ -101,7 +101,7 @@ class MappableBuilder implements Builder {
         '// coverage:ignore-file\n'
         '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
         '// ignore_for_file: type=lint\n'
-        '// ignore_for_file: unused_element, unnecessary_cast\n'
+        '// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member\n'
         '// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter\n\n'
         'part of \'$libraryPath\';\n\n'
         '${output.join('\n\n')}\n' //,

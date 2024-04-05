@@ -115,6 +115,8 @@ void initializeMappers() {
   p17.DataMapper.ensureInitialized();
   p17.SingleSettingMapper.ensureInitialized();
   p17.SettingsMapper.ensureInitialized();
+  p17.AMapper.ensureInitialized();
+  p17.BMapper.ensureInitialized();
   p17.AssetMapper.ensureInitialized();
   p18.GameMapper.ensureInitialized();
   p18.CardGameMapper.ensureInitialized();

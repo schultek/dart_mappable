@@ -46,6 +46,18 @@ class Settings with SettingsMappable {
   });
 }
 
+@MappableClass()
+class A<T> with AMappable<T> {
+  final T value;
+
+  A(this.value);
+}
+
+@MappableClass()
+class B extends A<List<String>> with BMappable {
+  B(super.value);
+}
+
 class MapHooksAfter extends MappingHook {
   const MapHooksAfter();
 

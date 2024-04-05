@@ -1,3 +1,7 @@
+# 4.2.3
+
+- Added lint ignores for 'override_on_non_overriding_member'.
+
 # 4.2.2
 
 - Fixed issues with adding unnecessary '__type' property for nullable generics.
@@ -25,7 +29,7 @@
 # 4.0.1
 
 - Added support for generic typed parameters for deep copyWith.
-- Added lint ignores for 'unnecessary_cast', 'strict_raw_type' and 'inference_failure_on_untyped_parameter'
+- Added lint ignores for 'unnecessary_cast', 'strict_raw_type' and 'inference_failure_on_untyped_parameter'.
 
 # 4.0.0
 
