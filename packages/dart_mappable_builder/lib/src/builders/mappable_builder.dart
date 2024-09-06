@@ -96,7 +96,8 @@ class MappableBuilder implements Builder {
     final outputId = buildStep.allowedOutputs.first;
 
     var libraryPath = p.posix
-        .relative(buildStep.inputId.path, from: p.dirname(outputId.path));
+        .relative(buildStep.inputId.path, from: p.dirname(outputId.path))
+        .replaceAll('\\', '/');
     var source = DartFormatter(pageWidth: options.lineLength ?? 80).format(
         '// coverage:ignore-file\n'
         '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
