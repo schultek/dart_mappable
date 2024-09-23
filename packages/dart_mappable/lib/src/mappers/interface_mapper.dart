@@ -114,6 +114,9 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
   /// Whether to ignore null values when encoding the fields of this interface.
   bool get ignoreNull => false;
 
+  /// Whether to ignore values when encoding the fields of this interface.
+  Iterable<String> get ignore => [];
+
   /// The optional mapping hook defined for this interface.
   MappingHook? get hook => null;
 
@@ -185,21 +188,35 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
       T value,
       Iterable<Field<T, dynamic>> fields,
       bool ignoreNull,
+      Iterable<String> ignore,
       EncodingContext context) {
     bool shallow = context.options?.shallow ?? false;
+
+    // Helper to determine if a field should be ignored
+    bool shouldIncludeField(Field<T, dynamic> f) {
+      return !ignore.contains(f.key);
+    }
+
     if (shallow) {
       return {
         for (var f in fields)
-          if (!ignoreNull || f.get(value) != null) f.key: f.get(value),
+          if (shouldIncludeField(f) && (!ignoreNull || f.get(value) != null))
+            f.key: f.get(value),
       };
     }
+
     if (ignoreNull) {
       return {
         for (var f in fields)
-          if (f.get(value) != null) f.key: f.encode(value, context),
+          if (shouldIncludeField(f) && f.get(value) != null)
+            f.key: f.encode(value, context),
       };
     }
-    return {for (var f in fields) f.key: f.encode(value, context)};
+
+    return {
+      for (var f in fields)
+        if (shouldIncludeField(f)) f.key: f.encode(value, context),
+    };
   }
 
   V decodeMap<V>(Map<String, dynamic> map) => decodeValue<V>(map);

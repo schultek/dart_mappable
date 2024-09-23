@@ -13,6 +13,7 @@ class MappableClass extends MappableInterface {
   const MappableClass({
     super.caseStyle,
     super.ignoreNull,
+    this.ignore,
     super.uniqueId,
     this.discriminatorKey,
     this.discriminatorValue,
@@ -43,6 +44,9 @@ class MappableClass extends MappableInterface {
 
   /// To be used with [discriminatorValue] to signal a default subclass.
   static const useAsDefault = MappingFlags.useAsDefault;
+
+  /// Property keys to exclude from `toMap` and `toJson`.
+  final Iterable<String>? ignore;
 }
 
 /// Collection of flags used for annotations.
