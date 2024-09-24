@@ -12,6 +12,7 @@ class MappableOptions {
   final CaseStyle? caseStyle;
   final CaseStyle? enumCaseStyle;
   final bool? ignoreNull;
+  final Iterable<String>? ignore;
   final String? discriminatorKey;
   final int? generateMethods;
   final InitializerScope? initializerScope;
@@ -23,6 +24,7 @@ class MappableOptions {
     this.caseStyle,
     this.enumCaseStyle,
     this.ignoreNull,
+    this.ignore,
     this.discriminatorKey,
     this.generateMethods,
     this.initializerScope,
@@ -36,6 +38,7 @@ class MappableOptions {
         enumCaseStyle =
             CaseStyle.fromString(options['enumCaseStyle'] as String?),
         ignoreNull = options['ignoreNull'] as bool?,
+        ignore = options['ignore'] as Iterable<String>?,
         discriminatorKey = options['discriminatorKey'] as String?,
         generateMethods =
             parseGenerateMethods(toList(options['generateMethods'])),
@@ -53,6 +56,7 @@ class MappableOptions {
       caseStyle: options.caseStyle ?? caseStyle,
       enumCaseStyle: options.enumCaseStyle ?? enumCaseStyle,
       ignoreNull: options.ignoreNull ?? ignoreNull,
+      ignore: options.ignore ?? ignore,
       discriminatorKey: options.discriminatorKey ?? discriminatorKey,
       generateMethods: options.generateMethods ?? generateMethods,
       initializerScope: options.initializerScope ?? initializerScope,
@@ -66,6 +70,7 @@ class MappableOptions {
       caseStyle: caseStyleFromAnnotation(object.read('caseStyle')),
       enumCaseStyle: caseStyleFromAnnotation(object.read('enumCaseStyle')),
       ignoreNull: object.read('ignoreNull')?.toBoolValue(),
+      ignore: object.read('ignore')?.toStringList(),
       discriminatorKey: object.read('discriminatorKey')?.toStringValue(),
       generateMethods: object.read('generateMethods')?.toIntValue(),
       initializerScope: initScope?.isNull ?? true
