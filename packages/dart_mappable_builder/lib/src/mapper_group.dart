@@ -238,10 +238,14 @@ class MapperElementGroup {
   String prefixedType(DartType t,
       {bool withNullability = true, bool resolveBounds = false}) {
     if (t is TypeParameterType) {
+      var type = t.element.name;
       if (resolveBounds) {
-        return prefixedType(t.bound, resolveBounds: resolveBounds);
+        type = prefixedType(t.bound, resolveBounds: resolveBounds);
       }
-      return t.element.name;
+      if (withNullability && t.isNullable) {
+        type += '?';
+      }
+      return type;
     }
 
     if (t is InterfaceType) {

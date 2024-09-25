@@ -945,3 +945,116 @@ class _AssetCopyWithImpl<$R, $Out, T>
           Then<$Out2, $R2> t) =>
       _AssetCopyWithImpl($value, $cast, t);
 }
+
+class NullableGenericsMapper extends ClassMapperBase<NullableGenerics> {
+  NullableGenericsMapper._();
+
+  static NullableGenericsMapper? _instance;
+  static NullableGenericsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperBase.addType<Object>();
+      MapperContainer.globals.use(_instance = NullableGenericsMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'NullableGenerics';
+  @override
+  Function get typeFactory => <T extends Object>(f) => f<NullableGenerics<T>>();
+
+  static Object? _$value(NullableGenerics v) => v.value;
+  static dynamic _arg$value<T extends Object>(f) => f<T>();
+  static const Field<NullableGenerics, Object> _f$value =
+      Field('value', _$value, arg: _arg$value);
+
+  @override
+  final MappableFields<NullableGenerics> fields = const {
+    #value: _f$value,
+  };
+
+  static NullableGenerics<T> _instantiate<T extends Object>(DecodingData data) {
+    return NullableGenerics(value: data.dec(_f$value));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static NullableGenerics<T> fromMap<T extends Object>(
+      Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<NullableGenerics<T>>(map);
+  }
+
+  static NullableGenerics<T> fromJson<T extends Object>(String json) {
+    return ensureInitialized().decodeJson<NullableGenerics<T>>(json);
+  }
+}
+
+mixin NullableGenericsMappable<T extends Object> {
+  String toJson() {
+    return NullableGenericsMapper.ensureInitialized()
+        .encodeJson<NullableGenerics<T>>(this as NullableGenerics<T>);
+  }
+
+  Map<String, dynamic> toMap() {
+    return NullableGenericsMapper.ensureInitialized()
+        .encodeMap<NullableGenerics<T>>(this as NullableGenerics<T>);
+  }
+
+  NullableGenericsCopyWith<NullableGenerics<T>, NullableGenerics<T>,
+          NullableGenerics<T>, T>
+      get copyWith => _NullableGenericsCopyWithImpl(
+          this as NullableGenerics<T>, $identity, $identity);
+  @override
+  String toString() {
+    return NullableGenericsMapper.ensureInitialized()
+        .stringifyValue(this as NullableGenerics<T>);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return NullableGenericsMapper.ensureInitialized()
+        .equalsValue(this as NullableGenerics<T>, other);
+  }
+
+  @override
+  int get hashCode {
+    return NullableGenericsMapper.ensureInitialized()
+        .hashValue(this as NullableGenerics<T>);
+  }
+}
+
+extension NullableGenericsValueCopy<$R, $Out, T extends Object>
+    on ObjectCopyWith<$R, NullableGenerics<T>, $Out> {
+  NullableGenericsCopyWith<$R, NullableGenerics<T>, $Out, T>
+      get $asNullableGenerics =>
+          $base.as((v, t, t2) => _NullableGenericsCopyWithImpl(v, t, t2));
+}
+
+abstract class NullableGenericsCopyWith<$R, $In extends NullableGenerics<T>,
+    $Out, T extends Object> implements ClassCopyWith<$R, $In, $Out> {
+  $R call({T? value});
+  NullableGenericsCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _NullableGenericsCopyWithImpl<$R, $Out, T extends Object>
+    extends ClassCopyWithBase<$R, NullableGenerics<T>, $Out>
+    implements NullableGenericsCopyWith<$R, NullableGenerics<T>, $Out, T> {
+  _NullableGenericsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<NullableGenerics> $mapper =
+      NullableGenericsMapper.ensureInitialized();
+  @override
+  $R call({Object? value = $none}) =>
+      $apply(FieldCopyWithData({if (value != $none) #value: value}));
+  @override
+  NullableGenerics<T> $make(CopyWithData data) =>
+      NullableGenerics(value: data.get(#value, or: $value.value));
+
+  @override
+  NullableGenericsCopyWith<$R2, NullableGenerics<T>, $Out2, T>
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _NullableGenericsCopyWithImpl($value, $cast, t);
+}

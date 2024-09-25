@@ -86,6 +86,13 @@ class Asset<T> with AssetMappable {
   final T data;
 }
 
+@MappableClass()
+class NullableGenerics<T extends Object> with NullableGenericsMappable<T> {
+  final T? value;
+
+  const NullableGenerics({required this.value});
+}
+
 void main() {
   group('Generic classes', () {
     test('Should encode generic objects', () {
@@ -184,6 +191,18 @@ void main() {
         () => AssetMapper.fromJson<String>('{"data": null}'),
         throwsMapperException(MapperException.chain(MapperMethod.decode,
             '(Asset<String>).data', MapperException.missingParameter('data'))),
+      );
+    });
+
+    test('Nullable generic value', () {
+      expect(
+        NullableGenericsMapper.fromJson<String>('{"value": "Hello"}').value,
+        equals('Hello'),
+      );
+
+      expect(
+        NullableGenericsMapper.fromJson<String>('{"value": null}').value,
+        isNull,
       );
     });
   });
