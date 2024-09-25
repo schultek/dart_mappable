@@ -27,50 +27,90 @@ abstract class SimpleMapper<T extends Object> extends _SimpleMapperBase<T> {
   }
 }
 
-/// An interface to define custom mappers for generic types with 1 argument.
+/// An interface to define custom mappers for generic types with one bounded argument.
 ///
 /// {@category Custom Mappers}
-abstract class SimpleMapper1<T extends Object> extends _SimpleMapperBase<T> {
-  const SimpleMapper1();
+abstract class SimpleMapper1Bounded<T extends Object, B1>
+    extends _SimpleMapperBase<T> {
+  const SimpleMapper1Bounded();
 
-  /// Override as `MyClass<A> decode<A>(Object value)`
-  T decode<A>(Object value);
+  /// Override as `MyClass<A> decode<A extends ...>(Object value)`
+  T decode<A extends B1>(Object value);
 
-  /// Override as `Object encode<A>(MyClass<A> self)`
-  Object? encode<A>(covariant T self);
+  /// Override as `Object? encode<A extends ...>(MyClass<A> self)`
+  Object? encode<A extends B1>(covariant T self);
 
   @override
   T _decode(Object value, DecodingContext context) {
-    return context.callWith1(decode, value);
+    assert(context.args.length == 1);
+    return context.callWith(decode, value);
   }
 
   @override
   Object? _encode(T value, EncodingContext context) {
-    return context.callWith1(encode, value);
+    assert(context.args.length == 1);
+    return context.callWith(encode, value);
   }
 }
 
-/// An interface to define custom mappers for generic types with 2 arguments.
+/// An interface to define custom mappers for generic types with one argument.
+///
+/// For generic types with one bounded type argument extend the [SimpleMapper1Bounded]
+/// interface instead.
 ///
 /// {@category Custom Mappers}
-abstract class SimpleMapper2<T extends Object> extends _SimpleMapperBase<T> {
-  const SimpleMapper2();
+abstract class SimpleMapper1<T extends Object>
+    extends SimpleMapper1Bounded<T, dynamic> {
+  /// Override as `MyClass<A> decode<A>(Object value)`
+  @override
+  T decode<A>(Object value);
 
-  /// Override as `MyClass<A, B> decode<A, B>(Object value)`
-  T decode<A, B>(Object value);
+  /// Override as `Object? encode<A>(MyClass<A> self)`
+  @override
+  Object? encode<A>(covariant T self);
+}
+
+/// An interface to define custom mappers for generic types with two bounded arguments.
+///
+/// {@category Custom Mappers}
+abstract class SimpleMapper2Bounded<T extends Object, B1, B2>
+    extends _SimpleMapperBase<T> {
+  const SimpleMapper2Bounded();
+
+  /// Override as `MyClass<A, B> decode<A extends ..., B extends ...>(Object value)`
+  T decode<A extends B1, B extends B2>(Object value);
 
   /// Override as `Object? encode<A, B>(MyClass<A, B> self)`
-  Object? encode<A, B>(covariant T self);
+  Object? encode<A extends B1, B extends B2>(covariant T self);
 
   @override
   T _decode(Object value, DecodingContext context) {
-    return context.callWith2(decode, value);
+    assert(context.args.length == 2);
+    return context.callWith(decode, value);
   }
 
   @override
   Object? _encode(T value, EncodingContext context) {
-    return context.callWith2(encode, value);
+    assert(context.args.length == 2);
+    return context.callWith(encode, value);
   }
+}
+
+/// An interface to define custom mappers for generic types with two arguments.
+///
+/// For generic types with two bounded type arguments extend the [SimpleMapper2Bounded]
+/// interface instead.
+///
+/// {@category Custom Mappers}
+abstract class SimpleMapper2<T extends Object>
+    extends SimpleMapper2Bounded<T, dynamic, dynamic> {
+  /// Override as `MyClass<A, B> decode<A, B>(Object value)`
+  @override
+  T decode<A, B>(Object value);
+
+  /// Override as `Object? encode<A, B>(MyClass<A, B> self)`
+  @override
+  Object? encode<A, B>(covariant T self);
 }
 
 abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T> {

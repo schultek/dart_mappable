@@ -84,15 +84,15 @@ class CustomBoxMapper extends SimpleMapper1<GenericBox> {
   // use the type parameter [T] in the return type [GenericBox<T>]
   GenericBox<T> decode<T>(dynamic value) { 
     // use the type parameter [T] in your decoding logic
-    T content = MapperContainer.globals.fromValue<T>(value);
-    return GenericBox<T>(content); 
+    T content = container.fromValue<T>(value);
+    return GenericBox<T>(container.fromValue<T>(value)); 
   }
 
   @override
   // use the type parameter [T] in the parameter type [GenericBox<T>]
   dynamic encode<T>(GenericBox<T> self) {
     // use the type parameter [T] in your encoding logic
-    return MapperContainer.globals.toValue<T>(self.content); 
+    return container.toValue<T>(self.content); 
   }
 
   // In case of generic types, we also must specify a type factory. This is a special type of 
@@ -100,6 +100,34 @@ class CustomBoxMapper extends SimpleMapper1<GenericBox> {
   // Specify any type arguments in alignment to the decode/encode functions.
   @override
   Function get typeFactory => <T>(f) => f<GenericBox<T>>();
+}
+```
+
+If your generic class has one or two bounded type parameters (e.g. `class NumberBox<T extends num>`) use the `SimpleMapper1Bounded`
+and `SimpleMapper2Bounded` variants:
+
+```dart
+class NumberBox<T extends num> {
+  NumberBox(this.content);
+
+  final T content;
+}
+
+class NumberBoxMapper extends SimpleMapper1Bounded<NumberBox, num> {
+  const NumberBoxMapper();
+
+  @override
+  NumberBox<A> decode<A extends num>(Object value) {
+    return NumberBox<A>(container.fromValue<A>(value));
+  }
+
+  @override
+  Object? encode<A extends num>(NumberBox<A> self) {
+    return container.toValue(self.content);
+  }
+
+  @override
+  Function get typeFactory => <T extends num>(f) => f<NumberBox<T>>();
 }
 ```
 

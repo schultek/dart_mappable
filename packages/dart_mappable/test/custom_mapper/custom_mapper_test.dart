@@ -90,6 +90,29 @@ class BigIntMapper extends PrimitiveMapper<BigInt> {
 
 class EmptyMapper extends MapperBase<Uint8List> {}
 
+class NumberBox<T extends num> {
+  NumberBox(this.content);
+
+  final T content;
+}
+
+class NumberBoxMapper extends SimpleMapper1Bounded<NumberBox, num> {
+  const NumberBoxMapper();
+
+  @override
+  Function get typeFactory => <T extends num>(f) => f<NumberBox<T>>();
+
+  @override
+  NumberBox<A> decode<A extends num>(Object value) {
+    return NumberBox<A>(container.fromValue<A>(value));
+  }
+
+  @override
+  Object? encode<A extends num>(NumberBox<A> self) {
+    return container.toValue(self.content);
+  }
+}
+
 void main() {
   group('Custom Mappers', () {
     test('Simple Custom Mapper', () {
@@ -113,6 +136,16 @@ void main() {
 
       var json = MapperContainer.globals.toJson(box);
       expect(json, equals('2'));
+    });
+
+    test('Bounded generic custom Mapper', () {
+      MapperContainer.globals.use(NumberBoxMapper());
+
+      NumberBox<double> box = MapperContainer.globals.fromValue('2.3');
+      expect(box.content, equals(2.3));
+
+      var json = MapperContainer.globals.toJson(box);
+      expect(json, equals('2.3'));
     });
 
     test('Custom Uri Mapper', () {
