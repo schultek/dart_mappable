@@ -190,8 +190,12 @@ abstract class MappableInterface {
   /// using the `|` operator.
   final int? generateMethods;
 
-  /// Specify additional custom mappers that should be included for fields
+  /// Specify additional custom mappers that should be used for fields
   /// of this class.
+  ///
+  /// This does not scope the mappers to this class only. All mappers are always
+  /// registered globally and available to all classes. This only makes sure
+  /// that the needed mappers are registered before they are needed for this class.
   final Iterable<MapperBase>? includeCustomMappers;
 }
 

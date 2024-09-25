@@ -49,7 +49,9 @@ class Domain {
 }
 ```
 
-Alternatively you can add this to the `MapperContainer.globals` to be globally available to all other mappers.
+This will **globally** register the custom mapper when the class is initialized and is afterwards available for all models.
+
+Alternatively you can manually add this to the `MapperContainer.globals`:
 
 ```dart
 void main() {
