@@ -1058,3 +1058,115 @@ class _NullableGenericsCopyWithImpl<$R, $Out, T extends Object>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
           _NullableGenericsCopyWithImpl($value, $cast, t);
 }
+
+class FunctionContainerMapper extends ClassMapperBase<FunctionContainer> {
+  FunctionContainerMapper._();
+
+  static FunctionContainerMapper? _instance;
+  static FunctionContainerMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = FunctionContainerMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'FunctionContainer';
+  @override
+  Function get typeFactory => <T>(f) => f<FunctionContainer<T>>();
+
+  static Function _$genericFunction(FunctionContainer v) =>
+      (v as dynamic).genericFunction as Function;
+  static dynamic _arg$genericFunction<T>(f) => f<String Function(T)>();
+  static const Field<FunctionContainer, Function> _f$genericFunction =
+      Field('genericFunction', _$genericFunction, arg: _arg$genericFunction);
+
+  @override
+  final MappableFields<FunctionContainer> fields = const {
+    #genericFunction: _f$genericFunction,
+  };
+
+  static FunctionContainer<T> _instantiate<T>(DecodingData data) {
+    return FunctionContainer(data.dec(_f$genericFunction));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static FunctionContainer<T> fromMap<T>(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<FunctionContainer<T>>(map);
+  }
+
+  static FunctionContainer<T> fromJson<T>(String json) {
+    return ensureInitialized().decodeJson<FunctionContainer<T>>(json);
+  }
+}
+
+mixin FunctionContainerMappable<T> {
+  String toJson() {
+    return FunctionContainerMapper.ensureInitialized()
+        .encodeJson<FunctionContainer<T>>(this as FunctionContainer<T>);
+  }
+
+  Map<String, dynamic> toMap() {
+    return FunctionContainerMapper.ensureInitialized()
+        .encodeMap<FunctionContainer<T>>(this as FunctionContainer<T>);
+  }
+
+  FunctionContainerCopyWith<FunctionContainer<T>, FunctionContainer<T>,
+          FunctionContainer<T>, T>
+      get copyWith => _FunctionContainerCopyWithImpl(
+          this as FunctionContainer<T>, $identity, $identity);
+  @override
+  String toString() {
+    return FunctionContainerMapper.ensureInitialized()
+        .stringifyValue(this as FunctionContainer<T>);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return FunctionContainerMapper.ensureInitialized()
+        .equalsValue(this as FunctionContainer<T>, other);
+  }
+
+  @override
+  int get hashCode {
+    return FunctionContainerMapper.ensureInitialized()
+        .hashValue(this as FunctionContainer<T>);
+  }
+}
+
+extension FunctionContainerValueCopy<$R, $Out, T>
+    on ObjectCopyWith<$R, FunctionContainer<T>, $Out> {
+  FunctionContainerCopyWith<$R, FunctionContainer<T>, $Out, T>
+      get $asFunctionContainer =>
+          $base.as((v, t, t2) => _FunctionContainerCopyWithImpl(v, t, t2));
+}
+
+abstract class FunctionContainerCopyWith<$R, $In extends FunctionContainer<T>,
+    $Out, T> implements ClassCopyWith<$R, $In, $Out> {
+  $R call({String Function(T)? genericFunction});
+  FunctionContainerCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _FunctionContainerCopyWithImpl<$R, $Out, T>
+    extends ClassCopyWithBase<$R, FunctionContainer<T>, $Out>
+    implements FunctionContainerCopyWith<$R, FunctionContainer<T>, $Out, T> {
+  _FunctionContainerCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<FunctionContainer> $mapper =
+      FunctionContainerMapper.ensureInitialized();
+  @override
+  $R call({String Function(T)? genericFunction}) => $apply(FieldCopyWithData(
+      {if (genericFunction != null) #genericFunction: genericFunction}));
+  @override
+  FunctionContainer<T> $make(CopyWithData data) =>
+      FunctionContainer(data.get(#genericFunction, or: $value.genericFunction));
+
+  @override
+  FunctionContainerCopyWith<$R2, FunctionContainer<T>, $Out2, T>
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _FunctionContainerCopyWithImpl($value, $cast, t);
+}

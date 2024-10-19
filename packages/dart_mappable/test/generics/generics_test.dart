@@ -93,6 +93,13 @@ class NullableGenerics<T extends Object> with NullableGenericsMappable<T> {
   const NullableGenerics({required this.value});
 }
 
+@MappableClass()
+class FunctionContainer<T> with FunctionContainerMappable<T> {
+  String Function(T) genericFunction;
+
+  FunctionContainer(this.genericFunction);
+}
+
 void main() {
   group('Generic classes', () {
     test('Should encode generic objects', () {
@@ -203,6 +210,13 @@ void main() {
       expect(
         NullableGenericsMapper.fromJson<String>('{"value": null}').value,
         isNull,
+      );
+    });
+
+    test('Should generate generic function field', () {
+      expect(
+        FunctionContainer<int>((int a) => a.toString()).toString(),
+        equals('FunctionContainer(genericFunction: Closure: (int) => String)'),
       );
     });
   });

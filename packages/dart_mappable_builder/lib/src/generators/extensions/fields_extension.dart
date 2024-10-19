@@ -9,7 +9,12 @@ extension FieldsExtension<T extends InterfaceMapperElement>
     for (var f in fields) {
       if (f.needsGetter) {
         output.write(
-            '  static ${f.staticGetterType} _\$${f.name}(${element.prefixedClassName} v) => v.${f.name};\n');
+            '  static ${f.staticGetterType} _\$${f.name}(${element.prefixedClassName} v) => ');
+        if (f.staticGetterType == 'Function') {
+          output.write('(v as dynamic).${f.name} as Function;\n');
+        } else {
+          output.write('v.${f.name};\n');
+        }
       }
       if (f.needsArg) {
         output.write(

@@ -67,4 +67,10 @@ class IsGenericTypeVisitor extends UnifyingTypeVisitor<bool> {
     return type.positionalFields.any((f) => f.type.accept(this)) ||
         type.namedFields.any((f) => f.type.accept(this));
   }
+
+  @override
+  bool visitFunctionType(FunctionType type) {
+    return type.returnType.accept(this) ||
+        type.parameters.any((p) => p.type.accept(this));
+  }
 }

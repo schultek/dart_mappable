@@ -311,6 +311,37 @@ class MapperElementGroup {
       return type;
     }
 
+    if (t is FunctionType) {
+      var returnType = prefixedType(t.returnType, resolveBounds: resolveBounds);
+
+      var typeArgs = '';
+      if (t.typeFormals.isNotEmpty) {
+        typeArgs =
+            '<${t.typeFormals.map((t) => t.name + (t.bound != null ? ' extends ${prefixedType(t.bound!, resolveBounds: resolveBounds)}' : '')).join(', ')}>';
+      }
+
+      var args = t.normalParameterTypes
+          .map((t) => prefixedType(t, resolveBounds: resolveBounds))
+          .join(', ');
+      if (t.optionalParameterTypes.isNotEmpty) {
+        if (args.isNotEmpty) args += ', ';
+        args +=
+            '[${t.optionalParameterTypes.map((t) => prefixedType(t, resolveBounds: resolveBounds)).join(', ')}]';
+      }
+      if (t.namedParameterTypes.isNotEmpty) {
+        if (args.isNotEmpty) args += ', ';
+        args +=
+            '{${t.namedParameterTypes.entries.map((e) => '${e.key}: ${prefixedType(e.value, resolveBounds: resolveBounds)}').join(', ')}}';
+      }
+
+      var type = '$returnType Function$typeArgs($args)';
+      if (withNullability && t.isNullable) {
+        type += '?';
+      }
+
+      return type;
+    }
+
     return t.getDisplayString(withNullability: withNullability);
   }
 

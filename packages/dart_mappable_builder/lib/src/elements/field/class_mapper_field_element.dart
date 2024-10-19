@@ -49,6 +49,9 @@ class ClassMapperFieldElement extends MapperFieldElement {
 
   @override
   late final String staticGetterType = () {
+    if (resolvedType is FunctionType) {
+      return 'Function';
+    }
     return parent.parent.prefixedType(resolvedType, resolveBounds: true);
   }();
 
@@ -59,6 +62,9 @@ class ClassMapperFieldElement extends MapperFieldElement {
 
   @override
   late final String staticArgType = () {
+    if (resolvedType is FunctionType) {
+      return 'Function';
+    }
     return parent.parent.prefixedType(param?.type ?? resolvedType,
         withNullability: false, resolveBounds: true);
   }();

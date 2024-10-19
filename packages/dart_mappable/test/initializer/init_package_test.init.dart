@@ -122,6 +122,7 @@ void initializeMappers() {
   p18.BMapper.ensureInitialized();
   p18.AssetMapper.ensureInitialized();
   p18.NullableGenericsMapper.ensureInitialized();
+  p18.FunctionContainerMapper.ensureInitialized();
   p19.GameMapper.ensureInitialized();
   p19.CardGameMapper.ensureInitialized();
   p19.PlayerMapper.ensureInitialized();

@@ -61,6 +61,8 @@ abstract class SimpleMapper1Bounded<T extends Object, B1>
 /// {@category Custom Mappers}
 abstract class SimpleMapper1<T extends Object>
     extends SimpleMapper1Bounded<T, dynamic> {
+  const SimpleMapper1();
+
   /// Override as `MyClass<A> decode<A>(Object value)`
   @override
   T decode<A>(Object value);
@@ -104,6 +106,8 @@ abstract class SimpleMapper2Bounded<T extends Object, B1, B2>
 /// {@category Custom Mappers}
 abstract class SimpleMapper2<T extends Object>
     extends SimpleMapper2Bounded<T, dynamic, dynamic> {
+  const SimpleMapper2();
+
   /// Override as `MyClass<A, B> decode<A, B>(Object value)`
   @override
   T decode<A, B>(Object value);
