@@ -1,3 +1,10 @@
+# 4.3.0
+
+- Added support for reusing annotations as constant variables.
+- Fixed generation for generic functions.
+- Fixed bug with nullable generic field.
+- Fixed bug with import path on windows.
+
 # 4.2.3
 
 - Added lint ignores for 'override_on_non_overriding_member'.

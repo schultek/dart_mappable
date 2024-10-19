@@ -1,3 +1,11 @@
+# 4.3.0
+
+- Added support for reusing annotations as constant variables.
+- Added `SimpleMapper1Bounded` and `SimpleMapper2Bounded` for custom bounded generic types.
+- Fixed generation for generic functions.
+- Fixed bug with nullable generic field.
+- Fixed bug with import path on windows.
+
 # 4.2.2
 
 - Added `CaseStyle.upperSnakeCase`.
