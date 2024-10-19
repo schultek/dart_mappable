@@ -14,20 +14,24 @@ import 'field/mapper_field_element.dart';
 class MapperAnnotation {
   const MapperAnnotation.empty(this.element)
       : node = null,
-        annotation = null,
+        arguments = null,
         value = null;
-  const MapperAnnotation(this.element, this.node, this.annotation, this.value);
+  const MapperAnnotation(this.element, this.node, this.arguments, this.value);
 
   final Element element;
   final AstNode? node;
-  final Annotation? annotation;
+  final ArgumentList? arguments;
   final DartObject? value;
 
   static Future<MapperAnnotation> from<T>(Element element) async {
     var node = await element.getResolvedNode();
-    var annotation = getAnnotation(node, T);
+    var arguments = await getAnnotationArguments(node, T);
     var value = TypeChecker.fromRuntime(T).firstAnnotationOf(element);
-    return MapperAnnotation(element, node, annotation, value);
+    return MapperAnnotation(element, node, arguments, value);
+  }
+
+  AstNode? getPropertyNode(dynamic /* String | int */ property) {
+    return arguments?.getArgument(property);
   }
 }
 

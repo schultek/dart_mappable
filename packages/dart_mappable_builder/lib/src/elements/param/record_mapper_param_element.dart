@@ -22,7 +22,7 @@ class RecordMapperParamElement extends MapperParamElement {
 
   @override
   Future<String?> getHook() async {
-    var node = getAnnotationProperty(param, MappableField, 'hook');
+    var node = await getAnnotationProperty(param, MappableField, 'hook');
     return node?.toSource();
   }
 

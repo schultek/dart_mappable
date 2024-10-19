@@ -72,7 +72,7 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
   late final String? hookForClass = () {
     var hook = annotation.value?.read('hook');
     if (hook != null && !hook.isNull) {
-      var node = annotation.annotation?.getPropertyNode('hook');
+      var node = annotation.getPropertyNode('hook');
       if (node != null) {
         return node.toSource();
       }

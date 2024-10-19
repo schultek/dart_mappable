@@ -12,7 +12,7 @@ import 'record_mapper_element.dart';
 
 class RecordMapperAnnotation extends MapperAnnotation {
   RecordMapperAnnotation(super.element, RecordTypeAnnotation super.node,
-      super.annotation, super.value);
+      super.arguments, super.value);
 
   @override
   RecordTypeAnnotation get node => super.node as RecordTypeAnnotation;
@@ -25,11 +25,11 @@ class RecordMapperAnnotation extends MapperAnnotation {
         .where((d) => d.name.lexeme == element.name)
         .first;
 
-    var annotation = getAnnotation(node, MappableRecord);
+    var arguments = await getAnnotationArguments(node, MappableRecord);
     var value =
         TypeChecker.fromRuntime(MappableRecord).firstAnnotationOf(element);
     return RecordMapperAnnotation(
-        element, node.type as RecordTypeAnnotation, annotation, value);
+        element, node.type as RecordTypeAnnotation, arguments, value);
   }
 }
 

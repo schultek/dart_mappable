@@ -4,7 +4,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../builder_options.dart';
 import '../../mapper_group.dart';
-import '../../utils.dart';
 import '../constructor/constructor_mapper_element.dart';
 import '../mapper_element.dart';
 import 'class_mapper_element.dart';
@@ -27,9 +26,8 @@ class TargetClassMapperElement extends ClassMapperElement
 
   late final String prefixedDecodingClassName = prefixedClassName;
 
-  late final String? customMappers = annotation.annotation
-      ?.getPropertyNode('includeCustomMappers')
-      ?.toSource();
+  late final String? customMappers =
+      annotation.getPropertyNode('includeCustomMappers')?.toSource();
 
   late final List<String> customTypes = () {
     var types = <String>[];

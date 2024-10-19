@@ -32,7 +32,8 @@ extension GetNode on Element {
   }
 }
 
-Annotation? getAnnotation(AstNode? node, Type annotationType) {
+Future<ArgumentList?> getAnnotationArguments(
+    AstNode? node, Type annotationType) async {
   if (node == null) {
     return null;
   }
@@ -57,14 +58,38 @@ Annotation? getAnnotation(AstNode? node, Type annotationType) {
     return null;
   }
 
-  var type = annotationType.toString();
-  return annotations.where((a) => a.name.name == type).firstOrNull;
+  var checker = TypeChecker.fromRuntime(annotationType);
+  var annotation = annotations.where((a) {
+    var type = a.elementAnnotation?.computeConstantValue()?.type;
+    return type != null && checker.isAssignableFromType(type);
+  }).firstOrNull;
+  var arguments = annotation?.arguments;
+  if (arguments != null) {
+    return arguments;
+  } else {
+    return getArgumentsFromElement(annotation?.element);
+  }
 }
 
-extension AnnotationProperty on Annotation {
-  AstNode? getPropertyNode(dynamic property) {
-    for (var i = 0; i < arguments!.arguments.length; i++) {
-      var arg = arguments!.arguments[i];
+Future<ArgumentList?> getArgumentsFromElement(Element? element) async {
+  if (element case PropertyAccessorElement elem) {
+    var node = await elem.variable.getResolvedNode();
+    if (node is VariableDeclaration) {
+      var exp = node.initializer;
+      if (exp is InstanceCreationExpression) {
+        return exp.argumentList;
+      } else if (exp is SimpleIdentifier) {
+        return getArgumentsFromElement(exp.staticElement);
+      }
+    }
+  }
+  return null;
+}
+
+extension ArgumentProperty on ArgumentList {
+  AstNode? getArgument(dynamic property) {
+    for (var i = 0; i < arguments.length; i++) {
+      var arg = arguments[i];
       if (arg is NamedExpression && property is String) {
         if (arg.name.label.name == property) {
           return arg.expression;
@@ -77,22 +102,10 @@ extension AnnotationProperty on Annotation {
   }
 }
 
-AstNode? getAnnotationProperty(
-    AstNode? node, Type annotationType, dynamic property) {
-  var annotation = getAnnotation(node, annotationType);
-  if (annotation != null) {
-    for (var i = 0; i < annotation.arguments!.arguments.length; i++) {
-      var arg = annotation.arguments!.arguments[i];
-      if (arg is NamedExpression && property is String) {
-        if (arg.name.label.name == property) {
-          return arg.expression;
-        }
-      } else if (property is int && i == property) {
-        return arg;
-      }
-    }
-  }
-  return null;
+Future<AstNode?> getAnnotationProperty(
+    AstNode? node, Type annotationType, dynamic property) async {
+  var arguments = await getAnnotationArguments(node, annotationType);
+  return arguments?.getArgument(property);
 }
 
 Future<AstNode?> getAnnotationNode(

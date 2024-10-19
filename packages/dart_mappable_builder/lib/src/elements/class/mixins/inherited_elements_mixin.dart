@@ -32,7 +32,7 @@ mixin InheritedElementsMixin on MapperElement<ClassElement> {
           superElement?.discriminatorKey;
 
   late String? discriminatorValueCode =
-      annotation.annotation?.getPropertyNode('discriminatorValue')?.toSource();
+      annotation.getPropertyNode('discriminatorValue')?.toSource();
 
   List<ClassElement> getSubClasses() {
     return annotation.value

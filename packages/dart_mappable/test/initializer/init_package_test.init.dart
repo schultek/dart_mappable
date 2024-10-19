@@ -78,6 +78,7 @@ void initializeMappers() {
   p7.VMapper.ensureInitialized();
   p7.WMapper.ensureInitialized();
   p8.PrivateContainerMapper.ensureInitialized();
+  p8.PrivateContainer2Mapper.ensureInitialized();
   p9.TestObjMapper.ensureInitialized();
   p10.ClassAMapper.ensureInitialized();
   p10.EnumAMapper.ensureInitialized();
