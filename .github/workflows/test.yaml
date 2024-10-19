@@ -25,16 +25,16 @@ jobs:
           melos bootstrap
           
       - name: Check formatting
-        run: melos format
+        run: melos run format
 
       - name: Generate Code
-        run: melos build
+        run: melos run build
 
       - name: Lint
-        run: melos analyze
+        run: melos run analyze
 
       - name: Run Unit tests
-        run: melos coverage
+        run: melos run coverage
 
       - name: Upload Coverage
         uses: codecov/codecov-action@v3

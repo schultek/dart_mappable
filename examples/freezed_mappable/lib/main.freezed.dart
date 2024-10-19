@@ -12,7 +12,7 @@ part of 'main.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$Union {
@@ -63,7 +63,9 @@ mixin _$Union {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Union
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $UnionCopyWith<Union> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -85,6 +87,8 @@ class _$UnionCopyWithImpl<$Res, $Val extends Union>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Union
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -100,26 +104,30 @@ class _$UnionCopyWithImpl<$Res, $Val extends Union>
 }
 
 /// @nodoc
-abstract class _$$DataCopyWith<$Res> implements $UnionCopyWith<$Res> {
-  factory _$$DataCopyWith(_$Data value, $Res Function(_$Data) then) =
-      __$$DataCopyWithImpl<$Res>;
+abstract class _$$DataImplCopyWith<$Res> implements $UnionCopyWith<$Res> {
+  factory _$$DataImplCopyWith(
+          _$DataImpl value, $Res Function(_$DataImpl) then) =
+      __$$DataImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({@MappableField(key: 'mykey') int value});
 }
 
 /// @nodoc
-class __$$DataCopyWithImpl<$Res> extends _$UnionCopyWithImpl<$Res, _$Data>
-    implements _$$DataCopyWith<$Res> {
-  __$$DataCopyWithImpl(_$Data _value, $Res Function(_$Data) _then)
+class __$$DataImplCopyWithImpl<$Res>
+    extends _$UnionCopyWithImpl<$Res, _$DataImpl>
+    implements _$$DataImplCopyWith<$Res> {
+  __$$DataImplCopyWithImpl(_$DataImpl _value, $Res Function(_$DataImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Union
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? value = null,
   }) {
-    return _then(_$Data(
+    return _then(_$DataImpl(
       null == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -131,8 +139,8 @@ class __$$DataCopyWithImpl<$Res> extends _$UnionCopyWithImpl<$Res, _$Data>
 /// @nodoc
 
 @MappableClass(discriminatorValue: 'data')
-class _$Data implements Data {
-  const _$Data(@MappableField(key: 'mykey') this.value);
+class _$DataImpl implements Data {
+  const _$DataImpl(@MappableField(key: 'mykey') this.value);
 
   @override
   @MappableField(key: 'mykey')
@@ -144,21 +152,23 @@ class _$Data implements Data {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$Data &&
+            other is _$DataImpl &&
             (identical(other.value, value) || other.value == value));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, value);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Union
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$DataCopyWith<_$Data> get copyWith =>
-      __$$DataCopyWithImpl<_$Data>(this, _$identity);
+  _$$DataImplCopyWith<_$DataImpl> get copyWith =>
+      __$$DataImplCopyWithImpl<_$DataImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -230,37 +240,46 @@ class _$Data implements Data {
 }
 
 abstract class Data implements Union {
-  const factory Data(@MappableField(key: 'mykey') final int value) = _$Data;
+  const factory Data(@MappableField(key: 'mykey') final int value) = _$DataImpl;
 
   @override
   @MappableField(key: 'mykey')
   int get value;
+
+  /// Create a copy of Union
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$DataCopyWith<_$Data> get copyWith => throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$DataImplCopyWith<_$DataImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$LoadingCopyWith<$Res> implements $UnionCopyWith<$Res> {
-  factory _$$LoadingCopyWith(_$Loading value, $Res Function(_$Loading) then) =
-      __$$LoadingCopyWithImpl<$Res>;
+abstract class _$$LoadingImplCopyWith<$Res> implements $UnionCopyWith<$Res> {
+  factory _$$LoadingImplCopyWith(
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int value});
 }
 
 /// @nodoc
-class __$$LoadingCopyWithImpl<$Res> extends _$UnionCopyWithImpl<$Res, _$Loading>
-    implements _$$LoadingCopyWith<$Res> {
-  __$$LoadingCopyWithImpl(_$Loading _value, $Res Function(_$Loading) _then)
+class __$$LoadingImplCopyWithImpl<$Res>
+    extends _$UnionCopyWithImpl<$Res, _$LoadingImpl>
+    implements _$$LoadingImplCopyWith<$Res> {
+  __$$LoadingImplCopyWithImpl(
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Union
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? value = null,
   }) {
-    return _then(_$Loading(
+    return _then(_$LoadingImpl(
       null == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -272,8 +291,8 @@ class __$$LoadingCopyWithImpl<$Res> extends _$UnionCopyWithImpl<$Res, _$Loading>
 /// @nodoc
 
 @MappableClass(discriminatorValue: 'loading')
-class _$Loading implements Loading {
-  const _$Loading(this.value);
+class _$LoadingImpl implements Loading {
+  const _$LoadingImpl(this.value);
 
   @override
   final int value;
@@ -284,21 +303,23 @@ class _$Loading implements Loading {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$Loading &&
+            other is _$LoadingImpl &&
             (identical(other.value, value) || other.value == value));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, value);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Union
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$LoadingCopyWith<_$Loading> get copyWith =>
-      __$$LoadingCopyWithImpl<_$Loading>(this, _$identity);
+  _$$LoadingImplCopyWith<_$LoadingImpl> get copyWith =>
+      __$$LoadingImplCopyWithImpl<_$LoadingImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -370,41 +391,47 @@ class _$Loading implements Loading {
 }
 
 abstract class Loading implements Union {
-  const factory Loading(final int value) = _$Loading;
+  const factory Loading(final int value) = _$LoadingImpl;
 
   @override
   int get value;
+
+  /// Create a copy of Union
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$LoadingCopyWith<_$Loading> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LoadingImplCopyWith<_$LoadingImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ErrorDetailsCopyWith<$Res> implements $UnionCopyWith<$Res> {
-  factory _$$ErrorDetailsCopyWith(
-          _$ErrorDetails value, $Res Function(_$ErrorDetails) then) =
-      __$$ErrorDetailsCopyWithImpl<$Res>;
+abstract class _$$ErrorDetailsImplCopyWith<$Res>
+    implements $UnionCopyWith<$Res> {
+  factory _$$ErrorDetailsImplCopyWith(
+          _$ErrorDetailsImpl value, $Res Function(_$ErrorDetailsImpl) then) =
+      __$$ErrorDetailsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int value, String? message});
 }
 
 /// @nodoc
-class __$$ErrorDetailsCopyWithImpl<$Res>
-    extends _$UnionCopyWithImpl<$Res, _$ErrorDetails>
-    implements _$$ErrorDetailsCopyWith<$Res> {
-  __$$ErrorDetailsCopyWithImpl(
-      _$ErrorDetails _value, $Res Function(_$ErrorDetails) _then)
+class __$$ErrorDetailsImplCopyWithImpl<$Res>
+    extends _$UnionCopyWithImpl<$Res, _$ErrorDetailsImpl>
+    implements _$$ErrorDetailsImplCopyWith<$Res> {
+  __$$ErrorDetailsImplCopyWithImpl(
+      _$ErrorDetailsImpl _value, $Res Function(_$ErrorDetailsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Union
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? value = null,
     Object? message = freezed,
   }) {
-    return _then(_$ErrorDetails(
+    return _then(_$ErrorDetailsImpl(
       null == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -420,8 +447,8 @@ class __$$ErrorDetailsCopyWithImpl<$Res>
 /// @nodoc
 
 @MappableClass(discriminatorValue: 'error')
-class _$ErrorDetails implements ErrorDetails {
-  const _$ErrorDetails(this.value, [this.message]);
+class _$ErrorDetailsImpl implements ErrorDetails {
+  const _$ErrorDetailsImpl(this.value, [this.message]);
 
   @override
   final int value;
@@ -434,10 +461,10 @@ class _$ErrorDetails implements ErrorDetails {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ErrorDetails &&
+            other is _$ErrorDetailsImpl &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.message, message) || other.message == message));
   }
@@ -445,11 +472,13 @@ class _$ErrorDetails implements ErrorDetails {
   @override
   int get hashCode => Object.hash(runtimeType, value, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Union
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ErrorDetailsCopyWith<_$ErrorDetails> get copyWith =>
-      __$$ErrorDetailsCopyWithImpl<_$ErrorDetails>(this, _$identity);
+  _$$ErrorDetailsImplCopyWith<_$ErrorDetailsImpl> get copyWith =>
+      __$$ErrorDetailsImplCopyWithImpl<_$ErrorDetailsImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -522,13 +551,16 @@ class _$ErrorDetails implements ErrorDetails {
 
 abstract class ErrorDetails implements Union {
   const factory ErrorDetails(final int value, [final String? message]) =
-      _$ErrorDetails;
+      _$ErrorDetailsImpl;
 
   @override
   int get value;
   String? get message;
+
+  /// Create a copy of Union
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$ErrorDetailsCopyWith<_$ErrorDetails> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ErrorDetailsImplCopyWith<_$ErrorDetailsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

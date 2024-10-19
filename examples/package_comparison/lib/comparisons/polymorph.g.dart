@@ -22,7 +22,7 @@ Map<String, dynamic> _$CatAToJson(CatA instance) => <String, dynamic>{
 
 DogA _$DogAFromJson(Map<String, dynamic> json) => DogA(
       json['name'] as String,
-      json['age'] as int,
+      (json['age'] as num).toInt(),
     );
 
 Map<String, dynamic> _$DogAToJson(DogA instance) => <String, dynamic>{
