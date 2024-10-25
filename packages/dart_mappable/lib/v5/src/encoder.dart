@@ -21,7 +21,10 @@ abstract mixin class EncodableMixin implements Encodable {
 
   @override
   void encodeSerial(SerialEncoder encoder) {
-    encode(GeneralizedSerialEncoder(encoder));
+    var encoded = encode(GeneralizedSerialEncoder(encoder));
+    if (encoded is KeyedGeneralizedSerialEncoder) {
+      encoder.endObject();
+    }
   }
 }
 
@@ -36,6 +39,10 @@ extension JsonEncodable on Encodable {
 
   String toJson() {
     return JsonEncoder.encode(this);
+  }
+
+  List<int> toJsonBytes() {
+    return JsonEncoder.encodeBytes(this);
   }
 }
 

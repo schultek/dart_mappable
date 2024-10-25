@@ -33,18 +33,31 @@ class KeyedGeneralizedStructuredEncoder<Key> implements KeyedEncoder<Key> {
 }
 
 extension type StructuredEncoder._(Null _) {
+  static final _i = StructuredEncoder._(null);
+
   static Object? encode(Encodable value) {
-    return value.encodeStructured(StructuredEncoder._(null));
+    return value.encodeStructured(_i);
   }
 
+  @pragma('vm:prefer-inline')
   Object? encodeValue(Object? value) => value;
 
+  @pragma('vm:prefer-inline')
+  Object? encodeEncodable(Encodable value) => value.encodeStructured(this);
+
+  @pragma('vm:prefer-inline')
   KeyedStructuredEncoder<Key> encodeKeyed<Key>() {
-    return KeyedStructuredEncoder(<Key, dynamic>{});
+    return KeyedStructuredEncoder._(<Key, dynamic>{});
+  }
+
+  @pragma('vm:prefer-inline')
+  Object? encodeIterable<T>(
+      Iterable<T> value, Object? Function(T, StructuredEncoder) encode) {
+    return [for (final e in value) encode(e, StructuredEncoder._i)];
   }
 }
 
-extension type KeyedStructuredEncoder<Key>(Map<Key, dynamic> _value) {
+extension type KeyedStructuredEncoder<Key>._(Map<Key, dynamic> _value) {
   @pragma('vm:prefer-inline')
   void encodeValue(Key key, Object? value) {
     _value[key] = value;
@@ -53,5 +66,11 @@ extension type KeyedStructuredEncoder<Key>(Map<Key, dynamic> _value) {
   @pragma('vm:prefer-inline')
   void encodeEncodable(Key key, Encodable value) {
     _value[key] = value.encodeStructured(StructuredEncoder._(null));
+  }
+
+  @pragma('vm:prefer-inline')
+  void encodeIterable<T>(Key key, Iterable<T> value,
+      Object? Function(T, StructuredEncoder) encode) {
+    _value[key] = [for (final e in value) encode(e, StructuredEncoder._i)];
   }
 }

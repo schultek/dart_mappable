@@ -1,12 +1,18 @@
-import '../src/decoder.dart';
 import '../src/mapper.dart';
+import '../src/serial_decoder.dart';
 import '../src/serial_encoder.dart';
+import '../src/structured_decoder.dart';
 import '../src/structured_encoder.dart';
 
 class UriMapper implements Mapper<Uri> {
   @override
-  Uri decode(Decoder decoder) {
-    return Uri.parse(decoder.decodeString()!);
+  Uri decodeStructured(StructuredDecoder decoder) {
+    return Uri.parse(decoder.decodeString());
+  }
+
+  @override
+  Uri decodeSerial(SerialDecoder decoder) {
+    return Uri.parse(decoder.decodeString());
   }
 
   @override

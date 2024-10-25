@@ -1,18 +1,25 @@
 import 'dart:async';
 
-import 'decoder.dart';
 import 'encoder.dart';
+import 'serial_decoder.dart';
 import 'serial_encoder.dart';
+import 'structured_decoder.dart';
 import 'structured_encoder.dart';
 
 abstract class Mapper<T> {
-  T decode(Decoder decoder);
+  T decodeSerial(SerialDecoder decoder);
+  T decodeStructured(StructuredDecoder decoder);
+
   Object? encodeStructured(StructuredEncoder encoder, T value);
   void encodeSerial(SerialEncoder encoder, T value);
 }
 
-T Function(Decoder) findDecodeFor<T>() {
-  return findMapperFor<T>().decode;
+T Function(StructuredDecoder) findStructuredDecodeFor<T>() {
+  return findMapperFor<T>().decodeStructured;
+}
+
+T Function(SerialDecoder) findSerialDecodeFor<T>() {
+  return findMapperFor<T>().decodeSerial;
 }
 
 Encodable findEncodableFor<T>(T value) {

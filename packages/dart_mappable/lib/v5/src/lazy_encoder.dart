@@ -7,6 +7,7 @@ class LazyEncoder implements SerialEncoder {
   LazyEncoder._();
 
   Object? _value;
+  final List<Object?> _stack = [];
 
   static Object? encode(Encodable value) {
     var e = LazyEncoder._();
@@ -14,85 +15,85 @@ class LazyEncoder implements SerialEncoder {
     return e._value;
   }
 
-  @override
-  KeyedSerialEncoder<Key> encodeKeyed<Key>() {
-    return KeyedLazyEncoder._(_value = _LazyMap<Key, dynamic>());
+  void _encodeValue(Object? value) {
+    if (_stack case [..._, Map m, Object? key]) {
+      m[key] = value;
+      _stack.removeLast();
+    } else if (_stack case [..._, List l]) {
+      l.add(value);
+    } else {
+      _value = value;
+    }
   }
 
   @override
   void encodeBool(bool value) {
-    _value = value;
+    _encodeValue(value);
   }
 
   @override
   void encodeDouble(double value) {
-    _value = value;
-  }
-
-  @override
-  void encodeEncodable(Encodable value) {
-    value.encodeSerial(this);
+    _encodeValue(value);
   }
 
   @override
   void encodeInt(int value) {
-    _value = value;
-  }
-
-  @override
-  void encodeList<T>(List<T> value) {
-    _value = value;
+    _encodeValue(value);
   }
 
   @override
   void encodeNull() {
-    _value = null;
+    _encodeValue(null);
   }
 
   @override
   void encodeString(String value) {
-    _value = value;
-  }
-}
-
-class KeyedLazyEncoder<Key> implements KeyedSerialEncoder<Key> {
-  KeyedLazyEncoder._(this._value);
-
-  final _LazyMap<Key, dynamic> _value;
-
-  @override
-  void encodeEncodable(Key key, Encodable value) {
-    _value._lazy[key] = value;
+    _encodeValue(value);
   }
 
   @override
-  void encodeList<T>(Key key, List<T> value) {
-    _value[key] = value;
+  void encodeEncodable(Encodable value) {
+    if (_stack case [..._, _LazyMap map, Object? key]) {
+      map._lazy[key] = value;
+      _stack.removeLast();
+    } else if (_stack case [..._, _LazyList l]) {
+      l._lazy[l.length] = value;
+      l._value.add(null);
+    } else {
+      final s = LazyEncoder._();
+      value.encodeSerial(s);
+      _encodeValue(s._value);
+    }
   }
 
   @override
-  void encodeBool(Key key, bool value) {
-    _value[key] = value;
+  void encodeKey(Object? key) {
+    assert(_stack.last is Map);
+    _stack.add(key);
   }
 
   @override
-  void encodeDouble(Key key, double value) {
-    _value[key] = value;
+  void startObject<Key>() {
+    _stack.add(_LazyMap<Key, dynamic>());
   }
 
   @override
-  void encodeInt(Key key, int value) {
-    _value[key] = value;
+  void endObject() {
+    assert(_stack.last is _LazyMap);
+    var n = _stack.removeLast();
+    _encodeValue(n);
   }
 
   @override
-  void encodeNull(Key key) {
-    _value[key] = null;
+  void startArray<E>() {
+    _stack.add(_LazyList<E>());
   }
 
   @override
-  void encodeString(Key key, String value) {
-    _value[key] = value;
+  void endArray() {
+    assert(_stack.last is List);
+    var n = _stack.removeLast();
+    _encodeValue(n);
   }
 }
 
@@ -139,5 +140,34 @@ class _LazyMap<Key, Value> with MapMixin<Key, Value> {
     } else {
       return null;
     }
+  }
+}
+
+class _LazyList<E> with ListMixin<E> {
+  final List<E?> _value = [];
+  final Map<int, Encodable> _lazy = {};
+
+  @override
+  int get length => _value.length;
+  @override
+  set length(int newLength) {
+    _value.length = newLength;
+  }
+
+  @override
+  E operator [](int index) {
+    if (_lazy.containsKey(index)) {
+      final e = LazyEncoder._();
+      _lazy.remove(index)!.encodeSerial(e);
+      return _value[index] = e._value as E;
+    } else {
+      return _value[index] as E;
+    }
+  }
+
+  @override
+  void operator []=(int index, E value) {
+    _value[index] = value;
+    _lazy.remove(index);
   }
 }

@@ -1,7 +1,7 @@
-import '../src/decoder.dart';
 import '../src/encoder.dart';
 import '../src/mapper.dart';
 import '../src/serial_encoder.dart';
+import '../src/structured_decoder.dart';
 import '../src/structured_encoder.dart';
 import '../test/raw_encodable.dart';
 
@@ -23,10 +23,10 @@ class Box<T> implements Encodable, RawEncodable {
     return 'Box(data: $data)';
   }
 
-  static Box<T> decode<T>(Decoder decoder) {
+  static Box<T> decode<T>(StructuredDecoder decoder) {
     final keyed = decoder.decodeKeyed<String>();
     return Box(
-      keyed.decodeDecodable('data', findDecodeFor<T>()) as T,
+      keyed.decodeDecodable('data', findStructuredDecodeFor<T>()),
     );
   }
 
@@ -46,8 +46,10 @@ class Box<T> implements Encodable, RawEncodable {
 
   @override
   void encodeSerial(SerialEncoder encoder) {
-    final encoded = encoder.encodeKeyed<String>();
-    encoded.encodeEncodable('data', findEncodableFor<T>(data));
+    encoder.startObject<String>();
+    encoder.encodeKey('data');
+    encoder.encodeEncodable(findEncodableFor<T>(data));
+    encoder.endObject();
   }
 
   @override
