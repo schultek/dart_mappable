@@ -55,7 +55,7 @@ class DecodingContext extends MappingContext {
   }
 }
 
-/// The encoding context passed to the [encoder] method of a mapper.
+/// The encoding context passed to the [encoding] method of a mapper.
 class EncodingContext extends MappingContext {
   EncodingContext({super.container, this.options, super.args});
 

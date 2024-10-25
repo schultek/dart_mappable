@@ -1,11 +1,9 @@
-import '../src/encoder.dart';
+import '../src/decoding/decoding.dart';
+import '../src/encoding/encoding.dart';
 import '../src/mapper.dart';
-import '../src/serial_encoder.dart';
-import '../src/structured_decoder.dart';
-import '../src/structured_encoder.dart';
 import '../test/raw_encodable.dart';
 
-class Box<T> implements Encodable, RawEncodable {
+class Box<T> implements Encodable1<Box<T>, T>, RawEncodable {
   Box(this.data);
 
   final T data;
@@ -23,11 +21,9 @@ class Box<T> implements Encodable, RawEncodable {
     return 'Box(data: $data)';
   }
 
-  static Box<T> decode<T>(StructuredDecoder decoder) {
-    final keyed = decoder.decodeKeyed<String>();
-    return Box(
-      keyed.decodeDecodable('data', findDecodableFor<T>()),
-    );
+  static Box<T> fromMap<T>(Map<String, dynamic> value,
+      [Decoder<T>? decodable1]) {
+    return StructDecoding.decode(value, decoder<T>(decodable1));
   }
 
   static Box<T> fromMapRaw<T>(
@@ -37,20 +33,10 @@ class Box<T> implements Encodable, RawEncodable {
     );
   }
 
-  @override
-  Object? encodeStructured(StructuredEncoder encoder) {
-    final encoded = encoder.encodeKeyed<String>();
-    encoded.encodeEncodable('data', findEncodableFor<T>(data));
-    return encoded;
-  }
+  static Decoder<Box<T>> decoder<T>([Decoder<T>? d1]) => BoxDecoder<T>(d1);
 
   @override
-  void encodeSerial(SerialEncoder encoder) {
-    encoder.startObject<String>();
-    encoder.encodeKey('data');
-    encoder.encodeEncodable(findEncodableFor<T>(data));
-    encoder.endObject();
-  }
+  Encoder<Box<T>> encoder([Encoder<T>? e1]) => BoxEncoder<T>(e1);
 
   @override
   Map<String, dynamic> toMapRaw() {
@@ -58,4 +44,77 @@ class Box<T> implements Encodable, RawEncodable {
       'data': data is RawEncodable ? (data as RawEncodable).toMapRaw() : data,
     };
   }
+}
+
+class BoxEncoder<T> implements Encoder<Box<T>> {
+  BoxEncoder([this.encoder1]);
+
+  final Encoder<T>? encoder1;
+
+  @override
+  Object? encodeStruct(StructEncoding encoder, Box<T> value) {
+    final encoded = encoder.encodeKeyed<String>();
+    encoded.encodeEncodable(
+        'data', value.data, encoder1 ?? findEncoderFor<T>(value.data));
+    return encoded;
+  }
+
+  @override
+  void encodeSerial(SerialEncoding encoder, Box<T> value) {
+    encoder.startObject<String>();
+    encoder.encodeKey('data');
+    encoder.encodeEncodable(
+        value.data, encoder1 ?? findEncoderFor<T>(value.data));
+    encoder.endObject();
+  }
+}
+
+class BoxDecoder<T> implements Decoder<Box<T>> {
+  BoxDecoder([this.decoder1]);
+
+  final Decoder<T>? decoder1;
+
+  @override
+  Box<T> decodeSerial(SerialDecoding decoder) {
+    final d1 = decoder1 ?? findDecoderFor<T>();
+
+    late T data;
+
+    for (Object? key; (key = decoder.nextKey()) != null;) {
+      switch (key) {
+        case 'data':
+          data = decoder.decodeDecodable(d1);
+        default:
+          decoder.skipNext();
+      }
+    }
+
+    return Box(data);
+  }
+
+  @override
+  Box<T> decodeStruct(StructDecoding decoder) {
+    final d1 = decoder1 ?? findDecoderFor<T>();
+
+    final keyed = decoder.decodeKeyed<String>();
+    return Box(
+      keyed.decodeDecodable('data', d1),
+    );
+  }
+}
+
+class BoxMapper extends Mapper<Box>
+    with DecoderMapper1<Box>, EncoderMapper1<Box> {
+  factory BoxMapper() => _instance;
+  BoxMapper._();
+  static final _instance = BoxMapper._();
+
+  @override
+  Decoder<Box<T>> decoder<T>([Decoder<T>? d1]) => BoxDecoder<T>(d1);
+
+  @override
+  Encoder<Box<T>> encoder<T>([Encoder<T>? e1]) => BoxEncoder<T>(e1);
+
+  @override
+  Function get typeFactory => <T>(f) => f<Box<T>>();
 }

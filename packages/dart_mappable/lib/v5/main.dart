@@ -4,35 +4,57 @@ import 'package:collection/collection.dart';
 
 import 'bench.dart';
 import 'data.dart';
+import 'models/box.dart';
 import 'models/person.dart';
-import 'src/encoder.dart';
-import 'src/serial_decoder.dart';
-import 'src/structured_decoder.dart';
+import 'models/uri.dart';
+import 'src/decoding/decoding.dart';
+import 'src/encoding/encoding.dart';
+import 'src/mapper.dart';
 import 'test/raw_encodable.dart';
 
 void main() {
-  // useMappers(mappers: [UriMapper()], () {
-  //   var b = Box.decode<Uri>(Decoder.map(boxMap));
-  //   print(b);
-  //   var m = b.toMap();
-  //   print(m);
-  // });
-  //
-  // return;
+  //testGenerics();
+  runBenchmarks();
+}
 
+void testGenerics() {
+  useMappers(mappers: [UriMapper(), BoxMapper()], () {
+    var b = Box.fromMap<Uri>(boxMap);
+    print(b);
+    var m = b.toMap();
+    print(m);
+
+    var b2 = Box.fromMap<Box<Uri>>(boxBoxMap);
+    print(b2);
+    var m2 = b2.toMap();
+    print(m2);
+  });
+
+  var b2 = Box.fromMap<Box<Uri>>(
+    boxBoxMap,
+    Box.decoder(UriMapper().decoder()),
+  );
+  print(b2);
+  var m2 = b2.toMap(BoxMapper().encoder());
+  print(m2);
+
+  return;
+}
+
+void runBenchmarks() {
   Person p = Person.fromMapRaw(personMap);
 
   assert(p.toJson() == p.toJsonRaw());
   assert(DeepCollectionEquality().equals(p.toMap(), p.toMapRaw()));
   assert(DeepCollectionEquality().equals(p.toLazyMap(), p.toMapRaw()));
-  assert(StructuredDecoder.decode(personMap, Person.decodable) ==
+  assert(StructDecoding.decode(personMap, Person.decoder) ==
       Person.fromMapRaw(personMap));
-  assert(JsonDecoder.decode(personJson, Person.decodable) ==
+  assert(JsonDecoding.decode(personJson, Person.decoder) ==
       Person.fromMapRaw(personMap));
 
   print('== MAP DECODING ==');
   bench('dart_mappable          ', () {
-    p = StructuredDecoder.decode(personMap, Person.decodable);
+    p = StructDecoding.decode(personMap, Person.decoder);
   });
   bench('json_serializable      ', () {
     p = Person.fromMapRaw(personMap);
@@ -40,7 +62,7 @@ void main() {
 
   print('== JSON STRING DECODING ==');
   bench('dart_mappable          ', () {
-    p = JsonDecoder.decode(personJson, Person.decodable);
+    p = JsonDecoding.decode(personJson, Person.decoder);
   });
   bench('json_serializable      ', () {
     p = Person.fromMapRaw(jsonDecode(personJson) as Map<String, dynamic>);
@@ -48,7 +70,7 @@ void main() {
 
   print('== JSON BYTE DECODING ==');
   bench('dart_mappable          ', () {
-    p = JsonDecoder.decodeBytes(personJsonBytes, Person.decodable);
+    p = JsonDecoding.decodeBytes(personJsonBytes, Person.decoder);
   });
   bench('json_serializable      ', () {
     p = Person.fromMapRaw(

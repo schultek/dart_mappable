@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:crimson/crimson.dart';
 
-import 'decoder.dart';
+import 'decoding.dart';
 
-abstract interface class SerialDecoder {
+abstract interface class SerialDecoding {
   Object? decodeValue();
 
   String decodeString();
@@ -19,8 +19,8 @@ abstract interface class SerialDecoder {
   double decodeDouble();
   double? decodeDoubleOrNull();
 
-  T decodeDecodable<T>(Decodable<T> decodable);
-  T? decodeDecodableOrNull<T>(Decodable<T> decodable);
+  T decodeDecodable<T>(Decoder<T> decodable);
+  T? decodeDecodableOrNull<T>(Decoder<T> decodable);
 
   Object? nextKey();
   bool nextItem();
@@ -30,19 +30,19 @@ abstract interface class SerialDecoder {
   void skipRemainingKeys();
   void skipRemainingItems();
 
-  SerialDecoder clone();
+  SerialDecoding clone();
 }
 
-class JsonDecoder implements SerialDecoder {
-  JsonDecoder._(this._reader);
+class JsonDecoding implements SerialDecoding {
+  JsonDecoding._(this._reader);
   final Crimson _reader;
 
-  static T decodeBytes<T>(List<int> value, Decodable<T> decodable) {
-    return JsonDecoder._(Crimson(value)).decodeDecodable(decodable);
+  static T decodeBytes<T>(List<int> value, Decoder<T> decoder) {
+    return JsonDecoding._(Crimson(value)).decodeDecodable(decoder);
   }
 
-  static T decode<T>(String value, Decodable<T> decodable) {
-    return decodeBytes(utf8.encode(value), decodable);
+  static T decode<T>(String value, Decoder<T> decoder) {
+    return decodeBytes(utf8.encode(value), decoder);
   }
 
   @pragma('vm:prefer-inline')
@@ -101,13 +101,13 @@ class JsonDecoder implements SerialDecoder {
 
   @pragma('vm:prefer-inline')
   @override
-  T decodeDecodable<T>(Decodable<T> decodable) {
+  T decodeDecodable<T>(Decoder<T> decodable) {
     return decodable.decodeSerial(this);
   }
 
   @pragma('vm:prefer-inline')
   @override
-  T? decodeDecodableOrNull<T>(Decodable<T> decodable) {
+  T? decodeDecodableOrNull<T>(Decoder<T> decodable) {
     return _reader.skipNull() ? null : decodable.decodeSerial(this);
   }
 
@@ -146,138 +146,138 @@ class JsonDecoder implements SerialDecoder {
   }
 
   @override
-  SerialDecoder clone() {
-    return JsonDecoder._(Crimson(_reader.buffer, _reader.offset));
+  SerialDecoding clone() {
+    return JsonDecoding._(Crimson(_reader.buffer, _reader.offset));
   }
 }
 
-class GeneralizedSerialDecoder implements Decoder {
-  GeneralizedSerialDecoder._(this.decoder);
+class CompatSerialDecoding implements Decoding {
+  CompatSerialDecoding._(this.decoding);
 
-  static T decode<T>(DecodableMixin<T> decodable, SerialDecoder decoder) {
-    final d = GeneralizedSerialDecoder._(decoder);
+  static T decode<T>(DecoderMixin<T> decodable, SerialDecoding decoding) {
+    final d = CompatSerialDecoding._(decoding);
     try {
       return decodable.decode(d);
     } finally {
       if (d._keyed != null && !d._keyed!._done) {
-        d.decoder.skipRemainingKeys();
+        d.decoding.skipRemainingKeys();
       }
     }
   }
 
-  final SerialDecoder decoder;
+  final SerialDecoding decoding;
 
   @override
   String decodeString() {
-    return decoder.decodeString();
+    return decoding.decodeString();
   }
 
   @override
   String? decodeStringOrNull() {
-    return decoder.decodeStringOrNull();
+    return decoding.decodeStringOrNull();
   }
 
   @override
   bool decodeBool() {
-    return decoder.decodeBool();
+    return decoding.decodeBool();
   }
 
   @override
   bool? decodeBoolOrNull() {
-    return decoder.decodeBoolOrNull();
+    return decoding.decodeBoolOrNull();
   }
 
   @override
   int decodeInt() {
-    return decoder.decodeInt();
+    return decoding.decodeInt();
   }
 
   @override
   int? decodeIntOrNull() {
-    return decoder.decodeIntOrNull();
+    return decoding.decodeIntOrNull();
   }
 
   @override
   double decodeDouble() {
-    return decoder.decodeDouble();
+    return decoding.decodeDouble();
   }
 
   @override
   double? decodeDoubleOrNull() {
-    return decoder.decodeDoubleOrNull();
+    return decoding.decodeDoubleOrNull();
   }
 
   @override
-  T decodeDecodable<T>(Decodable<T> decodable) {
-    return decoder.decodeDecodable(decodable);
+  T decodeDecodable<T>(Decoder<T> decodable) {
+    return decoding.decodeDecodable(decodable);
   }
 
   @override
-  T? decodeDecodableOrNull<T>(Decodable<T> decodable) {
-    return decoder.decodeDecodableOrNull(decodable);
+  T? decodeDecodableOrNull<T>(Decoder<T> decodable) {
+    return decoding.decodeDecodableOrNull(decodable);
   }
 
   @override
   List<T> decodeList<T>() {
     return [
-      for (; decoder.nextItem();) decoder.decodeValue() as T,
+      for (; decoding.nextItem();) decoding.decodeValue() as T,
     ];
   }
 
   @override
   List<T>? decodeListOrNull<T>() {
-    return decoder.skipNull()
+    return decoding.skipNull()
         ? null
         : [
-            for (; decoder.nextItem();) decoder.decodeValue() as T,
+            for (; decoding.nextItem();) decoding.decodeValue() as T,
           ];
   }
 
   @override
-  List<T> decodeListDecodable<T>(Decodable<T> decodable) {
+  List<T> decodeListDecodable<T>(Decoder<T> decodable) {
     return [
-      for (; decoder.nextItem();) decoder.decodeDecodable(decodable),
+      for (; decoding.nextItem();) decoding.decodeDecodable(decodable),
     ];
   }
 
   @override
-  List<T>? decodeListDecodableOrNull<T>(Decodable<T> decodable) {
-    return decoder.skipNull()
+  List<T>? decodeListDecodableOrNull<T>(Decoder<T> decodable) {
+    return decoding.skipNull()
         ? null
         : [
-            for (; decoder.nextItem();) decoder.decodeDecodable(decodable),
+            for (; decoding.nextItem();) decoding.decodeDecodable(decodable),
           ];
   }
 
-  KeyedGeneralizedSerialDecoder? _keyed;
+  KeyedCompatSerialDecoding? _keyed;
 
   @override
-  KeyedDecoder<Key> decodeKeyed<Key>() {
-    _keyed ??= KeyedGeneralizedSerialDecoder<Key>(decoder);
-    return _keyed! as KeyedDecoder<Key>;
+  KeyedDecoding<Key> decodeKeyed<Key>() {
+    _keyed ??= KeyedCompatSerialDecoding<Key>(decoding);
+    return _keyed! as KeyedDecoding<Key>;
   }
 }
 
-class KeyedGeneralizedSerialDecoder<Key> implements KeyedDecoder<Key> {
-  KeyedGeneralizedSerialDecoder(this.decoder);
+class KeyedCompatSerialDecoding<Key> implements KeyedDecoding<Key> {
+  KeyedCompatSerialDecoding(this.decoding);
 
-  final SerialDecoder decoder;
+  final SerialDecoding decoding;
 
   bool _done = false;
-  final Map<Key, SerialDecoder> _values = {};
+  final Map<Key, SerialDecoding> _values = {};
 
   bool skipTo(Key key) {
     if (_done) return false;
     while (true) {
-      var k = decoder.nextKey();
+      var k = decoding.nextKey();
       if (k == null) {
         _done = true;
         return false;
       } else if (k == key) {
         return true;
       } else {
-        _values[k as Key] = decoder.clone();
-        decoder.skipNext();
+        _values[k as Key] = decoding.clone();
+        decoding.skipNext();
       }
     }
   }
@@ -289,7 +289,7 @@ class KeyedGeneralizedSerialDecoder<Key> implements KeyedDecoder<Key> {
     }
     final hasKey = skipTo(key);
     assert(hasKey);
-    return decoder.decodeString();
+    return decoding.decodeString();
   }
 
   @override
@@ -299,7 +299,7 @@ class KeyedGeneralizedSerialDecoder<Key> implements KeyedDecoder<Key> {
     }
     final hasKey = skipTo(key);
     if (!hasKey) return null;
-    return decoder.decodeStringOrNull();
+    return decoding.decodeStringOrNull();
   }
 
   @override
@@ -309,7 +309,7 @@ class KeyedGeneralizedSerialDecoder<Key> implements KeyedDecoder<Key> {
     }
     final hasKey = skipTo(key);
     assert(hasKey);
-    return decoder.decodeBool();
+    return decoding.decodeBool();
   }
 
   @override
@@ -319,7 +319,7 @@ class KeyedGeneralizedSerialDecoder<Key> implements KeyedDecoder<Key> {
     }
     final hasKey = skipTo(key);
     if (!hasKey) return null;
-    return decoder.decodeBoolOrNull();
+    return decoding.decodeBoolOrNull();
   }
 
   @override
@@ -329,7 +329,7 @@ class KeyedGeneralizedSerialDecoder<Key> implements KeyedDecoder<Key> {
     }
     final hasKey = skipTo(key);
     assert(hasKey);
-    return decoder.decodeDouble();
+    return decoding.decodeDouble();
   }
 
   @override
@@ -339,7 +339,7 @@ class KeyedGeneralizedSerialDecoder<Key> implements KeyedDecoder<Key> {
     }
     final hasKey = skipTo(key);
     if (!hasKey) return null;
-    return decoder.decodeDoubleOrNull();
+    return decoding.decodeDoubleOrNull();
   }
 
   @override
@@ -349,7 +349,7 @@ class KeyedGeneralizedSerialDecoder<Key> implements KeyedDecoder<Key> {
     }
     final hasKey = skipTo(key);
     assert(hasKey);
-    return decoder.decodeInt();
+    return decoding.decodeInt();
   }
 
   @override
@@ -359,27 +359,27 @@ class KeyedGeneralizedSerialDecoder<Key> implements KeyedDecoder<Key> {
     }
     final hasKey = skipTo(key);
     if (!hasKey) return null;
-    return decoder.decodeIntOrNull();
+    return decoding.decodeIntOrNull();
   }
 
   @override
-  T decodeDecodable<T>(Key key, Decodable<T> decodable) {
+  T decodeDecodable<T>(Key key, Decoder<T> decodable) {
     if (_values.containsKey(key)) {
       return _values[key]!.decodeDecodable(decodable);
     }
     final hasKey = skipTo(key);
     assert(hasKey);
-    return decoder.decodeDecodable(decodable);
+    return decoding.decodeDecodable(decodable);
   }
 
   @override
-  T? decodeDecodableOrNull<T>(Key key, Decodable<T> decodable) {
+  T? decodeDecodableOrNull<T>(Key key, Decoder<T> decodable) {
     if (_values.containsKey(key)) {
       return _values[key]!.decodeDecodableOrNull(decodable);
     }
     final hasKey = skipTo(key);
     if (!hasKey) return null;
-    return decoder.decodeDecodableOrNull(decodable);
+    return decoding.decodeDecodableOrNull(decodable);
   }
 
   @override
@@ -393,7 +393,7 @@ class KeyedGeneralizedSerialDecoder<Key> implements KeyedDecoder<Key> {
     final hasKey = skipTo(key);
     assert(hasKey);
     return [
-      for (; decoder.nextItem();) decoder.decodeValue() as T,
+      for (; decoding.nextItem();) decoding.decodeValue() as T,
     ];
   }
 
@@ -409,15 +409,15 @@ class KeyedGeneralizedSerialDecoder<Key> implements KeyedDecoder<Key> {
     }
     final hasKey = skipTo(key);
     if (!hasKey) return null;
-    return decoder.skipNull()
+    return decoding.skipNull()
         ? null
         : [
-            for (; decoder.nextItem();) decoder.decodeValue() as T,
+            for (; decoding.nextItem();) decoding.decodeValue() as T,
           ];
   }
 
   @override
-  List<T> decodeListDecodable<T>(Key key, Decodable<T> decodable) {
+  List<T> decodeListDecodable<T>(Key key, Decoder<T> decodable) {
     if (_values.containsKey(key)) {
       final d = _values[key]!;
       return [
@@ -427,12 +427,12 @@ class KeyedGeneralizedSerialDecoder<Key> implements KeyedDecoder<Key> {
     final hasKey = skipTo(key);
     assert(hasKey);
     return [
-      for (; decoder.nextItem();) decoder.decodeDecodable(decodable),
+      for (; decoding.nextItem();) decoding.decodeDecodable(decodable),
     ];
   }
 
   @override
-  List<T>? decodeListDecodableOrNull<T>(Key key, Decodable<T> decodable) {
+  List<T>? decodeListDecodableOrNull<T>(Key key, Decoder<T> decodable) {
     if (_values.containsKey(key)) {
       final d = _values[key]!;
       return d.skipNull()
@@ -443,10 +443,10 @@ class KeyedGeneralizedSerialDecoder<Key> implements KeyedDecoder<Key> {
     }
     final hasKey = skipTo(key);
     if (!hasKey) return null;
-    return decoder.skipNull()
+    return decoding.skipNull()
         ? null
         : [
-            for (; decoder.nextItem();) decoder.decodeDecodable(decodable),
+            for (; decoding.nextItem();) decoding.decodeDecodable(decodable),
           ];
   }
 }

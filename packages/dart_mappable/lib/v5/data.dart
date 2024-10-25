@@ -28,3 +28,7 @@ final personJsonBytes = utf8.encode(personJson);
 final boxMap = {
   'data': 'https://docs.page/schultek/jaspr',
 };
+
+final boxBoxMap = {
+  'data': boxMap,
+};

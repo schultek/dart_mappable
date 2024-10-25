@@ -1,29 +1,20 @@
-import '../src/decoder.dart';
-import '../src/encoder.dart';
+import '../src/decoding/decoding.dart';
+import '../src/encoding/encoding.dart';
 import '../src/mapper.dart';
-import '../src/serial_decoder.dart';
-import '../src/structured_decoder.dart';
 
-class UriMapper implements Mapper<Uri> {
+class UriMapper extends Mapper<Uri>
+    with DecoderMapper<Uri>, EncoderMapper<Uri> {
   @override
-  Uri decodeStructured(StructuredDecoder decoder) {
-    return Uri.parse(decoder.decodeString());
+  Decoder<Uri> decoder() {
+    return Decoder.fromHandler(decode: (decoding) {
+      return Uri.parse(decoding.decodeString());
+    });
   }
 
   @override
-  Uri decodeSerial(SerialDecoder decoder) {
-    return Uri.parse(decoder.decodeString());
-  }
-
-  @override
-  final Decodable<Uri> decodable = Decodable.fromHandler(decode: (decoder) {
-    return Uri.parse(decoder.decodeString());
-  });
-
-  @override
-  Encodable encodableOf(Uri value) {
-    return Encodable.fromHandler(encode: (encoder) {
-      return encoder.encodeValue(value.toString());
+  Encoder<Uri> encoder() {
+    return Encoder.fromHandler(encode: (encoding, value) {
+      return encoding.encodeValue(value.toString());
     });
   }
 }

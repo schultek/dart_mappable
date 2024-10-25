@@ -1,15 +1,11 @@
 import 'package:collection/collection.dart';
 
-import '../src/decoder.dart';
-import '../src/encoder.dart';
+import '../src/decoding/decoding.dart';
+import '../src/encoding/encoding.dart';
 import '../src/mapper.dart';
-import '../src/serial_decoder.dart';
-import '../src/serial_encoder.dart';
-import '../src/structured_decoder.dart';
-import '../src/structured_encoder.dart';
 import '../test/raw_encodable.dart';
 
-class Person implements Encodable, RawEncodable {
+class Person implements Encodable<Person>, RawEncodable {
   Person(this.name, this.a, this.b, this.c, this.d, this.e, this.f);
 
   final String name;
@@ -41,7 +37,7 @@ class Person implements Encodable, RawEncodable {
     return 'Person(name: $name, a: $a, b: $b, c: $c, d: $d, e: $e, f: $f)';
   }
 
-  static final Decodable<Person> decodable = PersonDecodable();
+  static final Decoder<Person> decoder = const PersonDecoder();
 
   static Person fromMapRaw(Map<String, dynamic> map) {
     return Person(
@@ -73,58 +69,67 @@ class Person implements Encodable, RawEncodable {
   }
 
   @override
-  Object? encodeStructured(StructuredEncoder encoder) {
-    final encoded = encoder.encodeKeyed<String>();
-    encoded.encodeValue('name', name);
-    encoded.encodeValue('a', a);
-    encoded.encodeValue('b', b);
-    encoded.encodeValue('c', c);
-    if (d != null) {
-      encoded.encodeEncodable('d', d!);
+  Encoder<Person> encoder() => const PersonEncoder();
+}
+
+final class PersonEncoder implements Encoder<Person> {
+  const PersonEncoder();
+
+  @override
+  Object? encodeStruct(StructEncoding encoding, Person value) {
+    final encoded = encoding.encodeKeyed<String>();
+    encoded.encodeValue('name', value.name);
+    encoded.encodeValue('a', value.a);
+    encoded.encodeValue('b', value.b);
+    encoded.encodeValue('c', value.c);
+    if (value.d != null) {
+      encoded.encodeEncodable('d', value.d!, value.d!.encoder());
     } else {
       encoded.encodeValue('d', null);
     }
-    encoded.encodeValue('e', e);
-    encoded.encodeIterable('f', f, (v, e) => v.encodeStructured(e));
+    encoded.encodeValue('e', value.e);
+    encoded.encodeIterable('f', value.f, (v) => v.encoder());
     return encoded;
   }
 
   @override
-  void encodeSerial(SerialEncoder encoder) {
+  void encodeSerial(SerialEncoding encoder, Person value) {
     encoder.startObject<String>();
     encoder.encodeKey('name');
-    encoder.encodeString(name);
+    encoder.encodeString(value.name);
     encoder.encodeKey('a');
-    encoder.encodeInt(a);
+    encoder.encodeInt(value.a);
     encoder.encodeKey('b');
-    encoder.encodeDouble(b);
+    encoder.encodeDouble(value.b);
     encoder.encodeKey('c');
-    encoder.encodeBool(c);
+    encoder.encodeBool(value.c);
     encoder.encodeKey('d');
-    if (d != null) {
-      encoder.encodeEncodable(d!);
+    if (value.d != null) {
+      encoder.encodeEncodable(value.d!, value.d!.encoder());
     } else {
       encoder.encodeNull();
     }
     encoder.encodeKey('e');
     encoder.startArray();
-    for (final e in e) {
+    for (final e in value.e) {
       encoder.encodeString(e);
     }
     encoder.endArray();
     encoder.encodeKey('f');
     encoder.startArray();
-    for (final e in f) {
-      encoder.encodeEncodable(e);
+    for (final e in value.f) {
+      encoder.encodeEncodable(e, e.encoder());
     }
     encoder.endArray();
     encoder.endObject();
   }
 }
 
-final class PersonDecodable implements Decodable<Person> {
+final class PersonDecoder implements Decoder<Person> {
+  const PersonDecoder();
+
   @override
-  Person decodeSerial(SerialDecoder decoder) {
+  Person decodeSerial(SerialDecoding decoder) {
     late String name;
     late int a;
     late double b;
@@ -144,13 +149,12 @@ final class PersonDecodable implements Decodable<Person> {
         case 'c':
           c = decoder.decodeBool();
         case 'd':
-          d = decoder.decodeDecodableOrNull(Person.decodable);
+          d = decoder.decodeDecodableOrNull(Person.decoder);
         case 'e':
           e = [for (; decoder.nextItem();) decoder.decodeString()];
         case 'f':
           f = [
-            for (; decoder.nextItem();)
-              decoder.decodeDecodable(Person.decodable)
+            for (; decoder.nextItem();) decoder.decodeDecodable(Person.decoder)
           ];
         default:
           decoder.skipNext();
@@ -161,28 +165,29 @@ final class PersonDecodable implements Decodable<Person> {
   }
 
   @override
-  Person decodeStructured(StructuredDecoder decoder) {
+  Person decodeStruct(StructDecoding decoder) {
     var keyed = decoder.decodeKeyed<String>();
     return Person(
       keyed.decodeString('name'),
       keyed.decodeInt('a'),
       keyed.decodeDouble('b'),
       keyed.decodeBool('c'),
-      keyed.decodeDecodableOrNull('d', Person.decodable),
+      keyed.decodeDecodableOrNull('d', Person.decoder),
       keyed.decodeList('e'),
-      keyed.decodeListDecodable('f', Person.decodable),
+      keyed.decodeListDecodable('f', Person.decoder),
     );
   }
 }
 
-class PersonMapper implements Mapper<Person> {
+class PersonMapper extends Mapper<Person>
+    with DecoderMapper<Person>, EncoderMapper<Person> {
   factory PersonMapper() => _instance;
   PersonMapper._();
   static final _instance = PersonMapper._();
 
   @override
-  final Decodable<Person> decodable = Person.decodable;
+  Decoder<Person> decoder() => PersonDecoder();
 
   @override
-  Encodable encodableOf(Person value) => value;
+  Encoder<Person> encoder() => PersonEncoder();
 }

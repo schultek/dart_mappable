@@ -1,17 +1,16 @@
 import 'dart:collection';
 
-import 'encoder.dart';
-import 'serial_encoder.dart';
+import 'encoding.dart';
 
-class LazyEncoder implements SerialEncoder {
-  LazyEncoder._();
+class LazyEncoding implements SerialEncoding {
+  LazyEncoding._();
 
   Object? _value;
   final List<Object?> _stack = [];
 
-  static Object? encode(Encodable value) {
-    var e = LazyEncoder._();
-    value.encodeSerial(e);
+  static Object? encode<T>(T value, Encoder<T> encoder) {
+    var e = LazyEncoding._();
+    encoder.encodeSerial(e, value);
     return e._value;
   }
 
@@ -52,16 +51,16 @@ class LazyEncoder implements SerialEncoder {
   }
 
   @override
-  void encodeEncodable(Encodable value) {
+  void encodeEncodable<T>(T value, Encoder<T> encoder) {
     if (_stack case [..._, _LazyMap map, Object? key]) {
-      map._lazy[key] = value;
+      map._lazy[key] = (value, encoder);
       _stack.removeLast();
     } else if (_stack case [..._, _LazyList l]) {
-      l._lazy[l.length] = value;
+      l._lazy[l.length] = (value, encoder);
       l._value.add(null);
     } else {
-      final s = LazyEncoder._();
-      value.encodeSerial(s);
+      final s = LazyEncoding._();
+      encoder.encodeSerial(s, value);
       _encodeValue(s._value);
     }
   }
@@ -99,15 +98,16 @@ class LazyEncoder implements SerialEncoder {
 
 class _LazyMap<Key, Value> with MapMixin<Key, Value> {
   final Map<Key, Value> _value = {};
-  final Map<Key, Encodable> _lazy = {};
+  final Map<Key, (dynamic, Encoder)> _lazy = {};
 
   @override
   Value? operator [](Object? key) {
     if (_value.containsKey(key)) {
       return _value[key];
     } else if (_lazy.containsKey(key)) {
-      final e = LazyEncoder._();
-      _lazy.remove(key)!.encodeSerial(e);
+      final e = LazyEncoding._();
+      final (value, encoder) = _lazy.remove(key)!;
+      encoder.encodeSerial(e, value);
       return _value[key as Key] = e._value as Value;
     } else {
       return null;
@@ -134,8 +134,9 @@ class _LazyMap<Key, Value> with MapMixin<Key, Value> {
     if (_value.containsKey(key)) {
       return _value.remove(key);
     } else if (_lazy.containsKey(key)) {
-      final e = LazyEncoder._();
-      _lazy.remove(key)!.encodeSerial(e);
+      final e = LazyEncoding._();
+      final (value, encoder) = _lazy.remove(key)!;
+      encoder.encodeSerial(e, value);
       return e._value as Value;
     } else {
       return null;
@@ -145,7 +146,7 @@ class _LazyMap<Key, Value> with MapMixin<Key, Value> {
 
 class _LazyList<E> with ListMixin<E> {
   final List<E?> _value = [];
-  final Map<int, Encodable> _lazy = {};
+  final Map<int, (dynamic, Encoder)> _lazy = {};
 
   @override
   int get length => _value.length;
@@ -157,8 +158,9 @@ class _LazyList<E> with ListMixin<E> {
   @override
   E operator [](int index) {
     if (_lazy.containsKey(index)) {
-      final e = LazyEncoder._();
-      _lazy.remove(index)!.encodeSerial(e);
+      final e = LazyEncoding._();
+      final (value, encoder) = _lazy.remove(index)!;
+      encoder.encodeSerial(e, value);
       return _value[index] = e._value as E;
     } else {
       return _value[index] as E;
