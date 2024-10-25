@@ -1,6 +1,8 @@
+import 'decoder.dart';
+
 extension type StructuredDecoder._(Object? _value) {
-  static T decode<T>(Object? value, T Function(StructuredDecoder) decode) {
-    return decode(StructuredDecoder._(value));
+  static T decode<T>(Object? value, Decodable<T> decodable) {
+    return StructuredDecoder._(value).decodeDecodable(decodable);
   }
 
   @pragma('vm:prefer-inline')
@@ -44,14 +46,14 @@ extension type StructuredDecoder._(Object? _value) {
   }
 
   @pragma('vm:prefer-inline')
-  T decodeDecodable<T>(T Function(StructuredDecoder) decode) {
-    return decode(this);
+  T decodeDecodable<T>(Decodable<T> decodable) {
+    return decodable.decodeStructured(this);
   }
 
   @pragma('vm:prefer-inline')
-  T? decodeDecodableOrNull<T>(T Function(StructuredDecoder) decode) {
+  T? decodeDecodableOrNull<T>(Decodable<T> decodable) {
     if (_value == null) return null;
-    return decode(this);
+    return decodable.decodeStructured(this);
   }
 
   @pragma('vm:prefer-inline')
@@ -70,14 +72,20 @@ extension type StructuredDecoder._(Object? _value) {
   }
 
   @pragma('vm:prefer-inline')
-  List<T> decodeListDecodable<T>(T Function(StructuredDecoder) decode) {
-    return [for (final e in _value as List) decode(StructuredDecoder._(e))];
+  List<T> decodeListDecodable<T>(Decodable<T> decodable) {
+    return [
+      for (final e in _value as List)
+        decodable.decodeStructured(StructuredDecoder._(e))
+    ];
   }
 
   @pragma('vm:prefer-inline')
-  List<T>? decodeListDecodableOrNull<T>(T Function(StructuredDecoder) decode) {
+  List<T>? decodeListDecodableOrNull<T>(Decodable<T> decodable) {
     if (_value == null) return null;
-    return [for (final e in _value as List) decode(StructuredDecoder._(e))];
+    return [
+      for (final e in _value as List)
+        decodable.decodeStructured(StructuredDecoder._(e))
+    ];
   }
 }
 
@@ -123,15 +131,15 @@ extension type KeyedStructuredDecoder<Key>._(Map<Key, dynamic> _value) {
   }
 
   @pragma('vm:prefer-inline')
-  T decodeDecodable<T>(Key key, T Function(StructuredDecoder) decode) {
-    return decode(StructuredDecoder._(_value[key]));
+  T decodeDecodable<T>(Key key, Decodable<T> decodable) {
+    return decodable.decodeStructured(StructuredDecoder._(_value[key]));
   }
 
   @pragma('vm:prefer-inline')
-  T? decodeDecodableOrNull<T>(Key key, T Function(StructuredDecoder) decode) {
+  T? decodeDecodableOrNull<T>(Key key, Decodable<T> decodable) {
     var v = _value[key];
     if (v == null) return null;
-    return decode(StructuredDecoder._(v));
+    return decodable.decodeStructured(StructuredDecoder._(v));
   }
 
   @pragma('vm:prefer-inline')
@@ -145,18 +153,211 @@ extension type KeyedStructuredDecoder<Key>._(Map<Key, dynamic> _value) {
   }
 
   @pragma('vm:prefer-inline')
-  List<T> decodeListDecodable<T>(
-      Key key, T Function(StructuredDecoder) decode) {
+  List<T> decodeListDecodable<T>(Key key, Decodable<T> decodable) {
     return [
-      for (final e in _value[key] as List) decode(StructuredDecoder._(e))
+      for (final e in _value[key] as List)
+        decodable.decodeStructured(StructuredDecoder._(e))
     ];
   }
 
   @pragma('vm:prefer-inline')
-  List<T>? decodeListDecodableOrNull<T>(
-      Key key, T Function(StructuredDecoder) decode) {
+  List<T>? decodeListDecodableOrNull<T>(Key key, Decodable<T> decodable) {
     var v = _value[key];
     if (v == null) return null;
-    return [for (final e in v as List) decode(StructuredDecoder._(e))];
+    return [
+      for (final e in v as List)
+        decodable.decodeStructured(StructuredDecoder._(e))
+    ];
+  }
+}
+
+class GeneralizedStructuredDecoder implements Decoder {
+  GeneralizedStructuredDecoder._(this.decoder);
+
+  static T decode<T>(DecodableMixin<T> decodable, StructuredDecoder decoder) {
+    final d = GeneralizedStructuredDecoder._(decoder);
+    return decodable.decode(d);
+  }
+
+  final StructuredDecoder decoder;
+
+  @pragma('vm:prefer-inline')
+  @override
+  String decodeString() {
+    return decoder.decodeString();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  String? decodeStringOrNull() {
+    return decoder.decodeStringOrNull();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  bool decodeBool() {
+    return decoder.decodeBool();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  bool? decodeBoolOrNull() {
+    return decoder.decodeBoolOrNull();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  int decodeInt() {
+    return decoder.decodeInt();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  int? decodeIntOrNull() {
+    return decoder.decodeIntOrNull();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  double decodeDouble() {
+    return decoder.decodeDouble();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  double? decodeDoubleOrNull() {
+    return decoder.decodeDoubleOrNull();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  T decodeDecodable<T>(Decodable<T> decodable) {
+    return decoder.decodeDecodable(decodable);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  T? decodeDecodableOrNull<T>(Decodable<T> decodable) {
+    return decoder.decodeDecodableOrNull(decodable);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  List<T> decodeList<T>() {
+    return decoder.decodeList<T>();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  List<T>? decodeListOrNull<T>() {
+    return decoder.decodeListOrNull<T>();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  List<T> decodeListDecodable<T>(Decodable<T> decodable) {
+    return decoder.decodeListDecodable<T>(decodable);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  List<T>? decodeListDecodableOrNull<T>(Decodable<T> decodable) {
+    return decoder.decodeListDecodableOrNull<T>(decodable);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  KeyedDecoder<Key> decodeKeyed<Key>() {
+    return KeyedGeneralizedStructuredDecoder<Key>(decoder.decodeKeyed());
+  }
+}
+
+class KeyedGeneralizedStructuredDecoder<Key> implements KeyedDecoder<Key> {
+  KeyedGeneralizedStructuredDecoder(this.decoder);
+
+  final KeyedStructuredDecoder<Key> decoder;
+
+  @pragma('vm:prefer-inline')
+  @override
+  String decodeString(Key key) {
+    return decoder.decodeString(key);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  String? decodeStringOrNull(Key key) {
+    return decoder.decodeStringOrNull(key);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  bool decodeBool(Key key) {
+    return decoder.decodeBool(key);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  bool? decodeBoolOrNull(Key key) {
+    return decoder.decodeBoolOrNull(key);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  int decodeInt(Key key) {
+    return decoder.decodeInt(key);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  int? decodeIntOrNull(Key key) {
+    return decoder.decodeIntOrNull(key);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  double decodeDouble(Key key) {
+    return decoder.decodeDouble(key);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  double? decodeDoubleOrNull(Key key) {
+    return decoder.decodeDoubleOrNull(key);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  T decodeDecodable<T>(Key key, Decodable<T> decodable) {
+    return decoder.decodeDecodable(key, decodable);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  T? decodeDecodableOrNull<T>(Key key, Decodable<T> decodable) {
+    return decoder.decodeDecodableOrNull(key, decodable);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  List<T> decodeList<T>(Key key) {
+    return decoder.decodeList(key);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  List<T>? decodeListOrNull<T>(Key key) {
+    return decoder.decodeListOrNull(key);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  List<T> decodeListDecodable<T>(Key key, Decodable<T> decodable) {
+    return decoder.decodeListDecodable(key, decodable);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  List<T>? decodeListDecodableOrNull<T>(Key key, Decodable<T> decodable) {
+    return decoder.decodeListDecodableOrNull(key, decodable);
   }
 }

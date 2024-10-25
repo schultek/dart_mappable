@@ -36,7 +36,7 @@ extension type StructuredEncoder._(Null _) {
   static final _i = StructuredEncoder._(null);
 
   static Object? encode(Encodable value) {
-    return value.encodeStructured(_i);
+    return _i.encodeEncodable(value);
   }
 
   @pragma('vm:prefer-inline')

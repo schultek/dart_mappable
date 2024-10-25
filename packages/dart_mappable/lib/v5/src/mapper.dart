@@ -1,47 +1,20 @@
 import 'dart:async';
 
+import 'decoder.dart';
 import 'encoder.dart';
-import 'serial_decoder.dart';
-import 'serial_encoder.dart';
-import 'structured_decoder.dart';
-import 'structured_encoder.dart';
 
 abstract class Mapper<T> {
-  T decodeSerial(SerialDecoder decoder);
-  T decodeStructured(StructuredDecoder decoder);
-
-  Object? encodeStructured(StructuredEncoder encoder, T value);
-  void encodeSerial(SerialEncoder encoder, T value);
+  Decodable<T> get decodable;
+  Encodable encodableOf(T value);
 }
 
-T Function(StructuredDecoder) findStructuredDecodeFor<T>() {
-  return findMapperFor<T>().decodeStructured;
-}
-
-T Function(SerialDecoder) findSerialDecodeFor<T>() {
-  return findMapperFor<T>().decodeSerial;
+Decodable<T> findDecodableFor<T>() {
+  return findMapperFor<T>().decodable;
 }
 
 Encodable findEncodableFor<T>(T value) {
   if (value is Encodable) return value;
-  return EncodableWithMapper(value, findMapperFor<T>());
-}
-
-class EncodableWithMapper<T> implements Encodable {
-  EncodableWithMapper(this.value, this.mapper);
-
-  final T value;
-  final Mapper<T> mapper;
-
-  @override
-  Object? encodeStructured(StructuredEncoder encoder) {
-    return mapper.encodeStructured(encoder, value);
-  }
-
-  @override
-  void encodeSerial(SerialEncoder encoder) {
-    mapper.encodeSerial(encoder, value);
-  }
+  return findMapperFor<T>().encodableOf(value);
 }
 
 final _mappersKey = Object();

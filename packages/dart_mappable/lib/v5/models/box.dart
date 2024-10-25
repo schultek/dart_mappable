@@ -26,7 +26,7 @@ class Box<T> implements Encodable, RawEncodable {
   static Box<T> decode<T>(StructuredDecoder decoder) {
     final keyed = decoder.decodeKeyed<String>();
     return Box(
-      keyed.decodeDecodable('data', findStructuredDecodeFor<T>()),
+      keyed.decodeDecodable('data', findDecodableFor<T>()),
     );
   }
 

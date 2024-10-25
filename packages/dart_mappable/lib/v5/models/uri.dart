@@ -1,8 +1,8 @@
+import '../src/decoder.dart';
+import '../src/encoder.dart';
 import '../src/mapper.dart';
 import '../src/serial_decoder.dart';
-import '../src/serial_encoder.dart';
 import '../src/structured_decoder.dart';
-import '../src/structured_encoder.dart';
 
 class UriMapper implements Mapper<Uri> {
   @override
@@ -16,12 +16,14 @@ class UriMapper implements Mapper<Uri> {
   }
 
   @override
-  Object? encodeStructured(StructuredEncoder encoder, Uri value) {
-    return encoder.encodeValue(value.toString());
-  }
+  final Decodable<Uri> decodable = Decodable.fromHandler(decode: (decoder) {
+    return Uri.parse(decoder.decodeString());
+  });
 
   @override
-  void encodeSerial(SerialEncoder encoder, Uri value) {
-    encoder.encodeString(value.toString());
+  Encodable encodableOf(Uri value) {
+    return Encodable.fromHandler(encode: (encoder) {
+      return encoder.encodeValue(value.toString());
+    });
   }
 }
