@@ -25,38 +25,57 @@ abstract class Mapper<T> {
   bool isForType(Type type) => type.base == T;
 }
 
-mixin DecoderMapper<T> implements Mapper<T> {
+abstract interface class DecoderOf<T> implements Mapper<T> {
   Decoder<T> decoder();
 }
 
-mixin DecoderMapper1<T> implements Mapper<T> {
+abstract interface class DecoderOf1<T> implements Mapper<T> {
   Decoder<T> decoder<A>([Decoder<A>? d1]);
 }
 
-mixin DecoderMapper2<T> implements Mapper<T> {
+abstract interface class DecoderOf2<T> implements Mapper<T> {
   Decoder<T> decoder<A, B>([Decoder<A>? d1, Decoder<B>? d2]);
 }
 
-mixin EncoderMapper<T> implements Mapper<T> {
+abstract interface class EncoderOf<T> implements Mapper<T> {
   Encoder<T> encoder();
 }
 
-mixin EncoderMapper1<T> implements Mapper<T> {
+abstract interface class EncoderOf1<T> implements Mapper<T> {
   Encoder<T> encoder<A>([Encoder<A>? e1]);
 }
 
+abstract interface class EncoderOf2<T> implements Mapper<T> {
+  Encoder<T> encoder<A, B>([Encoder<A>? e1, Encoder<B>? e2]);
+}
+
 Decoder<T> findDecoderFor<T>() {
-  var mapper = MapperContainer.current?.findByType<T>();
-  return switch (mapper!) {
-    DecoderMapper2 d => T.args.call2(<A, B>() {
-        return d.decoder<A, B>(findDecoderFor<A>(), findDecoderFor<B>());
-      }),
-    DecoderMapper1 d => T.args.call1(<A>() {
+  var mapper = MapperContainer.current.findByType<T>();
+  return _decoderOf<T>(mapper!)!;
+}
+
+Decoder<T>? _decoderOf<T>(Mapper mapper) {
+  return switch (mapper) {
+    DecoderOf d => d.decoder(),
+    DecoderOf1 d => T.args.call1(<A>() {
         return d.decoder<A>(findDecoderFor<A>());
       }),
-    DecoderMapper m => m.decoder(),
+    DecoderOf2 d => T.args.call2(<A, B>() {
+        return d.decoder<A, B>(findDecoderFor<A>(), findDecoderFor<B>());
+      }),
+    _ => null,
+  } as Decoder<T>?;
+}
+
+Encoder<T> findEncoderFor<T>(T value) {
+  if (value is Encodable<T>) return value.encoder();
+  var mapper = MapperContainer.current.findByValue<T>(value);
+  return switch (mapper) {
+    EncoderOf e => e.encoder(),
+    EncoderOf1 e => T.args.call1(<A>() => e.encoder<A>()),
+    EncoderOf2 e => T.args.call2(<A, B>() => e.encoder<A, B>()),
     _ => throw "",
-  } as Decoder<T>;
+  } as Encoder<T>;
 }
 
 extension on List<Type> {
@@ -69,13 +88,12 @@ extension on List<Type> {
   }
 }
 
-Encoder<T> findEncoderFor<T>(T value) {
-  if (value is Encodable) return value.encoder() as Encoder<T>;
-  var mapper = MapperContainer.current?.findByValue<T>(value);
-  return switch (mapper) {
-    EncoderMapper e => e.encoder(),
-    _ => throw "",
-  } as Encoder<T>;
+List<SubDecoderMixin<T>> findSubDecodersFor<T>() {
+  var mappers = MapperContainer.current.findAll<T>();
+  return mappers
+      .map((m) => _decoderOf<T>(m))
+      .whereType<SubDecoderMixin<T>>()
+      .toList();
 }
 
 R useMappers<R>(R Function() callback, {List<Mapper>? mappers}) {
@@ -86,12 +104,13 @@ R useMappers<R>(R Function() callback, {List<Mapper>? mappers}) {
 
 class MapperContainer implements TypeProvider {
   static final _containerKey = Object();
-  static MapperContainer? get current =>
-      Zone.current[_containerKey] as MapperContainer?;
+  static final _root = MapperContainer._({});
+
+  static MapperContainer get current =>
+      Zone.current[_containerKey] as MapperContainer? ?? _root;
 
   static MapperContainer _inherit({List<Mapper>? mappers}) {
-    var parent = current ?? MapperContainer._({});
-
+    var parent = current;
     if (mappers == null) {
       return parent;
     }
@@ -111,12 +130,18 @@ class MapperContainer implements TypeProvider {
   final Map<Type, Mapper?> _cachedMappers = {};
   final Map<Type, Mapper?> _cachedTypeMappers = {};
 
+  final Map<Object, dynamic> _cachedObjects = {};
+
   Mapper? findByType<T>([Type? type]) {
     return _mapperForType(type ?? T);
   }
 
   Mapper? findByValue<T>(T value) {
     return _mapperForValue(value);
+  }
+
+  List<Mapper<T>> findAll<T>() {
+    return _mappers.values.whereType<Mapper<T>>().toList();
   }
 
   Mapper? _mapperForValue(dynamic value) {
@@ -193,5 +218,13 @@ class MapperContainer implements TypeProvider {
   @override
   String? idOf(Type type) {
     return _mappers[type]?.id;
+  }
+
+  T? getCached<T>(Object key) {
+    return _cachedObjects[key] as T?;
+  }
+
+  void setCached<T>(Object key, T value) {
+    _cachedObjects[key] = value;
   }
 }

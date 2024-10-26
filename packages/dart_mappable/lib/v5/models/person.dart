@@ -16,6 +16,11 @@ class Person implements Encodable<Person>, RawEncodable {
   final List<String> e;
   final List<Person> f;
 
+  static Mapper<Person> mapper() => const PersonMapper();
+  static Decoder<Person> decoder() => const PersonDecoder();
+  @override
+  Encoder<Person> encoder() => const PersonEncoder();
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -36,8 +41,6 @@ class Person implements Encodable<Person>, RawEncodable {
   String toString() {
     return 'Person(name: $name, a: $a, b: $b, c: $c, d: $d, e: $e, f: $f)';
   }
-
-  static final Decoder<Person> decoder = const PersonDecoder();
 
   static Person fromMapRaw(Map<String, dynamic> map) {
     return Person(
@@ -67,16 +70,13 @@ class Person implements Encodable<Person>, RawEncodable {
       'f': f.map((e) => e.toMapRaw()).toList(),
     };
   }
-
-  @override
-  Encoder<Person> encoder() => const PersonEncoder();
 }
 
 final class PersonEncoder implements Encoder<Person> {
   const PersonEncoder();
 
   @override
-  Object? encodeStruct(StructEncoding encoding, Person value) {
+  Object? encodeStruct(Person value, StructEncoding encoding) {
     final encoded = encoding.encodeKeyed<String>();
     encoded.encodeValue('name', value.name);
     encoded.encodeValue('a', value.a);
@@ -93,7 +93,7 @@ final class PersonEncoder implements Encoder<Person> {
   }
 
   @override
-  void encodeSerial(SerialEncoding encoder, Person value) {
+  void encodeSerial(Person value, SerialEncoding encoder) {
     encoder.startObject<String>();
     encoder.encodeKey('name');
     encoder.encodeString(value.name);
@@ -149,12 +149,13 @@ final class PersonDecoder implements Decoder<Person> {
         case 'c':
           c = decoder.decodeBool();
         case 'd':
-          d = decoder.decodeDecodableOrNull(Person.decoder);
+          d = decoder.decodeDecodableOrNull(Person.decoder());
         case 'e':
           e = [for (; decoder.nextItem();) decoder.decodeString()];
         case 'f':
           f = [
-            for (; decoder.nextItem();) decoder.decodeDecodable(Person.decoder)
+            for (; decoder.nextItem();)
+              decoder.decodeDecodable(Person.decoder())
           ];
         default:
           decoder.skipNext();
@@ -172,22 +173,20 @@ final class PersonDecoder implements Decoder<Person> {
       keyed.decodeInt('a'),
       keyed.decodeDouble('b'),
       keyed.decodeBool('c'),
-      keyed.decodeDecodableOrNull('d', Person.decoder),
+      keyed.decodeDecodableOrNull('d', Person.decoder()),
       keyed.decodeList('e'),
-      keyed.decodeListDecodable('f', Person.decoder),
+      keyed.decodeListDecodable('f', Person.decoder()),
     );
   }
 }
 
 class PersonMapper extends Mapper<Person>
-    with DecoderMapper<Person>, EncoderMapper<Person> {
-  factory PersonMapper() => _instance;
-  PersonMapper._();
-  static final _instance = PersonMapper._();
+    implements DecoderOf<Person>, EncoderOf<Person> {
+  const PersonMapper();
 
   @override
-  Decoder<Person> decoder() => PersonDecoder();
+  Decoder<Person> decoder() => const PersonDecoder();
 
   @override
-  Encoder<Person> encoder() => PersonEncoder();
+  Encoder<Person> encoder() => const PersonEncoder();
 }

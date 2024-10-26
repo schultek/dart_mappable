@@ -7,35 +7,34 @@ export 'serial_encoding.dart';
 export 'struct_encoding.dart';
 
 abstract class Encoder<T> {
-  Object? encodeStruct(StructEncoding encoding, T value);
-  void encodeSerial(SerialEncoding encoding, T value);
+  Object? encodeStruct(T value, StructEncoding encoding);
+  void encodeSerial(T value, SerialEncoding encoding);
 
   const factory Encoder.fromHandlers({
-    required Object? Function(StructEncoding encoding, T value) encodeStruct,
-    required void Function(SerialEncoding encoding, T value) encodeSerial,
+    required Object? Function(T value, StructEncoding encoding) encodeStruct,
+    required void Function(T value, SerialEncoding encoding) encodeSerial,
   }) = _EncoderFromHandlers;
 
   const factory Encoder.fromHandler({
-    required Object? Function(Encoding encoding, T value) encode,
+    required Object? Function(T value, Encoding encoding) encode,
   }) = _EncoderFromHandler;
 }
 
-abstract interface class Encodable<T extends Encodable<T>> {
+abstract interface class Encodable<T> {
   Encoder<T> encoder();
 }
 
-abstract interface class Encodable1<T extends Encodable<T>, A>
-    implements Encodable<T> {
+abstract interface class Encodable1<T, A> implements Encodable<T> {
   @override
   Encoder<T> encoder([Encoder<A>? e1]);
 }
 
 abstract mixin class EncoderMixin<T> implements Encoder<T> {
-  Object? encode(Encoding encoder, T value);
+  Object? encode(T value, Encoding encoding);
 
   @override
-  Object? encodeStruct(StructEncoding encoder, T value) {
-    var encoded = encode(CompatStructEncoding(encoder), value);
+  Object? encodeStruct(T value, StructEncoding encoding) {
+    var encoded = encode(value, CompatStructEncoding(encoding));
     if (encoded is KeyedCompatStructEncoding) {
       return encoded.encoding;
     }
@@ -43,10 +42,10 @@ abstract mixin class EncoderMixin<T> implements Encoder<T> {
   }
 
   @override
-  void encodeSerial(SerialEncoding encoder, T value) {
-    var encoded = encode(GeneralizedSerialEncoding(encoder), value);
-    if (encoded is KeyedGeneralizedSerialEncoding) {
-      encoder.endObject();
+  void encodeSerial(T value, SerialEncoding encoding) {
+    var encoded = encode(value, CompatSerialEncoding(encoding));
+    if (encoded is KeyedCompatSerialEncoding) {
+      encoding.endObject();
     }
   }
 }
@@ -88,42 +87,49 @@ extension UtilEncodable1<T extends Encodable<T>, A> on Encodable1<T, A> {
 }
 
 abstract interface class Encoding {
-  KeyedEncoding<Key> encodeKeyed<Key>();
-
   Object? encodeValue(Object? value);
+
+  Object? encodeEncodable<T>(T value, Encoder<T> encoder);
+
+  Object? encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode);
+
+  KeyedEncoding<Key> encodeKeyed<Key>();
 }
 
 abstract interface class KeyedEncoding<Key> {
   void encodeValue(Key key, Object? value);
 
   void encodeEncodable<T>(Key key, T value, Encoder<T> encoder);
+
+  void encodeIterable<T>(
+      Key key, Iterable<T> value, Encoder<T> Function(T) encode);
 }
 
 final class _EncoderFromHandlers<T> implements Encoder<T> {
   const _EncoderFromHandlers({
-    required Object? Function(StructEncoding encoder, T value) encodeStruct,
-    required void Function(SerialEncoding encoder, T value) encodeSerial,
+    required Object? Function(T value, StructEncoding encoding) encodeStruct,
+    required void Function(T value, SerialEncoding encoding) encodeSerial,
   })  : _encodeStruct = encodeStruct,
         _encodeSerial = encodeSerial;
 
-  final Object? Function(StructEncoding encoder, T value) _encodeStruct;
-  final void Function(SerialEncoding encoder, T value) _encodeSerial;
+  final Object? Function(T value, StructEncoding encoding) _encodeStruct;
+  final void Function(T value, SerialEncoding encoding) _encodeSerial;
 
   @override
-  Object? encodeStruct(StructEncoding encoder, T value) =>
-      _encodeStruct(encoder, value);
+  Object? encodeStruct(T value, StructEncoding encoding) =>
+      _encodeStruct(value, encoding);
   @override
-  void encodeSerial(SerialEncoding encoder, T value) =>
-      _encodeSerial(encoder, value);
+  void encodeSerial(T value, SerialEncoding encoding) =>
+      _encodeSerial(value, encoding);
 }
 
 final class _EncoderFromHandler<T> with EncoderMixin<T> {
   const _EncoderFromHandler({
-    required Object? Function(Encoding encoder, T value) encode,
+    required Object? Function(T value, Encoding encoding) encode,
   }) : _encode = encode;
 
-  final Object? Function(Encoding encoder, T value) _encode;
+  final Object? Function(T value, Encoding encoding) _encode;
 
   @override
-  Object? encode(Encoding encoder, T value) => _encode(encoder, value);
+  Object? encode(T value, Encoding encoding) => _encode(value, encoding);
 }

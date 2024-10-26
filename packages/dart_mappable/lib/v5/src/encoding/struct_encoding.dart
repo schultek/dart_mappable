@@ -6,13 +6,23 @@ class CompatStructEncoding implements Encoding {
   final StructEncoding encoding;
 
   @override
-  KeyedEncoding<Key> encodeKeyed<Key>() {
-    return KeyedCompatStructEncoding(encoding.encodeKeyed());
+  Object? encodeValue(Object? value) {
+    return encoding.encodeValue(value);
   }
 
   @override
-  Object? encodeValue(Object? value) {
-    return encoding.encodeValue(value);
+  Object? encodeEncodable<T>(T value, Encoder<T> encoder) {
+    return encoding.encodeEncodable<T>(value, encoder);
+  }
+
+  @override
+  Object? encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode) {
+    return encoding.encodeIterable<T>(value, encode);
+  }
+
+  @override
+  KeyedEncoding<Key> encodeKeyed<Key>() {
+    return KeyedCompatStructEncoding(encoding.encodeKeyed());
   }
 }
 
@@ -22,13 +32,19 @@ class KeyedCompatStructEncoding<Key> implements KeyedEncoding<Key> {
   final KeyedStructEncoding<Key> encoding;
 
   @override
-  void encodeEncodable<T>(Key key, T value, Encoder<T> encoder) {
-    encoding.encodeEncodable(key, value, encoder);
+  void encodeValue(Key key, Object? value) {
+    encoding.encodeValue(key, value);
   }
 
   @override
-  void encodeValue(Key key, Object? value) {
-    encoding.encodeValue(key, value);
+  void encodeEncodable<T>(Key key, T value, Encoder<T> encoder) {
+    encoding.encodeEncodable<T>(key, value, encoder);
+  }
+
+  @override
+  void encodeIterable<T>(
+      Key key, Iterable<T> value, Encoder<T> Function(T) encode) {
+    encoding.encodeIterable<T>(key, value, encode);
   }
 }
 
@@ -44,7 +60,7 @@ extension type StructEncoding._(Null _) {
 
   @pragma('vm:prefer-inline')
   Object? encodeEncodable<T>(T value, Encoder<T> encoder) =>
-      encoder.encodeStruct(this, value);
+      encoder.encodeStruct(value, this);
 
   @pragma('vm:prefer-inline')
   KeyedStructEncoding<Key> encodeKeyed<Key>() {
@@ -52,9 +68,10 @@ extension type StructEncoding._(Null _) {
   }
 
   @pragma('vm:prefer-inline')
-  Object? encodeIterable<T>(
-      Iterable<T> value, Object? Function(T, StructEncoding) encode) {
-    return [for (final e in value) encode(e, StructEncoding._i)];
+  Object? encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode) {
+    return [
+      for (final e in value) encode(e).encodeStruct(e, StructEncoding._i)
+    ];
   }
 }
 
@@ -66,14 +83,14 @@ extension type KeyedStructEncoding<Key>._(Map<Key, dynamic> _value) {
 
   @pragma('vm:prefer-inline')
   void encodeEncodable<T>(Key key, T value, Encoder<T> encoder) {
-    _value[key] = encoder.encodeStruct(StructEncoding._(null), value);
+    _value[key] = encoder.encodeStruct(value, StructEncoding._(null));
   }
 
   @pragma('vm:prefer-inline')
   void encodeIterable<T>(
       Key key, Iterable<T> value, Encoder<T> Function(T) encode) {
     _value[key] = [
-      for (final e in value) encode(e).encodeStruct(StructEncoding._i, e)
+      for (final e in value) encode(e).encodeStruct(e, StructEncoding._i)
     ];
   }
 }

@@ -9,9 +9,9 @@ class LazyEncoding implements SerialEncoding {
   final List<Object?> _stack = [];
 
   static Object? encode<T>(T value, Encoder<T> encoder) {
-    var e = LazyEncoding._();
-    encoder.encodeSerial(e, value);
-    return e._value;
+    var encoding = LazyEncoding._();
+    encoder.encodeSerial(value, encoding);
+    return encoding._value;
   }
 
   void _encodeValue(Object? value) {
@@ -59,9 +59,9 @@ class LazyEncoding implements SerialEncoding {
       l._lazy[l.length] = (value, encoder);
       l._value.add(null);
     } else {
-      final s = LazyEncoding._();
-      encoder.encodeSerial(s, value);
-      _encodeValue(s._value);
+      final encoding = LazyEncoding._();
+      encoder.encodeSerial(value, encoding);
+      _encodeValue(encoding._value);
     }
   }
 
@@ -105,10 +105,10 @@ class _LazyMap<Key, Value> with MapMixin<Key, Value> {
     if (_value.containsKey(key)) {
       return _value[key];
     } else if (_lazy.containsKey(key)) {
-      final e = LazyEncoding._();
+      final encoding = LazyEncoding._();
       final (value, encoder) = _lazy.remove(key)!;
-      encoder.encodeSerial(e, value);
-      return _value[key as Key] = e._value as Value;
+      encoder.encodeSerial(value, encoding);
+      return _value[key as Key] = encoding._value as Value;
     } else {
       return null;
     }
@@ -134,10 +134,10 @@ class _LazyMap<Key, Value> with MapMixin<Key, Value> {
     if (_value.containsKey(key)) {
       return _value.remove(key);
     } else if (_lazy.containsKey(key)) {
-      final e = LazyEncoding._();
+      final encoding = LazyEncoding._();
       final (value, encoder) = _lazy.remove(key)!;
-      encoder.encodeSerial(e, value);
-      return e._value as Value;
+      encoder.encodeSerial(value, encoding);
+      return encoding._value as Value;
     } else {
       return null;
     }
@@ -158,10 +158,10 @@ class _LazyList<E> with ListMixin<E> {
   @override
   E operator [](int index) {
     if (_lazy.containsKey(index)) {
-      final e = LazyEncoding._();
+      final encoding = LazyEncoding._();
       final (value, encoder) = _lazy.remove(index)!;
-      encoder.encodeSerial(e, value);
-      return _value[index] = e._value as E;
+      encoder.encodeSerial(value, encoding);
+      return _value[index] = encoding._value as E;
     } else {
       return _value[index] as E;
     }

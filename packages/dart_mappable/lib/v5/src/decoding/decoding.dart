@@ -1,8 +1,10 @@
 import 'serial_decoding.dart';
 import 'struct_decoding.dart';
 
+export 'primitive.dart';
 export 'serial_decoding.dart';
 export 'struct_decoding.dart';
+export 'sub_decoder.dart';
 
 abstract interface class Decoder<T> {
   T decodeSerial(SerialDecoding decoding);
@@ -45,16 +47,18 @@ abstract interface class Decoding {
   double decodeDouble();
   double? decodeDoubleOrNull();
 
-  T decodeDecodable<T>(Decoder<T> decodable);
-  T? decodeDecodableOrNull<T>(Decoder<T> decodable);
+  T decodeDecodable<T>(Decoder<T> decoder);
+  T? decodeDecodableOrNull<T>(Decoder<T> decoder);
 
   List<T> decodeList<T>();
   List<T>? decodeListOrNull<T>();
 
-  List<T> decodeListDecodable<T>(Decoder<T> decodable);
-  List<T>? decodeListDecodableOrNull<T>(Decoder<T> decodable);
+  List<T> decodeListDecodable<T>(Decoder<T> decoder);
+  List<T>? decodeListDecodableOrNull<T>(Decoder<T> decoder);
 
   KeyedDecoding<Key> decodeKeyed<Key>();
+
+  Decoding clone();
 }
 
 abstract interface class KeyedDecoding<Key> {
@@ -70,14 +74,14 @@ abstract interface class KeyedDecoding<Key> {
   double decodeDouble(Key key);
   double? decodeDoubleOrNull(Key key);
 
-  T decodeDecodable<T>(Key key, Decoder<T> decodable);
-  T? decodeDecodableOrNull<T>(Key key, Decoder<T> decodable);
+  T decodeDecodable<T>(Key key, Decoder<T> decoder);
+  T? decodeDecodableOrNull<T>(Key key, Decoder<T> decoder);
 
   List<T> decodeList<T>(Key key);
   List<T>? decodeListOrNull<T>(Key key);
 
-  List<T> decodeListDecodable<T>(Key key, Decoder<T> decodable);
-  List<T>? decodeListDecodableOrNull<T>(Key key, Decoder<T> decodable);
+  List<T> decodeListDecodable<T>(Key key, Decoder<T> decoder);
+  List<T>? decodeListDecodableOrNull<T>(Key key, Decoder<T> decoder);
 }
 
 final class _DecoderFromHandlers<T> implements Decoder<T> {

@@ -32,3 +32,16 @@ final boxMap = {
 final boxBoxMap = {
   'data': boxMap,
 };
+
+final catMap = {
+  'lives': 5,
+  'type': 'cat',
+};
+final dogMap = {
+  'breed': 'Aussi',
+  'type': 'dog',
+};
+final birdMap = {
+  'color': 'red',
+  'type': 'bird',
+};

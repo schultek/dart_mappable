@@ -28,19 +28,13 @@ abstract interface class SerialEncoding {
   void encodeEncodable<T>(T value, Encoder<T> encoder);
 }
 
-class GeneralizedSerialEncoding implements Encoding {
-  GeneralizedSerialEncoding(this.encoding);
+class CompatSerialEncoding implements Encoding {
+  CompatSerialEncoding(this.encoding);
 
   final SerialEncoding encoding;
 
   @override
-  KeyedEncoding<Key> encodeKeyed<Key>() {
-    encoding.startObject<Key>();
-    return KeyedGeneralizedSerialEncoding(encoding);
-  }
-
-  @override
-  Object? encodeValue(Object? value) {
+  void encodeValue(Object? value) {
     if (value == null) {
       encoding.encodeNull();
     } else if (value is bool) {
@@ -60,47 +54,55 @@ class GeneralizedSerialEncoding implements Encoding {
     } else {
       throw ArgumentError('Unsupported type: ${value.runtimeType}');
     }
-    return null;
+  }
+
+  @override
+  void encodeEncodable<T>(T value, Encoder<T> encoder) {
+    encoding.encodeEncodable<T>(value, encoder);
+  }
+
+  @override
+  void encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode) {
+    encoding.startArray();
+    for (final e in value) {
+      encoding.encodeEncodable<T>(e, encode(e));
+    }
+    encoding.endArray();
+  }
+
+  @override
+  KeyedEncoding<Key> encodeKeyed<Key>() {
+    encoding.startObject<Key>();
+    return KeyedCompatSerialEncoding(encoding);
   }
 }
 
-class KeyedGeneralizedSerialEncoding<Key> implements KeyedEncoding<Key> {
-  KeyedGeneralizedSerialEncoding(this.encoding);
+class KeyedCompatSerialEncoding<Key> implements KeyedEncoding<Key> {
+  KeyedCompatSerialEncoding(this.encoding);
 
   SerialEncoding encoding;
 
   @override
-  void encodeEncodable<T>(Key key, T value, Encoder<T> encoder) {
+  void encodeValue(Key key, Object? value) {
     encoding.encodeKey(key);
-    encoding.encodeEncodable(value, encoder);
+    CompatSerialEncoding(encoding).encodeValue(value);
   }
 
   @override
-  void encodeValue(Key key, Object? value) {
+  void encodeEncodable<T>(Key key, T value, Encoder<T> encoder) {
     encoding.encodeKey(key);
-    if (value == null) {
-      encoding.encodeNull();
-    } else if (value is bool) {
-      encoding.encodeBool(value);
-    } else if (value is int) {
-      encoding.encodeInt(value);
-    } else if (value is double) {
-      encoding.encodeDouble(value);
-    } else if (value is String) {
-      encoding.encodeString(value);
-    } else if (value is List) {
-      encoding.startArray();
-      var enc = GeneralizedSerialEncoding(encoding);
-      for (final e in value) {
-        var encoded = enc.encodeValue(e);
-        if (encoded is KeyedGeneralizedSerialEncoding) {
-          encoding.endObject();
-        }
-      }
-      encoding.endArray();
-    } else {
-      throw ArgumentError('Unsupported type: ${value.runtimeType}');
+    encoding.encodeEncodable<T>(value, encoder);
+  }
+
+  @override
+  void encodeIterable<T>(
+      Key key, Iterable<T> value, Encoder<T> Function(T) encode) {
+    encoding.encodeKey(key);
+    encoding.startArray();
+    for (final e in value) {
+      encoding.encodeEncodable<T>(e, encode(e));
     }
+    encoding.endArray();
   }
 }
 
@@ -112,9 +114,9 @@ class JsonEncoding implements SerialEncoding {
   }
 
   static List<int> encodeBytes<T>(T value, Encoder<T> encoder) {
-    var e = JsonEncoding._(CrimsonWriter());
-    encoder.encodeSerial(e, value);
-    return e._writer.toBytes();
+    var encoding = JsonEncoding._(CrimsonWriter());
+    encoder.encodeSerial(value, encoding);
+    return encoding._writer.toBytes();
   }
 
   final CrimsonWriter _writer;
@@ -152,7 +154,7 @@ class JsonEncoding implements SerialEncoding {
   @pragma('vm:prefer-inline')
   @override
   void encodeEncodable<T>(T value, Encoder<T> encoder) {
-    encoder.encodeSerial(this, value);
+    encoder.encodeSerial(value, this);
   }
 
   @pragma('vm:prefer-inline')
