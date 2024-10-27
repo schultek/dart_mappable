@@ -4,6 +4,10 @@ extension CompatSerial on SerialDecoding {
   Decoding asDecoding() => CompatSerialDecoding._(this);
 }
 
+extension CompatStruct on StructDecoding {
+  Decoding asDecoding() => CompatStructDecoding._(this);
+}
+
 class CompatStructDecoding implements Decoding {
   CompatStructDecoding._(this.decoding);
 
@@ -101,15 +105,15 @@ class CompatStructDecoding implements Decoding {
   @pragma('vm:prefer-inline')
   @override
   KeyedDecoding<Key> decodeKeyed<Key>() {
-    return KeyedGeneralizedStructuredDecoder<Key>(decoding.decodeKeyed());
+    return KeyedCompatStructuredDecoder<Key>(decoding.decodeKeyed());
   }
 
   @override
   Decoding clone() => this;
 }
 
-class KeyedGeneralizedStructuredDecoder<Key> implements KeyedDecoding<Key> {
-  KeyedGeneralizedStructuredDecoder(this.decoder);
+class KeyedCompatStructuredDecoder<Key> implements KeyedDecoding<Key> {
+  KeyedCompatStructuredDecoder(this.decoder);
 
   final KeyedStructDecoding<Key> decoder;
 
@@ -300,7 +304,7 @@ class CompatSerialDecoding implements Decoding {
 
   @override
   KeyedDecoding<Key> decodeKeyed<Key>() {
-    _keyed ??= KeyedCompatSerialDecoding<Key>(decoding);
+    _keyed ??= KeyedCompatSerialDecoding<Key>._(decoding);
     return _keyed! as KeyedDecoding<Key>;
   }
 
@@ -309,7 +313,7 @@ class CompatSerialDecoding implements Decoding {
 }
 
 class KeyedCompatSerialDecoding<Key> implements KeyedDecoding<Key> {
-  KeyedCompatSerialDecoding(this.decoding);
+  KeyedCompatSerialDecoding._(this.decoding);
 
   final SerialDecoding decoding;
 
@@ -502,7 +506,16 @@ class KeyedCompatSerialDecoding<Key> implements KeyedDecoding<Key> {
 }
 
 class CompatStructEncoding implements Encoding {
-  CompatStructEncoding(this.encoding);
+  CompatStructEncoding._(this.encoding);
+
+  static Object? encode<T>(
+      T value, EncoderMixin<T> encoder, StructEncoding encoding) {
+    var encoded = encoder.encode(value, CompatStructEncoding._(encoding));
+    if (encoded is KeyedCompatStructEncoding) {
+      return encoded.encoding;
+    }
+    return encoded;
+  }
 
   final StructEncoding encoding;
 
@@ -523,12 +536,12 @@ class CompatStructEncoding implements Encoding {
 
   @override
   KeyedEncoding<Key> encodeKeyed<Key>() {
-    return KeyedCompatStructEncoding(encoding.encodeKeyed());
+    return KeyedCompatStructEncoding._(encoding.encodeKeyed());
   }
 }
 
 class KeyedCompatStructEncoding<Key> implements KeyedEncoding<Key> {
-  KeyedCompatStructEncoding(this.encoding);
+  KeyedCompatStructEncoding._(this.encoding);
 
   final KeyedStructEncoding<Key> encoding;
 
@@ -550,7 +563,15 @@ class KeyedCompatStructEncoding<Key> implements KeyedEncoding<Key> {
 }
 
 class CompatSerialEncoding implements Encoding {
-  CompatSerialEncoding(this.encoding);
+  CompatSerialEncoding._(this.encoding);
+
+  static void encode<T>(
+      T value, EncoderMixin<T> encoder, SerialEncoding encoding) {
+    var encoded = encoder.encode(value, CompatSerialEncoding._(encoding));
+    if (encoded is KeyedCompatSerialEncoding) {
+      encoding.endObject();
+    }
+  }
 
   final SerialEncoding encoding;
 
@@ -594,19 +615,19 @@ class CompatSerialEncoding implements Encoding {
   @override
   KeyedEncoding<Key> encodeKeyed<Key>() {
     encoding.startObject<Key>();
-    return KeyedCompatSerialEncoding(encoding);
+    return KeyedCompatSerialEncoding._(encoding);
   }
 }
 
 class KeyedCompatSerialEncoding<Key> implements KeyedEncoding<Key> {
-  KeyedCompatSerialEncoding(this.encoding);
+  KeyedCompatSerialEncoding._(this.encoding);
 
   SerialEncoding encoding;
 
   @override
   void encodeValue(Key key, Object? value) {
     encoding.encodeKey(key);
-    CompatSerialEncoding(encoding).encodeValue(value);
+    CompatSerialEncoding._(encoding).encodeValue(value);
   }
 
   @override

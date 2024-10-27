@@ -19,19 +19,12 @@ abstract mixin class EncoderMixin<T> implements Encoder<T> {
 
   @override
   Object? encodeStruct(T value, StructEncoding encoding) {
-    var encoded = encode(value, CompatStructEncoding(encoding));
-    if (encoded is KeyedCompatStructEncoding) {
-      return encoded.encoding;
-    }
-    return encoded;
+    return CompatStructEncoding.encode(value, this, encoding);
   }
 
   @override
   void encodeSerial(T value, SerialEncoding encoding) {
-    var encoded = encode(value, CompatSerialEncoding(encoding));
-    if (encoded is KeyedCompatSerialEncoding) {
-      encoding.endObject();
-    }
+    CompatSerialEncoding.encode(value, this, encoding);
   }
 }
 
