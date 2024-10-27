@@ -1,6 +1,8 @@
 import 'package:type_plus/type_plus.dart';
 
-import '../src/decoding/decoding.dart';
+import '../src/mapper/generics.dart';
+import '../src/mapper/inheritance.dart';
+import '../src/protocol/common.dart';
 
 class A<T> {
   static Decoder<A<T>> decoder<T>([Decoder<T>? d1]) => ADecoder(d1);
@@ -12,7 +14,10 @@ class ADecoder<T> with DecoderMixin<A<T>>, SuperDecoderMixin<A<T>> {
   final Decoder<T>? d1;
 
   @override
-  Set<SubDecoderMixin> get subDecoders => {
+  final String discriminatorKey = 'type';
+
+  @override
+  List<SubDecoderMixin> getSubDecoders() => [
         BDecoder<T>(d1),
         if (isBounded<T, num>())
           boundedDecoder1<T>(
@@ -22,7 +27,7 @@ class ADecoder<T> with DecoderMixin<A<T>>, SuperDecoderMixin<A<T>> {
         HDecoder(),
         if (isBounded<T, num>())
           boundedDecoder1<T>(<T extends num>() => IDecoder<C<T>, T>()),
-      };
+      ];
 
   @override
   A<T> decode(Decoding decoding) {
@@ -39,8 +44,6 @@ class BDecoder<T> with DecoderMixin<B<T>>, SubDecoderMixin<B<T>> {
 
   final Decoder<T>? d1;
 
-  @override
-  final String discriminatorKey = 'type';
   @override
   final String discriminatorValue = 'B';
 
@@ -59,8 +62,6 @@ class CDecoder<T extends num> with DecoderMixin<C<T>>, SubDecoderMixin<C<T>> {
 
   final Decoder<T>? d1;
 
-  @override
-  final String discriminatorKey = 'type';
   @override
   final String discriminatorValue = 'C';
 
@@ -84,6 +85,7 @@ class DDecoder<T, V> extends GenericDecoderBase2<D<T, V>, T, V>
 
   @override
   final String discriminatorKey = 'type';
+
   @override
   final String discriminatorValue = 'D';
 
@@ -127,13 +129,14 @@ class EDecoder<T, V>
 
   @override
   final String discriminatorKey = 'type';
+
   @override
   final String discriminatorValue = 'E';
 
   @override
-  Set<SubDecoderMixin> get subDecoders => {
+  List<SubDecoderMixin> getSubDecoders() => [
         FDecoder(),
-      };
+      ];
 
   @override
   E<T, V> decode(Decoding decoding) {
@@ -148,8 +151,6 @@ class F extends E<int, String> {
 class FDecoder with DecoderMixin<F>, SubDecoderMixin<F> {
   FDecoder();
 
-  @override
-  final String discriminatorKey = 'type';
   @override
   final String discriminatorValue = 'F';
 
@@ -173,8 +174,6 @@ class GDecoder<T, V extends A<T>>
   final Decoder<V>? d2;
 
   @override
-  final String discriminatorKey = 'type';
-  @override
   final String discriminatorValue = 'G';
 
   @override
@@ -193,8 +192,6 @@ class HDecoder<T extends C> with DecoderMixin<H<T>>, SubDecoderMixin<H<T>> {
 
   final Decoder<T>? d1;
 
-  @override
-  final String discriminatorKey = 'type';
   @override
   final String discriminatorValue = 'H';
 
@@ -217,8 +214,6 @@ class IDecoder<T extends C<V>, V extends num>
   final Decoder<T>? d1;
   final Decoder<V>? d2;
 
-  @override
-  final String discriminatorKey = 'type';
   @override
   final String discriminatorValue = 'I';
 
@@ -243,8 +238,6 @@ class JDecoder<T extends C<V>, V extends U, U extends num>
   final Decoder<V>? d2;
   final Decoder<U>? d3;
 
-  @override
-  final String discriminatorKey = 'type';
   @override
   final String discriminatorValue = 'J';
 

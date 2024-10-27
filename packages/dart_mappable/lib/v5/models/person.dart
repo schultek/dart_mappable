@@ -1,8 +1,7 @@
 import 'package:collection/collection.dart';
 
-import '../src/decoding/decoding.dart';
-import '../src/encoding/encoding.dart';
-import '../src/mapper.dart';
+import '../src/mapper/mapper.dart';
+import '../src/protocol/common.dart';
 import '../test/raw_encodable.dart';
 
 class Person implements Encodable<Person>, RawEncodable {

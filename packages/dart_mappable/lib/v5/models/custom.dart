@@ -1,7 +1,6 @@
-import '../src/decoding/decoding.dart';
-import '../src/encoding/encoding.dart';
-import '../src/mapper.dart';
-import '../src/simple_mapper.dart';
+import '../src/mapper/container.dart';
+import '../src/mapper/simple.dart';
+import '../src/protocol/common.dart';
 
 class UriMapper extends SimpleMapper<Uri> {
   @override

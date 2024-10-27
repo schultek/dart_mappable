@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'encoding.dart';
+import '../protocol/common.dart';
 
 class LazyEncoding implements SerialEncoding {
   LazyEncoding._();

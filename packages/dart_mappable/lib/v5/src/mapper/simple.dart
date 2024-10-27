@@ -1,5 +1,4 @@
-import 'decoding/decoding.dart';
-import 'encoding/encoding.dart';
+import '../protocol/common.dart';
 import 'mapper.dart';
 
 abstract class SimpleMapper<T> extends Mapper<T>

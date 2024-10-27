@@ -1,6 +1,6 @@
-import '../src/decoding/decoding.dart';
-import '../src/encoding/encoding.dart';
-import '../src/mapper.dart';
+import '../src/mapper/container.dart';
+import '../src/mapper/mapper.dart';
+import '../src/protocol/common.dart';
 import '../test/raw_encodable.dart';
 
 class Box<T> implements Encodable1<Box<T>, T>, RawEncodable {

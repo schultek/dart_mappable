@@ -1,6 +1,6 @@
-import '../src/decoding/decoding.dart';
-import '../src/encoding/encoding.dart';
-import '../src/mapper.dart';
+import '../src/mapper/inheritance.dart';
+import '../src/mapper/mapper.dart';
+import '../src/protocol/common.dart';
 
 abstract class AnimalGen<T> implements Encodable<AnimalGen<T>> {
   AnimalGen({required this.type});
@@ -50,6 +50,9 @@ class AnimalGenDecoder<T>
   final Decoder<T>? d1;
 
   @override
+  final String discriminatorKey = 'type';
+
+  @override
   List<SubDecoderMixin> getSubDecoders() => [
         CatGenDecoder<T>(d1),
         DogGenDecoder(),
@@ -89,9 +92,6 @@ class CatGenDecoder<T>
   final Decoder<T>? d1;
 
   @override
-  final String discriminatorKey = 'type';
-
-  @override
   final String discriminatorValue = 'cat';
 
   @override
@@ -106,9 +106,6 @@ class CatGenDecoder<T>
 
 class DogGenDecoder with DecoderMixin<DogGen>, SubDecoderMixin<DogGen> {
   const DogGenDecoder();
-
-  @override
-  final String discriminatorKey = 'type';
 
   @override
   final String discriminatorValue = 'dog';
@@ -164,9 +161,6 @@ class BirdGenDecoder<A, B extends num>
 
   final Decoder<A>? d1;
   final Decoder<B>? d2;
-
-  @override
-  final String discriminatorKey = 'type';
 
   @override
   final String discriminatorValue = 'bird';

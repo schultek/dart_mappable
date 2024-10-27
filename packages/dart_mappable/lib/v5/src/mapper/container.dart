@@ -4,57 +4,25 @@ import 'dart:async';
 import 'package:type_plus/src/types_registry.dart' show TypeRegistry;
 import 'package:type_plus/type_plus.dart';
 
-import 'decoding/decoding.dart';
-import 'encoding/encoding.dart';
-
-abstract class Mapper<T> {
-  const Mapper();
-
-  /// A unique id for this type, defaults to the name of the type.
-  ///
-  /// Override this if you have two types with the same name.
-  String get id => T.name;
-
-  /// A type factory is what makes generic types work.
-  Function get typeFactory => (f) => f<T>();
-
-  /// A getter for the type of this mapper.
-  Type get type => T;
-
-  bool isFor(dynamic v) => v is T;
-  bool isForType(Type type) => type.base == T;
-}
-
-abstract interface class DecoderOf<T> implements Mapper<T> {
-  Decoder<T> decoder();
-}
-
-abstract interface class DecoderOf1<T> implements Mapper<T> {
-  Decoder<T> decoder<A>([Decoder<A>? d1]);
-}
-
-abstract interface class DecoderOf2<T> implements Mapper<T> {
-  Decoder<T> decoder<A, B>([Decoder<A>? d1, Decoder<B>? d2]);
-}
-
-abstract interface class EncoderOf<T> implements Mapper<T> {
-  Encoder<T> encoder();
-}
-
-abstract interface class EncoderOf1<T> implements Mapper<T> {
-  Encoder<T> encoder<A>([Encoder<A>? e1]);
-}
-
-abstract interface class EncoderOf2<T> implements Mapper<T> {
-  Encoder<T> encoder<A, B>([Encoder<A>? e1, Encoder<B>? e2]);
-}
+import '../protocol/common.dart';
+import 'inheritance.dart';
+import 'mapper.dart';
+import 'primitive.dart';
 
 Decoder<T> findDecoderFor<T>() {
-  var mapper = MapperContainer.current.findByType<T>();
-  return _decoderOf<T>(mapper!)!;
+  if (T == List || isBounded<T, List>()) {
+    final decoder = T.args.call1<ListDecoder>(<E>() {
+      return ListDecoder<E>(findDecoderFor<E>());
+    });
+    if (decoder is Decoder<T>) {
+      return decoder as Decoder<T>;
+    }
+  }
+  final mapper = MapperContainer.current.findByType<T>();
+  return getDecoderOf<T>(mapper!)!;
 }
 
-Decoder<T>? _decoderOf<T>(Mapper mapper) {
+Decoder<T>? getDecoderOf<T>(Mapper mapper) {
   return switch (mapper) {
     DecoderOf d => d.decoder(),
     DecoderOf1 d => T.args.call1(<A>() {
@@ -69,12 +37,12 @@ Decoder<T>? _decoderOf<T>(Mapper mapper) {
 
 Encoder<T> findEncoderFor<T>(T value) {
   if (value is Encodable<T>) return value.encoder();
-  var mapper = MapperContainer.current.findByValue<T>(value);
+  final mapper = MapperContainer.current.findByValue<T>(value);
   return switch (mapper) {
     EncoderOf e => e.encoder(),
     EncoderOf1 e => T.args.call1(<A>() => e.encoder<A>()),
     EncoderOf2 e => T.args.call2(<A, B>() => e.encoder<A, B>()),
-    _ => throw "",
+    _ => throw "Not a encoder",
   } as Encoder<T>;
 }
 
@@ -86,14 +54,6 @@ extension on List<Type> {
   R call2<R>(R Function<A, B>() fn) {
     return first.provideTo(<A>() => this[1].provideTo(<B>() => fn<A, B>()));
   }
-}
-
-List<SubDecoderMixin<T>> findSubDecodersFor<T>() {
-  var mappers = MapperContainer.current.findAll<T>();
-  return mappers
-      .map((m) => _decoderOf<T>(m))
-      .whereType<SubDecoderMixin<T>>()
-      .toList();
 }
 
 R useMappers<R>(R Function() callback, {List<Mapper>? mappers}) {

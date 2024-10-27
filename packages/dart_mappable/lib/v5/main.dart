@@ -1,4 +1,4 @@
-import 'dart:convert' show jsonEncode, jsonDecode;
+import 'dart:convert' show jsonDecode;
 
 import 'package:collection/collection.dart';
 
@@ -9,9 +9,10 @@ import 'models/animal_gen.dart';
 import 'models/box.dart';
 import 'models/custom.dart';
 import 'models/person.dart';
-import 'src/decoding/decoding.dart';
-import 'src/encoding/encoding.dart';
-import 'src/mapper.dart';
+import 'src/implementation/json.dart';
+import 'src/implementation/util.dart';
+import 'src/mapper/container.dart';
+import 'src/protocol/common.dart';
 import 'test/raw_encodable.dart';
 
 void main() {

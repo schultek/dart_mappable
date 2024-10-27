@@ -1,4 +1,4 @@
-import 'decoding.dart';
+part of 'common.dart';
 
 extension type StructDecoding._(Object? _value) {
   static T decode<T>(Object? value, Decoder<T> decoder) {
@@ -170,196 +170,49 @@ extension type KeyedStructDecoding<Key>._(Map<Key, dynamic> _value) {
   }
 }
 
-class CompatStructDecoding implements Decoding {
-  CompatStructDecoding._(this.decoding);
+extension type StructEncoding._(Null _) {
+  static final _i = StructEncoding._(null);
 
-  static T decode<T>(DecoderMixin<T> decoder, StructDecoding decoding) {
-    final d = CompatStructDecoding._(decoding);
-    return decoder.decode(d);
-  }
-
-  final StructDecoding decoding;
-
-  @pragma('vm:prefer-inline')
-  @override
-  String decodeString() {
-    return decoding.decodeString();
+  static Object? encode<T>(T value, Encoder<T> encoder) {
+    return _i.encodeEncodable(value, encoder);
   }
 
   @pragma('vm:prefer-inline')
-  @override
-  String? decodeStringOrNull() {
-    return decoding.decodeStringOrNull();
+  Object? encodeValue(Object? value) => value;
+
+  @pragma('vm:prefer-inline')
+  Object? encodeEncodable<T>(T value, Encoder<T> encoder) =>
+      encoder.encodeStruct(value, this);
+
+  @pragma('vm:prefer-inline')
+  KeyedStructEncoding<Key> encodeKeyed<Key>() {
+    return KeyedStructEncoding._(<Key, dynamic>{});
   }
 
   @pragma('vm:prefer-inline')
-  @override
-  bool decodeBool() {
-    return decoding.decodeBool();
+  Object? encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode) {
+    return [
+      for (final e in value) encode(e).encodeStruct(e, StructEncoding._i)
+    ];
   }
-
-  @pragma('vm:prefer-inline')
-  @override
-  bool? decodeBoolOrNull() {
-    return decoding.decodeBoolOrNull();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  int decodeInt() {
-    return decoding.decodeInt();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  int? decodeIntOrNull() {
-    return decoding.decodeIntOrNull();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  double decodeDouble() {
-    return decoding.decodeDouble();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  double? decodeDoubleOrNull() {
-    return decoding.decodeDoubleOrNull();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  T decodeDecodable<T>(Decoder<T> decoder) {
-    return decoding.decodeDecodable(decoder);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  T? decodeDecodableOrNull<T>(Decoder<T> decoder) {
-    return decoding.decodeDecodableOrNull(decoder);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  List<T> decodeList<T>() {
-    return decoding.decodeList<T>();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  List<T>? decodeListOrNull<T>() {
-    return decoding.decodeListOrNull<T>();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  List<T> decodeListDecodable<T>(Decoder<T> decoder) {
-    return decoding.decodeListDecodable<T>(decoder);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  List<T>? decodeListDecodableOrNull<T>(Decoder<T> decoder) {
-    return decoding.decodeListDecodableOrNull<T>(decoder);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  KeyedDecoding<Key> decodeKeyed<Key>() {
-    return KeyedGeneralizedStructuredDecoder<Key>(decoding.decodeKeyed());
-  }
-
-  @override
-  Decoding clone() => this;
 }
 
-class KeyedGeneralizedStructuredDecoder<Key> implements KeyedDecoding<Key> {
-  KeyedGeneralizedStructuredDecoder(this.decoder);
-
-  final KeyedStructDecoding<Key> decoder;
-
+extension type KeyedStructEncoding<Key>._(Map<Key, dynamic> _value) {
   @pragma('vm:prefer-inline')
-  @override
-  String decodeString(Key key) {
-    return decoder.decodeString(key);
+  void encodeValue(Key key, Object? value) {
+    _value[key] = value;
   }
 
   @pragma('vm:prefer-inline')
-  @override
-  String? decodeStringOrNull(Key key) {
-    return decoder.decodeStringOrNull(key);
+  void encodeEncodable<T>(Key key, T value, Encoder<T> encoder) {
+    _value[key] = encoder.encodeStruct(value, StructEncoding._(null));
   }
 
   @pragma('vm:prefer-inline')
-  @override
-  bool decodeBool(Key key) {
-    return decoder.decodeBool(key);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  bool? decodeBoolOrNull(Key key) {
-    return decoder.decodeBoolOrNull(key);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  int decodeInt(Key key) {
-    return decoder.decodeInt(key);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  int? decodeIntOrNull(Key key) {
-    return decoder.decodeIntOrNull(key);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  double decodeDouble(Key key) {
-    return decoder.decodeDouble(key);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  double? decodeDoubleOrNull(Key key) {
-    return decoder.decodeDoubleOrNull(key);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  T decodeDecodable<T>(Key key, Decoder<T> decodable) {
-    return decoder.decodeDecodable(key, decodable);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  T? decodeDecodableOrNull<T>(Key key, Decoder<T> decodable) {
-    return decoder.decodeDecodableOrNull(key, decodable);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  List<T> decodeList<T>(Key key) {
-    return decoder.decodeList(key);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  List<T>? decodeListOrNull<T>(Key key) {
-    return decoder.decodeListOrNull(key);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  List<T> decodeListDecodable<T>(Key key, Decoder<T> decodable) {
-    return decoder.decodeListDecodable(key, decodable);
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  List<T>? decodeListDecodableOrNull<T>(Key key, Decoder<T> decodable) {
-    return decoder.decodeListDecodableOrNull(key, decodable);
+  void encodeIterable<T>(
+      Key key, Iterable<T> value, Encoder<T> Function(T) encode) {
+    _value[key] = [
+      for (final e in value) encode(e).encodeStruct(e, StructEncoding._i)
+    ];
   }
 }

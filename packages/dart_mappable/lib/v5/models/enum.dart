@@ -1,5 +1,4 @@
-import '../src/decoding/decoding.dart';
-import '../src/encoding/encoding.dart';
+import '../src/protocol/common.dart';
 
 enum Color implements Encodable<Color> {
   Green,

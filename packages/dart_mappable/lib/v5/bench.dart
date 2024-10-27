@@ -9,12 +9,12 @@ void bench(String name, void Function() f,
   }
   s.stop();
   var time = formatTime(s.elapsedMicroseconds ~/ (sum ? 1 : times));
-  print("$name: $time");
+  print('$name: $time');
 }
 
 String formatTime(int microseconds) {
   if (microseconds < 5000) {
-    return '${microseconds}µs';
+    return '$microsecondsµs';
   } else if (microseconds < 1000000) {
     return '${microseconds / 1000}ms';
   } else {

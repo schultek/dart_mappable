@@ -1,6 +1,6 @@
-import '../src/decoding/decoding.dart';
-import '../src/encoding/encoding.dart';
-import '../src/mapper.dart';
+import '../src/mapper/inheritance.dart';
+import '../src/mapper/mapper.dart';
+import '../src/protocol/common.dart';
 
 abstract class Animal implements Encodable<Animal> {
   Animal({required this.type});
@@ -44,13 +44,13 @@ class AnimalDecoder with DecoderMixin<Animal>, SuperDecoderMixin<Animal> {
   const AnimalDecoder();
 
   @override
-  final SubDecoderMixin<Animal>? defaultSubDecoder = null;
+  final String discriminatorKey = 'type';
 
   @override
-  final Set<SubDecoderMixin<Animal>> subDecoders = const {
-    CatDecoder(),
-    DogDecoder(),
-  };
+  List<SubDecoderMixin> getSubDecoders() => const [
+        CatDecoder(),
+        DogDecoder(),
+      ];
 
   @override
   Animal decode(Decoding decoding) {
@@ -68,9 +68,6 @@ class CatDecoder with DecoderMixin<Cat>, SubDecoderMixin<Cat> {
   const CatDecoder();
 
   @override
-  final String discriminatorKey = 'type';
-
-  @override
   final String discriminatorValue = 'cat';
 
   @override
@@ -85,9 +82,6 @@ class CatDecoder with DecoderMixin<Cat>, SubDecoderMixin<Cat> {
 
 class DogDecoder with DecoderMixin<Dog>, SubDecoderMixin<Dog> {
   const DogDecoder();
-
-  @override
-  final String discriminatorKey = 'type';
 
   @override
   final String discriminatorValue = 'dog';
@@ -137,9 +131,6 @@ class DogEncoder with EncoderMixin<Dog> {
 
 class BirdDecoder with DecoderMixin<Bird>, SubDecoderMixin<Bird> {
   const BirdDecoder();
-
-  @override
-  final String discriminatorKey = 'type';
 
   @override
   final String discriminatorValue = 'bird';

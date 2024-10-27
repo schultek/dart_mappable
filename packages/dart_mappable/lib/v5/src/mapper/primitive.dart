@@ -1,5 +1,6 @@
-import '../mapper.dart';
-import 'decoding.dart';
+import '../protocol/common.dart';
+import 'container.dart';
+import 'generics.dart';
 
 class ListDecoder<E> extends GenericDecoderBase1<List<E>, E> {
   ListDecoder([super.decoderA]);
