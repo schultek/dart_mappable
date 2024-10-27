@@ -43,27 +43,35 @@ class BirdGen<A, B extends num> extends AnimalGen<B> {
 }
 
 class AnimalGenDecoder<T>
-    with DecoderMixin<AnimalGen<T>>, SuperDecoderMixin<AnimalGen<T>> {
+    with SuperDecoderMixin<AnimalGen<T>>
+    implements Decoder<AnimalGen<T>> {
   AnimalGenDecoder([this.d1]);
 
   final Decoder<T>? d1;
 
   @override
-  late final Set<SubDecoderMixin> subDecoders = {
-    CatGenDecoder<T>(d1),
-    DogGenDecoder(),
-    if (isBounded<T, num>())
-      boundedDecoder1<T>(<T extends num>() {
-        return BirdGenDecoder<dynamic, T>(null, d1 as Decoder<T>?);
-      }),
-  };
+  List<SubDecoderMixin> getSubDecoders() => [
+        CatGenDecoder<T>(d1),
+        DogGenDecoder(),
+        if (isBounded<T, num>())
+          boundedDecoder1<T>(<T extends num>() {
+            return BirdGenDecoder<dynamic, T>(null, d1 as Decoder<T>?);
+          }),
+      ];
 
   @override
-  AnimalGen<T> decode(Decoding decoding) {
-    final subDecoder = getSubDecoder(decoding);
+  AnimalGen<T> decodeSerial(SerialDecoding decoding) {
+    if (decodeSubtype(decoding.asDecoding()) case final result?) {
+      return result;
+    }
 
-    if (subDecoder != null) {
-      return decoding.decodeDecodable(subDecoder);
+    throw "Unknown subtype of Animal";
+  }
+
+  @override
+  AnimalGen<T> decodeStruct(StructDecoding decoding) {
+    if (decodeSubtype(decoding.asDecoding()) case final result?) {
+      return result;
     }
 
     throw "Unknown subtype of Animal";

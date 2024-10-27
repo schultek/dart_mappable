@@ -1,12 +1,19 @@
 import '../mapper.dart';
 import 'decoding.dart';
 
-mixin SuperDecoderMixin<T> on Decoder<T> {
+abstract mixin class SuperDecoderMixin<T> implements Decoder<T> {
+  String? get discriminatorKey => null;
+
   /// The fallback subclass mapper for this class.
   SubDecoderMixin? getDefaultSubDecoder() => null;
 
   /// The set of subclass mappers for this class.
   List<SubDecoderMixin> getSubDecoders() => [];
+
+  T? decodeSubtype(Decoding decoding) {
+    final decoder = getSubDecoder(decoding);
+    return decoder != null ? decoding.decodeDecodable(decoder) : null;
+  }
 
   List<SubDecoderMixin> _collectDecodersOrCached() {
     final cached =
@@ -23,21 +30,26 @@ mixin SuperDecoderMixin<T> on Decoder<T> {
     return decoders;
   }
 
-  Decoder<T>? getSubDecoder(Decoding decoding, [Object? key]) {
-    var decoders = _collectDecodersOrCached();
+  Decoder<T>? getSubDecoder(Decoding decoding, [String? currentValue]) {
+    final decoders = _collectDecodersOrCached();
+
+    String? discriminatorValue = currentValue;
+    if (discriminatorValue == null && discriminatorKey != null) {
+      discriminatorValue = decoding
+          .clone()
+          .decodeKeyed<String>()
+          .decodeStringOrNull(discriminatorKey!);
+    }
 
     for (var d in decoders) {
       if (d is SubDecoderMixin<T> &&
-          d.canDecode(decoding) &&
-          (key == null || key == d.discriminatorKey)) {
+          d.canDecode(decoding, discriminatorKey, discriminatorValue)) {
         return d;
       }
     }
 
     var defaultDecoder = getDefaultSubDecoder();
-    if (defaultDecoder != null &&
-        defaultDecoder is SubDecoderMixin<T> &&
-        (key == null || key == defaultDecoder.discriminatorKey)) {
+    if (defaultDecoder != null && defaultDecoder is SubDecoderMixin<T>) {
       return defaultDecoder;
     }
     return null;
@@ -53,11 +65,10 @@ mixin SuperDecoderMixin<T> on Decoder<T> {
   }
 }
 
-mixin SubDecoderMixin<T> on Decoder<T> {
-  String? get discriminatorKey;
+abstract mixin class SubDecoderMixin<T> implements Decoder<T> {
   dynamic get discriminatorValue;
 
-  bool canDecode(Decoding decoding) {
+  bool canDecode(Decoding decoding, String? currentKey, String? currentValue) {
     var discriminator = discriminatorValue;
     if (identical(discriminator, 'use_as_default')) {
       return true;
@@ -72,18 +83,13 @@ mixin SubDecoderMixin<T> on Decoder<T> {
       }
     }
 
-    var key = discriminatorKey;
-    if (key == null) {
-      return false;
-    }
-
-    var decodedKey = decoding.clone().decodeKeyed().decodeStringOrNull(key);
-    if (decodedKey == discriminator) {
+    if (currentValue == discriminator) {
       return true;
     }
 
-    if (this case SuperDecoderMixin<T> d) {
-      return d.getSubDecoder(decoding, key) != null;
+    if (this case SuperDecoderMixin<T> d
+        when d.discriminatorKey == currentKey) {
+      return d.getSubDecoder(decoding, currentValue) != null;
     }
 
     return false;

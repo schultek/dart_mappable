@@ -5,6 +5,8 @@ extension type StructDecoding._(Object? _value) {
     return StructDecoding._(value).decodeDecodable(decoder);
   }
 
+  Decoding asDecoding() => CompatStructDecoding._(this);
+
   @pragma('vm:prefer-inline')
   String decodeString() {
     return _value as String;

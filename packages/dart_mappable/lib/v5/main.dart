@@ -15,9 +15,9 @@ import 'src/mapper.dart';
 import 'test/raw_encodable.dart';
 
 void main() {
-  testPolymorphism();
+  //testPolymorphism();
   //testGenerics();
-  //runBenchmarks();
+  runBenchmarks();
 }
 
 void testPolymorphism() {
@@ -81,13 +81,14 @@ void testGenerics() {
 void runBenchmarks() {
   Person p = Person.fromMapRaw(personMap);
 
-  assert(p.toJson() == p.toJsonRaw());
-  assert(DeepCollectionEquality().equals(p.toMap(), p.toMapRaw()));
-  assert(DeepCollectionEquality().equals(p.toLazyMap(), p.toMapRaw()));
   assert(StructDecoding.decode(personMap, Person.decoder()) ==
       Person.fromMapRaw(personMap));
   assert(JsonDecoding.decode(personJson, Person.decoder()) ==
       Person.fromMapRaw(personMap));
+
+  assert(p.toJson() == p.toJsonRaw());
+  assert(DeepCollectionEquality().equals(p.toMap(), p.toMapRaw()));
+  assert(DeepCollectionEquality().equals(p.toLazyMap(), p.toMapRaw()));
 
   print('== MAP DECODING ==');
   bench('dart_mappable          ', () {

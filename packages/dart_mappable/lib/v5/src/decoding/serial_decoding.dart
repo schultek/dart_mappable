@@ -33,6 +33,10 @@ abstract interface class SerialDecoding {
   SerialDecoding clone();
 }
 
+extension CompatSerial on SerialDecoding {
+  Decoding asDecoding() => CompatSerialDecoding._(this);
+}
+
 class JsonDecoding implements SerialDecoding {
   JsonDecoding._(this._reader);
   final Crimson _reader;
