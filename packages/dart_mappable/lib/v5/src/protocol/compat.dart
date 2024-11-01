@@ -68,14 +68,14 @@ class CompatStructDecoding implements Decoding {
 
   @pragma('vm:prefer-inline')
   @override
-  T decodeDecodable<T>(Decoder<T> decoder) {
-    return decoding.decodeDecodable(decoder);
+  T decodeObject<T>(Decoder<T> decoder) {
+    return decoding.decodeObject(decoder);
   }
 
   @pragma('vm:prefer-inline')
   @override
-  T? decodeDecodableOrNull<T>(Decoder<T> decoder) {
-    return decoding.decodeDecodableOrNull(decoder);
+  T? decodeObjectOrNull<T>(Decoder<T> decoder) {
+    return decoding.decodeObjectOrNull(decoder);
   }
 
   @pragma('vm:prefer-inline')
@@ -92,14 +92,14 @@ class CompatStructDecoding implements Decoding {
 
   @pragma('vm:prefer-inline')
   @override
-  List<T> decodeListDecodable<T>(Decoder<T> decoder) {
-    return decoding.decodeListDecodable<T>(decoder);
+  List<T> decodeListObject<T>(Decoder<T> decoder) {
+    return decoding.decodeListObject<T>(decoder);
   }
 
   @pragma('vm:prefer-inline')
   @override
-  List<T>? decodeListDecodableOrNull<T>(Decoder<T> decoder) {
-    return decoding.decodeListDecodableOrNull<T>(decoder);
+  List<T>? decodeListObjectOrNull<T>(Decoder<T> decoder) {
+    return decoding.decodeListObjectOrNull<T>(decoder);
   }
 
   @pragma('vm:prefer-inline')
@@ -167,14 +167,14 @@ class KeyedCompatStructuredDecoder<Key> implements KeyedDecoding<Key> {
 
   @pragma('vm:prefer-inline')
   @override
-  T decodeDecodable<T>(Key key, Decoder<T> decodable) {
-    return decoder.decodeDecodable(key, decodable);
+  T decodeObject<T>(Key key, Decoder<T> decodable) {
+    return decoder.decodeObject(key, decodable);
   }
 
   @pragma('vm:prefer-inline')
   @override
-  T? decodeDecodableOrNull<T>(Key key, Decoder<T> decodable) {
-    return decoder.decodeDecodableOrNull(key, decodable);
+  T? decodeObjectOrNull<T>(Key key, Decoder<T> decodable) {
+    return decoder.decodeObjectOrNull(key, decodable);
   }
 
   @pragma('vm:prefer-inline')
@@ -191,14 +191,14 @@ class KeyedCompatStructuredDecoder<Key> implements KeyedDecoding<Key> {
 
   @pragma('vm:prefer-inline')
   @override
-  List<T> decodeListDecodable<T>(Key key, Decoder<T> decodable) {
-    return decoder.decodeListDecodable(key, decodable);
+  List<T> decodeListObject<T>(Key key, Decoder<T> decodable) {
+    return decoder.decodeListObject(key, decodable);
   }
 
   @pragma('vm:prefer-inline')
   @override
-  List<T>? decodeListDecodableOrNull<T>(Key key, Decoder<T> decodable) {
-    return decoder.decodeListDecodableOrNull(key, decodable);
+  List<T>? decodeListObjectOrNull<T>(Key key, Decoder<T> decodable) {
+    return decoder.decodeListObjectOrNull(key, decodable);
   }
 }
 
@@ -259,13 +259,13 @@ class CompatSerialDecoding implements Decoding {
   }
 
   @override
-  T decodeDecodable<T>(Decoder<T> decoder) {
-    return decoding.decodeDecodable(decoder);
+  T decodeObject<T>(Decoder<T> decoder) {
+    return decoding.decodeObject(decoder);
   }
 
   @override
-  T? decodeDecodableOrNull<T>(Decoder<T> decoder) {
-    return decoding.decodeDecodableOrNull(decoder);
+  T? decodeObjectOrNull<T>(Decoder<T> decoder) {
+    return decoding.decodeObjectOrNull(decoder);
   }
 
   @override
@@ -285,18 +285,18 @@ class CompatSerialDecoding implements Decoding {
   }
 
   @override
-  List<T> decodeListDecodable<T>(Decoder<T> decoder) {
+  List<T> decodeListObject<T>(Decoder<T> decoder) {
     return [
-      for (; decoding.nextItem();) decoding.decodeDecodable(decoder),
+      for (; decoding.nextItem();) decoding.decodeObject(decoder),
     ];
   }
 
   @override
-  List<T>? decodeListDecodableOrNull<T>(Decoder<T> decoder) {
+  List<T>? decodeListObjectOrNull<T>(Decoder<T> decoder) {
     return decoding.skipNull()
         ? null
         : [
-            for (; decoding.nextItem();) decoding.decodeDecodable(decoder),
+            for (; decoding.nextItem();) decoding.decodeObject(decoder),
           ];
   }
 
@@ -417,23 +417,23 @@ class KeyedCompatSerialDecoding<Key> implements KeyedDecoding<Key> {
   }
 
   @override
-  T decodeDecodable<T>(Key key, Decoder<T> decoder) {
+  T decodeObject<T>(Key key, Decoder<T> decoder) {
     if (_values.containsKey(key)) {
-      return _values[key]!.decodeDecodable(decoder);
+      return _values[key]!.decodeObject(decoder);
     }
     final hasKey = skipTo(key);
     assert(hasKey);
-    return decoding.decodeDecodable(decoder);
+    return decoding.decodeObject(decoder);
   }
 
   @override
-  T? decodeDecodableOrNull<T>(Key key, Decoder<T> decoder) {
+  T? decodeObjectOrNull<T>(Key key, Decoder<T> decoder) {
     if (_values.containsKey(key)) {
-      return _values[key]!.decodeDecodableOrNull(decoder);
+      return _values[key]!.decodeObjectOrNull(decoder);
     }
     final hasKey = skipTo(key);
     if (!hasKey) return null;
-    return decoding.decodeDecodableOrNull(decoder);
+    return decoding.decodeObjectOrNull(decoder);
   }
 
   @override
@@ -471,28 +471,28 @@ class KeyedCompatSerialDecoding<Key> implements KeyedDecoding<Key> {
   }
 
   @override
-  List<T> decodeListDecodable<T>(Key key, Decoder<T> decoder) {
+  List<T> decodeListObject<T>(Key key, Decoder<T> decoder) {
     if (_values.containsKey(key)) {
       final d = _values[key]!;
       return [
-        for (; d.nextItem();) d.decodeDecodable(decoder),
+        for (; d.nextItem();) d.decodeObject(decoder),
       ];
     }
     final hasKey = skipTo(key);
     assert(hasKey);
     return [
-      for (; decoding.nextItem();) decoding.decodeDecodable(decoder),
+      for (; decoding.nextItem();) decoding.decodeObject(decoder),
     ];
   }
 
   @override
-  List<T>? decodeListDecodableOrNull<T>(Key key, Decoder<T> decoder) {
+  List<T>? decodeListObjectOrNull<T>(Key key, Decoder<T> decoder) {
     if (_values.containsKey(key)) {
       final d = _values[key]!;
       return d.skipNull()
           ? null
           : [
-              for (; d.nextItem();) d.decodeDecodable(decoder),
+              for (; d.nextItem();) d.decodeObject(decoder),
             ];
     }
     final hasKey = skipTo(key);
@@ -500,7 +500,7 @@ class KeyedCompatSerialDecoding<Key> implements KeyedDecoding<Key> {
     return decoding.skipNull()
         ? null
         : [
-            for (; decoding.nextItem();) decoding.decodeDecodable(decoder),
+            for (; decoding.nextItem();) decoding.decodeObject(decoder),
           ];
   }
 }
@@ -525,8 +525,8 @@ class CompatStructEncoding implements Encoding {
   }
 
   @override
-  Object? encodeEncodable<T>(T value, Encoder<T> encoder) {
-    return encoding.encodeEncodable<T>(value, encoder);
+  Object? encodeObject<T>(T value, Encoder<T> encoder) {
+    return encoding.encodeObject<T>(value, encoder);
   }
 
   @override
@@ -551,8 +551,8 @@ class KeyedCompatStructEncoding<Key> implements KeyedEncoding<Key> {
   }
 
   @override
-  void encodeEncodable<T>(Key key, T value, Encoder<T> encoder) {
-    encoding.encodeEncodable<T>(key, value, encoder);
+  void encodeObject<T>(Key key, T value, Encoder<T> encoder) {
+    encoding.encodeObject<T>(key, value, encoder);
   }
 
   @override
@@ -599,15 +599,15 @@ class CompatSerialEncoding implements Encoding {
   }
 
   @override
-  void encodeEncodable<T>(T value, Encoder<T> encoder) {
-    encoding.encodeEncodable<T>(value, encoder);
+  void encodeObject<T>(T value, Encoder<T> encoder) {
+    encoding.encodeObject<T>(value, encoder);
   }
 
   @override
   void encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode) {
     encoding.startArray();
     for (final e in value) {
-      encoding.encodeEncodable<T>(e, encode(e));
+      encoding.encodeObject<T>(e, encode(e));
     }
     encoding.endArray();
   }
@@ -631,9 +631,9 @@ class KeyedCompatSerialEncoding<Key> implements KeyedEncoding<Key> {
   }
 
   @override
-  void encodeEncodable<T>(Key key, T value, Encoder<T> encoder) {
+  void encodeObject<T>(Key key, T value, Encoder<T> encoder) {
     encoding.encodeKey(key);
-    encoding.encodeEncodable<T>(value, encoder);
+    encoding.encodeObject<T>(value, encoder);
   }
 
   @override
@@ -642,7 +642,7 @@ class KeyedCompatSerialEncoding<Key> implements KeyedEncoding<Key> {
     encoding.encodeKey(key);
     encoding.startArray();
     for (final e in value) {
-      encoding.encodeEncodable<T>(e, encode(e));
+      encoding.encodeObject<T>(e, encode(e));
     }
     encoding.endArray();
   }

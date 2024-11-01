@@ -57,7 +57,7 @@ class AnimalDecoder with DecoderMixin<Animal>, SuperDecoderMixin<Animal> {
     final subDecoder = getSubDecoder(decoding);
 
     if (subDecoder != null) {
-      return decoding.decodeDecodable(subDecoder);
+      return decoding.decodeObject(subDecoder);
     }
 
     throw "Unknown subtype of Animal";

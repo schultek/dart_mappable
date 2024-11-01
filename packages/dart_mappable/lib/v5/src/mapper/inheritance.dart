@@ -24,7 +24,7 @@ abstract mixin class SuperDecoderMixin<T> implements Decoder<T> {
 
   T? decodeSubtype(Decoding decoding) {
     final decoder = getSubDecoder(decoding);
-    return decoder != null ? decoding.decodeDecodable(decoder) : null;
+    return decoder != null ? decoding.decodeObject(decoder) : null;
   }
 
   List<SubDecoderMixin> _collectDecodersOrCached() {

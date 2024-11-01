@@ -51,7 +51,7 @@ class LazyEncoding implements SerialEncoding {
   }
 
   @override
-  void encodeEncodable<T>(T value, Encoder<T> encoder) {
+  void encodeObject<T>(T value, Encoder<T> encoder) {
     if (_stack case [..._, _LazyMap map, Object? key]) {
       map._lazy[key] = (value, encoder);
       _stack.removeLast();

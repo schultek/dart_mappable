@@ -15,8 +15,8 @@ abstract interface class SerialDecoding {
   double decodeDouble();
   double? decodeDoubleOrNull();
 
-  T decodeDecodable<T>(Decoder<T> decoder);
-  T? decodeDecodableOrNull<T>(Decoder<T> decoder);
+  T decodeObject<T>(Decoder<T> decoder);
+  T? decodeObjectOrNull<T>(Decoder<T> decoder);
 
   Object? nextKey();
   bool nextItem();
@@ -50,5 +50,5 @@ abstract interface class SerialEncoding {
 
   void encodeBool(bool value);
 
-  void encodeEncodable<T>(T value, Encoder<T> encoder);
+  void encodeObject<T>(T value, Encoder<T> encoder);
 }

@@ -53,7 +53,7 @@ class BoxEncoder<T> implements Encoder<Box<T>> {
   @override
   Object? encodeStruct(Box<T> value, StructEncoding encoding) {
     final keyed = encoding.encodeKeyed<String>();
-    keyed.encodeEncodable(
+    keyed.encodeObject(
         'data', value.data, encoder ?? findEncoderFor<T>(value.data));
     return keyed;
   }
@@ -62,8 +62,7 @@ class BoxEncoder<T> implements Encoder<Box<T>> {
   void encodeSerial(Box<T> value, SerialEncoding encoding) {
     encoding.startObject<String>();
     encoding.encodeKey('data');
-    encoding.encodeEncodable(
-        value.data, encoder ?? findEncoderFor<T>(value.data));
+    encoding.encodeObject(value.data, encoder ?? findEncoderFor<T>(value.data));
     encoding.endObject();
   }
 }
@@ -82,7 +81,7 @@ class BoxDecoder<T> implements Decoder<Box<T>> {
     for (Object? key; (key = decoding.nextKey()) != null;) {
       switch (key) {
         case 'data':
-          data = decoding.decodeDecodable(d1);
+          data = decoding.decodeObject(d1);
         default:
           decoding.skipNext();
       }
@@ -97,7 +96,7 @@ class BoxDecoder<T> implements Decoder<Box<T>> {
 
     final keyed = decoding.decodeKeyed<String>();
     return Box(
-      keyed.decodeDecodable('data', d1),
+      keyed.decodeObject('data', d1),
     );
   }
 }

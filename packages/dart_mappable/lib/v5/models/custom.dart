@@ -29,7 +29,7 @@ class Uri2Mapper extends SimpleMapper<Uri> {
 class SetMapper extends SimpleMapper1<Set> {
   @override
   Set<E> decode<E>(Decoding decoding, [Decoder<E>? d1]) {
-    return decoding.decodeListDecodable(d1 ?? findDecoderFor<E>()).toSet();
+    return decoding.decodeListObject(d1 ?? findDecoderFor<E>()).toSet();
   }
 
   @override

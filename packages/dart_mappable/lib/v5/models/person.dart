@@ -82,7 +82,7 @@ final class PersonEncoder implements Encoder<Person> {
     encoded.encodeValue('b', value.b);
     encoded.encodeValue('c', value.c);
     if (value.d != null) {
-      encoded.encodeEncodable('d', value.d!, value.d!.encoder());
+      encoded.encodeObject('d', value.d!, value.d!.encoder());
     } else {
       encoded.encodeValue('d', null);
     }
@@ -104,7 +104,7 @@ final class PersonEncoder implements Encoder<Person> {
     encoder.encodeBool(value.c);
     encoder.encodeKey('d');
     if (value.d != null) {
-      encoder.encodeEncodable(value.d!, value.d!.encoder());
+      encoder.encodeObject(value.d!, value.d!.encoder());
     } else {
       encoder.encodeNull();
     }
@@ -117,7 +117,7 @@ final class PersonEncoder implements Encoder<Person> {
     encoder.encodeKey('f');
     encoder.startArray();
     for (final e in value.f) {
-      encoder.encodeEncodable(e, e.encoder());
+      encoder.encodeObject(e, e.encoder());
     }
     encoder.endArray();
     encoder.endObject();
@@ -148,13 +148,12 @@ final class PersonDecoder implements Decoder<Person> {
         case 'c':
           c = decoder.decodeBool();
         case 'd':
-          d = decoder.decodeDecodableOrNull(Person.decoder());
+          d = decoder.decodeObjectOrNull(Person.decoder());
         case 'e':
           e = [for (; decoder.nextItem();) decoder.decodeString()];
         case 'f':
           f = [
-            for (; decoder.nextItem();)
-              decoder.decodeDecodable(Person.decoder())
+            for (; decoder.nextItem();) decoder.decodeObject(Person.decoder())
           ];
         default:
           decoder.skipNext();
@@ -172,9 +171,9 @@ final class PersonDecoder implements Decoder<Person> {
       keyed.decodeInt('a'),
       keyed.decodeDouble('b'),
       keyed.decodeBool('c'),
-      keyed.decodeDecodableOrNull('d', Person.decoder()),
+      keyed.decodeObjectOrNull('d', Person.decoder()),
       keyed.decodeList('e'),
-      keyed.decodeListDecodable('f', Person.decoder()),
+      keyed.decodeListObject('f', Person.decoder()),
     );
   }
 }

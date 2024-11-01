@@ -17,14 +17,14 @@ abstract interface class Decoding {
   double decodeDouble();
   double? decodeDoubleOrNull();
 
-  T decodeDecodable<T>(Decoder<T> decoder);
-  T? decodeDecodableOrNull<T>(Decoder<T> decoder);
+  T decodeObject<T>(Decoder<T> decoder);
+  T? decodeObjectOrNull<T>(Decoder<T> decoder);
 
   List<T> decodeList<T>();
   List<T>? decodeListOrNull<T>();
 
-  List<T> decodeListDecodable<T>(Decoder<T> decoder);
-  List<T>? decodeListDecodableOrNull<T>(Decoder<T> decoder);
+  List<T> decodeListObject<T>(Decoder<T> decoder);
+  List<T>? decodeListObjectOrNull<T>(Decoder<T> decoder);
 
   KeyedDecoding<Key> decodeKeyed<Key>();
 
@@ -44,20 +44,20 @@ abstract interface class KeyedDecoding<Key> {
   double decodeDouble(Key key);
   double? decodeDoubleOrNull(Key key);
 
-  T decodeDecodable<T>(Key key, Decoder<T> decoder);
-  T? decodeDecodableOrNull<T>(Key key, Decoder<T> decoder);
+  T decodeObject<T>(Key key, Decoder<T> decoder);
+  T? decodeObjectOrNull<T>(Key key, Decoder<T> decoder);
 
   List<T> decodeList<T>(Key key);
   List<T>? decodeListOrNull<T>(Key key);
 
-  List<T> decodeListDecodable<T>(Key key, Decoder<T> decoder);
-  List<T>? decodeListDecodableOrNull<T>(Key key, Decoder<T> decoder);
+  List<T> decodeListObject<T>(Key key, Decoder<T> decoder);
+  List<T>? decodeListObjectOrNull<T>(Key key, Decoder<T> decoder);
 }
 
 abstract interface class Encoding {
   Object? encodeValue(Object? value);
 
-  Object? encodeEncodable<T>(T value, Encoder<T> encoder);
+  Object? encodeObject<T>(T value, Encoder<T> encoder);
 
   Object? encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode);
 
@@ -67,7 +67,7 @@ abstract interface class Encoding {
 abstract interface class KeyedEncoding<Key> {
   void encodeValue(Key key, Object? value);
 
-  void encodeEncodable<T>(Key key, T value, Encoder<T> encoder);
+  void encodeObject<T>(Key key, T value, Encoder<T> encoder);
 
   void encodeIterable<T>(
       Key key, Iterable<T> value, Encoder<T> Function(T) encode);

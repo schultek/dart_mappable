@@ -2,7 +2,7 @@ part of 'common.dart';
 
 extension type StructDecoding._(Object? _value) {
   static T decode<T>(Object? value, Decoder<T> decoder) {
-    return StructDecoding._(value).decodeDecodable(decoder);
+    return StructDecoding._(value).decodeObject(decoder);
   }
 
   @pragma('vm:prefer-inline')
@@ -46,12 +46,12 @@ extension type StructDecoding._(Object? _value) {
   }
 
   @pragma('vm:prefer-inline')
-  T decodeDecodable<T>(Decoder<T> decoder) {
+  T decodeObject<T>(Decoder<T> decoder) {
     return decoder.decodeStruct(this);
   }
 
   @pragma('vm:prefer-inline')
-  T? decodeDecodableOrNull<T>(Decoder<T> decoder) {
+  T? decodeObjectOrNull<T>(Decoder<T> decoder) {
     if (_value == null) return null;
     return decoder.decodeStruct(this);
   }
@@ -72,14 +72,14 @@ extension type StructDecoding._(Object? _value) {
   }
 
   @pragma('vm:prefer-inline')
-  List<T> decodeListDecodable<T>(Decoder<T> decoder) {
+  List<T> decodeListObject<T>(Decoder<T> decoder) {
     return [
       for (final e in _value as List) decoder.decodeStruct(StructDecoding._(e))
     ];
   }
 
   @pragma('vm:prefer-inline')
-  List<T>? decodeListDecodableOrNull<T>(Decoder<T> decoder) {
+  List<T>? decodeListObjectOrNull<T>(Decoder<T> decoder) {
     if (_value == null) return null;
     return [
       for (final e in _value as List) decoder.decodeStruct(StructDecoding._(e))
@@ -129,12 +129,12 @@ extension type KeyedStructDecoding<Key>._(Map<Key, dynamic> _value) {
   }
 
   @pragma('vm:prefer-inline')
-  T decodeDecodable<T>(Key key, Decoder<T> decoder) {
+  T decodeObject<T>(Key key, Decoder<T> decoder) {
     return decoder.decodeStruct(StructDecoding._(_value[key]));
   }
 
   @pragma('vm:prefer-inline')
-  T? decodeDecodableOrNull<T>(Key key, Decoder<T> decoder) {
+  T? decodeObjectOrNull<T>(Key key, Decoder<T> decoder) {
     var v = _value[key];
     if (v == null) return null;
     return decoder.decodeStruct(StructDecoding._(v));
@@ -151,7 +151,7 @@ extension type KeyedStructDecoding<Key>._(Map<Key, dynamic> _value) {
   }
 
   @pragma('vm:prefer-inline')
-  List<T> decodeListDecodable<T>(Key key, Decoder<T> decoder) {
+  List<T> decodeListObject<T>(Key key, Decoder<T> decoder) {
     return [
       for (final e in _value[key] as List)
         decoder.decodeStruct(StructDecoding._(e))
@@ -159,7 +159,7 @@ extension type KeyedStructDecoding<Key>._(Map<Key, dynamic> _value) {
   }
 
   @pragma('vm:prefer-inline')
-  List<T>? decodeListDecodableOrNull<T>(Key key, Decoder<T> decoder) {
+  List<T>? decodeListObjectOrNull<T>(Key key, Decoder<T> decoder) {
     var v = _value[key];
     if (v == null) return null;
     return [
@@ -172,14 +172,14 @@ extension type StructEncoding._(Null _) {
   static final _i = StructEncoding._(null);
 
   static Object? encode<T>(T value, Encoder<T> encoder) {
-    return _i.encodeEncodable(value, encoder);
+    return _i.encodeObject(value, encoder);
   }
 
   @pragma('vm:prefer-inline')
   Object? encodeValue(Object? value) => value;
 
   @pragma('vm:prefer-inline')
-  Object? encodeEncodable<T>(T value, Encoder<T> encoder) =>
+  Object? encodeObject<T>(T value, Encoder<T> encoder) =>
       encoder.encodeStruct(value, this);
 
   @pragma('vm:prefer-inline')
@@ -202,7 +202,7 @@ extension type KeyedStructEncoding<Key>._(Map<Key, dynamic> _value) {
   }
 
   @pragma('vm:prefer-inline')
-  void encodeEncodable<T>(Key key, T value, Encoder<T> encoder) {
+  void encodeObject<T>(Key key, T value, Encoder<T> encoder) {
     _value[key] = encoder.encodeStruct(value, StructEncoding._(null));
   }
 

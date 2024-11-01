@@ -10,7 +10,7 @@ class ListDecoder<E> extends GenericDecoderBase1<List<E>, E> {
     final decoder = decoderA ?? findDecoderFor<E>();
 
     return [
-      for (; decoding.nextItem();) decoding.decodeDecodable(decoder),
+      for (; decoding.nextItem();) decoding.decodeObject(decoder),
     ];
   }
 
@@ -18,6 +18,6 @@ class ListDecoder<E> extends GenericDecoderBase1<List<E>, E> {
   List<E> decodeStruct(StructDecoding decoding) {
     final decoder = decoderA ?? findDecoderFor<E>();
 
-    return decoding.decodeListDecodable(decoder);
+    return decoding.decodeListObject(decoder);
   }
 }

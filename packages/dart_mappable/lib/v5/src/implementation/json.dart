@@ -9,7 +9,7 @@ class JsonDecoding implements SerialDecoding {
   final Crimson _reader;
 
   static T decodeBytes<T>(List<int> value, Decoder<T> decoder) {
-    return JsonDecoding._(Crimson(value)).decodeDecodable(decoder);
+    return JsonDecoding._(Crimson(value)).decodeObject(decoder);
   }
 
   static T decode<T>(String value, Decoder<T> decoder) {
@@ -72,13 +72,13 @@ class JsonDecoding implements SerialDecoding {
 
   @pragma('vm:prefer-inline')
   @override
-  T decodeDecodable<T>(Decoder<T> decoder) {
+  T decodeObject<T>(Decoder<T> decoder) {
     return decoder.decodeSerial(this);
   }
 
   @pragma('vm:prefer-inline')
   @override
-  T? decodeDecodableOrNull<T>(Decoder<T> decoder) {
+  T? decodeObjectOrNull<T>(Decoder<T> decoder) {
     return _reader.skipNull() ? null : decoder.decodeSerial(this);
   }
 
@@ -169,7 +169,7 @@ class JsonEncoding implements SerialEncoding {
 
   @pragma('vm:prefer-inline')
   @override
-  void encodeEncodable<T>(T value, Encoder<T> encoder) {
+  void encodeObject<T>(T value, Encoder<T> encoder) {
     encoder.encodeSerial(value, this);
   }
 
