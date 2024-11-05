@@ -18,35 +18,36 @@ Currently the Dart ecosystem around serialization is in a bad state. There is no
 
 > Looking at `json_serializable`, I never got its name. Its neither dealing with JSON, nor does it actually serialize anything. It's just **converting** a model to a **Map**. This isn't just a weird naming though, as, especially for less experienced devs, it is misrepresenting important concepts.
 
-An additional challenge is the positioning of `json_serializable` as the (semi-)official or "standard" solution, which makes it exceedingly hard for other good ideas and packages (like dart_mappable, crimson or dogs_core) to gain traction. There is also the `Codec` API, but it is only suitable for low level encodings like base64 or utf8.
+An additional challenge is the positioning of `json_serializable` as the (semi-)official or "standard" solution. Many other packages depend either on `json_serializable` directly or its conventions (e.g. having a specific `toJson()` on the model) to support serialization, like `freezed`, `retrofit` or `serverpod`. On the one hand this locks users in, without having much control over serialization. On the other hand packages are [kind of forced](https://github.com/schultek/dart_mappable/issues/82) to be compatible to it if they want to be adopted in the ecosystem. This causes a negative feedback loop.
 
 <details>
   <summary>More on why `json_serializable` is **not a good standard**.</summary>
   <br/>
 
-First of all, I don't dislike the package itself. It does the things it does very well. My problem is, as stated above, that it's naming is **not** reflecting what it actually does.
+First of all, I don't dislike the package itself. It does the things it does very well. And it solved a problem that was previously unsolved. My problem is, as stated above, that it's naming is **not** reflecting what it actually does..
 
-What it does is more precisely described as "mapping", which is transforming a object-oriented class into a `Map` of key-value pairs. While the Dart syntax for a `Map` does have similarities to it, this is **not JSON**. It is a structured in-memory representation of your data. JSON on the other hand is a **serial data format**, where the information (bytes) is stored one after another. A `String` in Dart. This is why you have to call `jsonEncode(myMap)` to get *actual* JSON that you can send to an API or store in a file.
+What it does (or specifically the generated `toJson()` method) is more precisely described as "mapping", which is transforming an object-oriented class into a `Map` of key-value pairs. While the Dart syntax for a `Map` does have similarities to it, this is **not JSON**. It is a structured in-memory representation of your data. JSON on the other hand is a **serial data format**, where the information (bytes) is stored one after another. A `String` in Dart. This is why you have to call `jsonEncode(myMap)` to get *actual* JSON that you can send to an API or store in a file.
 
-And therein lies the second problem of `json_serializable` (and dart_mappable v4 for that matter, as well as many other tools that work in a similar way). To get from a model class to actual json, you first need to convert the class to a Map, and then do a second conversion from a Map to JSON. This is inefficient and slow. A lot slower that if you would just directly go from class to JSON. And this is true for *any* serialization format, not just JSON.
-
-So instead we should aim for a standard that allows you to convert to a Map if you need to, but also allows to directly convert to a serial data format without using the Map in between.
-
+And therein lies the second problem of `json_serializable` (and dart_mappable v4 for that matter, as well as many other tools that work in a similar way). To get from a model class to actual json, you first need to convert the class to a Map (using `.toJson()`), and then do a second conversion from a Map to JSON (using `jsonEncode`). This is very inefficient, and a lot slower than if you would directly go from model to JSON, without creating the `Map` in between. And this is true for *any* serialization format, not just JSON.
 </details>
+
+**It is time we rethink serialization in Dart and aim for a standard that is modular, performant and allows to convert to and from *any* data format (structured or serial) efficiently.**
 
 ---
 
 # Design Goals
 
-The goal of the protocol is to have a **universally usable** and **encapsulated** protocol for serializing and deserializing Dart classes in an **optimally performant** way.
+The goal of the protocol is to have a **modular** and **universally usable** protocol for serializing and deserializing Dart classes in an **optimally performant** way.
 
-**[1] "Universally usable"** means that the protocol can be used for **any** serialized data format (json, csv, yaml, ...) as well as converting to primitive dart objects (Map, List, String, int, double, bool). It also means that it can be used by both "normal" devs and packages or as a generation target for build_runner, or (in the future) macros or other tools (like ide extensions or cli tools).
+**[1] "Modular"** means that the protocol is flexible in how it is used. Developers may use as much or as little of it as they need, have control over its parts and extend it
 
-**[2] "Encapsulated"** means that the protocol has no outside dependencies and, in theory, could even part of dart:convert. *How this could look in practice may be part of the discussion.*
+**[2] "Universally usable"** means that the protocol can be used for **any** serialized data format (json, csv, yaml, ...) as well as structured objects (like Map). It also means that it can be used by both app developers, package authors or as a generation target for build_runner, or (in the future) macros or other tools (like ide extensions or cli tools).
 
 **[3] "Optimally performant"** means that it should be designed for performance, as serialization is a performance critical part of many apps and often a bottleneck. **"Optimally"** specifically means that the protocol should make **no** performance compromises. Therefore its not about enabling "good" performance, its about enabling "optimal" performance.
 
 > My personal reason for **[3]** is that "I can't use it because I need better performance" should never be an argument here. Not because everyone needs optimal performance, but because many *think* they do.
+
+> A fourth goal is obviously acceptance and adaption in the ecosystem, but this can only be done together with the community and (maybe even) the Dart team. Therefore spread the word about the proposal and lets discuss.
 
 ---
 
@@ -54,40 +55,33 @@ The goal of the protocol is to have a **universally usable** and **encapsulated*
 
 The core protocol consists of the following interfaces:
 
-- `Encoding`/ `Decoding`, for defining the target format (use e.g. `JsonEncoding implements Encoding` for JSON)
-- `Encoder` / `Decoder`, for converting a specific type (use e.g. `UriEncoder implements Encoder<Uri>` for Uri)
+- `Encoding` & `Decoding`, for defining the target format (use e.g. `JsonEncoding implements Encoding` for JSON)
+- `Encoder` & `Decoder`, for converting a specific type (use e.g. `UriEncoder implements Encoder<Uri>` for Uri)
+
+As you see this separates the *how* from the *what* in terms of encoding and decoding.
+
+- the `Encoding` / `Decoding` defines **how** to en/decode (e.g. Map, JSON, YAML, CSV, ...)
+- the `Encoder` / `Decoder` defines **what** to en/decode (your own or external models, e.g. Person, Uri, ...)
+
+The protocol only defines the interfaces here, the actual implementation is up to the consumer (developer or packages).
+
+> I made reference implementations though for Map, JSON and CSV. Mainly for benchmarking, but this could also ship as a default set of implementations alongside the protocol.
+
+This separation of interfaces (`-ing` and `-er`) allows for a modular approach to serialization. The implementation of the format no longer needs to know (or make implicit assumptions) about the target models. As well as the other way around, where the model does not need to know about the format.
+
+Lets look at some implications and use-cases of this:
+
+1. Any code-gen tool (using build_runner, macros or other) would only need to care about creating `Encoder`s/`Decoder`s, not handle the actual serialization. Meaning less work for the author, and more flexibility for the consumer.
+
+2. Packages like `yaml` could expose a custom de/encoding (e.g. `YamlEncoding`) and directly work with any model using the protocol.
+
+3. Packages defining custom models could directly work with any other package or codebase using the protocol.
+
+4. Frameworks like Serverpod or Jaspr or backends like Firebase could acccept any model using the protocol without needing to ship their own serialization solution.
+
+## Usage
 
 These can be used together like this:
-
-
-TODO usage (consuming, example)
-
-
-
-The convention is:
-
-- the `Encoder` / `Decoder` defines **what** to en/decode (an Uri)
-- the `Encoding` / `Decoding` defines **how** to en/decode (e.g. JSON)
-
-The protocol only defines the interfaces here, the actual implementation is up to the consumer (or packages).
-
-> I made a reference implementation though for JSON, CSV and some example models.
-
-This separation of interfaces (`-ing` and `-er`) allows for a modular approach to serialization. The implementation of the format no longer needs to know (or make implicit assumptions) about the target models.
-
-> Some use-case inspirations:
-> - Any code-gen tool (using build_runner, macros or other) would only need to care about creating `Encoder`s/`Decoder`s, not handle the actual serialization. Meaning less fragmentation and more re-use across packages.
-> - Packages like `yaml` could expose a custom de/encoding (e.g. `YamlEncoding`) and directly work with any model using the protocol.
-> - Packages defining custom models could directly work with any other package or codebase using the protocol.
-> - Frameworks like Serverpod or Jaspr or backends like Firebase could acccept any model using the protocol without needing to ship their own serialization solution.
-
----
-
-## Encodable interface
-
-## Codable interface
-
-## Implementing models
 
 ```dart
 // Pseudocode for now, not the real interfaces.
@@ -106,6 +100,10 @@ class UriDecoder with DecoderMixin<Uri> implements Decoder<Uri> {
   }
 }
 ```
+
+---
+
+## Implementing models
 
 We only looked at a very simple example so far. Here is how this would look for classes with fields:
 
