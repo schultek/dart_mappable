@@ -2,6 +2,18 @@ import 'dart:collection';
 
 import '../protocol/common.dart';
 
+extension LazyEncodable on Encodable {
+  Map<String, dynamic> toLazyMap() {
+    return LazyEncoding.encode(this, encoder()) as Map<String, dynamic>;
+  }
+}
+
+extension LazyEncodable1<T extends Encodable<T>, A> on Encodable1<T, A> {
+  Map<String, dynamic> toLazyMap([Encoder<A>? e1]) {
+    return LazyEncoding.encode(this, encoder(e1)) as Map<String, dynamic>;
+  }
+}
+
 class LazyEncoding implements SerialEncoding {
   LazyEncoding._();
 

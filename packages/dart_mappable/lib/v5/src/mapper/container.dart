@@ -42,7 +42,7 @@ Encoder<T> findEncoderFor<T>(T value) {
     EncoderOf e => e.encoder(),
     EncoderOf1 e => T.args.call1(<A>() => e.encoder<A>()),
     EncoderOf2 e => T.args.call2(<A, B>() => e.encoder<A, B>()),
-    _ => throw "Not a encoder",
+    _ => throw 'Not a encoder',
   } as Encoder<T>;
 }
 

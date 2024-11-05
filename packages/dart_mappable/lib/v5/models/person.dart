@@ -2,7 +2,22 @@ import 'package:collection/collection.dart';
 
 import '../src/mapper/mapper.dart';
 import '../src/protocol/common.dart';
-import '../test/raw_encodable.dart';
+import '../benchmarks/raw_encodable.dart';
+
+class PersonCodable implements Codable<Person> {
+  @override
+  Decoder<Person> decoder() {
+    // TODO: implement decoder
+    throw UnimplementedError();
+  }
+
+  @override
+  Encoder<Person> encoder() {
+    // TODO: implement encoder
+    throw UnimplementedError();
+  }
+
+}
 
 class Person implements Encodable<Person>, RawEncodable {
   Person(this.name, this.a, this.b, this.c, this.d, this.e, this.f);
@@ -176,6 +191,7 @@ final class PersonDecoder implements Decoder<Person> {
       keyed.decodeListObject('f', Person.decoder()),
     );
   }
+
 }
 
 class PersonMapper extends Mapper<Person>

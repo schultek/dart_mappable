@@ -60,7 +60,7 @@ class AnimalDecoder with DecoderMixin<Animal>, SuperDecoderMixin<Animal> {
       return decoding.decodeObject(subDecoder);
     }
 
-    throw "Unknown subtype of Animal";
+    throw 'Unknown subtype of Animal';
   }
 }
 

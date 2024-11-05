@@ -68,7 +68,7 @@ class AnimalGenDecoder<T>
       return result;
     }
 
-    throw "Unknown subtype of Animal";
+    throw 'Unknown subtype of Animal';
   }
 
   @override
@@ -77,7 +77,7 @@ class AnimalGenDecoder<T>
       return result;
     }
 
-    throw "Unknown subtype of Animal";
+    throw 'Unknown subtype of Animal';
   }
 }
 

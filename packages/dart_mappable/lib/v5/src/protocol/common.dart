@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 part 'compat.dart';
 part 'helpers.dart';
 part 'interface.dart';
 part 'serial.dart';
 part 'structured.dart';
+part 'codec.dart';
 
 abstract interface class Decoding {
   String decodeString();

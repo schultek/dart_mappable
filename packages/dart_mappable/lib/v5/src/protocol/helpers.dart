@@ -12,6 +12,7 @@ abstract mixin class DecoderMixin<T> implements Decoder<T> {
   T decodeSerial(SerialDecoding decoding) {
     return CompatSerialDecoding.decode(this, decoding);
   }
+
 }
 
 abstract mixin class EncoderMixin<T> implements Encoder<T> {
@@ -42,6 +43,7 @@ final class _DecoderFromHandlers<T> implements Decoder<T> {
   T decodeStruct(StructDecoding decoding) => _decodeStruct(decoding);
   @override
   T decodeSerial(SerialDecoding decoding) => _decodeSerial(decoding);
+
 }
 
 final class _DecoderFromHandler<T> with DecoderMixin<T> {
@@ -53,6 +55,7 @@ final class _DecoderFromHandler<T> with DecoderMixin<T> {
 
   @override
   T decode(Decoding decoding) => _decode(decoding);
+
 }
 
 final class _EncoderFromHandlers<T> implements Encoder<T> {
@@ -71,6 +74,7 @@ final class _EncoderFromHandlers<T> implements Encoder<T> {
   @override
   void encodeSerial(T value, SerialEncoding encoding) =>
       _encodeSerial(value, encoding);
+
 }
 
 final class _EncoderFromHandler<T> with EncoderMixin<T> {
@@ -82,4 +86,5 @@ final class _EncoderFromHandler<T> with EncoderMixin<T> {
 
   @override
   Object? encode(T value, Encoding encoding) => _encode(value, encoding);
+
 }

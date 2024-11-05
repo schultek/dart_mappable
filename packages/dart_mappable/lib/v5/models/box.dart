@@ -1,7 +1,8 @@
+import '../src/implementation/map.dart';
 import '../src/mapper/container.dart';
 import '../src/mapper/mapper.dart';
 import '../src/protocol/common.dart';
-import '../test/raw_encodable.dart';
+import '../benchmarks/raw_encodable.dart';
 
 class Box<T> implements Encodable1<Box<T>, T>, RawEncodable {
   Box(this.data);
@@ -9,7 +10,7 @@ class Box<T> implements Encodable1<Box<T>, T>, RawEncodable {
   final T data;
 
   static Box<T> fromMap<T>(Map<String, dynamic> value, [Decoder<T>? decoder1]) {
-    return StructDecoding.decode(value, decoder<T>(decoder1));
+    return MapDecoding.decode(value, decoder<T>(decoder1));
   }
 
   static Mapper<Box> mapper() => const BoxMapper();

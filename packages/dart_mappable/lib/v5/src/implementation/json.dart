@@ -4,17 +4,62 @@ import 'package:crimson/crimson.dart';
 
 import '../protocol/common.dart';
 
-class JsonDecoding implements SerialDecoding {
-  JsonDecoding._(this._reader);
-  final Crimson _reader;
+const jsonCoding = JsonCoding();
+const jsonByteCoding = JsonByteCoding();
 
-  static T decodeBytes<T>(List<int> value, Decoder<T> decoder) {
+extension JsonEncodable on Encodable {
+  String toJson() {
+    return jsonCoding.encode(this, encoder());
+  }
+
+  List<int> toJsonBytes() {
+    return jsonByteCoding.encode(this, encoder());
+  }
+}
+
+extension JsonEncodable1<T extends Encodable<T>, A> on Encodable1<T, A> {
+  String toJson([Encoder<A>? e1]) {
+    return jsonCoding.encode(this, encoder(e1));
+  }
+
+  List<int> toJsonBytes([Encoder<A>? e1]) {
+    return jsonByteCoding.encode(this, encoder(e1));
+  }
+}
+
+class JsonCoding implements Coding<String> {
+  const JsonCoding();
+
+  @override
+  T decode<T>(String value, Decoder<T> decoder) {
+    return jsonByteCoding.decode(utf8.encode(value), decoder);
+  }
+
+  @override
+  String encode<T>(T value, Encoder<T> encoder) {
+    return utf8.decode(jsonByteCoding.encode(value, encoder));
+  }
+}
+
+class JsonByteCoding implements Coding<List<int>> {
+  const JsonByteCoding();
+
+  @override
+  T decode<T>(List<int> value, Decoder<T> decoder) {
     return JsonDecoding._(Crimson(value)).decodeObject(decoder);
   }
 
-  static T decode<T>(String value, Decoder<T> decoder) {
-    return decodeBytes(utf8.encode(value), decoder);
+  @override
+  List<int> encode<T>(T value, Encoder<T> encoder) {
+    var encoding = JsonEncoding._(CrimsonWriter());
+    encoder.encodeSerial(value, encoding);
+    return encoding._writer.toBytes();
   }
+}
+
+class JsonDecoding implements SerialDecoding {
+  JsonDecoding._(this._reader);
+  final Crimson _reader;
 
   @pragma('vm:prefer-inline')
   @override
@@ -124,16 +169,6 @@ class JsonDecoding implements SerialDecoding {
 
 class JsonEncoding implements SerialEncoding {
   JsonEncoding._(this._writer);
-
-  static String encode<T>(T value, Encoder<T> encoder) {
-    return utf8.decode(encodeBytes(value, encoder));
-  }
-
-  static List<int> encodeBytes<T>(T value, Encoder<T> encoder) {
-    var encoding = JsonEncoding._(CrimsonWriter());
-    encoder.encodeSerial(value, encoding);
-    return encoding._writer.toBytes();
-  }
 
   final CrimsonWriter _writer;
 
