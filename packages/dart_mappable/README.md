@@ -41,6 +41,7 @@ polymorphism, customization** and more.
 - 🎛️ **Highly flexible**: Customize the serialization, add custom types or integrate with other packages.
 - 🔥 **No compromises**: Its promise is that it just works, no matter what classes you throw at it.  
   *(If you find an unsupported case, you get a cookie 🍪. And please add an issue on [github](https://github.com/schultek/dart_mappable).)*
+- 🔌 **Plugin support**: IntelliJ IDEs Plugin [dart_mappable_plugin](https://github.com/eitanliu/dart_mappable_plugin)
 
 ## Quick Start
 
