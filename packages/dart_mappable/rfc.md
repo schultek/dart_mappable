@@ -14,7 +14,7 @@ During the last three years, I created the most powerful and feature-complete ma
 
 Serialization, aka transforming a data class into a serialized data format and back to be sent, received or stored, is a key part of almost all applications. And a key problem to figure out for every programming language and ecosystem. Swift has Codable, Python has pydantic, Rust has serde. Dart has ...?
 
-Currently the Dart ecosystem around serialization is in a bad state. There is no coherent story around serialization at all. The defacto-standard package `json_serialization` is neither doing serialization nor handling JSON. The core `jsonEncode`s reliance on an implicit `toJson()` method is just bad API design. Both completely ignore the fact that there are other serialization formats than JSON. Both are pretty bad in performance, considering what could be achieved.
+Currently, the Dart ecosystem around serialization is in a bad state. There is no coherent story around serialization at all. The defacto-standard package `json_serialization` is neither doing serialization nor handling JSON. The core `jsonEncode`s reliance on an implicit `toJson()` method is just bad API design. Both completely ignore the fact that there are other serialization formats than JSON. Both are pretty bad in performance, considering what could be achieved.
 
 > Looking at `json_serializable`, I never got its name. Its neither dealing with JSON, nor does it actually serialize anything. It's just **converting** a model to a **Map**. This isn't just a weird naming though, as, especially for less experienced devs, it is misrepresenting important concepts.
 
@@ -33,8 +33,6 @@ And therein lies the second problem of `json_serializable` (and dart_mappable v4
 
 **It is time we rethink serialization in Dart and aim for a standard that is modular, performant and allows to convert to and from *any* data format (structured or serial) efficiently.**
 
----
-
 # Design Goals
 
 The goal of the protocol is to have a **modular** and **universally usable** protocol for serializing and deserializing Dart classes in an **optimally performant** way.
@@ -48,8 +46,6 @@ The goal of the protocol is to have a **modular** and **universally usable** pro
 > My personal reason for **[3]** is that "I can't use it because I need better performance" should never be an argument here. Not because everyone needs optimal performance, but because many *think* they do.
 
 > A fourth goal is obviously acceptance and adaption in the ecosystem, but this can only be done together with the community and (maybe even) the Dart team. Therefore spread the word about the proposal and lets discuss.
-
----
 
 # Core Concept
 
@@ -69,43 +65,16 @@ The protocol only defines the interfaces here, the actual implementation is up t
 
 This separation of interfaces (`-ing` and `-er`) allows for a modular approach to serialization. The implementation of the format no longer needs to know (or make implicit assumptions) about the target models. As well as the other way around, where the model does not need to know about the format.
 
-Lets look at some implications and use-cases of this:
+Let's look at some implications and use-cases of this:
 
 1. Any code-gen tool (using build_runner, macros or other) would only need to care about creating `Encoder`s/`Decoder`s, not handle the actual serialization. Meaning less work for the author, and more flexibility for the consumer.
-
 2. Packages like `yaml` could expose a custom de/encoding (e.g. `YamlEncoding`) and directly work with any model using the protocol.
-
 3. Packages defining custom models could directly work with any other package or codebase using the protocol.
-
 4. Frameworks like Serverpod or Jaspr or backends like Firebase could acccept any model using the protocol without needing to ship their own serialization solution.
 
-## Usage
+# Model Definition
 
-These can be used together like this:
-
-```dart
-// Pseudocode for now, not the real interfaces.
-
-class UriEncoder implements Encoder<Uri> {
-  @override
-  Object? encode(Uri value, Encoding encoding) {
-    return encoding.encodeString(value.toString());
-  }
-}
-
-class UriDecoder with DecoderMixin<Uri> implements Decoder<Uri> {
-  @override
-  Uri decode(Decoding decoding) {
-    return Uri.parse(decoding.decodeString());
-  }
-}
-```
-
----
-
-## Implementing models
-
-We only looked at a very simple example so far. Here is how this would look for classes with fields:
+The following shows an example implementation for de/encoding a `Person` class:
 
 ```dart
 // Pseudocode for now, not the real interfaces.
@@ -117,13 +86,11 @@ class Person {
 
 class PersonEncoder implements Encoder<Person>  {
   @override
-  Object? encode(Person value, Encoding encoding) {
+  void encode(Person value, Encoding encoding) {
     final keyed = encoding.encodeKeyed<String>();
     
     keyed.encodeString('name', value.name);
     keyed.encodeInt('age', value.age);
-    
-    return keyed;
   }
 }
 
@@ -140,10 +107,16 @@ class PersonDecoder implements Decoder<Person>  {
 }
 ```
 
+As you see we create two classes `PersonEncoder` and `PersonDecoder` that implement the respective interfaces. 
+In the overridden `encode` and `decode` methods they then use the provided `Encoding` and `Decoding` instances.
+
+> This proposal does not specify how the above implementations are created. You can decide whether you use code-gen, 
+> ide tools or write it manually. Or even use different approaches for different models.
+
 ---
 
 An important aspect to note here is why the `encode()` or `decode()` methods are not diretly on the model class,
-but instead are separate `Encoder` and `Decoder` classes.
+but instead use separate `Encoder` and `Decoder` classes.
 
 First, this way the encoding logic is nicely separated from the model class itself.
 
@@ -151,9 +124,12 @@ More importantly, it allows anyone to define `Encoders` for any type, especially
 
 Additionally, some models might have (1) different ways to encode them (e.g. `DateTime` can be encoded either as a unix int, or timestamp String), or (2) need to be configurable in how they encode (e.g. `DateTime` can be encoded as local time, or utc time). (1) is solved by having multiple `Encoder` classes for the same model (e.g. `UnixDateTimeEncoder()` and `IsoDateTimeEncoder()`), which the user can choose from and (2) by making the `Encoder` subclass take constructor parameters (e.g. `DateTimeEncoder({bool convertToUtc})`).
 
+There is also another reason to support more complex setups like generic classes or polymorphism, which are discussed later. Though these are not directly part 
+of the protocol, they are enabled by it.
+
 Lastly, it is a soft goal of the protocol to be equivalent for both encoding and decoding, as it makes the API more predictable.
 
-However this means we always need to provide a separate companion object (the `Encoder`) when wanting to encode a value. There is a solution to this though:
+However, this means we always need to provide a separate companion object (the `Encoder`) when wanting to encode a value. There is a solution to this though:
 
 ## Model Interface
 
@@ -173,46 +149,22 @@ That way, a consuming method can accept any `Encodable` model and access its enc
 
 ---
 
-Sadly, this only works for encoding, not decoding, as we cannot define interfaces for static members in Dart. So an equivalent `Decodable<Person` interface on `Person` that requires a `static Decoder<Person> decoder();` method is not possible.
+Sadly, this only works for encoding, not decoding, as we cannot define interfaces for static members in Dart. 
+So an equivalent `Decodable<Person` interface on `Person` that requires a `static Decoder<Person> decoder();` method is not possible.
 
----
 
 ## Interface variants
 
-Before we go into further detail, we need to assess goal **[1]** (universally usable) and **[3]** (optimally performant).
+Before we go into further detail, we need to assess goal **[2]** (universally usable) and **[3]** (optimally performant).
 
-For **[1]** the `Encoding` / `Decoding` interfaces must be able to en/decode to both **structured objects** (aka Map, List, etc) as well as **serialized data** (like a JSON String). However these two types are so different in nature (structured vs serial) that it is not feasible to define one common protocol that also respects **[3]**.
+For **[2]** the `Encoding` / `Decoding` interfaces must be able to en/decode to both **structured objects** (aka Map, List, etc) as well as **serialized data** (like a JSON String). 
+However these two types are so different in nature (structured vs serial) that it is not feasible to define one common protocol that also respects **[3]**.
 
 <details><summary>More on why its not feasible.</summary>
   <br/>
 Lets look at the following example:
 
-Say we want to encode `Person` to both a `Map<String, dynamic>` and a JSON `String`. The **optimal** implementations looks something like this:
-
-```dart
-// Pseudocode
-
-Map encodeToMap(Person value) {
-  var map = {};
-  map['name'] = value.name;
-  map['age'] = value.age;
-  return map;
-}
-
-String encodeToJson(Person value) {
-  var json = StringBuffer('{');
-  json.write('"name":');
-  json.write('"${value.name}"');
-  json.write(',"age":');
-  json.write('${value.age}');
-  json.write('}');
-  return json.toString();
-}
-```
-
-Whereas for the map, the optimal implementation is just to set the values, the optimal implementation for serial encoding is writing everything in-order into a string buffer.
-
-This becomes even more apparent for decoding:
+Say we want to decode `Person` from both a `Map<String, dynamic>` and a JSON `String`. The **optimal** implementations looks something like this:
 
 ```dart
 // Pseudocode
@@ -243,51 +195,26 @@ Person decodeFromJson(String value) {
 }
 ```
 
-For the map, the optimal implementation is just to get the values using the key. As its hash based, the order of which the fields are read is irrelevant.
-However for serial decoding the optimal implementation reads the fields in order of how they are encoded. Here the encoded value defines the order in which the fields are decoded, not the implementation.
+For the map, the optimal implementation is just to access the values using the key. As it is hash based, the order of which the fields are read is irrelevant.
+However, for serial decoding the optimal implementation reads the fields in order of how they occur. Here the encoded value (the JSON String) defines the order in which the fields are decoded, not the implementation.
 
-**Therefore abstracting this into one common interface with separate implementations will have great performance compromises for both sides.**
+> This difference also exists, although not that drastic, for encoding.
+
+**Therefore, abstracting this into one common interface with separate implementations would have great performance compromises for both sides.**
 
 ---
 
 </details>
 
-As a result, there are actual **two sets** of interfaces:
+As a result, the protocol actually defines **two sets** of interfaces:
 
-- `StructuredEncoding` / `StructuredDecoding`, to convert a model to structured objects (Map, List, ...)
+- `StructuredEncoding` / `StructuredDecoding`, to convert a model to structured data (Map, etc.)
 - `SerialEncoding` / `SerialDecoding`, to convert a model to serial data (JSON, etc.)
 
 with slight, but important differences in their API.
 
-This results in that the `Encoder` and `Decoder` APIs actually need to implement **two** methods, one for structured en/decoding and one for serial en/decoding:
+Consequently, the `Encoder` and `Decoder` APIs need to implement **two** methods, one for structured en/decoding and one for serial en/decoding:
 
-```dart
-class PersonEncoder implements Encoder<Person>  {
-  @override
-  Object? encodeStructured(Person value, StructuredEncoding encoding) {
-    final keyed = encoding.encodeKeyed<String>();
-    
-    keyed.encodeValue('name', value.name);
-    keyed.encodeValue('age', value.age);
-    
-    return keyed;
-  }
-  
-  @override
-  void encodeSerial(Person value, SerialEncoding encoding) {
-    encoding.startObject<String>();
-  
-    encoder.encodeKey('name');
-    encoding.encodeString(value.name);
-    encoder.encodeKey('age');
-    encoding.encodeInt(value.age);
-  
-    encoding.endObject();
-  }
-}
-```
-
-and
 
 ```dart
 class PersonDecoder implements Decoder<Person>  {
@@ -318,42 +245,55 @@ class PersonDecoder implements Decoder<Person>  {
 }
 ```
 
+and
+
+```dart
+class PersonEncoder implements Encoder<Person>  {
+  @override
+  void encodeStructured(Person value, StructuredEncoding encoding) {
+    final keyed = encoding.encodeKeyed<String>();
+    
+    keyed.encodeValue('name', value.name);
+    keyed.encodeValue('age', value.age);
+  }
+  
+  @override
+  void encodeSerial(Person value, SerialEncoding encoding) {
+    encoding.startObject<String>();
+  
+    encoder.encodeKey('name');
+    encoding.encodeString(value.name);
+    encoder.encodeKey('age');
+    encoding.encodeInt(value.age);
+  
+    encoding.endObject();
+  }
+}
+```
+
 While this ensures the optimal performance, it might seem undesirable to have always two methods to implement for the same task.
 
 The reasoning here is that you will rarely actually have to implement the interfaces yourself. Most of the time
-the code will be auto-generated by code-gen, or (in the future) macros, or external tooling. Therefore conciseness
-is not really a concern for the design of this protocol.
+the code will be auto-generated by code-gen, or (in the future) macros, or external tooling. In those cases conciseness
+is not a concern.
 
-In other words, many many more users will profit from the performance gains than would profit from a more concise API.
+If you want to implement these interfaces manually though - and don't want to implement both methods - the protocol comes with
+and additional utility called `EncoderMixin` / `DecoderMixin` that wraps both structured and serial encoding into one common API.
+This then has the performance cost as described above, but only for the specific model this is used for.
 
-BUT: There is an additional utility in the protocol (called `EncoderMixin` / `DecoderMixin`), that does wrap both structured and serial encoding to one common API and lets the user only implement a single method. This can be used where the need for conciseness does outweigh performance requirements, while not affecting everyone else.
-  
----
+> In conclusion, I think **many** more users will profit from the performance gains of the two interfaces than would profit from a more concise API.
 
-## Creating custom Encodings and Decoding
+# Performance benchmarks
 
-
-Also, while the serial variants are abstract and meant to be implemented for a specific format (like `JsonEncoding implements SerialEncoding`), the structured variants are not meant to be subclassed and come with a default implementation that uses extension types for optimal performance.
-
-  
----
-
-# Usage
-
-So far we only looked at how to implement the core interfaces for a model. Let's now look at how to use these together to actually encode or decode something.
-
-But before that we take a quick detour and look at the achieved performance of the reference implementation.
-
-## Performance benchmarks
-
-To benchmark the performance, I compare the protocol ("self") to the "common" way of encoding objects ("other") (commonly `toMap()`, as implemented by `json_serializable`, which is also kinda the same as the usual by-hand implementation).
+Talking about performance, lets look at what we can expect from this protocol.
+For this benchmark, I compare the protocol ("self") to the "common" way of encoding objects ("other").
 
 ```text
 // Interpret as:
 // - This encodes / decodes around 5MB of sample data, running in JIT mode
 // - The absolute values are less important, the difference is what counts
 // - The "other" way does not have a specialized implementation for json en/decoding, 
-     it uses `.toMap()` with an additional `jsonEncode` or `utf8.encode()` call.
+     it uses `.toJson()` with an additional `jsonEncode` or `utf8.encode()` call.
   
 == MAP DECODING ==
 self: 10.04ms
@@ -376,56 +316,13 @@ self: 17.735ms
 other: 120.372ms
 ```
 
+Key takeaways:
+- For map de/encoding, the performance difference is negligible. The added interfaces and abstraction layer of the protocol does not have a negative impact on the performance.
+- For json de/encoding, the protocol implementation is significantly faster than the other way.
+
+# Format definition
 
 
+# Consuming the protocol
 
   
----
-
-# Current
-
-## Global vs Local Mappers
-
-Currently all mappers are used globally, which has the following implications:
-
-- There can only be a single mapper for a type at a time. (inflexible)
-- Mappers must be registered before being able to be used. (easy to forget)
-- Once registered, mappers are used for any and all models. (unwanted sideeffects, hard to catch bugs)
-- Mappers can be freely registered and un-registered. (unwanted breakage)
-
-
-## Primitive and Default Mappers
-
-Currently there is no difference in how primitive types, user types and custom types are handled.
-All are just mappers. This has the following implications:
-
-- The handling of primitive values goes through the full code path for finding and executing mappers. (slow)
-- Primitive mappers can be un-registered or overridden. (unwanted breakage)
-
-
-
-# Proposal
-
-The new system should follow these rules:
-
-- No global registry of mappers, mappers are only used "locally".
-- "locally" means for zone. Mappers are registered for a zone (and its descendant zones).
-- Mapping options (e.g. includeTypeId) are also set based on the zone.
-- Primitive types are handled inline and have no mappers.
-- Statically inferred mappers are used explicitly and won't use the discovery code path.
-- Dynamically used mappers can be used for statically unknown types, but not override statically inferred mappers.
-- There will be new APIs for specifying dynamic mappers and options for a zone.
-
-The following APIs will be removed:
-
-- `MapperContainer.globals`
-- `MyClassMapper.ensureInitialized()`
-- `includeCustomMappers`
-
-The following new APIs will be introduced:
-
-- `fromJson<T>(..., mappers: [...])` and others (top-level functions) (tbd)
-- `MyClass.fromJson<T>(..., mappers: [...])`, specifies extra mappers
-- `useMappers` on both MappableClass and MappableField, specifies extra mappers statically
-- `withMappers(mappers: [...], options: ..., () { ... })`, creates a new zone with mappers and options
-- `MyClassMapper()`, generated factory constructor creating singleton instance
