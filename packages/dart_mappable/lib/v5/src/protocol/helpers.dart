@@ -16,11 +16,11 @@ abstract mixin class DecoderMixin<T> implements Decoder<T> {
 }
 
 abstract mixin class EncoderMixin<T> implements Encoder<T> {
-  Object? encode(T value, Encoding encoding);
+  void encode(T value, Encoding encoding);
 
   @override
-  Object? encodeStruct(T value, StructEncoding encoding) {
-    return CompatStructEncoding.encode(value, this, encoding);
+  void encodeStruct(T value, StructEncoding encoding) {
+    CompatStructEncoding.encode(value, this, encoding);
   }
 
   @override
@@ -60,16 +60,16 @@ final class _DecoderFromHandler<T> with DecoderMixin<T> {
 
 final class _EncoderFromHandlers<T> implements Encoder<T> {
   const _EncoderFromHandlers({
-    required Object? Function(T value, StructEncoding encoding) encodeStruct,
+    required void Function(T value, StructEncoding encoding) encodeStruct,
     required void Function(T value, SerialEncoding encoding) encodeSerial,
   })  : _encodeStruct = encodeStruct,
         _encodeSerial = encodeSerial;
 
-  final Object? Function(T value, StructEncoding encoding) _encodeStruct;
+  final void Function(T value, StructEncoding encoding) _encodeStruct;
   final void Function(T value, SerialEncoding encoding) _encodeSerial;
 
   @override
-  Object? encodeStruct(T value, StructEncoding encoding) =>
+  void encodeStruct(T value, StructEncoding encoding) =>
       _encodeStruct(value, encoding);
   @override
   void encodeSerial(T value, SerialEncoding encoding) =>

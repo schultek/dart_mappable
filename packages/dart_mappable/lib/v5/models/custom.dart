@@ -9,8 +9,8 @@ class UriMapper extends SimpleMapper<Uri> {
   }
 
   @override
-  Object? encode(Uri value, Encoding encoding) {
-    return encoding.encodeValue(value.toString());
+  void encode(Uri value, Encoding encoding) {
+    encoding.encodeValue(value.toString());
   }
 }
 
@@ -29,8 +29,8 @@ class Uri2Mapper extends SimpleMapper<Uri> {
   }
 
   @override
-  Object? encode(Uri value, Encoding encoding) {
-    return encoding.encodeValue(value.toString().toUpperCase());
+  void encode(Uri value, Encoding encoding) {
+    encoding.encodeValue(value.toString().toUpperCase());
   }
 }
 
@@ -41,7 +41,7 @@ class SetMapper extends SimpleMapper1<Set> {
   }
 
   @override
-  Object? encode<E>(Set<E> value, Encoding encoding, [Encoder<E>? e1]) {
-    return encoding.encodeIterable<E>(value, (e) => e1 ?? findEncoderFor<E>(e));
+  void encode<E>(Set<E> value, Encoding encoding, [Encoder<E>? e1]) {
+    encoding.encodeIterable<E>(value, (e) => e1 ?? findEncoderFor<E>(e));
   }
 }

@@ -19,27 +19,18 @@ abstract interface class SerialDecoding {
   T? decodeObjectOrNull<T>(Decoder<T> decoder);
 
   Object? nextKey();
+  void skipRemainingKeys();
+
   bool nextItem();
+  void skipRemainingItems();
 
   void skipNext();
   bool skipNull();
-  void skipRemainingKeys();
-  void skipRemainingItems();
 
   SerialDecoding clone();
 }
 
 abstract interface class SerialEncoding {
-  void startObject<Key>();
-
-  void endObject();
-
-  void startArray<E>();
-
-  void endArray();
-
-  void encodeKey(Object? key);
-
   void encodeNull();
 
   void encodeString(String value);
@@ -51,4 +42,13 @@ abstract interface class SerialEncoding {
   void encodeBool(bool value);
 
   void encodeObject<T>(T value, Encoder<T> encoder);
+
+  void startObject<Key>();
+  void endObject();
+
+  void startArray<E>();
+  void endArray();
+
+  void encodeKey(Object? key);
+
 }

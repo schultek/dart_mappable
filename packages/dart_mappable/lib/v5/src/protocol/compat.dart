@@ -508,30 +508,26 @@ class KeyedCompatSerialDecoding<Key> implements KeyedDecoding<Key> {
 class CompatStructEncoding implements Encoding {
   CompatStructEncoding._(this.encoding);
 
-  static Object? encode<T>(
+  static void encode<T>(
       T value, EncoderMixin<T> encoder, StructEncoding encoding) {
-    var encoded = encoder.encode(value, CompatStructEncoding._(encoding));
-    if (encoded is KeyedCompatStructEncoding) {
-      return encoded.encoding;
-    }
-    return encoded;
+    encoder.encode(value, CompatStructEncoding._(encoding));
   }
 
   final StructEncoding encoding;
 
   @override
-  Object? encodeValue(Object? value) {
-    return encoding.encodeValue(value);
+  void encodeValue(Object? value) {
+    encoding.encodeValue(value);
   }
 
   @override
-  Object? encodeObject<T>(T value, Encoder<T> encoder) {
-    return encoding.encodeObject<T>(value, encoder);
+  void encodeObject<T>(T value, Encoder<T> encoder) {
+    encoding.encodeObject<T>(value, encoder);
   }
 
   @override
-  Object? encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode) {
-    return encoding.encodeIterable<T>(value, encode);
+  void encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode) {
+    encoding.encodeIterable<T>(value, encode);
   }
 
   @override
@@ -567,13 +563,15 @@ class CompatSerialEncoding implements Encoding {
 
   static void encode<T>(
       T value, EncoderMixin<T> encoder, SerialEncoding encoding) {
-    var encoded = encoder.encode(value, CompatSerialEncoding._(encoding));
-    if (encoded is KeyedCompatSerialEncoding) {
+    var comp = CompatSerialEncoding._(encoding);
+    encoder.encode(value, comp);
+    if (comp.isKeyed) {
       encoding.endObject();
     }
   }
 
   final SerialEncoding encoding;
+  bool isKeyed = false;
 
   @override
   void encodeValue(Object? value) {
@@ -615,6 +613,7 @@ class CompatSerialEncoding implements Encoding {
   @override
   KeyedEncoding<Key> encodeKeyed<Key>() {
     encoding.startObject<Key>();
+    isKeyed = true;
     return KeyedCompatSerialEncoding._(encoding);
   }
 }

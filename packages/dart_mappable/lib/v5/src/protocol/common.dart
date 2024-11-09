@@ -58,11 +58,11 @@ abstract interface class KeyedDecoding<Key> {
 }
 
 abstract interface class Encoding {
-  Object? encodeValue(Object? value);
+  void encodeValue(Object? value);
 
-  Object? encodeObject<T>(T value, Encoder<T> encoder);
+  void encodeObject<T>(T value, Encoder<T> encoder);
 
-  Object? encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode);
+  void encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode);
 
   KeyedEncoding<Key> encodeKeyed<Key>();
 }
@@ -91,15 +91,15 @@ abstract interface class Decoder<T> {
 }
 
 abstract class Encoder<T> {
-  Object? encodeStruct(T value, StructEncoding encoding);
+  void encodeStruct(T value, StructEncoding encoding);
   void encodeSerial(T value, SerialEncoding encoding);
 
   const factory Encoder.fromHandlers({
-    required Object? Function(T value, StructEncoding encoding) encodeStruct,
+    required void Function(T value, StructEncoding encoding) encodeStruct,
     required void Function(T value, SerialEncoding encoding) encodeSerial,
   }) = _EncoderFromHandlers;
 
   const factory Encoder.fromHandler({
-    required Object? Function(T value, Encoding encoding) encode,
+    required void Function(T value, Encoding encoding) encode,
   }) = _EncoderFromHandler;
 }

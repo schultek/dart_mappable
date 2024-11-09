@@ -1,4 +1,3 @@
-import 'dart:io';
 
 void compare(
   String name, {

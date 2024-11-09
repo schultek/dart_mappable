@@ -32,12 +32,12 @@ class JsonCoding implements Coding<String> {
 
   @override
   T decode<T>(String value, Decoder<T> decoder) {
-    return jsonByteCoding.decode(utf8.encode(value), decoder);
+    return JsonDecoding.decode(utf8.encode(value), decoder);
   }
 
   @override
   String encode<T>(T value, Encoder<T> encoder) {
-    return utf8.decode(jsonByteCoding.encode(value, encoder));
+    return utf8.decode(JsonEncoding.encode(value, encoder));
   }
 }
 
@@ -46,20 +46,22 @@ class JsonByteCoding implements Coding<List<int>> {
 
   @override
   T decode<T>(List<int> value, Decoder<T> decoder) {
-    return JsonDecoding._(Crimson(value)).decodeObject(decoder);
+    return JsonDecoding.decode(value, decoder);
   }
 
   @override
   List<int> encode<T>(T value, Encoder<T> encoder) {
-    var encoding = JsonEncoding._(CrimsonWriter());
-    encoder.encodeSerial(value, encoding);
-    return encoding._writer.toBytes();
+    return JsonEncoding.encode(value, encoder);
   }
 }
 
 class JsonDecoding implements SerialDecoding {
   JsonDecoding._(this._reader);
   final Crimson _reader;
+
+  static T decode<T>(List<int> value, Decoder<T> decoder) {
+    return JsonDecoding._(Crimson(value)).decodeObject(decoder);
+  }
 
   @pragma('vm:prefer-inline')
   @override
@@ -171,6 +173,12 @@ class JsonEncoding implements SerialEncoding {
   JsonEncoding._(this._writer);
 
   final CrimsonWriter _writer;
+
+  static List<int> encode<T>(T value, Encoder<T> encoder) {
+    var encoding = JsonEncoding._(CrimsonWriter());
+    encoder.encodeSerial(value, encoding);
+    return encoding._writer.toBytes();
+  }
 
   @pragma('vm:prefer-inline')
   @override

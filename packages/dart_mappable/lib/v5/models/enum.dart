@@ -1,9 +1,9 @@
 import '../src/protocol/common.dart';
 
 enum Color implements Encodable<Color> {
-  Green,
-  BLUE,
-  bloodRED;
+  green,
+  blue,
+  red;
 
   Decoder<Color> decoder() => const ColorDecoder();
   @override
@@ -25,9 +25,9 @@ class ColorDecoder implements Decoder<Color> {
 
   Color decode(String? value) {
     return switch (value) {
-      'green' => Color.Green,
-      'blue' => Color.BLUE,
-      'blood-red' => Color.bloodRED,
+      'green' => Color.green,
+      'blue' => Color.blue,
+      'red' => Color.red,
       _ => throw 'Unknown enum value',
     };
   }
@@ -42,15 +42,15 @@ class ColorEncoder implements Encoder<Color> {
   }
 
   @override
-  Object? encodeStruct(Color value, StructEncoding encoding) {
-    return encoding.encodeValue(encode(value));
+  void encodeStruct(Color value, StructEncoding encoding) {
+    encoding.encodeValue(encode(value));
   }
 
   String encode(Color value) {
     return switch (value) {
-      Color.Green => 'green',
-      Color.BLUE => 'blue',
-      Color.bloodRED => 'blood-red',
+      Color.green => 'green',
+      Color.blue => 'blue',
+      Color.red => 'red',
     };
   }
 }

@@ -1,8 +1,6 @@
-import 'package:collection/collection.dart';
 
 import '../src/mapper/mapper.dart';
 import '../src/protocol/common.dart';
-import '../benchmarks/raw_encodable.dart';
 
 class MeasuresCodable implements Codable<Measures> {
   @override

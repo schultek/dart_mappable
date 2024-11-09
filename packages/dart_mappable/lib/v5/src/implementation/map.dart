@@ -219,37 +219,38 @@ class KeyedMapDecoding<Key> implements KeyedStructDecoding<Key> {
 
 class MapEncoding implements StructEncoding {
   MapEncoding._();
-  static final _i = MapEncoding._();
+
+  Object? _value;
 
   static Object? encode<T>(T value, Encoder<T> encoder) {
-    return _i.encodeObject(value, encoder);
+    var encoding = MapEncoding._();
+    encoding.encodeObject(value, encoder);
+    return encoding._value;
   }
 
   @override
   @pragma('vm:prefer-inline')
-  Object? encodeValue(Object? value) => value;
+  void encodeValue(Object? value) {
+    _value = value;
+  }
 
   @override
   @pragma('vm:prefer-inline')
-  Object? encodeObject<T>(T value, Encoder<T> encoder) {
-    var e = encoder.encodeStruct(value, this);
-    if (e is KeyedMapEncoding) {
-      return e._value;
-    }
-    return e;
+  void encodeObject<T>(T value, Encoder<T> encoder) {
+    encoder.encodeStruct(value, this);
   }
 
   @override
   @pragma('vm:prefer-inline')
   KeyedMapEncoding<Key> encodeKeyed<Key>() {
-    return KeyedMapEncoding._(<Key, dynamic>{});
+    return KeyedMapEncoding._(_value = <Key, dynamic>{});
   }
 
   @override
   @pragma('vm:prefer-inline')
-  Object? encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode) {
-    return [
-      for (final e in value) encodeObject(e, encode(e)),
+  void encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode) {
+    _value = [
+      for (final e in value) MapEncoding.encode(e, encode(e)),
     ];
   }
 }
@@ -267,7 +268,7 @@ class KeyedMapEncoding<Key> implements KeyedStructEncoding<Key> {
   @override
   @pragma('vm:prefer-inline')
   void encodeObject<T>(Key key, T value, Encoder<T> encoder) {
-    _value[key] = MapEncoding._i.encodeObject(value, encoder);
+    _value[key] = MapEncoding.encode(value, encoder);
   }
 
   @override
@@ -275,7 +276,7 @@ class KeyedMapEncoding<Key> implements KeyedStructEncoding<Key> {
   void encodeIterable<T>(
       Key key, Iterable<T> value, Encoder<T> Function(T) encode) {
     _value[key] = [
-      for (final e in value) MapEncoding._i.encodeObject(e, encode(e))
+      for (final e in value) MapEncoding.encode(e, encode(e))
     ];
   }
 }
