@@ -24,12 +24,12 @@ Decoder<T> findDecoderFor<T>() {
 
 Decoder<T>? getDecoderOf<T>(Mapper mapper) {
   return switch (mapper) {
-    DecoderOf d => d.decoder(),
-    DecoderOf1 d => T.args.call1(<A>() {
-        return d.decoder<A>(findDecoderFor<A>());
+    CodableMapper m => m.codable(),
+    CodableMapper1 m => T.args.call1(<A>() {
+        return m.codable<A>().decoder(findDecoderFor<A>());
       }),
-    DecoderOf2 d => T.args.call2(<A, B>() {
-        return d.decoder<A, B>(findDecoderFor<A>(), findDecoderFor<B>());
+    CodableMapper2 m => T.args.call2(<A, B>() {
+        return m.codable<A, B>().decoder(findDecoderFor<A>(), findDecoderFor<B>());
       }),
     _ => null,
   } as Decoder<T>?;
@@ -38,12 +38,13 @@ Decoder<T>? getDecoderOf<T>(Mapper mapper) {
 Encoder<T> findEncoderFor<T>(T value) {
   if (value is Encodable<T>) return value.encoder();
   final mapper = MapperContainer.current.findByValue<T>(value);
-  return switch (mapper) {
-    EncoderOf e => e.encoder(),
-    EncoderOf1 e => T.args.call1(<A>() => e.encoder<A>()),
-    EncoderOf2 e => T.args.call2(<A, B>() => e.encoder<A, B>()),
-    _ => throw 'Not a encoder',
-  } as Encoder<T>;
+  final encodable = switch (mapper) {
+    CodableMapper m => m.codable(),
+    CodableMapper1 m => T.args.call1<Codable>(<A>() => m.codable<A>()),
+    CodableMapper2 m => T.args.call2<Codable>(<A, B>() => m.codable<A, B>()),
+    _ => throw 'Not a CodableMapper',
+  } as Encodable<T>;
+  return encodable.encoder();
 }
 
 extension on List<Type> {

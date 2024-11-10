@@ -4,21 +4,6 @@ import '../src/mapper/mapper.dart';
 import '../src/protocol/common.dart';
 import '../benchmarks/raw_encodable.dart';
 
-class PersonCodable implements Codable<Person> {
-  @override
-  Decoder<Person> decoder() {
-    // TODO: implement decoder
-    throw UnimplementedError();
-  }
-
-  @override
-  Encoder<Person> encoder() {
-    // TODO: implement encoder
-    throw UnimplementedError();
-  }
-
-}
-
 class Person implements Encodable<Person>, RawEncodable {
   Person(this.name, this.a, this.b, this.c, this.d, this.e, this.f);
 
@@ -31,6 +16,7 @@ class Person implements Encodable<Person>, RawEncodable {
   final List<Person> f;
 
   static Mapper<Person> mapper() => const PersonMapper();
+  static Codable<Person> codable() => const PersonCodable();
   static Decoder<Person> decoder() => const PersonDecoder();
   @override
   Encoder<Person> encoder() => const PersonEncoder();
@@ -191,12 +177,17 @@ final class PersonDecoder implements Decoder<Person> {
       keyed.decodeListObject('f', Person.decoder()),
     );
   }
-
 }
 
-class PersonMapper extends Mapper<Person>
-    implements DecoderOf<Person>, EncoderOf<Person> {
+class PersonMapper extends Mapper<Person> implements CodableMapper<Person> {
   const PersonMapper();
+
+  @override
+  Codable<Person> codable() => const PersonCodable();
+}
+
+class PersonCodable implements Codable<Person> {
+  const PersonCodable();
 
   @override
   Decoder<Person> decoder() => const PersonDecoder();

@@ -20,26 +20,12 @@ abstract class Mapper<T> {
   bool isForType(Type type) => type.base == T;
 }
 
-abstract interface class DecoderOf<T> implements Mapper<T> {
-  Decoder<T> decoder();
+abstract interface class CodableMapper<T> implements Mapper<T> {
+  Codable<T> codable();
 }
-
-abstract interface class DecoderOf1<T> implements Mapper<T> {
-  Decoder<T> decoder<A>([Decoder<A>? d1]);
+abstract interface class CodableMapper1<T> implements Mapper<T> {
+  Codable1<T, A> codable<A>();
 }
-
-abstract interface class DecoderOf2<T> implements Mapper<T> {
-  Decoder<T> decoder<A, B>([Decoder<A>? d1, Decoder<B>? d2]);
-}
-
-abstract interface class EncoderOf<T> implements Mapper<T> {
-  Encoder<T> encoder();
-}
-
-abstract interface class EncoderOf1<T> implements Mapper<T> {
-  Encoder<T> encoder<A>([Encoder<A>? e1]);
-}
-
-abstract interface class EncoderOf2<T> implements Mapper<T> {
-  Encoder<T> encoder<A, B>([Encoder<A>? e1, Encoder<B>? e2]);
+abstract interface class CodableMapper2<T> implements Mapper<T> {
+  Codable2<T, A, B> codable<A, B>();
 }

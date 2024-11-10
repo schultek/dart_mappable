@@ -7,23 +7,45 @@ import '../protocol/common.dart';
 const jsonCoding = JsonCoding();
 const jsonByteCoding = JsonByteCoding();
 
-extension JsonEncodable on Encodable {
-  String toJson() {
-    return jsonCoding.encode(this, encoder());
+extension JsonDecodable<T> on Decodable<T> {
+  T fromJson(String json) {
+    return jsonCoding.decode<T>(json, decoder());
   }
-
-  List<int> toJsonBytes() {
-    return jsonByteCoding.encode(this, encoder());
+}
+extension JsonDecodable1<T, A> on Decodable1<T, A> {
+  T fromJson(String json, [Decoder<A>? d1]) {
+    return jsonCoding.decode<T>(json, decoder(d1));
   }
 }
 
-extension JsonEncodable1<T extends Encodable<T>, A> on Encodable1<T, A> {
+extension JsonEncodableSelf<T extends Encodable<T>> on T {
+  String toJson() {
+    return jsonCoding.encode<T>(this, encoder());
+  }
+
+  List<int> toJsonBytes() {
+    return jsonByteCoding.encode<T>(this, encoder());
+  }
+}
+
+extension JsonEncodable<T> on Encodable<T> {
+  String toJson(T value) {
+    return jsonCoding.encode<T>(value, encoder());
+  }
+
+  List<int> toJsonBytes(T value) {
+    return jsonByteCoding.encode<T>(value, encoder());
+  }
+}
+
+
+extension JsonEncodable1<T extends Encodable1<T, A>, A> on T {
   String toJson([Encoder<A>? e1]) {
-    return jsonCoding.encode(this, encoder(e1));
+    return jsonCoding.encode<T>(this, encoder(e1));
   }
 
   List<int> toJsonBytes([Encoder<A>? e1]) {
-    return jsonByteCoding.encode(this, encoder(e1));
+    return jsonByteCoding.encode<T>(this, encoder(e1));
   }
 }
 

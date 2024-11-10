@@ -14,14 +14,6 @@ class UriMapper extends SimpleMapper<Uri> {
   }
 }
 
-class UriDecoder with DecoderMixin<Uri> implements Decoder<Uri> {
-  @override
-  Uri decode(Decoding decoding) {
-    decoding.decodeKeyed();
-    return Uri.parse(decoding.decodeString());
-  }
-}
-
 class Uri2Mapper extends SimpleMapper<Uri> {
   @override
   Uri decode(Decoding decoding) {

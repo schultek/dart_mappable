@@ -102,16 +102,22 @@ class BoxDecoder<T> implements Decoder<Box<T>> {
   }
 }
 
-class BoxMapper extends Mapper<Box>
-    implements DecoderOf1<Box>, EncoderOf1<Box> {
+class BoxMapper extends Mapper<Box> implements CodableMapper1<Box> {
   const BoxMapper();
 
   @override
-  Decoder<Box<T>> decoder<T>([Decoder<T>? d1]) => BoxDecoder<T>(d1);
-
-  @override
-  Encoder<Box<T>> encoder<T>([Encoder<T>? e1]) => BoxEncoder<T>(e1);
+  Codable1<Box<T>, T> codable<T>() => BoxCodable<T>();
 
   @override
   Function get typeFactory => <T>(f) => f<Box<T>>();
+}
+
+class BoxCodable<T> implements Codable1<Box<T>, T> {
+  const BoxCodable();
+
+  @override
+  Decoder<Box<T>> decoder([Decoder<T>? d1]) => BoxDecoder<T>(d1);
+
+  @override
+  Encoder<Box<T>> encoder([Encoder<T>? e1]) => BoxEncoder<T>(e1);
 }

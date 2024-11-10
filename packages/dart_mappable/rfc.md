@@ -72,6 +72,8 @@ Let's look at some implications and use-cases of this:
 3. Packages defining custom models could directly work with any other package or codebase using the protocol.
 4. Frameworks like Serverpod or Jaspr or backends like Firebase could acccept any model using the protocol without needing to ship their own serialization solution.
 
+> The following sections are meant to be read in order. We start with the core, assess assumptions, discover interfaces, explain reasoning and eventually reclaim the `fromX()` and `toX()` methods. Stay with me.
+
 # Model Definition
 
 The following shows an example implementation for de/encoding a `Person` class:
@@ -108,9 +110,9 @@ class PersonDecoder implements Decoder<Person>  {
 ```
 
 As you see we create two classes `PersonEncoder` and `PersonDecoder` that implement the respective interfaces. 
-In the overridden `encode` and `decode` methods they then use the provided `Encoding` and `Decoding` instances.
+In the overridden `encode` and `decode` methods use the provided `Encoding` and `Decoding` instances.
 
-> This proposal does not specify how the above implementations are created. You can decide whether you use code-gen, 
+> This proposal does not specify how the above implementations are created. You can use code-gen, 
 > ide tools or write it manually. Or even use different approaches for different models.
 
 ---
@@ -118,7 +120,7 @@ In the overridden `encode` and `decode` methods they then use the provided `Enco
 An important aspect to note here is why the `encode()` or `decode()` methods are not diretly on the model class,
 but instead use separate `Encoder` and `Decoder` classes.
 
-First, this way the encoding logic is nicely separated from the model class itself.
+First, this way nicely separates the encoding logic from the model class itself.
 
 More importantly, it allows anyone to define `Encoders` for any type, especially third party or core sdk ones that you don't have control over (you can't add an `encode()` method to `DateTime`, but you can create a `DateTimeEncoder`).
 
@@ -286,43 +288,262 @@ This then has the performance cost as described above, but only for the specific
 # Performance benchmarks
 
 Talking about performance, lets look at what we can expect from this protocol.
-For this benchmark, I compare the protocol ("self") to the "common" way of encoding objects ("other").
+For this benchmark, I compare the protocol ("codable") to the "common" way of encoding objects ("baseline").
 
 ```text
 // Interpret as:
-// - This encodes / decodes around 5MB of sample data, running in JIT mode
+// - This encodes / decodes around 10MB of sample data, running in JIT mode
 // - The absolute values are less important, the difference is what counts
-// - The "other" way does not have a specialized implementation for json en/decoding, 
+// - The "baseline" way does not have a specialized implementation for json en/decoding, 
      it uses `.toJson()` with an additional `jsonEncode` or `utf8.encode()` call.
   
 == MAP DECODING ==
-self: 10.04ms
-other: 13.652ms
+codable: 21.773ms
+baseline: 37.764ms
 == JSON STRING DECODING ==
-self: 53.187ms
-other: 82.256ms
+codable: 111.153ms
+baseline: 177.185ms
 == JSON BYTE DECODING ==
-self: 34.37ms
-other: 110.9ms
+codable: 68.462ms
+baseline: 323.199ms
 
 == MAP ENCODING ==
-self: 37.66ms
-other: 55.348ms
+codable: 99.498ms
+baseline: 120.8ms
 == JSON STRING ENCODING ==
-self: 41.205ms
-other: 134.168ms
+codable: 77.439ms
+baseline: 254.927ms
 == JSON BYTE ENCODING ==
-self: 17.735ms
-other: 120.372ms
+codable: 62.786ms
+baseline: 264.513ms
 ```
 
 Key takeaways:
+- The protocol is always faster ;)
 - For map de/encoding, the performance difference is negligible. The added interfaces and abstraction layer of the protocol does not have a negative impact on the performance.
-- For json de/encoding, the protocol implementation is significantly faster than the other way.
-
-# Format definition
-
+- For json de/encoding, the protocol implementation is significantly faster than the baseline, since it avoids the overhead of converting to a Map first.
 
 # Consuming the protocol
 
+> "Consuming" as in actually de/encoding something using the protocol and its implementations.
+
+Actually, the protocol itself does not strictly define in code how to consume it, in terms of using and combining its different parts. This
+is because:
+
+1. It should be flexible enough to be used in both user codebases and packages
+2. There are different usage patterns depending on whether the consuming code is in a user codebase, a package that
+extends the protocol (e.g. provides a format, provides data models, other utility) or a package that only uses the protocol internally.
+
+> A result of having a super flexible protocol ...  
+> ....it can be used very flexibly.
+
+However, there are of course rules that consumers should adhere to in order to make things play nicely with each other.
+
+The general gist of things is:
+
+- Models should at minimum expose a `Decoder` and `Encoder` for itself.
+- Formats should at minimum accept any `Decoder` and `Encoder`.
+- Both can add additional convenience objects, methods or extensions.
+
+Tools like code-generators or macros may wrap this with their own API, as long as they don't prevent the user from accessing
+the underlying protocol, as this would defeat the purpose of being usable across packages.
+
+> For example with dart_mappable I will create additional abstractions around this, with escape hatches to access the underlying protocol.
+
+## Model Rules
+
+*Rules that models implementations should adhere to. Using Person as an example.*
+
+### 1. Implement `Encodable` where possible.
+
+If you control a model, add the `Encodable` interface to it. This exposes a `Encoder` directly on the model:
+
+  ```dart
+  class Person implements Encodable<Person> {
+    @override
+    Encoder<Person> encoder() => /* ... e.g. PersonEncoder() */;
+  }
+  ```
+
+### 2. Create a `Codable` implementation.
+
+The `Codable` interface simply combines both the `Encodable` and `Decodable` interfaces. It should be used
+to create a wrapper object that can be passed around and knows how to decode and encode a model.
+
+```dart
+class PersonCodable implements Codable<Person> {
+  // Should have a public constructor. Const if possible.
+  const PersonCodable();
   
+  // Inherited from the Encodable interface.
+  @override
+  Encoder<Person> encoder() => /* ... e.g. PersonEncoder() */;
+  
+  // Inherited from the Decodable interface .
+  @override
+  Decoder<Person> decoder() => /* ... e.g. PersonDecoder() */;
+}
+```
+
+With this, the `Encoder` and `Decoder` implementations itself don't need to be public anymore, as third parties can 
+get them through `PersonCodable().encoder()` and `PersonCodable().decoder()` respectively.
+
+### 3. Expose the `Codable` implementation where possible.
+
+If you control a model, expose the `Codable` implementation of a model as a static method:
+
+```dart
+class Person {
+  static Codable<Person> codable() => const PersonCodable();
+}
+```
+
+With this, the `Codable` implementation itself doesn't need to be public anymore, as third parties can
+get them through `Person.codable()`.
+
+---
+
+By combining **2** and **3** users can:
+
+- get a `Codable` for `Person` via `Person.codable()`
+- get a `Encoder` for `Person` via `Person.codable().encoder()`
+- get a `Decoder` for `Person` via `Person.codable().decoder()`
+
+> Read on to see everything come together.
+
+## Format Rules
+
+*Rules that format implementations should adhere to. Using JSON as an example.*
+
+### 1. Use private constructors.
+
+On the `Decoding` and `Encoding` implementations use private constructors so no third-party code
+can create instances.
+
+```dart
+class JsonDecoding implements SerialDecoding {
+  JsonDecoding._();
+}
+
+class JsonEncoding implements SerialEncoding {
+  JsonEncoding._();
+}
+```
+
+### 2. Expose static `decode` and `encode` methods.
+
+On the `Decoding` implementation expose a static `decode` method accepting the raw value and a `Decoder`:
+
+```dart
+class JsonDecoding implements SerialDecoding {
+  
+  static T decode<T>(String json, Decoder<T> decoder) {
+    // Implement the decoding, usually:
+    // 1. Create a new instance: `final decoding = JsonDecoding._();`
+    // 2. Call `decodeObject`: `return decoding.decodeObject(decoder);`
+  }
+}
+```
+
+Others can call this using:
+
+`JsonDecoding.decode(json, Person.codable().decoder())`.
+
+---
+
+On the `Encoding` implementation expose a static `encode` method accepting the model and an `Encoder`:
+
+```dart
+class JsonEncoding implements SerialEncoding {
+  
+  static String encode<T>(T value, Encoder<T> encoder) {
+    // Implement the encoding, usually:
+    // 1. Create a new instance: `final encoding = JsonEncoding._();`
+    // 2. Call `encodeSerial`: `encoder.encodeSerial(value, encoding);`
+    // 3. Return the encoded value: `return encoding.output.toString();`
+  }
+}
+```
+
+Others can call this using:
+
+`JsonEncoding.encode(person, Person.codable().encoder())`.
+
+### 3. Create `fromX()`/`toX()` extensions on `Decodable` and `Encodable`
+
+> Now we are harvesting the fruits of our labor.
+
+A format should create extensions to add `fromX()` and `toX()` methods
+to the interfaces. This allows for a convenient and familiar (de)serialization experience.
+
+```dart
+extension JsonDecodable<T> on Decodable<T> {
+  T fromJson(String json) {
+    return JsonDecoding.decode<T>(json, decoder());
+  }
+}
+
+// Variant A, on an external Encodable
+extension JsonEncodable<T> on Encodable<T> {
+  String toJson(T value) {
+    return JsonEncoding.encode<T>(value, encoder());
+  }
+}
+
+// Variant B, on a model Encodable.
+//
+// This works (and overrides the other toJson) as the 
+// extension has a higher specificity as variant A.
+extension JsonEncodableModel<T extends Encodable<T>> on T {
+  String toJson() {
+    return JsonEncoding.encode<T>(this, encoder());
+  }
+}
+```
+
+Which can be used like this, respectively:
+
+- `final Person person = Person.codable().fromJson(json);`
+- `final String json = Person.codable().toJson(person);`
+- `final String json = person.toJson();`
+
+---
+
+Enabling the `fromX()` / `toX()` paradigm like this has a lot of advantages:
+
+1. Separate methods for each used format, e.g. `toMap()`, `toJson()`, `toYaml()`, etc.
+2. You can control access to these methods simply by importing the formats, and without modifying each model (e.g. importing `package:yaml` would instantly add `.toYaml()` to all your models).
+3. You can create your own extensions if you prefer a different naming (e.g. `Map<String, dynamic> toJson()` instead of `Map<String, dynamic> toMap()`).
+4. You can freely and without conflict add methods to your models, as instance methods override extensions (e.g. adding a `toJson()` directly to the model is still possible).
+5. Adding a static `fromX` directly on the model class is of course also still possible, but not required.
+
+---
+
+---
+
+# Thanks for reading
+
+> Thanks for reading this far. You've reached the end of the core RFC.
+> Next step: Give feedback and spread the word. We can only make this a reality together. 💙
+
+Things to check out:
+
+- Core protocol: [tbd]()
+- Benchmark: [tbd]()
+- JSON reference implementation: [tbd]()
+- Map reference implementation: [tbd]()
+- CSV reference implementation: [tbd]()
+
+> Below are some more special considerations for generics and polymorphism. 
+
+---
+
+---
+
+# Generics
+
+TODO
+
+# Polymorphism
+
+TODO
