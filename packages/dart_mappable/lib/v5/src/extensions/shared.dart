@@ -1,6 +1,5 @@
-part of 'protocol.dart';
-
-abstract interface class StructDecoding {
+part of 'extensions.dart';
+abstract interface class Decoding {
   Object? decodeValue();
 
   String decodeString();
@@ -18,22 +17,18 @@ abstract interface class StructDecoding {
   T decodeObject<T>(Decoder<T> decoder);
   T? decodeObjectOrNull<T>(Decoder<T> decoder);
 
-  KeyedStructDecoding<Key> decodeKeyed<Key>();
-
   List<T> decodeList<T>();
   List<T>? decodeListOrNull<T>();
 
   List<T> decodeListObject<T>(Decoder<T> decoder);
   List<T>? decodeListObjectOrNull<T>(Decoder<T> decoder);
 
-  Map<K, V> decodeMap<K, V>();
-  Map<K, V>? decodeMapOrNull<K, V>();
+  KeyedDecoding<Key> decodeKeyed<Key>();
 
-  Map<K, V> decodeMapObject<K, V>(Decoder<V> decoder);
-  Map<K, V>? decodeMapObjectOrNull<K, V>(Decoder<V> decoder);
+  Decoding clone();
 }
 
-abstract interface class KeyedStructDecoding<Key> {
+abstract interface class KeyedDecoding<Key> {
   Object? decodeValue(Key key);
 
   String decodeString(Key key);
@@ -56,27 +51,19 @@ abstract interface class KeyedStructDecoding<Key> {
 
   List<T> decodeListObject<T>(Key key, Decoder<T> decoder);
   List<T>? decodeListObjectOrNull<T>(Key key, Decoder<T> decoder);
-
-  Map<K, V> decodeMap<K, V>(Key key);
-  Map<K, V>? decodeMapOrNull<K, V>(Key key);
-
-  Map<K, V> decodeMapObject<K, V>(Key key, Decoder<V> decoder);
-  Map<K, V>? decodeMapObjectOrNull<K, V>(Key key, Decoder<V> decoder);
 }
 
-abstract interface class StructEncoding {
+abstract interface class Encoding {
   void encodeValue(Object? value);
 
   void encodeObject<T>(T value, Encoder<T> encoder);
 
-  KeyedStructEncoding<Key> encodeKeyed<Key>();
-
   void encodeIterable<T>(Iterable<T> value, Encoder<T> Function(T) encode);
 
-  void encodeMap<K, V>(Map<K, V> value, Encoder<V> Function(V) encode);
+  KeyedEncoding<Key> encodeKeyed<Key>();
 }
 
-abstract interface class KeyedStructEncoding<Key> {
+abstract interface class KeyedEncoding<Key> {
   void encodeValue(Key key, Object? value);
 
   void encodeObject<T>(Key key, T value, Encoder<T> encoder);
@@ -84,5 +71,3 @@ abstract interface class KeyedStructEncoding<Key> {
   void encodeIterable<T>(
       Key key, Iterable<T> value, Encoder<T> Function(T) encode);
 }
-
-

@@ -17,21 +17,11 @@ void testGenerics() {
   //   print(m2);
   // });
 
-  var b2 = Box.fromMap<Uri>(
+  Box<Uri> b2 = Box.codable<Uri>().fromMap(
     boxMap,
-    UriMapper().decoder(),
+    UriMapper().codable().decoder(),
   );
   print(b2);
-  var m2 = b2.toMap(UriMapper().encoder());
+  var m2 = b2.toMap(UriMapper().codable().encoder());
   print(m2);
-
-  var b3 = Box.fromMap<Uri>(
-    boxMap,
-    Uri2Mapper().decoder(),
-  );
-  print(b3);
-  var m3 = b3.toMap(Uri2Mapper().encoder());
-  print(m3);
-
-  return;
 }

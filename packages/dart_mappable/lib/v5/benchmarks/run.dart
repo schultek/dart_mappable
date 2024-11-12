@@ -12,18 +12,18 @@ void runBenchmarks() {
 
   compare(
     'MAP DECODING',
-    self: () => p = MapDecoding.decode(personMap, Person.decoder()),
+    self: () => p = Person.codable().fromMap(personMap),
     other: () => p = Person.fromMapRaw(personMap),
   );
   compare(
     'JSON STRING DECODING',
-    self: () => p = jsonCoding.decode(personJson, Person.decoder()),
+    self: () => p = Person.codable().fromJson(personJson),
     other: () =>
     p = Person.fromMapRaw(jsonDecode(personJson) as Map<String, dynamic>),
   );
   compare(
     'JSON BYTE DECODING',
-    self: () => p = jsonByteCoding.decode(personJsonBytes, Person.decoder()),
+    self: () => p = Person.codable().fromJsonBytes(personJsonBytes),
     other: () => p = Person.fromMapRaw(
         jsonBytes.decode(personJsonBytes) as Map<String, dynamic>),
   );

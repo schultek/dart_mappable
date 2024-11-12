@@ -1,47 +1,29 @@
-import 'package:crimson/crimson.dart';
+/// CSV reference implementation.
+///
+/// This is limited to simple values only, no nested objects or lists.
+/// Values are separated by ",".
 
 import 'package:crimson/src/consts.dart';
-import '../protocol/common.dart';
-
-const csvCoding = CsvCoding();
-
-extension CsvEncodable on Encodable {
-  String toCsv() {
-    return csvCoding.encode(this, encoder());
-  }
-}
-
-extension JsonEncodable1<T extends Encodable<T>, A> on Encodable1<T, A> {
-  String toCsv([Encoder<A>? e1]) {
-    return csvCoding.encode(this, encoder(e1));
-  }
-}
-
-class CsvCoding implements Coding<String> {
-  const CsvCoding();
-
-  @override
-  T decode<T>(String value, Decoder<T> decoder) {
-    return CsvDecoding._(value.codeUnits).decodeObject(decoder);
-  }
-
-  @override
-  String encode<T>(T value, Encoder<T> encoder) {
-    return '';
-    // var encoding = CsvEncoding._();
-    // encoder.encodeSerial(value, encoding);
-    // return encoding.write();
-  }
-}
+import '../protocol/protocol.dart';
 
 class CsvDecoding implements SerialDecoding {
-  CsvDecoding._(this.buffer,
-      [this._offset = 0, this._key = -1, List<String>? keys]) {
-
+  CsvDecoding._(
+    this.buffer, [
+    this._offset = 0,
+    this._key = -1,
+    List<String>? keys,
+  ]) {
     this.keys = keys ?? [];
     if (keys == null) {
       _readKeys();
     }
+  }
+
+  static List<T> decode<T>(String value, Decoder<T> decoder) {
+    final decoding = CsvDecoding._(value.codeUnits);
+    return [
+      for (;decoding.nextItem();) decoding.decodeObject(decoder),
+    ];
   }
 
   final List<int> buffer;
@@ -310,75 +292,111 @@ class CsvDecoding implements SerialDecoding {
   }
 }
 
-class JsonEncoding implements SerialEncoding {
-  JsonEncoding._(this._writer);
 
-  final CrimsonWriter _writer;
+class CsvEncoding implements SerialEncoding {
+  CsvEncoding._();
 
-  @pragma('vm:prefer-inline')
-  @override
-  void encodeNull() {
-    _writer.writeNull();
+  final List<String> keys = [];
+  final StringBuffer writer = StringBuffer();
+
+  static String encode<T>(Iterable<T> value, Encoder<T> Function(T) encoder) {
+    final encoding = CsvEncoding._();
+    for (final e in value) {
+      encoding.encodeObject(e, encoder(e));
+    }
+    return '${encoding.keys.join(',')}\n${encoding.writer}';
   }
 
-  @pragma('vm:prefer-inline')
+  int key = -1;
+
   @override
   void encodeString(String value) {
-    _writer.writeString(value);
+    assert(key >= 0);
+    if (key > 0) writer.write(',');
+  writer.write(value);
+  key++;
   }
 
-  @pragma('vm:prefer-inline')
   @override
-  void encodeBool(bool value) {
-    _writer.writeBool(value);
+  void encodeBool(bool value) {assert(key >= 0);
+    if (key > 0) writer.write(',');
+    writer.write(value);
+    key++;
   }
 
-  @pragma('vm:prefer-inline')
   @override
-  void encodeInt(int value) {
-    _writer.writeNum(value);
+  void encodeDouble(double value) {assert(key >= 0);
+    if (key > 0) writer.write(',');
+    writer.write(value);key++;
   }
 
-  @pragma('vm:prefer-inline')
   @override
-  void encodeDouble(double value) {
-    _writer.writeNum(value);
+  void encodeInt(int value) {assert(key >= 0);
+    if (key > 0) writer.write(',');
+    writer.write(value);key++;
   }
 
-  @pragma('vm:prefer-inline')
+  @override
+  void encodeNull() {assert(key >= 0);
+    if (key > 0) writer.write(',');key++;
+  }
+
   @override
   void encodeObject<T>(T value, Encoder<T> encoder) {
     encoder.encodeSerial(value, this);
   }
 
-  @pragma('vm:prefer-inline')
-  @override
-  void encodeKey(Object? key) {
-    _writer.writeObjectKey(key.toString());
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  void startObject<Key>() {
-    assert(Key == String);
-    _writer.writeObjectStart();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  void endObject() {
-    _writer.writeObjectEnd();
-  }
-
-  @pragma('vm:prefer-inline')
   @override
   void startArray<E>() {
-    _writer.writeArrayStart();
+    throw UnsupportedError('Lists not supported');
   }
 
-  @pragma('vm:prefer-inline')
+
   @override
   void endArray() {
-    _writer.writeArrayEnd();
+    throw UnsupportedError('Lists not supported');
+  }
+
+  @override
+  void startObject<Key>() {
+    assert(key == -1);
+    key = 0;
+  }
+
+  @override
+  void endObject() {
+    writer.writeln();
+    key = -1;
+  }
+
+
+  @override
+  void encodeKey(Object? k) {
+    assert(key >= 0);
+    assert(k is String);
+    if (key < keys.length) {
+      assert(k == keys[key]);
+    } else {
+      keys.add(k as String);
+    }
+  }
+}
+
+extension CsvDecodable<T> on Decodable<T> {
+  List<T> fromCsv(String csv) {
+    return CsvDecoding.decode(csv, decoder());
+  }
+}
+
+extension CsvEncodable<T> on Encodable<T> {
+  String toCsv(Iterable<T> value) {
+    final e = encoder();
+    return CsvEncoding.encode(value, (_) => e);
+  }
+}
+
+extension CsvEncodableSelf<T extends Encodable<T>> on Iterable<T> {
+  String toCsv() {
+    return CsvEncoding.encode(this, (v) => v.encoder());
   }
 }

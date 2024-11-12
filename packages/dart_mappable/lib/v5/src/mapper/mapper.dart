@@ -1,6 +1,6 @@
 import 'package:type_plus/type_plus.dart';
 
-import '../protocol/common.dart';
+import '../protocol/protocol.dart';
 
 abstract class Mapper<T> {
   const Mapper();

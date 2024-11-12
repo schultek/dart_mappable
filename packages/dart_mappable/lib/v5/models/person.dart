@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 
 import '../src/mapper/mapper.dart';
-import '../src/protocol/common.dart';
+import '../src/protocol/protocol.dart';
 import '../benchmarks/raw_encodable.dart';
 
 class Person implements Encodable<Person>, RawEncodable {
@@ -17,7 +17,6 @@ class Person implements Encodable<Person>, RawEncodable {
 
   static Mapper<Person> mapper() => const PersonMapper();
   static Codable<Person> codable() => const PersonCodable();
-  static Decoder<Person> decoder() => const PersonDecoder();
   @override
   Encoder<Person> encoder() => const PersonEncoder();
 
@@ -76,20 +75,19 @@ final class PersonEncoder implements Encoder<Person> {
   const PersonEncoder();
 
   @override
-  Object? encodeStruct(Person value, StructEncoding encoding) {
-    final encoded = encoding.encodeKeyed<String>();
-    encoded.encodeValue('name', value.name);
-    encoded.encodeValue('a', value.a);
-    encoded.encodeValue('b', value.b);
-    encoded.encodeValue('c', value.c);
+  void encodeStruct(Person value, StructEncoding encoding) {
+    final keyed = encoding.encodeKeyed<String>();
+    keyed.encodeValue('name', value.name);
+    keyed.encodeValue('a', value.a);
+    keyed.encodeValue('b', value.b);
+    keyed.encodeValue('c', value.c);
     if (value.d != null) {
-      encoded.encodeObject('d', value.d!, value.d!.encoder());
+      keyed.encodeObject('d', value.d!, value.d!.encoder());
     } else {
-      encoded.encodeValue('d', null);
+      keyed.encodeValue('d', null);
     }
-    encoded.encodeValue('e', value.e);
-    encoded.encodeIterable('f', value.f, (v) => v.encoder());
-    return encoded;
+    keyed.encodeValue('e', value.e);
+    keyed.encodeIterable('f', value.f, (v) => v.encoder());
   }
 
   @override
@@ -129,7 +127,7 @@ final class PersonDecoder implements Decoder<Person> {
   const PersonDecoder();
 
   @override
-  Person decodeSerial(SerialDecoding decoder) {
+  Person decodeSerial(SerialDecoding decoding) {
     late String name;
     late int a;
     late double b;
@@ -138,26 +136,26 @@ final class PersonDecoder implements Decoder<Person> {
     late List<String> e;
     late List<Person> f;
 
-    for (Object? key; (key = decoder.nextKey()) != null;) {
+    for (Object? key; (key = decoding.nextKey()) != null;) {
       switch (key) {
         case 'name':
-          name = decoder.decodeString();
+          name = decoding.decodeString();
         case 'a':
-          a = decoder.decodeInt();
+          a = decoding.decodeInt();
         case 'b':
-          b = decoder.decodeDouble();
+          b = decoding.decodeDouble();
         case 'c':
-          c = decoder.decodeBool();
+          c = decoding.decodeBool();
         case 'd':
-          d = decoder.decodeObjectOrNull(Person.decoder());
+          d = decoding.decodeObjectOrNull(Person.codable().decoder());
         case 'e':
-          e = [for (; decoder.nextItem();) decoder.decodeString()];
+          e = [for (; decoding.nextItem();) decoding.decodeString()];
         case 'f':
           f = [
-            for (; decoder.nextItem();) decoder.decodeObject(Person.decoder())
+            for (; decoding.nextItem();) decoding.decodeObject(Person.codable().decoder())
           ];
         default:
-          decoder.skipNext();
+          decoding.skipNext();
       }
     }
 
@@ -165,16 +163,16 @@ final class PersonDecoder implements Decoder<Person> {
   }
 
   @override
-  Person decodeStruct(StructDecoding decoder) {
-    var keyed = decoder.decodeKeyed<String>();
+  Person decodeStruct(StructDecoding decoding) {
+    var keyed = decoding.decodeKeyed<String>();
     return Person(
       keyed.decodeString('name'),
       keyed.decodeInt('a'),
       keyed.decodeDouble('b'),
       keyed.decodeBool('c'),
-      keyed.decodeObjectOrNull('d', Person.decoder()),
+      keyed.decodeObjectOrNull('d', Person.codable().decoder()),
       keyed.decodeList('e'),
-      keyed.decodeListObject('f', Person.decoder()),
+      keyed.decodeListObject('f', Person.codable().decoder()),
     );
   }
 }

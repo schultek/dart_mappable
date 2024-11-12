@@ -1,4 +1,4 @@
-part of 'common.dart';
+part of 'extensions.dart';
 
 extension CompatSerial on SerialDecoding {
   Decoding asDecoding() => CompatSerialDecoding._(this);
@@ -11,12 +11,18 @@ extension CompatStruct on StructDecoding {
 class CompatStructDecoding implements Decoding {
   CompatStructDecoding._(this.decoding);
 
-  static T decode<T>(DecoderMixin<T> decoder, StructDecoding decoding) {
+  static T decode<T>(T Function(Decoding) decode, StructDecoding decoding) {
     final d = CompatStructDecoding._(decoding);
-    return decoder.decode(d);
+    return decode(d);
   }
 
   final StructDecoding decoding;
+
+  @override
+  @pragma('vm:prefer-inline')
+  Object? decodeValue() {
+    return decoding.decodeValue();
+  }
 
   @pragma('vm:prefer-inline')
   @override
@@ -110,105 +116,112 @@ class CompatStructDecoding implements Decoding {
 
   @override
   Decoding clone() => this;
+
 }
 
 class KeyedCompatStructuredDecoder<Key> implements KeyedDecoding<Key> {
-  KeyedCompatStructuredDecoder(this.decoder);
+  KeyedCompatStructuredDecoder(this.decoding);
 
-  final KeyedStructDecoding<Key> decoder;
+  final KeyedStructDecoding<Key> decoding;
+
+  @override
+  @pragma('vm:prefer-inline')
+  Object? decodeValue(Key key) {
+    return decoding.decodeValue(key);
+  }
 
   @pragma('vm:prefer-inline')
   @override
   String decodeString(Key key) {
-    return decoder.decodeString(key);
+    return decoding.decodeString(key);
   }
 
   @pragma('vm:prefer-inline')
   @override
   String? decodeStringOrNull(Key key) {
-    return decoder.decodeStringOrNull(key);
+    return decoding.decodeStringOrNull(key);
   }
 
   @pragma('vm:prefer-inline')
   @override
   bool decodeBool(Key key) {
-    return decoder.decodeBool(key);
+    return decoding.decodeBool(key);
   }
 
   @pragma('vm:prefer-inline')
   @override
   bool? decodeBoolOrNull(Key key) {
-    return decoder.decodeBoolOrNull(key);
+    return decoding.decodeBoolOrNull(key);
   }
 
   @pragma('vm:prefer-inline')
   @override
   int decodeInt(Key key) {
-    return decoder.decodeInt(key);
+    return decoding.decodeInt(key);
   }
 
   @pragma('vm:prefer-inline')
   @override
   int? decodeIntOrNull(Key key) {
-    return decoder.decodeIntOrNull(key);
+    return decoding.decodeIntOrNull(key);
   }
 
   @pragma('vm:prefer-inline')
   @override
   double decodeDouble(Key key) {
-    return decoder.decodeDouble(key);
+    return decoding.decodeDouble(key);
   }
 
   @pragma('vm:prefer-inline')
   @override
   double? decodeDoubleOrNull(Key key) {
-    return decoder.decodeDoubleOrNull(key);
+    return decoding.decodeDoubleOrNull(key);
   }
 
   @pragma('vm:prefer-inline')
   @override
   T decodeObject<T>(Key key, Decoder<T> decodable) {
-    return decoder.decodeObject(key, decodable);
+    return decoding.decodeObject(key, decodable);
   }
 
   @pragma('vm:prefer-inline')
   @override
   T? decodeObjectOrNull<T>(Key key, Decoder<T> decodable) {
-    return decoder.decodeObjectOrNull(key, decodable);
+    return decoding.decodeObjectOrNull(key, decodable);
   }
 
   @pragma('vm:prefer-inline')
   @override
   List<T> decodeList<T>(Key key) {
-    return decoder.decodeList(key);
+    return decoding.decodeList(key);
   }
 
   @pragma('vm:prefer-inline')
   @override
   List<T>? decodeListOrNull<T>(Key key) {
-    return decoder.decodeListOrNull(key);
+    return decoding.decodeListOrNull(key);
   }
 
   @pragma('vm:prefer-inline')
   @override
   List<T> decodeListObject<T>(Key key, Decoder<T> decodable) {
-    return decoder.decodeListObject(key, decodable);
+    return decoding.decodeListObject(key, decodable);
   }
 
   @pragma('vm:prefer-inline')
   @override
   List<T>? decodeListObjectOrNull<T>(Key key, Decoder<T> decodable) {
-    return decoder.decodeListObjectOrNull(key, decodable);
+    return decoding.decodeListObjectOrNull(key, decodable);
   }
 }
 
 class CompatSerialDecoding implements Decoding {
   CompatSerialDecoding._(this.decoding);
 
-  static T decode<T>(DecoderMixin<T> decoder, SerialDecoding decoding) {
+  static T decode<T>(T Function(Decoding) decode, SerialDecoding decoding) {
     final d = CompatSerialDecoding._(decoding);
     try {
-      return decoder.decode(d);
+      return decode(d);
     } finally {
       if (d._keyed != null && !d._keyed!._done) {
         d.decoding.skipRemainingKeys();
@@ -217,6 +230,11 @@ class CompatSerialDecoding implements Decoding {
   }
 
   final SerialDecoding decoding;
+
+  @override
+  Object? decodeValue() {
+    return decoding.decodeValue();
+  }
 
   @override
   String decodeString() {
@@ -334,6 +352,16 @@ class KeyedCompatSerialDecoding<Key> implements KeyedDecoding<Key> {
         decoding.skipNext();
       }
     }
+  }
+
+  @override
+  Object? decodeValue(Key key) {
+    if (_values.containsKey(key)) {
+      return _values[key]!.decodeValue();
+    }
+    final hasKey = skipTo(key);
+    assert(hasKey);
+    return decoding.decodeValue();
   }
 
   @override
@@ -509,8 +537,8 @@ class CompatStructEncoding implements Encoding {
   CompatStructEncoding._(this.encoding);
 
   static void encode<T>(
-      T value, EncoderMixin<T> encoder, StructEncoding encoding) {
-    encoder.encode(value, CompatStructEncoding._(encoding));
+      T value, void Function(T, Encoding) encode, StructEncoding encoding) {
+    encode(value, CompatStructEncoding._(encoding));
   }
 
   final StructEncoding encoding;
@@ -562,9 +590,9 @@ class CompatSerialEncoding implements Encoding {
   CompatSerialEncoding._(this.encoding);
 
   static void encode<T>(
-      T value, EncoderMixin<T> encoder, SerialEncoding encoding) {
+      T value, void Function(T, Encoding) encode, SerialEncoding encoding) {
     var comp = CompatSerialEncoding._(encoding);
-    encoder.encode(value, comp);
+    encode(value, comp);
     if (comp.isKeyed) {
       encoding.endObject();
     }

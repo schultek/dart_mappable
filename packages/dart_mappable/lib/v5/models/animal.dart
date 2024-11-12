@@ -1,16 +1,38 @@
+import '../src/extensions/extensions.dart';
 import '../src/mapper/inheritance.dart';
 import '../src/mapper/mapper.dart';
-import '../src/protocol/common.dart';
+import '../src/protocol/protocol.dart';
 
-abstract class Animal implements Encodable<Animal> {
+class Animal implements SuperEncodable {
   Animal({required this.type});
 
   final String type;
 
   static Decoder<Animal> decoder() => const AnimalDecoder();
+
+  @override
+  Encoder<Animal> encoder() => AnimalEncoder();
 }
 
-class Cat extends Animal {
+class AnimalEncoder implements Encoder<Animal> {
+  @override
+  void encodeSerial(Animal value, SerialEncoding encoding) {
+    encoding
+      ..startObject<String>()
+      ..encodeKey('type')
+      ..encodeString(value.type)
+      ..endObject();
+  }
+
+  @override
+  void encodeStruct(Animal value, StructEncoding encoding) {
+    encoding.encodeKeyed<String>()
+      .encodeValue('type', value.type);
+  }
+  
+}
+
+class Cat extends Animal implements Encodable<Cat> {
   Cat({this.lives = 7, super.type = 'cat'});
 
   final int lives;
@@ -20,7 +42,7 @@ class Cat extends Animal {
   Encoder<Cat> encoder() => const CatEncoder();
 }
 
-class Dog extends Animal {
+class Dog extends Animal implements Encodable<Dog> {
   Dog({required this.breed, super.type = 'dog'});
 
   final String breed;
@@ -60,7 +82,7 @@ class AnimalDecoder with DecoderMixin<Animal>, SuperDecoderMixin<Animal> {
       return decoding.decodeObject(subDecoder);
     }
 
-    throw 'Unknown subtype of Animal';
+    return Animal(type: decoding.decodeKeyed().decodeString('type'));
   }
 }
 
@@ -111,8 +133,8 @@ class CatEncoder implements Encoder<Cat> {
   }
 
   @override
-  Object? encodeStruct(Cat value, StructEncoding encoding) {
-    return encoding.encodeKeyed<String>()
+  void encodeStruct(Cat value, StructEncoding encoding) {
+    encoding.encodeKeyed<String>()
       ..encodeValue('type', value.type)
       ..encodeValue('lives', value.lives);
   }
@@ -157,8 +179,15 @@ class BirdEncoder with EncoderMixin<Bird> {
 }
 
 class BirdMapper extends Mapper<Bird>
-    implements DecoderOf<Bird>, EncoderOf<Bird> {
+    implements CodableMapper<Bird> {
   const BirdMapper();
+
+  @override
+  Codable<Bird> codable() => const BirdCodable();
+}
+
+class BirdCodable implements Codable<Bird> {
+  const BirdCodable();
 
   @override
   Decoder<Bird> decoder() => const BirdDecoder();

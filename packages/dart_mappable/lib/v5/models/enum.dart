@@ -1,11 +1,12 @@
-import '../src/protocol/common.dart';
+import '../src/protocol/protocol.dart';
 
 enum Color implements Encodable<Color> {
   green,
   blue,
   red;
 
-  Decoder<Color> decoder() => const ColorDecoder();
+  static Codable<Color> codable() => const ColorCodable();
+
   @override
   Encoder<Color> encoder() => const ColorEncoder();
 }
@@ -53,4 +54,14 @@ class ColorEncoder implements Encoder<Color> {
       Color.red => 'red',
     };
   }
+}
+
+class ColorCodable implements Codable<Color> {
+  const ColorCodable();
+
+  @override
+  Decoder<Color> decoder() => const ColorDecoder();
+
+  @override
+  Encoder<Color> encoder() => const ColorEncoder();
 }

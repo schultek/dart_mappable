@@ -1,81 +1,13 @@
+/// JSON reference implementation.
+///
+/// This uses package:crimson for the raw reading and writing operations.
+
 import 'dart:convert';
 
 import 'package:crimson/crimson.dart';
 
-import '../protocol/common.dart';
-
-const jsonCoding = JsonCoding();
-const jsonByteCoding = JsonByteCoding();
-
-extension JsonDecodable<T> on Decodable<T> {
-  T fromJson(String json) {
-    return jsonCoding.decode<T>(json, decoder());
-  }
-}
-extension JsonDecodable1<T, A> on Decodable1<T, A> {
-  T fromJson(String json, [Decoder<A>? d1]) {
-    return jsonCoding.decode<T>(json, decoder(d1));
-  }
-}
-
-extension JsonEncodableSelf<T extends Encodable<T>> on T {
-  String toJson() {
-    return jsonCoding.encode<T>(this, encoder());
-  }
-
-  List<int> toJsonBytes() {
-    return jsonByteCoding.encode<T>(this, encoder());
-  }
-}
-
-extension JsonEncodable<T> on Encodable<T> {
-  String toJson(T value) {
-    return jsonCoding.encode<T>(value, encoder());
-  }
-
-  List<int> toJsonBytes(T value) {
-    return jsonByteCoding.encode<T>(value, encoder());
-  }
-}
-
-
-extension JsonEncodable1<T extends Encodable1<T, A>, A> on T {
-  String toJson([Encoder<A>? e1]) {
-    return jsonCoding.encode<T>(this, encoder(e1));
-  }
-
-  List<int> toJsonBytes([Encoder<A>? e1]) {
-    return jsonByteCoding.encode<T>(this, encoder(e1));
-  }
-}
-
-class JsonCoding implements Coding<String> {
-  const JsonCoding();
-
-  @override
-  T decode<T>(String value, Decoder<T> decoder) {
-    return JsonDecoding.decode(utf8.encode(value), decoder);
-  }
-
-  @override
-  String encode<T>(T value, Encoder<T> encoder) {
-    return utf8.decode(JsonEncoding.encode(value, encoder));
-  }
-}
-
-class JsonByteCoding implements Coding<List<int>> {
-  const JsonByteCoding();
-
-  @override
-  T decode<T>(List<int> value, Decoder<T> decoder) {
-    return JsonDecoding.decode(value, decoder);
-  }
-
-  @override
-  List<int> encode<T>(T value, Encoder<T> encoder) {
-    return JsonEncoding.encode(value, encoder);
-  }
-}
+import '../extensions/extensions.dart';
+import '../protocol/protocol.dart';
 
 class JsonDecoding implements SerialDecoding {
   JsonDecoding._(this._reader);
@@ -267,5 +199,96 @@ class JsonEncoding implements SerialEncoding {
   @override
   void endArray() {
     _writer.writeArrayEnd();
+  }
+}
+
+extension JsonDecodable<T> on Decodable<T> {
+  T fromJson(String json) {
+    return fromJsonBytes(utf8.encode(json));
+  }
+
+  T fromJsonBytes(List<int> bytes) {
+    return JsonDecoding.decode<T>(bytes, decoder());
+  }
+}
+
+extension JsonDecodable1<T, A> on Decodable1<T, A> {
+  T fromJson(String json, [Decoder<A>? d1]) {
+    return fromJsonBytes(utf8.encode(json), d1);
+  }
+
+  T fromJsonBytes(List<int> bytes, [Decoder<A>? d1]) {
+    return JsonDecoding.decode<T>(bytes, decoder(d1));
+  }
+}
+
+extension JsonEncodable<T> on Encodable<T> {
+  String toJson(T value) {
+    return utf8.decode(toJsonBytes(value));
+  }
+
+  List<int> toJsonBytes(T value) {
+    return JsonEncoding.encode<T>(value, encoder());
+  }
+}
+
+extension JsonEncodableSelf<T extends Encodable<T>> on T {
+  String toJson() {
+    return utf8.decode(toJsonBytes());
+  }
+
+  List<int> toJsonBytes() {
+    return JsonEncoding.encode<T>(this, encoder());
+  }
+}
+
+extension JsonEncodable1<T, A> on Encodable1<T, A> {
+  String toJson(T value, [Encoder<A>? e1]) {
+    return utf8.decode(toJsonBytes(value, e1));
+  }
+
+  List<int> toJsonBytes(T value, [Encoder<A>? e1]) {
+    return JsonEncoding.encode<T>(value, encoder(e1));
+  }
+}
+
+extension JsonEncodableSelf1<T extends Encodable1<T, A>, A> on T {
+  String toJson([Encoder<A>? e1]) {
+    return utf8.decode(toJsonBytes(e1));
+  }
+
+  List<int> toJsonBytes([Encoder<A>? e1]) {
+    return JsonEncoding.encode<T>(this, encoder(e1));
+  }
+}
+
+const jsonCoding = JsonCoding();
+const jsonByteCoding = JsonByteCoding();
+
+class JsonCoding implements Coding<String> {
+  const JsonCoding();
+
+  @override
+  T decode<T>(String value, Decoder<T> decoder) {
+    return JsonDecoding.decode(utf8.encode(value), decoder);
+  }
+
+  @override
+  String encode<T>(T value, Encoder<T> encoder) {
+    return utf8.decode(JsonEncoding.encode(value, encoder));
+  }
+}
+
+class JsonByteCoding implements Coding<List<int>> {
+  const JsonByteCoding();
+
+  @override
+  T decode<T>(List<int> value, Decoder<T> decoder) {
+    return JsonDecoding.decode(value, decoder);
+  }
+
+  @override
+  List<int> encode<T>(T value, Encoder<T> encoder) {
+    return JsonEncoding.encode(value, encoder);
   }
 }

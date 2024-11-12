@@ -4,10 +4,10 @@ import 'dart:async';
 import 'package:type_plus/src/types_registry.dart' show TypeRegistry;
 import 'package:type_plus/type_plus.dart';
 
-import '../protocol/common.dart';
+import '../extensions/extensions.dart';
+import '../protocol/protocol.dart';
 import 'inheritance.dart';
 import 'mapper.dart';
-import 'primitive.dart';
 
 Decoder<T> findDecoderFor<T>() {
   if (T == List || isBounded<T, List>()) {
@@ -23,16 +23,13 @@ Decoder<T> findDecoderFor<T>() {
 }
 
 Decoder<T>? getDecoderOf<T>(Mapper mapper) {
-  return switch (mapper) {
+  final decodable = switch (mapper) {
     CodableMapper m => m.codable(),
-    CodableMapper1 m => T.args.call1(<A>() {
-        return m.codable<A>().decoder(findDecoderFor<A>());
-      }),
-    CodableMapper2 m => T.args.call2(<A, B>() {
-        return m.codable<A, B>().decoder(findDecoderFor<A>(), findDecoderFor<B>());
-      }),
+    CodableMapper1 m => T.args.call1<Codable>(<A>() => m.codable<A>()),
+    CodableMapper2 m => T.args.call2<Codable>(<A, B>() => m.codable<A, B>()),
     _ => null,
-  } as Decoder<T>?;
+  } as Decodable<T>?;
+  return decodable?.decoder();
 }
 
 Encoder<T> findEncoderFor<T>(T value) {

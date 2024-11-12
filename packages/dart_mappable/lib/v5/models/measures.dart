@@ -1,21 +1,5 @@
-
 import '../src/mapper/mapper.dart';
-import '../src/protocol/common.dart';
-
-class MeasuresCodable implements Codable<Measures> {
-  @override
-  Decoder<Measures> decoder() {
-    // TODO: implement decoder
-    throw UnimplementedError();
-  }
-
-  @override
-  Encoder<Measures> encoder() {
-    // TODO: implement encoder
-    throw UnimplementedError();
-  }
-
-}
+import '../src/protocol/protocol.dart';
 
 class Measures implements Encodable<Measures> {
   Measures(this.a, this.b, this.c, this.d);
@@ -25,14 +9,13 @@ class Measures implements Encodable<Measures> {
   final double c;
   final bool? d;
 
-
   @override
   String toString() {
     return 'Measures{a: $a, b: $b, c: $c, d: $d}';
   }
 
   static Mapper<Measures> mapper() => const MeasuresMapper();
-  static Decoder<Measures> decoder() => const MeasuresDecoder();
+  static Codable<Measures> codable() => const MeasuresCodable();
   @override
   Encoder<Measures> encoder() => const MeasuresEncoder();
 }
@@ -41,13 +24,12 @@ final class MeasuresEncoder implements Encoder<Measures> {
   const MeasuresEncoder();
 
   @override
-  Object? encodeStruct(Measures value, StructEncoding encoding) {
-    final encoded = encoding.encodeKeyed<String>();
-    encoded.encodeValue('a', value.a);
-    encoded.encodeValue('b', value.b);
-    encoded.encodeValue('c', value.c);
-    encoded.encodeValue('d', value.d);
-    return encoded;
+  void encodeStruct(Measures value, StructEncoding encoding) {
+    encoding.encodeKeyed<String>()
+      ..encodeValue('a', value.a)
+      ..encodeValue('b', value.b)
+      ..encodeValue('c', value.c)
+      ..encodeValue('d', value.d);
   }
 
   @override
@@ -114,8 +96,15 @@ final class MeasuresDecoder implements Decoder<Measures> {
 }
 
 class MeasuresMapper extends Mapper<Measures>
-    implements DecoderOf<Measures>, EncoderOf<Measures> {
+    implements CodableMapper<Measures> {
   const MeasuresMapper();
+
+  @override
+  Codable<Measures> codable() => const MeasuresCodable();
+}
+
+class MeasuresCodable implements Codable<Measures> {
+  const MeasuresCodable();
 
   @override
   Decoder<Measures> decoder() => const MeasuresDecoder();

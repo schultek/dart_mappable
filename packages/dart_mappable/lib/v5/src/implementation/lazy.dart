@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import '../protocol/common.dart';
+import '../protocol/protocol.dart';
 
 extension LazyEncodable on Encodable {
   Map<String, dynamic> toLazyMap() {

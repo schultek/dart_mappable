@@ -1,4 +1,4 @@
-part of 'common.dart';
+part of 'protocol.dart';
 
 abstract interface class SerialDecoding {
   Object? decodeValue();

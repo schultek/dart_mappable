@@ -1,5 +1,4 @@
-
-part of 'common.dart';
+part of 'extensions.dart';
 
 abstract interface class Coding<Out> {
   T decode<T>(Out value, Decoder<T> decoder);

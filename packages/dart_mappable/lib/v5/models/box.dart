@@ -1,7 +1,6 @@
-import '../src/implementation/map.dart';
 import '../src/mapper/container.dart';
 import '../src/mapper/mapper.dart';
-import '../src/protocol/common.dart';
+import '../src/protocol/protocol.dart';
 import '../benchmarks/raw_encodable.dart';
 
 class Box<T> implements Encodable1<Box<T>, T>, RawEncodable {
@@ -9,12 +8,8 @@ class Box<T> implements Encodable1<Box<T>, T>, RawEncodable {
 
   final T data;
 
-  static Box<T> fromMap<T>(Map<String, dynamic> value, [Decoder<T>? decoder1]) {
-    return MapDecoding.decode(value, decoder<T>(decoder1));
-  }
-
   static Mapper<Box> mapper() => const BoxMapper();
-  static Decoder<Box<T>> decoder<T>([Decoder<T>? d1]) => BoxDecoder<T>(d1);
+  static Codable1<Box<T>, T> codable<T>() => BoxCodable();
   @override
   Encoder<Box<T>> encoder([Encoder<T>? e1]) => BoxEncoder<T>(e1);
 
@@ -52,11 +47,9 @@ class BoxEncoder<T> implements Encoder<Box<T>> {
   final Encoder<T>? encoder;
 
   @override
-  Object? encodeStruct(Box<T> value, StructEncoding encoding) {
-    final keyed = encoding.encodeKeyed<String>();
-    keyed.encodeObject(
+  void encodeStruct(Box<T> value, StructEncoding encoding) {
+    encoding.encodeKeyed<String>().encodeObject(
         'data', value.data, encoder ?? findEncoderFor<T>(value.data));
-    return keyed;
   }
 
   @override

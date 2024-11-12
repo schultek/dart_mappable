@@ -29,7 +29,7 @@ class MappingContext {
   }
 }
 
-/// The decoding context passed to the [decoder] method of a mapper.
+/// The decoding context passed to the [decoding] method of a mapper.
 class DecodingContext extends MappingContext {
   DecodingContext(
       {super.container, super.args, this.options, this.inherited = false});

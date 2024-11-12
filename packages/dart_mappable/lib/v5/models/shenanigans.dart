@@ -1,8 +1,8 @@
 import 'package:type_plus/type_plus.dart';
 
-import '../src/mapper/generics.dart';
+import '../src/extensions/extensions.dart';
 import '../src/mapper/inheritance.dart';
-import '../src/protocol/common.dart';
+import '../src/protocol/protocol.dart';
 
 class A<T> {
   static Decoder<A<T>> decoder<T>([Decoder<T>? d1]) => ADecoder(d1);
@@ -76,7 +76,7 @@ class D<T, V> extends A<V> {
       DDecoder<T, V>(d1, d2);
 }
 
-class DDecoder<T, V> extends GenericDecoderBase2<D<T, V>, T, V>
+class DDecoder<T, V> extends DecoderBase2<D<T, V>, T, V>
     with
         DecoderMixin<D<T, V>>,
         SubDecoderMixin<D<T, V>>,
@@ -93,7 +93,7 @@ class DDecoder<T, V> extends GenericDecoderBase2<D<T, V>, T, V>
   List<SubDecoderMixin> getSubDecoders() {
     return [
       if (isBounded<V, List>())
-        if (decoderB case GenericDecoderBase1 d)
+        if (decoderB case DecoderBase1 d)
           d.extract(<E>(dA) => EDecoder<E, T>(dA, decoderA))
         else
           V.args.first.provideTo(<E>() {

@@ -528,11 +528,11 @@ Enabling the `fromX()` / `toX()` paradigm like this has a lot of advantages:
 
 Things to check out:
 
-- Core protocol: [tbd]()
-- Benchmark: [tbd]()
-- JSON reference implementation: [tbd]()
-- Map reference implementation: [tbd]()
-- CSV reference implementation: [tbd]()
+- Core protocol: [/protocol](https://github.com/schultek/dart_mappable/tree/experiment/v5/packages/dart_mappable/lib/v5/src/protocol)
+- Benchmark code: [/benchmark](https://github.com/schultek/dart_mappable/blob/experiment/v5/packages/dart_mappable/lib/v5/benchmarks/run.dart)
+- JSON reference implementation: [/impl/json](https://github.com/schultek/dart_mappable/blob/experiment/v5/packages/dart_mappable/lib/v5/src/implementation/json.dart)
+- Map reference implementation: [/impl/map](https://github.com/schultek/dart_mappable/blob/experiment/v5/packages/dart_mappable/lib/v5/src/implementation/map.dart)
+- CSV reference implementation: [/impl/csv](https://github.com/schultek/dart_mappable/blob/experiment/v5/packages/dart_mappable/lib/v5/src/implementation/csv.dart)
 
 > Below are some more special considerations for generics and polymorphism. 
 

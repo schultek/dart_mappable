@@ -1,4 +1,5 @@
-import '../protocol/common.dart';
+import '../extensions/extensions.dart';
+import '../protocol/protocol.dart';
 import 'container.dart';
 
 List<SubDecoderMixin<T>> findSubDecodersFor<T>() {

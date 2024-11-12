@@ -3,7 +3,6 @@ import 'package:collection/collection.dart';
 
 import '../benchmarks/data.dart';
 import '../models/animal.dart';
-import '../models/animal_gen.dart';
 import '../src/implementation/map.dart';
 import '../src/mapper/container.dart';
 
@@ -28,7 +27,8 @@ void testPolymorphism() {
     assert(DeepCollectionEquality().equals(animal.toMap(), birdMap));
   });
 
-  AnimalGen<int> animalGen =
-  MapDecoding.decode(birdMap, AnimalGen.decoder());
-  print(animalGen.runtimeType);
+  Animal animal2 = MapDecoding.decode(birdMap, Animal.decoder());
+  print(animal2);
+  assert(animal2.runtimeType == Animal);
+  assert(DeepCollectionEquality().equals(animal2.toMap(), {'type': 'bird'}));
 }
