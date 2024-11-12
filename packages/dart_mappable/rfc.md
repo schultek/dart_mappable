@@ -44,7 +44,7 @@ We can already see a glimpse of that with the experimental `json` macro package 
 is a great showcase of the new macro capabilities, it very much inherits the same problems that `json_serializable` has.
 
 But the shift to macros is also a great opportunity. A chance to not just improve *how* we generate code, but also *what* we generate.
-And we can leverage the migration process many packages will go through for macros to also migrate them to the new protocol.
+And we can leverage the migration process many packages will go through to also migrate them to the new protocol.
 
 > Put bluntly, with macros we are going to have a lot of breaking changes and codebase migrations anyway. 
 > We can either 'slip in' some much-needed improvements now, or have a very hard time doing so afterward.
@@ -53,15 +53,15 @@ And we can leverage the migration process many packages will go through for macr
 
 The goal of the protocol is to have a **modular** and **universally usable** protocol for serializing and deserializing Dart classes in an **optimally performant** way.
 
-**[1] "Modular"** means that the protocol is flexible in how it is used. Developers may use as much or as little of it as they need, have control over its parts and extend it
+**[1] "Modular"** means that the protocol is flexible in how it is used. Developers may use as much or as little of it as they need, have control over its parts and extend it.
 
 **[2] "Universally usable"** means that the protocol can be used for **any** serialized data format (json, csv, yaml, ...) as well as structured objects (like Map). It also means that it can be used by both app developers, package authors or as a generation target for build_runner, or (in the future) macros or other tools (like ide extensions or cli tools).
 
-**[3] "Optimally performant"** means that it should be designed for performance, as serialization is a performance critical part of many apps and often a bottleneck. **"Optimally"** specifically means that the protocol should make **no** performance compromises. Therefore its not about enabling "good" performance, its about enabling "optimal" performance.
+**[3] "Optimally performant"** means that it should be designed for performance, as serialization is a performance critical part of many apps and often a bottleneck. **"Optimally"** specifically means that the protocol should make **no** performance compromises. Therefore, it's not about enabling "good" performance, it's about enabling "optimal" performance.
 
 > My personal reason for **[3]** is that "I can't use it because I need better performance" should never be an argument here. Not because everyone needs optimal performance, but because many *think* they do.
 
-> A fourth goal is obviously acceptance and adaption in the ecosystem, but this can only be done together with the community and (maybe even) the Dart team. Therefore spread the word about the proposal and lets discuss.
+> A fourth goal is obviously acceptance and adaption in the ecosystem, but this can only be done together with the community and (maybe even) the Dart team. Therefore, spread the word about the proposal and let's discuss.
 
 # Core Concept
 
@@ -70,7 +70,7 @@ The core protocol consists of the following interfaces:
 - `Encoding` & `Decoding`, for defining the target format (use e.g. `JsonEncoding implements Encoding` for JSON)
 - `Encoder` & `Decoder`, for converting a specific type (use e.g. `UriEncoder implements Encoder<Uri>` for Uri)
 
-As you see this separates the *how* from the *what* in terms of encoding and decoding.
+As you see this separates the *How?* from the *What?* in terms of encoding and decoding.
 
 - the `Encoding` / `Decoding` defines **how** to en/decode (e.g. Map, JSON, YAML, CSV, ...)
 - the `Encoder` / `Decoder` defines **what** to en/decode (your own or external models, e.g. Person, Uri, ...)
