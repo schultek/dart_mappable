@@ -6,7 +6,7 @@ import 'dart:convert';
 
 import 'package:crimson/crimson.dart';
 
-import '../extensions/extensions.dart';
+import '../extended/extended.dart';
 import '../protocol/protocol.dart';
 
 class JsonDecoding implements SerialDecoding {

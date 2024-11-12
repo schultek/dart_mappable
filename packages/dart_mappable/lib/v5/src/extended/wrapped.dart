@@ -1,5 +1,5 @@
 
-part of 'extensions.dart';
+part of 'extended.dart';
 
 abstract mixin class WrappedDecoding {
 
@@ -13,7 +13,7 @@ abstract mixin class WrappedDecoding {
 
   @override
   Object? decodeValue() => wrapped.decodeValue();
-  
+
   @override
   bool decodeBool() => wrapped.decodeBool();
 

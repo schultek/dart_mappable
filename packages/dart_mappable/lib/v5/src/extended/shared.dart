@@ -1,4 +1,4 @@
-part of 'extensions.dart';
+part of 'extended.dart';
 abstract interface class Decoding {
   Object? decodeValue();
 

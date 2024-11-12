@@ -1,4 +1,4 @@
-part of 'extensions.dart';
+part of 'extended.dart';
 
 extension CodableHookExtension<T> on Codable<T> {
   Codable<T> hook(Hook hook) => CodableHook(this, hook);

@@ -1,6 +1,6 @@
 import 'package:type_plus/type_plus.dart';
 
-import '../src/extensions/extensions.dart';
+import '../src/extended/extended.dart';
 import '../src/mapper/inheritance.dart';
 import '../src/protocol/protocol.dart';
 

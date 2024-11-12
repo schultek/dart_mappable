@@ -1,4 +1,4 @@
-part of 'extensions.dart';
+part of 'extended.dart';
 
 extension CompatSerial on SerialDecoding {
   Decoding asDecoding() => CompatSerialDecoding._(this);

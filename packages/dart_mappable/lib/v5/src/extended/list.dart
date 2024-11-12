@@ -1,4 +1,4 @@
-part of 'extensions.dart';
+part of 'extended.dart';
 
 extension WrapListCodable<T> on Codable<T> {
   Codable<List<T>> list() => ListCodable(this);

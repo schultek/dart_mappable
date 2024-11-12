@@ -1,4 +1,4 @@
-part of 'extensions.dart';
+part of 'extended.dart';
 
 final class CodableUtils {
   static Codable<T> fromHandlers<T>({

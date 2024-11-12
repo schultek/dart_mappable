@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:type_plus/src/types_registry.dart' show TypeRegistry;
 import 'package:type_plus/type_plus.dart';
 
-import '../extensions/extensions.dart';
+import '../extended/extended.dart';
 import '../protocol/protocol.dart';
 import 'inheritance.dart';
 import 'mapper.dart';

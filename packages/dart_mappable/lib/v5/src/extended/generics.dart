@@ -1,4 +1,4 @@
-part of 'extensions.dart';
+part of 'extended.dart';
 
 abstract class DecoderBase1<T, A> implements Decoder<T> {
   const DecoderBase1([this.decoderA]);

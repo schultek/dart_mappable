@@ -1,4 +1,4 @@
-part of 'extensions.dart';
+part of 'extended.dart';
 
 extension WrapMapCodable<T> on Codable<T> {
   Codable<Map<K, T>> map<K>() => MapCodable(this);

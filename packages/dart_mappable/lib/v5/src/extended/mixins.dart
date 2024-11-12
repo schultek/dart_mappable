@@ -1,4 +1,4 @@
-part of 'extensions.dart';
+part of 'extended.dart';
 
 abstract mixin class DecoderMixin<T> implements Decoder<T> {
   T decode(Decoding decoding);

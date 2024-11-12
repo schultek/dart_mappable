@@ -2,7 +2,7 @@
 
 import '../models/measures.dart';
 import '../models/user.dart';
-import '../src/extensions/extensions.dart';
+import '../src/extended/extended.dart';
 import '../src/implementation/json.dart';
 import '../src/implementation/map.dart';
 import '../src/protocol/protocol.dart';

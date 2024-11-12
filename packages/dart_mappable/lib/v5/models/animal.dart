@@ -1,4 +1,4 @@
-import '../src/extensions/extensions.dart';
+import '../src/extended/extended.dart';
 import '../src/mapper/inheritance.dart';
 import '../src/mapper/mapper.dart';
 import '../src/protocol/protocol.dart';

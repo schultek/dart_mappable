@@ -1,4 +1,4 @@
-import '../src/extensions/extensions.dart';
+import '../src/extended/extended.dart';
 import '../src/mapper/simple.dart';
 
 class UriMapper extends SimpleMapper<Uri> {

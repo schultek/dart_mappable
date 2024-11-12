@@ -3,7 +3,7 @@ import 'package:collection/collection.dart';
 import '../benchmarks/data.dart';
 import '../benchmarks/raw_encodable.dart';
 import '../models/person.dart';
-import '../src/extensions/extensions.dart';
+import '../src/extended/extended.dart';
 import '../src/implementation/json.dart';
 import '../src/implementation/lazy.dart';
 import '../src/implementation/map.dart';

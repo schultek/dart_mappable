@@ -1,4 +1,4 @@
-part of 'extensions.dart';
+part of 'extended.dart';
 
 extension WrapSetCodable<T> on Codable<T> {
   Codable<Set<T>> set() => SetCodable(this);

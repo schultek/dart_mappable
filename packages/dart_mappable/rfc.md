@@ -33,6 +33,22 @@ And therein lies the second problem of `json_serializable` (and dart_mappable v4
 
 **It is time we rethink serialization in Dart and aim for a standard that is modular, performant and allows to convert to and from *any* data format (structured or serial) efficiently.**
 
+# Why now?
+
+> It's never bad to improve things, but now specifically, with macros on the way, we have a rare opportunity to rethink important topics.
+
+With macros on the horizon, we can already anticipate the great impact they will have on the language and ecosystem. It is
+likely that there will be a surge of new efforts and packages around traditional code-gen topics like data classes and serialization.
+
+We can already see a glimpse of that with the experimental `json` macro package created by the Dart team. While it
+is a great showcase of the new macro capabilities, it very much inherits the same problems that `json_serializable` has.
+
+But the shift to macros is also a great opportunity. A chance to not just improve *how* we generate code, but also *what* we generate.
+And we can leverage the migration process many packages will go through for macros to also migrate them to the new protocol.
+
+> Put bluntly, with macros we are going to have a lot of breaking changes and codebase migrations anyway. 
+> We can either 'slip in' some much-needed improvements now, or have a very hard time doing so afterward.
+
 # Design Goals
 
 The goal of the protocol is to have a **modular** and **universally usable** protocol for serializing and deserializing Dart classes in an **optimally performant** way.
@@ -529,21 +545,28 @@ Enabling the `fromX()` / `toX()` paradigm like this has a lot of advantages:
 Things to check out:
 
 - Core protocol: [/protocol](https://github.com/schultek/dart_mappable/tree/experiment/v5/packages/dart_mappable/lib/v5/src/protocol)
+- Extended protocol: [/extended](https://github.com/schultek/dart_mappable/tree/experiment/v5/packages/dart_mappable/lib/v5/src/extended)
 - Benchmark code: [/benchmark](https://github.com/schultek/dart_mappable/blob/experiment/v5/packages/dart_mappable/lib/v5/benchmarks/run.dart)
-- JSON reference implementation: [/impl/json](https://github.com/schultek/dart_mappable/blob/experiment/v5/packages/dart_mappable/lib/v5/src/implementation/json.dart)
-- Map reference implementation: [/impl/map](https://github.com/schultek/dart_mappable/blob/experiment/v5/packages/dart_mappable/lib/v5/src/implementation/map.dart)
-- CSV reference implementation: [/impl/csv](https://github.com/schultek/dart_mappable/blob/experiment/v5/packages/dart_mappable/lib/v5/src/implementation/csv.dart)
-
-> Below are some more special considerations for generics and polymorphism. 
-
----
+- Reference implementation:
+  - JSON [/impl/json](https://github.com/schultek/dart_mappable/blob/experiment/v5/packages/dart_mappable/lib/v5/src/implementation/json.dart)
+  - Map: [/impl/map](https://github.com/schultek/dart_mappable/blob/experiment/v5/packages/dart_mappable/lib/v5/src/implementation/map.dart)
+  - CSV: [/impl/csv](https://github.com/schultek/dart_mappable/blob/experiment/v5/packages/dart_mappable/lib/v5/src/implementation/csv.dart)
 
 ---
+
+# Extended protocol
+
+The sections below make up the **extended protocol** including special considerations and implementations for 
+things like generics, inheritance and hooks.
 
 # Generics
 
 TODO
 
-# Polymorphism
+# Inheritance
+
+TODO
+
+# Hooks
 
 TODO

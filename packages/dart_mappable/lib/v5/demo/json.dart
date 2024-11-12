@@ -1,7 +1,7 @@
 
 import '../benchmarks/data.dart';
 import '../models/person.dart';
-import '../src/extensions/extensions.dart';
+import '../src/extended/extended.dart';
 import '../src/implementation/json.dart';
 
 void main() {
