@@ -44,13 +44,13 @@ class CompatMappedDecoder implements MappedDecoder {
   }
 
   @override
-  Object? decodeValue(String key, [int? id]) {
+  Object? decodeDynamic(String key, [int? id]) {
     if (_values[key] ?? _values[id] case final d?) {
-      return d.decodValue();
+      return d.decodeDynamic();
     }
     final hasKey = skipTo(key, id);
     assert(hasKey);
-    return decoder.decodeValue();
+    return decoder.decodeDynamic();
   }
 
   @override
@@ -175,23 +175,23 @@ class CompatMappedDecoder implements MappedDecoder {
   }
   
   @override
-  Map<K, V> decodeMap<K, V>(String key, [int? id, Decode<K>? decodeKey, Decode<V>? decodeValue]) {
+  Map<K, V> decodeMap<K, V>(String key, [int? id, Decode<K>? decodeKey, Decode<V>? decodeDynamic]) {
     if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeMap(decodeKey, decodeValue);
+      return d.decodeMap(decodeKey, decodeDynamic);
     }
     final hasKey = skipTo(key, id);
     assert(hasKey);
-    return decoder.decodeMap(decodeKey, decodeValue);
+    return decoder.decodeMap(decodeKey, decodeDynamic);
   }
   
   @override
-  Map<K, V>? decodeMapOrNull<K, V>(String key, [int? id, Decode<K>? decodeKey, Decode<V>? decodeValue]) {
+  Map<K, V>? decodeMapOrNull<K, V>(String key, [int? id, Decode<K>? decodeKey, Decode<V>? decodeDynamic]) {
     if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeMapOrNull(decodeKey, decodeValue);
+      return d.decodeMapOrNull(decodeKey, decodeDynamic);
     }
     final hasKey = skipTo(key, id);
     if (!hasKey) return null;
-    return decoder.decodeMapOrNull(decodeKey, decodeValue);
+    return decoder.decodeMapOrNull(decodeKey, decodeDynamic);
   }
   
   @override

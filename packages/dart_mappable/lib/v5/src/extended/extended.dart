@@ -5,7 +5,6 @@ import '../protocol/protocol.dart';
 
 part 'shared.dart';
 part 'compat.dart';
-part 'mixins.dart';
 part 'list.dart';
 part 'map.dart';
 part 'set.dart';
