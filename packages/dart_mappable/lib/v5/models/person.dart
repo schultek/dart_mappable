@@ -177,6 +177,7 @@ final class PersonDecoder implements Decoder<Person> {
   }
 }
 
+
 class PersonMapper extends Mapper<Person> implements CodableMapper<Person> {
   const PersonMapper();
 

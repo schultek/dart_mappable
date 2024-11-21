@@ -1,7 +1,3 @@
-/// JSON reference implementation.
-///
-/// This uses package:crimson for the raw reading and writing operations.
-
 import 'dart:convert';
 
 import 'package:crimson/crimson.dart';
@@ -9,30 +5,101 @@ import 'package:crimson/crimson.dart';
 import '../extended/extended.dart';
 import '../protocol/protocol.dart';
 
-class JsonDecoding implements SerialDecoding {
-  JsonDecoding._(this._reader);
+extension JsonDecodable<T> on Decodable<T> {
+  T fromJson(String json) {
+    return fromJsonBytes(utf8.encode(json));
+  }
+
+  T fromJsonBytes(List<int> bytes) {
+    return JsonDecoder.decode<T>(bytes, decode());
+  }
+}
+
+extension JsonDecodable1<T, A> on Decodable1<T, A> {
+  T fromJson(String json, [Decode<A>? d1]) {
+    return fromJsonBytes(utf8.encode(json), d1);
+  }
+
+  T fromJsonBytes(List<int> bytes, [Decode<A>? d1]) {
+    return JsonDecoder.decode<T>(bytes, decode(d1));
+  }
+}
+
+extension JsonEncodable<T> on Encodable<T> {
+  String toJson(T value) {
+    return utf8.decode(toJsonBytes(value));
+  }
+
+  List<int> toJsonBytes(T value) {
+    return JsonEncoder.encode<T>(value, encode());
+  }
+}
+
+extension JsonEncodableSelf<T extends Encodable<T>> on T {
+  String toJson() {
+    return utf8.decode(toJsonBytes());
+  }
+
+  List<int> toJsonBytes() {
+    return JsonEncoder.encode<T>(this, encode());
+  }
+}
+
+extension JsonEncodable1<T, A> on Encodable1<T, A> {
+  String toJson(T value, [Encode<A>? e1]) {
+    return utf8.decode(toJsonBytes(value, e1));
+  }
+
+  List<int> toJsonBytes(T value, [Encode<A>? e1]) {
+    return JsonEncoder.encode<T>(value, encode(e1));
+  }
+}
+
+extension JsonEncodableSelf1<T extends Encodable1<T, A>, A> on T {
+  String toJson([Encode<A>? e1]) {
+    return utf8.decode(toJsonBytes(e1));
+  }
+
+  List<int> toJsonBytes([Encode<A>? e1]) {
+    return JsonEncoder.encode<T>(this, encode(e1));
+  }
+}
+
+class JsonDecoder implements Decoder, IteratedDecoder, KeyedDecoder {
+  JsonDecoder._(this._reader);
   final Crimson _reader;
 
-  static T decode<T>(List<int> value, Decoder<T> decoder) {
-    return JsonDecoding._(Crimson(value)).decodeObject(decoder);
+  static T decode<T>(List<int> value, Decode<T> decode) {
+    return JsonDecoder._(Crimson(value)).decodeObject(decode);
   }
 
   @pragma('vm:prefer-inline')
   @override
-  Object? decodeValue() {
-    return _reader.read();
+  T decodeObject<T>(Decode<T> decode) {
+    final type = _reader.whatIsNext();
+    return switch (decode) {
+      DecodeKeyed<T> d when type == JsonType.object => d.decodeKeyed(this),
+      DecodeMap<T> d when type == JsonType.object => d.decodeMap<String, dynamic>(decodeMap()),
+      DecodeMapped<T> d when type == JsonType.object => CompatMappedDecoder.apply(d, this),
+      DecodeIterated<T> d when type == JsonType.array => d.decodeIterated(this),
+      DecodeList<T> d when type == JsonType.array => d.decodeList<dynamic>(decodeList()),
+      DecodeString<T> d when type == JsonType.string => d.decodeString(decodeString()),
+      DecodeNum<T> d when type == JsonType.number => d.decodeNum(decodeNum()),
+      DecodeInt<T> d when type == JsonType.number => d.decodeInt(decodeInt()),
+      DecodeDouble<T> d when type == JsonType.number => d.decodeDouble(decodeDouble()),
+      DecodeBool<T> d when type == JsonType.bool => d.decodeBool(decodeBool()),
+      DecodeNull<T> d when type == JsonType.nil => (_reader.skipNull(), d.decodeNull()).$2,
+      DecodeAny<T> d => d.decodeAny(this),
+      DecodeDynamic<T> d => d.decodeDynamic(_reader.read()),
+      _ => throw UnsupportedError(''),
+    };
   }
 
   @pragma('vm:prefer-inline')
   @override
-  String decodeString() {
-    return _reader.readString();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  String? decodeStringOrNull() {
-    return _reader.readStringOrNull();
+  T? decodeObjectOrNull<T>(Decode<T> decode) {
+    if (skipNull()) return null;
+    return decodeObject(decode);
   }
 
   @pragma('vm:prefer-inline')
@@ -49,18 +116,6 @@ class JsonDecoding implements SerialDecoding {
 
   @pragma('vm:prefer-inline')
   @override
-  int decodeInt() {
-    return _reader.readInt();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  int? decodeIntOrNull() {
-    return _reader.readIntOrNull();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
   double decodeDouble() {
     return _reader.readDouble();
   }
@@ -73,14 +128,92 @@ class JsonDecoding implements SerialDecoding {
 
   @pragma('vm:prefer-inline')
   @override
-  T decodeObject<T>(Decoder<T> decoder) {
-    return decoder.decodeSerial(this);
+  int decodeInt() {
+    return _reader.readInt();
   }
 
   @pragma('vm:prefer-inline')
   @override
-  T? decodeObjectOrNull<T>(Decoder<T> decoder) {
-    return _reader.skipNull() ? null : decoder.decodeSerial(this);
+  int? decodeIntOrNull() {
+    return _reader.readIntOrNull();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  List<I> decodeList<I>([Decode<I>? decodeItem]) {
+    return switch (decodeItem) {
+      null => _reader.readArray().cast(),
+      final di => [
+          for (; _reader.iterArray();) decodeObject(di),
+        ],
+    };
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  List<I>? decodeListOrNull<I>([Decode<I>? decodeItem]) {
+    if (_reader.skipNull()) return null;
+    return decodeList(decodeItem!);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  Map<K, V> decodeMap<K, V>([covariant DecodeString<K>? decodeKey, Decode<V>? decodeValue]) {
+    return switch ((decodeKey, decodeValue)) {
+      (null, null) => _reader.readObject().cast(),
+      (final dk?, null) => {
+          for (String? key; (key = _reader.iterObject()) != null;) dk.decodeString(key!): _reader.read() as V,
+        },
+      (null, final dv?) => {
+          for (String? key; (key = _reader.iterObject()) != null;) key as K: decodeObject(dv),
+        },
+      (final dk?, final dv?) => {
+          for (String? key; (key = _reader.iterObject()) != null;) dk.decodeString(key!): decodeObject(dv),
+        },
+    };
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  Map<K, V>? decodeMapOrNull<K, V>([covariant DecodeString<K>? decodeKey, Decode<V>? decodeValue]) {
+    if (_reader.skipNull()) return null;
+    return decodeMap(decodeKey, decodeValue);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  num decodeNum() {
+    return _reader.readNum();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  num? decodeNumOrNull() {
+    return _reader.readNumOrNull();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  String decodeString() {
+    return _reader.readString();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  String? decodeStringOrNull() {
+    return _reader.readStringOrNull();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  Object? decodeValue() {
+    return _reader.read();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  bool skipNull() {
+    return _reader.skipNull();
   }
 
   @pragma('vm:prefer-inline')
@@ -97,53 +230,72 @@ class JsonDecoding implements SerialDecoding {
 
   @pragma('vm:prefer-inline')
   @override
-  void skipNext() {
-    _reader.skip();
+  void skipCurrentItem() {
+    return _reader.skip();
   }
 
   @pragma('vm:prefer-inline')
   @override
-  bool skipNull() {
-    return _reader.skipNull();
+  void skipCurrentValue() {
+    return _reader.skip();
   }
 
+  @pragma('vm:prefer-inline')
   @override
   void skipRemainingKeys() {
-    _reader.skipPartialObject();
+    return _reader.skipPartialObject();
   }
 
+  @pragma('vm:prefer-inline')
   @override
   void skipRemainingItems() {
-    _reader.skipPartialArray();
+    return _reader.skipPartialArray();
   }
 
   @override
-  SerialDecoding clone() {
-    return JsonDecoding._(Crimson(_reader.buffer, _reader.offset));
+  JsonDecoder clone() {
+    return JsonDecoder._(Crimson(_reader.buffer, _reader.offset));
+  }
+  
+  @override
+  dynamic decodeDynamic() {
+    return _reader.read();
+  }
+  
+  @override
+  IteratedDecoder decodeIterated() {
+    return this;
+  }
+  
+  @override
+  KeyedDecoder decodeKeyed() {
+    return this;
+  }
+  
+  @override
+  MappedDecoder decodeMapped() {
+    return CompatMappedDecoder.get(decode, decoder)
+  }
+  
+  @override
+  DecodingType whatsNext() {
+    // TODO: implement whatsNext
+    throw UnimplementedError();
   }
 }
 
-class JsonEncoding implements SerialEncoding {
-  JsonEncoding._(this._writer);
+class JsonEncoder implements Encoder, IteratedEncoder {
+  JsonEncoder._(this._writer) {
+    _keyed = JsonKeyedEncoder._(_writer, this);
+  }
 
   final CrimsonWriter _writer;
+  late final JsonKeyedEncoder _keyed;
 
-  static List<int> encode<T>(T value, Encoder<T> encoder) {
-    var encoding = JsonEncoding._(CrimsonWriter());
-    encoder.encodeSerial(value, encoding);
-    return encoding._writer.toBytes();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  void encodeNull() {
-    _writer.writeNull();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  void encodeString(String value) {
-    _writer.writeString(value);
+  static List<int> encode<T>(T value, Encode<T> encode) {
+    var encoder = JsonEncoder._(CrimsonWriter());
+    encode.encode(value, encoder);
+    return encoder._writer.toBytes();
   }
 
   @pragma('vm:prefer-inline')
@@ -154,8 +306,9 @@ class JsonEncoding implements SerialEncoding {
 
   @pragma('vm:prefer-inline')
   @override
-  void encodeInt(int value) {
-    _writer.writeNum(value);
+  IteratedEncoder encodeIterated() {
+    _writer.writeArrayStart();
+    return this;
   }
 
   @pragma('vm:prefer-inline')
@@ -166,129 +319,206 @@ class JsonEncoding implements SerialEncoding {
 
   @pragma('vm:prefer-inline')
   @override
-  void encodeObject<T>(T value, Encoder<T> encoder) {
-    encoder.encodeSerial(value, this);
+  void encodeInt(int value) {
+    _writer.writeNum(value);
   }
 
   @pragma('vm:prefer-inline')
   @override
-  void encodeKey(Object? key) {
-    _writer.writeObjectKey(key.toString());
+  void encodeIterable<E>(Iterable<E> value, {Encode<E> Function(E p1)? encodeElement}) {
+    _writer.writeArrayStart();
+    for (final e in value) {
+      if (encodeElement != null) {
+        encodeElement(e).encode(e, this);
+      } else {
+        _writer.write(e);
+      }
+    }
+    _writer.writeArrayEnd();
   }
 
   @pragma('vm:prefer-inline')
   @override
-  void startObject<Key>() {
-    assert(Key == String);
+  KeyedEncoder encodeKeyed() {
     _writer.writeObjectStart();
+    return _keyed;
   }
 
   @pragma('vm:prefer-inline')
   @override
-  void endObject() {
+  void encodeMap<K, V>(Map<K, V> value, {Encode<K> Function(K p1)? encodeKey, Encode<V> Function(V p1)? encodeValue}) {
+    _writer.writeObjectStart();
+    for (final key in value.keys) {
+      final v = value[key] as V;
+      if (encodeKey != null) {
+        encodeKey(key).encode(key, this);
+        // TODO write colon
+      } else {
+        _writer.writeObjectKey(key as String);
+      }
+      if (encodeValue != null) {
+        encodeValue(v).encode(v, this);
+      } else {
+        _writer.write(v);
+      }
+    }
     _writer.writeObjectEnd();
   }
 
   @pragma('vm:prefer-inline')
   @override
-  void startArray<E>() {
-    _writer.writeArrayStart();
+  void encodeNull() {
+    _writer.writeNull();
   }
 
   @pragma('vm:prefer-inline')
   @override
-  void endArray() {
+  void encodeNum(num value) {
+    _writer.writeNum(value);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  void encodeObject<T>(T value, Encode<T> encode) {
+    encode.encode(value, this);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  void encodeString(String value) {
+    _writer.writeString(value);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  void encodeValue(Object? value) {
+    _writer.write(value);
+  }
+
+  @override
+  void end() {
     _writer.writeArrayEnd();
   }
 }
 
-extension JsonDecodable<T> on Decodable<T> {
-  T fromJson(String json) {
-    return fromJsonBytes(utf8.encode(json));
+class JsonKeyedEncoder implements KeyedEncoder {
+  JsonKeyedEncoder._(this._writer, this._parent);
+
+  final CrimsonWriter _writer;
+  final JsonEncoder _parent;
+
+  @pragma('vm:prefer-inline')
+  @override
+  void encodeBool(String key, bool value, {int? id}) {
+    _writer.writeObjectKey(key);
+    _writer.writeBool(value);
   }
 
-  T fromJsonBytes(List<int> bytes) {
-    return JsonDecoding.decode<T>(bytes, decoder());
-  }
-}
-
-extension JsonDecodable1<T, A> on Decodable1<T, A> {
-  T fromJson(String json, [Decoder<A>? d1]) {
-    return fromJsonBytes(utf8.encode(json), d1);
+  @pragma('vm:prefer-inline')
+  @override
+  IteratedEncoder encodeIterated(String key, {int? id}) {
+    _writer.writeObjectKey(key);
+    _writer.writeArrayStart();
+    return _parent;
   }
 
-  T fromJsonBytes(List<int> bytes, [Decoder<A>? d1]) {
-    return JsonDecoding.decode<T>(bytes, decoder(d1));
-  }
-}
-
-extension JsonEncodable<T> on Encodable<T> {
-  String toJson(T value) {
-    return utf8.decode(toJsonBytes(value));
+  @pragma('vm:prefer-inline')
+  @override
+  void encodeDouble(String key, double value, {int? id}) {
+    _writer.writeObjectKey(key);
+    _writer.writeNum(value);
   }
 
-  List<int> toJsonBytes(T value) {
-    return JsonEncoding.encode<T>(value, encoder());
-  }
-}
-
-extension JsonEncodableSelf<T extends Encodable<T>> on T {
-  String toJson() {
-    return utf8.decode(toJsonBytes());
+  @pragma('vm:prefer-inline')
+  @override
+  void encodeInt(String key, int value, {int? id}) {
+    _writer.writeObjectKey(key);
+    _writer.writeNum(value);
   }
 
-  List<int> toJsonBytes() {
-    return JsonEncoding.encode<T>(this, encoder());
-  }
-}
-
-extension JsonEncodable1<T, A> on Encodable1<T, A> {
-  String toJson(T value, [Encoder<A>? e1]) {
-    return utf8.decode(toJsonBytes(value, e1));
-  }
-
-  List<int> toJsonBytes(T value, [Encoder<A>? e1]) {
-    return JsonEncoding.encode<T>(value, encoder(e1));
-  }
-}
-
-extension JsonEncodableSelf1<T extends Encodable1<T, A>, A> on T {
-  String toJson([Encoder<A>? e1]) {
-    return utf8.decode(toJsonBytes(e1));
+  @pragma('vm:prefer-inline')
+  @override
+  void encodeIterable<E>(String key, Iterable<E> value, {int? id, Encode<E> Function(E p1)? encodeElement}) {
+    _writer.writeObjectKey(key);
+    _writer.writeArrayStart();
+    for (final e in value) {
+      if (encodeElement != null) {
+        encodeElement(e).encode(e, _parent);
+      } else {
+        _writer.write(e);
+      }
+    }
+    _writer.writeArrayEnd();
   }
 
-  List<int> toJsonBytes([Encoder<A>? e1]) {
-    return JsonEncoding.encode<T>(this, encoder(e1));
+  @pragma('vm:prefer-inline')
+  @override
+  KeyedEncoder encodeKeyed(String key, {int? id}) {
+    _writer.writeObjectKey(key);
+    _writer.writeObjectStart();
+    return this;
   }
-}
 
-const jsonCoding = JsonCoding();
-const jsonByteCoding = JsonByteCoding();
+  @pragma('vm:prefer-inline')
+  @override
+  void encodeMap<K, V>(String key, Map<K, V> value,
+      {int? id, Encode<K> Function(K p1)? encodeKey, Encode<V> Function(V p1)? encodeValue}) {
+    _writer.writeObjectKey(key);
+    _writer.writeObjectStart();
+    for (final key in value.keys) {
+      final v = value[key] as V;
+      if (encodeKey != null) {
+        encodeKey(key).encode(key, _parent);
+        // TODO write colon
+      } else {
+        _writer.writeObjectKey(key as String);
+      }
+      if (encodeValue != null) {
+        encodeValue(v).encode(v, _parent);
+      } else {
+        _writer.write(v);
+      }
+    }
+    _writer.writeObjectEnd();
+  }
 
-class JsonCoding implements Coding<String> {
-  const JsonCoding();
+  @pragma('vm:prefer-inline')
+  @override
+  void encodeNull(String key, {int? id}) {
+    _writer.writeObjectKey(key);
+    _writer.writeNull();
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  void encodeNum(String key, num value, {int? id}) {
+    _writer.writeObjectKey(key);
+    _writer.writeNum(value);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  void encodeObject<T>(String key, T value, Encode<T> encode, {int? id}) {
+    _writer.writeObjectKey(key);
+    encode.encode(value, _parent);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  void encodeString(String key, String value, {int? id}) {
+    _writer.writeObjectKey(key);
+    _writer.writeString(value);
+  }
+
+  @pragma('vm:prefer-inline')
+  @override
+  void encodeValue(String key, Object? value, {int? id}) {
+    _writer.writeObjectKey(key);
+    _writer.write(value);
+  }
 
   @override
-  T decode<T>(String value, Decoder<T> decoder) {
-    return JsonDecoding.decode(utf8.encode(value), decoder);
-  }
-
-  @override
-  String encode<T>(T value, Encoder<T> encoder) {
-    return utf8.decode(JsonEncoding.encode(value, encoder));
-  }
-}
-
-class JsonByteCoding implements Coding<List<int>> {
-  const JsonByteCoding();
-
-  @override
-  T decode<T>(List<int> value, Decoder<T> decoder) {
-    return JsonDecoding.decode(value, decoder);
-  }
-
-  @override
-  List<int> encode<T>(T value, Encoder<T> encoder) {
-    return JsonEncoding.encode(value, encoder);
+  void end() {
+    _writer.writeObjectEnd();
   }
 }

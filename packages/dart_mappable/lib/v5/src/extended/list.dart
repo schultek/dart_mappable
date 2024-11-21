@@ -10,40 +10,31 @@ class ListCodable<E> implements Codable<List<E>> {
   final Codable<E> codable;
 
   @override
-  Decoder<List<E>> decoder() => ListDecoder(codable.decoder());
+  Decode<List<E>> decode() => ListDecode(codable.decode());
 
   @override
-  Encoder<List<E>> encoder() => IterableEncoder(codable.encoder());
+  Encode<List<E>> encode() => IterableEncode(codable.encode());
 }
 
-class ListDecoder<E> extends DecoderBase1<List<E>, E> {
-  ListDecoder(Decoder<E> super.decoderA);
+class ListDecode<E> extends DecodeBase1<List<E>, E> implements DecodeIterated<List<E>>, DecodeAny<List<E>> {
+  ListDecode(Decode<E> super.decodeA);
 
   @override
-  List<E> decodeSerial(SerialDecoding decoding) {
-    return [for (; decoding.nextItem();) decoding.decodeObject(decoderA!)];
+  List<E> decodeIterated(IteratedDecoder iterated) {
+    return [for (; iterated.nextItem();) iterated.decodeObject(decodeA!)];
   }
-
+  
   @override
-  List<E> decodeStruct(StructDecoding decoding) {
-    return decoding.decodeListObject(decoderA!);
+  List<E> decodeAny(Decoder decoder) {
+    return decoder.decodeList(decodeA!);
   }
 }
 
-class IterableEncoder<I extends Iterable<E>, E> extends EncoderBase1<I, E> {
-  IterableEncoder(Encoder<E> super.encoderA);
-
+class IterableEncode<I extends Iterable<E>, E> extends EncodeBase1<I, E> {
+  IterableEncode(Encode<E> super.encodeA);
+  
   @override
-  void encodeSerial(I value, SerialEncoding encoding) {
-    encoding.startArray();
-    for (final e in value){
-      encoding.encodeObject(e, encoderA!);
-    }
-    encoding.endArray();
-  }
-
-  @override
-  void encodeStruct(I value, StructEncoding encoding) {
-    encoding.encodeIterable(value, (_) => encoderA!);
+  void encode(I value, Encoder encoder) {
+    encoder.encodeIterable(value, encodeElement: (_) => encodeA!);
   }
 }

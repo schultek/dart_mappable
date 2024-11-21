@@ -10,34 +10,34 @@ abstract interface class Codable2<T, A, B>
 
 
 abstract interface class Decodable<T> {
-  Decoder<T> decoder();
+  Decode<T> decode();
 }
 
 abstract interface class Decodable1<T, A> implements Decodable<T> {
   @override
-  Decoder<T> decoder([Decoder<A>? d1]);
+  Decode<T> decode([Decode<A>? d1]);
 }
 abstract interface class Decodable2<T, A, B> implements Decodable<T> {
   @override
-  Decoder<T> decoder([Decoder<A>? d1, Decoder<B>? d2]);
+  Decode<T> decode([Decode<A>? d1, Decode<B>? d2]);
 }
 
 
 abstract interface class SuperEncodable {
-  Encoder<Object?> encoder();
+  Encode<Object?> encode();
 }
 
 abstract interface class Encodable<T> implements SuperEncodable {
   @override
-  Encoder<T> encoder();
+  Encode<T> encode();
 }
 
 abstract interface class Encodable1<T, A> implements Encodable<T> {
   @override
-  Encoder<T> encoder([Encoder<A>? e1]);
+  Encode<T> encode([Encode<A>? e1]);
 }
 
 abstract interface class Encodable2<T, A, B> implements Encodable<T> {
   @override
-  Encoder<T> encoder([Encoder<A>? e1, Encoder<B>? e2]);
+  Encode<T> encode([Encode<A>? e1, Encode<B>? e2]);
 }

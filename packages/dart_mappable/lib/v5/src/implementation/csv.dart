@@ -5,7 +5,7 @@
 
 import 'package:crimson/src/consts.dart';
 import '../protocol/protocol.dart';
-
+/*
 class CsvDecoding implements SerialDecoding {
   CsvDecoding._(
     this.buffer, [
@@ -399,4 +399,4 @@ extension CsvEncodableSelf<T extends Encodable<T>> on Iterable<T> {
   String toCsv() {
     return CsvEncoding.encode(this, (v) => v.encoder());
   }
-}
+}*/

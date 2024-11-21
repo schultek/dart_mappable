@@ -10,45 +10,35 @@ class MapCodable<K, V> implements Codable<Map<K, V>> {
   final Codable<V> codable;
 
   @override
-  Decoder<Map<K, V>> decoder() => MapDecoder(codable.decoder());
+  Decode<Map<K, V>> decode() => MapDecode(codable.decode());
 
   @override
-  Encoder<Map<K, V>> encoder() => MapEncoder(codable.encoder());
+  Encode<Map<K, V>> encode() => MapEncode(codable.encode());
 }
 
-class MapDecoder<K, V> extends DecoderBase1<Map<K, V>, V> {
-  MapDecoder(Decoder<V> super.decoderA);
+class MapDecode<K, V> extends DecodeBase1<Map<K, V>, V> implements DecodeKeyed<Map<K, V>>, DecodeAny<Map<K, V>> {
+  MapDecode(Decode<V> super.decodeA);
 
   @override
-  Map<K, V> decodeSerial(SerialDecoding decoding) {
+  Map<K, V> decodeKeyed(KeyedDecoder keyed) {
     final map = <K, V>{};
-    for (Object? key; (key = decoding.nextKey()) != null;) {
-      map[key as K] = decoding.decodeObject(decoderA!);
+    for (Object? key; (key = keyed.nextKey()) != null;) {
+      map[key as K] = keyed.decodeObject(decodeA!);
     }
     return map;
   }
 
   @override
-  Map<K, V> decodeStruct(StructDecoding decoding) {
-    return decoding.decodeMapObject(decoderA!);
+  Map<K, V> decodeAny(Decoder decoder) {
+    return decoder.decodeMap(null, decodeA!);
   }
 }
 
-class MapEncoder<K, V> extends EncoderBase1<Map<K, V>, V> {
-  MapEncoder(Encoder<V> super.encoderA);
-
+class MapEncode<K, V> extends EncodeBase1<Map<K, V>, V> {
+  MapEncode(Encode<V> super.encodeA);
+  
   @override
-  void encodeSerial(Map<K, V> value, SerialEncoding encoding) {
-    encoding.startObject<K>();
-    for (final key in value.keys) {
-      encoding.encodeKey(key);
-      encoding.encodeObject(value[key], encoderA!);
-    }
-    encoding.endArray();
-  }
-
-  @override
-  void encodeStruct(Map<K, V> value, StructEncoding encoding) {
-    encoding.encodeMap(value, (_) => encoderA!);
+  void encode(Map<K, V> value, Encoder encoder) {
+    encoder.encodeMap(value, encodeValue: (_) => encodeA!);
   }
 }

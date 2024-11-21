@@ -11,6 +11,5 @@ part 'map.dart';
 part 'set.dart';
 part 'generics.dart';
 part 'wrapped.dart';
-part 'codec.dart';
 part 'helpers.dart';
 part 'hooks.dart';

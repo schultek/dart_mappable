@@ -10,22 +10,22 @@ class SetCodable<E> implements Codable<Set<E>> {
   final Codable<E> codable;
 
   @override
-  Decoder<Set<E>> decoder() => SetDecoder(codable.decoder());
+  Decode<Set<E>> decode() => SetDecode(codable.decode());
 
   @override
-  Encoder<Set<E>> encoder() => IterableEncoder(codable.encoder());
+  Encode<Set<E>> encode() => IterableEncode(codable.encode());
 }
 
-class SetDecoder<E> extends DecoderBase1<Set<E>, E> {
-  SetDecoder(Decoder<E> super.decoderA);
+class SetDecode<E> extends DecodeBase1<Set<E>, E> implements DecodeIterated<Set<E>>, DecodeAny<Set<E>> {
+  SetDecode(Decode<E> super.decodeA);
 
   @override
-  Set<E> decodeSerial(SerialDecoding decoding) {
-    return {for (; decoding.nextItem();) decoding.decodeObject(decoderA!)};
+  Set<E> decodeIterated(IteratedDecoder iterated) {
+    return {for (; iterated.nextItem();) iterated.decodeObject(decodeA!)};
   }
-
+  
   @override
-  Set<E> decodeStruct(StructDecoding decoding) {
-    return decoding.decodeListObject(decoderA!).toSet();
+  Set<E> decodeAny(Decoder decode) {
+    return decode.decodeList(decodeA!).toSet();
   }
 }

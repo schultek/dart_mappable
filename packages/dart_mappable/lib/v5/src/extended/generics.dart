@@ -1,87 +1,87 @@
 part of 'extended.dart';
 
-abstract class DecoderBase1<T, A> implements Decoder<T> {
-  const DecoderBase1([this.decoderA]);
+abstract class DecodeBase1<T, A> {
+  const DecodeBase1([this.decodeA]);
 
-  final Decoder<A>? decoderA;
+  final Decode<A>? decodeA;
 
-  R extract<R>(R Function<A>(Decoder<A>? decoderA) fn) {
-    return fn<A>(decoderA);
+  R extract<R>(R Function<A>(Decode<A>? decodeA) fn) {
+    return fn<A>(decodeA);
   }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is DecoderBase1<T, A> &&
+          other is DecodeBase1<T, A> &&
               runtimeType == other.runtimeType &&
-              decoderA == other.decoderA;
+              decodeA == other.decodeA;
 
   @override
-  int get hashCode => Object.hash(T, decoderA);
+  int get hashCode => Object.hash(T, decodeA);
 }
 
-abstract class DecoderBase2<T, A, B> implements Decoder<T> {
-  const DecoderBase2([this.decoderA, this.decoderB]);
+abstract class DecodeBase2<T, A, B> {
+  const DecodeBase2([this.decodeA, this.decodeB]);
 
-  final Decoder<A>? decoderA;
-  final Decoder<B>? decoderB;
+  final Decode<A>? decodeA;
+  final Decode<B>? decodeB;
 
   R extract<R>(
-      R Function<A, B>(Decoder<A>? decoderA, Decoder<B>? decoderB) fn) {
-    return fn<A, B>(decoderA, decoderB);
+      R Function<A, B>(Decode<A>? decodeA, Decode<B>? decodeB) fn) {
+    return fn<A, B>(decodeA, decodeB);
   }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is DecoderBase2<T, A, B> &&
+          other is DecodeBase2<T, A, B> &&
               runtimeType == other.runtimeType &&
-              decoderA == other.decoderA &&
-              decoderB == other.decoderB;
+              decodeA == other.decodeA &&
+              decodeB == other.decodeB;
 
   @override
-  int get hashCode => Object.hash(T, decoderA, decoderB);
+  int get hashCode => Object.hash(T, decodeA, decodeB);
 }
 
-abstract class EncoderBase1<T, A> implements Encoder<T> {
-  const EncoderBase1([this.encoderA]);
+abstract class EncodeBase1<T, A> implements Encode<T> {
+  const EncodeBase1([this.encodeA]);
 
-  final Encoder<A>? encoderA;
+  final Encode<A>? encodeA;
 
-  R extract<R>(R Function<A>(Encoder<A>? encoderA) fn) {
-    return fn<A>(encoderA);
+  R extract<R>(R Function<A>(Encode<A>? encodeA) fn) {
+    return fn<A>(encodeA);
   }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is EncoderBase1<T, A> &&
+          other is EncodeBase1<T, A> &&
               runtimeType == other.runtimeType &&
-              encoderA == other.encoderA;
+              encodeA == other.encodeA;
 
   @override
-  int get hashCode => Object.hash(T, encoderA);
+  int get hashCode => Object.hash(T, encodeA);
 }
 
-abstract class EncoderBase2<T, A, B> implements Encoder<T> {
-  const EncoderBase2([this.encoderA, this.encoderB]);
+abstract class EncodeBase2<T, A, B> implements Encode<T> {
+  const EncodeBase2([this.encodeA, this.encodeB]);
 
-  final Encoder<A>? encoderA;
-  final Encoder<B>? encoderB;
+  final Encode<A>? encodeA;
+  final Encode<B>? encodeB;
 
   R extract<R>(
-      R Function<A, B>(Encoder<A>? encoderA, Encoder<B>? encoderB) fn) {
-    return fn<A, B>(encoderA, encoderB);
+      R Function<A, B>(Encode<A>? encodeA, Encode<B>? encodeB) fn) {
+    return fn<A, B>(encodeA, encodeB);
   }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is EncoderBase2<T, A, B> &&
+          other is EncodeBase2<T, A, B> &&
               runtimeType == other.runtimeType &&
-              encoderA == other.encoderA &&
-              encoderB == other.encoderB;
+              encodeA == other.encodeA &&
+              encodeB == other.encodeB;
 
   @override
-  int get hashCode => Object.hash(T, encoderA, encoderB);
+  int get hashCode => Object.hash(T, encodeA, encodeB);
 }

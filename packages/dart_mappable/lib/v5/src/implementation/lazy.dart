@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import '../protocol/protocol.dart';
-
+/*
 extension LazyEncodable on Encodable {
   Map<String, dynamic> toLazyMap() {
     return LazyEncoding.encode(this, encoder()) as Map<String, dynamic>;
@@ -185,3 +185,4 @@ class _LazyList<E> with ListMixin<E> {
     _lazy.remove(index);
   }
 }
+*/

@@ -37,40 +37,59 @@ class UppercaseStringHook with ProxyHook {
   String? visitStringOrNull(String? value) => value?.toUpperCase();
 }
 
-class RemapPropsHook with HookMixin {
+class RemapPropsHook implements Hook {
 
   @override
-  T decode<T>(Decoding decoding, Decoder<T> decoder) {
-    return decoding.decodeKeyed<String>().decodeObject('m', decoder);
+  T decode<T>(Decoder decoder, Decode<T> decode) {
+    return decoder.decodeObject(DecodePickProperty('m', decode));
   }
 
   @override
-  void encode<T>(T value, Encoding encoding, Encoder<T> encoder) {
-    encoding.encodeKeyed<String>().encodeObject('m', value, encoder);
+  void encode<T>(T value, Encoder encoder, Encode<T> encode) {
+    encoder.encodeKeyed()
+     ..encodeObject('m', value, encode)
+     ..end();
   }
 
 }
 
-class ObjectWithIdHook with HookMixin {
+class DecodePickProperty<T> implements DecodeMapped<T> {
+  DecodePickProperty(this.key, this.decode);
 
+  final String key;
+  final Decode<T> decode;
+  
   @override
-  T decode<T>(Decoding decoding, Decoder<T> decoder) {
-    final value = decoding.clone().decodeValue();
-    if (value is String) {
-      return MapDecoding.decode({'id': value}, decoder);
-    } else {
-      return super.decode(decoding, decoder);
-    }
+  T decodeMapped(MappedDecoder mapped) {
+    return mapped.decodeObject(key, decode);
+  }
+}
+
+class ObjectWithIdHook implements Hook {
+  
+  @override
+  T decode<T>(Decoder decoder, Decode<T> decode) {
+    return decoder.decodeObject(DecodeObjectWithId(decode));
   }
 
   @override
-  void encode<T>(T value, Encoding encoding, Encoder<T> encoder) {
-    final map = MapEncoding.encode(value, encoder);
-    if (map is Map && map.containsKey('id')) {
-      encoding.encodeValue(map['id']);
-    } else {
-      super.encode(value, encoding, encoder);
-    }
+  void encode<T>(T value, Encoder encoder, Encode<T> encode) {
+    encoder.encodeObject(value, encode);
+  }
+}
+
+class DecodeObjectWithId<T> implements DecodeString<T>, DecodeAny<T> {
+  DecodeObjectWithId(this.decode);
+
+  final Decode<T> decode;
+  
+  @override
+  T decodeString(String value) {
+    return MapDecoder.decode({'id': value}, decode);
   }
 
+  @override
+  T decodeAny(Decoder decoder) {
+    return decoder.decodeObject(decode);
+  }
 }
