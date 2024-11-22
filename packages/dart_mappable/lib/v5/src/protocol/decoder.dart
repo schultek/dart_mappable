@@ -1,6 +1,8 @@
 part of 'protocol.dart';
 
 abstract interface class Decoder {
+  DecodingType whatsNext();
+  
   dynamic decodeDynamic();
 
   bool decodeBool();
@@ -19,6 +21,8 @@ abstract interface class Decoder {
   Map<K, V> decodeMap<K, V>([Decode<K>? decodeKey, Decode<V>? decodeValue]);
   Map<K, V>? decodeMapOrNull<K, V>([Decode<K>? decodeKey, Decode<V>? decodeValue]);
 
+  T decodeCustom<T>();
+
   IteratedDecoder decodeIterated();
   KeyedDecoder decodeKeyed();
   MappedDecoder decodeMapped();
@@ -28,12 +32,36 @@ abstract interface class Decoder {
 
   bool skipNull();
 
-  DecodingType whatsNext();
-
   Decoder clone();
+
+  Never expect(String expect);
 }
 
-enum DecodingType {
+final class DecodingType {
+
+  const DecodingType._(this.type);
+
+  final Type? type;
+
+  static const nil = DecodingType._(Null);
+  static const bool = DecodingType._(core.bool);
+  static const int = DecodingType._(core.int);
+  static const double = DecodingType._(core.double);
+  static const num = DecodingType._(core.num);
+  static const string = DecodingType._(core.String);
+  static const list = DecodingType._(core.List);
+  static const map = DecodingType._(core.Map);
+  static const iterated = DecodingType._(IteratedDecoder);
+  static const keyed = DecodingType._(KeyedDecoder);
+  static const mapped = DecodingType._(MappedDecoder); 
+
+  const DecodingType.custom(this.type);
+
+  static const unknown = DecodingType._(null);
+
+}
+
+enum DecodingType2 {
   nil, bool, int, double, num, string, list, map, iterated, keyed, mapped, unknown;
 }
 
@@ -58,6 +86,8 @@ abstract class KeyedDecoder implements Decoder {
 }
 
 abstract class MappedDecoder {
+  DecodingType whatsNext(String key, [int? id]);
+
   dynamic decodeDynamic(String key, [int? id]);
 
   bool decodeBool(String key, [int? id]);
@@ -76,53 +106,23 @@ abstract class MappedDecoder {
   Map<K, V> decodeMap<K, V>(String key, [int? id, Decode<K>? decodeKey, Decode<V>? decodeValue]);
   Map<K, V>? decodeMapOrNull<K, V>(String key, [int? id, Decode<K>? decodeKey, Decode<V>? decodeValue]);
 
+  T decodeCustom<T>(String key, [int? id]);
+
+  IteratedDecoder decodeIterated(String key, [int? id]);
+  KeyedDecoder decodeKeyed(String key, [int? id]);
+  MappedDecoder decodeMapped(String key, [int? id]);
+
   T decodeObject<T>(String key, Decode<T> decode, [int? id]);
   T? decodeObjectOrNull<T>(String key, Decode<T> decode, [int? id]);
+
+  bool isNull(String key, [int? id]);
+
+  Iterable<Object> get keys;
+
+  Never expect(String key, String expect, [int? id]);
 }
 
 
-sealed class Decode<T> {}
-
-abstract interface class DecodeDynamic<T> implements Decode<T> {
-  T decodeDynamic(dynamic value);
+abstract interface class Decode<T> {
+  T decode(Decoder decoder);
 }
-abstract interface class DecodeBool<T> implements Decode<T> {
-  T decodeBool(bool value);
-}
-abstract interface class DecodeDouble<T> implements Decode<T> {
-  T decodeDouble(double value);
-}
-abstract interface class DecodeInt<T> implements Decode<T> {
-  T decodeInt(int value);
-}
-abstract interface class DecodeNum<T> implements Decode<T> {
-  T decodeNum(num value);
-}
-abstract interface class DecodeString<T> implements Decode<T> {
-  T decodeString(String value);
-}
-abstract interface class DecodeList<T> implements Decode<T> {
-  T decodeList<E>(List<E> value);
-}
-abstract interface class DecodeMap<T> implements Decode<T> {
-  T decodeMap<K, V>(Map<K, V> value);
-}
-abstract interface class DecodeIterated<T> implements Decode<T> {
-  T decodeIterated(IteratedDecoder iterated);
-}
-abstract interface class DecodeKeyed<T> implements Decode<T> {
-  T decodeKeyed(KeyedDecoder keyed);
-}
-abstract interface class DecodeMapped<T> implements Decode<T> {
-  T decodeMapped(MappedDecoder mapped);
-}
-abstract interface class DecodeNull<T> implements Decode<T> {
-  T decodeNull();
-}
-abstract interface class DecodeAny<T> implements Decode<T> {
-  T decodeAny(Decoder decoder);
-}
-abstract interface class DecodeCustom<T, V> implements Decode<T> {
-  T decodeCustom(V value);
-}
-

@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:crimson/crimson.dart';
 
-import '../extended/extended.dart';
+import '../extended/compat.dart';
 import '../protocol/protocol.dart';
+import 'map.dart';
 
 extension JsonDecodable<T> on Decodable<T> {
   T fromJson(String json) {
@@ -76,23 +77,7 @@ class JsonDecoder implements Decoder, IteratedDecoder, KeyedDecoder {
   @pragma('vm:prefer-inline')
   @override
   T decodeObject<T>(Decode<T> decode) {
-    final type = _reader.whatIsNext();
-    return switch (decode) {
-      DecodeKeyed<T> d when type == JsonType.object => d.decodeKeyed(this),
-      DecodeMap<T> d when type == JsonType.object => d.decodeMap<String, dynamic>(decodeMap()),
-      DecodeMapped<T> d when type == JsonType.object => CompatMappedDecoder.apply(d, this),
-      DecodeIterated<T> d when type == JsonType.array => d.decodeIterated(this),
-      DecodeList<T> d when type == JsonType.array => d.decodeList<dynamic>(decodeList()),
-      DecodeString<T> d when type == JsonType.string => d.decodeString(decodeString()),
-      DecodeNum<T> d when type == JsonType.number => d.decodeNum(decodeNum()),
-      DecodeInt<T> d when type == JsonType.number => d.decodeInt(decodeInt()),
-      DecodeDouble<T> d when type == JsonType.number => d.decodeDouble(decodeDouble()),
-      DecodeBool<T> d when type == JsonType.bool => d.decodeBool(decodeBool()),
-      DecodeNull<T> d when type == JsonType.nil => (_reader.skipNull(), d.decodeNull()).$2,
-      DecodeAny<T> d => d.decodeAny(this),
-      DecodeDynamic<T> d => d.decodeDynamic(_reader.read()),
-      _ => throw UnsupportedError(''),
-    };
+    return decode.decode(this);
   }
 
   @pragma('vm:prefer-inline')
@@ -158,24 +143,24 @@ class JsonDecoder implements Decoder, IteratedDecoder, KeyedDecoder {
 
   @pragma('vm:prefer-inline')
   @override
-  Map<K, V> decodeMap<K, V>([covariant DecodeString<K>? decodeKey, Decode<V>? decodeValue]) {
+  Map<K, V> decodeMap<K, V>([covariant Decode<K>? decodeKey, Decode<V>? decodeValue]) {
     return switch ((decodeKey, decodeValue)) {
       (null, null) => _reader.readObject().cast(),
       (final dk?, null) => {
-          for (String? key; (key = _reader.iterObject()) != null;) dk.decodeString(key!): _reader.read() as V,
+          for (String? key; (key = _reader.iterObject()) != null;) MapDecoder.decode(key, dk): _reader.read() as V,
         },
       (null, final dv?) => {
           for (String? key; (key = _reader.iterObject()) != null;) key as K: decodeObject(dv),
         },
       (final dk?, final dv?) => {
-          for (String? key; (key = _reader.iterObject()) != null;) dk.decodeString(key!): decodeObject(dv),
+          for (String? key; (key = _reader.iterObject()) != null;) MapDecoder.decode(key, dk): decodeObject(dv),
         },
     };
   }
 
   @pragma('vm:prefer-inline')
   @override
-  Map<K, V>? decodeMapOrNull<K, V>([covariant DecodeString<K>? decodeKey, Decode<V>? decodeValue]) {
+  Map<K, V>? decodeMapOrNull<K, V>([covariant Decode<K>? decodeKey, Decode<V>? decodeValue]) {
     if (_reader.skipNull()) return null;
     return decodeMap(decodeKey, decodeValue);
   }
@@ -202,12 +187,6 @@ class JsonDecoder implements Decoder, IteratedDecoder, KeyedDecoder {
   @override
   String? decodeStringOrNull() {
     return _reader.readStringOrNull();
-  }
-
-  @pragma('vm:prefer-inline')
-  @override
-  Object? decodeValue() {
-    return _reader.read();
   }
 
   @pragma('vm:prefer-inline')
@@ -274,13 +253,30 @@ class JsonDecoder implements Decoder, IteratedDecoder, KeyedDecoder {
   
   @override
   MappedDecoder decodeMapped() {
-    return CompatMappedDecoder.get(decode, decoder)
+    return CompatMappedDecoder.wrap(this);
   }
   
   @override
   DecodingType whatsNext() {
-    // TODO: implement whatsNext
-    throw UnimplementedError();
+    final type = _reader.whatIsNext();
+    return switch (type) {
+      JsonType.nil => DecodingType.nil,
+      JsonType.bool => DecodingType.bool,
+      JsonType.number => DecodingType.num,
+      JsonType.string => DecodingType.string,
+      JsonType.object => DecodingType.keyed,
+      JsonType.array => DecodingType.iterated,
+    };
+  }
+  
+  @override
+  Never expect(String expect) {
+    throw FormatException('Expected $expect, but got ${whatsNext()}');
+  }
+  
+  @override
+  T decodeCustom<T>() {
+    expect('$T');
   }
 }
 

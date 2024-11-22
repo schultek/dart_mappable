@@ -1,216 +1,163 @@
-part of 'extended.dart';
+import '../protocol/protocol.dart';
 
 class CompatMappedDecoder implements MappedDecoder {
-  CompatMappedDecoder._(this.decoder);
+  CompatMappedDecoder._(this.decoders);
 
-  static T apply<T>(DecodeMapped<T> decode, KeyedDecoder decoder) {
-    final d = CompatMappedDecoder._(decoder);
-    try {
-      return decode.decodeMapped(d);
-    } finally {
-      if (!d._done) {
-        d.decoder.skipRemainingKeys();
-      }
-    }
-  }
-
-  static MappedDecoder get<T>(DecodeMapped<T> decode, KeyedDecoder decoder) {
-    try {
-      return CompatMappedDecoder._(decoder.clone());
-    } finally {
+  static MappedDecoder wrap<T>(KeyedDecoder decoder) {
+    final map = <Object, KeyedDecoder>{};
+    for (Object? key; (key = decoder.nextKey()) != null;) {
+      map[key!] = decoder.clone();
       decoder.skipCurrentValue();
     }
+    return CompatMappedDecoder._(map);
   }
 
-  final KeyedDecoder decoder;
-
-  bool _done = false;
-  final Map<Object, KeyedDecoder> _values = {};
-
-  bool skipTo(String key, [int? id]) {
-    if (_done) return false;
-    while (true) {
-      var k = decoder.nextKey();
-      if (k == null) {
-        _done = true;
-        return false;
-      } else if (k == key || k == id) {
-        return true;
-      } else {
-        _values[k] = decoder.clone();
-        decoder.skipCurrentValue();
-      }
-    }
-  }
+  final Map<Object, KeyedDecoder> decoders;
 
   @override
   Object? decodeDynamic(String key, [int? id]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeDynamic();
-    }
-    final hasKey = skipTo(key, id);
-    assert(hasKey);
-    return decoder.decodeDynamic();
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().decodeDynamic();
   }
 
   @override
   String decodeString(String key, [int? id]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeString();
-    }
-    final hasKey = skipTo(key, id);
-    assert(hasKey);
-    return decoder.decodeString();
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().decodeString();
   }
 
   @override
   String? decodeStringOrNull(String key, [int? id]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeStringOrNull();
-    }
-    final hasKey = skipTo(key, id);
-    if (!hasKey) return null;
-    return decoder.decodeStringOrNull();
+    var d = decoders[key] ?? decoders[id];
+    return d?.clone().decodeStringOrNull();
   }
 
   @override
   bool decodeBool(String key, [int? id]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeBool();
-    }
-    final hasKey = skipTo(key, id);
-    assert(hasKey);
-    return decoder.decodeBool();
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().decodeBool();
   }
 
   @override
   bool? decodeBoolOrNull(String key, [int? id]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeBoolOrNull();
-    }
-    final hasKey = skipTo(key, id);
-    if (!hasKey) return null;
-    return decoder.decodeBoolOrNull();
+    var d = decoders[key] ?? decoders[id];
+    return d?.clone().decodeBoolOrNull();
   }
 
   @override
   double decodeDouble(String key, [int? id]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeDouble();
-    }
-    final hasKey = skipTo(key, id);
-    assert(hasKey);
-    return decoder.decodeDouble();
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().decodeDouble();
   }
 
   @override
   double? decodeDoubleOrNull(String key, [int? id]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeDoubleOrNull();
-    }
-    final hasKey = skipTo(key, id);
-    if (!hasKey) return null;
-    return decoder.decodeDoubleOrNull();
+    var d = decoders[key] ?? decoders[id];
+    return d?.clone().decodeDoubleOrNull();
   }
 
   @override
   int decodeInt(String key, [int? id]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeInt();
-    }
-    final hasKey = skipTo(key, id);
-    assert(hasKey);
-    return decoder.decodeInt();
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().decodeInt();
   }
 
   @override
   int? decodeIntOrNull(String key, [int? id]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeIntOrNull();
-    }
-    final hasKey = skipTo(key, id);
-    if (!hasKey) return null;
-    return decoder.decodeIntOrNull();
+    var d = decoders[key] ?? decoders[id];
+    return d?.clone().decodeIntOrNull();
   }
 
   @override
   T decodeObject<T>(String key, Decode<T> decode, [int? id]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeObject(decode);
-    }
-    final hasKey = skipTo(key, id);
-    assert(hasKey);
-    return decoder.decodeObject(decode);
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().decodeObject(decode);
   }
 
   @override
   T? decodeObjectOrNull<T>(String key, Decode<T> decode, [int? id]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeObjectOrNull(decode);
-    }
-    final hasKey = skipTo(key, id);
-    if (!hasKey) return null;
-    return decoder.decodeObjectOrNull(decode);
+    var d = decoders[key] ?? decoders[id];
+    return d?.clone().decodeObjectOrNull(decode);
   }
 
   @override
   List<T> decodeList<T>(String key, [int? id, Decode<T>? decodeElement]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeList(decodeElement);
-    }
-    final hasKey = skipTo(key, id);
-    assert(hasKey);
-    return decoder.decodeList(decodeElement);
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().decodeList(decodeElement);
   }
 
   @override
   List<T>? decodeListOrNull<T>(String key, [int? id, Decode<T>? decodeElement]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeListOrNull(decodeElement);
-    }
-    final hasKey = skipTo(key, id);
-    if (!hasKey) return null;
-    return decoder.decodeListOrNull(decodeElement);
-    
+    var d = decoders[key] ?? decoders[id];
+    return d?.clone().decodeListOrNull(decodeElement);
   }
-  
+
   @override
   Map<K, V> decodeMap<K, V>(String key, [int? id, Decode<K>? decodeKey, Decode<V>? decodeDynamic]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeMap(decodeKey, decodeDynamic);
-    }
-    final hasKey = skipTo(key, id);
-    assert(hasKey);
-    return decoder.decodeMap(decodeKey, decodeDynamic);
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().decodeMap(decodeKey, decodeDynamic);
   }
-  
+
   @override
   Map<K, V>? decodeMapOrNull<K, V>(String key, [int? id, Decode<K>? decodeKey, Decode<V>? decodeDynamic]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeMapOrNull(decodeKey, decodeDynamic);
-    }
-    final hasKey = skipTo(key, id);
-    if (!hasKey) return null;
-    return decoder.decodeMapOrNull(decodeKey, decodeDynamic);
+    var d = decoders[key] ?? decoders[id];
+    return d?.clone().decodeMapOrNull(decodeKey, decodeDynamic);
   }
-  
+
   @override
   num decodeNum(String key, [int? id]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeNum();
-    }
-    final hasKey = skipTo(key, id);
-    assert(hasKey);
-    return decoder.decodeNum();
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().decodeNum();
+  }
+
+  @override
+  num? decodeNumOrNull(String key, [int? id]) {
+    var d = decoders[key] ?? decoders[id];
+    return d?.clone().decodeNumOrNull();
+  }
+
+  @override
+  DecodingType whatsNext(String key, [int? id]) {
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().whatsNext();
+  }
+
+  @override
+  Iterable<Object> get keys => decoders.keys;
+
+  @override
+  IteratedDecoder decodeIterated(String key, [int? id]) {
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().decodeIterated();
+  }
+
+  @override
+  KeyedDecoder decodeKeyed(String key, [int? id]) {
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().decodeKeyed();
+  }
+
+  @override
+  MappedDecoder decodeMapped(String key, [int? id]) {
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().decodeMapped();
+  }
+
+  @override
+  Never expect(String key, String expect, [int? id]) {
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().expect(expect);
+  }
+
+  @override
+  bool isNull(String key, [int? id]) {
+    var d = decoders[key] ?? decoders[id];
+    return d != null && d.clone().skipNull();
   }
   
   @override
-  num? decodeNumOrNull(String key, [int? id]) {
-    if (_values[key] ?? _values[id] case final d?) {
-      return d.decodeNumOrNull();
-    }
-    final hasKey = skipTo(key, id);
-    if (!hasKey) return null;
-    return decoder.decodeNumOrNull();
+  T decodeCustom<T>(String key, [int? id]) {
+    var d = decoders[key] ?? decoders[id];
+    return d!.clone().decodeCustom<T>();
   }
 }
