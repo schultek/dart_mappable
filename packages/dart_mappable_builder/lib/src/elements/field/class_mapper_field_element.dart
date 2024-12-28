@@ -99,7 +99,7 @@ class ClassMapperFieldElement extends MapperFieldElement {
         _keyFor(field?.getter) ??
         parent.caseStyle.transform(name);
     if (key != name) {
-      return ", key: '$key'";
+      return ", key: r'$key'";
     } else {
       return '';
     }

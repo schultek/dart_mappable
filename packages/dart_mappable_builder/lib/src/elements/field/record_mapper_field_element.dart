@@ -65,7 +65,7 @@ class RecordMapperFieldElement extends MapperFieldElement {
     String key = param.key ?? parent.caseStyle?.transform(param.name) ?? name;
 
     if (key != name) {
-      return ", key: '$key'";
+      return ", key: r'$key'";
     } else {
       return '';
     }
