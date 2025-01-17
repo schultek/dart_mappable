@@ -10,3 +10,13 @@ linter:
     prefer_relative_imports: true
     prefer_single_quotes: true
     depend_on_referenced_packages: true
+
+dart_code_metrics:
+  exclude-public-api: true
+  extends: 
+    - recommended
+  rules:
+    - avoid-incomplete-copy-with: false
+    - member-ordering
+    - parameters-ordering
+    - prefer-trailing-comma: false

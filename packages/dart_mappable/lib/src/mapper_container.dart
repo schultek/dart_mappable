@@ -461,38 +461,6 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     }
   }
 
-  T guardMappable<T>(
-    Object value,
-    T Function(MapperBase, Object, MappingContext) fn,
-    T Function() fallback,
-    MapperMethod method,
-    String Function() hint,
-  ) {
-    var mapper = _mapperFor(value);
-    if (mapper != null) {
-      try {
-        return fn(
-            mapper,
-            value,
-            MappingContext(
-              container: this,
-              args: () {
-                return value.runtimeType.args
-                    .map((t) => t == UnresolvedType ? dynamic : t)
-                    .toList();
-              },
-            ));
-      } catch (e, stacktrace) {
-        Error.throwWithStackTrace(
-          MapperException.chain(method, hint(), e),
-          stacktrace,
-        );
-      }
-    } else {
-      return fallback();
-    }
-  }
-
   @override
   void use<T extends Object>(MapperBase<T> mapper) => useAll([mapper]);
 
