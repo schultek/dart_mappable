@@ -18,9 +18,7 @@ class TempAssetWriter implements RecordingAssetWriter {
 
   TempAssetWriter() {
     var id = Random().nextInt(1e6.round());
-    dir = Directory.fromUri(
-        Uri.parse(path.join(Directory.systemTemp.path, 'mappable_$id')));
-    dir.createSync();
+    dir = Directory.systemTemp.createTempSync('mappable_$id');
   }
 
   Future<dynamic> run(String code) async {
