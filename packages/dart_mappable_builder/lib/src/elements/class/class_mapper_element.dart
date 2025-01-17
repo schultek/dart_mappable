@@ -64,6 +64,9 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
           superElement?.ignoreNull ??
           false;
 
+  late final Iterable<String> ignore =
+      annotation.value?.read('ignore')?.toStringList() ?? [];
+
   late final int generateMethods =
       annotation.value?.read('generateMethods')?.toIntValue() ??
           options.generateMethods ??
