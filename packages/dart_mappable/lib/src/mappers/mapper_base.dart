@@ -44,7 +44,7 @@ abstract class MapperBase<T extends Object> {
         value,
         DecodingContext(
           container: container,
-          args: () => type.args,
+          args: type.args,
           options: options,
         ),
       ) as V;
@@ -81,7 +81,7 @@ abstract class MapperBase<T extends Object> {
               typeArgs = fallback;
             }
             return typeArgs.toList();
-          },
+          }(),
         ),
       );
 
@@ -121,7 +121,7 @@ abstract class MapperBase<T extends Object> {
       if (!isFor(other)) return false;
       var context = MappingContext(
         container: container,
-        args: () => value.runtimeType.args
+        args: value.runtimeType.args
             .map((t) => t == UnresolvedType ? dynamic : t)
             .toList(),
       );
@@ -143,7 +143,7 @@ abstract class MapperBase<T extends Object> {
     try {
       var context = MappingContext(
         container: container,
-        args: () => value.runtimeType.args
+        args: value.runtimeType.args
             .map((t) => t == UnresolvedType ? dynamic : t)
             .toList(),
       );
@@ -165,7 +165,7 @@ abstract class MapperBase<T extends Object> {
     try {
       var context = MappingContext(
         container: container,
-        args: () => value.runtimeType.args
+        args: value.runtimeType.args
             .map((t) => t == UnresolvedType ? dynamic : t)
             .toList(),
       );

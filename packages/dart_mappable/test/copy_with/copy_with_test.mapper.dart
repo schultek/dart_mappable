@@ -520,7 +520,7 @@ class BrandListMapper extends SubClassMapperBase<BrandList> {
 
   @override
   DecodingContext inherit(DecodingContext context) {
-    return context.inherit(args: () => []);
+    return context.inherit(args: []);
   }
 
   static BrandList _instantiate(DecodingData data) {
@@ -778,7 +778,7 @@ class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
 
   @override
   DecodingContext inherit(DecodingContext context) {
-    return context.inherit(args: () => [dynamic, context.arg(0)]);
+    return context.inherit(args: [dynamic, context.arg(0)]);
   }
 
   static KeyedItemList<K, T> _instantiate<K, T>(DecodingData data) {

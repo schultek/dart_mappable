@@ -476,11 +476,9 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
             value,
             MappingContext(
               container: this,
-              args: () {
-                return value.runtimeType.args
-                    .map((t) => t == UnresolvedType ? dynamic : t)
-                    .toList();
-              },
+              args: value.runtimeType.args
+                  .map((t) => t == UnresolvedType ? dynamic : t)
+                  .toList(),
             ));
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(

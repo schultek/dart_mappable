@@ -7,14 +7,10 @@ class MappingContext {
   /// The container that is used for this mapping call.
   final MapperContainer container;
 
-  /// A list of type arguments to get the concrete type for a generic mapper.
-  final List<Type> Function()? _args;
+  final List<Type> args;
 
-  late final List<Type> args = _args?.call() ?? [];
-
-  MappingContext({MapperContainer? container, List<Type> Function()? args})
-      : _args = args,
-        container = container ?? MapperContainer.globals;
+  MappingContext({MapperContainer? container, this.args = const []})
+      : container = container ?? MapperContainer.globals;
 
   Type arg(int index, [List<int> argIndices = const []]) {
     var a = args[index];
@@ -38,19 +34,16 @@ class DecodingContext extends MappingContext {
   final bool inherited;
 
   DecodingContext change(
-      {MapperContainer? container,
-      List<Type> Function()? args,
-      bool? inherited}) {
+      {MapperContainer? container, List<Type>? args, bool? inherited}) {
     return DecodingContext(
       container: container ?? this.container,
-      args: args ?? _args,
+      args: args ?? this.args,
       options: options,
       inherited: inherited ?? this.inherited,
     );
   }
 
-  DecodingContext inherit(
-      {MapperContainer? container, List<Type> Function()? args}) {
+  DecodingContext inherit({MapperContainer? container, List<Type>? args}) {
     return change(container: container, args: args, inherited: true);
   }
 }
@@ -61,11 +54,10 @@ class EncodingContext extends MappingContext {
 
   final EncodingOptions? options;
 
-  EncodingContext change(
-      {MapperContainer? container, List<Type> Function()? args}) {
+  EncodingContext change({MapperContainer? container, List<Type>? args}) {
     return EncodingContext(
       container: container ?? this.container,
-      args: args ?? _args,
+      args: args ?? this.args,
       options: options,
     );
   }

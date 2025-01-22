@@ -331,7 +331,7 @@ class DMapper extends SubClassMapperBase<D> {
 
   @override
   DecodingContext inherit(DecodingContext context) {
-    return context.inherit(args: () => [dynamic, context.arg(0)]);
+    return context.inherit(args: [dynamic, context.arg(0)]);
   }
 
   static D<T, V> _instantiate<T, V>(DecodingData data) {
@@ -436,11 +436,10 @@ class EMapper extends SubClassMapperBase<E> {
 
   @override
   DecodingContext inherit(DecodingContext context) {
-    return context.inherit(
-        args: () => [
-              context.arg(1, [0]),
-              context.arg(0)
-            ]);
+    return context.inherit(args: [
+      context.arg(1, [0]),
+      context.arg(0)
+    ]);
   }
 
   static E<T, V> _instantiate<T, V>(DecodingData data) {
@@ -542,7 +541,7 @@ class FMapper extends SubClassMapperBase<F> {
 
   @override
   DecodingContext inherit(DecodingContext context) {
-    return context.inherit(args: () => []);
+    return context.inherit(args: []);
   }
 
   static F _instantiate(DecodingData data) {
@@ -646,11 +645,10 @@ class GMapper extends SubClassMapperBase<G> {
 
   @override
   DecodingContext inherit(DecodingContext context) {
-    return context.inherit(
-        args: () => [
-              context.arg(0),
-              context.type(<$A>() => A<$A>, [context.arg(0)])
-            ]);
+    return context.inherit(args: [
+      context.arg(0),
+      context.type(<$A>() => A<$A>, [context.arg(0)])
+    ]);
   }
 
   static G<T, V> _instantiate<T, V extends A<T>>(DecodingData data) {
@@ -757,7 +755,7 @@ class HMapper extends SubClassMapperBase<H> {
 
   @override
   DecodingContext inherit(DecodingContext context) {
-    return context.inherit(args: () => [C<num>]);
+    return context.inherit(args: [C<num>]);
   }
 
   static H<T> _instantiate<T extends C<num>>(DecodingData data) {
@@ -865,11 +863,10 @@ class IMapper extends SubClassMapperBase<I> {
 
   @override
   DecodingContext inherit(DecodingContext context) {
-    return context.inherit(
-        args: () => [
-              context.type(<$A extends num>() => C<$A>, [context.arg(0)]),
-              context.arg(0)
-            ]);
+    return context.inherit(args: [
+      context.type(<$A extends num>() => C<$A>, [context.arg(0)]),
+      context.arg(0)
+    ]);
   }
 
   static I<T, V> _instantiate<T extends C<V>, V extends num>(
@@ -979,13 +976,12 @@ class JMapper extends SubClassMapperBase<J> {
 
   @override
   DecodingContext inherit(DecodingContext context) {
-    return context.inherit(
-        args: () => [
-              context.type(<$A extends $B, $B extends num>() => C<$A>,
-                  [context.arg(0), context.arg(1)]),
-              context.arg(0),
-              context.arg(1)
-            ]);
+    return context.inherit(args: [
+      context.type(<$A extends $B, $B extends num>() => C<$A>,
+          [context.arg(0), context.arg(1)]),
+      context.arg(0),
+      context.arg(1)
+    ]);
   }
 
   static J<T, V, U> _instantiate<T extends C<V>, V extends U, U extends num>(
