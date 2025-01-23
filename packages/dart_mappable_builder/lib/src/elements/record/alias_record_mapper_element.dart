@@ -18,7 +18,7 @@ class RecordMapperAnnotation extends MapperAnnotation {
   RecordTypeAnnotation get node => super.node as RecordTypeAnnotation;
 
   static Future<RecordMapperAnnotation> from(TypeAliasElement element) async {
-    var n = await element.enclosingElement.getResolvedNode();
+    var n = await element.enclosingElement3.getResolvedNode();
     var node = (n as CompilationUnit)
         .declarations
         .whereType<GenericTypeAlias>()

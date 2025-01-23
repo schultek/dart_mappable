@@ -27,7 +27,9 @@ class CopyParamElement {
         var classTarget = element.parent.getMapperForElement(e);
 
         if (classTarget is! ClassMapperElement ||
-            !classTarget.shouldGenerate(GenerateMethods.copy)) return null;
+            !classTarget.shouldGenerate(GenerateMethods.copy)) {
+          return null;
+        }
         if (classTarget.hasCallableConstructor ||
             classTarget.superElement != null ||
             classTarget.subElements.isNotEmpty) {

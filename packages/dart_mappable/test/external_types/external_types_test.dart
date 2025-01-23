@@ -1,5 +1,5 @@
 @MappableLib(caseStyle: CaseStyle.snakeCase)
-library lib;
+library;
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';

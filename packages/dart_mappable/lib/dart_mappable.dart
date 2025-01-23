@@ -1,4 +1,4 @@
-library dart_mappable;
+library;
 
 export 'src/annotations.dart';
 export 'src/case_style.dart';

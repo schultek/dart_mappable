@@ -15,7 +15,7 @@ abstract class Animal with AnimalMappable {
     generateMethods: GenerateMethods.copy | GenerateMethods.stringify)
 class Cat extends Animal with CatMappable {
   String color;
-  Cat(String name, this.color) : super(name);
+  Cat(super.name, this.color);
 }
 
 @MappableClass(

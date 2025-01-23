@@ -11,5 +11,5 @@ class Dog extends Animal with DogMappable {
 
   Person owner;
 
-  Dog(String name, this.age, this.owner) : super(name);
+  Dog(super.name, this.age, this.owner);
 }

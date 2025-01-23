@@ -3,7 +3,6 @@ import 'mapper_container.dart';
 import 'mapper_exception.dart';
 import 'mappers/mapping_context.dart';
 
-/// {@nodoc}
 extension DecodingUtil on DecodingContext {
   T $dec<T>(
     Object? value,
@@ -36,7 +35,6 @@ extension DecodingUtil on DecodingContext {
   }
 }
 
-/// {@nodoc}
 extension EncodingUtil on EncodingContext {
   dynamic $enc<T>(
     Object? value,

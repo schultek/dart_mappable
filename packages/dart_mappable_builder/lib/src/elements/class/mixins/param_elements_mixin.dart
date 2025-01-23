@@ -92,7 +92,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
       var s = parent.library.typeSystem;
       if (s.isAssignableTo(getterType, param.type)) {
         return FieldParamElement(
-            param, getter.variable, getSuperField(getter.variable));
+            param, getter.variable2!, getSuperField(getter.variable2!));
       }
 
       return UnresolvedParamElement(

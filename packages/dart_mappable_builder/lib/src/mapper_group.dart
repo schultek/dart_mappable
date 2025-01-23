@@ -23,7 +23,7 @@ import 'utils.dart';
 class MapperElementGroup {
   MapperElementGroup(this.library, this.options) {
     var names = <String, Element>{};
-    for (var i in library.libraryImports) {
+    for (var i in library.definingCompilationUnit.libraryImports) {
       names.addAll(i.namespace.definedNames);
     }
     names.addAll(library.publicNamespace.definedNames);
@@ -172,7 +172,7 @@ class MapperElementGroup {
             await getOrAddMapperForElement(elem) as ClassMapperElement?;
 
         if (subMapper == null) {
-          throw 'Cannot include subclass ${elem.getDisplayString(withNullability: false)}, '
+          throw 'Cannot include subclass ${elem.getDisplayString()}, '
               'since it has no generated mapper.';
         }
 
@@ -342,7 +342,7 @@ class MapperElementGroup {
       return type;
     }
 
-    return t.getDisplayString(withNullability: withNullability);
+    return t.getDisplayString();
   }
 
   /// All of the declared classes and enums in this library.

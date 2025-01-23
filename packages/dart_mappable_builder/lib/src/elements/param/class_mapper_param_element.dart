@@ -34,8 +34,7 @@ class FieldParamElement extends ClassMapperParamElement {
   final PropertyInducingElement field;
   final PropertyInducingElement? superField;
 
-  FieldParamElement(ParameterElement parameter, this.field, [this.superField])
-      : super(parameter);
+  FieldParamElement(super.parameter, this.field, [this.superField]);
 
   @override
   bool get isCovariant =>
@@ -59,8 +58,7 @@ class FieldParamElement extends ClassMapperParamElement {
 class SuperParamElement extends ClassMapperParamElement {
   final ClassMapperParamElement superParameter;
 
-  SuperParamElement(ParameterElement parameter, this.superParameter)
-      : super(parameter);
+  SuperParamElement(super.parameter, this.superParameter);
 
   @override
   String get superName => superParameter.superName;
@@ -111,8 +109,7 @@ class SuperParamElement extends ClassMapperParamElement {
 class UnresolvedParamElement extends ClassMapperParamElement {
   final String message;
 
-  UnresolvedParamElement(ParameterElement parameter, this.message)
-      : super(parameter);
+  UnresolvedParamElement(super.parameter, this.message);
 
   @override
   PropertyInducingElement? get accessor => null;

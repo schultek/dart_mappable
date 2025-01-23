@@ -40,8 +40,7 @@ class Game with GameMappable {
 
 @MappableClass()
 class CardGame extends Game with CardGameMappable {
-  CardGame(@MappableField(hook: game.CardPlayerHook()) Player player)
-      : super(player);
+  CardGame(@MappableField(hook: game.CardPlayerHook()) super.player);
 }
 
 @MappableClass()
