@@ -242,7 +242,8 @@ class MapperElementGroup {
     if (t is TypeParameterType) {
       var type = t.element.name;
       if (resolveBounds) {
-        type = prefixedType(t.bound, resolveBounds: resolveBounds, resolveBoundsDeep: resolveBoundsDeep);
+        type = prefixedType(t.bound,
+            resolveBounds: resolveBounds, resolveBoundsDeep: resolveBoundsDeep);
       }
       if (withNullability && t.isNullable) {
         type += '?';
