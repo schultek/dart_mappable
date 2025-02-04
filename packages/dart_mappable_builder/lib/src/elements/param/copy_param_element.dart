@@ -104,17 +104,24 @@ class CopyParamElement {
   late ParameterElement p = param.parameter;
   late PropertyInducingElement a = param.accessor!;
 
-  String get fieldTypeParams => p.type is InterfaceType
-      ? (p.type as InterfaceType)
-          .typeArguments
-          .map((t) => ', ${parent.prefixedType(t)}')
-          .join()
-      : '';
+  String fieldTypeParamsFor(DartType t) {
+    if (t case InterfaceType t) {
+      return t.typeArguments
+          .map((t) => ', ${parent.prefixedType(t, resolveBounds: false)}')
+          .join();
+    }
+    if (t case TypeParameterType t) {
+      return fieldTypeParamsFor(t.bound);
+    }
+    return '';
+  }
+
+  String get fieldTypeParams => fieldTypeParamsFor(p.type);
 
   String get invocationThen => '(v) => call(${param.superName}: v)';
 
   String get subTypeParam => hasSubConfigs
-      ? ', ${parent.prefixedType(p.type, withNullability: false, resolveBounds: true)}'
+      ? ', ${parent.prefixedType(p.type, withNullability: false, resolveBounds: true, resolveBoundsDeep: false)}'
       : '';
   String get superTypeParam => hasSubConfigs || hasSuperElement
       ? ', ${parent.prefixedType(p.type, withNullability: false)}'

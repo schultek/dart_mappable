@@ -759,7 +759,7 @@ extension WrapperValueCopy<$R, $Out, T>
 
 abstract class WrapperCopyWith<$R, $In extends Wrapper<T>, $Out, T>
     implements ClassCopyWith<$R, $In, $Out> {
-  GenericCopyWith<$R, Generic<dynamic>, Generic<T>, T> get value;
+  GenericCopyWith<$R, Generic<T>, Generic<T>, T> get value;
   $R call({Generic<T>? value});
   WrapperCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -773,7 +773,7 @@ class _WrapperCopyWithImpl<$R, $Out, T>
   late final ClassMapperBase<Wrapper> $mapper =
       WrapperMapper.ensureInitialized();
   @override
-  GenericCopyWith<$R, Generic<dynamic>, Generic<T>, T> get value =>
+  GenericCopyWith<$R, Generic<T>, Generic<T>, T> get value =>
       $value.value.copyWith.$chain((v) => call(value: v));
   @override
   $R call({Generic<T>? value}) =>

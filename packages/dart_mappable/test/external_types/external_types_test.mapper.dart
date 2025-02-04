@@ -22,7 +22,7 @@ class PersonMapper extends ClassMapperBase<Person> {
 
   static String _$firstName(Person v) => v.firstName;
   static const Field<Person, String> _f$firstName =
-      Field('firstName', _$firstName, key: 'first_name');
+      Field('firstName', _$firstName, key: r'first_name');
 
   @override
   final MappableFields<Person> fields = const {
@@ -196,7 +196,7 @@ class Person2Mapper extends ClassMapperBase<m.Person> {
 
   static String _$firstName(m.Person v) => v.firstName;
   static const Field<m.Person, String> _f$firstName =
-      Field('firstName', _$firstName, key: 'first_name');
+      Field('firstName', _$firstName, key: r'first_name');
 
   @override
   final MappableFields<m.Person> fields = const {

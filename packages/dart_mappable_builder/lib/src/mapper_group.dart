@@ -236,17 +236,21 @@ class MapperElementGroup {
   }
 
   String prefixedType(DartType t,
-      {bool withNullability = true, bool resolveBounds = false}) {
+      {bool withNullability = true,
+      bool resolveBounds = false,
+      bool resolveBoundsDeep = true}) {
     if (t is TypeParameterType) {
       var type = t.element.name;
       if (resolveBounds) {
-        type = prefixedType(t.bound, resolveBounds: resolveBounds);
+        type = prefixedType(t.bound, resolveBounds: resolveBounds, resolveBoundsDeep: resolveBoundsDeep);
       }
       if (withNullability && t.isNullable) {
         type += '?';
       }
       return type;
     }
+
+    resolveBounds &= resolveBoundsDeep;
 
     if (t is InterfaceType) {
       var typeArgs = '';
