@@ -25,7 +25,7 @@ class AMapper extends ClassMapperBase<A> {
   static int _$b(A v) => v.b;
   static const Field<A, int> _f$b = Field('b', _$b);
   static int _$_c(A v) => v._c;
-  static const Field<A, int> _f$_c = Field('_c', _$_c, key: 'c');
+  static const Field<A, int> _f$_c = Field('_c', _$_c, key: r'c');
 
   @override
   final MappableFields<A> fields = const {
@@ -121,9 +121,9 @@ class BMapper extends ClassMapperBase<B> {
   final String id = 'B';
 
   static int _$b(B v) => v.b;
-  static const Field<B, int> _f$b = Field('b', _$b, key: 'a');
+  static const Field<B, int> _f$b = Field('b', _$b, key: r'a');
   static int _$a(B v) => v.a;
-  static const Field<B, int> _f$a = Field('a', _$a, key: 'b');
+  static const Field<B, int> _f$a = Field('a', _$a, key: r'b');
 
   @override
   final MappableFields<B> fields = const {
@@ -220,7 +220,7 @@ class CMapper extends ClassMapperBase<C> {
   static String _$name(C v) => v.name;
   static const Field<C, String> _f$name = Field('name', _$name);
   static String _$data(C v) => v.data;
-  static const Field<C, String> _f$data = Field('data', _$data, key: 'd');
+  static const Field<C, String> _f$data = Field('data', _$data, key: r'd');
 
   @override
   final MappableFields<C> fields = const {

@@ -1,3 +1,7 @@
+# 4.3.1
+
+- Fixed bug with bounded generic deep copyWith parameters.
+
 # 4.3.0
 
 - Added support for reusing annotations as constant variables.
