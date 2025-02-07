@@ -562,14 +562,19 @@ class Container3Mapper extends ClassMapperBase<Container3> {
   static dynamic _arg$content<T extends A2<dynamic>>(f) => f<T>();
   static const Field<Container3, A2<dynamic>> _f$content =
       Field('content', _$content, arg: _arg$content);
+  static List<A2<dynamic>> _$contents(Container3 v) => v.contents;
+  static dynamic _arg$contents<T extends A2<dynamic>>(f) => f<List<T>>();
+  static const Field<Container3, List<A2<dynamic>>> _f$contents =
+      Field('contents', _$contents, arg: _arg$contents);
 
   @override
   final MappableFields<Container3> fields = const {
     #content: _f$content,
+    #contents: _f$contents,
   };
 
   static Container3<T> _instantiate<T extends A2<dynamic>>(DecodingData data) {
-    return Container3(data.dec(_f$content));
+    return Container3(data.dec(_f$content), data.dec(_f$contents));
   }
 
   @override
@@ -627,7 +632,8 @@ extension Container3ValueCopy<$R, $Out, T extends A2<dynamic>>
 abstract class Container3CopyWith<$R, $In extends Container3<T>, $Out,
     T extends A2<dynamic>> implements ClassCopyWith<$R, $In, $Out> {
   A2CopyWith<$R, A2<dynamic>, T, dynamic> get content;
-  $R call({T? content});
+  ListCopyWith<$R, T, A2CopyWith<$R, T, T, dynamic>> get contents;
+  $R call({T? content, List<T>? contents});
   Container3CopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -643,11 +649,20 @@ class _Container3CopyWithImpl<$R, $Out, T extends A2<dynamic>>
   A2CopyWith<$R, A2<dynamic>, T, dynamic> get content =>
       $value.content.copyWith.$chain((v) => call(content: v));
   @override
-  $R call({T? content}) =>
-      $apply(FieldCopyWithData({if (content != null) #content: content}));
+  ListCopyWith<$R, T, A2CopyWith<$R, T, T, dynamic>> get contents =>
+      ListCopyWith(
+          $value.contents,
+          (v, t) => (v.copyWith as A2CopyWith<A2, T, T, dynamic>).$chain(t),
+          (v) => call(contents: v));
   @override
-  Container3<T> $make(CopyWithData data) =>
-      Container3(data.get(#content, or: $value.content));
+  $R call({T? content, List<T>? contents}) => $apply(FieldCopyWithData({
+        if (content != null) #content: content,
+        if (contents != null) #contents: contents
+      }));
+  @override
+  Container3<T> $make(CopyWithData data) => Container3(
+      data.get(#content, or: $value.content),
+      data.get(#contents, or: $value.contents));
 
   @override
   Container3CopyWith<$R2, Container3<T>, $Out2, T> $chain<$R2, $Out2>(
@@ -771,14 +786,19 @@ class Container4Mapper extends ClassMapperBase<Container4> {
   static dynamic _arg$content<T extends A2<B>>(f) => f<T>();
   static const Field<Container4, A2<B>> _f$content =
       Field('content', _$content, arg: _arg$content);
+  static List<A2<B>> _$contents(Container4 v) => v.contents;
+  static dynamic _arg$contents<T extends A2<B>>(f) => f<List<T>>();
+  static const Field<Container4, List<A2<B>>> _f$contents =
+      Field('contents', _$contents, arg: _arg$contents);
 
   @override
   final MappableFields<Container4> fields = const {
     #content: _f$content,
+    #contents: _f$contents,
   };
 
   static Container4<T> _instantiate<T extends A2<B>>(DecodingData data) {
-    return Container4(data.dec(_f$content));
+    return Container4(data.dec(_f$content), data.dec(_f$contents));
   }
 
   @override
@@ -835,7 +855,8 @@ extension Container4ValueCopy<$R, $Out, T extends A2<B>>
 abstract class Container4CopyWith<$R, $In extends Container4<T>, $Out,
     T extends A2<B>> implements ClassCopyWith<$R, $In, $Out> {
   A2CopyWith<$R, A2<B>, T, B> get content;
-  $R call({T? content});
+  ListCopyWith<$R, T, A2CopyWith<$R, T, T, B>> get contents;
+  $R call({T? content, List<T>? contents});
   Container4CopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -851,11 +872,19 @@ class _Container4CopyWithImpl<$R, $Out, T extends A2<B>>
   A2CopyWith<$R, A2<B>, T, B> get content =>
       $value.content.copyWith.$chain((v) => call(content: v));
   @override
-  $R call({T? content}) =>
-      $apply(FieldCopyWithData({if (content != null) #content: content}));
+  ListCopyWith<$R, T, A2CopyWith<$R, T, T, B>> get contents => ListCopyWith(
+      $value.contents,
+      (v, t) => (v.copyWith as A2CopyWith<A2, T, T, B>).$chain(t),
+      (v) => call(contents: v));
   @override
-  Container4<T> $make(CopyWithData data) =>
-      Container4(data.get(#content, or: $value.content));
+  $R call({T? content, List<T>? contents}) => $apply(FieldCopyWithData({
+        if (content != null) #content: content,
+        if (contents != null) #contents: contents
+      }));
+  @override
+  Container4<T> $make(CopyWithData data) => Container4(
+      data.get(#content, or: $value.content),
+      data.get(#contents, or: $value.contents));
 
   @override
   Container4CopyWith<$R2, Container4<T>, $Out2, T> $chain<$R2, $Out2>(
