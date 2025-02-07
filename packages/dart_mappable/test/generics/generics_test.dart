@@ -219,5 +219,36 @@ void main() {
         equals('FunctionContainer(genericFunction: Closure: (int) => String)'),
       );
     });
+
+    tearDown(() {
+      MapperContainer.typeIdKey = '__type';
+    });
+
+    test('Use custom typeId key', () {
+      MapperContainer.typeIdKey = '__custom_type';
+      SettingsMapper.ensureInitialized();
+
+      var data = MapperContainer.globals
+          .toValue<dynamic>(SingleSetting<int>(properties: [1, 4]));
+      expect(
+        data,
+        equals({
+          'properties': [1, 4],
+          '__custom_type': 'SingleSetting<int>'
+        }),
+      );
+
+      var setting = MapperContainer.globals.fromValue(data);
+      expect(setting, isA<SingleSetting<int>>());
+
+      // Ignores wrong type id key
+      expect(
+        MapperContainer.globals.fromValue({
+          'properties': [1, 4],
+          '__type': 'SingleSetting<int>'
+        }),
+        isA<Map>(),
+      );
+    });
   });
 }

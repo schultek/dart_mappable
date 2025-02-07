@@ -1,3 +1,7 @@
+# 4.3.1
+
+- Added `MapperContainer.typeIdKey` to support changing the '__type' key.
+
 # 4.3.0
 
 - Added support for reusing annotations as constant variables.
