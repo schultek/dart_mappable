@@ -35,8 +35,7 @@ class MapMapper<M extends Map> extends MapperBase<M>
 
   @override
   String stringify(M value, MappingContext context) =>
-      '{${value.entries.map((e) => '${context.container.asString(e.key)}: '
-          '${context.container.asString(e.value)}').join(', ')}}';
+      '{${value.entries.map((e) => '${context.container.asString(e.key)}: ' '${context.container.asString(e.value)}').join(', ')}}';
 }
 
 /// {@nodoc}
@@ -100,11 +99,10 @@ class _MapEncoder<M extends Map> {
 
 /// {@nodoc}
 class _MapEncoder2<M extends Map, K> {
-  final MapMapper<M> mapper;
   final EncodingContext context;
   final M value;
 
-  _MapEncoder2(this.mapper, this.context, this.value);
+  _MapEncoder2(this.context, this.value);
 
   Map<dynamic, dynamic> encode() {
     assert(context.args.length == 2);
