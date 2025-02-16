@@ -580,7 +580,7 @@ abstract class BrandListCopyWith<$R, $In extends BrandList, $Out>
   @override
   ListCopyWith<$R, Brand?, BrandCopyWith<$R, Brand, Brand>?> get items;
   @override
-  $R call({covariant List<Brand?>? items});
+  $R call({List<Brand?>? items});
   BrandListCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -976,7 +976,7 @@ abstract class ComparableItemListCopyWith<$R, $In extends ComparableItemList<T>,
   @override
   ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get items;
   @override
-  $R call({covariant List<T>? items});
+  $R call({List<T>? items});
   ComparableItemListCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }

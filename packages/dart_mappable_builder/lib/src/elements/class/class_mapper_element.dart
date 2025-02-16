@@ -141,9 +141,9 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
       if (!field.isGetter) continue;
 
       if (field.isPublic && field.isSynthetic) {
-        yield field.variable;
+        yield field.variable2!;
       } else if (fieldChecker.hasAnnotationOf(field)) {
-        yield field.variable;
+        yield field.variable2!;
       }
     }
   }();

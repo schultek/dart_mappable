@@ -43,7 +43,7 @@ abstract class ItemList<T> with ItemListMappable<T> {
 
 @MappableClass()
 class BrandList extends ItemList<Brand?> with BrandListMappable {
-  BrandList(List<Brand?>? brands) : super(brands);
+  BrandList(super.brands);
 }
 
 @MappableClass()
@@ -61,7 +61,7 @@ class KeyedItemList<K, T> extends ItemList<T> with KeyedItemListMappable<K, T> {
 @MappableClass()
 class ComparableItemList<T extends Comparable> extends ItemList<T>
     with ComparableItemListMappable<T> {
-  ComparableItemList(List<T>? items) : super(items);
+  ComparableItemList(super.items);
 }
 
 void main() {

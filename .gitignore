@@ -11,3 +11,4 @@ pubspec_overrides.yaml
 build/
 **/doc/api/
 coverage/
+.DS_Store

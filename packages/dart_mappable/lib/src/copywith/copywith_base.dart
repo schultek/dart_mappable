@@ -2,16 +2,12 @@ class _None {
   const _None();
 }
 
-/// {@nodoc}
 const $none = _None();
 
-/// {@nodoc}
 T $identity<T>(T value) => value;
 
-/// {@nodoc}
 T $cast<T>(Object value) => value as T;
 
-/// {@nodoc}
 typedef Then<$T, $R> = $R Function($T);
 
 /// {@category Copy-With}
@@ -42,7 +38,6 @@ class CopyWithBase<Result, In, Out> implements ObjectCopyWith<Result, In, Out> {
   Result $update(Then<In, Out> transform) => $then2(transform($value));
 }
 
-/// {@nodoc}
 extension ChainedCopyWith<Result, In, Out> on ObjectCopyWith<Result, In, Out> {
   CopyWithBase<Result, In, Out> get $base =>
       this as CopyWithBase<Result, In, Out>;

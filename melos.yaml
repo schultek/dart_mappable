@@ -3,6 +3,9 @@ name: dart_mappable
 packages:
   - packages/**
   - examples/**
+ignore:
+  # Ignore until dart_json_mapper supports analyzer 7.0.0
+  - examples/package_comparison
 
 command:
   bootstrap:

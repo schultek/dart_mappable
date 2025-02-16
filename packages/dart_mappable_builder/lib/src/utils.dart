@@ -73,7 +73,7 @@ Future<ArgumentList?> getAnnotationArguments(
 
 Future<ArgumentList?> getArgumentsFromElement(Element? element) async {
   if (element case PropertyAccessorElement elem) {
-    var node = await elem.variable.getResolvedNode();
+    var node = await elem.variable2!.getResolvedNode();
     if (node is VariableDeclaration) {
       var exp = node.initializer;
       if (exp is InstanceCreationExpression) {

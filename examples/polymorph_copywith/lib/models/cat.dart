@@ -9,7 +9,7 @@ class Cat extends Animal with CatMappable {
   String color;
   CatType breed;
 
-  Cat(String name, this.breed, this.color) : super(name);
+  Cat(super.name, this.breed, this.color);
 }
 
 @MappableEnum()

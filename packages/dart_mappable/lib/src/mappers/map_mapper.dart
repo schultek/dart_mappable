@@ -39,7 +39,6 @@ class MapMapper<M extends Map> extends MapperBase<M>
           '${context.container.asString(e.value)}').join(', ')}}';
 }
 
-/// {@nodoc}
 class _MapDecoder<M extends Map> {
   final MapMapper<M> mapper;
   final DecodingContext context;
@@ -57,7 +56,6 @@ class _MapDecoder<M extends Map> {
   }
 }
 
-/// {@nodoc}
 class _MapDecoder2<M extends Map, K> {
   final MapMapper<M> mapper;
   final DecodingContext context;
@@ -80,7 +78,6 @@ class _MapDecoder2<M extends Map, K> {
   }
 }
 
-/// {@nodoc}
 class _MapEncoder<M extends Map> {
   final MapMapper<M> mapper;
   final EncodingContext context;
@@ -98,7 +95,6 @@ class _MapEncoder<M extends Map> {
   }
 }
 
-/// {@nodoc}
 class _MapEncoder2<M extends Map, K> {
   final MapMapper<M> mapper;
   final EncodingContext context;

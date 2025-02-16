@@ -38,9 +38,9 @@ class ClassMapperFieldElement extends MapperFieldElement {
   }();
 
   late final DartType resolvedType = () {
-    if (field?.enclosingElement is InterfaceElement) {
+    if (field?.enclosingElement3 is InterfaceElement) {
       var it = (parent.element as InterfaceElement).thisType;
-      it = it.asInstanceOf(field!.enclosingElement as InterfaceElement)!;
+      it = it.asInstanceOf(field!.enclosingElement3 as InterfaceElement)!;
       var getter = it.getGetter(field!.name);
       return getter!.type.returnType;
     }

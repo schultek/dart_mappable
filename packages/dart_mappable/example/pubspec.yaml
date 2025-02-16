@@ -7,6 +7,6 @@ dependencies:
   dart_mappable: any
 
 dev_dependencies:
-  build_runner: ^2.2.0
+  build_runner: ^2.4.14
   dart_mappable_builder: any
-  lints: ^2.0.0
+  lints: ^5.1.1

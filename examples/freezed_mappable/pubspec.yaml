@@ -1,14 +1,14 @@
 name: freezed_mappable
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: '>=3.6.0 <4.0.0'
 
 dependencies:
   dart_mappable: any
-  freezed_annotation: ^2.2.0
+  freezed_annotation: ^2.4.4
 
 dev_dependencies:
-  build_runner: ^2.2.0
+  build_runner: ^2.4.14
   dart_mappable_builder: any
-  freezed: ^2.2.0
-  lints: ^2.1.0
+  freezed: ^2.5.8
+  lints: ^5.1.1

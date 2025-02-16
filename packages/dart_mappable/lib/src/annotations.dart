@@ -229,7 +229,7 @@ class MappableLib {
   /// Specify which methods to generate for classes.
   final int? generateMethods;
 
-  /// Will generated a new <filename>.init.dart file with an initializer
+  /// Will generated a new [<filename>.init.dart] file with an initializer
   /// method that automatically registers all mappers in the scope.
   final InitializerScope? generateInitializerForScope;
 }

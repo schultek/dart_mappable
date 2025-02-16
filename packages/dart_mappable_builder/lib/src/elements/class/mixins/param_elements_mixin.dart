@@ -90,15 +90,15 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
       var getterType = getter.type.returnType;
 
       var s = parent.library.typeSystem;
-      if (s.isAssignableTo(getterType, param.type)) {
+      if (s.isAssignableTo(getterType, dec.type)) {
         return FieldParamElement(
-            param, getter.variable, getSuperField(getter.variable));
+            param, getter.variable2!, getSuperField(getter.variable2!));
       }
 
       return UnresolvedParamElement(
         param,
         'Found getter or field related to this parameter, but it has a '
-        'non-matching type. Expected ${param.type} but got ${getter.type.returnType}.',
+        'non-matching type. Expected ${dec.type} but got ${getter.type.returnType}.',
       );
     }
 

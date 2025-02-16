@@ -12,7 +12,7 @@ abstract class Animal with AnimalMappable {
 @MappableClass()
 class Cat extends Animal with CatMappable {
   String color;
-  Cat(String name, this.color) : super(name);
+  Cat(super.name, this.color);
 }
 
 @MappableClass(discriminatorValue: 1)
@@ -23,14 +23,14 @@ class Dog extends Animal with DogMappable {
 
 @MappableClass(discriminatorValue: null)
 class NullAnimal extends Animal with NullAnimalMappable {
-  NullAnimal(String name) : super(name);
+  NullAnimal(super.name);
 }
 
 @MappableClass(discriminatorValue: MappableClass.useAsDefault)
 class DefaultAnimal extends Animal with DefaultAnimalMappable {
   String type;
 
-  DefaultAnimal(String name, this.type) : super(name);
+  DefaultAnimal(super.name, this.type);
 }
 
 @MappableClass(ignoreNull: true)

@@ -76,7 +76,7 @@ class DataMapper extends SubClassMapperBase<Data> {
 
   static int _$value(Data v) => v.value;
   static const Field<Data, int> _f$value =
-      Field('value', _$value, key: 'mykey');
+      Field('value', _$value, key: r'mykey');
 
   @override
   final MappableFields<Data> fields = const {

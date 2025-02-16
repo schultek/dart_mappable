@@ -203,7 +203,7 @@ abstract class ClassMapperBase<T extends Object>
     var result =
         InterfaceMapperBase.encodeFields(value, _params, ignoreNull, context);
     if (_encodedStaticParams != null) {
-      return {...result, ...?_encodedStaticParams};
+      return {...result, ..._encodedStaticParams};
     }
     return result;
   }

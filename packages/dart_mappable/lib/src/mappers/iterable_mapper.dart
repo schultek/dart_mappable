@@ -71,7 +71,6 @@ class SetMapper<S extends Set> extends IterableMapper<S> {
       '{${value.map((e) => context.container.asString(e)).join(', ')}}';
 }
 
-/// {@nodoc}
 class _IterableDecoder<I extends Iterable> {
   final IterableMapper<I> mapper;
   final DecodingContext context;
@@ -90,7 +89,6 @@ class _IterableDecoder<I extends Iterable> {
   }
 }
 
-/// {@nodoc}
 class _IterableEncoder<I extends Iterable> {
   final IterableMapper<I> mapper;
   final EncodingContext context;

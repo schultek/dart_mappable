@@ -48,7 +48,7 @@ mixin TypeParamsMixin on MapperElement<ClassElement> {
     if (t is TypeParameterType) {
       return findInheritedTypeArg(t.element);
     } else if (t is! InterfaceType) {
-      return t.getDisplayString(withNullability: true);
+      return t.getDisplayString();
     }
 
     String argParamFor(int index) =>
@@ -68,7 +68,7 @@ mixin TypeParamsMixin on MapperElement<ClassElement> {
         }
         return arg;
       } else if (t is! InterfaceType) {
-        return t.getDisplayString(withNullability: true);
+        return t.getDisplayString();
       } else {
         var typeArgs = '';
         if (t.typeArguments.isNotEmpty) {
