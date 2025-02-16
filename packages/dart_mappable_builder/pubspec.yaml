@@ -1,6 +1,6 @@
 name: dart_mappable_builder
 description: Improved json serialization and data classes with full support for generics, inheritance, customization and more.
-version: 4.3.1+1
+version: 4.4.0
 repository: https://github.com/schultek/dart_mappable
 issue_tracker: https://github.com/schultek/dart_mappable/issues
 funding:
@@ -14,7 +14,7 @@ dependencies:
   ansicolor: ^2.0.1
   build: ^2.4.2
   collection: ^1.15.0
-  dart_mappable: ^4.3.0
+  dart_mappable: ^4.4.0
   dart_style: ^3.0.1
   glob: ^2.1.0
   path: ^1.8.0

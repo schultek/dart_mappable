@@ -1,3 +1,7 @@
+# 4.4.0
+
+- Require `sdk: >=3.6.0`.
+
 # 4.3.1
 
 - Added `MapperContainer.typeIdKey` to support changing the '__type' key.

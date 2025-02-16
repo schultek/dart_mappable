@@ -1,3 +1,8 @@
+# 4.4.0
+
+- Update `analyzer` to `>=7.0.0 <8.0.0` and `source_gen` to `^2.0.0`. Bump other dependencies accordingly.
+- Require `sdk: >=3.6.0`.
+
 # 4.3.1
 
 - Fixed bug with bounded generic deep copyWith parameters.
