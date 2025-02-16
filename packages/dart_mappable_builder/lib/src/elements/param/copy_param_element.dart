@@ -163,14 +163,7 @@ class CollectionCopyParamElement extends CopyParamElement {
   late String itemTypeParam =
       ', ${parent.prefixedType(itemType, withNullability: false)}';
 
-  late String itemSelfTypeParams = () {
-    return itemType is InterfaceType
-        ? (itemType as InterfaceType)
-            .typeArguments
-            .map((t) => ', ${parent.prefixedType(t)}')
-            .join()
-        : '';
-  }();
+  late String itemSelfTypeParams = fieldTypeParamsFor(itemType);
 
   @override
   String get fieldTypeParams {

@@ -34,15 +34,17 @@ class A<T extends B> with AMappable<T> {
 @MappableClass()
 class Container3<T extends A2> with Container3Mappable<T> {
   final T content;
+  final List<T> contents;
 
-  const Container3(this.content);
+  const Container3(this.content, this.contents);
 }
 
 @MappableClass()
 class Container4<T extends A2<B>> with Container4Mappable<T> {
   final T content;
+  final List<T> contents;
 
-  const Container4(this.content);
+  const Container4(this.content, this.contents);
 }
 
 @MappableClass()
@@ -69,8 +71,8 @@ void main() {
     final c0 = Container<A<B2>>(A(B2('abc')));
     final c1 = Container1<A<B2>>(A(B2('def')));
     final c2 = Container2<A<B2>, B2>(A(B2('ghi')));
-    final c3 = Container3<A2<B2>>(A2(B2('jkl')));
-    final c4 = Container4<A2<B2>>(A2(B2('mno')));
+    final c3 = Container3<A2<B2>>(A2(B2('jkl')), []);
+    final c4 = Container4<A2<B2>>(A2(B2('mno')), []);
 
     var c02 = c0.copyWith.content.b(b: 'jkl');
     expect(c02.content.b, equals(B2('jkl')));

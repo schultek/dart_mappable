@@ -86,7 +86,7 @@ abstract class MapperBase<T extends Object> {
       );
 
       if (includeTypeId && result is Map<String, dynamic>) {
-        result['__type'] = value.runtimeType.id;
+        result[MapperContainer.typeIdKey] = value.runtimeType.id;
       }
 
       return result;

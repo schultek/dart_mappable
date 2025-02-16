@@ -31,9 +31,10 @@ class EncodingOptions {
   /// Whether to include the type id of the encoding object.
   ///
   /// If set, this adds a '__type' property with the specific runtime type
-  /// of the encoding object.
-  /// If left untouched, the container automatically decides whether to include
+  /// of the encoding object. If left untouched, the container automatically decides whether to include
   /// the type id based on the static and dynamic type of an object.
+  ///
+  /// The key can be changed from '__type' to something else by setting [MapperContainer.typeIdKey].
   final bool? includeTypeId;
 
   /// Whether to inherit this options for nested calls to [MapperContainer.toValue],
@@ -117,6 +118,11 @@ abstract class MapperContainer {
   /// This container does not define any mappers itself. Rather each generated
   /// mapper will register itself with this container when calling `ensureInitialized()`.
   static final MapperContainer globals = _MapperContainerBase();
+
+  /// The key of a special property that holds the type id of an encoded object.
+  ///
+  /// See also: [EncodingOptions.includeTypeId].
+  static String typeIdKey = '__type';
 
   /// The core method to decode any value to a given type [T].
   T fromValue<T>(Object? value, [DecodingOptions? options]);
@@ -354,10 +360,12 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     }
 
     var type = options?.type ?? T;
-    if (value is Map<String, dynamic> && value['__type'] != null) {
-      type = TypePlus.fromId(value['__type'] as String);
+    if (value is Map<String, dynamic> &&
+        value[MapperContainer.typeIdKey] != null) {
+      type = TypePlus.fromId(value[MapperContainer.typeIdKey] as String);
       if (type == UnresolvedType) {
-        var e = MapperException.unresolvedType(value['__type'] as String);
+        var e = MapperException.unresolvedType(
+            value[MapperContainer.typeIdKey] as String);
         throw MapperException.chain(MapperMethod.decode, '($T)', e);
       }
     } else if (value is T) {
