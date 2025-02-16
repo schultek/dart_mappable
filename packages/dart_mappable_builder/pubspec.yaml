@@ -13,11 +13,11 @@ dependencies:
   analyzer: ^7.0.0
   ansicolor: ^2.0.1
   build: ^2.4.2
-  collection: ^1.19.0
+  collection: ^1.15.0
   dart_mappable: ^4.3.0
   dart_style: ^3.0.1
   glob: ^2.1.0
-  path: ^1.9.0
+  path: ^1.8.0
   pub_semver: ^2.1.5
   source_gen: ^2.0.0
 
