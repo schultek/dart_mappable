@@ -122,6 +122,27 @@ void main() {
 }
 ``` 
 
----
+## Clone
+
+`copyWith` can be used as a clone tool when called without any parameters but be aware that the overriden == operator will detect the clone and the original as the same object. Only the identical() method detects that they are diferent objects.
+
+```dart
+@MappableClass()
+class Foo with FooMappable {
+  final int value;
+
+  Foo(this.value);
+}
+
+void main() {
+  var foo1 = Foo(1);
+  var foo2 = foo1.copyWith();
+
+  assert(foo1 == foo2); // succeeds
+  assert(identical(foo1, foo2)); // fails
+}
+
+``` 
+
 
 <p align="right"><a href="../topics/Polymorphism-topic.html">Next: Polymorphism</a></p>
