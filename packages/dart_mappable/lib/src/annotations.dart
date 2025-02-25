@@ -13,6 +13,7 @@ class MappableClass extends MappableInterface {
   const MappableClass({
     super.caseStyle,
     super.ignoreNull,
+    super.ignore,
     super.uniqueId,
     this.discriminatorKey,
     this.discriminatorValue,
@@ -145,6 +146,7 @@ class MappableRecord extends MappableInterface {
   const MappableRecord({
     super.caseStyle,
     super.ignoreNull,
+    super.ignore,
     super.uniqueId,
     super.hook,
     super.includeCustomMappers,
@@ -158,6 +160,7 @@ abstract class MappableInterface {
   const MappableInterface._({
     this.caseStyle,
     this.ignoreNull,
+    this.ignore,
     this.uniqueId,
     this.hook,
     this.generateMethods,
@@ -169,6 +172,9 @@ abstract class MappableInterface {
 
   /// If true removes all map keys with null values.
   final bool? ignoreNull;
+
+  /// Property keys to exclude from `toMap` and `toJson`.
+  final Iterable<String>? ignore;
 
   /// A unique id representing this class.
   ///
@@ -209,6 +215,7 @@ class MappableLib {
     this.caseStyle,
     this.enumCaseStyle,
     this.ignoreNull,
+    this.ignore,
     this.discriminatorKey,
     this.generateMethods,
     this.generateInitializerForScope,
@@ -222,6 +229,9 @@ class MappableLib {
 
   /// If true removes all map keys with null values.
   final bool? ignoreNull;
+
+  /// Property keys to exclude from `toMap` and `toJson`.
+  final Iterable<String>? ignore;
 
   /// Property key used for type discriminators.
   final String? discriminatorKey;

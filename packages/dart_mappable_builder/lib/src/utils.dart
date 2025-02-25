@@ -180,6 +180,9 @@ extension NullableType on DartType {
 extension TypeList on DartObject {
   List<DartType>? toTypeList() =>
       toListValue()?.map((o) => o.toTypeValue()).whereType<DartType>().toList();
+
+  List<String>? toStringList() =>
+      toListValue()?.map((o) => o.toStringValue()).whereType<String>().toList();
 }
 
 extension ObjectReader on DartObject {
