@@ -55,7 +55,7 @@ mixin PersonMappable {
   }
 
   PersonCopyWith<Person, Person, Person> get copyWith =>
-      _PersonCopyWithImpl(this as Person, $identity, $identity);
+      _PersonCopyWithImpl<Person, Person>(this as Person, $identity, $identity);
   @override
   String toString() {
     return PersonMapper.ensureInitialized().stringifyValue(this as Person);
@@ -74,7 +74,7 @@ mixin PersonMappable {
 
 extension PersonValueCopy<$R, $Out> on ObjectCopyWith<$R, Person, $Out> {
   PersonCopyWith<$R, Person, $Out> get $asPerson =>
-      $base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _PersonCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class PersonCopyWith<$R, $In extends Person, $Out>
@@ -98,7 +98,7 @@ class _PersonCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Person, $Out>
 
   @override
   PersonCopyWith<$R2, Person, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _PersonCopyWithImpl($value, $cast, t);
+      _PersonCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class CakeMapper extends ClassMapperBase<f.Cake> {
@@ -154,7 +154,7 @@ extension CakeMapperExtension on f.Cake {
 
 extension CakeValueCopy<$R, $Out> on ObjectCopyWith<$R, f.Cake, $Out> {
   CakeCopyWith<$R, f.Cake, $Out> get $asCake =>
-      $base.as((v, t, t2) => _CakeCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _CakeCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class CakeCopyWith<$R, $In extends f.Cake, $Out>
@@ -177,7 +177,7 @@ class _CakeCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, f.Cake, $Out>
 
   @override
   CakeCopyWith<$R2, f.Cake, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _CakeCopyWithImpl($value, $cast, t);
+      _CakeCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class Person2Mapper extends ClassMapperBase<m.Person> {
@@ -234,7 +234,7 @@ extension Person2MapperExtension on m.Person {
 
 extension Person2ValueCopy<$R, $Out> on ObjectCopyWith<$R, m.Person, $Out> {
   Person2CopyWith<$R, m.Person, $Out> get $asPerson =>
-      $base.as((v, t, t2) => _Person2CopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _Person2CopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class Person2CopyWith<$R, $In extends m.Person, $Out>
@@ -261,7 +261,7 @@ class _Person2CopyWithImpl<$R, $Out>
   @override
   Person2CopyWith<$R2, m.Person, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _Person2CopyWithImpl($value, $cast, t);
+      _Person2CopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class AnimalMapper extends ClassMapperBase<o.Animal> {
@@ -385,7 +385,7 @@ extension PetMapperExtension on o.Pet {
 
 extension PetValueCopy<$R, $Out> on ObjectCopyWith<$R, o.Pet, $Out> {
   PetCopyWith<$R, o.Pet, $Out> get $asPet =>
-      $base.as((v, t, t2) => _PetCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _PetCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class PetCopyWith<$R, $In extends o.Pet, $Out>
@@ -414,5 +414,5 @@ class _PetCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, o.Pet, $Out>
 
   @override
   PetCopyWith<$R2, o.Pet, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _PetCopyWithImpl($value, $cast, t);
+      _PetCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

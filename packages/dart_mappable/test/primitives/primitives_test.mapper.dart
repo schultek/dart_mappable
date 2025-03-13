@@ -59,7 +59,7 @@ mixin ItemsMappable {
   }
 
   ItemsCopyWith<Items, Items, Items> get copyWith =>
-      _ItemsCopyWithImpl(this as Items, $identity, $identity);
+      _ItemsCopyWithImpl<Items, Items>(this as Items, $identity, $identity);
   @override
   String toString() {
     return ItemsMapper.ensureInitialized().stringifyValue(this as Items);
@@ -78,7 +78,7 @@ mixin ItemsMappable {
 
 extension ItemsValueCopy<$R, $Out> on ObjectCopyWith<$R, Items, $Out> {
   ItemsCopyWith<$R, Items, $Out> get $asItems =>
-      $base.as((v, t, t2) => _ItemsCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ItemsCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ItemsCopyWith<$R, $In extends Items, $Out>
@@ -115,7 +115,7 @@ class _ItemsCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Items, $Out>
 
   @override
   ItemsCopyWith<$R2, Items, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ItemsCopyWithImpl($value, $cast, t);
+      _ItemsCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class ItemMapper extends ClassMapperBase<Item> {
@@ -166,7 +166,7 @@ mixin ItemMappable {
   }
 
   ItemCopyWith<Item, Item, Item> get copyWith =>
-      _ItemCopyWithImpl(this as Item, $identity, $identity);
+      _ItemCopyWithImpl<Item, Item>(this as Item, $identity, $identity);
   @override
   String toString() {
     return ItemMapper.ensureInitialized().stringifyValue(this as Item);
@@ -185,7 +185,7 @@ mixin ItemMappable {
 
 extension ItemValueCopy<$R, $Out> on ObjectCopyWith<$R, Item, $Out> {
   ItemCopyWith<$R, Item, $Out> get $asItem =>
-      $base.as((v, t, t2) => _ItemCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ItemCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ItemCopyWith<$R, $In extends Item, $Out>
@@ -208,5 +208,5 @@ class _ItemCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Item, $Out>
 
   @override
   ItemCopyWith<$R2, Item, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ItemCopyWithImpl($value, $cast, t);
+      _ItemCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

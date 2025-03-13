@@ -48,6 +48,13 @@ class Container4<T extends A2<B>> with Container4Mappable<T> {
 }
 
 @MappableClass()
+class Container5<T extends B?> with Container5Mappable<T> {
+  final T content;
+
+  const Container5(this.content);
+}
+
+@MappableClass()
 class A2<T> with A2Mappable<T> {
   final T t;
 

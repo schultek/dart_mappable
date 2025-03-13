@@ -64,7 +64,7 @@ mixin AMappable<T> {
   }
 
   ACopyWith<A<T>, A<T>, A<T>, T> get copyWith =>
-      _ACopyWithImpl(this as A<T>, $identity, $identity);
+      _ACopyWithImpl<A<T>, A<T>, T>(this as A<T>, $identity, $identity);
   @override
   String toString() {
     return AMapper.ensureInitialized().stringifyValue(this as A<T>);
@@ -83,7 +83,7 @@ mixin AMappable<T> {
 
 extension AValueCopy<$R, $Out, T> on ObjectCopyWith<$R, A<T>, $Out> {
   ACopyWith<$R, A<T>, $Out, T> get $asA =>
-      $base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ACopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
 abstract class ACopyWith<$R, $In extends A<T>, $Out, T>
@@ -107,7 +107,7 @@ class _ACopyWithImpl<$R, $Out, T> extends ClassCopyWithBase<$R, A<T>, $Out>
 
   @override
   ACopyWith<$R2, A<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ACopyWithImpl($value, $cast, t);
+      _ACopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class CMapper extends ClassMapperBase<C> {
@@ -162,7 +162,7 @@ mixin CMappable {
   }
 
   CCopyWith<C, C, C> get copyWith =>
-      _CCopyWithImpl(this as C, $identity, $identity);
+      _CCopyWithImpl<C, C>(this as C, $identity, $identity);
   @override
   String toString() {
     return CMapper.ensureInitialized().stringifyValue(this as C);
@@ -181,7 +181,7 @@ mixin CMappable {
 
 extension CValueCopy<$R, $Out> on ObjectCopyWith<$R, C, $Out> {
   CCopyWith<$R, C, $Out> get $asC =>
-      $base.as((v, t, t2) => _CCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _CCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class CCopyWith<$R, $In extends C, $Out>
@@ -205,7 +205,7 @@ class _CCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, C, $Out>
 
   @override
   CCopyWith<$R2, C, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _CCopyWithImpl($value, $cast, t);
+      _CCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 typedef _t$_R1<A, B> = ({A lat, B lng});

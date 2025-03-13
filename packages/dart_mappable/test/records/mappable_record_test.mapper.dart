@@ -62,7 +62,8 @@ mixin LocationMappable {
   }
 
   LocationCopyWith<Location, Location, Location> get copyWith =>
-      _LocationCopyWithImpl(this as Location, $identity, $identity);
+      _LocationCopyWithImpl<Location, Location>(
+          this as Location, $identity, $identity);
   @override
   String toString() {
     return LocationMapper.ensureInitialized().stringifyValue(this as Location);
@@ -82,7 +83,7 @@ mixin LocationMappable {
 
 extension LocationValueCopy<$R, $Out> on ObjectCopyWith<$R, Location, $Out> {
   LocationCopyWith<$R, Location, $Out> get $asLocation =>
-      $base.as((v, t, t2) => _LocationCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _LocationCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class LocationCopyWith<$R, $In extends Location, $Out>
@@ -109,7 +110,7 @@ class _LocationCopyWithImpl<$R, $Out>
   @override
   LocationCopyWith<$R2, Location, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _LocationCopyWithImpl($value, $cast, t);
+      _LocationCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class PointMapper extends RecordMapperBase<Point> {
@@ -280,7 +281,7 @@ class _OffsetCopyWithImpl<$R, T> extends RecordCopyWithBase<$R, Offset<T>>
   late final RecordMapperBase<Offset> $mapper =
       OffsetMapper.ensureInitialized();
   @override
-  $R call({double? x, T? y}) =>
+  $R call({double? x, Object? y = $none}) =>
       $apply(FieldCopyWithData({if (x != null) #x: x, if (y != null) #y: y}));
   @override
   Offset<T> $make(CopyWithData data) =>

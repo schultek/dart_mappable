@@ -58,6 +58,7 @@ void initializeMappers() {
   p3.AMapper.ensureInitialized();
   p3.Container3Mapper.ensureInitialized();
   p3.Container4Mapper.ensureInitialized();
+  p3.Container5Mapper.ensureInitialized();
   p3.A2Mapper.ensureInitialized();
   p3.BMapper.ensureInitialized();
   p3.B2Mapper.ensureInitialized();

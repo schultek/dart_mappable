@@ -104,7 +104,7 @@ mixin BMappable {
   }
 
   BCopyWith<B, B, B> get copyWith =>
-      _BCopyWithImpl(this as B, $identity, $identity);
+      _BCopyWithImpl<B, B>(this as B, $identity, $identity);
   @override
   String toString() {
     return BMapper.ensureInitialized().stringifyValue(this as B);
@@ -123,7 +123,7 @@ mixin BMappable {
 
 extension BValueCopy<$R, $Out> on ObjectCopyWith<$R, B, $Out> {
   BCopyWith<$R, B, $Out> get $asB =>
-      $base.as((v, t, t2) => _BCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _BCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class BCopyWith<$R, $In extends B, $Out>
@@ -146,7 +146,7 @@ class _BCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, B, $Out>
 
   @override
   BCopyWith<$R2, B, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _BCopyWithImpl($value, $cast, t);
+      _BCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class CMapper extends SubClassMapperBase<C> {
@@ -200,7 +200,7 @@ mixin CMappable {
   }
 
   CCopyWith<C, C, C> get copyWith =>
-      _CCopyWithImpl(this as C, $identity, $identity);
+      _CCopyWithImpl<C, C>(this as C, $identity, $identity);
   @override
   String toString() {
     return CMapper.ensureInitialized().stringifyValue(this as C);
@@ -219,7 +219,7 @@ mixin CMappable {
 
 extension CValueCopy<$R, $Out> on ObjectCopyWith<$R, C, $Out> {
   CCopyWith<$R, C, $Out> get $asC =>
-      $base.as((v, t, t2) => _CCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _CCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class CCopyWith<$R, $In extends C, $Out>
@@ -242,5 +242,5 @@ class _CCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, C, $Out>
 
   @override
   CCopyWith<$R2, C, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _CCopyWithImpl($value, $cast, t);
+      _CCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

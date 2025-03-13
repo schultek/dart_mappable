@@ -62,7 +62,7 @@ mixin BoxMappable<T extends Content> {
   }
 
   BoxCopyWith<Box<T>, Box<T>, Box<T>, T> get copyWith =>
-      _BoxCopyWithImpl(this as Box<T>, $identity, $identity);
+      _BoxCopyWithImpl<Box<T>, Box<T>, T>(this as Box<T>, $identity, $identity);
   @override
   String toString() {
     return BoxMapper.ensureInitialized().stringifyValue(this as Box<T>);
@@ -82,7 +82,7 @@ mixin BoxMappable<T extends Content> {
 extension BoxValueCopy<$R, $Out, T extends Content>
     on ObjectCopyWith<$R, Box<T>, $Out> {
   BoxCopyWith<$R, Box<T>, $Out, T> get $asBox =>
-      $base.as((v, t, t2) => _BoxCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _BoxCopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
 abstract class BoxCopyWith<$R, $In extends Box<T>, $Out, T extends Content>
@@ -113,7 +113,7 @@ class _BoxCopyWithImpl<$R, $Out, T extends Content>
 
   @override
   BoxCopyWith<$R2, Box<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _BoxCopyWithImpl($value, $cast, t);
+      _BoxCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class ContentMapper extends ClassMapperBase<Content> {
@@ -166,7 +166,8 @@ mixin ContentMappable {
   }
 
   ContentCopyWith<Content, Content, Content> get copyWith =>
-      _ContentCopyWithImpl(this as Content, $identity, $identity);
+      _ContentCopyWithImpl<Content, Content>(
+          this as Content, $identity, $identity);
   @override
   String toString() {
     return ContentMapper.ensureInitialized().stringifyValue(this as Content);
@@ -186,7 +187,7 @@ mixin ContentMappable {
 
 extension ContentValueCopy<$R, $Out> on ObjectCopyWith<$R, Content, $Out> {
   ContentCopyWith<$R, Content, $Out> get $asContent =>
-      $base.as((v, t, t2) => _ContentCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ContentCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ContentCopyWith<$R, $In extends Content, $Out>
@@ -211,5 +212,5 @@ class _ContentCopyWithImpl<$R, $Out>
 
   @override
   ContentCopyWith<$R2, Content, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ContentCopyWithImpl($value, $cast, t);
+      _ContentCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

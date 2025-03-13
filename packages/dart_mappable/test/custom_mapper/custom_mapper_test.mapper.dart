@@ -63,7 +63,8 @@ mixin TestObjMappable {
   }
 
   TestObjCopyWith<TestObj, TestObj, TestObj> get copyWith =>
-      _TestObjCopyWithImpl(this as TestObj, $identity, $identity);
+      _TestObjCopyWithImpl<TestObj, TestObj>(
+          this as TestObj, $identity, $identity);
   @override
   String toString() {
     return TestObjMapper.ensureInitialized().stringifyValue(this as TestObj);
@@ -83,7 +84,7 @@ mixin TestObjMappable {
 
 extension TestObjValueCopy<$R, $Out> on ObjectCopyWith<$R, TestObj, $Out> {
   TestObjCopyWith<$R, TestObj, $Out> get $asTestObj =>
-      $base.as((v, t, t2) => _TestObjCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _TestObjCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class TestObjCopyWith<$R, $In extends TestObj, $Out>
@@ -121,5 +122,5 @@ class _TestObjCopyWithImpl<$R, $Out>
 
   @override
   TestObjCopyWith<$R2, TestObj, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _TestObjCopyWithImpl($value, $cast, t);
+      _TestObjCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

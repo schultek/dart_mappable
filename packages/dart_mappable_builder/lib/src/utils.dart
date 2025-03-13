@@ -174,7 +174,15 @@ TextTransform? textTransformFromAnnotation(DartObject? obj) {
 }
 
 extension NullableType on DartType {
-  bool get isNullable => nullabilitySuffix == NullabilitySuffix.question;
+  bool get isNullable =>
+      nullabilitySuffix == NullabilitySuffix.question ||
+      (this is TypeParameterType &&
+          (this as TypeParameterType).bound.isNullable);
+  bool get isNullableOrDynamic =>
+      isNullable ||
+      this is DynamicType ||
+      (this is TypeParameterType &&
+          (this as TypeParameterType).bound.isNullableOrDynamic);
 }
 
 extension TypeList on DartObject {

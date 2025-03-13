@@ -59,7 +59,7 @@ mixin AMappable<T extends C> {
   }
 
   ACopyWith<A<T>, A<T>, A<T>, T> get copyWith =>
-      _ACopyWithImpl(this as A<T>, $identity, $identity);
+      _ACopyWithImpl<A<T>, A<T>, T>(this as A<T>, $identity, $identity);
   @override
   String toString() {
     return AMapper.ensureInitialized().stringifyValue(this as A<T>);
@@ -78,7 +78,7 @@ mixin AMappable<T extends C> {
 
 extension AValueCopy<$R, $Out, T extends C> on ObjectCopyWith<$R, A<T>, $Out> {
   ACopyWith<$R, A<T>, $Out, T> get $asA =>
-      $base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ACopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
 abstract class ACopyWith<$R, $In extends A<T>, $Out, T extends C>
@@ -106,7 +106,7 @@ class _ACopyWithImpl<$R, $Out, T extends C>
 
   @override
   ACopyWith<$R2, A<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ACopyWithImpl($value, $cast, t);
+      _ACopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class CMapper extends ClassMapperBase<C> {
@@ -210,7 +210,7 @@ mixin BMappable {
   }
 
   BCopyWith<B, B, B> get copyWith =>
-      _BCopyWithImpl(this as B, $identity, $identity);
+      _BCopyWithImpl<B, B>(this as B, $identity, $identity);
   @override
   String toString() {
     return BMapper.ensureInitialized().stringifyValue(this as B);
@@ -229,7 +229,7 @@ mixin BMappable {
 
 extension BValueCopy<$R, $Out> on ObjectCopyWith<$R, B, $Out> {
   BCopyWith<$R, B, $Out> get $asB =>
-      $base.as((v, t, t2) => _BCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _BCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class BCopyWith<$R, $In extends B, $Out>
@@ -258,7 +258,7 @@ class _BCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, B, $Out>
 
   @override
   BCopyWith<$R2, B, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _BCopyWithImpl($value, $cast, t);
+      _BCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class DMapper extends ClassMapperBase<D> {
@@ -310,7 +310,7 @@ mixin DMappable {
   }
 
   DCopyWith<D, D, D> get copyWith =>
-      _DCopyWithImpl(this as D, $identity, $identity);
+      _DCopyWithImpl<D, D>(this as D, $identity, $identity);
   @override
   String toString() {
     return DMapper.ensureInitialized().stringifyValue(this as D);
@@ -329,7 +329,7 @@ mixin DMappable {
 
 extension DValueCopy<$R, $Out> on ObjectCopyWith<$R, D, $Out> {
   DCopyWith<$R, D, $Out> get $asD =>
-      $base.as((v, t, t2) => _DCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _DCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class DCopyWith<$R, $In extends D, $Out>
@@ -353,5 +353,5 @@ class _DCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, D, $Out>
 
   @override
   DCopyWith<$R2, D, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _DCopyWithImpl($value, $cast, t);
+      _DCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

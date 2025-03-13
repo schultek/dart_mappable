@@ -61,7 +61,8 @@ mixin ContainerMappable<T extends A<B>> {
   }
 
   ContainerCopyWith<Container<T>, Container<T>, Container<T>, T> get copyWith =>
-      _ContainerCopyWithImpl(this as Container<T>, $identity, $identity);
+      _ContainerCopyWithImpl<Container<T>, Container<T>, T>(
+          this as Container<T>, $identity, $identity);
   @override
   String toString() {
     return ContainerMapper.ensureInitialized()
@@ -83,7 +84,7 @@ mixin ContainerMappable<T extends A<B>> {
 extension ContainerValueCopy<$R, $Out, T extends A<B>>
     on ObjectCopyWith<$R, Container<T>, $Out> {
   ContainerCopyWith<$R, Container<T>, $Out, T> get $asContainer =>
-      $base.as((v, t, t2) => _ContainerCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ContainerCopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
 abstract class ContainerCopyWith<$R, $In extends Container<T>, $Out,
@@ -114,7 +115,7 @@ class _ContainerCopyWithImpl<$R, $Out, T extends A<B>>
   @override
   ContainerCopyWith<$R2, Container<T>, $Out2, T> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _ContainerCopyWithImpl($value, $cast, t);
+      _ContainerCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class AMapper extends ClassMapperBase<A> {
@@ -169,7 +170,7 @@ mixin AMappable<T extends B> {
   }
 
   ACopyWith<A<T>, A<T>, A<T>, T> get copyWith =>
-      _ACopyWithImpl(this as A<T>, $identity, $identity);
+      _ACopyWithImpl<A<T>, A<T>, T>(this as A<T>, $identity, $identity);
   @override
   String toString() {
     return AMapper.ensureInitialized().stringifyValue(this as A<T>);
@@ -188,7 +189,7 @@ mixin AMappable<T extends B> {
 
 extension AValueCopy<$R, $Out, T extends B> on ObjectCopyWith<$R, A<T>, $Out> {
   ACopyWith<$R, A<T>, $Out, T> get $asA =>
-      $base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ACopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
 abstract class ACopyWith<$R, $In extends A<T>, $Out, T extends B>
@@ -214,7 +215,7 @@ class _ACopyWithImpl<$R, $Out, T extends B>
 
   @override
   ACopyWith<$R2, A<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ACopyWithImpl($value, $cast, t);
+      _ACopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class BMapper extends ClassMapperBase<B> {
@@ -266,7 +267,7 @@ mixin BMappable {
   }
 
   BCopyWith<B, B, B> get copyWith =>
-      _BCopyWithImpl(this as B, $identity, $identity);
+      _BCopyWithImpl<B, B>(this as B, $identity, $identity);
   @override
   String toString() {
     return BMapper.ensureInitialized().stringifyValue(this as B);
@@ -285,7 +286,7 @@ mixin BMappable {
 
 extension BValueCopy<$R, $Out> on ObjectCopyWith<$R, B, $Out> {
   BCopyWith<$R, B, $Out> get $asB =>
-      $base.as((v, t, t2) => _BCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _BCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class BCopyWith<$R, $In extends B, $Out>
@@ -307,7 +308,7 @@ class _BCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, B, $Out>
 
   @override
   BCopyWith<$R2, B, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _BCopyWithImpl($value, $cast, t);
+      _BCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class Container1Mapper extends ClassMapperBase<Container1> {
@@ -365,8 +366,8 @@ mixin Container1Mappable<T extends A<B>> {
   }
 
   Container1CopyWith<Container1<T>, Container1<T>, Container1<T>, T>
-      get copyWith =>
-          _Container1CopyWithImpl(this as Container1<T>, $identity, $identity);
+      get copyWith => _Container1CopyWithImpl<Container1<T>, Container1<T>, T>(
+          this as Container1<T>, $identity, $identity);
   @override
   String toString() {
     return Container1Mapper.ensureInitialized()
@@ -389,7 +390,7 @@ mixin Container1Mappable<T extends A<B>> {
 extension Container1ValueCopy<$R, $Out, T extends A<B>>
     on ObjectCopyWith<$R, Container1<T>, $Out> {
   Container1CopyWith<$R, Container1<T>, $Out, T> get $asContainer1 =>
-      $base.as((v, t, t2) => _Container1CopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _Container1CopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
 abstract class Container1CopyWith<$R, $In extends Container1<T>, $Out,
@@ -420,7 +421,7 @@ class _Container1CopyWithImpl<$R, $Out, T extends A<B>>
   @override
   Container1CopyWith<$R2, Container1<T>, $Out2, T> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _Container1CopyWithImpl($value, $cast, t);
+      _Container1CopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class Container2Mapper extends ClassMapperBase<Container2> {
@@ -482,8 +483,9 @@ mixin Container2Mappable<T extends A<V>, V extends B> {
   }
 
   Container2CopyWith<Container2<T, V>, Container2<T, V>, Container2<T, V>, T, V>
-      get copyWith => _Container2CopyWithImpl(
-          this as Container2<T, V>, $identity, $identity);
+      get copyWith =>
+          _Container2CopyWithImpl<Container2<T, V>, Container2<T, V>, T, V>(
+              this as Container2<T, V>, $identity, $identity);
   @override
   String toString() {
     return Container2Mapper.ensureInitialized()
@@ -506,7 +508,7 @@ mixin Container2Mappable<T extends A<V>, V extends B> {
 extension Container2ValueCopy<$R, $Out, T extends A<V>, V extends B>
     on ObjectCopyWith<$R, Container2<T, V>, $Out> {
   Container2CopyWith<$R, Container2<T, V>, $Out, T, V> get $asContainer2 =>
-      $base.as((v, t, t2) => _Container2CopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _Container2CopyWithImpl<$R, $Out, T, V>(v, t, t2));
 }
 
 abstract class Container2CopyWith<$R, $In extends Container2<T, V>, $Out,
@@ -538,7 +540,7 @@ class _Container2CopyWithImpl<$R, $Out, T extends A<V>, V extends B>
   @override
   Container2CopyWith<$R2, Container2<T, V>, $Out2, T, V> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _Container2CopyWithImpl($value, $cast, t);
+      _Container2CopyWithImpl<$R2, $Out2, T, V>($value, $cast, t);
 }
 
 class Container3Mapper extends ClassMapperBase<Container3> {
@@ -602,8 +604,8 @@ mixin Container3Mappable<T extends A2<dynamic>> {
   }
 
   Container3CopyWith<Container3<T>, Container3<T>, Container3<T>, T>
-      get copyWith =>
-          _Container3CopyWithImpl(this as Container3<T>, $identity, $identity);
+      get copyWith => _Container3CopyWithImpl<Container3<T>, Container3<T>, T>(
+          this as Container3<T>, $identity, $identity);
   @override
   String toString() {
     return Container3Mapper.ensureInitialized()
@@ -626,7 +628,7 @@ mixin Container3Mappable<T extends A2<dynamic>> {
 extension Container3ValueCopy<$R, $Out, T extends A2<dynamic>>
     on ObjectCopyWith<$R, Container3<T>, $Out> {
   Container3CopyWith<$R, Container3<T>, $Out, T> get $asContainer3 =>
-      $base.as((v, t, t2) => _Container3CopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _Container3CopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
 abstract class Container3CopyWith<$R, $In extends Container3<T>, $Out,
@@ -667,7 +669,7 @@ class _Container3CopyWithImpl<$R, $Out, T extends A2<dynamic>>
   @override
   Container3CopyWith<$R2, Container3<T>, $Out2, T> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _Container3CopyWithImpl($value, $cast, t);
+      _Container3CopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class A2Mapper extends ClassMapperBase<A2> {
@@ -721,7 +723,7 @@ mixin A2Mappable<T> {
   }
 
   A2CopyWith<A2<T>, A2<T>, A2<T>, T> get copyWith =>
-      _A2CopyWithImpl(this as A2<T>, $identity, $identity);
+      _A2CopyWithImpl<A2<T>, A2<T>, T>(this as A2<T>, $identity, $identity);
   @override
   String toString() {
     return A2Mapper.ensureInitialized().stringifyValue(this as A2<T>);
@@ -740,7 +742,7 @@ mixin A2Mappable<T> {
 
 extension A2ValueCopy<$R, $Out, T> on ObjectCopyWith<$R, A2<T>, $Out> {
   A2CopyWith<$R, A2<T>, $Out, T> get $asA2 =>
-      $base.as((v, t, t2) => _A2CopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _A2CopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
 abstract class A2CopyWith<$R, $In extends A2<T>, $Out, T>
@@ -756,13 +758,14 @@ class _A2CopyWithImpl<$R, $Out, T> extends ClassCopyWithBase<$R, A2<T>, $Out>
   @override
   late final ClassMapperBase<A2> $mapper = A2Mapper.ensureInitialized();
   @override
-  $R call({T? t}) => $apply(FieldCopyWithData({if (t != null) #t: t}));
+  $R call({Object? t = $none}) =>
+      $apply(FieldCopyWithData({if (t != $none) #t: t}));
   @override
   A2<T> $make(CopyWithData data) => A2(data.get(#t, or: $value.t));
 
   @override
   A2CopyWith<$R2, A2<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _A2CopyWithImpl($value, $cast, t);
+      _A2CopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class Container4Mapper extends ClassMapperBase<Container4> {
@@ -825,8 +828,8 @@ mixin Container4Mappable<T extends A2<B>> {
   }
 
   Container4CopyWith<Container4<T>, Container4<T>, Container4<T>, T>
-      get copyWith =>
-          _Container4CopyWithImpl(this as Container4<T>, $identity, $identity);
+      get copyWith => _Container4CopyWithImpl<Container4<T>, Container4<T>, T>(
+          this as Container4<T>, $identity, $identity);
   @override
   String toString() {
     return Container4Mapper.ensureInitialized()
@@ -849,7 +852,7 @@ mixin Container4Mappable<T extends A2<B>> {
 extension Container4ValueCopy<$R, $Out, T extends A2<B>>
     on ObjectCopyWith<$R, Container4<T>, $Out> {
   Container4CopyWith<$R, Container4<T>, $Out, T> get $asContainer4 =>
-      $base.as((v, t, t2) => _Container4CopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _Container4CopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
 abstract class Container4CopyWith<$R, $In extends Container4<T>, $Out,
@@ -889,7 +892,120 @@ class _Container4CopyWithImpl<$R, $Out, T extends A2<B>>
   @override
   Container4CopyWith<$R2, Container4<T>, $Out2, T> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _Container4CopyWithImpl($value, $cast, t);
+      _Container4CopyWithImpl<$R2, $Out2, T>($value, $cast, t);
+}
+
+class Container5Mapper extends ClassMapperBase<Container5> {
+  Container5Mapper._();
+
+  static Container5Mapper? _instance;
+  static Container5Mapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = Container5Mapper._());
+      BMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'Container5';
+  @override
+  Function get typeFactory => <T extends B?>(f) => f<Container5<T>>();
+
+  static B? _$content(Container5 v) => v.content;
+  static dynamic _arg$content<T extends B?>(f) => f<T>();
+  static const Field<Container5, B> _f$content =
+      Field('content', _$content, arg: _arg$content);
+
+  @override
+  final MappableFields<Container5> fields = const {
+    #content: _f$content,
+  };
+
+  static Container5<T> _instantiate<T extends B?>(DecodingData data) {
+    return Container5(data.dec(_f$content));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static Container5<T> fromMap<T extends B?>(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<Container5<T>>(map);
+  }
+
+  static Container5<T> fromJson<T extends B?>(String json) {
+    return ensureInitialized().decodeJson<Container5<T>>(json);
+  }
+}
+
+mixin Container5Mappable<T extends B?> {
+  String toJson() {
+    return Container5Mapper.ensureInitialized()
+        .encodeJson<Container5<T>>(this as Container5<T>);
+  }
+
+  Map<String, dynamic> toMap() {
+    return Container5Mapper.ensureInitialized()
+        .encodeMap<Container5<T>>(this as Container5<T>);
+  }
+
+  Container5CopyWith<Container5<T>, Container5<T>, Container5<T>, T>
+      get copyWith => _Container5CopyWithImpl<Container5<T>, Container5<T>, T>(
+          this as Container5<T>, $identity, $identity);
+  @override
+  String toString() {
+    return Container5Mapper.ensureInitialized()
+        .stringifyValue(this as Container5<T>);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return Container5Mapper.ensureInitialized()
+        .equalsValue(this as Container5<T>, other);
+  }
+
+  @override
+  int get hashCode {
+    return Container5Mapper.ensureInitialized()
+        .hashValue(this as Container5<T>);
+  }
+}
+
+extension Container5ValueCopy<$R, $Out, T extends B?>
+    on ObjectCopyWith<$R, Container5<T>, $Out> {
+  Container5CopyWith<$R, Container5<T>, $Out, T> get $asContainer5 =>
+      $base.as((v, t, t2) => _Container5CopyWithImpl<$R, $Out, T>(v, t, t2));
+}
+
+abstract class Container5CopyWith<$R, $In extends Container5<T>, $Out,
+    T extends B?> implements ClassCopyWith<$R, $In, $Out> {
+  BCopyWith<$R, B, T>? get content;
+  $R call({T? content});
+  Container5CopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _Container5CopyWithImpl<$R, $Out, T extends B?>
+    extends ClassCopyWithBase<$R, Container5<T>, $Out>
+    implements Container5CopyWith<$R, Container5<T>, $Out, T> {
+  _Container5CopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<Container5> $mapper =
+      Container5Mapper.ensureInitialized();
+  @override
+  BCopyWith<$R, B, T>? get content =>
+      $value.content?.copyWith.$chain((v) => call(content: v));
+  @override
+  $R call({Object? content = $none}) =>
+      $apply(FieldCopyWithData({if (content != $none) #content: content}));
+  @override
+  Container5<T> $make(CopyWithData data) =>
+      Container5(data.get(#content, or: $value.content));
+
+  @override
+  Container5CopyWith<$R2, Container5<T>, $Out2, T> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _Container5CopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class B2Mapper extends ClassMapperBase<B2> {
@@ -941,7 +1057,7 @@ mixin B2Mappable {
   }
 
   B2CopyWith<B2, B2, B2> get copyWith =>
-      _B2CopyWithImpl(this as B2, $identity, $identity);
+      _B2CopyWithImpl<B2, B2>(this as B2, $identity, $identity);
   @override
   String toString() {
     return B2Mapper.ensureInitialized().stringifyValue(this as B2);
@@ -960,7 +1076,7 @@ mixin B2Mappable {
 
 extension B2ValueCopy<$R, $Out> on ObjectCopyWith<$R, B2, $Out> {
   B2CopyWith<$R, B2, $Out> get $asB2 =>
-      $base.as((v, t, t2) => _B2CopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _B2CopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class B2CopyWith<$R, $In extends B2, $Out>
@@ -983,5 +1099,5 @@ class _B2CopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, B2, $Out>
 
   @override
   B2CopyWith<$R2, B2, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _B2CopyWithImpl($value, $cast, t);
+      _B2CopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

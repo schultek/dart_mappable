@@ -2,6 +2,7 @@
 
 - Added support for `shallowEncoding` and `includeTypeId` options of `@MappableClass()`.
 - Fixed escaping of enum values.
+- Fixed copyWith method for unbounded and nullable-bounded generic types.
 
 # 4.4.0
 

@@ -66,7 +66,8 @@ mixin ShepherdMappable {
   }
 
   ShepherdCopyWith<Shepherd, Shepherd, Shepherd> get copyWith =>
-      _ShepherdCopyWithImpl(this as Shepherd, $identity, $identity);
+      _ShepherdCopyWithImpl<Shepherd, Shepherd>(
+          this as Shepherd, $identity, $identity);
   @override
   String toString() {
     return ShepherdMapper.ensureInitialized().stringifyValue(this as Shepherd);
@@ -86,7 +87,7 @@ mixin ShepherdMappable {
 
 extension ShepherdValueCopy<$R, $Out> on ObjectCopyWith<$R, Shepherd, $Out> {
   ShepherdCopyWith<$R, Shepherd, $Out> get $asShepherd =>
-      $base.as((v, t, t2) => _ShepherdCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ShepherdCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ShepherdCopyWith<$R, $In extends Shepherd, $Out>
@@ -114,7 +115,7 @@ class _ShepherdCopyWithImpl<$R, $Out>
   @override
   ShepherdCopyWith<$R2, Shepherd, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _ShepherdCopyWithImpl($value, $cast, t);
+      _ShepherdCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class DogMapper extends SubClassMapperBase<Dog> {
@@ -176,7 +177,7 @@ mixin DogMappable {
   }
 
   DogCopyWith<Dog, Dog, Dog> get copyWith =>
-      _DogCopyWithImpl(this as Dog, $identity, $identity);
+      _DogCopyWithImpl<Dog, Dog>(this as Dog, $identity, $identity);
   @override
   String toString() {
     return DogMapper.ensureInitialized().stringifyValue(this as Dog);
@@ -195,7 +196,7 @@ mixin DogMappable {
 
 extension DogValueCopy<$R, $Out> on ObjectCopyWith<$R, Dog, $Out> {
   DogCopyWith<$R, Dog, $Out> get $asDog =>
-      $base.as((v, t, t2) => _DogCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _DogCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class DogCopyWith<$R, $In extends Dog, $Out>
@@ -219,7 +220,7 @@ class _DogCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Dog, $Out>
 
   @override
   DogCopyWith<$R2, Dog, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _DogCopyWithImpl($value, $cast, t);
+      _DogCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class AnimalMapper extends ClassMapperBase<Animal> {
@@ -400,7 +401,8 @@ mixin SiameseMappable {
   }
 
   SiameseCopyWith<Siamese, Siamese, Siamese> get copyWith =>
-      _SiameseCopyWithImpl(this as Siamese, $identity, $identity);
+      _SiameseCopyWithImpl<Siamese, Siamese>(
+          this as Siamese, $identity, $identity);
   @override
   String toString() {
     return SiameseMapper.ensureInitialized().stringifyValue(this as Siamese);
@@ -420,7 +422,7 @@ mixin SiameseMappable {
 
 extension SiameseValueCopy<$R, $Out> on ObjectCopyWith<$R, Siamese, $Out> {
   SiameseCopyWith<$R, Siamese, $Out> get $asSiamese =>
-      $base.as((v, t, t2) => _SiameseCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _SiameseCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class SiameseCopyWith<$R, $In extends Siamese, $Out>
@@ -446,7 +448,7 @@ class _SiameseCopyWithImpl<$R, $Out>
 
   @override
   SiameseCopyWith<$R2, Siamese, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _SiameseCopyWithImpl($value, $cast, t);
+      _SiameseCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class HumanMapper extends ClassMapperBase<Human> {
@@ -498,7 +500,7 @@ mixin HumanMappable {
   }
 
   HumanCopyWith<Human, Human, Human> get copyWith =>
-      _HumanCopyWithImpl(this as Human, $identity, $identity);
+      _HumanCopyWithImpl<Human, Human>(this as Human, $identity, $identity);
   @override
   String toString() {
     return HumanMapper.ensureInitialized().stringifyValue(this as Human);
@@ -517,7 +519,7 @@ mixin HumanMappable {
 
 extension HumanValueCopy<$R, $Out> on ObjectCopyWith<$R, Human, $Out> {
   HumanCopyWith<$R, Human, $Out> get $asHuman =>
-      $base.as((v, t, t2) => _HumanCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _HumanCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class HumanCopyWith<$R, $In extends Human, $Out>
@@ -544,5 +546,5 @@ class _HumanCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Human, $Out>
 
   @override
   HumanCopyWith<$R2, Human, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _HumanCopyWithImpl($value, $cast, t);
+      _HumanCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

@@ -51,7 +51,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
 
     if (element.hasCallableConstructor) {
       snippet +=
-          ' => _${element.uniqueClassName}CopyWithImpl(this as $selfTypeParam, \$identity, \$identity);\n';
+          ' => _${element.uniqueClassName}CopyWithImpl<$selfTypeParam, $selfTypeParam$classTypeParams>(this as $selfTypeParam, \$identity, \$identity);\n';
     } else {
       snippet += ';\n';
     }
@@ -65,7 +65,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
     if (element.hasCallableConstructor) {
       output.write(
           'extension ${element.uniqueClassName}ValueCopy<\$R, \$Out$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam, \$Out> {\n'
-          '  ${element.uniqueClassName}CopyWith<\$R, $selfTypeParam, \$Out$classTypeParams> get \$as${element.className} => \$base.as((v, t, t2) => _${element.uniqueClassName}CopyWithImpl(v, t, t2));\n'
+          '  ${element.uniqueClassName}CopyWith<\$R, $selfTypeParam, \$Out$classTypeParams> get \$as${element.className} => \$base.as((v, t, t2) => _${element.uniqueClassName}CopyWithImpl<\$R, \$Out$classTypeParams>(v, t, t2));\n'
           '}\n\n');
     }
 
@@ -142,7 +142,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
       output.write('\n'
           '  @override ${element.uniqueClassName}CopyWith<\$R2, $selfTypeParam, \$Out2$classTypeParams> '
           '\$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t) '
-          '=> _${element.uniqueClassName}CopyWithImpl(\$value, \$cast, t);\n');
+          '=> _${element.uniqueClassName}CopyWithImpl<\$R2, \$Out2$classTypeParams>(\$value, \$cast, t);\n');
 
       output.write('}');
     }
@@ -160,7 +160,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
       var type = element.parent.prefixedType(p.type, withNullability: false);
 
       if (param is UnresolvedParamElement) {
-        if (p.type.isNullable) {
+        if (p.type.isNullableOrDynamic) {
           var isDynamic = p.type is DynamicType;
           params.add('$type${isDynamic ? '' : '?'} ${p.name}');
         } else {
@@ -168,10 +168,10 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
         }
       } else {
         var name = param.superName;
-        var isDynamic = p.type is DynamicType;
-        if (implVersion && (p.type.isNullable || isDynamic)) {
+        if (implVersion && p.type.isNullableOrDynamic) {
           params.add('Object? $name = \$none');
         } else {
+          var isDynamic = p.type is DynamicType;
           params.add(
               '${param.isCovariant && !implVersion ? 'covariant ' : ''}$type${isDynamic ? '' : '?'} $name');
         }
@@ -188,7 +188,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
 
       if (param is! UnresolvedParamElement) {
         var p = param.parameter;
-        if (p.type.isNullable || p.type is DynamicType) {
+        if (p.type.isNullableOrDynamic) {
           str = 'if (${param.superName} != \$none) $str';
         } else {
           str = 'if (${param.superName} != null) $str';

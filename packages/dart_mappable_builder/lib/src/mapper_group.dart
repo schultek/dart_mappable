@@ -243,9 +243,11 @@ class MapperElementGroup {
       var type = t.element.name;
       if (resolveBounds) {
         type = prefixedType(t.bound,
-            resolveBounds: resolveBounds, resolveBoundsDeep: resolveBoundsDeep);
+            withNullability: withNullability,
+            resolveBounds: resolveBounds,
+            resolveBoundsDeep: resolveBoundsDeep);
       }
-      if (withNullability && t.isNullable) {
+      if (withNullability && t.isNullable && !type.endsWith('?')) {
         type += '?';
       }
       return type;

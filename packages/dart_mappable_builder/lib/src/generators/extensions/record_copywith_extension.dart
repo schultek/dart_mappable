@@ -114,10 +114,10 @@ extension RecordCopyWithMixin on MapperGenerator<RecordMapperElement> {
         }
       } else {
         var name = param.name;
-        var isDynamic = p.type is DynamicType;
-        if (implVersion && (p.type.isNullable || isDynamic)) {
+        if (implVersion && (p.type.isNullableOrDynamic)) {
           params.add('Object? $name = \$none');
         } else {
+          var isDynamic = p.type is DynamicType;
           params.add('$type${isDynamic ? '' : '?'} $name');
         }
       }

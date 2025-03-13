@@ -120,7 +120,7 @@ mixin CatMappable {
   }
 
   CatCopyWith<Cat, Cat, Cat> get copyWith =>
-      _CatCopyWithImpl(this as Cat, $identity, $identity);
+      _CatCopyWithImpl<Cat, Cat>(this as Cat, $identity, $identity);
   @override
   String toString() {
     return CatMapper.ensureInitialized().stringifyValue(this as Cat);
@@ -139,7 +139,7 @@ mixin CatMappable {
 
 extension CatValueCopy<$R, $Out> on ObjectCopyWith<$R, Cat, $Out> {
   CatCopyWith<$R, Cat, $Out> get $asCat =>
-      $base.as((v, t, t2) => _CatCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _CatCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class CatCopyWith<$R, $In extends Cat, $Out>
@@ -164,7 +164,7 @@ class _CatCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Cat, $Out>
 
   @override
   CatCopyWith<$R2, Cat, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _CatCopyWithImpl($value, $cast, t);
+      _CatCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class DogMapper extends SubClassMapperBase<Dog> {
@@ -227,7 +227,7 @@ mixin DogMappable {
   }
 
   DogCopyWith<Dog, Dog, Dog> get copyWith =>
-      _DogCopyWithImpl(this as Dog, $identity, $identity);
+      _DogCopyWithImpl<Dog, Dog>(this as Dog, $identity, $identity);
   @override
   String toString() {
     return DogMapper.ensureInitialized().stringifyValue(this as Dog);
@@ -246,7 +246,7 @@ mixin DogMappable {
 
 extension DogValueCopy<$R, $Out> on ObjectCopyWith<$R, Dog, $Out> {
   DogCopyWith<$R, Dog, $Out> get $asDog =>
-      $base.as((v, t, t2) => _DogCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _DogCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class DogCopyWith<$R, $In extends Dog, $Out>
@@ -270,7 +270,7 @@ class _DogCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Dog, $Out>
 
   @override
   DogCopyWith<$R2, Dog, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _DogCopyWithImpl($value, $cast, t);
+      _DogCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class NullAnimalMapper extends SubClassMapperBase<NullAnimal> {
@@ -331,7 +331,8 @@ mixin NullAnimalMappable {
   }
 
   NullAnimalCopyWith<NullAnimal, NullAnimal, NullAnimal> get copyWith =>
-      _NullAnimalCopyWithImpl(this as NullAnimal, $identity, $identity);
+      _NullAnimalCopyWithImpl<NullAnimal, NullAnimal>(
+          this as NullAnimal, $identity, $identity);
   @override
   String toString() {
     return NullAnimalMapper.ensureInitialized()
@@ -353,7 +354,7 @@ mixin NullAnimalMappable {
 extension NullAnimalValueCopy<$R, $Out>
     on ObjectCopyWith<$R, NullAnimal, $Out> {
   NullAnimalCopyWith<$R, NullAnimal, $Out> get $asNullAnimal =>
-      $base.as((v, t, t2) => _NullAnimalCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _NullAnimalCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class NullAnimalCopyWith<$R, $In extends NullAnimal, $Out>
@@ -381,7 +382,7 @@ class _NullAnimalCopyWithImpl<$R, $Out>
   @override
   NullAnimalCopyWith<$R2, NullAnimal, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _NullAnimalCopyWithImpl($value, $cast, t);
+      _NullAnimalCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class DefaultAnimalMapper extends SubClassMapperBase<DefaultAnimal> {
@@ -445,7 +446,7 @@ mixin DefaultAnimalMappable {
   }
 
   DefaultAnimalCopyWith<DefaultAnimal, DefaultAnimal, DefaultAnimal>
-      get copyWith => _DefaultAnimalCopyWithImpl(
+      get copyWith => _DefaultAnimalCopyWithImpl<DefaultAnimal, DefaultAnimal>(
           this as DefaultAnimal, $identity, $identity);
   @override
   String toString() {
@@ -469,7 +470,7 @@ mixin DefaultAnimalMappable {
 extension DefaultAnimalValueCopy<$R, $Out>
     on ObjectCopyWith<$R, DefaultAnimal, $Out> {
   DefaultAnimalCopyWith<$R, DefaultAnimal, $Out> get $asDefaultAnimal =>
-      $base.as((v, t, t2) => _DefaultAnimalCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _DefaultAnimalCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class DefaultAnimalCopyWith<$R, $In extends DefaultAnimal, $Out>
@@ -497,7 +498,7 @@ class _DefaultAnimalCopyWithImpl<$R, $Out>
   @override
   DefaultAnimalCopyWith<$R2, DefaultAnimal, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _DefaultAnimalCopyWithImpl($value, $cast, t);
+      _DefaultAnimalCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class ZooMapper extends ClassMapperBase<Zoo> {
@@ -560,7 +561,7 @@ mixin ZooMappable {
   }
 
   ZooCopyWith<Zoo, Zoo, Zoo> get copyWith =>
-      _ZooCopyWithImpl(this as Zoo, $identity, $identity);
+      _ZooCopyWithImpl<Zoo, Zoo>(this as Zoo, $identity, $identity);
   @override
   String toString() {
     return ZooMapper.ensureInitialized().stringifyValue(this as Zoo);
@@ -579,7 +580,7 @@ mixin ZooMappable {
 
 extension ZooValueCopy<$R, $Out> on ObjectCopyWith<$R, Zoo, $Out> {
   ZooCopyWith<$R, Zoo, $Out> get $asZoo =>
-      $base.as((v, t, t2) => _ZooCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ZooCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ZooCopyWith<$R, $In extends Zoo, $Out>
@@ -632,5 +633,5 @@ class _ZooCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Zoo, $Out>
 
   @override
   ZooCopyWith<$R2, Zoo, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ZooCopyWithImpl($value, $cast, t);
+      _ZooCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

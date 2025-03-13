@@ -121,7 +121,7 @@ mixin AMappable {
   }
 
   ACopyWith<A, A, A> get copyWith =>
-      _ACopyWithImpl(this as A, $identity, $identity);
+      _ACopyWithImpl<A, A>(this as A, $identity, $identity);
   @override
   String toString() {
     return AMapper.ensureInitialized().stringifyValue(this as A);
@@ -140,7 +140,7 @@ mixin AMappable {
 
 extension AValueCopy<$R, $Out> on ObjectCopyWith<$R, A, $Out> {
   ACopyWith<$R, A, $Out> get $asA =>
-      $base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ACopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ACopyWith<$R, $In extends A, $Out>
@@ -173,7 +173,7 @@ class _ACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, A, $Out>
 
   @override
   ACopyWith<$R2, A, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ACopyWithImpl($value, $cast, t);
+      _ACopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class BaseMapper extends ClassMapperBase<Base> {
@@ -225,7 +225,7 @@ mixin BaseMappable {
   }
 
   BaseCopyWith<Base, Base, Base> get copyWith =>
-      _BaseCopyWithImpl(this as Base, $identity, $identity);
+      _BaseCopyWithImpl<Base, Base>(this as Base, $identity, $identity);
   @override
   String toString() {
     return BaseMapper.ensureInitialized().stringifyValue(this as Base);
@@ -244,7 +244,7 @@ mixin BaseMappable {
 
 extension BaseValueCopy<$R, $Out> on ObjectCopyWith<$R, Base, $Out> {
   BaseCopyWith<$R, Base, $Out> get $asBase =>
-      $base.as((v, t, t2) => _BaseCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _BaseCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class BaseCopyWith<$R, $In extends Base, $Out>
@@ -267,7 +267,7 @@ class _BaseCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Base, $Out>
 
   @override
   BaseCopyWith<$R2, Base, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _BaseCopyWithImpl($value, $cast, t);
+      _BaseCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class SubMapper extends ClassMapperBase<Sub> {
@@ -319,7 +319,7 @@ mixin SubMappable {
   }
 
   SubCopyWith<Sub, Sub, Sub> get copyWith =>
-      _SubCopyWithImpl(this as Sub, $identity, $identity);
+      _SubCopyWithImpl<Sub, Sub>(this as Sub, $identity, $identity);
   @override
   String toString() {
     return SubMapper.ensureInitialized().stringifyValue(this as Sub);
@@ -338,7 +338,7 @@ mixin SubMappable {
 
 extension SubValueCopy<$R, $Out> on ObjectCopyWith<$R, Sub, $Out> {
   SubCopyWith<$R, Sub, $Out> get $asSub =>
-      $base.as((v, t, t2) => _SubCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _SubCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class SubCopyWith<$R, $In extends Sub, $Out>
@@ -362,7 +362,7 @@ class _SubCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Sub, $Out>
 
   @override
   SubCopyWith<$R2, Sub, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _SubCopyWithImpl($value, $cast, t);
+      _SubCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class BaseTypeMapper extends ClassMapperBase<BaseType> {
@@ -416,7 +416,8 @@ mixin BaseTypeMappable {
   }
 
   BaseTypeCopyWith<BaseType, BaseType, BaseType> get copyWith =>
-      _BaseTypeCopyWithImpl(this as BaseType, $identity, $identity);
+      _BaseTypeCopyWithImpl<BaseType, BaseType>(
+          this as BaseType, $identity, $identity);
   @override
   String toString() {
     return BaseTypeMapper.ensureInitialized().stringifyValue(this as BaseType);
@@ -436,7 +437,7 @@ mixin BaseTypeMappable {
 
 extension BaseTypeValueCopy<$R, $Out> on ObjectCopyWith<$R, BaseType, $Out> {
   BaseTypeCopyWith<$R, BaseType, $Out> get $asBaseType =>
-      $base.as((v, t, t2) => _BaseTypeCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _BaseTypeCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class BaseTypeCopyWith<$R, $In extends BaseType, $Out>
@@ -463,7 +464,7 @@ class _BaseTypeCopyWithImpl<$R, $Out>
   @override
   BaseTypeCopyWith<$R2, BaseType, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _BaseTypeCopyWithImpl($value, $cast, t);
+      _BaseTypeCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class SubTypeMapper extends SubClassMapperBase<SubType> {
@@ -524,7 +525,8 @@ mixin SubTypeMappable {
   }
 
   SubTypeCopyWith<SubType, SubType, SubType> get copyWith =>
-      _SubTypeCopyWithImpl(this as SubType, $identity, $identity);
+      _SubTypeCopyWithImpl<SubType, SubType>(
+          this as SubType, $identity, $identity);
   @override
   String toString() {
     return SubTypeMapper.ensureInitialized().stringifyValue(this as SubType);
@@ -544,7 +546,7 @@ mixin SubTypeMappable {
 
 extension SubTypeValueCopy<$R, $Out> on ObjectCopyWith<$R, SubType, $Out> {
   SubTypeCopyWith<$R, SubType, $Out> get $asSubType =>
-      $base.as((v, t, t2) => _SubTypeCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _SubTypeCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class SubTypeCopyWith<$R, $In extends SubType, $Out>
@@ -570,7 +572,7 @@ class _SubTypeCopyWithImpl<$R, $Out>
 
   @override
   SubTypeCopyWith<$R2, SubType, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _SubTypeCopyWithImpl($value, $cast, t);
+      _SubTypeCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class GenericMapper extends ClassMapperBase<Generic> {
@@ -627,7 +629,8 @@ mixin GenericMappable<T> {
   }
 
   GenericCopyWith<Generic<T>, Generic<T>, Generic<T>, T> get copyWith =>
-      _GenericCopyWithImpl(this as Generic<T>, $identity, $identity);
+      _GenericCopyWithImpl<Generic<T>, Generic<T>, T>(
+          this as Generic<T>, $identity, $identity);
   @override
   String toString() {
     return GenericMapper.ensureInitialized().stringifyValue(this as Generic<T>);
@@ -648,7 +651,7 @@ mixin GenericMappable<T> {
 extension GenericValueCopy<$R, $Out, T>
     on ObjectCopyWith<$R, Generic<T>, $Out> {
   GenericCopyWith<$R, Generic<T>, $Out, T> get $asGeneric =>
-      $base.as((v, t, t2) => _GenericCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _GenericCopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
 abstract class GenericCopyWith<$R, $In extends Generic<T>, $Out, T>
@@ -666,8 +669,8 @@ class _GenericCopyWithImpl<$R, $Out, T>
   late final ClassMapperBase<Generic> $mapper =
       GenericMapper.ensureInitialized();
   @override
-  $R call({T? data}) =>
-      $apply(FieldCopyWithData({if (data != null) #data: data}));
+  $R call({Object? data = $none}) =>
+      $apply(FieldCopyWithData({if (data != $none) #data: data}));
   @override
   Generic<T> $make(CopyWithData data) =>
       Generic(data.get(#data, or: $value.data));
@@ -675,7 +678,7 @@ class _GenericCopyWithImpl<$R, $Out, T>
   @override
   GenericCopyWith<$R2, Generic<T>, $Out2, T> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _GenericCopyWithImpl($value, $cast, t);
+      _GenericCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class WrapperMapper extends ClassMapperBase<Wrapper> {
@@ -733,7 +736,8 @@ mixin WrapperMappable<T> {
   }
 
   WrapperCopyWith<Wrapper<T>, Wrapper<T>, Wrapper<T>, T> get copyWith =>
-      _WrapperCopyWithImpl(this as Wrapper<T>, $identity, $identity);
+      _WrapperCopyWithImpl<Wrapper<T>, Wrapper<T>, T>(
+          this as Wrapper<T>, $identity, $identity);
   @override
   String toString() {
     return WrapperMapper.ensureInitialized().stringifyValue(this as Wrapper<T>);
@@ -754,7 +758,7 @@ mixin WrapperMappable<T> {
 extension WrapperValueCopy<$R, $Out, T>
     on ObjectCopyWith<$R, Wrapper<T>, $Out> {
   WrapperCopyWith<$R, Wrapper<T>, $Out, T> get $asWrapper =>
-      $base.as((v, t, t2) => _WrapperCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _WrapperCopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
 abstract class WrapperCopyWith<$R, $In extends Wrapper<T>, $Out, T>
@@ -785,5 +789,5 @@ class _WrapperCopyWithImpl<$R, $Out, T>
   @override
   WrapperCopyWith<$R2, Wrapper<T>, $Out2, T> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _WrapperCopyWithImpl($value, $cast, t);
+      _WrapperCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }

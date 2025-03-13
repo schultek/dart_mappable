@@ -57,7 +57,8 @@ mixin SetWrapperMappable {
   }
 
   SetWrapperCopyWith<SetWrapper, SetWrapper, SetWrapper> get copyWith =>
-      _SetWrapperCopyWithImpl(this as SetWrapper, $identity, $identity);
+      _SetWrapperCopyWithImpl<SetWrapper, SetWrapper>(
+          this as SetWrapper, $identity, $identity);
   @override
   String toString() {
     return SetWrapperMapper.ensureInitialized()
@@ -79,7 +80,7 @@ mixin SetWrapperMappable {
 extension SetWrapperValueCopy<$R, $Out>
     on ObjectCopyWith<$R, SetWrapper, $Out> {
   SetWrapperCopyWith<$R, SetWrapper, $Out> get $asSetWrapper =>
-      $base.as((v, t, t2) => _SetWrapperCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _SetWrapperCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class SetWrapperCopyWith<$R, $In extends SetWrapper, $Out>
@@ -106,7 +107,7 @@ class _SetWrapperCopyWithImpl<$R, $Out>
   @override
   SetWrapperCopyWith<$R2, SetWrapper, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _SetWrapperCopyWithImpl($value, $cast, t);
+      _SetWrapperCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class ListWrapperMapper extends ClassMapperBase<ListWrapper> {
@@ -160,7 +161,8 @@ mixin ListWrapperMappable {
   }
 
   ListWrapperCopyWith<ListWrapper, ListWrapper, ListWrapper> get copyWith =>
-      _ListWrapperCopyWithImpl(this as ListWrapper, $identity, $identity);
+      _ListWrapperCopyWithImpl<ListWrapper, ListWrapper>(
+          this as ListWrapper, $identity, $identity);
   @override
   String toString() {
     return ListWrapperMapper.ensureInitialized()
@@ -182,7 +184,7 @@ mixin ListWrapperMappable {
 extension ListWrapperValueCopy<$R, $Out>
     on ObjectCopyWith<$R, ListWrapper, $Out> {
   ListWrapperCopyWith<$R, ListWrapper, $Out> get $asListWrapper =>
-      $base.as((v, t, t2) => _ListWrapperCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ListWrapperCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ListWrapperCopyWith<$R, $In extends ListWrapper, $Out>
@@ -214,7 +216,7 @@ class _ListWrapperCopyWithImpl<$R, $Out>
   @override
   ListWrapperCopyWith<$R2, ListWrapper, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _ListWrapperCopyWithImpl($value, $cast, t);
+      _ListWrapperCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class MapWrapperMapper extends ClassMapperBase<MapWrapper> {
@@ -268,7 +270,8 @@ mixin MapWrapperMappable {
   }
 
   MapWrapperCopyWith<MapWrapper, MapWrapper, MapWrapper> get copyWith =>
-      _MapWrapperCopyWithImpl(this as MapWrapper, $identity, $identity);
+      _MapWrapperCopyWithImpl<MapWrapper, MapWrapper>(
+          this as MapWrapper, $identity, $identity);
   @override
   String toString() {
     return MapWrapperMapper.ensureInitialized()
@@ -290,7 +293,7 @@ mixin MapWrapperMappable {
 extension MapWrapperValueCopy<$R, $Out>
     on ObjectCopyWith<$R, MapWrapper, $Out> {
   MapWrapperCopyWith<$R, MapWrapper, $Out> get $asMapWrapper =>
-      $base.as((v, t, t2) => _MapWrapperCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _MapWrapperCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class MapWrapperCopyWith<$R, $In extends MapWrapper, $Out>
@@ -323,5 +326,5 @@ class _MapWrapperCopyWithImpl<$R, $Out>
   @override
   MapWrapperCopyWith<$R2, MapWrapper, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _MapWrapperCopyWithImpl($value, $cast, t);
+      _MapWrapperCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

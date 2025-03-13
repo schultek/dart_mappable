@@ -105,7 +105,7 @@ mixin DSOpacityDataMappable {
   }
 
   DSOpacityDataCopyWith<DSOpacityData, DSOpacityData, DSOpacityData>
-      get copyWith => _DSOpacityDataCopyWithImpl(
+      get copyWith => _DSOpacityDataCopyWithImpl<DSOpacityData, DSOpacityData>(
           this as DSOpacityData, $identity, $identity);
   @override
   String toString() {
@@ -129,7 +129,7 @@ mixin DSOpacityDataMappable {
 extension DSOpacityDataValueCopy<$R, $Out>
     on ObjectCopyWith<$R, DSOpacityData, $Out> {
   DSOpacityDataCopyWith<$R, DSOpacityData, $Out> get $asDSOpacityData =>
-      $base.as((v, t, t2) => _DSOpacityDataCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _DSOpacityDataCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class DSOpacityDataCopyWith<$R, $In extends DSOpacityData, $Out>
@@ -166,5 +166,5 @@ class _DSOpacityDataCopyWithImpl<$R, $Out>
   @override
   DSOpacityDataCopyWith<$R2, DSOpacityData, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _DSOpacityDataCopyWithImpl($value, $cast, t);
+      _DSOpacityDataCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

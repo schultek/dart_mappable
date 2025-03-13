@@ -60,8 +60,9 @@ mixin PrivateContainerMappable {
   }
 
   PrivateContainerCopyWith<PrivateContainer, PrivateContainer, PrivateContainer>
-      get copyWith => _PrivateContainerCopyWithImpl(
-          this as PrivateContainer, $identity, $identity);
+      get copyWith =>
+          _PrivateContainerCopyWithImpl<PrivateContainer, PrivateContainer>(
+              this as PrivateContainer, $identity, $identity);
   @override
   String toString() {
     return PrivateContainerMapper.ensureInitialized()
@@ -84,8 +85,8 @@ mixin PrivateContainerMappable {
 extension PrivateContainerValueCopy<$R, $Out>
     on ObjectCopyWith<$R, PrivateContainer, $Out> {
   PrivateContainerCopyWith<$R, PrivateContainer, $Out>
-      get $asPrivateContainer =>
-          $base.as((v, t, t2) => _PrivateContainerCopyWithImpl(v, t, t2));
+      get $asPrivateContainer => $base
+          .as((v, t, t2) => _PrivateContainerCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class PrivateContainerCopyWith<$R, $In extends PrivateContainer, $Out>
@@ -113,7 +114,7 @@ class _PrivateContainerCopyWithImpl<$R, $Out>
   @override
   PrivateContainerCopyWith<$R2, PrivateContainer, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _PrivateContainerCopyWithImpl($value, $cast, t);
+      _PrivateContainerCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class PrivateContainer2Mapper extends ClassMapperBase<PrivateContainer2> {
@@ -171,8 +172,9 @@ mixin PrivateContainer2Mappable {
 
   PrivateContainer2CopyWith<PrivateContainer2, PrivateContainer2,
           PrivateContainer2>
-      get copyWith => _PrivateContainer2CopyWithImpl(
-          this as PrivateContainer2, $identity, $identity);
+      get copyWith =>
+          _PrivateContainer2CopyWithImpl<PrivateContainer2, PrivateContainer2>(
+              this as PrivateContainer2, $identity, $identity);
   @override
   String toString() {
     return PrivateContainer2Mapper.ensureInitialized()
@@ -195,8 +197,8 @@ mixin PrivateContainer2Mappable {
 extension PrivateContainer2ValueCopy<$R, $Out>
     on ObjectCopyWith<$R, PrivateContainer2, $Out> {
   PrivateContainer2CopyWith<$R, PrivateContainer2, $Out>
-      get $asPrivateContainer2 =>
-          $base.as((v, t, t2) => _PrivateContainer2CopyWithImpl(v, t, t2));
+      get $asPrivateContainer2 => $base
+          .as((v, t, t2) => _PrivateContainer2CopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class PrivateContainer2CopyWith<$R, $In extends PrivateContainer2,
@@ -224,5 +226,5 @@ class _PrivateContainer2CopyWithImpl<$R, $Out>
   @override
   PrivateContainer2CopyWith<$R2, PrivateContainer2, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _PrivateContainer2CopyWithImpl($value, $cast, t);
+      _PrivateContainer2CopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

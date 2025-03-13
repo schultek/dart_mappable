@@ -125,7 +125,7 @@ mixin OneMappable {
   }
 
   OneCopyWith<One, One, One> get copyWith =>
-      _OneCopyWithImpl(this as One, $identity, $identity);
+      _OneCopyWithImpl<One, One>(this as One, $identity, $identity);
   @override
   String toString() {
     return OneMapper.ensureInitialized().stringifyValue(this as One);
@@ -144,7 +144,7 @@ mixin OneMappable {
 
 extension OneValueCopy<$R, $Out> on ObjectCopyWith<$R, One, $Out> {
   OneCopyWith<$R, One, $Out> get $asOne =>
-      $base.as((v, t, t2) => _OneCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _OneCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class OneCopyWith<$R, $In extends One, $Out>
@@ -182,7 +182,7 @@ class _OneCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, One, $Out>
 
   @override
   OneCopyWith<$R2, One, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _OneCopyWithImpl($value, $cast, t);
+      _OneCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class TwoMapper extends ClassMapperBase<Two> {
@@ -233,7 +233,7 @@ mixin TwoMappable {
   }
 
   TwoCopyWith<Two, Two, Two> get copyWith =>
-      _TwoCopyWithImpl(this as Two, $identity, $identity);
+      _TwoCopyWithImpl<Two, Two>(this as Two, $identity, $identity);
   @override
   String toString() {
     return TwoMapper.ensureInitialized().stringifyValue(this as Two);
@@ -252,7 +252,7 @@ mixin TwoMappable {
 
 extension TwoValueCopy<$R, $Out> on ObjectCopyWith<$R, Two, $Out> {
   TwoCopyWith<$R, Two, $Out> get $asTwo =>
-      $base.as((v, t, t2) => _TwoCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _TwoCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class TwoCopyWith<$R, $In extends Two, $Out>
@@ -274,5 +274,5 @@ class _TwoCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Two, $Out>
 
   @override
   TwoCopyWith<$R2, Two, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _TwoCopyWithImpl($value, $cast, t);
+      _TwoCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

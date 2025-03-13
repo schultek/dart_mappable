@@ -60,7 +60,7 @@ mixin GameMappable {
   }
 
   GameCopyWith<Game, Game, Game> get copyWith =>
-      _GameCopyWithImpl(this as Game, $identity, $identity);
+      _GameCopyWithImpl<Game, Game>(this as Game, $identity, $identity);
   @override
   String toString() {
     return GameMapper.ensureInitialized().stringifyValue(this as Game);
@@ -79,7 +79,7 @@ mixin GameMappable {
 
 extension GameValueCopy<$R, $Out> on ObjectCopyWith<$R, Game, $Out> {
   GameCopyWith<$R, Game, $Out> get $asGame =>
-      $base.as((v, t, t2) => _GameCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _GameCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class GameCopyWith<$R, $In extends Game, $Out>
@@ -106,7 +106,7 @@ class _GameCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Game, $Out>
 
   @override
   GameCopyWith<$R2, Game, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _GameCopyWithImpl($value, $cast, t);
+      _GameCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class PlayerMapper extends ClassMapperBase<Player> {
@@ -157,7 +157,7 @@ mixin PlayerMappable {
   }
 
   PlayerCopyWith<Player, Player, Player> get copyWith =>
-      _PlayerCopyWithImpl(this as Player, $identity, $identity);
+      _PlayerCopyWithImpl<Player, Player>(this as Player, $identity, $identity);
   @override
   String toString() {
     return PlayerMapper.ensureInitialized().stringifyValue(this as Player);
@@ -176,7 +176,7 @@ mixin PlayerMappable {
 
 extension PlayerValueCopy<$R, $Out> on ObjectCopyWith<$R, Player, $Out> {
   PlayerCopyWith<$R, Player, $Out> get $asPlayer =>
-      $base.as((v, t, t2) => _PlayerCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _PlayerCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class PlayerCopyWith<$R, $In extends Player, $Out>
@@ -198,7 +198,7 @@ class _PlayerCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Player, $Out>
 
   @override
   PlayerCopyWith<$R2, Player, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _PlayerCopyWithImpl($value, $cast, t);
+      _PlayerCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class CardGameMapper extends ClassMapperBase<CardGame> {
@@ -261,7 +261,8 @@ mixin CardGameMappable {
   }
 
   CardGameCopyWith<CardGame, CardGame, CardGame> get copyWith =>
-      _CardGameCopyWithImpl(this as CardGame, $identity, $identity);
+      _CardGameCopyWithImpl<CardGame, CardGame>(
+          this as CardGame, $identity, $identity);
   @override
   String toString() {
     return CardGameMapper.ensureInitialized().stringifyValue(this as CardGame);
@@ -281,7 +282,7 @@ mixin CardGameMappable {
 
 extension CardGameValueCopy<$R, $Out> on ObjectCopyWith<$R, CardGame, $Out> {
   CardGameCopyWith<$R, CardGame, $Out> get $asCardGame =>
-      $base.as((v, t, t2) => _CardGameCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _CardGameCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class CardGameCopyWith<$R, $In extends CardGame, $Out>
@@ -314,5 +315,5 @@ class _CardGameCopyWithImpl<$R, $Out>
   @override
   CardGameCopyWith<$R2, CardGame, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _CardGameCopyWithImpl($value, $cast, t);
+      _CardGameCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

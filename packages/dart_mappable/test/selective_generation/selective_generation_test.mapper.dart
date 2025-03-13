@@ -46,12 +46,12 @@ mixin AMappable {
   }
 
   ACopyWith<A, A, A> get copyWith =>
-      _ACopyWithImpl(this as A, $identity, $identity);
+      _ACopyWithImpl<A, A>(this as A, $identity, $identity);
 }
 
 extension AValueCopy<$R, $Out> on ObjectCopyWith<$R, A, $Out> {
   ACopyWith<$R, A, $Out> get $asA =>
-      $base.as((v, t, t2) => _ACopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ACopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ACopyWith<$R, $In extends A, $Out>
@@ -73,7 +73,7 @@ class _ACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, A, $Out>
 
   @override
   ACopyWith<$R2, A, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ACopyWithImpl($value, $cast, t);
+      _ACopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class BMapper extends ClassMapperBase<B> {

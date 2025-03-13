@@ -106,7 +106,7 @@ mixin ClassAMappable {
   }
 
   ClassACopyWith<ClassA, ClassA, ClassA> get copyWith =>
-      _ClassACopyWithImpl(this as ClassA, $identity, $identity);
+      _ClassACopyWithImpl<ClassA, ClassA>(this as ClassA, $identity, $identity);
   @override
   String toString() {
     return ClassAMapper.ensureInitialized().stringifyValue(this as ClassA);
@@ -125,7 +125,7 @@ mixin ClassAMappable {
 
 extension ClassAValueCopy<$R, $Out> on ObjectCopyWith<$R, ClassA, $Out> {
   ClassACopyWith<$R, ClassA, $Out> get $asClassA =>
-      $base.as((v, t, t2) => _ClassACopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ClassACopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ClassACopyWith<$R, $In extends ClassA, $Out>
@@ -157,5 +157,5 @@ class _ClassACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, ClassA, $Out>
 
   @override
   ClassACopyWith<$R2, ClassA, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ClassACopyWithImpl($value, $cast, t);
+      _ClassACopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
