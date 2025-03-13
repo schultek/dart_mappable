@@ -49,6 +49,13 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
     if (element.ignoreNull) {
       output.write('  @override\n  final bool ignoreNull = true;\n');
     }
+    if (element.shallowEncoding) {
+      output.write('  @override\n  final bool shallowEncoding = true;\n');
+    }
+    if (element.includeTypeId != null) {
+      output.write(
+          '  @override\n  bool includeTypeId<T>(_) => ${element.includeTypeId};\n');
+    }
 
     if (element.isDiscriminatingSubclass) {
       await generateDiscriminatorFields(output);

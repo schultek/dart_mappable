@@ -20,6 +20,8 @@ class MappableClass extends MappableInterface {
     super.generateMethods,
     this.includeSubClasses,
     super.includeCustomMappers,
+    this.shallowEncoding,
+    this.includeTypeId,
   }) : super._();
 
   /// Property key used for type discriminators.
@@ -40,6 +42,20 @@ class MappableClass extends MappableInterface {
   /// You only need to add subclasses here that are not in the same library
   /// as the superclass. All others are automatically included.
   final Iterable<Type>? includeSubClasses;
+
+  /// Whether to encode nested objects or just one level deep.
+  final bool? shallowEncoding;
+
+  /// Whether to include the type id of the object during encoding.
+  ///
+  /// If true, this adds a '__type' property with the specific runtime type
+  /// of the object.
+  /// If null (default), the package automatically decides whether to include
+  /// the type id based on the static and dynamic type of an object.
+  /// If false, the type id is never included.
+  ///
+  /// The key can be changed from '__type' to something else by setting [MapperContainer.typeIdKey].
+  final bool? includeTypeId;
 
   /// To be used with [discriminatorValue] to signal a default subclass.
   static const useAsDefault = MappingFlags.useAsDefault;

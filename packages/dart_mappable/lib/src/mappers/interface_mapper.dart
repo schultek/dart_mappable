@@ -182,11 +182,12 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
   @protected
   @pragma('vm:prefer-inline')
   static Map<String, dynamic> encodeFields<T extends Object>(
-      T value,
-      Iterable<Field<T, dynamic>> fields,
-      bool ignoreNull,
-      EncodingContext context) {
-    bool shallow = context.options?.shallow ?? false;
+    T value,
+    Iterable<Field<T, dynamic>> fields,
+    bool ignoreNull,
+    EncodingContext context,
+    bool shallow,
+  ) {
     if (shallow) {
       return {
         for (var f in fields)

@@ -4,6 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../builder_options.dart';
 import '../../mapper_group.dart';
+import '../../utils.dart';
 import '../constructor/constructor_mapper_element.dart';
 import '../mapper_element.dart';
 import 'class_mapper_element.dart';
@@ -54,4 +55,10 @@ class TargetClassMapperElement extends ClassMapperElement
 
     return types;
   }();
+
+  late final bool shallowEncoding =
+      annotation.value?.read('shallowEncoding')?.toBoolValue() ?? false;
+
+  late final bool? includeTypeId =
+      annotation.value?.read('includeTypeId')?.toBoolValue();
 }

@@ -1,3 +1,7 @@
+# 4.4.1
+
+- Added support for `shallowEncoding` and `includeTypeId` options of `@MappableClass()`.
+
 # 4.4.0
 
 - Update `analyzer` to `>=7.0.0 <8.0.0` and `source_gen` to `^2.0.0`. Bump other dependencies accordingly.

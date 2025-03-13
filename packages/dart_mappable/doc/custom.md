@@ -131,6 +131,8 @@ class NumberBoxMapper extends SimpleMapper1Bounded<NumberBox, num> {
 }
 ```
 
+If your bound type (here `num`) is **not** a primitive or mappable type, you need to register it with dart_mappable. Otherwise it may fail to use your mapper. To register any additional type, use `MapperBase.add<T>()`.
+
 ## Custom Iterables and Maps
 
 For special Iterable and Map types, you can of course specify custom mappers as described in the previous section.

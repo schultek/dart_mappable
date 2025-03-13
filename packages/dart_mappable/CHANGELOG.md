@@ -1,3 +1,8 @@
+# 4.4.1
+
+- Added `shallowEncoding` option to `@MappableClass()`.
+- Added `includeTypeId` option to `@MappableClass()`.
+
 # 4.4.0
 
 - Require `sdk: >=3.6.0`.

@@ -26,8 +26,13 @@ abstract class RecordMapperBase<T extends Record> extends InterfaceMapperBase<T>
 
   @override
   Object? encode(T value, EncodingContext context) {
-    return InterfaceMapperBase.encodeFields(value, fields.values, ignoreNull,
-        context.change(args: () => apply(context)));
+    return InterfaceMapperBase.encodeFields(
+      value,
+      fields.values,
+      ignoreNull,
+      context.change(args: () => apply(context)),
+      context.options?.shallow ?? false,
+    );
   }
 
   @override

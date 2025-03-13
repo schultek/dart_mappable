@@ -81,6 +81,9 @@ abstract class ClassMapperBase<T extends Object>
   /// The set of subclass mappers for this class.
   final Set<SubClassMapperBase<T>> _subMappers = {};
 
+  /// Whether to encode nested objects or just one level deep.
+  final bool shallowEncoding = false;
+
   /// This will inherit the decoding context when giving over decoding to a
   /// subclass.
   ///
@@ -200,8 +203,13 @@ abstract class ClassMapperBase<T extends Object>
 
   @override
   Object? encode(T value, EncodingContext context) {
-    var result =
-        InterfaceMapperBase.encodeFields(value, _params, ignoreNull, context);
+    var result = InterfaceMapperBase.encodeFields(
+      value,
+      _params,
+      ignoreNull,
+      context,
+      context.options?.shallow ?? this.shallowEncoding,
+    );
     if (_encodedStaticParams != null) {
       return {...result, ..._encodedStaticParams};
     }
