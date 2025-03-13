@@ -23,7 +23,7 @@ enum Status {
   success,
   @MappableValue(State.off)
   warning,
-  @MappableValue('error')
+  @MappableValue(r'error$val')
   error
 }
 
@@ -52,7 +52,7 @@ void main() {
         expect(Status.zero.toValue(), equals(0));
         expect(Status.success.toValue(), equals(200));
         expect(Status.warning.toValue(), equals(State.off));
-        expect(Status.error.toValue(), equals('error'));
+        expect(Status.error.toValue(), equals('error\$val'));
       });
     });
 
@@ -95,7 +95,7 @@ void main() {
         expect(StatusMapper.fromValue(0), equals(Status.zero));
         expect(StatusMapper.fromValue(200), equals(Status.success));
         expect(StatusMapper.fromValue(State.off), equals(Status.warning));
-        expect(StatusMapper.fromValue('error'), equals(Status.error));
+        expect(StatusMapper.fromValue('error\$val'), equals(Status.error));
 
         expect(
           () => ItemsMapper.fromValue(false),

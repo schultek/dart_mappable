@@ -25,11 +25,11 @@ class BMapper extends EnumMapper<B> {
   @override
   B decode(dynamic value) {
     switch (value) {
-      case 'a':
+      case r'a':
         return B.a;
-      case 'bB':
+      case r'bB':
         return B.bB;
-      case 'ccCc':
+      case r'ccCc':
         return B.ccCc;
       default:
         return B.values[0];
@@ -40,11 +40,11 @@ class BMapper extends EnumMapper<B> {
   dynamic encode(B self) {
     switch (self) {
       case B.a:
-        return 'a';
+        return r'a';
       case B.bB:
-        return 'bB';
+        return r'bB';
       case B.ccCc:
-        return 'ccCc';
+        return r'ccCc';
     }
   }
 }

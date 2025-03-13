@@ -25,11 +25,11 @@ class BrandMapper extends EnumMapper<Brand> {
   @override
   Brand decode(dynamic value) {
     switch (value) {
-      case 'Toyota':
+      case r'Toyota':
         return Brand.Toyota;
-      case 'Audi':
+      case r'Audi':
         return Brand.Audi;
-      case 'BMW':
+      case r'BMW':
         return Brand.BMW;
       default:
         return Brand.values[1];
@@ -40,11 +40,11 @@ class BrandMapper extends EnumMapper<Brand> {
   dynamic encode(Brand self) {
     switch (self) {
       case Brand.Toyota:
-        return 'Toyota';
+        return r'Toyota';
       case Brand.Audi:
-        return 'Audi';
+        return r'Audi';
       case Brand.BMW:
-        return 'BMW';
+        return r'BMW';
     }
   }
 }

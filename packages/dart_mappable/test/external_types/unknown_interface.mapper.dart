@@ -25,7 +25,7 @@ class HOpacityMapper extends EnumMapper<HOpacity> {
   @override
   HOpacity decode(dynamic value) {
     switch (value) {
-      case 'bzOpacityIntense':
+      case r'bzOpacityIntense':
         return HOpacity.bzOpacityIntense;
       default:
         throw MapperException.unknownEnumValue(value);
@@ -36,7 +36,7 @@ class HOpacityMapper extends EnumMapper<HOpacity> {
   dynamic encode(HOpacity self) {
     switch (self) {
       case HOpacity.bzOpacityIntense:
-        return 'bzOpacityIntense';
+        return r'bzOpacityIntense';
     }
   }
 }

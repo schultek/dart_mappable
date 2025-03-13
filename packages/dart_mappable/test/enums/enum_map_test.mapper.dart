@@ -25,11 +25,11 @@ class EnumAMapper extends EnumMapper<EnumA> {
   @override
   EnumA decode(dynamic value) {
     switch (value) {
-      case 'a':
+      case r'a':
         return EnumA.a;
-      case 'aa':
+      case r'aa':
         return EnumA.aa;
-      case 'unknown':
+      case r'unknown':
         return EnumA.unknown;
       default:
         return EnumA.values[2];
@@ -40,11 +40,11 @@ class EnumAMapper extends EnumMapper<EnumA> {
   dynamic encode(EnumA self) {
     switch (self) {
       case EnumA.a:
-        return 'a';
+        return r'a';
       case EnumA.aa:
-        return 'aa';
+        return r'aa';
       case EnumA.unknown:
-        return 'unknown';
+        return r'unknown';
     }
   }
 }

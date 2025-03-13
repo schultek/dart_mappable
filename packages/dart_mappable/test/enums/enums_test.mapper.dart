@@ -25,11 +25,11 @@ class StateMapper extends EnumMapper<State> {
   @override
   State decode(dynamic value) {
     switch (value) {
-      case 'On':
+      case r'On':
         return State.On;
-      case 'off':
+      case r'off':
         return State.off;
-      case 'itsCOMPLICATED':
+      case r'itsCOMPLICATED':
         return State.itsCOMPLICATED;
       default:
         return State.values[1];
@@ -40,11 +40,11 @@ class StateMapper extends EnumMapper<State> {
   dynamic encode(State self) {
     switch (self) {
       case State.On:
-        return 'On';
+        return r'On';
       case State.off:
-        return 'off';
+        return r'off';
       case State.itsCOMPLICATED:
-        return 'itsCOMPLICATED';
+        return r'itsCOMPLICATED';
     }
   }
 }
@@ -75,11 +75,11 @@ class ColorMapper extends EnumMapper<Color> {
   @override
   Color decode(dynamic value) {
     switch (value) {
-      case 'green':
+      case r'green':
         return Color.Green;
-      case 'blue':
+      case r'blue':
         return Color.BLUE;
-      case 'blood-red':
+      case r'blood-red':
         return Color.bloodRED;
       default:
         throw MapperException.unknownEnumValue(value);
@@ -90,11 +90,11 @@ class ColorMapper extends EnumMapper<Color> {
   dynamic encode(Color self) {
     switch (self) {
       case Color.Green:
-        return 'green';
+        return r'green';
       case Color.BLUE:
-        return 'blue';
+        return r'blue';
       case Color.bloodRED:
-        return 'blood-red';
+        return r'blood-red';
     }
   }
 }
@@ -181,7 +181,7 @@ class StatusMapper extends EnumMapper<Status> {
         return Status.success;
       case State.off:
         return Status.warning;
-      case 'error':
+      case r'error$val':
         return Status.error;
       default:
         throw MapperException.unknownEnumValue(value);
@@ -198,7 +198,7 @@ class StatusMapper extends EnumMapper<Status> {
       case Status.warning:
         return State.off;
       case Status.error:
-        return 'error';
+        return r'error$val';
     }
   }
 }

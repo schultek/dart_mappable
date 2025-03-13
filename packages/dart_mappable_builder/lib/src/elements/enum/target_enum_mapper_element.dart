@@ -50,7 +50,7 @@ class TargetEnumMapperElement extends EnumMapperElement {
     if (v.$2 != null) {
       return (name: name, value: v.$2!.toSource());
     } else if (mode == ValuesMode.named) {
-      return (name: name, value: "'${caseStyle.transform(name)}'");
+      return (name: name, value: "r'${caseStyle.transform(name)}'");
     } else {
       return (name: name, value: i);
     }

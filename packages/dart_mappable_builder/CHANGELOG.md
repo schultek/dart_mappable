@@ -1,6 +1,7 @@
 # 4.4.1
 
 - Added support for `shallowEncoding` and `includeTypeId` options of `@MappableClass()`.
+- Fixed escaping of enum values.
 
 # 4.4.0
 
