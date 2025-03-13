@@ -12,15 +12,18 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
     if (hook != null) {
       output.write('''
         @override
-        final MappingHook hook = const $hook;
+        final MappingHook hook = $hook;
       ''');
     }
 
     var superHooks = _getSuperHooks(element);
     if (superHooks.isNotEmpty) {
+      final hook = superHooks.length == 1
+          ? superHooks.first
+          : 'ChainedHook([${superHooks.map((h) => h.startsWith('const ') ? h.substring(6) : h).join(', ')}])';
       output.write('''
         @override
-        final MappingHook superHook = const ${superHooks.length == 1 ? superHooks.first : 'ChainedHook([${superHooks.join(', ')}])'};
+        final MappingHook superHook = $hook;
         
       ''');
     }

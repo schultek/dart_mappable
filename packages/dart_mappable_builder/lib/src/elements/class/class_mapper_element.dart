@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
@@ -74,7 +75,11 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
     if (hook != null && !hook.isNull) {
       var node = annotation.getPropertyNode('hook');
       if (node != null) {
-        return node.toSource();
+        var hook = node.toSource();
+        if (node is InstanceCreationExpression) {
+          hook = 'const $hook';
+        }
+        return hook;
       }
     }
     return null;

@@ -247,7 +247,10 @@ class MapperElementGroup {
             resolveBounds: resolveBounds,
             resolveBoundsDeep: resolveBoundsDeep);
       }
-      if (withNullability && t.isNullable && !type.endsWith('?')) {
+      if (withNullability &&
+          t.isNullable &&
+          !type.endsWith('?') &&
+          type != 'dynamic') {
         type += '?';
       }
       return type;
