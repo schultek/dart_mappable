@@ -1,4 +1,4 @@
-# 4.4.1
+# 4.5.0
 
 - Added `shallowEncoding` option to `@MappableClass()`.
 - Added `includeTypeId` option to `@MappableClass()`.
