@@ -33,7 +33,7 @@
 ---
 
 `dart_mappable` covers all basic features *(from/to json, == override, hashCode, toString(), copyWith)*
-while adding new or improved support for advances use-cases including **generics, inheritance and 
+while adding new or improved support for advanced use-cases including **generics, inheritance and 
 polymorphism, customization** and more.
 
 - 🎁 **Everything included**: Serialization, Equality, ToString, CopyWith and more.
@@ -77,7 +77,7 @@ To use a class you must:
 - annotate the class with `@MappableClass()` and
 - apply a mixin with the name of the class plus `Mappable`.
 
-***Tip**: Don't worry if the mixin don't exist at first, just run code-generation once an it will be created.
+***Tip**: Don't worry if the mixin don't exist at first, just run code-generation once and it will be created.
 The builder will also warn you if you define your class without the proper mixin.*
 
 ***Note**: For generic classes (e.g. `MyClass<T>`) make sure to also provide all type parameters
