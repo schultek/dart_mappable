@@ -88,11 +88,11 @@ to the mixin (`... with MyClassMappable<T>`).*
 In order to generate the serialization code, run the following command:
 
 ```shell script
-dart pub run build_runner build
+dart run build_runner build
 ```
 
 ***Tip**: You'll need to re-run code generation each time you are making changes to your annotated classes.
-During development, you can use `watch` to automatically watch your changes: `dart pub run build_runner watch`.*
+During development, you can use `watch` to automatically watch your changes: `dart run build_runner watch`.*
 
 This will generate a `<filename>.mapper.dart` file for each of your files containing annotated classes.
 
