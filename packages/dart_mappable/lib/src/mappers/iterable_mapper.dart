@@ -90,11 +90,10 @@ class _IterableDecoder<I extends Iterable> {
 }
 
 class _IterableEncoder<I extends Iterable> {
-  final IterableMapper<I> mapper;
   final EncodingContext context;
   final I value;
 
-  _IterableEncoder(this.mapper, this.context, this.value);
+  _IterableEncoder(this.context, this.value);
 
   Object encode() {
     return context.args.single.provideTo(_encode);

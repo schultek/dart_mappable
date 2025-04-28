@@ -1,0 +1,788 @@
+{
+  "date": "2025-01-17 14:05:49.736480Z",
+  "version": "1.26.2",
+  "paths": {
+    "lib/src/mapper_container.dart": {
+      "prefer-match-file-name": [
+        "9bce71510950c0d39821116cba5e4077"
+      ],
+      "prefer-prefixed-global-constants": [
+        "691ec75c0d38ad1b5b5ab162ded05bba",
+        "ac18c29bcda88f134f4c2be2616faf00"
+      ],
+      "member-ordering": [
+        "8a471542c394286cfd01c9f3f3f4632d",
+        "c7f56a2ebdf1887146dc98504171a5cc",
+        "f9bb80502921f309b82d4cb50755a834",
+        "f0756136aa4087fdb691a613ece52b91",
+        "cd2281e74214328df162284fd2bdc561",
+        "f0756136aa4087fdb691a613ece52b91",
+        "973d82614ae7be75a5f8862799d35b38",
+        "8f731929844aa49d7cb798c23c8b4d66",
+        "b59f7236b785f95c53c6e95dd9292771",
+        "14ce10d0574fc64d155e7bc59762938b",
+        "56d6e593ccd79176584ec27529f2cf7e",
+        "9a38715c5d8292340da5bdda265616f3",
+        "94d5bb73362b851109e2e7fdd394dc13",
+        "bff55da963c0effdb982a7ea7bd1a161",
+        "3ea8b0acf2b317f50cdb640c5a065544",
+        "75b91c1872d24c87bc7006411317e988",
+        "6c73452f419d70619ecef339c36c7eff",
+        "9608f734594a3140b5caceb9ee124b7d",
+        "2d024f0eb2547dd30ad9017b1087bce9",
+        "1f3916f9b3f7b3a4ecb4883b4b519d7e",
+        "3d4eb7288217e5d86c0ff7111b798c60",
+        "1ab982a7bf36f7ce7ec138f534094c74",
+        "6eca8c7beeda68e992c78e403952bf07",
+        "204f88ab275c45721616926b608e564a",
+        "91d13c81c99f8a14f2cdf612ae7c4f06",
+        "dbddeb412387b757c91900e8c4b70949",
+        "e3efb1faa9e694ab0fb66330abc19308",
+        "a1bcd3f36ceb4b45ba78935ebeb232a4",
+        "37c553a9158888fc78042c435710699f",
+        "a5030d7a6fe2f865c26acf60f891b302",
+        "da2511425022bfdc9964b250ac168de4",
+        "cfd24f3f02a8ac079c547536f62cabc4",
+        "c6353ed32c9bf686b2fb2a7badf98ed6",
+        "6e2d3f5e332535fc274d7c5f3ff5bb92",
+        "0ede0baa0ff7190744318e1cfc299949",
+        "12622f971a33f0705cda6ba3d38953c9",
+        "89bd8a745a35dea0359f2386c2b4cc92"
+      ],
+      "prefer-declaring-const-constructor": [
+        "9bce71510950c0d39821116cba5e4077",
+        "9a2ae0105f06df8d0d7111f72fa73222"
+      ],
+      "prefer-explicit-function-type": [
+        "86408593c34af77fdd90df932f8b5261",
+        "86408593c34af77fdd90df932f8b5261",
+        "86408593c34af77fdd90df932f8b5261",
+        "86408593c34af77fdd90df932f8b5261",
+        "1a869e7a9230cddc8e67f9c185eec77f",
+        "86408593c34af77fdd90df932f8b5261"
+      ],
+      "avoid-dynamic": [
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f"
+      ],
+      "avoid-redundant-else": [
+        "4e53ecdd1f48bf23bdbd5267c0d4e850",
+        "43c3575e03e4161eebf29c9f7f474d04",
+        "70d82137a6538a0e6febe5b0ad47a0a2",
+        "811d79c0fdf9ca6fa95bfe06a367b525",
+        "105a5499142dbfd6c1494cb159add3d7",
+        "bd009fe6af66ba73a4aa9f68a45deacb",
+        "614e2d7c411801880628e2e8bc65dec5",
+        "5335ae93d156f72b2d30d436a8202e4a"
+      ],
+      "avoid-nullable-tostring": [
+        "9b71f8224875d86396b1a510742682b9"
+      ],
+      "parameters-ordering": [
+        "e32eb5ae8bc71b1eb42487cfe4823b5c",
+        "c15a2372493a75548c68066b2b266161",
+        "bc2679e703ab54312e72da46649d32a7",
+        "e7874c36e44631267a9704e5d508974d",
+        "c5321cd1a00150f04d72a004845df2fa",
+        "bc2679e703ab54312e72da46649d32a7",
+        "42d9913a7749ad47acdbc937ed765f39",
+        "2da38e84885d6f9912fd612d80be8c4c"
+      ]
+    },
+    "lib/src/mapper_utils.dart": {
+      "prefer-match-file-name": [
+        "3eeffe14e9d54e03bd2b7268c267ee7f"
+      ],
+      "avoid-dynamic": [
+        "b72f3bd391ba731a35708bfd8cd8a68f"
+      ],
+      "avoid-excessive-expressions": [
+        "5a3052c00a2fa16ac26bf371cc86520c"
+      ],
+      "avoid-unnecessary-extends": [
+        "5476e74be12b7b2392d5dd04aa69d6d8"
+      ],
+      "avoid-redundant-else": [
+        "731a8b2dc4163bcee8eba3d6061a8769"
+      ],
+      "parameters-ordering": [
+        "eb201c33c2e8dc73acce06a4c6c2cc49",
+        "aa4497e0dc63485f71603011a9ad9679"
+      ]
+    },
+    "lib/src/annotations.dart": {
+      "prefer-match-file-name": [
+        "2811938495a6c76dfe2dc26903f84741"
+      ],
+      "member-ordering": [
+        "7e1b1f632a0aff1908844e12f7886b25",
+        "48d8b852d894761f7c40bb3735c97c1a",
+        "169dc2eeb68493eff46bf203788c1ae3",
+        "54a8782e297184330a8efe548054132b",
+        "b230fbb0b04abecfc2da521943a3dce4",
+        "452bb1ed2b3de1da9141cf4646f5f546",
+        "5103ea47b39d3a06ec2ffded38e8b06f",
+        "2a4c2773d9abe97dcfabf9f04688ec02",
+        "d7a431a29f935b9c87eab37a3b4b2935",
+        "d28c8a72bee02d4a21580d00ea9c094d",
+        "f8720172815dc78bb9827b373f17400d",
+        "f8281e810874d2e53ddea2c928e5af27",
+        "50a0068a514567ca0f348892af8a3213",
+        "741d981c45ac994ef9a3e1c2fdba5716",
+        "0d3840ad9920538a3e67c7420ea154a7",
+        "2d4819507c11dd1b287bd50ed2ac3d5b",
+        "f8720172815dc78bb9827b373f17400d",
+        "c4efd70b7bf47009fd148a0801a74386",
+        "f8281e810874d2e53ddea2c928e5af27",
+        "e9294f973e84aada49412b4fb7206d66",
+        "de916385432194ef17a73f442568007b",
+        "14891b5487b93b74897f0702e277f9ca"
+      ],
+      "avoid-dynamic": [
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f"
+      ],
+      "parameters-ordering": [
+        "0b43a3cc350bb27683a5dc6dd2817164",
+        "54a79dcc5483f574b8d01d20d23d1912",
+        "a04cc1a40eb3581c6a056156d1acde60",
+        "0d41c76eb2271a23763a6ea3eabada3f",
+        "e48ab8813c2bccd6e01c891d78f11ca7",
+        "8d28af32db1617717ec8c7ef792c5ed6"
+      ]
+    },
+    "lib/src/mapper_exception.dart": {
+      "member-ordering": [
+        "6cdc78a69a7b4efdb1385aae52d3a126",
+        "5c32d4f500c15dcd913a200f935867d7",
+        "43f299fbb8fde5971a7980a8da736fc2",
+        "8039f19d46db10b893db5204d07f1a3f",
+        "f5542432a04ca279bc65dc4b332da2f5",
+        "db7cb1abefd3efcd8ae5ae214e068693",
+        "cc804a57c07b804cf0e70f74b8bb1c68",
+        "674b912299578890b16e9b3acf254ce5",
+        "6281b48285419c7b9a436305e58186e3",
+        "6deabfae9e45dff5a1dd3ab464502ff0",
+        "651c24ad0c653716945de5a24378c239",
+        "102b18139c438a86454e431979555211",
+        "2539373ea2610acb5145a390b9deec81"
+      ],
+      "avoid-dynamic": [
+        "b72f3bd391ba731a35708bfd8cd8a68f"
+      ],
+      "prefer-declaring-const-constructor": [
+        "183ec5181a7e5898520ef6445eeb7689"
+      ],
+      "prefer-public-exception-classes": [
+        "be0a56949c6d71b01636c0467f9d1a8e"
+      ],
+      "parameters-ordering": [
+        "f94096e55336398c1cda1e4a45342dc9",
+        "2a3b1c11120ddb59405c5129299a1c7b",
+        "e71e4ab44491289daef96efc91f651c0"
+      ]
+    },
+    "lib/src/copywith/map_copy_with.dart": {
+      "member-ordering": [
+        "732da1aafd96d94afde23b781b6e0c00"
+      ],
+      "prefer-correct-callback-field-name": [
+        "c6a262e686aab7de7a60841fb9c22775"
+      ],
+      "parameters-ordering": [
+        "3558604c0fbceaae35cb8bd624e888f6",
+        "d89439e81aaedb6414b002c54465cc11"
+      ]
+    },
+    "lib/src/copywith/class_copy_with.dart": {
+      "member-ordering": [
+        "d659c042e40a91f81fdb2bbb1dd05209"
+      ],
+      "parameters-ordering": [
+        "cab28773d89d77024746836e3089024b"
+      ]
+    },
+    "lib/src/copywith/copywith_base.dart": {
+      "prefer-match-file-name": [
+        "7470c9470965af0cffb4b15784e735e4"
+      ],
+      "prefer-prefixed-global-constants": [
+        "1b87544d81952305fb725b8019a153c1"
+      ],
+      "member-ordering": [
+        "0e5a2fa5e6dd4f6c461258f6b5a9ac08",
+        "f228c79fb4c438134e26ae26b7a32e9d",
+        "cc0c1f6fc51fbb17afb9a798357c2a8d"
+      ],
+      "prefer-correct-callback-field-name": [
+        "baa309d9f2822609cb3460b0fd8d137b",
+        "e09471c74911d4686b11f0c3b907e7e0"
+      ],
+      "parameters-ordering": [
+        "8eb1ac173f44cf5706a95b6c368b8e8d",
+        "f9848ef0c13ecda46f0f8d59f878b886",
+        "355cb9e9209ea0bdd37c1d4886d2d683"
+      ]
+    },
+    "lib/src/copywith/copywith_data.dart": {
+      "member-ordering": [
+        "13a6919877bb019c534a310f745a58ee",
+        "8e04788a37eae63c367b2ae491e6a8a4",
+        "1b8f80c9b00fa507500a3d168a8d23c1",
+        "8e04788a37eae63c367b2ae491e6a8a4",
+        "643ad2479f99683422a67d8ddc2ea955",
+        "dc8c09bd5ef87d3fd541ce724674453f"
+      ],
+      "avoid-nullable-parameters-with-default-values": [
+        "5476e74be12b7b2392d5dd04aa69d6d8",
+        "5476e74be12b7b2392d5dd04aa69d6d8",
+        "5476e74be12b7b2392d5dd04aa69d6d8"
+      ],
+      "avoid-redundant-else": [
+        "3d6b38441e8b46ee7bc82dc6f3f9e510",
+        "3d6b38441e8b46ee7bc82dc6f3f9e510",
+        "3d6b38441e8b46ee7bc82dc6f3f9e510"
+      ]
+    },
+    "lib/src/copywith/list_copy_with.dart": {
+      "member-ordering": [
+        "1fd6561b0e7dee78cd8351d87e9371ba"
+      ],
+      "prefer-correct-callback-field-name": [
+        "c6a262e686aab7de7a60841fb9c22775"
+      ],
+      "avoid-unsafe-collection-methods": [
+        "0a53398f2154df1735120ed1a5e931ed"
+      ],
+      "prefer-null-aware-spread": [
+        "cf7e727f49b5725e282922aff1103f24"
+      ],
+      "parameters-ordering": [
+        "f908ef25ca6164e666928e359afd1c25",
+        "f6095016bb978e9f7c5bd549eb6bc40d"
+      ]
+    },
+    "lib/src/copywith/record_copy_with.dart": {
+      "member-ordering": [
+        "15fc93fcac3ef584d7e73272667ae417",
+        "0fe1df0181e6168349253b6482cd09c5",
+        "5b0cadb294246f25aa41deeba4c09ddd",
+        "0fe1df0181e6168349253b6482cd09c5",
+        "643ad2479f99683422a67d8ddc2ea955",
+        "dc8c09bd5ef87d3fd541ce724674453f"
+      ],
+      "avoid-nullable-parameters-with-default-values": [
+        "5476e74be12b7b2392d5dd04aa69d6d8",
+        "5476e74be12b7b2392d5dd04aa69d6d8"
+      ],
+      "avoid-redundant-else": [
+        "3d6b38441e8b46ee7bc82dc6f3f9e510",
+        "3d6b38441e8b46ee7bc82dc6f3f9e510"
+      ],
+      "parameters-ordering": [
+        "cab28773d89d77024746836e3089024b"
+      ]
+    },
+    "lib/src/hooks/unmapped_properties_hook.dart": {
+      "member-ordering": [
+        "cf238dbb3dd9f17b71c60ab3adee6cd6",
+        "308af19da7b8934f1fd375560249fd0b",
+        "308af19da7b8934f1fd375560249fd0b"
+      ],
+      "avoid-dynamic": [
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f"
+      ],
+      "avoid-shadowing": [
+        "3c6e0b8a9c15224a8228b9a98ca1531d",
+        "3c6e0b8a9c15224a8228b9a98ca1531d",
+        "3c6e0b8a9c15224a8228b9a98ca1531d",
+        "14f802e1fba977727845e8872c1743a7"
+      ],
+      "avoid-redundant-else": [
+        "824037cbda0c46874510ef41a3bea60b"
+      ]
+    },
+    "lib/src/hooks/chained_hook.dart": {
+      "member-ordering": [
+        "4d77f62e9313b0a14e894d8f404d01de"
+      ],
+      "avoid-dynamic": [
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f"
+      ]
+    },
+    "lib/src/hooks/string_hooks.dart": {
+      "prefer-match-file-name": [
+        "b2b00208969e0617af9c784b55857909"
+      ],
+      "avoid-dynamic": [
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f"
+      ]
+    },
+    "lib/src/mappers/record_mapper.dart": {
+      "prefer-match-file-name": [
+        "db6949d4aadda58d4a2a34367f36892a"
+      ],
+      "avoid-unnecessary-nullable-return-type": [
+        "5476e74be12b7b2392d5dd04aa69d6d8"
+      ],
+      "parameters-ordering": [
+        "d8babfc8e2469a3b2a860a422a253fe7",
+        "3b93c1a37b0111a955fe41b42691ac68"
+      ]
+    },
+    "lib/src/mappers/mapper_mixins.dart": {
+      "prefer-match-file-name": [
+        "ac1e341bd6d1b736a09b2dc9c33b700f"
+      ],
+      "avoid-dynamic": [
+        "2063c1608d6e0baf80249c42e2be5804",
+        "795f3202b17cb6bc3d4b771d8c6c9eaf",
+        "2063c1608d6e0baf80249c42e2be5804",
+        "2063c1608d6e0baf80249c42e2be5804",
+        "2063c1608d6e0baf80249c42e2be5804",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f"
+      ],
+      "member-ordering": [
+        "1cc1161f192fc26230c39ad87c33cb53"
+      ],
+      "prefer-declaring-const-constructor": [
+        "fdd1570f47711cc7ab766ef575ee86f1"
+      ],
+      "parameters-ordering": [
+        "985843a5e1769845acd8263646075966",
+        "53cd5d7f3e5954003e2f8cc4794344aa",
+        "e4491523e9fbcf7d8f258edb77488f8e",
+        "e4491523e9fbcf7d8f258edb77488f8e",
+        "361764250c72636a9f9a1e6834446915",
+        "e4491523e9fbcf7d8f258edb77488f8e"
+      ]
+    },
+    "lib/src/mappers/simple_mapper.dart": {
+      "avoid-dynamic": [
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "2063c1608d6e0baf80249c42e2be5804",
+        "795f3202b17cb6bc3d4b771d8c6c9eaf"
+      ],
+      "avoid-unnecessary-overrides": [
+        "5b93625023a1c2180221257849744b59",
+        "97a57645a3f0e1518f8c9f4d340d4c4f",
+        "5b93625023a1c2180221257849744b59",
+        "97a57645a3f0e1518f8c9f4d340d4c4f"
+      ],
+      "member-ordering": [
+        "944faa08246bbdf50380365ae2655a58",
+        "da6739b778be4a28f323c4c580a20e90",
+        "0eab1a06976e4a596b40a3219ab6f13e",
+        "692ba0e95c1cad2438b9b48a57d61933",
+        "d9446e0bd061a4c853056d52a06355c0",
+        "7d1440fe06412a8c9a7d6a94725154c7"
+      ],
+      "parameters-ordering": [
+        "1c6f0e7ee85901be529ddb301be2ad43",
+        "3b93c1a37b0111a955fe41b42691ac68",
+        "1c6f0e7ee85901be529ddb301be2ad43",
+        "3b93c1a37b0111a955fe41b42691ac68",
+        "1c6f0e7ee85901be529ddb301be2ad43",
+        "3b93c1a37b0111a955fe41b42691ac68",
+        "1c6f0e7ee85901be529ddb301be2ad43",
+        "3b93c1a37b0111a955fe41b42691ac68",
+        "1c6f0e7ee85901be529ddb301be2ad43",
+        "3b93c1a37b0111a955fe41b42691ac68",
+        "985843a5e1769845acd8263646075966",
+        "e4491523e9fbcf7d8f258edb77488f8e",
+        "e4491523e9fbcf7d8f258edb77488f8e"
+      ]
+    },
+    "lib/src/mappers/interface_mapper.dart": {
+      "prefer-match-file-name": [
+        "aa673efdeb5fc3fd65feb890e1c2db03"
+      ],
+      "prefer-correct-callback-field-name": [
+        "6d1f3c79a6ed212f8a63161734c5743b",
+        "61dd86c2dc75c3f569ec619bd283a33f"
+      ],
+      "prefer-explicit-function-type": [
+        "1a869e7a9230cddc8e67f9c185eec77f",
+        "86408593c34af77fdd90df932f8b5261"
+      ],
+      "avoid-dynamic": [
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "9e3669d19b675bd57058fd4664205d2a",
+        "b72f3bd391ba731a35708bfd8cd8a68f"
+      ],
+      "avoid-redundant-else": [
+        "e41d578f2415f623673ed9d42f390614",
+        "53ed196dd00f6fba9beacea76c714253",
+        "811d79c0fdf9ca6fa95bfe06a367b525"
+      ],
+      "member-ordering": [
+        "643ad2479f99683422a67d8ddc2ea955",
+        "dc8c09bd5ef87d3fd541ce724674453f",
+        "a277c162649db5113e3bda0d9a0a8feb",
+        "249bb975ccb10a4bc19c87cac313ecf2",
+        "eebdd69eae5098f7bd56d93747ce1b3c",
+        "3cb86c31f0d7d3d1f348400000b8e30e"
+      ],
+      "prefer-declaring-const-constructor": [
+        "8ece43506a2021db8bb76cde76acadc9"
+      ],
+      "avoid-inferrable-type-arguments": [
+        "ff3da524b068dd032e566ea1883afaf8",
+        "ff3da524b068dd032e566ea1883afaf8"
+      ],
+      "avoid-unused-generics": [
+        "d15f627d6b0b377a89f49126e7c263f6"
+      ],
+      "parameters-ordering": [
+        "1bb2d32475b0fda8aa983bcad07a49fe",
+        "3b93c1a37b0111a955fe41b42691ac68",
+        "8ae0f69d6db78bb9d48aac0afe3abc2c",
+        "5de64c3e11ea9c9e422be59726ddf3d6",
+        "d8babfc8e2469a3b2a860a422a253fe7",
+        "d8babfc8e2469a3b2a860a422a253fe7",
+        "3b93c1a37b0111a955fe41b42691ac68",
+        "3b93c1a37b0111a955fe41b42691ac68",
+        "2a5fadb61103f5140a2ff17c81aceb03"
+      ]
+    },
+    "lib/src/mappers/mapping_context.dart": {
+      "member-ordering": [
+        "865fe0d210fc3555a0e1647fb0309ad8",
+        "c23416d64c4bf71747c7f63d1bbdcce0",
+        "27d1da12e3ebe85452c95f618061931f",
+        "6e02ac37baf9ce3c5b80a7c574732a4f"
+      ],
+      "prefer-correct-callback-field-name": [
+        "3d7902a384a8a801bf4e0dd5b0c25465"
+      ],
+      "avoid-unsafe-collection-methods": [
+        "a8ebefc90349808f3ff6f44b0a50f89d",
+        "8b04d5e3775d298e78455efc5ca404d5",
+        "8b04d5e3775d298e78455efc5ca404d5",
+        "fce3a19a823c0ba64e72d497d2adacc4",
+        "8b04d5e3775d298e78455efc5ca404d5",
+        "fce3a19a823c0ba64e72d497d2adacc4",
+        "6a228239018721b8485efab3906db681"
+      ],
+      "avoid-shadowing": [
+        "0cc175b9c0f1b6a831c399e269772661",
+        "a956af09162870af6ce4ebe0f12ccaf8",
+        "cae4eae4c3b46142380966d00cc5e446"
+      ],
+      "prefer-explicit-function-type": [
+        "86408593c34af77fdd90df932f8b5261",
+        "86408593c34af77fdd90df932f8b5261"
+      ],
+      "avoid-unused-generics": [
+        "7fc56270e7a70fa81a5935b72eacbe29",
+        "9d5ed678fe57bcca610140957afab571",
+        "0d61f8370cad1d412f80b84d143e1257"
+      ],
+      "parameters-ordering": [
+        "aa97ebcfeebf104f932600e3b0b66ead",
+        "0773cb934fa3f342ac77ceeb62b54030",
+        "762feec0e9aae0097da468bcce10f663",
+        "5bdc05ec22d0250dda108717fbef6670",
+        "49ca3585b00a4249953e7f600726c735",
+        "5bdc05ec22d0250dda108717fbef6670"
+      ]
+    },
+    "lib/src/mappers/mapper_base.dart": {
+      "member-ordering": [
+        "9cf796dee47da4d51ad1c4c94ae59217",
+        "bfb1d16ba56da8825a91940bbd66029e",
+        "ce3fbc9c4f71edaaeda9190a70f5071c",
+        "92fd1c4e8bbef421ab9b9de94d00b35e"
+      ],
+      "prefer-explicit-function-type": [
+        "86408593c34af77fdd90df932f8b5261",
+        "1a869e7a9230cddc8e67f9c185eec77f"
+      ],
+      "avoid-dynamic": [
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f"
+      ],
+      "avoid-shadowing": [
+        "599dcce2998a6b40b1e38e8c6006cb0a",
+        "599dcce2998a6b40b1e38e8c6006cb0a",
+        "599dcce2998a6b40b1e38e8c6006cb0a"
+      ],
+      "prefer-parentheses-with-if-null": [
+        "3088d655118c5246a5b68b959263ba54"
+      ],
+      "avoid-unnecessary-nullable-return-type": [
+        "5476e74be12b7b2392d5dd04aa69d6d8"
+      ],
+      "avoid-unsafe-collection-methods": [
+        "2959069fe7809476c138b710d146427b"
+      ],
+      "avoid-unused-generics": [
+        "ff3da524b068dd032e566ea1883afaf8"
+      ],
+      "parameters-ordering": [
+        "1c6f0e7ee85901be529ddb301be2ad43",
+        "a234040c2ccf4f0cd61521ad59b574f4",
+        "c1ba7981ee80e25d334a001dd3b59bb2",
+        "3b93c1a37b0111a955fe41b42691ac68",
+        "361764250c72636a9f9a1e6834446915",
+        "c2b2447f62d926f3c5eb642d0b67a4a1",
+        "c2b2447f62d926f3c5eb642d0b67a4a1",
+        "e4491523e9fbcf7d8f258edb77488f8e",
+        "e4491523e9fbcf7d8f258edb77488f8e"
+      ]
+    },
+    "lib/src/mappers/map_mapper.dart": {
+      "member-ordering": [
+        "9a504c3e15bfd6386074e3a4f6b62f5d",
+        "84e5a90604de9dd0e61f7b2eb9368611"
+      ],
+      "prefer-correct-callback-field-name": [
+        "050fbd3299a988f39abf1c73440013cc"
+      ],
+      "prefer-explicit-function-type": [
+        "86408593c34af77fdd90df932f8b5261"
+      ],
+      "avoid-dynamic": [
+        "9e3669d19b675bd57058fd4664205d2a",
+        "b72f3bd391ba731a35708bfd8cd8a68f"
+      ],
+      "prefer-declaring-const-constructor": [
+        "8d6ef8f121a100d2db5ee3a27421447e",
+        "c6678d3a6ab8e29609eb03c467a53efd",
+        "7f173200307515118f09f7ba6c94d7f1",
+        "1c8ac7b595e0a343a54254a08f261589"
+      ],
+      "avoid-unsafe-collection-methods": [
+        "8b04d5e3775d298e78455efc5ca404d5",
+        "98bd1c45684cf587ac2347a92dd7bb51",
+        "8b04d5e3775d298e78455efc5ca404d5",
+        "98bd1c45684cf587ac2347a92dd7bb51"
+      ],
+      "avoid-shadowing": [
+        "2063c1608d6e0baf80249c42e2be5804",
+        "2063c1608d6e0baf80249c42e2be5804"
+      ],
+      "avoid-passing-self-as-argument": [
+        "5c18ef72771564b7f43c497dc507aeab",
+        "5c18ef72771564b7f43c497dc507aeab"
+      ],
+      "avoid-unused-generics": [
+        "ff3da524b068dd032e566ea1883afaf8"
+      ],
+      "parameters-ordering": [
+        "1c6f0e7ee85901be529ddb301be2ad43",
+        "aa88d067d3f23d458a24841f9b6d07f2",
+        "0317cc4f98c557c0b3eb0d33eb317d2c",
+        "dde34bf672b97e16263593353881cb05",
+        "dde34bf672b97e16263593353881cb05",
+        "dde34bf672b97e16263593353881cb05",
+        "dde34bf672b97e16263593353881cb05"
+      ]
+    },
+    "lib/src/mappers/iterable_mapper.dart": {
+      "member-ordering": [
+        "b5f875bb782067046cac35120d367340",
+        "d9129a62185184b60a12dd8bc4762894",
+        "84e5a90604de9dd0e61f7b2eb9368611"
+      ],
+      "prefer-declaring-const-constructor": [
+        "4448b90d9083bb144fb6aad413e55a46",
+        "c2eb357cd4e807cdc6a4f36e7ea84066",
+        "4db1d5f5aec7fc418bb9bc15b8400510"
+      ],
+      "prefer-correct-callback-field-name": [
+        "d94da7f541feda3feea6321f32ee38bb"
+      ],
+      "prefer-explicit-function-type": [
+        "86408593c34af77fdd90df932f8b5261"
+      ],
+      "avoid-dynamic": [
+        "9e3669d19b675bd57058fd4664205d2a",
+        "b72f3bd391ba731a35708bfd8cd8a68f"
+      ],
+      "avoid-unsafe-collection-methods": [
+        "dd5c07036f2975ff4bce568b6511d3bc",
+        "dd5c07036f2975ff4bce568b6511d3bc"
+      ],
+      "avoid-passing-self-as-argument": [
+        "5c18ef72771564b7f43c497dc507aeab"
+      ],
+      "avoid-unused-generics": [
+        "ff3da524b068dd032e566ea1883afaf8"
+      ],
+      "parameters-ordering": [
+        "1c6f0e7ee85901be529ddb301be2ad43",
+        "363834f4486a7c64663e73c11d3e223f",
+        "b2130679b4d98e946c57c60e7fda1416",
+        "ec773892c093350a5b43b9d2dc3e9214",
+        "dde34bf672b97e16263593353881cb05",
+        "dde34bf672b97e16263593353881cb05"
+      ]
+    },
+    "lib/src/mappers/default_mappers.dart": {
+      "prefer-match-file-name": [
+        "242daf82b90162b9806a9abedf326279"
+      ],
+      "member-ordering": [
+        "089dc216591520e39c43e9b7d8d47699",
+        "b99e1f88164493422fd6e3dec9bc07ec",
+        "bf527444af6fc7b79d695803537f6ab6",
+        "b958f8b36d3f4ebf5957bdaf344abb39",
+        "00c1ea43dff117e7ebebd10c18f6e4b8",
+        "fa1a3d286fef271f688c0b2db9ebff2c",
+        "10fa7e77d9760b0da14badd6303f62cb",
+        "90804606f6ab258fcf8c23ae81b64f9d",
+        "8e40a3bd0cae75e94f37f89669a7f5aa"
+      ],
+      "prefer-correct-callback-field-name": [
+        "ab7b94be8d1359a91a5190d3a8ba67d8",
+        "ab7b94be8d1359a91a5190d3a8ba67d8",
+        "210f2a401454926fe1b72719278d6ac0"
+      ],
+      "avoid-dynamic": [
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "9e3669d19b675bd57058fd4664205d2a",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "9e3669d19b675bd57058fd4664205d2a"
+      ],
+      "avoid-redundant-else": [
+        "ec4cfdb20b0bba51dd49d4f51110ff0d"
+      ],
+      "parameters-ordering": [
+        "26e0ca71248e8cdce6bd413cf16ca1bc",
+        "3b93c1a37b0111a955fe41b42691ac68",
+        "1c6f0e7ee85901be529ddb301be2ad43",
+        "3b93c1a37b0111a955fe41b42691ac68",
+        "1c6f0e7ee85901be529ddb301be2ad43",
+        "3b93c1a37b0111a955fe41b42691ac68"
+      ],
+      "prefer-explicit-function-type": [
+        "86408593c34af77fdd90df932f8b5261"
+      ],
+      "avoid-inferrable-type-arguments": [
+        "ff3da524b068dd032e566ea1883afaf8"
+      ],
+      "avoid-unused-generics": [
+        "ff3da524b068dd032e566ea1883afaf8"
+      ]
+    },
+    "lib/src/mappers/class_mapper.dart": {
+      "prefer-match-file-name": [
+        "f79498642d00558d08744b802bef3188"
+      ],
+      "member-ordering": [
+        "7e153ca76ed1274df809c922f3820421",
+        "f4e68e7c0adbe0948ad3d4a72f60ea77",
+        "3102f15709e983b5255cf3135e24f4b6",
+        "9d705cc48de2830c845a957e63cc2d0a",
+        "8f8bdad8fe154e36347d248f1939f0cb",
+        "14ff7fd29e11c67a07209eb1bd4a4331",
+        "dc5376e42afe36bfaa1874ea82a3e203"
+      ],
+      "avoid-dynamic": [
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "9e3669d19b675bd57058fd4664205d2a",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f",
+        "b72f3bd391ba731a35708bfd8cd8a68f"
+      ],
+      "prefer-explicit-function-type": [
+        "86408593c34af77fdd90df932f8b5261",
+        "86408593c34af77fdd90df932f8b5261"
+      ],
+      "avoid-redundant-else": [
+        "b372843ab594e4f07fd080f8c688dba4"
+      ],
+      "avoid-inferrable-type-arguments": [
+        "ff3da524b068dd032e566ea1883afaf8",
+        "ff3da524b068dd032e566ea1883afaf8",
+        "ff3da524b068dd032e566ea1883afaf8",
+        "ff3da524b068dd032e566ea1883afaf8"
+      ],
+      "avoid-shadowing": [
+        "6f8f57715090da2632453988d9a1501b"
+      ],
+      "avoid-unnecessary-nullable-return-type": [
+        "5476e74be12b7b2392d5dd04aa69d6d8"
+      ],
+      "parameters-ordering": [
+        "c1ba7981ee80e25d334a001dd3b59bb2",
+        "d8babfc8e2469a3b2a860a422a253fe7",
+        "d8babfc8e2469a3b2a860a422a253fe7",
+        "3b93c1a37b0111a955fe41b42691ac68",
+        "3b93c1a37b0111a955fe41b42691ac68",
+        "e4491523e9fbcf7d8f258edb77488f8e",
+        "e4491523e9fbcf7d8f258edb77488f8e",
+        "361764250c72636a9f9a1e6834446915"
+      ]
+    },
+    "lib/src/case_style.dart": {
+      "member-ordering": [
+        "8757a6887180c1e2e659f5c91897f86c",
+        "f1bb022fe8effb159d0761b90df0bfcb",
+        "6c21e5f892f20b81c3a33f927166bfca",
+        "d819100661f7f540a686f9f3104cfbb6",
+        "548d1126e0bb02264a165a2aa8fb545e",
+        "3ffbc1795eb9d74c3031969f905ff5fa",
+        "970c5ea22c24bdfa27eb0091672ef431",
+        "0e7cd7ba6572f4435ae02bf59e3ee1fb",
+        "5379f054364b2c333bf249627cb95b7f",
+        "768e12de37a0e8bed26807f534ff5b51",
+        "839bd03feb5710793a846c2a7f29a656",
+        "80629fac8b5cbedf56a950a91e7f25f6"
+      ],
+      "avoid-redundant-else": [
+        "5ecfb130582560f6a6c95079d3e6f82b",
+        "c72984c277a67031a64bcdfa75fd4f8f",
+        "13f981615e9bbb49b65138a82304f5d5",
+        "9c26ab0a7b36cf38c0372d12dc4beb36"
+      ],
+      "avoid-unsafe-collection-methods": [
+        "632372d71d4fdbca9440f542820c0a54"
+      ],
+      "parameters-ordering": [
+        "03281b8571da7026809322a2f920a575"
+      ]
+    }
+  }
+}
