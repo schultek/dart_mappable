@@ -65,6 +65,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
     await generateInstantiateMethod(output);
 
     generateStaticDecoders(output);
+    generateDeclaredFieldEncoder(output);
     output.write('}\n\n');
 
     if (element.generateAsMixin) {
