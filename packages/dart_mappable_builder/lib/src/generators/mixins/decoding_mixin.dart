@@ -39,16 +39,17 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
   }
 
   void generateTypeFactory(StringBuffer output) {
-    final impl = '${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();';
+    final impl =
+        '${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();';
     if (!element.hasRecursiveTypeParams) {
       output.write('''
       @override
       Function get typeFactory => $impl
     ''');
     } else {
-
       final deepBounds = element.element.typeParameters2
-          .map((p) => p.bound != null ? element.parent.prefixedType(p.bound!) : null)
+          .map((p) =>
+              p.bound != null ? element.parent.prefixedType(p.bound!) : null)
           .toList();
       final flatBounds = element.element.typeParameters2.map((p) {
         if (p.bound case InterfaceType bound) {
@@ -59,16 +60,14 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
           return '${p.name3}';
         }
       }).toList();
-      
 
-      final flatDeclaration = flatBounds.isNotEmpty
-          ? '<${flatBounds.join(', ')}>'
-          : '';
+      final flatDeclaration =
+          flatBounds.isNotEmpty ? '<${flatBounds.join(', ')}>' : '';
 
       final condition = [
         for (final (i, bound) in deepBounds.indexed)
-        if (bound != null)
-         '<${element.element.typeParameters2[i].name3}>[] is List<$bound>'
+          if (bound != null)
+            '<${element.element.typeParameters2[i].name3}>[] is List<$bound>'
       ].join(' && ');
 
       output.write('''
@@ -89,7 +88,8 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
   }
 
   Future<void> generateDiscriminatorFields(StringBuffer output) async {
-    var prefix = element.parent.prefixOfElement(element.superElement!.annotation.element);
+    var prefix = element.parent
+        .prefixOfElement(element.superElement!.annotation.element);
 
     output.write('''
     

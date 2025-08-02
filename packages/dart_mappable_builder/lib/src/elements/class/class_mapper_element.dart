@@ -98,8 +98,8 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement2>
 
     for (var f in _allFields) {
       if (!fields.containsKey(f) &&
-          !fields.keys
-              .any((e) => e is PropertyInducingElement2 && e.name3 == f.name3)) {
+          !fields.keys.any(
+              (e) => e is PropertyInducingElement2 && e.name3 == f.name3)) {
         fields[f] = ClassMapperFieldElement(null, f, this);
       }
     }

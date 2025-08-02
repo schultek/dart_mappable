@@ -12,18 +12,23 @@ mixin TypeParamsMixin on MapperElement<ClassElement2> {
   late String selfTypeParam = '$prefixedClassName$typeParams';
 
   late List<String> typeParamsList = element.typeParameters2
-      .map((p) => '${p.name3}${p.bound != null ? ' extends ${parent.prefixedType(p.bound!)}' : ''}')
+      .map((p) =>
+          '${p.name3}${p.bound != null ? ' extends ${parent.prefixedType(p.bound!)}' : ''}')
       .toList();
 
   late List<String> superTypeArgs = () {
     if (extendsElement == null) return <String>[];
-    return element.supertype?.typeArguments.map((a) => parent.prefixedType(a)).toList() ?? [];
+    return element.supertype?.typeArguments
+            .map((a) => parent.prefixedType(a))
+            .toList() ??
+        [];
   }();
 
   bool hasModifiedArgs = false;
 
   late List<String>? inheritedTypeArgs = () {
-    if (element.typeParameters2.length != element.supertype!.typeArguments.length) {
+    if (element.typeParameters2.length !=
+        element.supertype!.typeArguments.length) {
       hasModifiedArgs = true;
     }
 
@@ -46,7 +51,8 @@ mixin TypeParamsMixin on MapperElement<ClassElement2> {
       return t.getDisplayString();
     }
 
-    String argParamFor(int index) => r'$' + String.fromCharCode('A'.codeUnitAt(0) + index);
+    String argParamFor(int index) =>
+        r'$' + String.fromCharCode('A'.codeUnitAt(0) + index);
     var factoryArgs = <String>[];
     var inheritedArgs = <String>[];
 
@@ -120,14 +126,16 @@ mixin TypeParamsMixin on MapperElement<ClassElement2> {
     return 'dynamic';
   }
 
-  late String typeParams =
-      element.typeParameters2.isNotEmpty ? '<${element.typeParameters2.map((p) => p.name3 ?? '').join(', ')}>' : '';
+  late String typeParams = element.typeParameters2.isNotEmpty
+      ? '<${element.typeParameters2.map((p) => p.name3 ?? '').join(', ')}>'
+      : '';
 
   late String superTypeParams = element.typeParameters2.isNotEmpty
       ? '<${element.typeParameters2.map((p) => element.supertype!.typeArguments.any((t) => t is TypeParameterType && t.element3 == p) ? p.name3 ?? '' : 'dynamic').join(', ')}>'
       : '';
 
-  late String typeParamsDeclaration = typeParamsList.isNotEmpty ? '<${typeParamsList.join(', ')}>' : '';
+  late String typeParamsDeclaration =
+      typeParamsList.isNotEmpty ? '<${typeParamsList.join(', ')}>' : '';
 
   late bool hasRecursiveTypeParams = element.typeParameters2.any((p) {
     return p.bound != null && _isRecursiveType(p.bound!, {});

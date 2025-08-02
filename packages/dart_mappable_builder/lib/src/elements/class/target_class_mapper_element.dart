@@ -38,7 +38,10 @@ class TargetClassMapperElement extends ClassMapperElement
         var e = type.element3;
         var m = parent.getMapperForElement(e);
         if (m == null) {
-          types.add((e.name3 ?? '', e.typeParameters2.map((p) => p.name3 ?? '').toList()));
+          types.add((
+            e.name3 ?? '',
+            e.typeParameters2.map((p) => p.name3 ?? '').toList()
+          ));
         }
 
         for (var arg in type.typeArguments) {

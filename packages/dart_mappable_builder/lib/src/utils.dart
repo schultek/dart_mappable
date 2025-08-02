@@ -27,7 +27,9 @@ extension GetNode on Element2 {
   }
 
   Future<AstNode?> getResolvedNode() async {
-    return nodeResolver.astNodeFor(firstFragment, resolve: true).catchError((_) => null);
+    return nodeResolver
+        .astNodeFor(firstFragment, resolve: true)
+        .catchError((_) => null);
   }
 }
 

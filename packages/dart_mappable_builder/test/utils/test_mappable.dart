@@ -15,14 +15,14 @@ Map<String, String> singleModel(String modelClass) => {
 Future<void> testMappable(
   Map<String, String> inputs, {
   Map<String, String>? outputs,
-  
 }) async {
   final reader = TestReaderWriter(rootPackage: 'models');
   await reader.testing.loadIsolateSources();
   await testBuilder(
     MappableBuilder(BuilderOptions({})),
     inputs.map((key, value) => MapEntry('models|lib/$key.dart', value)),
-    outputs: outputs?.map((key, value) => MapEntry('models|lib/$key.mapper.dart', value)),
+    outputs: outputs
+        ?.map((key, value) => MapEntry('models|lib/$key.mapper.dart', value)),
     readerWriter: reader,
   );
 }

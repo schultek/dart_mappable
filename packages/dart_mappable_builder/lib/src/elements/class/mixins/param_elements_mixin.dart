@@ -85,7 +85,8 @@ mixin ParamElementsMixin on MapperElement<ClassElement2> {
       return init;
     }
 
-    var getter = element.thisType.lookUpGetter3(param.name3 ?? '', parent.library);
+    var getter =
+        element.thisType.lookUpGetter3(param.name3 ?? '', parent.library);
     if (getter != null) {
       var getterType = getter.type.returnType;
 

@@ -1,5 +1,3 @@
-
-
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
@@ -10,7 +8,6 @@ class ComparableBox<T extends Comparable<T>> with ComparableBoxMappable<T> {
   const ComparableBox(this.value);
   final T value;
 }
-
 
 void main() {
   group('Generic classes', () {
