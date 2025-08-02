@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -25,9 +26,7 @@ class ShepherdMapper extends SubClassMapperBase<Shepherd> {
   static const Field<Shepherd, String> _f$name = Field('name', _$name);
 
   @override
-  final MappableFields<Shepherd> fields = const {
-    #name: _f$name,
-  };
+  final MappableFields<Shepherd> fields = const {#name: _f$name};
   @override
   final bool ignoreNull = true;
 
@@ -56,18 +55,23 @@ class ShepherdMapper extends SubClassMapperBase<Shepherd> {
 
 mixin ShepherdMappable {
   String toJson() {
-    return ShepherdMapper.ensureInitialized()
-        .encodeJson<Shepherd>(this as Shepherd);
+    return ShepherdMapper.ensureInitialized().encodeJson<Shepherd>(
+      this as Shepherd,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return ShepherdMapper.ensureInitialized()
-        .encodeMap<Shepherd>(this as Shepherd);
+    return ShepherdMapper.ensureInitialized().encodeMap<Shepherd>(
+      this as Shepherd,
+    );
   }
 
   ShepherdCopyWith<Shepherd, Shepherd, Shepherd> get copyWith =>
       _ShepherdCopyWithImpl<Shepherd, Shepherd>(
-          this as Shepherd, $identity, $identity);
+        this as Shepherd,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return ShepherdMapper.ensureInitialized().stringifyValue(this as Shepherd);
@@ -75,8 +79,10 @@ mixin ShepherdMappable {
 
   @override
   bool operator ==(Object other) {
-    return ShepherdMapper.ensureInitialized()
-        .equalsValue(this as Shepherd, other);
+    return ShepherdMapper.ensureInitialized().equalsValue(
+      this as Shepherd,
+      other,
+    );
   }
 
   @override
@@ -114,8 +120,8 @@ class _ShepherdCopyWithImpl<$R, $Out>
 
   @override
   ShepherdCopyWith<$R2, Shepherd, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _ShepherdCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _ShepherdCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class DogMapper extends SubClassMapperBase<Dog> {
@@ -138,9 +144,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   static const Field<Dog, String> _f$name = Field('name', _$name);
 
   @override
-  final MappableFields<Dog> fields = const {
-    #name: _f$name,
-  };
+  final MappableFields<Dog> fields = const {#name: _f$name};
   @override
   final bool ignoreNull = true;
 
@@ -243,15 +247,16 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   static const Field<Animal, String> _f$name = Field('name', _$name);
 
   @override
-  final MappableFields<Animal> fields = const {
-    #name: _f$name,
-  };
+  final MappableFields<Animal> fields = const {#name: _f$name};
   @override
   final bool ignoreNull = true;
 
   static Animal _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
-        'Animal', 'type', '${data.value['type']}');
+      'Animal',
+      'type',
+      '${data.value['type']}',
+    );
   }
 
   @override
@@ -298,9 +303,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   static const Field<Cat, String> _f$name = Field('name', _$name);
 
   @override
-  final MappableFields<Cat> fields = const {
-    #name: _f$name,
-  };
+  final MappableFields<Cat> fields = const {#name: _f$name};
   @override
   final bool ignoreNull = true;
 
@@ -313,7 +316,10 @@ class CatMapper extends SubClassMapperBase<Cat> {
 
   static Cat _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
-        'Cat', 'breed', '${data.value['breed']}');
+      'Cat',
+      'breed',
+      '${data.value['breed']}',
+    );
   }
 
   @override
@@ -360,9 +366,7 @@ class SiameseMapper extends SubClassMapperBase<Siamese> {
   static const Field<Siamese, String> _f$name = Field('name', _$name);
 
   @override
-  final MappableFields<Siamese> fields = const {
-    #name: _f$name,
-  };
+  final MappableFields<Siamese> fields = const {#name: _f$name};
   @override
   final bool ignoreNull = true;
 
@@ -391,18 +395,23 @@ class SiameseMapper extends SubClassMapperBase<Siamese> {
 
 mixin SiameseMappable {
   String toJson() {
-    return SiameseMapper.ensureInitialized()
-        .encodeJson<Siamese>(this as Siamese);
+    return SiameseMapper.ensureInitialized().encodeJson<Siamese>(
+      this as Siamese,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return SiameseMapper.ensureInitialized()
-        .encodeMap<Siamese>(this as Siamese);
+    return SiameseMapper.ensureInitialized().encodeMap<Siamese>(
+      this as Siamese,
+    );
   }
 
   SiameseCopyWith<Siamese, Siamese, Siamese> get copyWith =>
       _SiameseCopyWithImpl<Siamese, Siamese>(
-          this as Siamese, $identity, $identity);
+        this as Siamese,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return SiameseMapper.ensureInitialized().stringifyValue(this as Siamese);
@@ -410,8 +419,10 @@ mixin SiameseMappable {
 
   @override
   bool operator ==(Object other) {
-    return SiameseMapper.ensureInitialized()
-        .equalsValue(this as Siamese, other);
+    return SiameseMapper.ensureInitialized().equalsValue(
+      this as Siamese,
+      other,
+    );
   }
 
   @override
@@ -470,9 +481,7 @@ class HumanMapper extends ClassMapperBase<Human> {
   static const Field<Human, Cat> _f$cat = Field('cat', _$cat);
 
   @override
-  final MappableFields<Human> fields = const {
-    #cat: _f$cat,
-  };
+  final MappableFields<Human> fields = const {#cat: _f$cat};
 
   static Human _instantiate(DecodingData data) {
     return Human(data.dec(_f$cat));
@@ -548,3 +557,4 @@ class _HumanCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Human, $Out>
   HumanCopyWith<$R2, Human, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _HumanCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -26,8 +27,10 @@ class BaseMapper extends ClassMapperBase<Base> {
   static String _$name(Base v) => v.name;
   static const Field<Base, String> _f$name = Field('name', _$name);
   static Map<String, dynamic> _$objects(Base v) => v.objects;
-  static const Field<Base, Map<String, dynamic>> _f$objects =
-      Field('objects', _$objects);
+  static const Field<Base, Map<String, dynamic>> _f$objects = Field(
+    'objects',
+    _$objects,
+  );
 
   @override
   final MappableFields<Base> fields = const {
@@ -61,7 +64,7 @@ mixin BaseMappable {
 abstract class BaseCopyWith<$R, $In extends Base, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>?>
-      get objects;
+  get objects;
   $R call({String? id, String? name, Map<String, dynamic>? objects});
   BaseCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -86,8 +89,10 @@ class OneMapper extends ClassMapperBase<One> {
   static String _$name(One v) => v.name;
   static const Field<One, String> _f$name = Field('name', _$name);
   static Map<String, dynamic> _$objects(One v) => v.objects;
-  static const Field<One, Map<String, dynamic>> _f$objects =
-      Field('objects', _$objects);
+  static const Field<One, Map<String, dynamic>> _f$objects = Field(
+    'objects',
+    _$objects,
+  );
 
   @override
   final MappableFields<One> fields = const {
@@ -98,9 +103,10 @@ class OneMapper extends ClassMapperBase<One> {
 
   static One _instantiate(DecodingData data) {
     return One(
-        id: data.dec(_f$id),
-        name: data.dec(_f$name),
-        objects: data.dec(_f$objects));
+      id: data.dec(_f$id),
+      name: data.dec(_f$name),
+      objects: data.dec(_f$objects),
+    );
   }
 
   @override
@@ -151,7 +157,7 @@ abstract class OneCopyWith<$R, $In extends One, $Out>
     implements BaseCopyWith<$R, $In, $Out> {
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
-      get objects;
+  get objects;
   @override
   $R call({String? id, String? name, Map<String, dynamic>? objects});
   OneCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -165,20 +171,25 @@ class _OneCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, One, $Out>
   late final ClassMapperBase<One> $mapper = OneMapper.ensureInitialized();
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
-      get objects => MapCopyWith($value.objects,
-          (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(objects: v));
+  get objects => MapCopyWith(
+    $value.objects,
+    (v, t) => ObjectCopyWith(v, $identity, t),
+    (v) => call(objects: v),
+  );
   @override
-  $R call({String? id, String? name, Map<String, dynamic>? objects}) =>
-      $apply(FieldCopyWithData({
-        if (id != null) #id: id,
-        if (name != null) #name: name,
-        if (objects != null) #objects: objects
-      }));
+  $R call({String? id, String? name, Map<String, dynamic>? objects}) => $apply(
+    FieldCopyWithData({
+      if (id != null) #id: id,
+      if (name != null) #name: name,
+      if (objects != null) #objects: objects,
+    }),
+  );
   @override
   One $make(CopyWithData data) => One(
-      id: data.get(#id, or: $value.id),
-      name: data.get(#name, or: $value.name),
-      objects: data.get(#objects, or: $value.objects));
+    id: data.get(#id, or: $value.id),
+    name: data.get(#name, or: $value.name),
+    objects: data.get(#objects, or: $value.objects),
+  );
 
   @override
   OneCopyWith<$R2, One, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
@@ -203,9 +214,7 @@ class TwoMapper extends ClassMapperBase<Two> {
   static const Field<Two, String> _f$id = Field('id', _$id);
 
   @override
-  final MappableFields<Two> fields = const {
-    #id: _f$id,
-  };
+  final MappableFields<Two> fields = const {#id: _f$id};
 
   static Two _instantiate(DecodingData data) {
     return Two(id: data.dec(_f$id));
@@ -276,3 +285,4 @@ class _TwoCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Two, $Out>
   TwoCopyWith<$R2, Two, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _TwoCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -72,13 +73,13 @@ class ClassAMapper extends ClassMapperBase<ClassA> {
   final String id = 'ClassA';
 
   static Map<EnumA, bool?> _$someVariable(ClassA v) => v.someVariable;
-  static const Field<ClassA, Map<EnumA, bool?>> _f$someVariable =
-      Field('someVariable', _$someVariable);
+  static const Field<ClassA, Map<EnumA, bool?>> _f$someVariable = Field(
+    'someVariable',
+    _$someVariable,
+  );
 
   @override
-  final MappableFields<ClassA> fields = const {
-    #someVariable: _f$someVariable,
-  };
+  final MappableFields<ClassA> fields = const {#someVariable: _f$someVariable};
 
   static ClassA _instantiate(DecodingData data) {
     return ClassA(data.dec(_f$someVariable));
@@ -131,7 +132,7 @@ extension ClassAValueCopy<$R, $Out> on ObjectCopyWith<$R, ClassA, $Out> {
 abstract class ClassACopyWith<$R, $In extends ClassA, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, EnumA, bool?, ObjectCopyWith<$R, bool?, bool?>?>
-      get someVariable;
+  get someVariable;
   $R call({Map<EnumA, bool?>? someVariable});
   ClassACopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -144,13 +145,15 @@ class _ClassACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, ClassA, $Out>
   late final ClassMapperBase<ClassA> $mapper = ClassAMapper.ensureInitialized();
   @override
   MapCopyWith<$R, EnumA, bool?, ObjectCopyWith<$R, bool?, bool?>?>
-      get someVariable => MapCopyWith(
-          $value.someVariable,
-          (v, t) => ObjectCopyWith(v, $identity, t),
-          (v) => call(someVariable: v));
+  get someVariable => MapCopyWith(
+    $value.someVariable,
+    (v, t) => ObjectCopyWith(v, $identity, t),
+    (v) => call(someVariable: v),
+  );
   @override
-  $R call({Map<EnumA, bool?>? someVariable}) => $apply(FieldCopyWithData(
-      {if (someVariable != null) #someVariable: someVariable}));
+  $R call({Map<EnumA, bool?>? someVariable}) => $apply(
+    FieldCopyWithData({if (someVariable != null) #someVariable: someVariable}),
+  );
   @override
   ClassA $make(CopyWithData data) =>
       ClassA(data.get(#someVariable, or: $value.someVariable));
@@ -159,3 +162,4 @@ class _ClassACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, ClassA, $Out>
   ClassACopyWith<$R2, ClassA, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _ClassACopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

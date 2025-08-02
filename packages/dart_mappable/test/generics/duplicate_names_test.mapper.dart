@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -21,14 +22,18 @@ class BoxMapper extends ClassMapperBase<Box> {
   @override
   final String id = 'Box2';
   @override
-  Function get typeFactory => <T extends Content>(f) => f<Box<T>>();
+  Function get typeFactory =>
+      <T extends Content>(f) => f<Box<T>>();
 
   static int _$size(Box v) => v.size;
   static const Field<Box, int> _f$size = Field('size', _$size);
   static Content _$contents(Box v) => v.contents;
   static dynamic _arg$contents<T extends Content>(f) => f<T>();
-  static const Field<Box, Content> _f$contents =
-      Field('contents', _$contents, arg: _arg$contents);
+  static const Field<Box, Content> _f$contents = Field(
+    'contents',
+    _$contents,
+    arg: _arg$contents,
+  );
 
   @override
   final MappableFields<Box> fields = const {
@@ -103,13 +108,17 @@ class _BoxCopyWithImpl<$R, $Out, T extends Content>
   ContentCopyWith<$R, Content, T> get contents =>
       $value.contents.copyWith.$chain((v) => call(contents: v));
   @override
-  $R call({int? size, T? contents}) => $apply(FieldCopyWithData({
-        if (size != null) #size: size,
-        if (contents != null) #contents: contents
-      }));
+  $R call({int? size, T? contents}) => $apply(
+    FieldCopyWithData({
+      if (size != null) #size: size,
+      if (contents != null) #contents: contents,
+    }),
+  );
   @override
-  Box<T> $make(CopyWithData data) => Box(data.get(#size, or: $value.size),
-      contents: data.get(#contents, or: $value.contents));
+  Box<T> $make(CopyWithData data) => Box(
+    data.get(#size, or: $value.size),
+    contents: data.get(#contents, or: $value.contents),
+  );
 
   @override
   BoxCopyWith<$R2, Box<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
@@ -134,9 +143,7 @@ class ContentMapper extends ClassMapperBase<Content> {
   static const Field<Content, String> _f$data = Field('data', _$data);
 
   @override
-  final MappableFields<Content> fields = const {
-    #data: _f$data,
-  };
+  final MappableFields<Content> fields = const {#data: _f$data};
 
   static Content _instantiate(DecodingData data) {
     return Content(data.dec(_f$data));
@@ -156,18 +163,23 @@ class ContentMapper extends ClassMapperBase<Content> {
 
 mixin ContentMappable {
   String toJson() {
-    return ContentMapper.ensureInitialized()
-        .encodeJson<Content>(this as Content);
+    return ContentMapper.ensureInitialized().encodeJson<Content>(
+      this as Content,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return ContentMapper.ensureInitialized()
-        .encodeMap<Content>(this as Content);
+    return ContentMapper.ensureInitialized().encodeMap<Content>(
+      this as Content,
+    );
   }
 
   ContentCopyWith<Content, Content, Content> get copyWith =>
       _ContentCopyWithImpl<Content, Content>(
-          this as Content, $identity, $identity);
+        this as Content,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return ContentMapper.ensureInitialized().stringifyValue(this as Content);
@@ -175,8 +187,10 @@ mixin ContentMappable {
 
   @override
   bool operator ==(Object other) {
-    return ContentMapper.ensureInitialized()
-        .equalsValue(this as Content, other);
+    return ContentMapper.ensureInitialized().equalsValue(
+      this as Content,
+      other,
+    );
   }
 
   @override
@@ -214,3 +228,4 @@ class _ContentCopyWithImpl<$R, $Out>
   ContentCopyWith<$R2, Content, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _ContentCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

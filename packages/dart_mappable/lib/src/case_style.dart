@@ -40,7 +40,8 @@ class CaseStyle {
         var match = _customCase.firstMatch(value);
         if (match == null || match.groupCount != 2) {
           throw FormatException(
-              "Cannot parse custom caseStyle expression '$value'");
+            "Cannot parse custom caseStyle expression '$value'",
+          );
         }
 
         TextTransform? head, tail;
@@ -70,19 +71,25 @@ class CaseStyle {
   static const unmodified = 'unmodified';
 
   /// Transforms to 'fieldName'
-  static const camelCase =
-      CaseStyle(head: TextTransform.lowerCase, tail: TextTransform.capitalCase);
+  static const camelCase = CaseStyle(
+    head: TextTransform.lowerCase,
+    tail: TextTransform.capitalCase,
+  );
 
   /// Transforms to 'FieldName'
   static const pascalCase = CaseStyle(tail: TextTransform.capitalCase);
 
   /// Transforms to 'field_name'
-  static const snakeCase =
-      CaseStyle(tail: TextTransform.lowerCase, separator: '_');
+  static const snakeCase = CaseStyle(
+    tail: TextTransform.lowerCase,
+    separator: '_',
+  );
 
   /// Transforms to 'field-name'
-  static const paramCase =
-      CaseStyle(tail: TextTransform.lowerCase, separator: '-');
+  static const paramCase = CaseStyle(
+    tail: TextTransform.lowerCase,
+    separator: '-',
+  );
 
   /// Transforms to 'fieldname'
   static const lowerCase = CaseStyle(tail: TextTransform.lowerCase);
@@ -91,8 +98,10 @@ class CaseStyle {
   static const upperCase = CaseStyle(tail: TextTransform.upperCase);
 
   /// Transforms to 'FIELD_NAME'
-  static const upperSnakeCase =
-      CaseStyle(tail: TextTransform.upperCase, separator: '_');
+  static const upperSnakeCase = CaseStyle(
+    tail: TextTransform.upperCase,
+    separator: '_',
+  );
 }
 
 extension CaseStyleTransform on CaseStyle? {
@@ -106,7 +115,7 @@ extension CaseStyleTransform on CaseStyle? {
       if (style.head != null) {
         words = [
           style.head.transform(words[0]),
-          ...words.skip(1).map((w) => style.tail.transform(w))
+          ...words.skip(1).map((w) => style.tail.transform(w)),
         ];
       } else if (style.tail != null) {
         words = words.map((w) => style.tail.transform(w)).toList();

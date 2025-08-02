@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -22,16 +23,15 @@ class AMapper extends ClassMapperBase<A> {
   @override
   final String id = 'A';
   @override
-  Function get typeFactory => <T extends C>(f) => f<A<T>>();
+  Function get typeFactory =>
+      <T extends C>(f) => f<A<T>>();
 
   static C _$value(A v) => v.value;
   static dynamic _arg$value<T extends C>(f) => f<T>();
   static const Field<A, C> _f$value = Field('value', _$value, arg: _arg$value);
 
   @override
-  final MappableFields<A> fields = const {
-    #value: _f$value,
-  };
+  final MappableFields<A> fields = const {#value: _f$value};
 
   static A<T> _instantiate<T extends C>(DecodingData data) {
     return A(data.dec(_f$value));
@@ -128,9 +128,7 @@ class CMapper extends ClassMapperBase<C> {
   static const Field<C, String> _f$data = Field('data', _$data);
 
   @override
-  final MappableFields<C> fields = const {
-    #data: _f$data,
-  };
+  final MappableFields<C> fields = const {#data: _f$data};
 
   static C _instantiate(DecodingData data) {
     throw MapperException.missingConstructor('C');
@@ -180,9 +178,7 @@ class BMapper extends ClassMapperBase<B> {
   static const Field<B, D> _f$value = Field('value', _$value);
 
   @override
-  final MappableFields<B> fields = const {
-    #value: _f$value,
-  };
+  final MappableFields<B> fields = const {#value: _f$value};
 
   static B _instantiate(DecodingData data) {
     return B(data.dec(_f$value));
@@ -280,9 +276,7 @@ class DMapper extends ClassMapperBase<D> {
   static const Field<D, String> _f$data = Field('data', _$data);
 
   @override
-  final MappableFields<D> fields = const {
-    #data: _f$data,
-  };
+  final MappableFields<D> fields = const {#data: _f$data};
 
   static D _instantiate(DecodingData data) {
     return D(data: data.dec(_f$data));
@@ -355,3 +349,4 @@ class _DCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, D, $Out>
   DCopyWith<$R2, D, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _DCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

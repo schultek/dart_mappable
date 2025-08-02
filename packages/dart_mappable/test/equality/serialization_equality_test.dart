@@ -77,7 +77,9 @@ void main() {
       expect(w, equals(WrapperMapper.fromMap<String>(w.toMap())));
       expect(wNull, equals(WrapperMapper.fromMap<String?>(wNull.toMap())));
       expect(
-          wNullReal, equals(WrapperMapper.fromMap<String?>(wNullReal.toMap())));
+        wNullReal,
+        equals(WrapperMapper.fromMap<String?>(wNullReal.toMap())),
+      );
 
       expect(wObj, equals(WrapperMapper.fromMap<Object>(wObj.toMap())));
       expect(wObj2, equals(WrapperMapper.fromMap<Object>(wObj2.toMap())));
@@ -92,7 +94,9 @@ void main() {
       expect(w, equals(m.fromMap<dynamic>(m.toMap<dynamic>(w))));
       expect(wNull, equals(m.fromMap<dynamic>(m.toMap<dynamic>(wNull))));
       expect(
-          wNullReal, equals(m.fromMap<dynamic>(m.toMap<dynamic>(wNullReal))));
+        wNullReal,
+        equals(m.fromMap<dynamic>(m.toMap<dynamic>(wNullReal))),
+      );
 
       expect(wObj, equals(m.fromMap<WO>(m.toMap<WO>(wObj))));
       expect(wObj2, equals(m.fromMap<WO>(m.toMap<WO>(wObj2))));

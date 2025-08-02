@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -22,13 +23,13 @@ class PrivateContainerMapper extends ClassMapperBase<PrivateContainer> {
   final String id = 'ABC';
 
   static MyPrivateClass _$value(PrivateContainer v) => v.value;
-  static const Field<PrivateContainer, MyPrivateClass> _f$value =
-      Field('value', _$value);
+  static const Field<PrivateContainer, MyPrivateClass> _f$value = Field(
+    'value',
+    _$value,
+  );
 
   @override
-  final MappableFields<PrivateContainer> fields = const {
-    #value: _f$value,
-  };
+  final MappableFields<PrivateContainer> fields = const {#value: _f$value};
   @override
   final bool ignoreNull = true;
 
@@ -60,40 +61,48 @@ mixin PrivateContainerMappable {
   }
 
   PrivateContainerCopyWith<PrivateContainer, PrivateContainer, PrivateContainer>
-      get copyWith =>
-          _PrivateContainerCopyWithImpl<PrivateContainer, PrivateContainer>(
-              this as PrivateContainer, $identity, $identity);
+  get copyWith =>
+      _PrivateContainerCopyWithImpl<PrivateContainer, PrivateContainer>(
+        this as PrivateContainer,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
-    return PrivateContainerMapper.ensureInitialized()
-        .stringifyValue(this as PrivateContainer);
+    return PrivateContainerMapper.ensureInitialized().stringifyValue(
+      this as PrivateContainer,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return PrivateContainerMapper.ensureInitialized()
-        .equalsValue(this as PrivateContainer, other);
+    return PrivateContainerMapper.ensureInitialized().equalsValue(
+      this as PrivateContainer,
+      other,
+    );
   }
 
   @override
   int get hashCode {
-    return PrivateContainerMapper.ensureInitialized()
-        .hashValue(this as PrivateContainer);
+    return PrivateContainerMapper.ensureInitialized().hashValue(
+      this as PrivateContainer,
+    );
   }
 }
 
 extension PrivateContainerValueCopy<$R, $Out>
     on ObjectCopyWith<$R, PrivateContainer, $Out> {
   PrivateContainerCopyWith<$R, PrivateContainer, $Out>
-      get $asPrivateContainer => $base
-          .as((v, t, t2) => _PrivateContainerCopyWithImpl<$R, $Out>(v, t, t2));
+  get $asPrivateContainer =>
+      $base.as((v, t, t2) => _PrivateContainerCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class PrivateContainerCopyWith<$R, $In extends PrivateContainer, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({MyPrivateClass? value});
   PrivateContainerCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
+    Then<$Out2, $R2> t,
+  );
 }
 
 class _PrivateContainerCopyWithImpl<$R, $Out>
@@ -113,8 +122,8 @@ class _PrivateContainerCopyWithImpl<$R, $Out>
 
   @override
   PrivateContainerCopyWith<$R2, PrivateContainer, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _PrivateContainerCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _PrivateContainerCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class PrivateContainer2Mapper extends ClassMapperBase<PrivateContainer2> {
@@ -133,13 +142,13 @@ class PrivateContainer2Mapper extends ClassMapperBase<PrivateContainer2> {
   final String id = 'ABC';
 
   static MyPrivateClass _$value(PrivateContainer2 v) => v.value;
-  static const Field<PrivateContainer2, MyPrivateClass> _f$value =
-      Field('value', _$value);
+  static const Field<PrivateContainer2, MyPrivateClass> _f$value = Field(
+    'value',
+    _$value,
+  );
 
   @override
-  final MappableFields<PrivateContainer2> fields = const {
-    #value: _f$value,
-  };
+  final MappableFields<PrivateContainer2> fields = const {#value: _f$value};
   @override
   final bool ignoreNull = true;
 
@@ -170,42 +179,58 @@ mixin PrivateContainer2Mappable {
         .encodeMap<PrivateContainer2>(this as PrivateContainer2);
   }
 
-  PrivateContainer2CopyWith<PrivateContainer2, PrivateContainer2,
-          PrivateContainer2>
-      get copyWith =>
-          _PrivateContainer2CopyWithImpl<PrivateContainer2, PrivateContainer2>(
-              this as PrivateContainer2, $identity, $identity);
+  PrivateContainer2CopyWith<
+    PrivateContainer2,
+    PrivateContainer2,
+    PrivateContainer2
+  >
+  get copyWith =>
+      _PrivateContainer2CopyWithImpl<PrivateContainer2, PrivateContainer2>(
+        this as PrivateContainer2,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
-    return PrivateContainer2Mapper.ensureInitialized()
-        .stringifyValue(this as PrivateContainer2);
+    return PrivateContainer2Mapper.ensureInitialized().stringifyValue(
+      this as PrivateContainer2,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return PrivateContainer2Mapper.ensureInitialized()
-        .equalsValue(this as PrivateContainer2, other);
+    return PrivateContainer2Mapper.ensureInitialized().equalsValue(
+      this as PrivateContainer2,
+      other,
+    );
   }
 
   @override
   int get hashCode {
-    return PrivateContainer2Mapper.ensureInitialized()
-        .hashValue(this as PrivateContainer2);
+    return PrivateContainer2Mapper.ensureInitialized().hashValue(
+      this as PrivateContainer2,
+    );
   }
 }
 
 extension PrivateContainer2ValueCopy<$R, $Out>
     on ObjectCopyWith<$R, PrivateContainer2, $Out> {
   PrivateContainer2CopyWith<$R, PrivateContainer2, $Out>
-      get $asPrivateContainer2 => $base
-          .as((v, t, t2) => _PrivateContainer2CopyWithImpl<$R, $Out>(v, t, t2));
+  get $asPrivateContainer2 => $base.as(
+    (v, t, t2) => _PrivateContainer2CopyWithImpl<$R, $Out>(v, t, t2),
+  );
 }
 
-abstract class PrivateContainer2CopyWith<$R, $In extends PrivateContainer2,
-    $Out> implements ClassCopyWith<$R, $In, $Out> {
+abstract class PrivateContainer2CopyWith<
+  $R,
+  $In extends PrivateContainer2,
+  $Out
+>
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({MyPrivateClass? value});
   PrivateContainer2CopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
+    Then<$Out2, $R2> t,
+  );
 }
 
 class _PrivateContainer2CopyWithImpl<$R, $Out>
@@ -225,6 +250,7 @@ class _PrivateContainer2CopyWithImpl<$R, $Out>
 
   @override
   PrivateContainer2CopyWith<$R2, PrivateContainer2, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _PrivateContainer2CopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _PrivateContainer2CopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

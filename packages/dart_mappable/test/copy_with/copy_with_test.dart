@@ -87,8 +87,9 @@ void main() {
       p2 = p2.copyWith.car(brand: null);
       expect(p2.car.brand, equals(null));
 
-      Person p3 =
-          person.copyWith.car.$update((c) => Car(c.brand, '${c.model}_xx'));
+      Person p3 = person.copyWith.car.$update(
+        (c) => Car(c.brand, '${c.model}_xx'),
+      );
       expect(p3.car.brand, equals(person.car.brand));
       expect(p3.car.model, equals('A8_xx'));
     });
@@ -117,19 +118,25 @@ void main() {
 
       expect(
         dealership.copyWith.salesRep.get(audi)!(name: 'Tony'),
-        equals(Dealership(cars, {
-          ...salesRep,
-          audi: Person('Tony', Car(audi, 'A9')),
-        })),
+        equals(
+          Dealership(cars, {
+            ...salesRep,
+            audi: Person('Tony', Car(audi, 'A9')),
+          }),
+        ),
       );
 
       expect(
-        dealership.copyWith.salesRep
-            .put(porsche, Person('Justus', Car(porsche, '911'))),
-        equals(Dealership(cars, {
-          ...salesRep,
-          porsche: Person('Justus', Car(porsche, '911')),
-        })),
+        dealership.copyWith.salesRep.put(
+          porsche,
+          Person('Justus', Car(porsche, '911')),
+        ),
+        equals(
+          Dealership(cars, {
+            ...salesRep,
+            porsche: Person('Justus', Car(porsche, '911')),
+          }),
+        ),
       );
     });
 

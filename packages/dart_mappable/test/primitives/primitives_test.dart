@@ -73,12 +73,16 @@ void main() {
 
     test('Mapping of List and Set', () {
       expect(m.fromJson<List<int>>('[2, 4, 105.6]'), equals([2, 4, 106]));
-      expect(m.fromValue<List<String>>([1, 'a', MyClass('Tom')]),
-          equals(['1', 'a', 'MyClass{Tom}']));
+      expect(
+        m.fromValue<List<String>>([1, 'a', MyClass('Tom')]),
+        equals(['1', 'a', 'MyClass{Tom}']),
+      );
 
       expect(m.fromJson<Set<int>>('[2, 4, 105.6]'), equals({2, 4, 106}));
-      expect(m.fromValue<Set<String>>([1, 'a', MyClass('Tom')]),
-          equals({'1', 'a', 'MyClass{Tom}'}));
+      expect(
+        m.fromValue<Set<String>>([1, 'a', MyClass('Tom')]),
+        equals({'1', 'a', 'MyClass{Tom}'}),
+      );
 
       Items a = Items([Item(1), Item(2)], {1: Item(3)});
       Items b = Items([Item(1), Item(2)], {1: Item(3)});
@@ -87,15 +91,14 @@ void main() {
 
     test('Mapping of Map', () {
       expect(m.fromJson<Map<String, int>>('{"a": 2}'), equals({'a': 2}));
-      expect(m.fromValue<Map<String, String>>({'a': MyClass('Tom')}),
-          equals({'a': 'MyClass{Tom}'}));
+      expect(
+        m.fromValue<Map<String, String>>({'a': MyClass('Tom')}),
+        equals({'a': 'MyClass{Tom}'}),
+      );
 
       expect(
         m.toValue<Map<String, dynamic>>({'a': 2, 'b': 'test'}),
-        allOf(
-          isA<Map<String, dynamic>>(),
-          equals({'a': 2, 'b': 'test'}),
-        ),
+        allOf(isA<Map<String, dynamic>>(), equals({'a': 2, 'b': 'test'})),
       );
     });
   });

@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -92,11 +93,13 @@ class AMapper extends ClassMapperBase<A> {
   };
 
   static A _instantiate(DecodingData data) {
-    return A(data.dec(_f$a),
-        b: data.dec(_f$b),
-        c: data.dec(_f$c),
-        d: data.dec(_f$d),
-        e: data.dec(_f$e));
+    return A(
+      data.dec(_f$a),
+      b: data.dec(_f$b),
+      c: data.dec(_f$c),
+      d: data.dec(_f$d),
+      e: data.dec(_f$e),
+    );
   }
 
   @override
@@ -157,21 +160,26 @@ class _ACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, A, $Out>
   late final ClassMapperBase<A> $mapper = AMapper.ensureInitialized();
   @override
   $R call({String? a, int? b, Object? c = $none, bool? d, Object? e = $none}) =>
-      $apply(FieldCopyWithData({
-        if (a != null) #a: a,
-        if (b != null) #b: b,
-        if (c != $none) #c: c,
-        if (d != null) #d: d,
-        if (e != $none) #e: e
-      }));
+      $apply(
+        FieldCopyWithData({
+          if (a != null) #a: a,
+          if (b != null) #b: b,
+          if (c != $none) #c: c,
+          if (d != null) #d: d,
+          if (e != $none) #e: e,
+        }),
+      );
   @override
-  A $make(CopyWithData data) => A(data.get(#a, or: $value.a),
-      b: data.get(#b, or: $value.b),
-      c: data.get(#c, or: $value.c),
-      d: data.get(#d, or: $value.d),
-      e: data.get(#e, or: $value.e));
+  A $make(CopyWithData data) => A(
+    data.get(#a, or: $value.a),
+    b: data.get(#b, or: $value.b),
+    c: data.get(#c, or: $value.c),
+    d: data.get(#d, or: $value.d),
+    e: data.get(#e, or: $value.e),
+  );
 
   @override
   ACopyWith<$R2, A, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _ACopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

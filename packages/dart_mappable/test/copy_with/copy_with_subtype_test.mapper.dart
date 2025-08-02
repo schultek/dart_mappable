@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -26,13 +27,14 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   static const Field<Animal, String> _f$name = Field('name', _$name);
 
   @override
-  final MappableFields<Animal> fields = const {
-    #name: _f$name,
-  };
+  final MappableFields<Animal> fields = const {#name: _f$name};
 
   static Animal _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
-        'Animal', 'type', '${data.value['type']}');
+      'Animal',
+      'type',
+      '${data.value['type']}',
+    );
   }
 
   @override
@@ -70,10 +72,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   static const Field<Cat, String> _f$color = Field('color', _$color);
 
   @override
-  final MappableFields<Cat> fields = const {
-    #name: _f$name,
-    #color: _f$color,
-  };
+  final MappableFields<Cat> fields = const {#name: _f$name, #color: _f$color};
 
   @override
   final String discriminatorKey = 'type';
@@ -118,8 +117,12 @@ class _CatCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Cat, $Out>
   @override
   late final ClassMapperBase<Cat> $mapper = CatMapper.ensureInitialized();
   @override
-  $R call({String? name, String? color}) => $apply(FieldCopyWithData(
-      {if (name != null) #name: name, if (color != null) #color: color}));
+  $R call({String? name, String? color}) => $apply(
+    FieldCopyWithData({
+      if (name != null) #name: name,
+      if (color != null) #color: color,
+    }),
+  );
   @override
   Cat $make(CopyWithData data) =>
       Cat(data.get(#name, or: $value.name), data.get(#color, or: $value.color));
@@ -148,9 +151,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   static const Field<Dog, String> _f$name = Field('name', _$name);
 
   @override
-  final MappableFields<Dog> fields = const {
-    #name: _f$name,
-  };
+  final MappableFields<Dog> fields = const {#name: _f$name};
 
   @override
   final String discriminatorKey = 'type';
@@ -224,9 +225,7 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   static const Field<Zoo, Animal> _f$animal = Field('animal', _$animal);
 
   @override
-  final MappableFields<Zoo> fields = const {
-    #animal: _f$animal,
-  };
+  final MappableFields<Zoo> fields = const {#animal: _f$animal};
 
   static Zoo _instantiate(DecodingData data) {
     return Zoo(data.dec(_f$animal));
@@ -292,7 +291,8 @@ class AMapper extends ClassMapperBase<A> {
   @override
   final String id = 'A';
   @override
-  Function get typeFactory => <T>(f) => f<A<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<A<T>>();
 
   @override
   final MappableFields<A> fields = const {};
@@ -382,7 +382,8 @@ class CMapper extends ClassMapperBase<C> {
   @override
   final String id = 'C';
   @override
-  Function get typeFactory => <T>(f) => f<C<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<C<T>>();
 
   @override
   final MappableFields<C> fields = const {};
@@ -479,10 +480,7 @@ class BMapper extends ClassMapperBase<B> {
   static const Field<B, A<dynamic>> _f$a = Field('a', _$a);
 
   @override
-  final MappableFields<B> fields = const {
-    #list: _f$list,
-    #a: _f$a,
-  };
+  final MappableFields<B> fields = const {#list: _f$list, #a: _f$a};
 
   static B _instantiate(DecodingData data) {
     return B(data.dec(_f$list), data.dec(_f$a));
@@ -535,7 +533,7 @@ extension BValueCopy<$R, $Out> on ObjectCopyWith<$R, B, $Out> {
 abstract class BCopyWith<$R, $In extends B, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, A<dynamic>?, ACopyWith<$R, A<dynamic>, A<dynamic>, dynamic>?>
-      get list;
+  get list;
   ACopyWith<$R, A<dynamic>, A<dynamic>, dynamic>? get a;
   $R call({List<A<dynamic>?>? list, A<dynamic>? a});
   BCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -549,15 +547,18 @@ class _BCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, B, $Out>
   late final ClassMapperBase<B> $mapper = BMapper.ensureInitialized();
   @override
   ListCopyWith<$R, A<dynamic>?, ACopyWith<$R, A<dynamic>, A<dynamic>, dynamic>?>
-      get list => ListCopyWith(
-          $value.list, (v, t) => v?.copyWith.$chain(t), (v) => call(list: v));
+  get list => ListCopyWith(
+    $value.list,
+    (v, t) => v?.copyWith.$chain(t),
+    (v) => call(list: v),
+  );
   @override
   ACopyWith<$R, A<dynamic>, A<dynamic>, dynamic>? get a =>
       $value.a?.copyWith.$chain((v) => call(a: v));
   @override
-  $R call({List<A<dynamic>?>? list, Object? a = $none}) =>
-      $apply(FieldCopyWithData(
-          {if (list != null) #list: list, if (a != $none) #a: a}));
+  $R call({List<A<dynamic>?>? list, Object? a = $none}) => $apply(
+    FieldCopyWithData({if (list != null) #list: list, if (a != $none) #a: a}),
+  );
   @override
   B $make(CopyWithData data) =>
       B(data.get(#list, or: $value.list), data.get(#a, or: $value.a));
@@ -566,3 +567,4 @@ class _BCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, B, $Out>
   BCopyWith<$R2, B, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _BCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

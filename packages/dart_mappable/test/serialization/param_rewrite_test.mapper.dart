@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -28,11 +29,7 @@ class AMapper extends ClassMapperBase<A> {
   static const Field<A, int> _f$_c = Field('_c', _$_c, key: r'c');
 
   @override
-  final MappableFields<A> fields = const {
-    #a: _f$a,
-    #b: _f$b,
-    #_c: _f$_c,
-  };
+  final MappableFields<A> fields = const {#a: _f$a, #b: _f$b, #_c: _f$_c};
 
   static A _instantiate(DecodingData data) {
     return A(data.dec(_f$a), data.dec(_f$b), data.dec(_f$_c));
@@ -95,11 +92,19 @@ class _ACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, A, $Out>
   @override
   late final ClassMapperBase<A> $mapper = AMapper.ensureInitialized();
   @override
-  $R call({int? a, Object? b = $none, int? c}) => $apply(FieldCopyWithData(
-      {if (a != null) #a: a, if (b != $none) #b: b, if (c != null) #c: c}));
+  $R call({int? a, Object? b = $none, int? c}) => $apply(
+    FieldCopyWithData({
+      if (a != null) #a: a,
+      if (b != $none) #b: b,
+      if (c != null) #c: c,
+    }),
+  );
   @override
-  A $make(CopyWithData data) => A(data.get(#a, or: $value.a),
-      data.get(#b, or: $value.b), data.get(#c, or: $value._c));
+  A $make(CopyWithData data) => A(
+    data.get(#a, or: $value.a),
+    data.get(#b, or: $value.b),
+    data.get(#c, or: $value._c),
+  );
 
   @override
   ACopyWith<$R2, A, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
@@ -126,10 +131,7 @@ class BMapper extends ClassMapperBase<B> {
   static const Field<B, int> _f$a = Field('a', _$a, key: r'b');
 
   @override
-  final MappableFields<B> fields = const {
-    #b: _f$b,
-    #a: _f$a,
-  };
+  final MappableFields<B> fields = const {#b: _f$b, #a: _f$a};
 
   static B _instantiate(DecodingData data) {
     return B(data.dec(_f$b), data.dec(_f$a));
@@ -223,10 +225,7 @@ class CMapper extends ClassMapperBase<C> {
   static const Field<C, String> _f$data = Field('data', _$data, key: r'd');
 
   @override
-  final MappableFields<C> fields = const {
-    #name: _f$name,
-    #data: _f$data,
-  };
+  final MappableFields<C> fields = const {#name: _f$name, #data: _f$data};
 
   static C _instantiate(DecodingData data) {
     return C(data.dec(_f$name));
@@ -298,3 +297,4 @@ class _CCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, C, $Out>
   CCopyWith<$R2, C, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _CCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

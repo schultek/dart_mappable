@@ -33,21 +33,25 @@ abstract class MapperBase<T extends Object> {
     throw MapperException.unsupportedMethod(MapperMethod.decode, type);
   }
 
-  V decodeValue<V>(Object? value,
-      [DecodingOptions? options, MapperContainer? container]) {
+  V decodeValue<V>(
+    Object? value, [
+    DecodingOptions? options,
+    MapperContainer? container,
+  ]) {
     if (value == null || (options?.type == null && value is V)) {
       return value as V;
     }
     var type = options?.type ?? V;
     try {
       return decoder(
-        value,
-        DecodingContext(
-          container: container,
-          args: () => type.args,
-          options: options,
-        ),
-      ) as V;
+            value,
+            DecodingContext(
+              container: container,
+              args: () => type.args,
+              options: options,
+            ),
+          )
+          as V;
     } catch (e, stacktrace) {
       Error.throwWithStackTrace(
         MapperException.chain(MapperMethod.decode, '($type)', e),
@@ -56,8 +60,11 @@ abstract class MapperBase<T extends Object> {
     }
   }
 
-  Object? encodeValue<V>(V value,
-      [EncodingOptions? options, MapperContainer? container]) {
+  Object? encodeValue<V>(
+    V value, [
+    EncodingOptions? options,
+    MapperContainer? container,
+  ]) {
     try {
       var includeTypeId = options?.includeTypeId;
       includeTypeId ??= this.includeTypeId<V>(value);
@@ -73,8 +80,9 @@ abstract class MapperBase<T extends Object> {
               type = value.runtimeType;
             }
 
-            var typeArgs =
-                type.args.map((t) => t == UnresolvedType ? dynamic : t);
+            var typeArgs = type.args.map(
+              (t) => t == UnresolvedType ? dynamic : t,
+            );
 
             var fallback = this.type.base.args;
             if (typeArgs.length != fallback.length) {
@@ -121,9 +129,11 @@ abstract class MapperBase<T extends Object> {
       if (!isFor(other)) return false;
       var context = MappingContext(
         container: container,
-        args: () => value.runtimeType.args
-            .map((t) => t == UnresolvedType ? dynamic : t)
-            .toList(),
+        args:
+            () =>
+                value.runtimeType.args
+                    .map((t) => t == UnresolvedType ? dynamic : t)
+                    .toList(),
       );
       return equals(value, other as T, context);
     } catch (e, stacktrace) {
@@ -143,9 +153,11 @@ abstract class MapperBase<T extends Object> {
     try {
       var context = MappingContext(
         container: container,
-        args: () => value.runtimeType.args
-            .map((t) => t == UnresolvedType ? dynamic : t)
-            .toList(),
+        args:
+            () =>
+                value.runtimeType.args
+                    .map((t) => t == UnresolvedType ? dynamic : t)
+                    .toList(),
       );
       return hash(value, context);
     } catch (e, stacktrace) {
@@ -165,15 +177,20 @@ abstract class MapperBase<T extends Object> {
     try {
       var context = MappingContext(
         container: container,
-        args: () => value.runtimeType.args
-            .map((t) => t == UnresolvedType ? dynamic : t)
-            .toList(),
+        args:
+            () =>
+                value.runtimeType.args
+                    .map((t) => t == UnresolvedType ? dynamic : t)
+                    .toList(),
       );
       return stringify(value, context);
     } catch (e, stacktrace) {
       Error.throwWithStackTrace(
-        MapperException.chain(MapperMethod.stringify,
-            '(Instance of \'${value.runtimeType}\')', e),
+        MapperException.chain(
+          MapperMethod.stringify,
+          '(Instance of \'${value.runtimeType}\')',
+          e,
+        ),
         stacktrace,
       );
     }
@@ -192,8 +209,9 @@ abstract class MapperBase<T extends Object> {
         dynamic.base != UnresolvedType &&
         (dynamic.base != static.base ||
             dynamic.args.length != static.args.length ||
-            dynamic.args.any((t) =>
-                _checkTypesDiff(t, static.args[dynamic.args.indexOf(t)])));
+            dynamic.args.any(
+              (t) => _checkTypesDiff(t, static.args[dynamic.args.indexOf(t)]),
+            ));
   }
 
   /// Registers an additional type [T] to be identifiable by the package.

@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -28,13 +29,14 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   static const Field<Animal, String> _f$name = Field('name', _$name);
 
   @override
-  final MappableFields<Animal> fields = const {
-    #name: _f$name,
-  };
+  final MappableFields<Animal> fields = const {#name: _f$name};
 
   static Animal _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
-        'Animal', 'type', '${data.value['type']}');
+      'Animal',
+      'type',
+      '${data.value['type']}',
+    );
   }
 
   @override
@@ -82,10 +84,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   static const Field<Cat, String> _f$color = Field('color', _$color);
 
   @override
-  final MappableFields<Cat> fields = const {
-    #name: _f$name,
-    #color: _f$color,
-  };
+  final MappableFields<Cat> fields = const {#name: _f$name, #color: _f$color};
 
   @override
   final String discriminatorKey = 'type';
@@ -156,8 +155,12 @@ class _CatCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Cat, $Out>
   @override
   late final ClassMapperBase<Cat> $mapper = CatMapper.ensureInitialized();
   @override
-  $R call({String? name, String? color}) => $apply(FieldCopyWithData(
-      {if (name != null) #name: name, if (color != null) #color: color}));
+  $R call({String? name, String? color}) => $apply(
+    FieldCopyWithData({
+      if (name != null) #name: name,
+      if (color != null) #color: color,
+    }),
+  );
   @override
   Cat $make(CopyWithData data) =>
       Cat(data.get(#name, or: $value.name), data.get(#color, or: $value.color));
@@ -185,14 +188,14 @@ class DogMapper extends SubClassMapperBase<Dog> {
   static int _$age(Dog v) => v.age;
   static const Field<Dog, int> _f$age = Field('age', _$age);
   static String _$name(Dog v) => v.name;
-  static const Field<Dog, String> _f$name =
-      Field('name', _$name, mode: FieldMode.member);
+  static const Field<Dog, String> _f$name = Field(
+    'name',
+    _$name,
+    mode: FieldMode.member,
+  );
 
   @override
-  final MappableFields<Dog> fields = const {
-    #age: _f$age,
-    #name: _f$name,
-  };
+  final MappableFields<Dog> fields = const {#age: _f$age, #name: _f$name};
 
   @override
   final String discriminatorKey = 'type';
@@ -292,9 +295,7 @@ class NullAnimalMapper extends SubClassMapperBase<NullAnimal> {
   static const Field<NullAnimal, String> _f$name = Field('name', _$name);
 
   @override
-  final MappableFields<NullAnimal> fields = const {
-    #name: _f$name,
-  };
+  final MappableFields<NullAnimal> fields = const {#name: _f$name};
 
   @override
   final String discriminatorKey = 'type';
@@ -321,28 +322,36 @@ class NullAnimalMapper extends SubClassMapperBase<NullAnimal> {
 
 mixin NullAnimalMappable {
   String toJson() {
-    return NullAnimalMapper.ensureInitialized()
-        .encodeJson<NullAnimal>(this as NullAnimal);
+    return NullAnimalMapper.ensureInitialized().encodeJson<NullAnimal>(
+      this as NullAnimal,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return NullAnimalMapper.ensureInitialized()
-        .encodeMap<NullAnimal>(this as NullAnimal);
+    return NullAnimalMapper.ensureInitialized().encodeMap<NullAnimal>(
+      this as NullAnimal,
+    );
   }
 
   NullAnimalCopyWith<NullAnimal, NullAnimal, NullAnimal> get copyWith =>
       _NullAnimalCopyWithImpl<NullAnimal, NullAnimal>(
-          this as NullAnimal, $identity, $identity);
+        this as NullAnimal,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
-    return NullAnimalMapper.ensureInitialized()
-        .stringifyValue(this as NullAnimal);
+    return NullAnimalMapper.ensureInitialized().stringifyValue(
+      this as NullAnimal,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return NullAnimalMapper.ensureInitialized()
-        .equalsValue(this as NullAnimal, other);
+    return NullAnimalMapper.ensureInitialized().equalsValue(
+      this as NullAnimal,
+      other,
+    );
   }
 
   @override
@@ -381,8 +390,8 @@ class _NullAnimalCopyWithImpl<$R, $Out>
 
   @override
   NullAnimalCopyWith<$R2, NullAnimal, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _NullAnimalCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _NullAnimalCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class DefaultAnimalMapper extends SubClassMapperBase<DefaultAnimal> {
@@ -436,34 +445,43 @@ class DefaultAnimalMapper extends SubClassMapperBase<DefaultAnimal> {
 
 mixin DefaultAnimalMappable {
   String toJson() {
-    return DefaultAnimalMapper.ensureInitialized()
-        .encodeJson<DefaultAnimal>(this as DefaultAnimal);
+    return DefaultAnimalMapper.ensureInitialized().encodeJson<DefaultAnimal>(
+      this as DefaultAnimal,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return DefaultAnimalMapper.ensureInitialized()
-        .encodeMap<DefaultAnimal>(this as DefaultAnimal);
+    return DefaultAnimalMapper.ensureInitialized().encodeMap<DefaultAnimal>(
+      this as DefaultAnimal,
+    );
   }
 
   DefaultAnimalCopyWith<DefaultAnimal, DefaultAnimal, DefaultAnimal>
-      get copyWith => _DefaultAnimalCopyWithImpl<DefaultAnimal, DefaultAnimal>(
-          this as DefaultAnimal, $identity, $identity);
+  get copyWith => _DefaultAnimalCopyWithImpl<DefaultAnimal, DefaultAnimal>(
+    this as DefaultAnimal,
+    $identity,
+    $identity,
+  );
   @override
   String toString() {
-    return DefaultAnimalMapper.ensureInitialized()
-        .stringifyValue(this as DefaultAnimal);
+    return DefaultAnimalMapper.ensureInitialized().stringifyValue(
+      this as DefaultAnimal,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return DefaultAnimalMapper.ensureInitialized()
-        .equalsValue(this as DefaultAnimal, other);
+    return DefaultAnimalMapper.ensureInitialized().equalsValue(
+      this as DefaultAnimal,
+      other,
+    );
   }
 
   @override
   int get hashCode {
-    return DefaultAnimalMapper.ensureInitialized()
-        .hashValue(this as DefaultAnimal);
+    return DefaultAnimalMapper.ensureInitialized().hashValue(
+      this as DefaultAnimal,
+    );
   }
 }
 
@@ -489,16 +507,22 @@ class _DefaultAnimalCopyWithImpl<$R, $Out>
   late final ClassMapperBase<DefaultAnimal> $mapper =
       DefaultAnimalMapper.ensureInitialized();
   @override
-  $R call({String? name, String? type}) => $apply(FieldCopyWithData(
-      {if (name != null) #name: name, if (type != null) #type: type}));
+  $R call({String? name, String? type}) => $apply(
+    FieldCopyWithData({
+      if (name != null) #name: name,
+      if (type != null) #type: type,
+    }),
+  );
   @override
   DefaultAnimal $make(CopyWithData data) => DefaultAnimal(
-      data.get(#name, or: $value.name), data.get(#type, or: $value.type));
+    data.get(#name, or: $value.name),
+    data.get(#type, or: $value.type),
+  );
 
   @override
   DefaultAnimalCopyWith<$R2, DefaultAnimal, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _DefaultAnimalCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _DefaultAnimalCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class ZooMapper extends ClassMapperBase<Zoo> {
@@ -519,11 +543,15 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   static Animal? _$animal(Zoo v) => v.animal;
   static const Field<Zoo, Animal> _f$animal = Field('animal', _$animal);
   static List<Animal>? _$animals(Zoo v) => v.animals;
-  static const Field<Zoo, List<Animal>> _f$animals =
-      Field('animals', _$animals);
+  static const Field<Zoo, List<Animal>> _f$animals = Field(
+    'animals',
+    _$animals,
+  );
   static Map<String, Animal>? _$animalsMap(Zoo v) => v.animalsMap;
-  static const Field<Zoo, Map<String, Animal>> _f$animalsMap =
-      Field('animalsMap', _$animalsMap);
+  static const Field<Zoo, Map<String, Animal>> _f$animalsMap = Field(
+    'animalsMap',
+    _$animalsMap,
+  );
 
   @override
   final MappableFields<Zoo> fields = const {
@@ -536,7 +564,10 @@ class ZooMapper extends ClassMapperBase<Zoo> {
 
   static Zoo _instantiate(DecodingData data) {
     return Zoo(
-        data.dec(_f$animal), data.dec(_f$animals), data.dec(_f$animalsMap));
+      data.dec(_f$animal),
+      data.dec(_f$animals),
+      data.dec(_f$animalsMap),
+    );
   }
 
   @override
@@ -588,9 +619,12 @@ abstract class ZooCopyWith<$R, $In extends Zoo, $Out>
   AnimalCopyWith<$R, Animal, Animal>? get animal;
   ListCopyWith<$R, Animal, AnimalCopyWith<$R, Animal, Animal>>? get animals;
   MapCopyWith<$R, String, Animal, AnimalCopyWith<$R, Animal, Animal>>?
-      get animalsMap;
-  $R call(
-      {Animal? animal, List<Animal>? animals, Map<String, Animal>? animalsMap});
+  get animalsMap;
+  $R call({
+    Animal? animal,
+    List<Animal>? animals,
+    Map<String, Animal>? animalsMap,
+  });
   ZooCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -606,32 +640,42 @@ class _ZooCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Zoo, $Out>
   @override
   ListCopyWith<$R, Animal, AnimalCopyWith<$R, Animal, Animal>>? get animals =>
       $value.animals != null
-          ? ListCopyWith($value.animals!, (v, t) => v.copyWith.$chain(t),
-              (v) => call(animals: v))
-          : null;
+      ? ListCopyWith(
+          $value.animals!,
+          (v, t) => v.copyWith.$chain(t),
+          (v) => call(animals: v),
+        )
+      : null;
   @override
   MapCopyWith<$R, String, Animal, AnimalCopyWith<$R, Animal, Animal>>?
-      get animalsMap => $value.animalsMap != null
-          ? MapCopyWith($value.animalsMap!, (v, t) => v.copyWith.$chain(t),
-              (v) => call(animalsMap: v))
-          : null;
+  get animalsMap => $value.animalsMap != null
+      ? MapCopyWith(
+          $value.animalsMap!,
+          (v, t) => v.copyWith.$chain(t),
+          (v) => call(animalsMap: v),
+        )
+      : null;
   @override
-  $R call(
-          {Object? animal = $none,
-          Object? animals = $none,
-          Object? animalsMap = $none}) =>
-      $apply(FieldCopyWithData({
-        if (animal != $none) #animal: animal,
-        if (animals != $none) #animals: animals,
-        if (animalsMap != $none) #animalsMap: animalsMap
-      }));
+  $R call({
+    Object? animal = $none,
+    Object? animals = $none,
+    Object? animalsMap = $none,
+  }) => $apply(
+    FieldCopyWithData({
+      if (animal != $none) #animal: animal,
+      if (animals != $none) #animals: animals,
+      if (animalsMap != $none) #animalsMap: animalsMap,
+    }),
+  );
   @override
   Zoo $make(CopyWithData data) => Zoo(
-      data.get(#animal, or: $value.animal),
-      data.get(#animals, or: $value.animals),
-      data.get(#animalsMap, or: $value.animalsMap));
+    data.get(#animal, or: $value.animal),
+    data.get(#animals, or: $value.animals),
+    data.get(#animalsMap, or: $value.animalsMap),
+  );
 
   @override
   ZooCopyWith<$R2, Zoo, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _ZooCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

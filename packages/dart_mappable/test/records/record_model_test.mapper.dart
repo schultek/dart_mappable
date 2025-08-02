@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -23,7 +24,8 @@ class AMapper extends ClassMapperBase<A> {
   @override
   final String id = 'A';
   @override
-  Function get typeFactory => <T>(f) => f<A<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<A<T>>();
 
   static String _$a(A v) => v.a;
   static const Field<A, String> _f$a = Field('a', _$a);
@@ -33,10 +35,7 @@ class AMapper extends ClassMapperBase<A> {
       Field('r', _$r, arg: _arg$r);
 
   @override
-  final MappableFields<A> fields = const {
-    #a: _f$a,
-    #r: _f$r,
-  };
+  final MappableFields<A> fields = const {#a: _f$a, #r: _f$r};
 
   static A<T> _instantiate<T>(DecodingData data) {
     return A(data.dec(_f$a), data.dec(_f$r));
@@ -131,10 +130,7 @@ class CMapper extends ClassMapperBase<C> {
   static const Field<C, _t$_R1<String, int>> _f$d = Field('d', _$d);
 
   @override
-  final MappableFields<C> fields = const {
-    #c: _f$c,
-    #d: _f$d,
-  };
+  final MappableFields<C> fields = const {#c: _f$c, #d: _f$d};
 
   static C _instantiate(DecodingData data) {
     return C(data.dec(_f$c), data.dec(_f$d));
@@ -224,21 +220,25 @@ class _t$_R1Mapper extends RecordMapperBase<_t$_R1> {
 
   static dynamic _$lat(_t$_R1 v) => v.lat;
   static dynamic _arg$lat<A, B>(f) => f<A>();
-  static const Field<_t$_R1, dynamic> _f$lat =
-      Field('lat', _$lat, arg: _arg$lat);
+  static const Field<_t$_R1, dynamic> _f$lat = Field(
+    'lat',
+    _$lat,
+    arg: _arg$lat,
+  );
   static dynamic _$lng(_t$_R1 v) => v.lng;
   static dynamic _arg$lng<A, B>(f) => f<B>();
-  static const Field<_t$_R1, dynamic> _f$lng =
-      Field('lng', _$lng, arg: _arg$lng);
+  static const Field<_t$_R1, dynamic> _f$lng = Field(
+    'lng',
+    _$lng,
+    arg: _arg$lng,
+  );
 
   @override
-  final MappableFields<_t$_R1> fields = const {
-    #lat: _f$lat,
-    #lng: _f$lng,
-  };
+  final MappableFields<_t$_R1> fields = const {#lat: _f$lat, #lng: _f$lng};
 
   @override
-  Function get typeFactory => <A, B>(f) => f<_t$_R1<A, B>>();
+  Function get typeFactory =>
+      <A, B>(f) => f<_t$_R1<A, B>>();
 
   static _t$_R1<A, B> _instantiate<A, B>(DecodingData<_t$_R1> data) {
     return (lat: data.dec(_f$lat), lng: data.dec(_f$lng));
@@ -292,15 +292,17 @@ class _t$_R0Mapper extends RecordMapperBase<_t$_R0> {
   };
 
   @override
-  Function get typeFactory => <A, B, C, D>(f) => f<_t$_R0<A, B, C, D>>();
+  Function get typeFactory =>
+      <A, B, C, D>(f) => f<_t$_R0<A, B, C, D>>();
 
   static _t$_R0<A, B, C, D> _instantiate<A, B, C, D>(
-      DecodingData<_t$_R0> data) {
+    DecodingData<_t$_R0> data,
+  ) {
     return (
       data.dec(_f$$1),
       b: data.dec(_f$b),
       c: data.dec(_f$c),
-      d: data.dec(_f$d)
+      d: data.dec(_f$d),
     );
   }
 
@@ -315,3 +317,4 @@ class _t$_R0Mapper extends RecordMapperBase<_t$_R0> {
     return ensureInitialized().decodeJson<_t$_R0<A, B, C, D>>(json);
   }
 }
+

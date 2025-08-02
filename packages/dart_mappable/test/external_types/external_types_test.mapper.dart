@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -21,13 +22,14 @@ class PersonMapper extends ClassMapperBase<Person> {
   final String id = 'Person';
 
   static String _$firstName(Person v) => v.firstName;
-  static const Field<Person, String> _f$firstName =
-      Field('firstName', _$firstName, key: r'first_name');
+  static const Field<Person, String> _f$firstName = Field(
+    'firstName',
+    _$firstName,
+    key: r'first_name',
+  );
 
   @override
-  final MappableFields<Person> fields = const {
-    #firstName: _f$firstName,
-  };
+  final MappableFields<Person> fields = const {#firstName: _f$firstName};
 
   static Person _instantiate(DecodingData data) {
     return Person(data.dec(_f$firstName));
@@ -119,9 +121,7 @@ class CakeMapper extends ClassMapperBase<f.Cake> {
   static const Field<f.Cake, String> _f$type = Field('type', _$type);
 
   @override
-  final MappableFields<f.Cake> fields = const {
-    #type: _f$type,
-  };
+  final MappableFields<f.Cake> fields = const {#type: _f$type};
 
   static f.Cake _instantiate(DecodingData data) {
     return f.Cake(data.dec(_f$type));
@@ -195,13 +195,14 @@ class Person2Mapper extends ClassMapperBase<m.Person> {
   final String id = 'Person';
 
   static String _$firstName(m.Person v) => v.firstName;
-  static const Field<m.Person, String> _f$firstName =
-      Field('firstName', _$firstName, key: r'first_name');
+  static const Field<m.Person, String> _f$firstName = Field(
+    'firstName',
+    _$firstName,
+    key: r'first_name',
+  );
 
   @override
-  final MappableFields<m.Person> fields = const {
-    #firstName: _f$firstName,
-  };
+  final MappableFields<m.Person> fields = const {#firstName: _f$firstName};
 
   static m.Person _instantiate(DecodingData data) {
     return m.Person(data.dec(_f$firstName));
@@ -260,8 +261,8 @@ class _Person2CopyWithImpl<$R, $Out>
 
   @override
   Person2CopyWith<$R2, m.Person, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _Person2CopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _Person2CopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class AnimalMapper extends ClassMapperBase<o.Animal> {
@@ -283,13 +284,14 @@ class AnimalMapper extends ClassMapperBase<o.Animal> {
   static const Field<o.Animal, String> _f$color = Field('color', _$color);
 
   @override
-  final MappableFields<o.Animal> fields = const {
-    #color: _f$color,
-  };
+  final MappableFields<o.Animal> fields = const {#color: _f$color};
 
   static o.Animal _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
-        'Animal', 'type', '${data.value['type']}');
+      'Animal',
+      'type',
+      '${data.value['type']}',
+    );
   }
 
   @override
@@ -406,13 +408,20 @@ class _PetCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, o.Pet, $Out>
   Person2CopyWith<$R, m.Person, m.Person> get owner =>
       $value.owner.copyWith.$chain((v) => call(owner: v));
   @override
-  $R call({m.Person? owner, String? color}) => $apply(FieldCopyWithData(
-      {if (owner != null) #owner: owner, if (color != null) #color: color}));
+  $R call({m.Person? owner, String? color}) => $apply(
+    FieldCopyWithData({
+      if (owner != null) #owner: owner,
+      if (color != null) #color: color,
+    }),
+  );
   @override
   o.Pet $make(CopyWithData data) => o.Pet(
-      data.get(#owner, or: $value.owner), data.get(#color, or: $value.color));
+    data.get(#owner, or: $value.owner),
+    data.get(#color, or: $value.color),
+  );
 
   @override
   PetCopyWith<$R2, o.Pet, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _PetCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

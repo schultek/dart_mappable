@@ -17,18 +17,14 @@ class B extends A<D> with BMappable {
 
 @MappableClass()
 sealed class C with CMappable {
-  C({
-    required this.data,
-  });
+  C({required this.data});
 
   final String data;
 }
 
 @MappableClass()
 class D extends C with DMappable {
-  D({
-    required super.data,
-  });
+  D({required super.data});
 }
 
 class E {}

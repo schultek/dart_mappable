@@ -39,7 +39,7 @@ class _UnusedPropertiesMap with MapMixin<String, dynamic> {
   String key;
 
   _UnusedPropertiesMap.of(this.wrapped, {required this.key})
-      : unused = _ReferenceMap.of({...wrapped});
+    : unused = _ReferenceMap.of({...wrapped});
 
   @override
   dynamic operator [](Object? key) {

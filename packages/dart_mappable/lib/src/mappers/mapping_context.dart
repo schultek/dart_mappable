@@ -13,8 +13,8 @@ class MappingContext {
   late final List<Type> args = _args?.call() ?? [];
 
   MappingContext({MapperContainer? container, List<Type> Function()? args})
-      : _args = args,
-        container = container ?? MapperContainer.globals;
+    : _args = args,
+      container = container ?? MapperContainer.globals;
 
   Type arg(int index, [List<int> argIndices = const []]) {
     var a = args[index];
@@ -31,16 +31,21 @@ class MappingContext {
 
 /// The decoding context passed to the [decoder] method of a mapper.
 class DecodingContext extends MappingContext {
-  DecodingContext(
-      {super.container, super.args, this.options, this.inherited = false});
+  DecodingContext({
+    super.container,
+    super.args,
+    this.options,
+    this.inherited = false,
+  });
 
   final DecodingOptions? options;
   final bool inherited;
 
-  DecodingContext change(
-      {MapperContainer? container,
-      List<Type> Function()? args,
-      bool? inherited}) {
+  DecodingContext change({
+    MapperContainer? container,
+    List<Type> Function()? args,
+    bool? inherited,
+  }) {
     return DecodingContext(
       container: container ?? this.container,
       args: args ?? _args,
@@ -49,8 +54,10 @@ class DecodingContext extends MappingContext {
     );
   }
 
-  DecodingContext inherit(
-      {MapperContainer? container, List<Type> Function()? args}) {
+  DecodingContext inherit({
+    MapperContainer? container,
+    List<Type> Function()? args,
+  }) {
     return change(container: container, args: args, inherited: true);
   }
 }
@@ -61,8 +68,10 @@ class EncodingContext extends MappingContext {
 
   final EncodingOptions? options;
 
-  EncodingContext change(
-      {MapperContainer? container, List<Type> Function()? args}) {
+  EncodingContext change({
+    MapperContainer? container,
+    List<Type> Function()? args,
+  }) {
     return EncodingContext(
       container: container ?? this.container,
       args: args ?? _args,
@@ -85,13 +94,17 @@ extension MappingContextCall<O extends MappingContext> on O {
 
   R callWith2<R, U>(R Function<A, B>(U) fn, [U? value]) {
     assert(args.length == 2);
-    return args.first
-        .provideTo(<A>() => args[1].provideTo(<B>() => fn<A, B>(value as U)));
+    return args.first.provideTo(
+      <A>() => args[1].provideTo(<B>() => fn<A, B>(value as U)),
+    );
   }
 
   R callWith3<R, U>(R Function<A, B, C>(U) fn, [U? value]) {
     assert(args.length == 3);
-    return args.first.provideTo(<A>() => args[1].provideTo(
-        <B>() => args[2].provideTo(<C>() => fn<A, B, C>(value as U))));
+    return args.first.provideTo(
+      <A>() => args[1].provideTo(
+        <B>() => args[2].provideTo(<C>() => fn<A, B, C>(value as U)),
+      ),
+    );
   }
 }

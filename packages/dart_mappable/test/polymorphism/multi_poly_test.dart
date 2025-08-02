@@ -47,11 +47,15 @@ void main() {
 
     test('Fail abstract Level 1', () {
       expect(
-          () => AnimalMapper.fromMap({'type': 'Cat'}),
-          throwsMapperException(MapperException.chain(
-              MapperMethod.decode,
-              '(Animal)',
-              MapperException.missingSubclass('Cat', 'breed', 'null'))));
+        () => AnimalMapper.fromMap({'type': 'Cat'}),
+        throwsMapperException(
+          MapperException.chain(
+            MapperMethod.decode,
+            '(Animal)',
+            MapperException.missingSubclass('Cat', 'breed', 'null'),
+          ),
+        ),
+      );
     });
 
     test('Decode Level 2 Inherit Key', () {
@@ -91,16 +95,19 @@ void main() {
     test('Fail decode', () {
       expect(
         () => AnimalMapper.fromJson('{}'),
-        throwsMapperException(MapperException.chain(
+        throwsMapperException(
+          MapperException.chain(
             MapperMethod.decode,
             '(Animal)',
-            MapperException.missingSubclass('Animal', 'type', 'null'))),
+            MapperException.missingSubclass('Animal', 'type', 'null'),
+          ),
+        ),
       );
     });
 
     test('Decode wrapper', () {
       final human = HumanMapper.fromMap({
-        'cat': {'breed': 'Siamese'}
+        'cat': {'breed': 'Siamese'},
       });
       expect(human, isA<Human>());
       expect(human.cat, isA<Siamese>());

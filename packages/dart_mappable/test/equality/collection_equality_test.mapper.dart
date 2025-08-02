@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -21,13 +22,13 @@ class SetWrapperMapper extends ClassMapperBase<SetWrapper> {
   final String id = 'SetWrapper';
 
   static Set<String> _$values(SetWrapper v) => v.values;
-  static const Field<SetWrapper, Set<String>> _f$values =
-      Field('values', _$values);
+  static const Field<SetWrapper, Set<String>> _f$values = Field(
+    'values',
+    _$values,
+  );
 
   @override
-  final MappableFields<SetWrapper> fields = const {
-    #values: _f$values,
-  };
+  final MappableFields<SetWrapper> fields = const {#values: _f$values};
 
   static SetWrapper _instantiate(DecodingData data) {
     return SetWrapper(data.dec(_f$values));
@@ -47,28 +48,36 @@ class SetWrapperMapper extends ClassMapperBase<SetWrapper> {
 
 mixin SetWrapperMappable {
   String toJson() {
-    return SetWrapperMapper.ensureInitialized()
-        .encodeJson<SetWrapper>(this as SetWrapper);
+    return SetWrapperMapper.ensureInitialized().encodeJson<SetWrapper>(
+      this as SetWrapper,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return SetWrapperMapper.ensureInitialized()
-        .encodeMap<SetWrapper>(this as SetWrapper);
+    return SetWrapperMapper.ensureInitialized().encodeMap<SetWrapper>(
+      this as SetWrapper,
+    );
   }
 
   SetWrapperCopyWith<SetWrapper, SetWrapper, SetWrapper> get copyWith =>
       _SetWrapperCopyWithImpl<SetWrapper, SetWrapper>(
-          this as SetWrapper, $identity, $identity);
+        this as SetWrapper,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
-    return SetWrapperMapper.ensureInitialized()
-        .stringifyValue(this as SetWrapper);
+    return SetWrapperMapper.ensureInitialized().stringifyValue(
+      this as SetWrapper,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return SetWrapperMapper.ensureInitialized()
-        .equalsValue(this as SetWrapper, other);
+    return SetWrapperMapper.ensureInitialized().equalsValue(
+      this as SetWrapper,
+      other,
+    );
   }
 
   @override
@@ -106,8 +115,8 @@ class _SetWrapperCopyWithImpl<$R, $Out>
 
   @override
   SetWrapperCopyWith<$R2, SetWrapper, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _SetWrapperCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _SetWrapperCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class ListWrapperMapper extends ClassMapperBase<ListWrapper> {
@@ -125,13 +134,13 @@ class ListWrapperMapper extends ClassMapperBase<ListWrapper> {
   final String id = 'ListWrapper';
 
   static List<String> _$values(ListWrapper v) => v.values;
-  static const Field<ListWrapper, List<String>> _f$values =
-      Field('values', _$values);
+  static const Field<ListWrapper, List<String>> _f$values = Field(
+    'values',
+    _$values,
+  );
 
   @override
-  final MappableFields<ListWrapper> fields = const {
-    #values: _f$values,
-  };
+  final MappableFields<ListWrapper> fields = const {#values: _f$values};
 
   static ListWrapper _instantiate(DecodingData data) {
     return ListWrapper(data.dec(_f$values));
@@ -151,28 +160,36 @@ class ListWrapperMapper extends ClassMapperBase<ListWrapper> {
 
 mixin ListWrapperMappable {
   String toJson() {
-    return ListWrapperMapper.ensureInitialized()
-        .encodeJson<ListWrapper>(this as ListWrapper);
+    return ListWrapperMapper.ensureInitialized().encodeJson<ListWrapper>(
+      this as ListWrapper,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return ListWrapperMapper.ensureInitialized()
-        .encodeMap<ListWrapper>(this as ListWrapper);
+    return ListWrapperMapper.ensureInitialized().encodeMap<ListWrapper>(
+      this as ListWrapper,
+    );
   }
 
   ListWrapperCopyWith<ListWrapper, ListWrapper, ListWrapper> get copyWith =>
       _ListWrapperCopyWithImpl<ListWrapper, ListWrapper>(
-          this as ListWrapper, $identity, $identity);
+        this as ListWrapper,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
-    return ListWrapperMapper.ensureInitialized()
-        .stringifyValue(this as ListWrapper);
+    return ListWrapperMapper.ensureInitialized().stringifyValue(
+      this as ListWrapper,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return ListWrapperMapper.ensureInitialized()
-        .equalsValue(this as ListWrapper, other);
+    return ListWrapperMapper.ensureInitialized().equalsValue(
+      this as ListWrapper,
+      other,
+    );
   }
 
   @override
@@ -204,8 +221,11 @@ class _ListWrapperCopyWithImpl<$R, $Out>
       ListWrapperMapper.ensureInitialized();
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get values =>
-      ListCopyWith($value.values, (v, t) => ObjectCopyWith(v, $identity, t),
-          (v) => call(values: v));
+      ListCopyWith(
+        $value.values,
+        (v, t) => ObjectCopyWith(v, $identity, t),
+        (v) => call(values: v),
+      );
   @override
   $R call({List<String>? values}) =>
       $apply(FieldCopyWithData({if (values != null) #values: values}));
@@ -215,8 +235,8 @@ class _ListWrapperCopyWithImpl<$R, $Out>
 
   @override
   ListWrapperCopyWith<$R2, ListWrapper, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _ListWrapperCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _ListWrapperCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class MapWrapperMapper extends ClassMapperBase<MapWrapper> {
@@ -234,13 +254,13 @@ class MapWrapperMapper extends ClassMapperBase<MapWrapper> {
   final String id = 'MapWrapper';
 
   static Map<String, dynamic> _$values(MapWrapper v) => v.values;
-  static const Field<MapWrapper, Map<String, dynamic>> _f$values =
-      Field('values', _$values);
+  static const Field<MapWrapper, Map<String, dynamic>> _f$values = Field(
+    'values',
+    _$values,
+  );
 
   @override
-  final MappableFields<MapWrapper> fields = const {
-    #values: _f$values,
-  };
+  final MappableFields<MapWrapper> fields = const {#values: _f$values};
 
   static MapWrapper _instantiate(DecodingData data) {
     return MapWrapper(data.dec(_f$values));
@@ -260,28 +280,36 @@ class MapWrapperMapper extends ClassMapperBase<MapWrapper> {
 
 mixin MapWrapperMappable {
   String toJson() {
-    return MapWrapperMapper.ensureInitialized()
-        .encodeJson<MapWrapper>(this as MapWrapper);
+    return MapWrapperMapper.ensureInitialized().encodeJson<MapWrapper>(
+      this as MapWrapper,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return MapWrapperMapper.ensureInitialized()
-        .encodeMap<MapWrapper>(this as MapWrapper);
+    return MapWrapperMapper.ensureInitialized().encodeMap<MapWrapper>(
+      this as MapWrapper,
+    );
   }
 
   MapWrapperCopyWith<MapWrapper, MapWrapper, MapWrapper> get copyWith =>
       _MapWrapperCopyWithImpl<MapWrapper, MapWrapper>(
-          this as MapWrapper, $identity, $identity);
+        this as MapWrapper,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
-    return MapWrapperMapper.ensureInitialized()
-        .stringifyValue(this as MapWrapper);
+    return MapWrapperMapper.ensureInitialized().stringifyValue(
+      this as MapWrapper,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return MapWrapperMapper.ensureInitialized()
-        .equalsValue(this as MapWrapper, other);
+    return MapWrapperMapper.ensureInitialized().equalsValue(
+      this as MapWrapper,
+      other,
+    );
   }
 
   @override
@@ -299,7 +327,7 @@ extension MapWrapperValueCopy<$R, $Out>
 abstract class MapWrapperCopyWith<$R, $In extends MapWrapper, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
-      get values;
+  get values;
   $R call({Map<String, dynamic>? values});
   MapWrapperCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -314,8 +342,11 @@ class _MapWrapperCopyWithImpl<$R, $Out>
       MapWrapperMapper.ensureInitialized();
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
-      get values => MapCopyWith($value.values,
-          (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(values: v));
+  get values => MapCopyWith(
+    $value.values,
+    (v, t) => ObjectCopyWith(v, $identity, t),
+    (v) => call(values: v),
+  );
   @override
   $R call({Map<String, dynamic>? values}) =>
       $apply(FieldCopyWithData({if (values != null) #values: values}));
@@ -325,6 +356,7 @@ class _MapWrapperCopyWithImpl<$R, $Out>
 
   @override
   MapWrapperCopyWith<$R2, MapWrapper, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _MapWrapperCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _MapWrapperCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

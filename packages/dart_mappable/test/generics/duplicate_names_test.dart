@@ -26,19 +26,25 @@ void main() {
     b.ConfettiMapper.ensureInitialized();
 
     test('Should encode generic objects', () {
-      var boxA = MapperContainer.globals
-          .toJson<dynamic>(Box(10, contents: Content('test')));
+      var boxA = MapperContainer.globals.toJson<dynamic>(
+        Box(10, contents: Content('test')),
+      );
       var boxB = MapperContainer.globals.toJson<dynamic>(
-          b.Box<b.Confetti>(10, contents: [b.Confetti('Rainbow')]));
+        b.Box<b.Confetti>(10, contents: [b.Confetti('Rainbow')]),
+      );
 
       expect(
-          boxA,
-          equals(
-              '{"size":10,"contents":{"data":"test"},"__type":"Box2<Content>"}'));
+        boxA,
+        equals(
+          '{"size":10,"contents":{"data":"test"},"__type":"Box2<Content>"}',
+        ),
+      );
       expect(
-          boxB,
-          equals(
-              '{"size":10,"contents":[{"color":"Rainbow"}],"__type":"Box<Confetti>"}'));
+        boxB,
+        equals(
+          '{"size":10,"contents":[{"color":"Rainbow"}],"__type":"Box<Confetti>"}',
+        ),
+      );
 
       var decA = MapperContainer.globals.fromJson(boxA);
       var decB = MapperContainer.globals.fromJson(boxB);

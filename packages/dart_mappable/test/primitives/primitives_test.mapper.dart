@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -24,8 +25,10 @@ class ItemsMapper extends ClassMapperBase<Items> {
   static List<Item> _$items(Items v) => v.items;
   static const Field<Items, List<Item>> _f$items = Field('items', _$items);
   static Map<int, Item> _$items2(Items v) => v.items2;
-  static const Field<Items, Map<int, Item>> _f$items2 =
-      Field('items2', _$items2);
+  static const Field<Items, Map<int, Item>> _f$items2 = Field(
+    'items2',
+    _$items2,
+  );
 
   @override
   final MappableFields<Items> fields = const {
@@ -98,20 +101,29 @@ class _ItemsCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Items, $Out>
   @override
   ListCopyWith<$R, Item, ItemCopyWith<$R, Item, Item>> get items =>
       ListCopyWith(
-          $value.items, (v, t) => v.copyWith.$chain(t), (v) => call(items: v));
+        $value.items,
+        (v, t) => v.copyWith.$chain(t),
+        (v) => call(items: v),
+      );
   @override
   MapCopyWith<$R, int, Item, ItemCopyWith<$R, Item, Item>> get items2 =>
-      MapCopyWith($value.items2, (v, t) => v.copyWith.$chain(t),
-          (v) => call(items2: v));
+      MapCopyWith(
+        $value.items2,
+        (v, t) => v.copyWith.$chain(t),
+        (v) => call(items2: v),
+      );
   @override
-  $R call({List<Item>? items, Map<int, Item>? items2}) =>
-      $apply(FieldCopyWithData({
-        if (items != null) #items: items,
-        if (items2 != null) #items2: items2
-      }));
+  $R call({List<Item>? items, Map<int, Item>? items2}) => $apply(
+    FieldCopyWithData({
+      if (items != null) #items: items,
+      if (items2 != null) #items2: items2,
+    }),
+  );
   @override
   Items $make(CopyWithData data) => Items(
-      data.get(#items, or: $value.items), data.get(#items2, or: $value.items2));
+    data.get(#items, or: $value.items),
+    data.get(#items2, or: $value.items2),
+  );
 
   @override
   ItemsCopyWith<$R2, Items, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
@@ -136,9 +148,7 @@ class ItemMapper extends ClassMapperBase<Item> {
   static const Field<Item, int> _f$index = Field('index', _$index);
 
   @override
-  final MappableFields<Item> fields = const {
-    #index: _f$index,
-  };
+  final MappableFields<Item> fields = const {#index: _f$index};
 
   static Item _instantiate(DecodingData data) {
     return Item(data.dec(_f$index));
@@ -210,3 +220,4 @@ class _ItemCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Item, $Out>
   ItemCopyWith<$R2, Item, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _ItemCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

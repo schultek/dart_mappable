@@ -35,30 +35,26 @@ void main() {
         PersonMapper.fromMap({
           'name': 'Max',
           'age': 18,
-          'car': {'drivenKm': 1000, 'brand': 'audi'}
+          'car': {'drivenKm': 1000, 'brand': 'audi'},
         }),
         equals(Person('Max', car: const Car(1000, Brand.Audi))),
       );
       expect(
-        PersonMapper.fromMap({
-          'name': 'Eva',
-          'age': 21,
-        }),
+        PersonMapper.fromMap({'name': 'Eva', 'age': 21}),
         equals(Person('Eva', age: 21)),
       );
     });
 
     test('from map throws', () {
       expect(
-        () => PersonMapper.fromMap({
-          'name': 'Andi',
-          'car': 'None',
-        }),
-        throwsMapperException(MapperException.chain(
-          MapperMethod.decode,
-          '(Person).car(Car?)',
-          MapperException.unexpectedType(String, 'Map<String, dynamic>'),
-        )),
+        () => PersonMapper.fromMap({'name': 'Andi', 'car': 'None'}),
+        throwsMapperException(
+          MapperException.chain(
+            MapperMethod.decode,
+            '(Person).car(Car?)',
+            MapperException.unexpectedType(String, 'Map<String, dynamic>'),
+          ),
+        ),
       );
     });
 
@@ -68,17 +64,13 @@ void main() {
         equals({
           'name': 'Max',
           'age': 18,
-          'car': {'drivenKm': 1000, 'brand': 'Audi'}
+          'car': {'drivenKm': 1000, 'brand': 'Audi'},
         }),
       );
 
       expect(
         Person('Eva', age: 21).toMap(),
-        equals({
-          'name': 'Eva',
-          'age': 21,
-          'car': null,
-        }),
+        equals({'name': 'Eva', 'age': 21, 'car': null}),
       );
     });
   });

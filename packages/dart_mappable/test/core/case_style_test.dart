@@ -16,15 +16,20 @@ void main() {
 
     test('custom from string', () {
       expect(
-          CaseStyle.fromString('custom(u,_)'),
-          predicate<CaseStyle>(
-              (c) => c.tail == TextTransform.upperCase && c.separator == '_'));
+        CaseStyle.fromString('custom(u,_)'),
+        predicate<CaseStyle>(
+          (c) => c.tail == TextTransform.upperCase && c.separator == '_',
+        ),
+      );
       expect(
-          CaseStyle.fromString('custom(lc,+)'),
-          predicate<CaseStyle>((c) =>
+        CaseStyle.fromString('custom(lc,+)'),
+        predicate<CaseStyle>(
+          (c) =>
               c.head == TextTransform.lowerCase &&
               c.tail == TextTransform.capitalCase &&
-              c.separator == '+'));
+              c.separator == '+',
+        ),
+      );
     });
 
     test('transform', () {

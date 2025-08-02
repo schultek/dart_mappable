@@ -11,18 +11,13 @@ class BaseTokenParser<T> {
   final Map<BaseToken, T> data;
   final T fallback;
 
-  const BaseTokenParser({
-    required this.data,
-    required this.fallback,
-  });
+  const BaseTokenParser({required this.data, required this.fallback});
 }
 
 @MappableClass()
 class DSOpacityData extends BaseTokenParser<double> with DSOpacityDataMappable {
   const DSOpacityData({
-    super.data = const {
-      HOpacity.bzOpacityIntense: 0.4,
-    },
+    super.data = const {HOpacity.bzOpacityIntense: 0.4},
     super.fallback = 0.0,
   });
 }
@@ -34,9 +29,7 @@ enum HOpacity implements BaseToken {
   @override
   final String token;
 
-  const HOpacity({
-    required this.token,
-  });
+  const HOpacity({required this.token});
 }
 
 void main() {

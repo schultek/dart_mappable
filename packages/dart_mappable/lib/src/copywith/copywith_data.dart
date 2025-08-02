@@ -38,7 +38,7 @@ class MergeCopyWithData extends CopyWithData {
 
 class DeltaCopyWithData extends CopyWithData {
   DeltaCopyWithData(this.mapper, this.value)
-      : context = DecodingContext(container: MapperContainer.globals);
+    : context = DecodingContext(container: MapperContainer.globals);
 
   final ClassMapperBase mapper;
   final Map<String, dynamic> value;

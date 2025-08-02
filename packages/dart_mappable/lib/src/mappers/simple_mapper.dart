@@ -122,8 +122,10 @@ abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T> {
 
   static MapperContainer? _container;
   MapperContainer get container {
-    assert(_container != null,
-        'SimpleMapper.container can only be accessed inside the decode() or encode() functions.');
+    assert(
+      _container != null,
+      'SimpleMapper.container can only be accessed inside the decode() or encode() functions.',
+    );
     return _container!;
   }
 

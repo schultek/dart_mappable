@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -74,8 +75,12 @@ class PersonMapper extends ClassMapperBase<Person> {
   static String _$name(Person v) => v.name;
   static const Field<Person, String> _f$name = Field('name', _$name);
   static int _$age(Person v) => v.age;
-  static const Field<Person, int> _f$age =
-      Field('age', _$age, opt: true, def: 18);
+  static const Field<Person, int> _f$age = Field(
+    'age',
+    _$age,
+    opt: true,
+    def: 18,
+  );
   static Car? _$car(Person v) => v.car;
   static const Field<Person, Car> _f$car = Field('car', _$car, opt: true);
 
@@ -87,8 +92,11 @@ class PersonMapper extends ClassMapperBase<Person> {
   };
 
   static Person _instantiate(DecodingData data) {
-    return Person(data.dec(_f$name),
-        age: data.dec(_f$age), car: data.dec(_f$car));
+    return Person(
+      data.dec(_f$name),
+      age: data.dec(_f$age),
+      car: data.dec(_f$car),
+    );
   }
 
   @override
@@ -152,15 +160,19 @@ class _PersonCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Person, $Out>
   CarCopyWith<$R, Car, Car>? get car =>
       $value.car?.copyWith.$chain((v) => call(car: v));
   @override
-  $R call({String? name, int? age, Object? car = $none}) =>
-      $apply(FieldCopyWithData({
-        if (name != null) #name: name,
-        if (age != null) #age: age,
-        if (car != $none) #car: car
-      }));
+  $R call({String? name, int? age, Object? car = $none}) => $apply(
+    FieldCopyWithData({
+      if (name != null) #name: name,
+      if (age != null) #age: age,
+      if (car != $none) #car: car,
+    }),
+  );
   @override
-  Person $make(CopyWithData data) => Person(data.get(#name, or: $value.name),
-      age: data.get(#age, or: $value.age), car: data.get(#car, or: $value.car));
+  Person $make(CopyWithData data) => Person(
+    data.get(#name, or: $value.name),
+    age: data.get(#age, or: $value.age),
+    car: data.get(#car, or: $value.car),
+  );
 
   @override
   PersonCopyWith<$R2, Person, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
@@ -187,8 +199,11 @@ class CarMapper extends ClassMapperBase<Car> {
   static Brand _$brand(Car v) => v.brand;
   static const Field<Car, Brand> _f$brand = Field('brand', _$brand);
   static double _$miles(Car v) => v.miles;
-  static const Field<Car, double> _f$miles =
-      Field('miles', _$miles, mode: FieldMode.member);
+  static const Field<Car, double> _f$miles = Field(
+    'miles',
+    _$miles,
+    mode: FieldMode.member,
+  );
 
   @override
   final MappableFields<Car> fields = const {
@@ -258,15 +273,20 @@ class _CarCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Car, $Out>
   @override
   late final ClassMapperBase<Car> $mapper = CarMapper.ensureInitialized();
   @override
-  $R call({int? drivenKm, Brand? brand}) => $apply(FieldCopyWithData({
-        if (drivenKm != null) #drivenKm: drivenKm,
-        if (brand != null) #brand: brand
-      }));
+  $R call({int? drivenKm, Brand? brand}) => $apply(
+    FieldCopyWithData({
+      if (drivenKm != null) #drivenKm: drivenKm,
+      if (brand != null) #brand: brand,
+    }),
+  );
   @override
-  Car $make(CopyWithData data) => Car(data.get(#drivenKm, or: $value.drivenKm),
-      data.get(#brand, or: $value.brand));
+  Car $make(CopyWithData data) => Car(
+    data.get(#drivenKm, or: $value.drivenKm),
+    data.get(#brand, or: $value.brand),
+  );
 
   @override
   CarCopyWith<$R2, Car, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _CarCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

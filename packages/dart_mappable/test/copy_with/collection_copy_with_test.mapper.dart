@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -20,17 +21,19 @@ class AMapper extends ClassMapperBase<A> {
   @override
   final String id = 'A';
   @override
-  Function get typeFactory => <T>(f) => f<A<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<A<T>>();
 
   static List<dynamic> _$items(A v) => v.items;
   static dynamic _arg$items<T>(f) => f<List<T>>();
-  static const Field<A, List<dynamic>> _f$items =
-      Field('items', _$items, arg: _arg$items);
+  static const Field<A, List<dynamic>> _f$items = Field(
+    'items',
+    _$items,
+    arg: _arg$items,
+  );
 
   @override
-  final MappableFields<A> fields = const {
-    #items: _f$items,
-  };
+  final MappableFields<A> fields = const {#items: _f$items};
 
   static A<T> _instantiate<T>(DecodingData data) {
     return A(data.dec(_f$items));
@@ -95,9 +98,10 @@ class _ACopyWithImpl<$R, $Out, T> extends ClassCopyWithBase<$R, A<T>, $Out>
   late final ClassMapperBase<A> $mapper = AMapper.ensureInitialized();
   @override
   ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get items => ListCopyWith(
-      $value.items,
-      (v, t) => ObjectCopyWith(v, $identity, t),
-      (v) => call(items: v));
+    $value.items,
+    (v, t) => ObjectCopyWith(v, $identity, t),
+    (v) => call(items: v),
+  );
   @override
   $R call({List<T>? items}) =>
       $apply(FieldCopyWithData({if (items != null) #items: items}));
@@ -123,17 +127,19 @@ class BMapper extends ClassMapperBase<B> {
   @override
   final String id = 'B';
   @override
-  Function get typeFactory => <T>(f) => f<B<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<B<T>>();
 
   static Map<String, dynamic> _$items(B v) => v.items;
   static dynamic _arg$items<T>(f) => f<Map<String, T>>();
-  static const Field<B, Map<String, dynamic>> _f$items =
-      Field('items', _$items, arg: _arg$items);
+  static const Field<B, Map<String, dynamic>> _f$items = Field(
+    'items',
+    _$items,
+    arg: _arg$items,
+  );
 
   @override
-  final MappableFields<B> fields = const {
-    #items: _f$items,
-  };
+  final MappableFields<B> fields = const {#items: _f$items};
 
   static B<T> _instantiate<T>(DecodingData data) {
     return B(data.dec(_f$items));
@@ -198,9 +204,10 @@ class _BCopyWithImpl<$R, $Out, T> extends ClassCopyWithBase<$R, B<T>, $Out>
   late final ClassMapperBase<B> $mapper = BMapper.ensureInitialized();
   @override
   MapCopyWith<$R, String, T, ObjectCopyWith<$R, T, T>> get items => MapCopyWith(
-      $value.items,
-      (v, t) => ObjectCopyWith(v, $identity, t),
-      (v) => call(items: v));
+    $value.items,
+    (v, t) => ObjectCopyWith(v, $identity, t),
+    (v) => call(items: v),
+  );
   @override
   $R call({Map<String, T>? items}) =>
       $apply(FieldCopyWithData({if (items != null) #items: items}));
@@ -211,3 +218,4 @@ class _BCopyWithImpl<$R, $Out, T> extends ClassCopyWithBase<$R, B<T>, $Out>
   BCopyWith<$R2, B<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _BCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
+

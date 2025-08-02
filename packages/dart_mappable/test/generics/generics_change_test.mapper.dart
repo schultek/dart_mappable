@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -26,7 +27,8 @@ class AMapper extends ClassMapperBase<A> {
   @override
   final String id = 'A';
   @override
-  Function get typeFactory => <T>(f) => f<A<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<A<T>>();
 
   @override
   final MappableFields<A> fields = const {};
@@ -116,7 +118,8 @@ class BMapper extends SubClassMapperBase<B> {
   @override
   final String id = 'B';
   @override
-  Function get typeFactory => <T>(f) => f<B<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<B<T>>();
 
   @override
   final MappableFields<B> fields = const {};
@@ -215,7 +218,8 @@ class CMapper extends SubClassMapperBase<C> {
   @override
   final String id = 'C';
   @override
-  Function get typeFactory => <T extends num>(f) => f<C<T>>();
+  Function get typeFactory =>
+      <T extends num>(f) => f<C<T>>();
 
   @override
   final MappableFields<C> fields = const {};
@@ -317,7 +321,8 @@ class DMapper extends SubClassMapperBase<D> {
   @override
   final String id = 'D';
   @override
-  Function get typeFactory => <T, V>(f) => f<D<T, V>>();
+  Function get typeFactory =>
+      <T, V>(f) => f<D<T, V>>();
 
   @override
   final MappableFields<D> fields = const {};
@@ -361,7 +366,10 @@ mixin DMappable<T, V> {
 
   DCopyWith<D<T, V>, D<T, V>, D<T, V>, T, V> get copyWith =>
       _DCopyWithImpl<D<T, V>, D<T, V>, T, V>(
-          this as D<T, V>, $identity, $identity);
+        this as D<T, V>,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return DMapper.ensureInitialized().stringifyValue(this as D<T, V>);
@@ -423,7 +431,8 @@ class EMapper extends SubClassMapperBase<E> {
   @override
   final String id = 'E';
   @override
-  Function get typeFactory => <T, V>(f) => f<E<T, V>>();
+  Function get typeFactory =>
+      <T, V>(f) => f<E<T, V>>();
 
   @override
   final MappableFields<E> fields = const {};
@@ -438,10 +447,11 @@ class EMapper extends SubClassMapperBase<E> {
   @override
   DecodingContext inherit(DecodingContext context) {
     return context.inherit(
-        args: () => [
-              context.arg(1, [0]),
-              context.arg(0)
-            ]);
+      args: () => [
+        context.arg(1, [0]),
+        context.arg(0),
+      ],
+    );
   }
 
   static E<T, V> _instantiate<T, V>(DecodingData data) {
@@ -471,7 +481,10 @@ mixin EMappable<T, V> {
 
   ECopyWith<E<T, V>, E<T, V>, E<T, V>, T, V> get copyWith =>
       _ECopyWithImpl<E<T, V>, E<T, V>, T, V>(
-          this as E<T, V>, $identity, $identity);
+        this as E<T, V>,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return EMapper.ensureInitialized().stringifyValue(this as E<T, V>);
@@ -634,7 +647,8 @@ class GMapper extends SubClassMapperBase<G> {
   @override
   final String id = 'G';
   @override
-  Function get typeFactory => <T, V extends A<T>>(f) => f<G<T, V>>();
+  Function get typeFactory =>
+      <T, V extends A<T>>(f) => f<G<T, V>>();
 
   @override
   final MappableFields<G> fields = const {};
@@ -649,10 +663,11 @@ class GMapper extends SubClassMapperBase<G> {
   @override
   DecodingContext inherit(DecodingContext context) {
     return context.inherit(
-        args: () => [
-              context.arg(0),
-              context.type(<$A>() => A<$A>, [context.arg(0)])
-            ]);
+      args: () => [
+        context.arg(0),
+        context.type(<$A>() => A<$A>, [context.arg(0)]),
+      ],
+    );
   }
 
   static G<T, V> _instantiate<T, V extends A<T>>(DecodingData data) {
@@ -682,7 +697,10 @@ mixin GMappable<T, V extends A<T>> {
 
   GCopyWith<G<T, V>, G<T, V>, G<T, V>, T, V> get copyWith =>
       _GCopyWithImpl<G<T, V>, G<T, V>, T, V>(
-          this as G<T, V>, $identity, $identity);
+        this as G<T, V>,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return GMapper.ensureInitialized().stringifyValue(this as G<T, V>);
@@ -746,7 +764,8 @@ class HMapper extends SubClassMapperBase<H> {
   @override
   final String id = 'H';
   @override
-  Function get typeFactory => <T extends C<num>>(f) => f<H<T>>();
+  Function get typeFactory =>
+      <T extends C<num>>(f) => f<H<T>>();
 
   @override
   final MappableFields<H> fields = const {};
@@ -869,14 +888,16 @@ class IMapper extends SubClassMapperBase<I> {
   @override
   DecodingContext inherit(DecodingContext context) {
     return context.inherit(
-        args: () => [
-              context.type(<$A extends num>() => C<$A>, [context.arg(0)]),
-              context.arg(0)
-            ]);
+      args: () => [
+        context.type(<$A extends num>() => C<$A>, [context.arg(0)]),
+        context.arg(0),
+      ],
+    );
   }
 
   static I<T, V> _instantiate<T extends C<V>, V extends num>(
-      DecodingData data) {
+    DecodingData data,
+  ) {
     return I();
   }
 
@@ -884,7 +905,8 @@ class IMapper extends SubClassMapperBase<I> {
   final Function instantiate = _instantiate;
 
   static I<T, V> fromMap<T extends C<V>, V extends num>(
-      Map<String, dynamic> map) {
+    Map<String, dynamic> map,
+  ) {
     return ensureInitialized().decodeMap<I<T, V>>(map);
   }
 
@@ -904,7 +926,10 @@ mixin IMappable<T extends C<V>, V extends num> {
 
   ICopyWith<I<T, V>, I<T, V>, I<T, V>, T, V> get copyWith =>
       _ICopyWithImpl<I<T, V>, I<T, V>, T, V>(
-          this as I<T, V>, $identity, $identity);
+        this as I<T, V>,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return IMapper.ensureInitialized().stringifyValue(this as I<T, V>);
@@ -927,8 +952,14 @@ extension IValueCopy<$R, $Out, T extends C<V>, V extends num>
       $base.as((v, t, t2) => _ICopyWithImpl<$R, $Out, T, V>(v, t, t2));
 }
 
-abstract class ICopyWith<$R, $In extends I<T, V>, $Out, T extends C<V>,
-    V extends num> implements ACopyWith<$R, $In, $Out, V> {
+abstract class ICopyWith<
+  $R,
+  $In extends I<T, V>,
+  $Out,
+  T extends C<V>,
+  V extends num
+>
+    implements ACopyWith<$R, $In, $Out, V> {
   @override
   $R call();
   ICopyWith<$R2, $In, $Out2, T, V> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -984,16 +1015,20 @@ class JMapper extends SubClassMapperBase<J> {
   @override
   DecodingContext inherit(DecodingContext context) {
     return context.inherit(
-        args: () => [
-              context.type(<$A extends $B, $B extends num>() => C<$A>,
-                  [context.arg(0), context.arg(1)]),
-              context.arg(0),
-              context.arg(1)
-            ]);
+      args: () => [
+        context.type(<$A extends $B, $B extends num>() => C<$A>, [
+          context.arg(0),
+          context.arg(1),
+        ]),
+        context.arg(0),
+        context.arg(1),
+      ],
+    );
   }
 
   static J<T, V, U> _instantiate<T extends C<V>, V extends U, U extends num>(
-      DecodingData data) {
+    DecodingData data,
+  ) {
     return J();
   }
 
@@ -1001,30 +1036,37 @@ class JMapper extends SubClassMapperBase<J> {
   final Function instantiate = _instantiate;
 
   static J<T, V, U> fromMap<T extends C<V>, V extends U, U extends num>(
-      Map<String, dynamic> map) {
+    Map<String, dynamic> map,
+  ) {
     return ensureInitialized().decodeMap<J<T, V, U>>(map);
   }
 
   static J<T, V, U> fromJson<T extends C<V>, V extends U, U extends num>(
-      String json) {
+    String json,
+  ) {
     return ensureInitialized().decodeJson<J<T, V, U>>(json);
   }
 }
 
 mixin JMappable<T extends C<V>, V extends U, U extends num> {
   String toJson() {
-    return JMapper.ensureInitialized()
-        .encodeJson<J<T, V, U>>(this as J<T, V, U>);
+    return JMapper.ensureInitialized().encodeJson<J<T, V, U>>(
+      this as J<T, V, U>,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return JMapper.ensureInitialized()
-        .encodeMap<J<T, V, U>>(this as J<T, V, U>);
+    return JMapper.ensureInitialized().encodeMap<J<T, V, U>>(
+      this as J<T, V, U>,
+    );
   }
 
   JCopyWith<J<T, V, U>, J<T, V, U>, J<T, V, U>, T, V, U> get copyWith =>
       _JCopyWithImpl<J<T, V, U>, J<T, V, U>, T, V, U>(
-          this as J<T, V, U>, $identity, $identity);
+        this as J<T, V, U>,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return JMapper.ensureInitialized().stringifyValue(this as J<T, V, U>);
@@ -1047,8 +1089,15 @@ extension JValueCopy<$R, $Out, T extends C<V>, V extends U, U extends num>
       $base.as((v, t, t2) => _JCopyWithImpl<$R, $Out, T, V, U>(v, t, t2));
 }
 
-abstract class JCopyWith<$R, $In extends J<T, V, U>, $Out, T extends C<V>,
-    V extends U, U extends num> implements DCopyWith<$R, $In, $Out, V, U> {
+abstract class JCopyWith<
+  $R,
+  $In extends J<T, V, U>,
+  $Out,
+  T extends C<V>,
+  V extends U,
+  U extends num
+>
+    implements DCopyWith<$R, $In, $Out, V, U> {
   @override
   $R call();
   JCopyWith<$R2, $In, $Out2, T, V, U> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -1068,6 +1117,7 @@ class _JCopyWithImpl<$R, $Out, T extends C<V>, V extends U, U extends num>
 
   @override
   JCopyWith<$R2, J<T, V, U>, $Out2, T, V, U> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _JCopyWithImpl<$R2, $Out2, T, V, U>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _JCopyWithImpl<$R2, $Out2, T, V, U>($value, $cast, t);
 }
+

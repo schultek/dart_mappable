@@ -10,8 +10,10 @@ class MapperException implements Exception {
 
   /// Exception when trying to get a mapper for an unregistered type.
   factory MapperException.unknownType(Type t) {
-    return MapperException._('Unknown type $t. Did you forgot to annotate the '
-        'class or register a custom mapper?');
+    return MapperException._(
+      'Unknown type $t. Did you forgot to annotate the '
+      'class or register a custom mapper?',
+    );
   }
 
   /// Exception when a required parameter is missing while serialization.
@@ -21,51 +23,72 @@ class MapperException implements Exception {
 
   /// Exception for tracking the deep origin of another exception.
   factory MapperException.chain(
-      MapperMethod method, String hint, Object error) {
+    MapperMethod method,
+    String hint,
+    Object error,
+  ) {
     return _ChainedMapperException(method, hint, error);
   }
 
   /// Exception when passing an unexpected type to a decoder.
   factory MapperException.unexpectedType(Type actual, String expected) {
     return MapperException._(
-        'Expected a value of type $expected, but got type $actual.');
+      'Expected a value of type $expected, but got type $actual.',
+    );
   }
 
   /// Exception when getting an unexpected type from an encoder.
   factory MapperException.incorrectEncoding(
-      Type source, String expected, Type actual) {
-    return MapperException._('Failed to encode value of type $source to '
-        '$expected. Instead encoded to type $actual.');
+    Type source,
+    String expected,
+    Type actual,
+  ) {
+    return MapperException._(
+      'Failed to encode value of type $source to '
+      '$expected. Instead encoded to type $actual.',
+    );
   }
 
   /// Exception when a discriminator for an abstract class has no match.
   factory MapperException.missingSubclass(
-      String className, String discriminatorKey, String discriminatorValue) {
-    return MapperException._('Cannot instantiate class $className, did you '
-        'forgot to specify a subclass for [ $discriminatorKey: '
-        "'$discriminatorValue' ] or a default subclass?");
+    String className,
+    String discriminatorKey,
+    String discriminatorValue,
+  ) {
+    return MapperException._(
+      'Cannot instantiate class $className, did you '
+      'forgot to specify a subclass for [ $discriminatorKey: '
+      "'$discriminatorValue' ] or a default subclass?",
+    );
   }
 
   /// Exception when a class has no valid constructor for serialization.
   factory MapperException.missingConstructor(String className) {
-    return MapperException._('Cannot instantiate class $className, no valid '
-        'constructor found.');
+    return MapperException._(
+      'Cannot instantiate class $className, no valid '
+      'constructor found.',
+    );
   }
 
   /// Exception when an encoded enum value has no match.
   factory MapperException.unknownEnumValue(dynamic value) {
     return MapperException.chain(
-        MapperMethod.decode,
-        '[$value]',
-        MapperException._("No enum value matches '$value', did you use the "
-            'correct mode or case-style or forgot to specify a default value?'));
+      MapperMethod.decode,
+      '[$value]',
+      MapperException._(
+        "No enum value matches '$value', did you use the "
+        'correct mode or case-style or forgot to specify a default value?',
+      ),
+    );
   }
 
   /// Exception when a method is called that was not specified for generation.
   factory MapperException.unsupportedMethod(MapperMethod method, Type type) {
-    return MapperException._('Unsupported operation "${method.name}" on type '
-        '$type: You can specify the supported operations for a type on its '
-        'annotation by using the GenerateMethods flag.');
+    return MapperException._(
+      'Unsupported operation "${method.name}" on type '
+      '$type: You can specify the supported operations for a type on its '
+      'annotation by using the GenerateMethods flag.',
+    );
   }
 
   /// Exception when a given type cannot be resolved.
@@ -73,8 +96,10 @@ class MapperException implements Exception {
   /// This may happen when using an unknown type not tied to any mapper.
   /// May be fixed using the [MapperBase.addType] method.
   factory MapperException.unresolvedType(String type) {
-    return MapperException._('Cannot resolve type from property "$type". '
-        'Invalid or unregistered type.');
+    return MapperException._(
+      'Cannot resolve type from property "$type". '
+      'Invalid or unregistered type.',
+    );
   }
 }
 

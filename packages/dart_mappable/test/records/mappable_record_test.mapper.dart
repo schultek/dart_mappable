@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -25,8 +26,10 @@ class LocationMapper extends ClassMapperBase<Location> {
   static Point _$point(Location v) => v.point;
   static const Field<Location, Point> _f$point = Field('point', _$point);
   static Offset<dynamic> _$offset(Location v) => v.offset;
-  static const Field<Location, Offset<dynamic>> _f$offset =
-      Field('offset', _$offset);
+  static const Field<Location, Offset<dynamic>> _f$offset = Field(
+    'offset',
+    _$offset,
+  );
 
   @override
   final MappableFields<Location> fields = const {
@@ -52,18 +55,23 @@ class LocationMapper extends ClassMapperBase<Location> {
 
 mixin LocationMappable {
   String toJson() {
-    return LocationMapper.ensureInitialized()
-        .encodeJson<Location>(this as Location);
+    return LocationMapper.ensureInitialized().encodeJson<Location>(
+      this as Location,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return LocationMapper.ensureInitialized()
-        .encodeMap<Location>(this as Location);
+    return LocationMapper.ensureInitialized().encodeMap<Location>(
+      this as Location,
+    );
   }
 
   LocationCopyWith<Location, Location, Location> get copyWith =>
       _LocationCopyWithImpl<Location, Location>(
-          this as Location, $identity, $identity);
+        this as Location,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return LocationMapper.ensureInitialized().stringifyValue(this as Location);
@@ -71,8 +79,10 @@ mixin LocationMappable {
 
   @override
   bool operator ==(Object other) {
-    return LocationMapper.ensureInitialized()
-        .equalsValue(this as Location, other);
+    return LocationMapper.ensureInitialized().equalsValue(
+      this as Location,
+      other,
+    );
   }
 
   @override
@@ -101,16 +111,22 @@ class _LocationCopyWithImpl<$R, $Out>
   late final ClassMapperBase<Location> $mapper =
       LocationMapper.ensureInitialized();
   @override
-  $R call({Point? point, Offset<dynamic>? offset}) => $apply(FieldCopyWithData(
-      {if (point != null) #point: point, if (offset != null) #offset: offset}));
+  $R call({Point? point, Offset<dynamic>? offset}) => $apply(
+    FieldCopyWithData({
+      if (point != null) #point: point,
+      if (offset != null) #offset: offset,
+    }),
+  );
   @override
   Location $make(CopyWithData data) => Location(
-      data.get(#point, or: $value.point), data.get(#offset, or: $value.offset));
+    data.get(#point, or: $value.point),
+    data.get(#offset, or: $value.offset),
+  );
 
   @override
   LocationCopyWith<$R2, Location, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _LocationCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _LocationCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class PointMapper extends RecordMapperBase<Point> {
@@ -126,19 +142,21 @@ class PointMapper extends RecordMapperBase<Point> {
   }
 
   static double _$x(Point v) => v.x;
-  static const Field<Point, double> _f$x =
-      Field('x', _$x, key: r'a', hook: RoundingHook());
+  static const Field<Point, double> _f$x = Field(
+    'x',
+    _$x,
+    key: r'a',
+    hook: RoundingHook(),
+  );
   static double _$y(Point v) => v.y;
   static const Field<Point, double> _f$y = Field('y', _$y);
 
   @override
-  final MappableFields<Point> fields = const {
-    #x: _f$x,
-    #y: _f$y,
-  };
+  final MappableFields<Point> fields = const {#x: _f$x, #y: _f$y};
 
   @override
-  Function get typeFactory => (f) => f<Point>();
+  Function get typeFactory =>
+      (f) => f<Point>();
 
   @override
   List<Type> apply(MappingContext context) {
@@ -221,13 +239,11 @@ class OffsetMapper extends RecordMapperBase<Offset> {
   static const Field<Offset, dynamic> _f$y = Field('y', _$y, arg: _arg$y);
 
   @override
-  final MappableFields<Offset> fields = const {
-    #x: _f$x,
-    #y: _f$y,
-  };
+  final MappableFields<Offset> fields = const {#x: _f$x, #y: _f$y};
 
   @override
-  Function get typeFactory => <T>(f) => f<Offset<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<Offset<T>>();
 
   @override
   List<Type> apply(MappingContext context) {
@@ -291,3 +307,4 @@ class _OffsetCopyWithImpl<$R, T> extends RecordCopyWithBase<$R, Offset<T>>
   OffsetCopyWith<$R2, T> $chain<$R2>(Then<Offset<T>, $R2> t) =>
       _OffsetCopyWithImpl($value, $cast, t);
 }
+

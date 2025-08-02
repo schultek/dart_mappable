@@ -13,28 +13,33 @@ void main() {
 
       expect(
         () => container.fromValue<int>('2'),
-        throwsMapperException(MapperException.chain(
-          MapperMethod.decode,
-          '(int)',
-          MapperException.unknownType(int),
-        )),
+        throwsMapperException(
+          MapperException.chain(
+            MapperMethod.decode,
+            '(int)',
+            MapperException.unknownType(int),
+          ),
+        ),
       );
 
       expect(
         () => container.toValue<int>(2),
-        throwsMapperException(MapperException.chain(
-          MapperMethod.encode,
-          '[2]',
-          MapperException.unknownType(int),
-        )),
+        throwsMapperException(
+          MapperException.chain(
+            MapperMethod.encode,
+            '[2]',
+            MapperException.unknownType(int),
+          ),
+        ),
       );
 
       MapperContainer.defaults.use(mapper);
 
       expect(container.fromValue<int>('2'), equals(2));
 
-      container
-          .use(PrimitiveMapper((value) => int.parse(value.toString()) * 10));
+      container.use(
+        PrimitiveMapper((value) => int.parse(value.toString()) * 10),
+      );
 
       expect(container.fromValue<int>('2'), 20);
 
@@ -51,11 +56,13 @@ void main() {
 
       expect(
         () => containerA.fromValue<int>('2'),
-        throwsMapperException(MapperException.chain(
-          MapperMethod.decode,
-          '(int)',
-          MapperException.unknownType(int),
-        )),
+        throwsMapperException(
+          MapperException.chain(
+            MapperMethod.decode,
+            '(int)',
+            MapperException.unknownType(int),
+          ),
+        ),
       );
 
       expect(containerB.fromValue<int>('2'), equals(2));
@@ -83,7 +90,8 @@ void main() {
       expect(
         () => container.toIterable(1),
         throwsMapperException(
-            MapperException.incorrectEncoding(int, 'Iterable', int)),
+          MapperException.incorrectEncoding(int, 'Iterable', int),
+        ),
       );
     });
 

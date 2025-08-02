@@ -35,20 +35,24 @@ void main() {
     test('from map throws', () {
       expect(
         () => AMapper.fromMap({'a': 'hi'}),
-        throwsMapperException(MapperException.chain(
-          MapperMethod.decode,
-          '(A).d',
-          MapperException.missingParameter('d'),
-        )),
+        throwsMapperException(
+          MapperException.chain(
+            MapperMethod.decode,
+            '(A).d',
+            MapperException.missingParameter('d'),
+          ),
+        ),
       );
 
       expect(
         () => AMapper.fromMap({'a': 'ok', 'b': 'fail', 'd': false}),
-        throwsMapperException(MapperException.chain(
-          MapperMethod.decode,
-          '(A).b(int?)',
-          FormatException('fail'),
-        )),
+        throwsMapperException(
+          MapperException.chain(
+            MapperMethod.decode,
+            '(A).b(int?)',
+            FormatException('fail'),
+          ),
+        ),
       );
     });
 

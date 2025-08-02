@@ -7,9 +7,10 @@ import 'list_copy_with.dart' show ItemCopyWith;
 /// {@category Copy-With}
 abstract class MapCopyWith<Result, Key, Value, Copy> {
   factory MapCopyWith(
-      Map<Key, Value> value,
-      ItemCopyWith<Copy, Value, Result> item,
-      Then<Map<Key, Value>, Result> then) = _MapCopyWith;
+    Map<Key, Value> value,
+    ItemCopyWith<Copy, Value, Result> item,
+    Then<Map<Key, Value>, Result> then,
+  ) = _MapCopyWith;
 
   /// Access the copyWith interface for the value of [key]
   Copy? operator [](Key key);
@@ -37,17 +38,20 @@ class _MapCopyWith<Result, Key, Value, Copy>
     extends CopyWithBase<Result, Map<Key, Value>, Map<Key, Value>>
     implements MapCopyWith<Result, Key, Value, Copy> {
   _MapCopyWith(
-      Map<Key, Value> value, this._item, Then<Map<Key, Value>, Result> then)
-      : super(value, $identity, then);
+    Map<Key, Value> value,
+    this._item,
+    Then<Map<Key, Value>, Result> then,
+  ) : super(value, $identity, then);
   final ItemCopyWith<Copy, Value, Result> _item;
 
   @override
   Copy? operator [](Key key) => get(key);
 
   @override
-  Copy? get(Key key) => $value[key] is Value
-      ? _item($value[key] as Value, (v) => replace(key, v))
-      : null;
+  Copy? get(Key key) =>
+      $value[key] is Value
+          ? _item($value[key] as Value, (v) => replace(key, v))
+          : null;
 
   @override
   Result put(Key key, Value v) => putAll({key: v});

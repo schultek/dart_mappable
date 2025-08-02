@@ -25,8 +25,13 @@ void main() {
       expect(MapperContainer.globals.fromMap<B>({}), isA<B>());
       expect(
         () => MapperContainer.globals.fromMap<a.A>({}),
-        throwsMapperException(MapperException.chain(
-            MapperMethod.decode, '(A)', MapperException.unknownType(a.A))),
+        throwsMapperException(
+          MapperException.chain(
+            MapperMethod.decode,
+            '(A)',
+            MapperException.unknownType(a.A),
+          ),
+        ),
       );
     });
   });

@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -23,14 +24,14 @@ class GameMapper extends ClassMapperBase<Game> {
   final String id = 'Game';
 
   static Player _$player(Game v) => v.player;
-  static const Field<Game, Player> _f$player = Field('player', _$player,
-      hook:
-          ChainedHook([PlayerHook(), UnmappedPropertiesHook('unmappedProps')]));
+  static const Field<Game, Player> _f$player = Field(
+    'player',
+    _$player,
+    hook: ChainedHook([PlayerHook(), UnmappedPropertiesHook('unmappedProps')]),
+  );
 
   @override
-  final MappableFields<Game> fields = const {
-    #player: _f$player,
-  };
+  final MappableFields<Game> fields = const {#player: _f$player};
 
   @override
   final MappingHook hook = const game.GameHook();
@@ -127,9 +128,7 @@ class PlayerMapper extends ClassMapperBase<Player> {
   static const Field<Player, String> _f$id = Field('id', _$id);
 
   @override
-  final MappableFields<Player> fields = const {
-    #id: _f$id,
-  };
+  final MappableFields<Player> fields = const {#id: _f$id};
 
   static Player _instantiate(DecodingData data) {
     return Player(data.dec(_f$id));
@@ -218,17 +217,18 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
   final String id = 'CardGame';
 
   static Player _$player(CardGame v) => v.player;
-  static const Field<CardGame, Player> _f$player = Field('player', _$player,
-      hook: ChainedHook([
-        PlayerHook(),
-        UnmappedPropertiesHook('unmappedProps'),
-        game.CardPlayerHook()
-      ]));
+  static const Field<CardGame, Player> _f$player = Field(
+    'player',
+    _$player,
+    hook: ChainedHook([
+      PlayerHook(),
+      UnmappedPropertiesHook('unmappedProps'),
+      game.CardPlayerHook(),
+    ]),
+  );
 
   @override
-  final MappableFields<CardGame> fields = const {
-    #player: _f$player,
-  };
+  final MappableFields<CardGame> fields = const {#player: _f$player};
 
   @override
   final MappingHook superHook = const game.GameHook();
@@ -251,18 +251,23 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
 
 mixin CardGameMappable {
   String toJson() {
-    return CardGameMapper.ensureInitialized()
-        .encodeJson<CardGame>(this as CardGame);
+    return CardGameMapper.ensureInitialized().encodeJson<CardGame>(
+      this as CardGame,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return CardGameMapper.ensureInitialized()
-        .encodeMap<CardGame>(this as CardGame);
+    return CardGameMapper.ensureInitialized().encodeMap<CardGame>(
+      this as CardGame,
+    );
   }
 
   CardGameCopyWith<CardGame, CardGame, CardGame> get copyWith =>
       _CardGameCopyWithImpl<CardGame, CardGame>(
-          this as CardGame, $identity, $identity);
+        this as CardGame,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return CardGameMapper.ensureInitialized().stringifyValue(this as CardGame);
@@ -270,8 +275,10 @@ mixin CardGameMappable {
 
   @override
   bool operator ==(Object other) {
-    return CardGameMapper.ensureInitialized()
-        .equalsValue(this as CardGame, other);
+    return CardGameMapper.ensureInitialized().equalsValue(
+      this as CardGame,
+      other,
+    );
   }
 
   @override
@@ -314,6 +321,7 @@ class _CardGameCopyWithImpl<$R, $Out>
 
   @override
   CardGameCopyWith<$R2, CardGame, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _CardGameCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _CardGameCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

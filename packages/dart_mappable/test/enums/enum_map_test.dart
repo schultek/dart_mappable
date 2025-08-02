@@ -25,8 +25,10 @@ void main() {
 
     test('toString', () {
       var a = ClassA({EnumA.a: true, EnumA.aa: false});
-      expect(a.toString(),
-          equals('ClassA(someVariable: {EnumA.a: true, EnumA.aa: false})'));
+      expect(
+        a.toString(),
+        equals('ClassA(someVariable: {EnumA.a: true, EnumA.aa: false})'),
+      );
     });
   });
 }

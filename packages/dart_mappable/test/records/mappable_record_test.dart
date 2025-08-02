@@ -4,10 +4,8 @@ import 'package:test/test.dart';
 part 'mappable_record_test.mapper.dart';
 
 @MappableRecord()
-typedef Point = ({
-  @MappableField(key: 'a', hook: RoundingHook()) double x,
-  double y
-});
+typedef Point =
+    ({@MappableField(key: 'a', hook: RoundingHook()) double x, double y});
 
 @MappableRecord()
 typedef Offset<T> = ({double x, T y});

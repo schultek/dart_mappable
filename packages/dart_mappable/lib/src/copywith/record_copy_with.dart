@@ -11,7 +11,8 @@ abstract class RecordCopyWith<Result, T extends Record>
 }
 
 abstract class RecordCopyWithBase<Result, T extends Record>
-    extends CopyWithBase<Result, T, T> implements RecordCopyWith<Result, T> {
+    extends CopyWithBase<Result, T, T>
+    implements RecordCopyWith<Result, T> {
   RecordCopyWithBase(super.$value, super.$then1, super.$then2);
 
   RecordMapperBase get $mapper;
@@ -47,7 +48,7 @@ class RecordMergeCopyWithData extends CopyWithData {
 
 class RecordDeltaCopyWithData extends CopyWithData {
   RecordDeltaCopyWithData(this.mapper, this.value)
-      : context = DecodingContext(container: MapperContainer.globals);
+    : context = DecodingContext(container: MapperContainer.globals);
 
   final RecordMapperBase mapper;
   final Map<String, dynamic> value;

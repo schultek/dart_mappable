@@ -5,9 +5,7 @@ part 'param_rewrite_test.mapper.dart';
 
 @MappableClass()
 class A with AMappable {
-  const A(this.a, int? b, int c)
-      : b = b ?? 0,
-        _c = c;
+  const A(this.a, int? b, int c) : b = b ?? 0, _c = c;
 
   final int a;
   final int b;
@@ -16,9 +14,7 @@ class A with AMappable {
 
 @MappableClass()
 class B with BMappable {
-  const B(int a, int b)
-      : a = b,
-        b = a;
+  const B(int a, int b) : a = b, b = a;
 
   final int a;
   final int b;

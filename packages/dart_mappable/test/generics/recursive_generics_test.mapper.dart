@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -21,23 +22,27 @@ class ComparableBoxMapper extends ClassMapperBase<ComparableBox> {
   @override
   final String id = 'ComparableBox';
   @override
-  Function get typeFactory => <T extends Comparable>(f) =>
-      <T>[] is List<Comparable<T>> ? _typeFactory<T>(f) : f<ComparableBox>();
-  final Function _typeFactory =
-      <T extends Comparable<T>>(f) => f<ComparableBox<T>>();
+  Function get typeFactory =>
+      <T extends Comparable>(f) => <T>[] is List<Comparable<T>>
+      ? _typeFactory<T>(f)
+      : f<ComparableBox>();
+  final Function _typeFactory = <T extends Comparable<T>>(f) =>
+      f<ComparableBox<T>>();
 
   static Comparable<Object?> _$value(ComparableBox v) => v.value;
   static dynamic _arg$value<T extends Comparable<T>>(f) => f<T>();
-  static const Field<ComparableBox, Comparable<Object?>> _f$value =
-      Field('value', _$value, arg: _arg$value);
+  static const Field<ComparableBox, Comparable<Object?>> _f$value = Field(
+    'value',
+    _$value,
+    arg: _arg$value,
+  );
 
   @override
-  final MappableFields<ComparableBox> fields = const {
-    #value: _f$value,
-  };
+  final MappableFields<ComparableBox> fields = const {#value: _f$value};
 
   static ComparableBox<T> _instantiate<T extends Comparable<T>>(
-      DecodingData data) {
+    DecodingData data,
+  ) {
     return ComparableBox(data.dec(_f$value));
   }
 
@@ -45,7 +50,8 @@ class ComparableBoxMapper extends ClassMapperBase<ComparableBox> {
   final Function instantiate = _instantiate;
 
   static ComparableBox<T> fromMap<T extends Comparable<T>>(
-      Map<String, dynamic> map) {
+    Map<String, dynamic> map,
+  ) {
     return ensureInitialized().decodeMap<ComparableBox<T>>(map);
   }
 
@@ -56,35 +62,44 @@ class ComparableBoxMapper extends ClassMapperBase<ComparableBox> {
 
 mixin ComparableBoxMappable<T extends Comparable<T>> {
   String toJson() {
-    return ComparableBoxMapper.ensureInitialized()
-        .encodeJson<ComparableBox<T>>(this as ComparableBox<T>);
+    return ComparableBoxMapper.ensureInitialized().encodeJson<ComparableBox<T>>(
+      this as ComparableBox<T>,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return ComparableBoxMapper.ensureInitialized()
-        .encodeMap<ComparableBox<T>>(this as ComparableBox<T>);
+    return ComparableBoxMapper.ensureInitialized().encodeMap<ComparableBox<T>>(
+      this as ComparableBox<T>,
+    );
   }
 
   ComparableBoxCopyWith<ComparableBox<T>, ComparableBox<T>, ComparableBox<T>, T>
-      get copyWith =>
-          _ComparableBoxCopyWithImpl<ComparableBox<T>, ComparableBox<T>, T>(
-              this as ComparableBox<T>, $identity, $identity);
+  get copyWith =>
+      _ComparableBoxCopyWithImpl<ComparableBox<T>, ComparableBox<T>, T>(
+        this as ComparableBox<T>,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
-    return ComparableBoxMapper.ensureInitialized()
-        .stringifyValue(this as ComparableBox<T>);
+    return ComparableBoxMapper.ensureInitialized().stringifyValue(
+      this as ComparableBox<T>,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return ComparableBoxMapper.ensureInitialized()
-        .equalsValue(this as ComparableBox<T>, other);
+    return ComparableBoxMapper.ensureInitialized().equalsValue(
+      this as ComparableBox<T>,
+      other,
+    );
   }
 
   @override
   int get hashCode {
-    return ComparableBoxMapper.ensureInitialized()
-        .hashValue(this as ComparableBox<T>);
+    return ComparableBoxMapper.ensureInitialized().hashValue(
+      this as ComparableBox<T>,
+    );
   }
 }
 
@@ -94,11 +109,17 @@ extension ComparableBoxValueCopy<$R, $Out, T extends Comparable<T>>
       $base.as((v, t, t2) => _ComparableBoxCopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
-abstract class ComparableBoxCopyWith<$R, $In extends ComparableBox<T>, $Out,
-    T extends Comparable<T>> implements ClassCopyWith<$R, $In, $Out> {
+abstract class ComparableBoxCopyWith<
+  $R,
+  $In extends ComparableBox<T>,
+  $Out,
+  T extends Comparable<T>
+>
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({T? value});
   ComparableBoxCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
+    Then<$Out2, $R2> t,
+  );
 }
 
 class _ComparableBoxCopyWithImpl<$R, $Out, T extends Comparable<T>>
@@ -118,6 +139,7 @@ class _ComparableBoxCopyWithImpl<$R, $Out, T extends Comparable<T>>
 
   @override
   ComparableBoxCopyWith<$R2, ComparableBox<T>, $Out2, T> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _ComparableBoxCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _ComparableBoxCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
+

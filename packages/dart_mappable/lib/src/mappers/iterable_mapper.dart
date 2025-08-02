@@ -37,9 +37,9 @@ class IterableMapper<I extends Iterable> extends MapperBase<I>
 
   @override
   Equality equality(Equality child) => switch (equalityMode) {
-        IterableEqualityMode.ordered => IterableEquality(child),
-        IterableEqualityMode.unordered => UnorderedIterableEquality(child),
-      };
+    IterableEqualityMode.ordered => IterableEquality(child),
+    IterableEqualityMode.unordered => UnorderedIterableEquality(child),
+  };
 
   @override
   String stringify(I value, MappingContext context) =>
@@ -54,7 +54,7 @@ enum IterableEqualityMode {
   ordered,
 
   /// Two iterables are considered equal if they have the same elements in any order.
-  unordered;
+  unordered,
 }
 
 /// The default mapper for [Set]s.
@@ -83,9 +83,11 @@ class _IterableDecoder<I extends Iterable> {
   }
 
   Iterable<T> _decode<T>() {
-    return mapper.fromIterable(value.map((v) {
-      return context.$dec<T>(v, 'item');
-    }));
+    return mapper.fromIterable(
+      value.map((v) {
+        return context.$dec<T>(v, 'item');
+      }),
+    );
   }
 }
 

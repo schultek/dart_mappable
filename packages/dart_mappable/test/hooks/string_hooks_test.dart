@@ -44,7 +44,7 @@ void main() {
       expect(
         a.toMap(),
         equals({
-          'c': {'1': 'one', '2': 'two'}
+          'c': {'1': 'one', '2': 'two'},
         }),
       );
     });

@@ -96,8 +96,9 @@ abstract class MapperContainer {
   ///
   /// All other container will automatically be linked to this container.
   @Deprecated(
-      'Use `MapperContainer.globals` instead. See $_containerIssueLink. '
-      'May be removed in a future version.')
+    'Use `MapperContainer.globals` instead. See $_containerIssueLink. '
+    'May be removed in a future version.',
+  )
   static final MapperContainer defaults = _MapperContainerBase._({
     PrimitiveMapper<Object>((v) => v, dynamic),
     PrimitiveMapper<Object>((v) => v, Object),
@@ -217,11 +218,10 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     Set<MapperContainer>? linked,
     Map<String, Function>? types,
   }) {
-    return _MapperContainerBase._(
-      mappers ?? {},
-      {...?linked, MapperContainer.defaults},
-      types ?? {},
-    );
+    return _MapperContainerBase._(mappers ?? {}, {
+      ...?linked,
+      MapperContainer.defaults,
+    }, types ?? {});
   }
 
   final Map<Type, MapperBase> _mappers = {};
@@ -276,12 +276,12 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     var mapper = //
         // direct type
         _mappers[baseType] ??
-            // indirect type ie. subtype
-            _mappers.values.where((m) => m.isFor(value)).firstOrNull ??
-            // inherited direct type
-            _inheritedMappers[baseType] ??
-            // inherited indirect type ie. subclasses
-            _inheritedMappers.values.where((m) => m.isFor(value)).firstOrNull;
+        // indirect type ie. subtype
+        _mappers.values.where((m) => m.isFor(value)).firstOrNull ??
+        // inherited direct type
+        _inheritedMappers[baseType] ??
+        // inherited indirect type ie. subclasses
+        _inheritedMappers.values.where((m) => m.isFor(value)).firstOrNull;
 
     if (mapper != null) {
       if (mapper is ClassMapperBase) {
@@ -308,7 +308,8 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     if (_cachedTypeMappers[baseType] case var m?) {
       return m;
     }
-    var mapper = _mappers[baseType] ??
+    var mapper =
+        _mappers[baseType] ??
         _mappers.values.where((m) => m.isForType(type)).firstOrNull ??
         _inheritedMappers[baseType] ??
         _inheritedMappers.values.where((m) => m.isForType(type)).firstOrNull;
@@ -335,7 +336,7 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
       ..._mappers.values
           .where((m) => m.type.name == name)
           .map((m) => m.typeFactory),
-      ..._types.values.where((f) => (f(<T>() => T) as Type).name == name)
+      ..._types.values.where((f) => (f(<T>() => T) as Type).name == name),
     ];
   }
 
@@ -354,8 +355,11 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
       if (value is T) {
         return value;
       } else {
-        throw MapperException.chain(MapperMethod.decode, '($T)',
-            MapperException.unexpectedType(Null, 'Object'));
+        throw MapperException.chain(
+          MapperMethod.decode,
+          '($T)',
+          MapperException.unexpectedType(Null, 'Object'),
+        );
       }
     }
 
@@ -365,7 +369,8 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
       type = TypePlus.fromId(value[MapperContainer.typeIdKey] as String);
       if (type == UnresolvedType) {
         var e = MapperException.unresolvedType(
-            value[MapperContainer.typeIdKey] as String);
+          value[MapperContainer.typeIdKey] as String,
+        );
         throw MapperException.chain(MapperMethod.decode, '($T)', e);
       }
     } else if (value is T) {
@@ -377,7 +382,10 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
       return mapper.decodeValue<T>(value, DecodingOptions(type: type), this);
     } else {
       throw MapperException.chain(
-          MapperMethod.decode, '($type)', MapperException.unknownType(type));
+        MapperMethod.decode,
+        '($type)',
+        MapperException.unknownType(type),
+      );
     }
   }
 
@@ -406,7 +414,10 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
       return value;
     } else {
       throw MapperException.incorrectEncoding(
-          object.runtimeType, 'Map', value.runtimeType);
+        object.runtimeType,
+        'Map',
+        value.runtimeType,
+      );
     }
   }
 
@@ -420,7 +431,10 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
       return value;
     } else {
       throw MapperException.incorrectEncoding(
-          object.runtimeType, 'Iterable', value.runtimeType);
+        object.runtimeType,
+        'Iterable',
+        value.runtimeType,
+      );
     }
   }
 
@@ -480,16 +494,17 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     if (mapper != null) {
       try {
         return fn(
-            mapper,
-            value,
-            MappingContext(
-              container: this,
-              args: () {
-                return value.runtimeType.args
-                    .map((t) => t == UnresolvedType ? dynamic : t)
-                    .toList();
-              },
-            ));
+          mapper,
+          value,
+          MappingContext(
+            container: this,
+            args: () {
+              return value.runtimeType.args
+                  .map((t) => t == UnresolvedType ? dynamic : t)
+                  .toList();
+            },
+          ),
+        );
       } catch (e, stacktrace) {
         Error.throwWithStackTrace(
           MapperException.chain(method, hint(), e),

@@ -32,18 +32,14 @@ class Data with DataMappable {
 class SingleSetting<T> with SingleSettingMappable {
   final List<T>? properties;
 
-  const SingleSetting({
-    this.properties,
-  });
+  const SingleSetting({this.properties});
 }
 
 @MappableClass(hook: MapHooksAfter())
 class Settings with SettingsMappable {
   final Map<String, SingleSetting>? settings;
 
-  const Settings({
-    this.settings,
-  });
+  const Settings({this.settings});
 }
 
 @MappableClass()
@@ -79,9 +75,7 @@ class MapHooksAfter extends MappingHook {
 
 @MappableClass()
 class Asset<T> with AssetMappable {
-  Asset({
-    required this.data,
-  });
+  Asset({required this.data});
 
   final T data;
 }
@@ -110,7 +104,8 @@ void main() {
       expect(
         boxJson,
         equals(
-            '{"size":10,"contents":[{"color":"Rainbow"}],"__type":"Box<Confetti>"}'),
+          '{"size":10,"contents":[{"color":"Rainbow"}],"__type":"Box<Confetti>"}',
+        ),
       );
 
       dynamic whatAmI = MapperContainer.globals.fromJson(boxJson);
@@ -120,53 +115,66 @@ void main() {
     test('Should keep type information', () {
       DataMapper.ensureInitialized();
 
-      var settings = Settings(settings: {
-        'counts': SingleSetting<int>(properties: [2, 3, 4]),
-        'names': SingleSetting<String>(properties: ['Tom', 'Anna']),
-        'data': SingleSetting<Data>(properties: [Data('1234')]),
-      });
+      var settings = Settings(
+        settings: {
+          'counts': SingleSetting<int>(properties: [2, 3, 4]),
+          'names': SingleSetting<String>(properties: ['Tom', 'Anna']),
+          'data': SingleSetting<Data>(properties: [Data('1234')]),
+        },
+      );
 
       var json = settings.toJson();
       expect(
-          json,
-          equals(
-              '{"settings":{"counts":{"properties":[2,3,4],"__type":"SingleSetting<int>"},"names":{"properties":["Tom","Anna"],"__type":"SingleSetting<String>"},"data":{"properties":[{"data":"1234"}],"__type":"SingleSetting<Data>"}}}'));
+        json,
+        equals(
+          '{"settings":{"counts":{"properties":[2,3,4],"__type":"SingleSetting<int>"},"names":{"properties":["Tom","Anna"],"__type":"SingleSetting<String>"},"data":{"properties":[{"data":"1234"}],"__type":"SingleSetting<Data>"}}}',
+        ),
+      );
 
       Settings copied = SettingsMapper.fromJson(json);
 
-      expect(copied.settings!['counts'].runtimeType,
-          equals(type<SingleSetting<int>>()));
-      expect(copied.settings!['names'].runtimeType,
-          equals(type<SingleSetting<String>>()));
-      expect(copied.settings!['data'].runtimeType,
-          equals(type<SingleSetting<Data>>()));
+      expect(
+        copied.settings!['counts'].runtimeType,
+        equals(type<SingleSetting<int>>()),
+      );
+      expect(
+        copied.settings!['names'].runtimeType,
+        equals(type<SingleSetting<String>>()),
+      );
+      expect(
+        copied.settings!['data'].runtimeType,
+        equals(type<SingleSetting<Data>>()),
+      );
     });
 
     test('Generic type encoding', () {
       SettingsMapper.ensureInitialized();
 
-      var dataA =
-          MapperContainer.globals.toMap(SingleSetting<int>(properties: [2, 3]));
+      var dataA = MapperContainer.globals.toMap(
+        SingleSetting<int>(properties: [2, 3]),
+      );
       expect(
         dataA,
         equals({
-          'properties': [2, 3]
+          'properties': [2, 3],
         }),
       );
 
-      var dataB = MapperContainer.globals
-          .toValue<dynamic>(SingleSetting<int>(properties: [1, 4]));
+      var dataB = MapperContainer.globals.toValue<dynamic>(
+        SingleSetting<int>(properties: [1, 4]),
+      );
       expect(
         dataB,
         equals({
           'properties': [1, 4],
-          '__type': 'SingleSetting<int>'
+          '__type': 'SingleSetting<int>',
         }),
       );
 
       var dataC = MapperContainer.globals.toValue<dynamic>(
-          SingleSetting<int>(properties: [1, 4]),
-          EncodingOptions(includeTypeId: false));
+        SingleSetting<int>(properties: [1, 4]),
+        EncodingOptions(includeTypeId: false),
+      );
       expect(
         dataC,
         equals({
@@ -178,26 +186,30 @@ void main() {
     test('Unknown type decoding', () {
       expect(
         () => MapperContainer.globals.fromMap<Object>({'__type': 'Unknown'}),
-        throwsMapperException(MapperException.chain(MapperMethod.decode,
-            '(Object)', MapperException.unresolvedType('Unknown'))),
+        throwsMapperException(
+          MapperException.chain(
+            MapperMethod.decode,
+            '(Object)',
+            MapperException.unresolvedType('Unknown'),
+          ),
+        ),
       );
     });
 
     test('Nullable generic param', () {
-      expect(
-        AssetMapper.fromJson<dynamic>('{"data": null}').data,
-        isNull,
-      );
+      expect(AssetMapper.fromJson<dynamic>('{"data": null}').data, isNull);
 
-      expect(
-        AssetMapper.fromJson<String?>('{"data": null}').data,
-        isNull,
-      );
+      expect(AssetMapper.fromJson<String?>('{"data": null}').data, isNull);
 
       expect(
         () => AssetMapper.fromJson<String>('{"data": null}'),
-        throwsMapperException(MapperException.chain(MapperMethod.decode,
-            '(Asset<String>).data', MapperException.missingParameter('data'))),
+        throwsMapperException(
+          MapperException.chain(
+            MapperMethod.decode,
+            '(Asset<String>).data',
+            MapperException.missingParameter('data'),
+          ),
+        ),
       );
     });
 
@@ -228,13 +240,14 @@ void main() {
       MapperContainer.typeIdKey = '__custom_type';
       SettingsMapper.ensureInitialized();
 
-      var data = MapperContainer.globals
-          .toValue<dynamic>(SingleSetting<int>(properties: [1, 4]));
+      var data = MapperContainer.globals.toValue<dynamic>(
+        SingleSetting<int>(properties: [1, 4]),
+      );
       expect(
         data,
         equals({
           'properties': [1, 4],
-          '__custom_type': 'SingleSetting<int>'
+          '__custom_type': 'SingleSetting<int>',
         }),
       );
 
@@ -245,7 +258,7 @@ void main() {
       expect(
         MapperContainer.globals.fromValue({
           'properties': [1, 4],
-          '__type': 'SingleSetting<int>'
+          '__type': 'SingleSetting<int>',
         }),
         isA<Map>(),
       );

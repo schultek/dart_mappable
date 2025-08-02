@@ -26,7 +26,7 @@ void main() {
 
     test('manual map', () {
       var map = UnmappedPropertiesHook('unmapped') //
-          .beforeDecode({'a': 'a', 'b': 'b'});
+      .beforeDecode({'a': 'a', 'b': 'b'});
       expect(map['a'], equals('a'));
       expect(map['b'], equals('b'));
       map['a'] = 'a2';

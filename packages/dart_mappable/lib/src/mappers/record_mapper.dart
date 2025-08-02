@@ -39,8 +39,10 @@ abstract class RecordMapperBase<T extends Record> extends InterfaceMapperBase<T>
   bool isForType(Type type) {
     try {
       var newArgs = apply(DecodingContext(args: () => type.args));
-      var instantiatedType = typeFactory
-          .callWith(parameters: [<V>() => V], typeArguments: newArgs);
+      var instantiatedType = typeFactory.callWith(
+        parameters: [<V>() => V],
+        typeArguments: newArgs,
+      );
       return type == instantiatedType;
     } catch (_) {
       return false;

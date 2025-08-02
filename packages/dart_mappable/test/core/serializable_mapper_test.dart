@@ -16,10 +16,14 @@ class MyClass1<A> {
 class MyClass2<A, B> {
   MyClass2();
   MyClass2.fromJson(
-      Map<String, dynamic> map, A Function(Object?) a, B Function(Object?) b);
+    Map<String, dynamic> map,
+    A Function(Object?) a,
+    B Function(Object?) b,
+  );
   Map<String, dynamic> toJson(
-          Object? Function(dynamic) a, Object? Function(dynamic) b) =>
-      {};
+    Object? Function(dynamic) a,
+    Object? Function(dynamic) b,
+  ) => {};
 }
 
 var myClassMapper = SerializableMapper<MyClass, Map<String, dynamic>>(
@@ -45,14 +49,8 @@ void main() {
     MapperContainer.globals.use(myClass2Mapper);
 
     test('basic class', () {
-      expect(
-        MapperContainer.globals.fromJson<MyClass>('{}'),
-        isA<MyClass>(),
-      );
-      expect(
-        MapperContainer.globals.toJson(MyClass()),
-        equals('{}'),
-      );
+      expect(MapperContainer.globals.fromJson<MyClass>('{}'), isA<MyClass>());
+      expect(MapperContainer.globals.toJson(MyClass()), equals('{}'));
     });
 
     test('generic 1 class', () {
@@ -60,10 +58,7 @@ void main() {
         MapperContainer.globals.fromJson<MyClass1<int>>('{}'),
         isA<MyClass1<int>>(),
       );
-      expect(
-        MapperContainer.globals.toJson(MyClass1<int>()),
-        equals('{}'),
-      );
+      expect(MapperContainer.globals.toJson(MyClass1<int>()), equals('{}'));
     });
 
     test('generic 2 class', () {

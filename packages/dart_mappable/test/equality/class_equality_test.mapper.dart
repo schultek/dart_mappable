@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -92,11 +93,13 @@ class AMapper extends ClassMapperBase<A> {
   };
 
   static A _instantiate(DecodingData data) {
-    return A(data.dec(_f$a),
-        b: data.dec(_f$b),
-        c: data.dec(_f$c),
-        d: data.dec(_f$d),
-        e: data.dec(_f$e));
+    return A(
+      data.dec(_f$a),
+      b: data.dec(_f$b),
+      c: data.dec(_f$c),
+      d: data.dec(_f$d),
+      e: data.dec(_f$e),
+    );
   }
 
   @override
@@ -157,19 +160,23 @@ class _ACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, A, $Out>
   late final ClassMapperBase<A> $mapper = AMapper.ensureInitialized();
   @override
   $R call({String? a, int? b, Object? c = $none, bool? d, Object? e = $none}) =>
-      $apply(FieldCopyWithData({
-        if (a != null) #a: a,
-        if (b != null) #b: b,
-        if (c != $none) #c: c,
-        if (d != null) #d: d,
-        if (e != $none) #e: e
-      }));
+      $apply(
+        FieldCopyWithData({
+          if (a != null) #a: a,
+          if (b != null) #b: b,
+          if (c != $none) #c: c,
+          if (d != null) #d: d,
+          if (e != $none) #e: e,
+        }),
+      );
   @override
-  A $make(CopyWithData data) => A(data.get(#a, or: $value.a),
-      b: data.get(#b, or: $value.b),
-      c: data.get(#c, or: $value.c),
-      d: data.get(#d, or: $value.d),
-      e: data.get(#e, or: $value.e));
+  A $make(CopyWithData data) => A(
+    data.get(#a, or: $value.a),
+    b: data.get(#b, or: $value.b),
+    c: data.get(#c, or: $value.c),
+    d: data.get(#d, or: $value.d),
+    e: data.get(#e, or: $value.e),
+  );
 
   @override
   ACopyWith<$R2, A, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
@@ -195,9 +202,7 @@ class BaseMapper extends ClassMapperBase<Base> {
   static const Field<Base, String> _f$data = Field('data', _$data);
 
   @override
-  final MappableFields<Base> fields = const {
-    #data: _f$data,
-  };
+  final MappableFields<Base> fields = const {#data: _f$data};
 
   static Base _instantiate(DecodingData data) {
     return Base(data.dec(_f$data));
@@ -289,9 +294,7 @@ class SubMapper extends ClassMapperBase<Sub> {
   static const Field<Sub, String> _f$data = Field('data', _$data);
 
   @override
-  final MappableFields<Sub> fields = const {
-    #data: _f$data,
-  };
+  final MappableFields<Sub> fields = const {#data: _f$data};
 
   static Sub _instantiate(DecodingData data) {
     return Sub(data.dec(_f$data));
@@ -384,9 +387,7 @@ class BaseTypeMapper extends ClassMapperBase<BaseType> {
   static const Field<BaseType, String> _f$type = Field('type', _$type);
 
   @override
-  final MappableFields<BaseType> fields = const {
-    #type: _f$type,
-  };
+  final MappableFields<BaseType> fields = const {#type: _f$type};
 
   static BaseType _instantiate(DecodingData data) {
     return BaseType(data.dec(_f$type));
@@ -406,18 +407,23 @@ class BaseTypeMapper extends ClassMapperBase<BaseType> {
 
 mixin BaseTypeMappable {
   String toJson() {
-    return BaseTypeMapper.ensureInitialized()
-        .encodeJson<BaseType>(this as BaseType);
+    return BaseTypeMapper.ensureInitialized().encodeJson<BaseType>(
+      this as BaseType,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return BaseTypeMapper.ensureInitialized()
-        .encodeMap<BaseType>(this as BaseType);
+    return BaseTypeMapper.ensureInitialized().encodeMap<BaseType>(
+      this as BaseType,
+    );
   }
 
   BaseTypeCopyWith<BaseType, BaseType, BaseType> get copyWith =>
       _BaseTypeCopyWithImpl<BaseType, BaseType>(
-          this as BaseType, $identity, $identity);
+        this as BaseType,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return BaseTypeMapper.ensureInitialized().stringifyValue(this as BaseType);
@@ -425,8 +431,10 @@ mixin BaseTypeMappable {
 
   @override
   bool operator ==(Object other) {
-    return BaseTypeMapper.ensureInitialized()
-        .equalsValue(this as BaseType, other);
+    return BaseTypeMapper.ensureInitialized().equalsValue(
+      this as BaseType,
+      other,
+    );
   }
 
   @override
@@ -463,8 +471,8 @@ class _BaseTypeCopyWithImpl<$R, $Out>
 
   @override
   BaseTypeCopyWith<$R2, BaseType, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _BaseTypeCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _BaseTypeCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class SubTypeMapper extends SubClassMapperBase<SubType> {
@@ -486,9 +494,7 @@ class SubTypeMapper extends SubClassMapperBase<SubType> {
   static const Field<SubType, String> _f$type = Field('type', _$type);
 
   @override
-  final MappableFields<SubType> fields = const {
-    #type: _f$type,
-  };
+  final MappableFields<SubType> fields = const {#type: _f$type};
 
   @override
   final String discriminatorKey = 'type';
@@ -515,18 +521,23 @@ class SubTypeMapper extends SubClassMapperBase<SubType> {
 
 mixin SubTypeMappable {
   String toJson() {
-    return SubTypeMapper.ensureInitialized()
-        .encodeJson<SubType>(this as SubType);
+    return SubTypeMapper.ensureInitialized().encodeJson<SubType>(
+      this as SubType,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return SubTypeMapper.ensureInitialized()
-        .encodeMap<SubType>(this as SubType);
+    return SubTypeMapper.ensureInitialized().encodeMap<SubType>(
+      this as SubType,
+    );
   }
 
   SubTypeCopyWith<SubType, SubType, SubType> get copyWith =>
       _SubTypeCopyWithImpl<SubType, SubType>(
-          this as SubType, $identity, $identity);
+        this as SubType,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return SubTypeMapper.ensureInitialized().stringifyValue(this as SubType);
@@ -534,8 +545,10 @@ mixin SubTypeMappable {
 
   @override
   bool operator ==(Object other) {
-    return SubTypeMapper.ensureInitialized()
-        .equalsValue(this as SubType, other);
+    return SubTypeMapper.ensureInitialized().equalsValue(
+      this as SubType,
+      other,
+    );
   }
 
   @override
@@ -589,17 +602,19 @@ class GenericMapper extends ClassMapperBase<Generic> {
   @override
   final String id = 'Generic';
   @override
-  Function get typeFactory => <T>(f) => f<Generic<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<Generic<T>>();
 
   static dynamic _$data(Generic v) => v.data;
   static dynamic _arg$data<T>(f) => f<T>();
-  static const Field<Generic, dynamic> _f$data =
-      Field('data', _$data, arg: _arg$data);
+  static const Field<Generic, dynamic> _f$data = Field(
+    'data',
+    _$data,
+    arg: _arg$data,
+  );
 
   @override
-  final MappableFields<Generic> fields = const {
-    #data: _f$data,
-  };
+  final MappableFields<Generic> fields = const {#data: _f$data};
 
   static Generic<T> _instantiate<T>(DecodingData data) {
     return Generic(data.dec(_f$data));
@@ -619,18 +634,23 @@ class GenericMapper extends ClassMapperBase<Generic> {
 
 mixin GenericMappable<T> {
   String toJson() {
-    return GenericMapper.ensureInitialized()
-        .encodeJson<Generic<T>>(this as Generic<T>);
+    return GenericMapper.ensureInitialized().encodeJson<Generic<T>>(
+      this as Generic<T>,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return GenericMapper.ensureInitialized()
-        .encodeMap<Generic<T>>(this as Generic<T>);
+    return GenericMapper.ensureInitialized().encodeMap<Generic<T>>(
+      this as Generic<T>,
+    );
   }
 
   GenericCopyWith<Generic<T>, Generic<T>, Generic<T>, T> get copyWith =>
       _GenericCopyWithImpl<Generic<T>, Generic<T>, T>(
-          this as Generic<T>, $identity, $identity);
+        this as Generic<T>,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return GenericMapper.ensureInitialized().stringifyValue(this as Generic<T>);
@@ -638,8 +658,10 @@ mixin GenericMappable<T> {
 
   @override
   bool operator ==(Object other) {
-    return GenericMapper.ensureInitialized()
-        .equalsValue(this as Generic<T>, other);
+    return GenericMapper.ensureInitialized().equalsValue(
+      this as Generic<T>,
+      other,
+    );
   }
 
   @override
@@ -677,8 +699,8 @@ class _GenericCopyWithImpl<$R, $Out, T>
 
   @override
   GenericCopyWith<$R2, Generic<T>, $Out2, T> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _GenericCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _GenericCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class WrapperMapper extends ClassMapperBase<Wrapper> {
@@ -696,17 +718,19 @@ class WrapperMapper extends ClassMapperBase<Wrapper> {
   @override
   final String id = 'Wrapper';
   @override
-  Function get typeFactory => <T>(f) => f<Wrapper<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<Wrapper<T>>();
 
   static Generic<dynamic> _$value(Wrapper v) => v.value;
   static dynamic _arg$value<T>(f) => f<Generic<T>>();
-  static const Field<Wrapper, Generic<dynamic>> _f$value =
-      Field('value', _$value, arg: _arg$value);
+  static const Field<Wrapper, Generic<dynamic>> _f$value = Field(
+    'value',
+    _$value,
+    arg: _arg$value,
+  );
 
   @override
-  final MappableFields<Wrapper> fields = const {
-    #value: _f$value,
-  };
+  final MappableFields<Wrapper> fields = const {#value: _f$value};
 
   static Wrapper<T> _instantiate<T>(DecodingData data) {
     return Wrapper(data.dec(_f$value));
@@ -726,18 +750,23 @@ class WrapperMapper extends ClassMapperBase<Wrapper> {
 
 mixin WrapperMappable<T> {
   String toJson() {
-    return WrapperMapper.ensureInitialized()
-        .encodeJson<Wrapper<T>>(this as Wrapper<T>);
+    return WrapperMapper.ensureInitialized().encodeJson<Wrapper<T>>(
+      this as Wrapper<T>,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return WrapperMapper.ensureInitialized()
-        .encodeMap<Wrapper<T>>(this as Wrapper<T>);
+    return WrapperMapper.ensureInitialized().encodeMap<Wrapper<T>>(
+      this as Wrapper<T>,
+    );
   }
 
   WrapperCopyWith<Wrapper<T>, Wrapper<T>, Wrapper<T>, T> get copyWith =>
       _WrapperCopyWithImpl<Wrapper<T>, Wrapper<T>, T>(
-          this as Wrapper<T>, $identity, $identity);
+        this as Wrapper<T>,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return WrapperMapper.ensureInitialized().stringifyValue(this as Wrapper<T>);
@@ -745,8 +774,10 @@ mixin WrapperMappable<T> {
 
   @override
   bool operator ==(Object other) {
-    return WrapperMapper.ensureInitialized()
-        .equalsValue(this as Wrapper<T>, other);
+    return WrapperMapper.ensureInitialized().equalsValue(
+      this as Wrapper<T>,
+      other,
+    );
   }
 
   @override
@@ -788,6 +819,7 @@ class _WrapperCopyWithImpl<$R, $Out, T>
 
   @override
   WrapperCopyWith<$R2, Wrapper<T>, $Out2, T> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _WrapperCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _WrapperCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
+

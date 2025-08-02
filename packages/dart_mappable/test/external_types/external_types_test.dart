@@ -46,12 +46,13 @@ void main() {
 
       expect(
         MapperContainer.globals.isEqual(
-            AnimalMapper.fromMap({
-              'type': 'Pet',
-              'owner': {'first_name': 'Clara'},
-              'color': 'Buddy',
-            }),
-            Pet(Person2('Clara'), 'Buddy')),
+          AnimalMapper.fromMap({
+            'type': 'Pet',
+            'owner': {'first_name': 'Clara'},
+            'color': 'Buddy',
+          }),
+          Pet(Person2('Clara'), 'Buddy'),
+        ),
         isTrue,
       );
     });

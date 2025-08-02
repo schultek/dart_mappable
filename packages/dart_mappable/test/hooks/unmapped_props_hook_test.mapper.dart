@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -21,8 +22,10 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   static Map<String, dynamic> _$unmappedProps(A v) => v.unmappedProps;
-  static const Field<A, Map<String, dynamic>> _f$unmappedProps =
-      Field('unmappedProps', _$unmappedProps);
+  static const Field<A, Map<String, dynamic>> _f$unmappedProps = Field(
+    'unmappedProps',
+    _$unmappedProps,
+  );
   static String? _$a(A v) => v.a;
   static const Field<A, String> _f$a = Field('a', _$a);
 
@@ -85,7 +88,7 @@ extension AValueCopy<$R, $Out> on ObjectCopyWith<$R, A, $Out> {
 abstract class ACopyWith<$R, $In extends A, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
-      get unmappedProps;
+  get unmappedProps;
   $R call({Map<String, dynamic>? unmappedProps, String? a});
   ACopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -98,22 +101,26 @@ class _ACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, A, $Out>
   late final ClassMapperBase<A> $mapper = AMapper.ensureInitialized();
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
-      get unmappedProps => MapCopyWith(
-          $value.unmappedProps,
-          (v, t) => ObjectCopyWith(v, $identity, t),
-          (v) => call(unmappedProps: v));
+  get unmappedProps => MapCopyWith(
+    $value.unmappedProps,
+    (v, t) => ObjectCopyWith(v, $identity, t),
+    (v) => call(unmappedProps: v),
+  );
   @override
-  $R call({Map<String, dynamic>? unmappedProps, Object? a = $none}) =>
-      $apply(FieldCopyWithData({
-        if (unmappedProps != null) #unmappedProps: unmappedProps,
-        if (a != $none) #a: a
-      }));
+  $R call({Map<String, dynamic>? unmappedProps, Object? a = $none}) => $apply(
+    FieldCopyWithData({
+      if (unmappedProps != null) #unmappedProps: unmappedProps,
+      if (a != $none) #a: a,
+    }),
+  );
   @override
   A $make(CopyWithData data) => A(
-      data.get(#unmappedProps, or: $value.unmappedProps),
-      data.get(#a, or: $value.a));
+    data.get(#unmappedProps, or: $value.unmappedProps),
+    data.get(#a, or: $value.a),
+  );
 
   @override
   ACopyWith<$R2, A, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _ACopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

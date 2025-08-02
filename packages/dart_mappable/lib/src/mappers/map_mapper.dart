@@ -36,7 +36,7 @@ class MapMapper<M extends Map> extends MapperBase<M>
   @override
   String stringify(M value, MappingContext context) =>
       '{${value.entries.map((e) => '${context.container.asString(e.key)}: '
-          '${context.container.asString(e.value)}').join(', ')}}';
+      '${context.container.asString(e.value)}').join(', ')}}';
 }
 
 class _MapDecoder<M extends Map> {
@@ -69,12 +69,14 @@ class _MapDecoder2<M extends Map, K> {
   }
 
   Map<K, V> _decode<V>() {
-    return mapper.fromMap(value.checked<Map>().map((key, value) {
-      return MapEntry(
-        context.$dec<K>(key, 'key'),
-        context.$dec<V>(value, 'value'),
-      );
-    }));
+    return mapper.fromMap(
+      value.checked<Map>().map((key, value) {
+        return MapEntry(
+          context.$dec<K>(key, 'key'),
+          context.$dec<V>(value, 'value'),
+        );
+      }),
+    );
   }
 }
 

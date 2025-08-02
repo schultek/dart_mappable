@@ -14,7 +14,7 @@ enum FieldMode {
   member,
 
   /// A field that is both a constructor parameter and class member.
-  field;
+  field,
 }
 
 /// A field defined in a class that is relevant for its mapping.
@@ -81,9 +81,10 @@ class Field<T extends Object, V> {
     if (data != null) {
       options = DecodingOptions(data: data);
     }
-    var result = opt || def != null
-        ? context.$dec<R?>(value[key], key, hook, options)
-        : context.$dec<R>(value[key], key, hook, options);
+    var result =
+        opt || def != null
+            ? context.$dec<R?>(value[key], key, hook, options)
+            : context.$dec<R>(value[key], key, hook, options);
     return result ?? (def as R);
   }
 }
@@ -211,7 +212,10 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
       return value;
     } else {
       throw MapperException.incorrectEncoding(
-          object.runtimeType, 'Map', value.runtimeType);
+        object.runtimeType,
+        'Map',
+        value.runtimeType,
+      );
     }
   }
 

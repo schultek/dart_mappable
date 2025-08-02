@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -24,8 +25,10 @@ class TestObjMapper extends ClassMapperBase<TestObj> {
   static BigInt? _$x(TestObj v) => v.x;
   static const Field<TestObj, BigInt> _f$x = Field('x', _$x);
   static Map<String, dynamic> _$unmappedProps(TestObj v) => v.unmappedProps;
-  static const Field<TestObj, Map<String, dynamic>> _f$unmappedProps =
-      Field('unmappedProps', _$unmappedProps);
+  static const Field<TestObj, Map<String, dynamic>> _f$unmappedProps = Field(
+    'unmappedProps',
+    _$unmappedProps,
+  );
 
   @override
   final MappableFields<TestObj> fields = const {
@@ -53,18 +56,23 @@ class TestObjMapper extends ClassMapperBase<TestObj> {
 
 mixin TestObjMappable {
   String toJson() {
-    return TestObjMapper.ensureInitialized()
-        .encodeJson<TestObj>(this as TestObj);
+    return TestObjMapper.ensureInitialized().encodeJson<TestObj>(
+      this as TestObj,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return TestObjMapper.ensureInitialized()
-        .encodeMap<TestObj>(this as TestObj);
+    return TestObjMapper.ensureInitialized().encodeMap<TestObj>(
+      this as TestObj,
+    );
   }
 
   TestObjCopyWith<TestObj, TestObj, TestObj> get copyWith =>
       _TestObjCopyWithImpl<TestObj, TestObj>(
-          this as TestObj, $identity, $identity);
+        this as TestObj,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return TestObjMapper.ensureInitialized().stringifyValue(this as TestObj);
@@ -72,8 +80,10 @@ mixin TestObjMappable {
 
   @override
   bool operator ==(Object other) {
-    return TestObjMapper.ensureInitialized()
-        .equalsValue(this as TestObj, other);
+    return TestObjMapper.ensureInitialized().equalsValue(
+      this as TestObj,
+      other,
+    );
   }
 
   @override
@@ -90,7 +100,7 @@ extension TestObjValueCopy<$R, $Out> on ObjectCopyWith<$R, TestObj, $Out> {
 abstract class TestObjCopyWith<$R, $In extends TestObj, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
-      get unmappedProps;
+  get unmappedProps;
   $R call({BigInt? x, Map<String, dynamic>? unmappedProps});
   TestObjCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -105,22 +115,26 @@ class _TestObjCopyWithImpl<$R, $Out>
       TestObjMapper.ensureInitialized();
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
-      get unmappedProps => MapCopyWith(
-          $value.unmappedProps,
-          (v, t) => ObjectCopyWith(v, $identity, t),
-          (v) => call(unmappedProps: v));
+  get unmappedProps => MapCopyWith(
+    $value.unmappedProps,
+    (v, t) => ObjectCopyWith(v, $identity, t),
+    (v) => call(unmappedProps: v),
+  );
   @override
-  $R call({Object? x = $none, Map<String, dynamic>? unmappedProps}) =>
-      $apply(FieldCopyWithData({
-        if (x != $none) #x: x,
-        if (unmappedProps != null) #unmappedProps: unmappedProps
-      }));
+  $R call({Object? x = $none, Map<String, dynamic>? unmappedProps}) => $apply(
+    FieldCopyWithData({
+      if (x != $none) #x: x,
+      if (unmappedProps != null) #unmappedProps: unmappedProps,
+    }),
+  );
   @override
   TestObj $make(CopyWithData data) => TestObj.explicit(
-      data.get(#x, or: $value.x),
-      data.get(#unmappedProps, or: $value.unmappedProps));
+    data.get(#x, or: $value.x),
+    data.get(#unmappedProps, or: $value.unmappedProps),
+  );
 
   @override
   TestObjCopyWith<$R2, TestObj, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _TestObjCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

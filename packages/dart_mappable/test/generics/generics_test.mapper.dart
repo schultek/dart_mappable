@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -21,14 +22,18 @@ class BoxMapper extends ClassMapperBase<Box> {
   @override
   final String id = 'Box';
   @override
-  Function get typeFactory => <T extends Content>(f) => f<Box<T>>();
+  Function get typeFactory =>
+      <T extends Content>(f) => f<Box<T>>();
 
   static int _$size(Box v) => v.size;
   static const Field<Box, int> _f$size = Field('size', _$size);
   static List<Content> _$contents(Box v) => v.contents;
   static dynamic _arg$contents<T extends Content>(f) => f<List<T>>();
-  static const Field<Box, List<Content>> _f$contents =
-      Field('contents', _$contents, arg: _arg$contents);
+  static const Field<Box, List<Content>> _f$contents = Field(
+    'contents',
+    _$contents,
+    arg: _arg$contents,
+  );
 
   @override
   final MappableFields<Box> fields = const {
@@ -101,17 +106,22 @@ class _BoxCopyWithImpl<$R, $Out, T extends Content>
   late final ClassMapperBase<Box> $mapper = BoxMapper.ensureInitialized();
   @override
   ListCopyWith<$R, T, ContentCopyWith<$R, T, T>> get contents => ListCopyWith(
-      $value.contents,
-      (v, t) => (v.copyWith as ContentCopyWith<Content, T, T>).$chain(t),
-      (v) => call(contents: v));
+    $value.contents,
+    (v, t) => (v.copyWith as ContentCopyWith<Content, T, T>).$chain(t),
+    (v) => call(contents: v),
+  );
   @override
-  $R call({int? size, List<T>? contents}) => $apply(FieldCopyWithData({
-        if (size != null) #size: size,
-        if (contents != null) #contents: contents
-      }));
+  $R call({int? size, List<T>? contents}) => $apply(
+    FieldCopyWithData({
+      if (size != null) #size: size,
+      if (contents != null) #contents: contents,
+    }),
+  );
   @override
-  Box<T> $make(CopyWithData data) => Box(data.get(#size, or: $value.size),
-      contents: data.get(#contents, or: $value.contents));
+  Box<T> $make(CopyWithData data) => Box(
+    data.get(#size, or: $value.size),
+    contents: data.get(#contents, or: $value.contents),
+  );
 
   @override
   BoxCopyWith<$R2, Box<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
@@ -154,18 +164,23 @@ class ContentMapper extends ClassMapperBase<Content> {
 
 mixin ContentMappable {
   String toJson() {
-    return ContentMapper.ensureInitialized()
-        .encodeJson<Content>(this as Content);
+    return ContentMapper.ensureInitialized().encodeJson<Content>(
+      this as Content,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return ContentMapper.ensureInitialized()
-        .encodeMap<Content>(this as Content);
+    return ContentMapper.ensureInitialized().encodeMap<Content>(
+      this as Content,
+    );
   }
 
   ContentCopyWith<Content, Content, Content> get copyWith =>
       _ContentCopyWithImpl<Content, Content>(
-          this as Content, $identity, $identity);
+        this as Content,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return ContentMapper.ensureInitialized().stringifyValue(this as Content);
@@ -173,8 +188,10 @@ mixin ContentMappable {
 
   @override
   bool operator ==(Object other) {
-    return ContentMapper.ensureInitialized()
-        .equalsValue(this as Content, other);
+    return ContentMapper.ensureInitialized().equalsValue(
+      this as Content,
+      other,
+    );
   }
 
   @override
@@ -231,9 +248,7 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
   static const Field<Confetti, String> _f$color = Field('color', _$color);
 
   @override
-  final MappableFields<Confetti> fields = const {
-    #color: _f$color,
-  };
+  final MappableFields<Confetti> fields = const {#color: _f$color};
 
   static Confetti _instantiate(DecodingData data) {
     return Confetti(data.dec(_f$color));
@@ -253,18 +268,23 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
 
 mixin ConfettiMappable {
   String toJson() {
-    return ConfettiMapper.ensureInitialized()
-        .encodeJson<Confetti>(this as Confetti);
+    return ConfettiMapper.ensureInitialized().encodeJson<Confetti>(
+      this as Confetti,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return ConfettiMapper.ensureInitialized()
-        .encodeMap<Confetti>(this as Confetti);
+    return ConfettiMapper.ensureInitialized().encodeMap<Confetti>(
+      this as Confetti,
+    );
   }
 
   ConfettiCopyWith<Confetti, Confetti, Confetti> get copyWith =>
       _ConfettiCopyWithImpl<Confetti, Confetti>(
-          this as Confetti, $identity, $identity);
+        this as Confetti,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return ConfettiMapper.ensureInitialized().stringifyValue(this as Confetti);
@@ -272,8 +292,10 @@ mixin ConfettiMappable {
 
   @override
   bool operator ==(Object other) {
-    return ConfettiMapper.ensureInitialized()
-        .equalsValue(this as Confetti, other);
+    return ConfettiMapper.ensureInitialized().equalsValue(
+      this as Confetti,
+      other,
+    );
   }
 
   @override
@@ -311,8 +333,8 @@ class _ConfettiCopyWithImpl<$R, $Out>
 
   @override
   ConfettiCopyWith<$R2, Confetti, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _ConfettiCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _ConfettiCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class DataMapper extends ClassMapperBase<Data> {
@@ -333,9 +355,7 @@ class DataMapper extends ClassMapperBase<Data> {
   static const Field<Data, String> _f$data = Field('data', _$data);
 
   @override
-  final MappableFields<Data> fields = const {
-    #data: _f$data,
-  };
+  final MappableFields<Data> fields = const {#data: _f$data};
 
   static Data _instantiate(DecodingData data) {
     return Data(data.dec(_f$data));
@@ -422,12 +442,17 @@ class SingleSettingMapper extends ClassMapperBase<SingleSetting> {
   @override
   final String id = 'SingleSetting';
   @override
-  Function get typeFactory => <T>(f) => f<SingleSetting<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<SingleSetting<T>>();
 
   static List<dynamic>? _$properties(SingleSetting v) => v.properties;
   static dynamic _arg$properties<T>(f) => f<List<T>>();
-  static const Field<SingleSetting, List<dynamic>> _f$properties =
-      Field('properties', _$properties, opt: true, arg: _arg$properties);
+  static const Field<SingleSetting, List<dynamic>> _f$properties = Field(
+    'properties',
+    _$properties,
+    opt: true,
+    arg: _arg$properties,
+  );
 
   @override
   final MappableFields<SingleSetting> fields = const {
@@ -452,35 +477,44 @@ class SingleSettingMapper extends ClassMapperBase<SingleSetting> {
 
 mixin SingleSettingMappable<T> {
   String toJson() {
-    return SingleSettingMapper.ensureInitialized()
-        .encodeJson<SingleSetting<T>>(this as SingleSetting<T>);
+    return SingleSettingMapper.ensureInitialized().encodeJson<SingleSetting<T>>(
+      this as SingleSetting<T>,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return SingleSettingMapper.ensureInitialized()
-        .encodeMap<SingleSetting<T>>(this as SingleSetting<T>);
+    return SingleSettingMapper.ensureInitialized().encodeMap<SingleSetting<T>>(
+      this as SingleSetting<T>,
+    );
   }
 
   SingleSettingCopyWith<SingleSetting<T>, SingleSetting<T>, SingleSetting<T>, T>
-      get copyWith =>
-          _SingleSettingCopyWithImpl<SingleSetting<T>, SingleSetting<T>, T>(
-              this as SingleSetting<T>, $identity, $identity);
+  get copyWith =>
+      _SingleSettingCopyWithImpl<SingleSetting<T>, SingleSetting<T>, T>(
+        this as SingleSetting<T>,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
-    return SingleSettingMapper.ensureInitialized()
-        .stringifyValue(this as SingleSetting<T>);
+    return SingleSettingMapper.ensureInitialized().stringifyValue(
+      this as SingleSetting<T>,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return SingleSettingMapper.ensureInitialized()
-        .equalsValue(this as SingleSetting<T>, other);
+    return SingleSettingMapper.ensureInitialized().equalsValue(
+      this as SingleSetting<T>,
+      other,
+    );
   }
 
   @override
   int get hashCode {
-    return SingleSettingMapper.ensureInitialized()
-        .hashValue(this as SingleSetting<T>);
+    return SingleSettingMapper.ensureInitialized().hashValue(
+      this as SingleSetting<T>,
+    );
   }
 }
 
@@ -495,7 +529,8 @@ abstract class SingleSettingCopyWith<$R, $In extends SingleSetting<T>, $Out, T>
   ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>>? get properties;
   $R call({List<T>? properties});
   SingleSettingCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
+    Then<$Out2, $R2> t,
+  );
 }
 
 class _SingleSettingCopyWithImpl<$R, $Out, T>
@@ -509,22 +544,24 @@ class _SingleSettingCopyWithImpl<$R, $Out, T>
   @override
   ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>>? get properties =>
       $value.properties != null
-          ? ListCopyWith(
-              $value.properties!,
-              (v, t) => ObjectCopyWith(v, $identity, t),
-              (v) => call(properties: v))
-          : null;
+      ? ListCopyWith(
+          $value.properties!,
+          (v, t) => ObjectCopyWith(v, $identity, t),
+          (v) => call(properties: v),
+        )
+      : null;
   @override
   $R call({Object? properties = $none}) => $apply(
-      FieldCopyWithData({if (properties != $none) #properties: properties}));
+    FieldCopyWithData({if (properties != $none) #properties: properties}),
+  );
   @override
   SingleSetting<T> $make(CopyWithData data) =>
       SingleSetting(properties: data.get(#properties, or: $value.properties));
 
   @override
   SingleSettingCopyWith<$R2, SingleSetting<T>, $Out2, T> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _SingleSettingCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _SingleSettingCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class SettingsMapper extends ClassMapperBase<Settings> {
@@ -545,12 +582,10 @@ class SettingsMapper extends ClassMapperBase<Settings> {
   static Map<String, SingleSetting<dynamic>>? _$settings(Settings v) =>
       v.settings;
   static const Field<Settings, Map<String, SingleSetting<dynamic>>>
-      _f$settings = Field('settings', _$settings, opt: true);
+  _f$settings = Field('settings', _$settings, opt: true);
 
   @override
-  final MappableFields<Settings> fields = const {
-    #settings: _f$settings,
-  };
+  final MappableFields<Settings> fields = const {#settings: _f$settings};
 
   @override
   final MappingHook hook = const MapHooksAfter();
@@ -572,18 +607,23 @@ class SettingsMapper extends ClassMapperBase<Settings> {
 
 mixin SettingsMappable {
   String toJson() {
-    return SettingsMapper.ensureInitialized()
-        .encodeJson<Settings>(this as Settings);
+    return SettingsMapper.ensureInitialized().encodeJson<Settings>(
+      this as Settings,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return SettingsMapper.ensureInitialized()
-        .encodeMap<Settings>(this as Settings);
+    return SettingsMapper.ensureInitialized().encodeMap<Settings>(
+      this as Settings,
+    );
   }
 
   SettingsCopyWith<Settings, Settings, Settings> get copyWith =>
       _SettingsCopyWithImpl<Settings, Settings>(
-          this as Settings, $identity, $identity);
+        this as Settings,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return SettingsMapper.ensureInitialized().stringifyValue(this as Settings);
@@ -591,8 +631,10 @@ mixin SettingsMappable {
 
   @override
   bool operator ==(Object other) {
-    return SettingsMapper.ensureInitialized()
-        .equalsValue(this as Settings, other);
+    return SettingsMapper.ensureInitialized().equalsValue(
+      this as Settings,
+      other,
+    );
   }
 
   @override
@@ -609,11 +651,17 @@ extension SettingsValueCopy<$R, $Out> on ObjectCopyWith<$R, Settings, $Out> {
 abstract class SettingsCopyWith<$R, $In extends Settings, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<
+    $R,
+    String,
+    SingleSetting<dynamic>,
+    SingleSettingCopyWith<
       $R,
-      String,
       SingleSetting<dynamic>,
-      SingleSettingCopyWith<$R, SingleSetting<dynamic>, SingleSetting<dynamic>,
-          dynamic>>? get settings;
+      SingleSetting<dynamic>,
+      dynamic
+    >
+  >?
+  get settings;
   $R call({Map<String, SingleSetting<dynamic>>? settings});
   SettingsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -628,13 +676,22 @@ class _SettingsCopyWithImpl<$R, $Out>
       SettingsMapper.ensureInitialized();
   @override
   MapCopyWith<
+    $R,
+    String,
+    SingleSetting<dynamic>,
+    SingleSettingCopyWith<
       $R,
-      String,
       SingleSetting<dynamic>,
-      SingleSettingCopyWith<$R, SingleSetting<dynamic>, SingleSetting<dynamic>,
-          dynamic>>? get settings => $value.settings != null
-      ? MapCopyWith($value.settings!, (v, t) => v.copyWith.$chain(t),
-          (v) => call(settings: v))
+      SingleSetting<dynamic>,
+      dynamic
+    >
+  >?
+  get settings => $value.settings != null
+      ? MapCopyWith(
+          $value.settings!,
+          (v, t) => v.copyWith.$chain(t),
+          (v) => call(settings: v),
+        )
       : null;
   @override
   $R call({Object? settings = $none}) =>
@@ -645,8 +702,8 @@ class _SettingsCopyWithImpl<$R, $Out>
 
   @override
   SettingsCopyWith<$R2, Settings, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _SettingsCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _SettingsCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class AMapper extends ClassMapperBase<A> {
@@ -664,17 +721,19 @@ class AMapper extends ClassMapperBase<A> {
   @override
   final String id = 'A';
   @override
-  Function get typeFactory => <T>(f) => f<A<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<A<T>>();
 
   static dynamic _$value(A v) => v.value;
   static dynamic _arg$value<T>(f) => f<T>();
-  static const Field<A, dynamic> _f$value =
-      Field('value', _$value, arg: _arg$value);
+  static const Field<A, dynamic> _f$value = Field(
+    'value',
+    _$value,
+    arg: _arg$value,
+  );
 
   @override
-  final MappableFields<A> fields = const {
-    #value: _f$value,
-  };
+  final MappableFields<A> fields = const {#value: _f$value};
 
   static A<T> _instantiate<T>(DecodingData data) {
     return A(data.dec(_f$value));
@@ -766,9 +825,7 @@ class BMapper extends ClassMapperBase<B> {
   static const Field<B, List<String>> _f$value = Field('value', _$value);
 
   @override
-  final MappableFields<B> fields = const {
-    #value: _f$value,
-  };
+  final MappableFields<B> fields = const {#value: _f$value};
 
   static B _instantiate(DecodingData data) {
     return B(data.dec(_f$value));
@@ -835,8 +892,11 @@ class _BCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, B, $Out>
   late final ClassMapperBase<B> $mapper = BMapper.ensureInitialized();
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get value =>
-      ListCopyWith($value.value, (v, t) => ObjectCopyWith(v, $identity, t),
-          (v) => call(value: v));
+      ListCopyWith(
+        $value.value,
+        (v, t) => ObjectCopyWith(v, $identity, t),
+        (v) => call(value: v),
+      );
   @override
   $R call({List<String>? value}) =>
       $apply(FieldCopyWithData({if (value != null) #value: value}));
@@ -862,17 +922,19 @@ class AssetMapper extends ClassMapperBase<Asset> {
   @override
   final String id = 'Asset';
   @override
-  Function get typeFactory => <T>(f) => f<Asset<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<Asset<T>>();
 
   static dynamic _$data(Asset v) => v.data;
   static dynamic _arg$data<T>(f) => f<T>();
-  static const Field<Asset, dynamic> _f$data =
-      Field('data', _$data, arg: _arg$data);
+  static const Field<Asset, dynamic> _f$data = Field(
+    'data',
+    _$data,
+    arg: _arg$data,
+  );
 
   @override
-  final MappableFields<Asset> fields = const {
-    #data: _f$data,
-  };
+  final MappableFields<Asset> fields = const {#data: _f$data};
 
   static Asset<T> _instantiate<T>(DecodingData data) {
     return Asset(data: data.dec(_f$data));
@@ -892,18 +954,23 @@ class AssetMapper extends ClassMapperBase<Asset> {
 
 mixin AssetMappable<T> {
   String toJson() {
-    return AssetMapper.ensureInitialized()
-        .encodeJson<Asset<T>>(this as Asset<T>);
+    return AssetMapper.ensureInitialized().encodeJson<Asset<T>>(
+      this as Asset<T>,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return AssetMapper.ensureInitialized()
-        .encodeMap<Asset<T>>(this as Asset<T>);
+    return AssetMapper.ensureInitialized().encodeMap<Asset<T>>(
+      this as Asset<T>,
+    );
   }
 
   AssetCopyWith<Asset<T>, Asset<T>, Asset<T>, T> get copyWith =>
       _AssetCopyWithImpl<Asset<T>, Asset<T>, T>(
-          this as Asset<T>, $identity, $identity);
+        this as Asset<T>,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return AssetMapper.ensureInitialized().stringifyValue(this as Asset<T>);
@@ -947,8 +1014,8 @@ class _AssetCopyWithImpl<$R, $Out, T>
 
   @override
   AssetCopyWith<$R2, Asset<T>, $Out2, T> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _AssetCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _AssetCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class NullableGenericsMapper extends ClassMapperBase<NullableGenerics> {
@@ -966,17 +1033,19 @@ class NullableGenericsMapper extends ClassMapperBase<NullableGenerics> {
   @override
   final String id = 'NullableGenerics';
   @override
-  Function get typeFactory => <T extends Object>(f) => f<NullableGenerics<T>>();
+  Function get typeFactory =>
+      <T extends Object>(f) => f<NullableGenerics<T>>();
 
   static Object? _$value(NullableGenerics v) => v.value;
   static dynamic _arg$value<T extends Object>(f) => f<T>();
-  static const Field<NullableGenerics, Object> _f$value =
-      Field('value', _$value, arg: _arg$value);
+  static const Field<NullableGenerics, Object> _f$value = Field(
+    'value',
+    _$value,
+    arg: _arg$value,
+  );
 
   @override
-  final MappableFields<NullableGenerics> fields = const {
-    #value: _f$value,
-  };
+  final MappableFields<NullableGenerics> fields = const {#value: _f$value};
 
   static NullableGenerics<T> _instantiate<T extends Object>(DecodingData data) {
     return NullableGenerics(value: data.dec(_f$value));
@@ -986,7 +1055,8 @@ class NullableGenericsMapper extends ClassMapperBase<NullableGenerics> {
   final Function instantiate = _instantiate;
 
   static NullableGenerics<T> fromMap<T extends Object>(
-      Map<String, dynamic> map) {
+    Map<String, dynamic> map,
+  ) {
     return ensureInitialized().decodeMap<NullableGenerics<T>>(map);
   }
 
@@ -1006,43 +1076,60 @@ mixin NullableGenericsMappable<T extends Object> {
         .encodeMap<NullableGenerics<T>>(this as NullableGenerics<T>);
   }
 
-  NullableGenericsCopyWith<NullableGenerics<T>, NullableGenerics<T>,
-          NullableGenerics<T>, T>
-      get copyWith => _NullableGenericsCopyWithImpl<
-          NullableGenerics<T>,
-          NullableGenerics<T>,
-          T>(this as NullableGenerics<T>, $identity, $identity);
+  NullableGenericsCopyWith<
+    NullableGenerics<T>,
+    NullableGenerics<T>,
+    NullableGenerics<T>,
+    T
+  >
+  get copyWith =>
+      _NullableGenericsCopyWithImpl<
+        NullableGenerics<T>,
+        NullableGenerics<T>,
+        T
+      >(this as NullableGenerics<T>, $identity, $identity);
   @override
   String toString() {
-    return NullableGenericsMapper.ensureInitialized()
-        .stringifyValue(this as NullableGenerics<T>);
+    return NullableGenericsMapper.ensureInitialized().stringifyValue(
+      this as NullableGenerics<T>,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return NullableGenericsMapper.ensureInitialized()
-        .equalsValue(this as NullableGenerics<T>, other);
+    return NullableGenericsMapper.ensureInitialized().equalsValue(
+      this as NullableGenerics<T>,
+      other,
+    );
   }
 
   @override
   int get hashCode {
-    return NullableGenericsMapper.ensureInitialized()
-        .hashValue(this as NullableGenerics<T>);
+    return NullableGenericsMapper.ensureInitialized().hashValue(
+      this as NullableGenerics<T>,
+    );
   }
 }
 
 extension NullableGenericsValueCopy<$R, $Out, T extends Object>
     on ObjectCopyWith<$R, NullableGenerics<T>, $Out> {
   NullableGenericsCopyWith<$R, NullableGenerics<T>, $Out, T>
-      get $asNullableGenerics => $base.as(
-          (v, t, t2) => _NullableGenericsCopyWithImpl<$R, $Out, T>(v, t, t2));
+  get $asNullableGenerics => $base.as(
+    (v, t, t2) => _NullableGenericsCopyWithImpl<$R, $Out, T>(v, t, t2),
+  );
 }
 
-abstract class NullableGenericsCopyWith<$R, $In extends NullableGenerics<T>,
-    $Out, T extends Object> implements ClassCopyWith<$R, $In, $Out> {
+abstract class NullableGenericsCopyWith<
+  $R,
+  $In extends NullableGenerics<T>,
+  $Out,
+  T extends Object
+>
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({T? value});
   NullableGenericsCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
+    Then<$Out2, $R2> t,
+  );
 }
 
 class _NullableGenericsCopyWithImpl<$R, $Out, T extends Object>
@@ -1062,8 +1149,8 @@ class _NullableGenericsCopyWithImpl<$R, $Out, T extends Object>
 
   @override
   NullableGenericsCopyWith<$R2, NullableGenerics<T>, $Out2, T>
-      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _NullableGenericsCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
+  $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _NullableGenericsCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class FunctionContainerMapper extends ClassMapperBase<FunctionContainer> {
@@ -1080,13 +1167,17 @@ class FunctionContainerMapper extends ClassMapperBase<FunctionContainer> {
   @override
   final String id = 'FunctionContainer';
   @override
-  Function get typeFactory => <T>(f) => f<FunctionContainer<T>>();
+  Function get typeFactory =>
+      <T>(f) => f<FunctionContainer<T>>();
 
   static Function _$genericFunction(FunctionContainer v) =>
       (v as dynamic).genericFunction as Function;
   static dynamic _arg$genericFunction<T>(f) => f<String Function(T)>();
-  static const Field<FunctionContainer, Function> _f$genericFunction =
-      Field('genericFunction', _$genericFunction, arg: _arg$genericFunction);
+  static const Field<FunctionContainer, Function> _f$genericFunction = Field(
+    'genericFunction',
+    _$genericFunction,
+    arg: _arg$genericFunction,
+  );
 
   @override
   final MappableFields<FunctionContainer> fields = const {
@@ -1120,43 +1211,60 @@ mixin FunctionContainerMappable<T> {
         .encodeMap<FunctionContainer<T>>(this as FunctionContainer<T>);
   }
 
-  FunctionContainerCopyWith<FunctionContainer<T>, FunctionContainer<T>,
-          FunctionContainer<T>, T>
-      get copyWith => _FunctionContainerCopyWithImpl<
-          FunctionContainer<T>,
-          FunctionContainer<T>,
-          T>(this as FunctionContainer<T>, $identity, $identity);
+  FunctionContainerCopyWith<
+    FunctionContainer<T>,
+    FunctionContainer<T>,
+    FunctionContainer<T>,
+    T
+  >
+  get copyWith =>
+      _FunctionContainerCopyWithImpl<
+        FunctionContainer<T>,
+        FunctionContainer<T>,
+        T
+      >(this as FunctionContainer<T>, $identity, $identity);
   @override
   String toString() {
-    return FunctionContainerMapper.ensureInitialized()
-        .stringifyValue(this as FunctionContainer<T>);
+    return FunctionContainerMapper.ensureInitialized().stringifyValue(
+      this as FunctionContainer<T>,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return FunctionContainerMapper.ensureInitialized()
-        .equalsValue(this as FunctionContainer<T>, other);
+    return FunctionContainerMapper.ensureInitialized().equalsValue(
+      this as FunctionContainer<T>,
+      other,
+    );
   }
 
   @override
   int get hashCode {
-    return FunctionContainerMapper.ensureInitialized()
-        .hashValue(this as FunctionContainer<T>);
+    return FunctionContainerMapper.ensureInitialized().hashValue(
+      this as FunctionContainer<T>,
+    );
   }
 }
 
 extension FunctionContainerValueCopy<$R, $Out, T>
     on ObjectCopyWith<$R, FunctionContainer<T>, $Out> {
   FunctionContainerCopyWith<$R, FunctionContainer<T>, $Out, T>
-      get $asFunctionContainer => $base.as(
-          (v, t, t2) => _FunctionContainerCopyWithImpl<$R, $Out, T>(v, t, t2));
+  get $asFunctionContainer => $base.as(
+    (v, t, t2) => _FunctionContainerCopyWithImpl<$R, $Out, T>(v, t, t2),
+  );
 }
 
-abstract class FunctionContainerCopyWith<$R, $In extends FunctionContainer<T>,
-    $Out, T> implements ClassCopyWith<$R, $In, $Out> {
+abstract class FunctionContainerCopyWith<
+  $R,
+  $In extends FunctionContainer<T>,
+  $Out,
+  T
+>
+    implements ClassCopyWith<$R, $In, $Out> {
   $R call({String Function(T)? genericFunction});
   FunctionContainerCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
+    Then<$Out2, $R2> t,
+  );
 }
 
 class _FunctionContainerCopyWithImpl<$R, $Out, T>
@@ -1168,14 +1276,18 @@ class _FunctionContainerCopyWithImpl<$R, $Out, T>
   late final ClassMapperBase<FunctionContainer> $mapper =
       FunctionContainerMapper.ensureInitialized();
   @override
-  $R call({String Function(T)? genericFunction}) => $apply(FieldCopyWithData(
-      {if (genericFunction != null) #genericFunction: genericFunction}));
+  $R call({String Function(T)? genericFunction}) => $apply(
+    FieldCopyWithData({
+      if (genericFunction != null) #genericFunction: genericFunction,
+    }),
+  );
   @override
   FunctionContainer<T> $make(CopyWithData data) =>
       FunctionContainer(data.get(#genericFunction, or: $value.genericFunction));
 
   @override
   FunctionContainerCopyWith<$R2, FunctionContainer<T>, $Out2, T>
-      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _FunctionContainerCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
+  $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _FunctionContainerCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
+

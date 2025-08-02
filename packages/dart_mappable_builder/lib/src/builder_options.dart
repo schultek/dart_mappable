@@ -15,7 +15,6 @@ class MappableOptions {
   final String? discriminatorKey;
   final int? generateMethods;
   final InitializerScope? initializerScope;
-  final int? lineLength;
   final Map<String, String> renameMethods;
   final Map<String, List<String>> buildExtensions;
 
@@ -26,7 +25,6 @@ class MappableOptions {
     this.discriminatorKey,
     this.generateMethods,
     this.initializerScope,
-    this.lineLength,
     this.renameMethods = const {},
     this.buildExtensions = _defaultExtensions,
   });
@@ -40,8 +38,6 @@ class MappableOptions {
         generateMethods =
             parseGenerateMethods(toList(options['generateMethods'])),
         initializerScope = null,
-        lineLength =
-            options['lineLength'] as int? ?? options['line_length'] as int?,
         renameMethods = toMap(options['renameMethods'] ?? {}),
         buildExtensions =
             validatedBuildExtensionsFrom(options, _defaultExtensions);

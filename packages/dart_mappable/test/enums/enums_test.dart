@@ -24,7 +24,7 @@ enum Status {
   @MappableValue(State.off)
   warning,
   @MappableValue(r'error$val')
-  error
+  error,
 }
 
 void main() {
@@ -62,11 +62,13 @@ void main() {
         expect(ColorMapper.fromValue('blood-red'), equals(Color.bloodRED));
         expect(
           () => ColorMapper.fromValue('pink'),
-          throwsMapperException(MapperException.chain(
-            MapperMethod.decode,
-            '(Color)',
-            MapperException.unknownEnumValue('pink'),
-          )),
+          throwsMapperException(
+            MapperException.chain(
+              MapperMethod.decode,
+              '(Color)',
+              MapperException.unknownEnumValue('pink'),
+            ),
+          ),
         );
       });
 
@@ -83,11 +85,13 @@ void main() {
 
         expect(
           () => ItemsMapper.fromValue(3),
-          throwsMapperException(MapperException.chain(
-            MapperMethod.decode,
-            '(Items)',
-            MapperException.unknownEnumValue(3),
-          )),
+          throwsMapperException(
+            MapperException.chain(
+              MapperMethod.decode,
+              '(Items)',
+              MapperException.unknownEnumValue(3),
+            ),
+          ),
         );
       });
 
@@ -99,11 +103,13 @@ void main() {
 
         expect(
           () => ItemsMapper.fromValue(false),
-          throwsMapperException(MapperException.chain(
-            MapperMethod.decode,
-            '(Items)',
-            MapperException.unknownEnumValue(false),
-          )),
+          throwsMapperException(
+            MapperException.chain(
+              MapperMethod.decode,
+              '(Items)',
+              MapperException.unknownEnumValue(false),
+            ),
+          ),
         );
       });
     });

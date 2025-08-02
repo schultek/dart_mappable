@@ -31,19 +31,20 @@ void main() {
 
       var m = a.toMap();
       expect(
-          m,
-          equals({
-            'a': 'hi',
-            'r': {
-              r'$1': 2,
-              'b': {'lat': 'hi', 'lng': false},
-              'c': {
-                'c': 'ho',
-                'd': {'lat': 'a', 'lng': 3}
-              },
-              'd': {'lat': 0.5, 'lng': 100.0}
-            }
-          }));
+        m,
+        equals({
+          'a': 'hi',
+          'r': {
+            r'$1': 2,
+            'b': {'lat': 'hi', 'lng': false},
+            'c': {
+              'c': 'ho',
+              'd': {'lat': 'a', 'lng': 3},
+            },
+            'd': {'lat': 0.5, 'lng': 100.0},
+          },
+        }),
+      );
 
       var a2 = AMapper.fromMap<({String lat, bool lng})>(m);
       expect(a2, equals(a));

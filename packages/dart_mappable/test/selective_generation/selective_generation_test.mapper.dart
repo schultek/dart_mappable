@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -24,9 +25,7 @@ class AMapper extends ClassMapperBase<A> {
   static const Field<A, String> _f$a = Field('a', _$a);
 
   @override
-  final MappableFields<A> fields = const {
-    #a: _f$a,
-  };
+  final MappableFields<A> fields = const {#a: _f$a};
 
   static A _instantiate(DecodingData data) {
     return A(data.dec(_f$a));
@@ -94,9 +93,7 @@ class BMapper extends ClassMapperBase<B> {
   static const Field<B, String> _f$b = Field('b', _$b);
 
   @override
-  final MappableFields<B> fields = const {
-    #b: _f$b,
-  };
+  final MappableFields<B> fields = const {#b: _f$b};
 
   static B _instantiate(DecodingData data) {
     return B(data.dec(_f$b));
@@ -122,3 +119,4 @@ mixin BMappable {
     return BMapper.ensureInitialized().hashValue(this as B);
   }
 }
+

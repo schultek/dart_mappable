@@ -3,10 +3,7 @@ import 'package:test/test.dart';
 
 part 'encoding_params_test.mapper.dart';
 
-@MappableClass(
-  shallowEncoding: true,
-  includeTypeId: false,
-)
+@MappableClass(shallowEncoding: true, includeTypeId: false)
 class A with AMappable {
   final String a;
   final B? b;
@@ -26,8 +23,10 @@ void main() {
 
     test('does not include type id', () {
       AMapper.ensureInitialized();
-      expect(MapperContainer.globals.toMap<dynamic>(A('hi')),
-          equals({'a': 'hi', 'b': null}));
+      expect(
+        MapperContainer.globals.toMap<dynamic>(A('hi')),
+        equals({'a': 'hi', 'b': null}),
+      );
       expect(AMapper.ensureInitialized().includeTypeId<dynamic>(null), isFalse);
     });
   });

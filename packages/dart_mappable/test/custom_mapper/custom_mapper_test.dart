@@ -30,7 +30,10 @@ class PrivateClassMapper extends SimpleMapper<MyPrivateClass> {
 
   @override
   bool equals(
-      MyPrivateClass self, MyPrivateClass other, MappingContext context) {
+    MyPrivateClass self,
+    MyPrivateClass other,
+    MappingContext context,
+  ) {
     return self.value == other.value;
   }
 }
@@ -125,7 +128,9 @@ void main() {
       expect(s, equals('test'));
 
       expect(
-          MapperContainer.globals.isEqual(c, MyPrivateClass('test')), isTrue);
+        MapperContainer.globals.isEqual(c, MyPrivateClass('test')),
+        isTrue,
+      );
     });
 
     test('Generic custom Mapper', () {
@@ -152,10 +157,11 @@ void main() {
       MapperContainer.globals.use(UriMapper());
 
       var uri = Uri(
-          scheme: 'https',
-          host: 'example.com',
-          path: 'some/path',
-          query: 'key=value');
+        scheme: 'https',
+        host: 'example.com',
+        path: 'some/path',
+        query: 'key=value',
+      );
 
       var encoded = MapperContainer.globals.toValue(uri);
       expect(encoded, equals('https://example.com/some/path?key=value'));
@@ -169,39 +175,60 @@ void main() {
 
       expect(
         () => MapperContainer.globals.fromValue<Uint8List>([]),
-        throwsMapperException(MapperException.chain(
+        throwsMapperException(
+          MapperException.chain(
             MapperMethod.decode,
             '(Uint8List)',
-            MapperException.unsupportedMethod(MapperMethod.decode, Uint8List))),
+            MapperException.unsupportedMethod(MapperMethod.decode, Uint8List),
+          ),
+        ),
       );
 
       expect(
         () => MapperContainer.globals.toValue<Uint8List>(Uint8List(0)),
-        throwsMapperException(MapperException.chain(
+        throwsMapperException(
+          MapperException.chain(
             MapperMethod.encode,
             '(Uint8List)',
-            MapperException.unsupportedMethod(MapperMethod.encode, Uint8List))),
+            MapperException.unsupportedMethod(MapperMethod.encode, Uint8List),
+          ),
+        ),
       );
 
       expect(
         () => MapperContainer.globals.asString(Uint8List(0)),
-        throwsMapperException(MapperException.chain(
+        throwsMapperException(
+          MapperException.chain(
             MapperMethod.stringify,
             "(Instance of 'Uint8List')",
             MapperException.unsupportedMethod(
-                MapperMethod.stringify, Uint8List))),
+              MapperMethod.stringify,
+              Uint8List,
+            ),
+          ),
+        ),
       );
 
       expect(
         () => MapperContainer.globals.isEqual(Uint8List(0), Uint8List(0)),
-        throwsMapperException(MapperException.chain(MapperMethod.equals, '[[]]',
-            MapperException.unsupportedMethod(MapperMethod.equals, Uint8List))),
+        throwsMapperException(
+          MapperException.chain(
+            MapperMethod.equals,
+            '[[]]',
+            MapperException.unsupportedMethod(MapperMethod.equals, Uint8List),
+          ),
+        ),
       );
 
       expect(
         () => MapperContainer.globals.hash(Uint8List(0)),
-        throwsMapperException(MapperException.chain(MapperMethod.hash, '[[]]',
-            MapperException.unsupportedMethod(MapperMethod.hash, Uint8List))),
+        throwsMapperException(
+          MapperException.chain(
+            MapperMethod.hash,
+            '[[]]',
+            MapperException.unsupportedMethod(MapperMethod.hash, Uint8List),
+          ),
+        ),
       );
     });
   });
@@ -221,10 +248,7 @@ void main() {
         equals('TestObj(x: 12345, unmappedProps: {y: 1234})'),
       );
 
-      expect(
-        testObj.toMap(),
-        equals(testMap),
-      );
+      expect(testObj.toMap(), equals(testMap));
     });
   });
 }

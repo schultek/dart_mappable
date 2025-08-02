@@ -3,9 +3,7 @@ import 'package:test/test.dart';
 
 part 'selective_generation_test.mapper.dart';
 
-@MappableClass(
-  generateMethods: GenerateMethods.encode | GenerateMethods.copy,
-)
+@MappableClass(generateMethods: GenerateMethods.encode | GenerateMethods.copy)
 class A with AMappable {
   final String a;
 

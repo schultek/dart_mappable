@@ -4,7 +4,6 @@ import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart' as p;
-import 'package:pub_semver/pub_semver.dart';
 
 import '../builder_options.dart';
 import '../elements/class/target_class_mapper_element.dart';
@@ -99,19 +98,20 @@ class MappableBuilder implements Builder {
     var libraryPath = p.posix
         .relative(buildStep.inputId.path, from: p.dirname(outputId.path))
         .replaceAll('\\', '/');
-    var source = DartFormatter(
-            languageVersion: Version(3, 0, 0),
-            pageWidth: options.lineLength ?? 80)
-        .format('// coverage:ignore-file\n'
-            '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
-            '// ignore_for_file: type=lint\n'
-            '// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member\n'
-            '// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter\n\n'
-            'part of \'$libraryPath\';\n\n'
-            '${output.join('\n\n')}\n' //,
-            );
+    var source =
+        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+            .format(output.join('\n\n'));
 
-    await buildStep.writeAsString(outputId, source);
+    await buildStep.writeAsString(
+        outputId,
+        '// coverage:ignore-file\n'
+        '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
+        '// dart format off\n'
+        '// ignore_for_file: type=lint\n'
+        '// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member\n'
+        '// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter\n\n'
+        'part of \'$libraryPath\';\n\n'
+        '$source\n');
   }
 
   Future<void> generateInitFile(
@@ -147,18 +147,18 @@ class MappableBuilder implements Builder {
 
     output.write('}');
 
-    var source = DartFormatter(
-            languageVersion: Version(3, 0, 0),
-            pageWidth: options.lineLength ?? 80)
-        .format(
-      '// coverage:ignore-file\n'
-      '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
-      '// ignore_for_file: type=lint\n'
-      '// ignore_for_file: unused_element\n\n'
-      '${output.toString()}\n',
-    );
+    var source =
+        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+            .format(output.toString());
 
-    await buildStep.writeAsString(outputId, source);
+    await buildStep.writeAsString(
+        outputId,
+        '// coverage:ignore-file\n'
+        '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
+        '// dart format off\n'
+        '// ignore_for_file: type=lint\n'
+        '// ignore_for_file: unused_element\n\n'
+        '$source\n');
   }
 }
 

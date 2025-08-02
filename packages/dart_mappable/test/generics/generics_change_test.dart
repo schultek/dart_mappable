@@ -61,11 +61,15 @@ void main() {
       expect(b, isA<E<dynamic, dynamic>>());
 
       expect(
-          () => AMapper.fromMap<Map>({'type': 'E'}),
-          throwsMapperException(MapperException.chain(
-              MapperMethod.decode,
-              '(A<Map<dynamic, dynamic>>)',
-              "type 'E<dynamic, dynamic>' is not a subtype of type 'A<Map<dynamic, dynamic>>' in type cast")));
+        () => AMapper.fromMap<Map>({'type': 'E'}),
+        throwsMapperException(
+          MapperException.chain(
+            MapperMethod.decode,
+            '(A<Map<dynamic, dynamic>>)',
+            "type 'E<dynamic, dynamic>' is not a subtype of type 'A<Map<dynamic, dynamic>>' in type cast",
+          ),
+        ),
+      );
     });
 
     test('Less Args', () {

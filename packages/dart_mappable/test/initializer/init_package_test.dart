@@ -1,6 +1,4 @@
-@MappableLib(
-  generateInitializerForScope: InitializerScope.package,
-)
+@MappableLib(generateInitializerForScope: InitializerScope.package)
 library;
 
 import 'package:dart_mappable/dart_mappable.dart';
@@ -19,8 +17,10 @@ void main() {
       expect(MapperContainer.globals.fromMap<a.A>({}), isA<a.A>());
       expect(MapperContainer.globals.fromMap<b.B>({}), isA<b.B>());
       expect(MapperContainer.globals.fromMap<b.A>({}), isA<b.A>());
-      expect(MapperContainer.globals.fromMap<c.A>({'a': 'a', 'd': false}),
-          isA<c.A>());
+      expect(
+        MapperContainer.globals.fromMap<c.A>({'a': 'a', 'd': false}),
+        isA<c.A>(),
+      );
     });
   });
 }

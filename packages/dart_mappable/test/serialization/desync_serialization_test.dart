@@ -7,9 +7,7 @@ part 'desync_serialization_test.mapper.dart';
 @MappableClass()
 class A with AMappable {
   const A(this.a, this.b, this.c);
-  const A.filled(this.a)
-      : b = 1,
-        c = const C(2);
+  const A.filled(this.a) : b = 1, c = const C(2);
 
   final int a;
   @MappableField()

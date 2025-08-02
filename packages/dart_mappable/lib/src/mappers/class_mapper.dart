@@ -23,7 +23,8 @@ abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
         return discriminator(value);
       } else {
         throw AssertionError(
-            'Discriminator function must be of type "bool Function(Map<String, dynamic>)".');
+          'Discriminator function must be of type "bool Function(Map<String, dynamic>)".',
+        );
       }
     } else if (discriminator == value[discriminatorKey]) {
       return true;
@@ -54,7 +55,7 @@ abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
   // ignore: overridden_fields
   late final Map<String, dynamic> _encodedStaticParams = {
     ...?superMapper._encodedStaticParams,
-    if (_shouldEncodeDiscriminatorParam) discriminatorKey: discriminatorValue
+    if (_shouldEncodeDiscriminatorParam) discriminatorKey: discriminatorValue,
   };
 
   @override
@@ -98,8 +99,10 @@ abstract class ClassMapperBase<T extends Object>
   void addSubMapper(SubClassMapperBase<T> mapper) {
     assert(identical(mapper.superMapper, this));
     if (identical(mapper.discriminatorValue, MappingFlags.useAsDefault)) {
-      assert(_defaultSubMapper == null,
-          'Cannot have multiple default mappers for a polymorphic class.');
+      assert(
+        _defaultSubMapper == null,
+        'Cannot have multiple default mappers for a polymorphic class.',
+      );
       _defaultSubMapper = mapper;
     } else {
       _subMappers.add(mapper);
@@ -107,8 +110,11 @@ abstract class ClassMapperBase<T extends Object>
   }
 
   @override
-  Object? encodeValue<V>(V value,
-      [EncodingOptions? options, MapperContainer? container]) {
+  Object? encodeValue<V>(
+    V value, [
+    EncodingOptions? options,
+    MapperContainer? container,
+  ]) {
     var m = subOrSelfFor(value);
     if (m != null) {
       return m.encodeValue<V>(value, options, container);
@@ -139,9 +145,10 @@ abstract class ClassMapperBase<T extends Object>
   /// The set of constructor parameters of this class.
   ///
   /// See [FieldMode] for more.
-  late final List<Field<T, dynamic>> _params = fields.values
-      .where((f) => f.mode != FieldMode.member && f.getter != null)
-      .toList();
+  late final List<Field<T, dynamic>> _params =
+      fields.values
+          .where((f) => f.mode != FieldMode.member && f.getter != null)
+          .toList();
 
   @override
   T decoder(Object? value, DecodingContext context) {
@@ -173,8 +180,10 @@ abstract class ClassMapperBase<T extends Object>
       }
     }
     if (_defaultSubMapper != null) {
-      return _defaultSubMapper!
-          .decoder(map, _defaultSubMapper!.inherit(context));
+      return _defaultSubMapper!.decoder(
+        map,
+        _defaultSubMapper!.inherit(context),
+      );
     }
     return super.decode(map, context);
   }
@@ -225,9 +234,11 @@ abstract class ClassMapperBase<T extends Object>
 
   @override
   int hash(T value, MappingContext context) {
-    return Object.hashAll(_members.map((f) {
-      return context.container.hash(f.get(value));
-    }));
+    return Object.hashAll(
+      _members.map((f) {
+        return context.container.hash(f.get(value));
+      }),
+    );
   }
 
   @override

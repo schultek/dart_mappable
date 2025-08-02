@@ -74,7 +74,7 @@ void main() {
       expect(
         zoo.toMap(),
         equals({
-          'animal': {'age': 2, 'type': 1}
+          'animal': {'age': 2, 'type': 1},
         }),
       );
     });

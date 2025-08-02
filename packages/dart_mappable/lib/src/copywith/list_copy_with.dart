@@ -1,7 +1,7 @@
 import 'copywith_base.dart';
 
-typedef ItemCopyWith<Copy, Elem, Result> = Copy Function(
-    Elem a, Then<Elem, Result> b);
+typedef ItemCopyWith<Copy, Elem, Result> =
+    Copy Function(Elem a, Then<Elem, Result> b);
 
 /// Interface used for [List]s in chained copyWith methods
 /// All methods return a new modified list and do not modify the original list.
@@ -61,7 +61,7 @@ class _ListCopyWith<Result, Elem, Copy>
     extends CopyWithBase<Result, List<Elem>, List<Elem>>
     implements ListCopyWith<Result, Elem, Copy> {
   _ListCopyWith(List<Elem> value, this._item, Then<List<Elem>, Result> then)
-      : super(value, $identity, then);
+    : super(value, $identity, then);
   final ItemCopyWith<Copy, Elem, Result> _item;
 
   @override

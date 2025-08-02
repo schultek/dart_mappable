@@ -4,10 +4,7 @@ import 'package:test/test.dart';
 part 'mixed_mappable_test.mapper.dart';
 
 abstract class AbstractIdBase {
-  const AbstractIdBase({
-    required this.id,
-    required this.name,
-  });
+  const AbstractIdBase({required this.id, required this.name});
 
   final String id;
   final String name;
@@ -15,22 +12,14 @@ abstract class AbstractIdBase {
 
 @MappableClass()
 abstract class Base extends AbstractIdBase with BaseMappable {
-  const Base({
-    required super.id,
-    required super.name,
-    required this.objects,
-  });
+  const Base({required super.id, required super.name, required this.objects});
 
   final Map<String, dynamic> objects;
 }
 
 @MappableClass()
 class One extends Base with OneMappable {
-  One({
-    required super.id,
-    required super.name,
-    required super.objects,
-  });
+  One({required super.id, required super.name, required super.objects});
 }
 
 @MappableClass()
