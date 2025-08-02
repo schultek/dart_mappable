@@ -6,7 +6,7 @@ part 'main.mapper.dart';
 
 @freezed
 @MappableClass(discriminatorKey: 'type')
-class Union with _$Union {
+abstract class Union with _$Union {
   @MappableClass(discriminatorValue: 'data')
   const factory Union.data(@MappableField(key: 'mykey') int value) = Data;
   @MappableClass(discriminatorValue: 'loading')
