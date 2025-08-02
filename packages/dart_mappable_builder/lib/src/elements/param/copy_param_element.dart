@@ -10,7 +10,9 @@ import 'class_mapper_param_element.dart';
 
 class CopyParamElement {
   static Iterable<CopyParamElement> collectFrom(
-      List<ClassMapperParamElement> params, ClassMapperElement element) sync* {
+    List<ClassMapperParamElement> params,
+    ClassMapperElement element,
+  ) sync* {
     for (var param in element.params) {
       if (param.accessor == null) {
         continue;
@@ -49,10 +51,11 @@ class CopyParamElement {
 
         var itemConfig = resolveElement(itemElement);
 
-        var itemPrefixedName = itemConfig != null
-            ? element.parent.prefixOfElement(itemConfig.element) +
-                itemConfig.uniqueClassName
-            : 'Object';
+        var itemPrefixedName =
+            itemConfig != null
+                ? element.parent.prefixOfElement(itemConfig.element) +
+                    itemConfig.uniqueClassName
+                : 'Object';
 
         return CollectionCopyParamElement(
           parent: element.parent,
@@ -76,7 +79,7 @@ class CopyParamElement {
         if (classConfig != null) {
           var prefixedName =
               element.parent.prefixOfElement(classConfig.annotation.element) +
-                  classConfig.uniqueClassName;
+              classConfig.uniqueClassName;
 
           yield CopyParamElement(
             parent: element.parent,
@@ -122,12 +125,14 @@ class CopyParamElement {
 
   String get invocationThen => '(v) => call(${param.superName}: v)';
 
-  String get subTypeParam => hasSubConfigs
-      ? ', ${parent.prefixedType(p.type, withNullability: false, resolveBounds: true, resolveBoundsDeep: false)}'
-      : '';
-  String get superTypeParam => hasSubConfigs || hasSuperElement
-      ? ', ${parent.prefixedType(p.type, withNullability: false)}'
-      : '';
+  String get subTypeParam =>
+      hasSubConfigs
+          ? ', ${parent.prefixedType(p.type, withNullability: false, resolveBounds: true, resolveBoundsDeep: false)}'
+          : '';
+  String get superTypeParam =>
+      hasSubConfigs || hasSuperElement
+          ? ', ${parent.prefixedType(p.type, withNullability: false)}'
+          : '';
 
   String get invocation {
     var inv = '\$value.${a.name3 ?? ''}';

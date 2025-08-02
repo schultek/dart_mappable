@@ -23,10 +23,14 @@ class B with BMappable {
 /// This makes chained copyWith work on [A.list] using the custom
 /// [ImmutableListCopyWith] implementation.
 extension DataList<$R, $Out extends A> on ACopyWith<$R, A, $Out> {
-  ImmutableListCopyWith<$R, B, BCopyWith<$R, B, B>> get list => (this
-          as CopyWithBase<$R, A, $Out>)
-      .as((v, t, t2) => ImmutableListCopyWith(
-          v.list, (vv, tt) => vv.copyWith.$chain(tt), (l) => call(list: l)));
+  ImmutableListCopyWith<$R, B, BCopyWith<$R, B, B>> get list =>
+      (this as CopyWithBase<$R, A, $Out>).as(
+        (v, t, t2) => ImmutableListCopyWith(
+          v.list,
+          (vv, tt) => vv.copyWith.$chain(tt),
+          (l) => call(list: l),
+        ),
+      );
 }
 
 void main() {
@@ -35,8 +39,8 @@ void main() {
   var a = AMapper.fromMap({
     'list': [
       {'str': 'hello'},
-      {'str': 'world'}
-    ]
+      {'str': 'world'},
+    ],
   });
 
   assert(a == A(IList([B('hello'), B('world')])));

@@ -25,13 +25,14 @@ class ZooMapper extends ClassMapperBase<Zoo> {
 
   static List<Animal> _$animals(Zoo v) => v.animals;
   static dynamic _arg$animals<T extends Animal>(f) => f<List<T>>();
-  static const Field<Zoo, List<Animal>> _f$animals =
-      Field('animals', _$animals, arg: _arg$animals);
+  static const Field<Zoo, List<Animal>> _f$animals = Field(
+    'animals',
+    _$animals,
+    arg: _arg$animals,
+  );
 
   @override
-  final MappableFields<Zoo> fields = const {
-    #animals: _f$animals,
-  };
+  final MappableFields<Zoo> fields = const {#animals: _f$animals};
 
   static Zoo<T> _instantiate<T extends Animal>(DecodingData data) {
     return Zoo(data.dec(_f$animals));
@@ -98,9 +99,10 @@ class _ZooCopyWithImpl<$R, $Out, T extends Animal>
   late final ClassMapperBase<Zoo> $mapper = ZooMapper.ensureInitialized();
   @override
   ListCopyWith<$R, T, AnimalCopyWith<$R, T, T>> get animals => ListCopyWith(
-      $value.animals,
-      (v, t) => (v.copyWith as AnimalCopyWith<Animal, T, T>).$chain(t),
-      (v) => call(animals: v));
+    $value.animals,
+    (v, t) => (v.copyWith as AnimalCopyWith<Animal, T, T>).$chain(t),
+    (v) => call(animals: v),
+  );
   @override
   $R call({List<T>? animals}) =>
       $apply(FieldCopyWithData({if (animals != null) #animals: animals}));

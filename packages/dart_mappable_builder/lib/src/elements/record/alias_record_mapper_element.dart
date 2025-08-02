@@ -11,32 +11,45 @@ import '../param/record_mapper_param_element.dart';
 import 'record_mapper_element.dart';
 
 class RecordMapperAnnotation extends MapperAnnotation {
-  RecordMapperAnnotation(super.element, RecordTypeAnnotation super.node,
-      super.arguments, super.value);
+  RecordMapperAnnotation(
+    super.element,
+    RecordTypeAnnotation super.node,
+    super.arguments,
+    super.value,
+  );
 
   @override
   RecordTypeAnnotation get node => super.node as RecordTypeAnnotation;
 
   static Future<RecordMapperAnnotation> from(TypeAliasElement2 element) async {
     var n = await element.enclosingElement2.getResolvedNode();
-    var node = (n as CompilationUnit)
-        .declarations
-        .whereType<GenericTypeAlias>()
-        .where((d) => d.name.lexeme == element.name3)
-        .first;
+    var node =
+        (n as CompilationUnit).declarations
+            .whereType<GenericTypeAlias>()
+            .where((d) => d.name.lexeme == element.name3)
+            .first;
 
     var arguments = await getAnnotationArguments(node, MappableRecord);
-    var value =
-        TypeChecker.fromRuntime(MappableRecord).firstAnnotationOf(element);
+    var value = TypeChecker.fromRuntime(
+      MappableRecord,
+    ).firstAnnotationOf(element);
     return RecordMapperAnnotation(
-        element, node.type as RecordTypeAnnotation, arguments, value);
+      element,
+      node.type as RecordTypeAnnotation,
+      arguments,
+      value,
+    );
   }
 }
 
 abstract class AliasRecordMapperElement
     extends RecordMapperElement<TypeAliasElement2> {
-  AliasRecordMapperElement(super.parent, super.element, super.options,
-      RecordMapperAnnotation super.annotation);
+  AliasRecordMapperElement(
+    super.parent,
+    super.element,
+    super.options,
+    RecordMapperAnnotation super.annotation,
+  );
 
   @override
   late final String className = element.name3 ?? '';
@@ -50,33 +63,41 @@ abstract class AliasRecordMapperElement
     var fields = <RecordMapperFieldElement>[];
 
     for (var (i, f) in annotation.node.positionalFields.indexed) {
-      fields.add(RecordMapperFieldElement(
-        RecordMapperParamElement('\$${i + 1}', f.type.type!, f),
-        this,
-      ));
+      fields.add(
+        RecordMapperFieldElement(
+          RecordMapperParamElement('\$${i + 1}', f.type.type!, f),
+          this,
+        ),
+      );
     }
 
     if (annotation.node.namedFields != null) {
       for (var f in annotation.node.namedFields!.fields) {
-        fields.add(RecordMapperFieldElement(
-          RecordMapperParamElement(f.name.lexeme, f.type.type!, f),
-          this,
-        ));
+        fields.add(
+          RecordMapperFieldElement(
+            RecordMapperParamElement(f.name.lexeme, f.type.type!, f),
+            this,
+          ),
+        );
       }
     }
 
     return fields;
   }();
 
-  late List<String> typeParamsList = element.typeParameters2
-      .map((p) =>
-          '${p.displayName}${p.bound != null ? ' extends ${parent.prefixedType(p.bound!)}' : ''}')
-      .toList();
+  late List<String> typeParamsList =
+      element.typeParameters2
+          .map(
+            (p) =>
+                '${p.displayName}${p.bound != null ? ' extends ${parent.prefixedType(p.bound!)}' : ''}',
+          )
+          .toList();
 
   @override
-  late String typeParams = element.typeParameters2.isNotEmpty
-      ? '<${element.typeParameters2.map((p) => p.name3 ?? '').join(', ')}>'
-      : '';
+  late String typeParams =
+      element.typeParameters2.isNotEmpty
+          ? '<${element.typeParameters2.map((p) => p.name3 ?? '').join(', ')}>'
+          : '';
 
   @override
   late String typeParamsDeclaration =

@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'utils.dart';
 
 const _defaultExtensions = {
-  '.dart': ['.mapper.dart', '.init.dart']
+  '.dart': ['.mapper.dart', '.init.dart'],
 };
 
 /// The builder options for a specific library
@@ -30,17 +30,19 @@ class MappableOptions {
   });
 
   MappableOptions.parse(Map options)
-      : caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
-        enumCaseStyle =
-            CaseStyle.fromString(options['enumCaseStyle'] as String?),
-        ignoreNull = options['ignoreNull'] as bool?,
-        discriminatorKey = options['discriminatorKey'] as String?,
-        generateMethods =
-            parseGenerateMethods(toList(options['generateMethods'])),
-        initializerScope = null,
-        renameMethods = toMap(options['renameMethods'] ?? {}),
-        buildExtensions =
-            validatedBuildExtensionsFrom(options, _defaultExtensions);
+    : caseStyle = CaseStyle.fromString(options['caseStyle'] as String?),
+      enumCaseStyle = CaseStyle.fromString(options['enumCaseStyle'] as String?),
+      ignoreNull = options['ignoreNull'] as bool?,
+      discriminatorKey = options['discriminatorKey'] as String?,
+      generateMethods = parseGenerateMethods(
+        toList(options['generateMethods']),
+      ),
+      initializerScope = null,
+      renameMethods = toMap(options['renameMethods'] ?? {}),
+      buildExtensions = validatedBuildExtensionsFrom(
+        options,
+        _defaultExtensions,
+      );
 
   MappableOptions apply(MappableOptions? options, {bool forceJoin = true}) {
     if (options == null) return this;
@@ -64,10 +66,11 @@ class MappableOptions {
       ignoreNull: object.read('ignoreNull')?.toBoolValue(),
       discriminatorKey: object.read('discriminatorKey')?.toStringValue(),
       generateMethods: object.read('generateMethods')?.toIntValue(),
-      initializerScope: initScope?.isNull ?? true
-          ? null
-          : InitializerScope
-              .values[initScope?.read('index')?.toIntValue() ?? 0],
+      initializerScope:
+          initScope?.isNull ?? true
+              ? null
+              : InitializerScope
+                  .values[initScope?.read('index')?.toIntValue() ?? 0],
     );
   }
 }

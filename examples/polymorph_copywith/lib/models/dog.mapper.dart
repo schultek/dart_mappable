@@ -109,14 +109,19 @@ class _DogCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Dog, $Out>
   PersonCopyWith<$R, Person, Person> get owner =>
       $value.owner.copyWith.$chain((v) => call(owner: v));
   @override
-  $R call({String? name, int? age, Person? owner}) => $apply(FieldCopyWithData({
-        if (name != null) #name: name,
-        if (age != null) #age: age,
-        if (owner != null) #owner: owner
-      }));
+  $R call({String? name, int? age, Person? owner}) => $apply(
+    FieldCopyWithData({
+      if (name != null) #name: name,
+      if (age != null) #age: age,
+      if (owner != null) #owner: owner,
+    }),
+  );
   @override
-  Dog $make(CopyWithData data) => Dog(data.get(#name, or: $value.name),
-      data.get(#age, or: $value.age), data.get(#owner, or: $value.owner));
+  Dog $make(CopyWithData data) => Dog(
+    data.get(#name, or: $value.name),
+    data.get(#age, or: $value.age),
+    data.get(#owner, or: $value.owner),
+  );
 
   @override
   DogCopyWith<$R2, Dog, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>

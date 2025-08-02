@@ -39,8 +39,10 @@ class FieldParamElement extends ClassMapperParamElement {
   @override
   bool get isCovariant =>
       superField != null &&
-      !parameter.library2!.typeSystem
-          .isAssignableTo(superField!.type, field.type);
+      !parameter.library2!.typeSystem.isAssignableTo(
+        superField!.type,
+        field.type,
+      );
 
   @override
   Future<String?> getHook() async {
@@ -65,8 +67,11 @@ class SuperParamElement extends ClassMapperParamElement {
 
   @override
   bool get isCovariant {
-    var isCov = !parameter.library2!.typeSystem
-        .isAssignableTo(superParameter.parameter.type, parameter.type);
+    var isCov =
+        !parameter.library2!.typeSystem.isAssignableTo(
+          superParameter.parameter.type,
+          parameter.type,
+        );
     return isCov || superParameter.isCovariant;
   }
 

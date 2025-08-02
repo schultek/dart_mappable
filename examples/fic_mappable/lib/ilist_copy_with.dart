@@ -4,8 +4,10 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 class ImmutableListCopyWith<Result, Elem, Copy>
     extends CopyWithBase<Result, IList<Elem>, IList<Elem>> {
   ImmutableListCopyWith(
-      IList<Elem> value, this._item, Then<IList<Elem>, Result> then)
-      : super(value, $identity, then);
+    IList<Elem> value,
+    this._item,
+    Then<IList<Elem>, Result> then,
+  ) : super(value, $identity, then);
 
   final ItemCopyWith<Copy, Elem, Result> _item;
 

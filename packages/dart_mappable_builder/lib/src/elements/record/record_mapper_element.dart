@@ -7,7 +7,11 @@ import '../mapper_element.dart';
 abstract class RecordMapperElement<T extends Element2>
     extends InterfaceMapperElement<T> {
   RecordMapperElement(
-      super.parent, super.element, super.options, super.annotation);
+    super.parent,
+    super.element,
+    super.options,
+    super.annotation,
+  );
 
   RecordType get type;
 
@@ -18,8 +22,9 @@ abstract class RecordMapperElement<T extends Element2>
   List<String>? get inheritedTypeArgs => null;
 
   late String genericRecordDeclaration = () {
-    var t =
-        type.positionalFields.mapIndexed((i, f) => genericArgAt(i)).join(', ');
+    var t = type.positionalFields
+        .mapIndexed((i, f) => genericArgAt(i))
+        .join(', ');
 
     if (type.namedFields.isNotEmpty) {
       var i = type.positionalFields.length;

@@ -15,7 +15,7 @@ class ClassMapperFieldElement extends MapperFieldElement {
   final InterfaceMapperElement parent;
 
   ClassMapperFieldElement(this.param, this.field, this.parent)
-      : assert(param != null || field != null);
+    : assert(param != null || field != null);
 
   @override
   late final String name = field?.name3 ?? param!.name;
@@ -65,17 +65,23 @@ class ClassMapperFieldElement extends MapperFieldElement {
     if (resolvedType is FunctionType) {
       return 'Function${resolvedType.isNullable ? '?' : ''}';
     }
-    return parent.parent.prefixedType(param?.type ?? resolvedType,
-        withNullability: false, resolveBounds: true);
+    return parent.parent.prefixedType(
+      param?.type ?? resolvedType,
+      withNullability: false,
+      resolveBounds: true,
+    );
   }();
 
   late final String staticArgGetterType = () {
-    return parent.parent.prefixedType(resolvedType,
-        withNullability: false, resolveBounds: true);
+    return parent.parent.prefixedType(
+      resolvedType,
+      withNullability: false,
+      resolveBounds: true,
+    );
   }();
 
-  late bool isAnnotated = (field != null &&
-          fieldChecker.hasAnnotationOf(field!)) ||
+  late bool isAnnotated =
+      (field != null && fieldChecker.hasAnnotationOf(field!)) ||
       (field?.getter2 != null && fieldChecker.hasAnnotationOf(field!.getter2!));
 
   @override
@@ -95,7 +101,8 @@ class ClassMapperFieldElement extends MapperFieldElement {
     if (param case var p?) {
       key = p.key ?? parent.caseStyle.transform(p.name);
     }
-    key ??= _keyFor(field) ??
+    key ??=
+        _keyFor(field) ??
         _keyFor(field?.getter2) ??
         parent.caseStyle.transform(name);
     if (key != name) {
@@ -132,7 +139,8 @@ class ClassMapperFieldElement extends MapperFieldElement {
 
   @override
   late final Future<String> hook = () async {
-    var hook = (await param?.getHook()) ??
+    var hook =
+        (await param?.getHook()) ??
         (await hookFor(field)) ??
         (await hookFor(field?.getter2));
     return hook != null ? ', hook: $hook' : '';

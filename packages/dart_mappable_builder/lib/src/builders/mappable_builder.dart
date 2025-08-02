@@ -22,7 +22,7 @@ class MappableBuilder implements Builder {
   late MappableOptions options;
 
   MappableBuilder(BuilderOptions options)
-      : options = MappableOptions.parse(options.config);
+    : options = MappableOptions.parse(options.config);
 
   @override
   FutureOr<void> build(BuildStep buildStep) async {
@@ -40,11 +40,13 @@ class MappableBuilder implements Builder {
         generateInitFile(buildStep, group),
       ]);
     } catch (e, st) {
-      print('An unexpected error occurred.\n'
-          'This is probably a bug in dart_mappable.\n'
-          'Please report this here: '
-          'https://github.com/schultek/dart_mappable/issues\n\n'
-          'The error was:\n$e\n\n$st');
+      print(
+        'An unexpected error occurred.\n'
+        'This is probably a bug in dart_mappable.\n'
+        'Please report this here: '
+        'https://github.com/schultek/dart_mappable/issues\n\n'
+        'The error was:\n$e\n\n$st',
+      );
       rethrow;
     }
   }
@@ -58,8 +60,9 @@ class MappableBuilder implements Builder {
     var options = this.options;
 
     if (libChecker.hasAnnotationOf(entryLib)) {
-      var libOptions =
-          MappableOptions.from(libChecker.firstAnnotationOf(entryLib)!);
+      var libOptions = MappableOptions.from(
+        libChecker.firstAnnotationOf(entryLib)!,
+      );
 
       options = options.apply(libOptions);
     }
@@ -70,7 +73,9 @@ class MappableBuilder implements Builder {
   }
 
   Future<void> generateMapperFile(
-      BuildStep buildStep, MapperElementGroup group) async {
+    BuildStep buildStep,
+    MapperElementGroup group,
+  ) async {
     await group.analyze();
 
     var mappers = group.targets.values;
@@ -98,24 +103,27 @@ class MappableBuilder implements Builder {
     var libraryPath = p.posix
         .relative(buildStep.inputId.path, from: p.dirname(outputId.path))
         .replaceAll('\\', '/');
-    var source =
-        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
-            .format(output.join('\n\n'));
+    var source = DartFormatter(
+      languageVersion: DartFormatter.latestLanguageVersion,
+    ).format(output.join('\n\n'));
 
     await buildStep.writeAsString(
-        outputId,
-        '// coverage:ignore-file\n'
-        '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
-        '// dart format off\n'
-        '// ignore_for_file: type=lint\n'
-        '// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member\n'
-        '// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter\n\n'
-        'part of \'$libraryPath\';\n\n'
-        '$source\n');
+      outputId,
+      '// coverage:ignore-file\n'
+      '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
+      '// dart format off\n'
+      '// ignore_for_file: type=lint\n'
+      '// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member\n'
+      '// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter\n\n'
+      'part of \'$libraryPath\';\n\n'
+      '$source\n',
+    );
   }
 
   Future<void> generateInitFile(
-      BuildStep buildStep, MapperElementGroup group) async {
+    BuildStep buildStep,
+    MapperElementGroup group,
+  ) async {
     if (group.options.initializerScope == null) {
       return;
     }
@@ -131,11 +139,13 @@ class MappableBuilder implements Builder {
 
     final outputId = buildStep.allowedOutputs.last;
 
-    output.write(writeImports(
-      buildStep.inputId,
-      discovered.map((e) => e.key.firstFragment.source.uri).toList(),
-      p.dirname(outputId.uri.path),
-    ));
+    output.write(
+      writeImports(
+        buildStep.inputId,
+        discovered.map((e) => e.key.firstFragment.source.uri).toList(),
+        p.dirname(outputId.uri.path),
+      ),
+    );
 
     output.write('void initializeMappers() {\n');
 
@@ -147,18 +157,19 @@ class MappableBuilder implements Builder {
 
     output.write('}');
 
-    var source =
-        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
-            .format(output.toString());
+    var source = DartFormatter(
+      languageVersion: DartFormatter.latestLanguageVersion,
+    ).format(output.toString());
 
     await buildStep.writeAsString(
-        outputId,
-        '// coverage:ignore-file\n'
-        '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
-        '// dart format off\n'
-        '// ignore_for_file: type=lint\n'
-        '// ignore_for_file: unused_element\n\n'
-        '$source\n');
+      outputId,
+      '// coverage:ignore-file\n'
+      '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
+      '// dart format off\n'
+      '// ignore_for_file: type=lint\n'
+      '// ignore_for_file: unused_element\n\n'
+      '$source\n',
+    );
   }
 }
 
@@ -194,9 +205,10 @@ String writeImports(AssetId input, List<Uri> imports, String outputDirectory) {
   package.sort();
   relative.sort();
 
-  String joined(List<String> s) => s.isNotEmpty
-      ? '${s.map((s) => "import '$s'${prefixes[s] != null ? ' as p${prefixes[s]}' : ''};").join('\n')}\n\n'
-      : '';
+  String joined(List<String> s) =>
+      s.isNotEmpty
+          ? '${s.map((s) => "import '$s'${prefixes[s] != null ? ' as p${prefixes[s]}' : ''};").join('\n')}\n\n'
+          : '';
 
   return joined(package) + joined(relative);
 }

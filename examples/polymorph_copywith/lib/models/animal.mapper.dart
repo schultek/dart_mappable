@@ -26,13 +26,14 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   static const Field<Animal, String> _f$name = Field('name', _$name);
 
   @override
-  final MappableFields<Animal> fields = const {
-    #name: _f$name,
-  };
+  final MappableFields<Animal> fields = const {#name: _f$name};
 
   static Animal _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
-        'Animal', 'type', '${data.value['type']}');
+      'Animal',
+      'type',
+      '${data.value['type']}',
+    );
   }
 
   @override

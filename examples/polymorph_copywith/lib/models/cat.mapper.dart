@@ -155,15 +155,19 @@ class _CatCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Cat, $Out>
   @override
   late final ClassMapperBase<Cat> $mapper = CatMapper.ensureInitialized();
   @override
-  $R call({String? name, CatType? breed, String? color}) =>
-      $apply(FieldCopyWithData({
-        if (name != null) #name: name,
-        if (breed != null) #breed: breed,
-        if (color != null) #color: color
-      }));
+  $R call({String? name, CatType? breed, String? color}) => $apply(
+    FieldCopyWithData({
+      if (name != null) #name: name,
+      if (breed != null) #breed: breed,
+      if (color != null) #color: color,
+    }),
+  );
   @override
-  Cat $make(CopyWithData data) => Cat(data.get(#name, or: $value.name),
-      data.get(#breed, or: $value.breed), data.get(#color, or: $value.color));
+  Cat $make(CopyWithData data) => Cat(
+    data.get(#name, or: $value.name),
+    data.get(#breed, or: $value.breed),
+    data.get(#color, or: $value.color),
+  );
 
   @override
   CatCopyWith<$R2, Cat, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>

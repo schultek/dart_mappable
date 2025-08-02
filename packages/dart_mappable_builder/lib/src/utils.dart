@@ -34,7 +34,9 @@ extension GetNode on Element2 {
 }
 
 Future<ArgumentList?> getAnnotationArguments(
-    AstNode? node, Type annotationType) async {
+  AstNode? node,
+  Type annotationType,
+) async {
   if (node == null) {
     return null;
   }
@@ -60,10 +62,11 @@ Future<ArgumentList?> getAnnotationArguments(
   }
 
   var checker = TypeChecker.fromRuntime(annotationType);
-  var annotation = annotations.where((a) {
-    var type = a.elementAnnotation?.computeConstantValue()?.type;
-    return type != null && checker.isAssignableFromType(type);
-  }).firstOrNull;
+  var annotation =
+      annotations.where((a) {
+        var type = a.elementAnnotation?.computeConstantValue()?.type;
+        return type != null && checker.isAssignableFromType(type);
+      }).firstOrNull;
   var arguments = annotation?.arguments;
   if (arguments != null) {
     return arguments;
@@ -104,19 +107,28 @@ extension ArgumentProperty on ArgumentList {
 }
 
 Future<AstNode?> getAnnotationProperty(
-    AstNode? node, Type annotationType, dynamic property) async {
+  AstNode? node,
+  Type annotationType,
+  dynamic property,
+) async {
   var arguments = await getAnnotationArguments(node, annotationType);
   return arguments?.getArgument(property);
 }
 
 Future<AstNode?> getAnnotationNode(
-    Element2 annotatedElement, Type annotationType, dynamic property) async {
+  Element2 annotatedElement,
+  Type annotationType,
+  dynamic property,
+) async {
   var node = await annotatedElement.getNode();
   return getAnnotationProperty(node, annotationType, property);
 }
 
 Future<AstNode?> getResolvedAnnotationNode(
-    Element2 annotatedElement, Type annotationType, dynamic property) async {
+  Element2 annotatedElement,
+  Type annotationType,
+  dynamic property,
+) async {
   var node = await annotatedElement.getResolvedNode();
   return getAnnotationProperty(node, annotationType, property);
 }
@@ -162,10 +174,10 @@ DartObject? fieldAnnotation(FormalParameterElement param) {
 CaseStyle? caseStyleFromAnnotation(DartObject? obj) {
   return obj != null && !obj.isNull
       ? CaseStyle(
-          head: textTransformFromAnnotation(obj.read('head')),
-          tail: textTransformFromAnnotation(obj.read('tail')),
-          separator: obj.read('separator')?.toStringValue() ?? '',
-        )
+        head: textTransformFromAnnotation(obj.read('head')),
+        tail: textTransformFromAnnotation(obj.read('tail')),
+        separator: obj.read('separator')?.toStringValue() ?? '',
+      )
       : null;
 }
 

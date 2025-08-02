@@ -8,10 +8,17 @@ import 'enum_mapper_element.dart';
 
 class DependentEnumMapperElement extends EnumMapperElement {
   DependentEnumMapperElement._(
-      super.parent, super.element, super.options, super.annotation);
+    super.parent,
+    super.element,
+    super.options,
+    super.annotation,
+  );
 
-  static Future<DependentEnumMapperElement> from(MapperElementGroup parent,
-      EnumElement2 element, MappableOptions options) async {
+  static Future<DependentEnumMapperElement> from(
+    MapperElementGroup parent,
+    EnumElement2 element,
+    MappableOptions options,
+  ) async {
     var annotation = await MapperAnnotation.from<MappableEnum>(element);
 
     return DependentEnumMapperElement._(parent, element, options, annotation);

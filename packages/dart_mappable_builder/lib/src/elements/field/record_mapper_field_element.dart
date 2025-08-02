@@ -25,10 +25,10 @@ class RecordMapperFieldElement extends MapperFieldElement {
 
   @override
   String get arg => () {
-        if (!needsArg) return '';
+    if (!needsArg) return '';
 
-        return ', arg: _arg\$$name';
-      }();
+    return ', arg: _arg\$$name';
+  }();
 
   @override
   late final String staticGetterType = () {
@@ -45,13 +45,19 @@ class RecordMapperFieldElement extends MapperFieldElement {
 
   @override
   late final String staticArgType = () {
-    return parent.parent
-        .prefixedType(param.type, withNullability: false, resolveBounds: true);
+    return parent.parent.prefixedType(
+      param.type,
+      withNullability: false,
+      resolveBounds: true,
+    );
   }();
 
   late final String staticArgGetterType = () {
-    return parent.parent
-        .prefixedType(param.type, withNullability: false, resolveBounds: true);
+    return parent.parent.prefixedType(
+      param.type,
+      withNullability: false,
+      resolveBounds: true,
+    );
   }();
 
   @override

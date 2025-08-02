@@ -9,7 +9,8 @@ extension FieldsExtension<T extends InterfaceMapperElement>
     for (var f in fields) {
       if (f.needsGetter) {
         output.write(
-            '  static ${f.staticGetterType} _\$${f.name}(${element.prefixedClassName} v) => ');
+          '  static ${f.staticGetterType} _\$${f.name}(${element.prefixedClassName} v) => ',
+        );
         if (f.staticGetterType == 'Function' ||
             f.staticGetterType == 'Function?') {
           output.write('(v as dynamic).${f.name} as ${f.staticGetterType};\n');
@@ -19,14 +20,17 @@ extension FieldsExtension<T extends InterfaceMapperElement>
       }
       if (f.needsArg) {
         output.write(
-            '  static dynamic _arg\$${f.name}${element.typeParamsDeclaration}(f) => f<${f.argType}>();\n');
+          '  static dynamic _arg\$${f.name}${element.typeParamsDeclaration}(f) => f<${f.argType}>();\n',
+        );
       }
       output.write(
-          "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.name} = Field('${f.name.replaceAll(r'$', r'\$')}', ${f.getter}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook});\n");
+        "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.name} = Field('${f.name.replaceAll(r'$', r'\$')}', ${f.getter}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook});\n",
+      );
     }
 
     output.write(
-        '\n  @override\n  final MappableFields<${element.prefixedClassName}> fields = const {\n');
+      '\n  @override\n  final MappableFields<${element.prefixedClassName}> fields = const {\n',
+    );
 
     for (var f in fields) {
       output.write('    #${f.name}: _f\$${f.name},\n');

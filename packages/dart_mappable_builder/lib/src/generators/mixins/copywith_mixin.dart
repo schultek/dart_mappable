@@ -13,9 +13,11 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
   late String classTypeParams =
       element.element.typeParameters2.map((p) => ', ${p.name3}').join();
 
-  late bool hasExtendsTarget = element.extendsElement != null &&
+  late bool hasExtendsTarget =
+      element.extendsElement != null &&
       element.extendsElement!.shouldGenerate(GenerateMethods.copy);
-  late bool hasSuperTarget = element.superElement != null &&
+  late bool hasSuperTarget =
+      element.superElement != null &&
       element.superElement!.shouldGenerate(GenerateMethods.copy);
 
   late String selfTypeParam = element.selfTypeParam;
@@ -64,9 +66,10 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
 
     if (element.hasCallableConstructor) {
       output.write(
-          'extension ${element.uniqueClassName}ValueCopy<\$R, \$Out$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam, \$Out> {\n'
-          '  ${element.uniqueClassName}CopyWith<\$R, $selfTypeParam, \$Out$classTypeParams> get \$as${element.className} => \$base.as((v, t, t2) => _${element.uniqueClassName}CopyWithImpl<\$R, \$Out$classTypeParams>(v, t, t2));\n'
-          '}\n\n');
+        'extension ${element.uniqueClassName}ValueCopy<\$R, \$Out$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam, \$Out> {\n'
+        '  ${element.uniqueClassName}CopyWith<\$R, $selfTypeParam, \$Out$classTypeParams> get \$as${element.className} => \$base.as((v, t, t2) => _${element.uniqueClassName}CopyWithImpl<\$R, \$Out$classTypeParams>(v, t, t2));\n'
+        '}\n\n',
+      );
     }
 
     var implements = <String>[];
@@ -75,18 +78,21 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
       var superClassTypeParams =
           element.superTypeArgs.map((a) => ', $a').join();
       implements.add(
-          '${element.extendsElement!.uniqueClassName}CopyWith<\$R, \$In, \$Out$superClassTypeParams>');
+        '${element.extendsElement!.uniqueClassName}CopyWith<\$R, \$In, \$Out$superClassTypeParams>',
+      );
     }
 
     for (var interface in element.interfaceElements) {
       if (interface.shouldGenerate(GenerateMethods.copy)) {
-        var interfaceTypeParams = element.element.interfaces
-            .firstWhere((t) => t.element3 == interface.element)
-            .typeArguments
-            .map((a) => ', ${element.parent.prefixedType(a)}')
-            .join();
+        var interfaceTypeParams =
+            element.element.interfaces
+                .firstWhere((t) => t.element3 == interface.element)
+                .typeArguments
+                .map((a) => ', ${element.parent.prefixedType(a)}')
+                .join();
         implements.add(
-            '${interface.uniqueClassName}CopyWith<\$R, \$In, \$Out$interfaceTypeParams>');
+          '${interface.uniqueClassName}CopyWith<\$R, \$In, \$Out$interfaceTypeParams>',
+        );
       }
     }
 
@@ -97,52 +103,66 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
     var implementsStmt =
         implements.isEmpty ? '' : ' implements ${implements.join(', ')}';
 
-    output.write(''
-        'abstract class ${element.uniqueClassName}CopyWith<\$R, \$In extends $selfTypeParam, \$Out$classTypeParamsDef>$implementsStmt {\n');
+    output.write(
+      ''
+      'abstract class ${element.uniqueClassName}CopyWith<\$R, \$In extends $selfTypeParam, \$Out$classTypeParamsDef>$implementsStmt {\n',
+    );
 
     var copyParams = CopyParamElement.collectFrom(element.params, element);
 
     for (var param in copyParams) {
       var isOverridden = hasSuperTarget && param.param is SuperParamElement;
       output.write(
-          '  ${isOverridden ? '@override ' : ''}${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name3 ?? ''};\n');
+        '  ${isOverridden ? '@override ' : ''}${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name3 ?? ''};\n',
+      );
     }
 
     output.write(
-        '  ${hasSuperTarget ? '@override ' : ''}\$R call(${_generateCopyWithParams()});\n');
+      '  ${hasSuperTarget ? '@override ' : ''}\$R call(${_generateCopyWithParams()});\n',
+    );
 
     output.write(
-        '  ${element.uniqueClassName}CopyWith<\$R2, \$In, \$Out2$classTypeParams> \$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t);\n');
+      '  ${element.uniqueClassName}CopyWith<\$R2, \$In, \$Out2$classTypeParams> \$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t);\n',
+    );
 
     output.write('}\n');
 
     if (element.hasCallableConstructor) {
-      output.write('\n'
-          'class _${element.uniqueClassName}CopyWithImpl<\$R, \$Out$classTypeParamsDef> '
-          'extends ClassCopyWithBase<\$R, $selfTypeParam, \$Out> implements ${element.uniqueClassName}CopyWith'
-          '<\$R, $selfTypeParam, \$Out$classTypeParams> {\n'
-          '  _${element.uniqueClassName}CopyWithImpl(super.value, super.then, super.then2);\n'
-          '\n');
+      output.write(
+        '\n'
+        'class _${element.uniqueClassName}CopyWithImpl<\$R, \$Out$classTypeParamsDef> '
+        'extends ClassCopyWithBase<\$R, $selfTypeParam, \$Out> implements ${element.uniqueClassName}CopyWith'
+        '<\$R, $selfTypeParam, \$Out$classTypeParams> {\n'
+        '  _${element.uniqueClassName}CopyWithImpl(super.value, super.then, super.then2);\n'
+        '\n',
+      );
 
-      output.write('  @override\n'
-          '  late final ClassMapperBase<${element.prefixedClassName}> \$mapper = ${element.mapperName}.ensureInitialized();\n');
+      output.write(
+        '  @override\n'
+        '  late final ClassMapperBase<${element.prefixedClassName}> \$mapper = ${element.mapperName}.ensureInitialized();\n',
+      );
 
       for (var param in copyParams) {
         output.write(
-            '  @override ${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name3 ?? ''} => ');
+          '  @override ${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name3 ?? ''} => ',
+        );
         output.write('${param.invocation};\n');
       }
 
       output.write(
-          '  @override \$R call(${_generateCopyWithParams(implVersion: true)}) => \$apply(FieldCopyWithData({${_generateCopyWithFields()}}));\n');
+        '  @override \$R call(${_generateCopyWithParams(implVersion: true)}) => \$apply(FieldCopyWithData({${_generateCopyWithFields()}}));\n',
+      );
 
       output.write(
-          '  @override $selfTypeParam \$make(CopyWithData data) => ${element.prefixedDecodingClassName}${element.constructor.element!.name3 != 'new' ? '.${element.constructor.element!.name3}' : ''}(${_generateCopyWithConstructorParams()});\n');
+        '  @override $selfTypeParam \$make(CopyWithData data) => ${element.prefixedDecodingClassName}${element.constructor.element!.name3 != 'new' ? '.${element.constructor.element!.name3}' : ''}(${_generateCopyWithConstructorParams()});\n',
+      );
 
-      output.write('\n'
-          '  @override ${element.uniqueClassName}CopyWith<\$R2, $selfTypeParam, \$Out2$classTypeParams> '
-          '\$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t) '
-          '=> _${element.uniqueClassName}CopyWithImpl<\$R2, \$Out2$classTypeParams>(\$value, \$cast, t);\n');
+      output.write(
+        '\n'
+        '  @override ${element.uniqueClassName}CopyWith<\$R2, $selfTypeParam, \$Out2$classTypeParams> '
+        '\$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t) '
+        '=> _${element.uniqueClassName}CopyWithImpl<\$R2, \$Out2$classTypeParams>(\$value, \$cast, t);\n',
+      );
 
       output.write('}');
     }
@@ -173,7 +193,8 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
         } else {
           var isDynamic = p.type is DynamicType;
           params.add(
-              '${param.isCovariant && !implVersion ? 'covariant ' : ''}$type${isDynamic ? '' : '?'} $name');
+            '${param.isCovariant && !implVersion ? 'covariant ' : ''}$type${isDynamic ? '' : '?'} $name',
+          );
         }
       }
     }

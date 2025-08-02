@@ -21,8 +21,9 @@ extension RecordCopyWithMixin on MapperGenerator<RecordMapperElement> {
     if (this.element is! TargetRecordMapperElement) return;
 
     output.write(
-        '  ${element.uniqueClassName}CopyWith<$selfTypeParam$classTypeParams> get copyWith => '
-        '_${element.uniqueClassName}CopyWithImpl(this, \$identity, \$identity);\n');
+      '  ${element.uniqueClassName}CopyWith<$selfTypeParam$classTypeParams> get copyWith => '
+      '_${element.uniqueClassName}CopyWithImpl(this, \$identity, \$identity);\n',
+    );
   }
 
   String generateCopyWithClasses() {
@@ -34,9 +35,10 @@ extension RecordCopyWithMixin on MapperGenerator<RecordMapperElement> {
     var output = StringBuffer();
 
     output.write(
-        'extension ${element.uniqueClassName}ValueCopy<\$R$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam, $selfTypeParam> {\n'
-        '  ${element.uniqueClassName}CopyWith<\$R$classTypeParams> get \$as${element.className} => \$base.as((v, t, t2) => _${element.uniqueClassName}CopyWithImpl(v, t, t2));\n'
-        '}\n\n');
+      'extension ${element.uniqueClassName}ValueCopy<\$R$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam, $selfTypeParam> {\n'
+      '  ${element.uniqueClassName}CopyWith<\$R$classTypeParams> get \$as${element.className} => \$base.as((v, t, t2) => _${element.uniqueClassName}CopyWithImpl(v, t, t2));\n'
+      '}\n\n',
+    );
 
     var implements = <String>[];
 
@@ -47,8 +49,10 @@ extension RecordCopyWithMixin on MapperGenerator<RecordMapperElement> {
     var implementsStmt =
         implements.isEmpty ? '' : ' implements ${implements.join(', ')}';
 
-    output.write(''
-        'abstract class ${element.uniqueClassName}CopyWith<\$R$classTypeParamsDef>$implementsStmt {\n');
+    output.write(
+      ''
+      'abstract class ${element.uniqueClassName}CopyWith<\$R$classTypeParamsDef>$implementsStmt {\n',
+    );
 
     // var copyParams = CopyParamElement.collectFrom(element.params, element);
     //
@@ -60,19 +64,24 @@ extension RecordCopyWithMixin on MapperGenerator<RecordMapperElement> {
     output.write('  \$R call(${_generateCopyWithParams()});\n');
 
     output.write(
-        '  ${element.uniqueClassName}CopyWith<\$R2$classTypeParams> \$chain<\$R2>(Then<$selfTypeParam, \$R2> t);\n');
+      '  ${element.uniqueClassName}CopyWith<\$R2$classTypeParams> \$chain<\$R2>(Then<$selfTypeParam, \$R2> t);\n',
+    );
 
     output.write('}\n');
 
-    output.write('\n'
-        'class _${element.uniqueClassName}CopyWithImpl<\$R$classTypeParamsDef> '
-        'extends RecordCopyWithBase<\$R, $selfTypeParam> implements ${element.uniqueClassName}CopyWith'
-        '<\$R$classTypeParams> {\n'
-        '  _${element.uniqueClassName}CopyWithImpl(super.value, super.then, super.then2);\n'
-        '\n');
+    output.write(
+      '\n'
+      'class _${element.uniqueClassName}CopyWithImpl<\$R$classTypeParamsDef> '
+      'extends RecordCopyWithBase<\$R, $selfTypeParam> implements ${element.uniqueClassName}CopyWith'
+      '<\$R$classTypeParams> {\n'
+      '  _${element.uniqueClassName}CopyWithImpl(super.value, super.then, super.then2);\n'
+      '\n',
+    );
 
-    output.write('  @override\n'
-        '  late final RecordMapperBase<${element.prefixedClassName}> \$mapper = ${element.mapperName}.ensureInitialized();\n');
+    output.write(
+      '  @override\n'
+      '  late final RecordMapperBase<${element.prefixedClassName}> \$mapper = ${element.mapperName}.ensureInitialized();\n',
+    );
 
     // for (var param in copyParams) {
     //   output.write(
@@ -81,15 +90,19 @@ extension RecordCopyWithMixin on MapperGenerator<RecordMapperElement> {
     // }
 
     output.write(
-        '  @override \$R call(${_generateCopyWithParams(implVersion: true)}) => \$apply(FieldCopyWithData({${_generateCopyWithFields()}}));\n');
+      '  @override \$R call(${_generateCopyWithParams(implVersion: true)}) => \$apply(FieldCopyWithData({${_generateCopyWithFields()}}));\n',
+    );
 
     output.write(
-        '  @override $selfTypeParam \$make(CopyWithData data) => (${_generateCopyWithConstructorParams()});\n');
+      '  @override $selfTypeParam \$make(CopyWithData data) => (${_generateCopyWithConstructorParams()});\n',
+    );
 
-    output.write('\n'
-        '  @override ${element.uniqueClassName}CopyWith<\$R2$classTypeParams> '
-        '\$chain<\$R2>(Then<$selfTypeParam, \$R2> t) '
-        '=> _${element.uniqueClassName}CopyWithImpl(\$value, \$cast, t);\n');
+    output.write(
+      '\n'
+      '  @override ${element.uniqueClassName}CopyWith<\$R2$classTypeParams> '
+      '\$chain<\$R2>(Then<$selfTypeParam, \$R2> t) '
+      '=> _${element.uniqueClassName}CopyWithImpl(\$value, \$cast, t);\n',
+    );
 
     output.write('}');
 

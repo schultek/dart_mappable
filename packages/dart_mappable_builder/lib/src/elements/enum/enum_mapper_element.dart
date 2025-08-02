@@ -4,7 +4,11 @@ import '../mapper_element.dart';
 
 abstract class EnumMapperElement extends MapperElement<EnumElement2> {
   EnumMapperElement(
-      super.parent, super.element, super.options, super.annotation);
+    super.parent,
+    super.element,
+    super.options,
+    super.annotation,
+  );
 
   @override
   late final String className = element.name3 ?? '';

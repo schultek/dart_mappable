@@ -12,7 +12,8 @@ part of 'main.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$Union {
@@ -23,45 +24,39 @@ mixin _$Union {
     required TResult Function(@MappableField(key: 'mykey') int value) data,
     required TResult Function(int value) loading,
     required TResult Function(int value, String? message) error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(@MappableField(key: 'mykey') int value)? data,
     TResult? Function(int value)? loading,
     TResult? Function(int value, String? message)? error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(@MappableField(key: 'mykey') int value)? data,
     TResult Function(int value)? loading,
     TResult Function(int value, String? message)? error,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Data value) data,
     required TResult Function(Loading value) loading,
     required TResult Function(ErrorDetails value) error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Data value)? data,
     TResult? Function(Loading value)? loading,
     TResult? Function(ErrorDetails value)? error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Data value)? data,
     TResult Function(Loading value)? loading,
     TResult Function(ErrorDetails value)? error,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 
   /// Create a copy of Union
   /// with the given fields replaced by the non-null parameter values.
@@ -91,23 +86,26 @@ class _$UnionCopyWithImpl<$Res, $Val extends Union>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? value = null,
-  }) {
-    return _then(_value.copyWith(
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+  $Res call({Object? value = null}) {
+    return _then(
+      _value.copyWith(
+            value:
+                null == value
+                    ? _value.value
+                    : value // ignore: cast_nullable_to_non_nullable
+                        as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$DataImplCopyWith<$Res> implements $UnionCopyWith<$Res> {
   factory _$$DataImplCopyWith(
-          _$DataImpl value, $Res Function(_$DataImpl) then) =
-      __$$DataImplCopyWithImpl<$Res>;
+    _$DataImpl value,
+    $Res Function(_$DataImpl) then,
+  ) = __$$DataImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({@MappableField(key: 'mykey') int value});
@@ -118,21 +116,21 @@ class __$$DataImplCopyWithImpl<$Res>
     extends _$UnionCopyWithImpl<$Res, _$DataImpl>
     implements _$$DataImplCopyWith<$Res> {
   __$$DataImplCopyWithImpl(_$DataImpl _value, $Res Function(_$DataImpl) _then)
-      : super(_value, _then);
+    : super(_value, _then);
 
   /// Create a copy of Union
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? value = null,
-  }) {
-    return _then(_$DataImpl(
-      null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+  $Res call({Object? value = null}) {
+    return _then(
+      _$DataImpl(
+        null == value
+            ? _value.value
+            : value // ignore: cast_nullable_to_non_nullable
+                as int,
+      ),
+    );
   }
 }
 
@@ -257,8 +255,9 @@ abstract class Data implements Union {
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> implements $UnionCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
-      __$$LoadingImplCopyWithImpl<$Res>;
+    _$LoadingImpl value,
+    $Res Function(_$LoadingImpl) then,
+  ) = __$$LoadingImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int value});
@@ -269,22 +268,23 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$UnionCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
-      : super(_value, _then);
+    _$LoadingImpl _value,
+    $Res Function(_$LoadingImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of Union
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? value = null,
-  }) {
-    return _then(_$LoadingImpl(
-      null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+  $Res call({Object? value = null}) {
+    return _then(
+      _$LoadingImpl(
+        null == value
+            ? _value.value
+            : value // ignore: cast_nullable_to_non_nullable
+                as int,
+      ),
+    );
   }
 }
 
@@ -408,8 +408,9 @@ abstract class Loading implements Union {
 abstract class _$$ErrorDetailsImplCopyWith<$Res>
     implements $UnionCopyWith<$Res> {
   factory _$$ErrorDetailsImplCopyWith(
-          _$ErrorDetailsImpl value, $Res Function(_$ErrorDetailsImpl) then) =
-      __$$ErrorDetailsImplCopyWithImpl<$Res>;
+    _$ErrorDetailsImpl value,
+    $Res Function(_$ErrorDetailsImpl) then,
+  ) = __$$ErrorDetailsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int value, String? message});
@@ -420,27 +421,27 @@ class __$$ErrorDetailsImplCopyWithImpl<$Res>
     extends _$UnionCopyWithImpl<$Res, _$ErrorDetailsImpl>
     implements _$$ErrorDetailsImplCopyWith<$Res> {
   __$$ErrorDetailsImplCopyWithImpl(
-      _$ErrorDetailsImpl _value, $Res Function(_$ErrorDetailsImpl) _then)
-      : super(_value, _then);
+    _$ErrorDetailsImpl _value,
+    $Res Function(_$ErrorDetailsImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of Union
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? value = null,
-    Object? message = freezed,
-  }) {
-    return _then(_$ErrorDetailsImpl(
-      null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as int,
-      freezed == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+  $Res call({Object? value = null, Object? message = freezed}) {
+    return _then(
+      _$ErrorDetailsImpl(
+        null == value
+            ? _value.value
+            : value // ignore: cast_nullable_to_non_nullable
+                as int,
+        freezed == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                as String?,
+      ),
+    );
   }
 }
 

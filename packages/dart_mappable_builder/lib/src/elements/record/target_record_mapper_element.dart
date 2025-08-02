@@ -9,10 +9,17 @@ import 'alias_record_mapper_element.dart';
 
 class TargetRecordMapperElement extends AliasRecordMapperElement {
   TargetRecordMapperElement(
-      super.parent, super.element, super.options, super.annotation);
+    super.parent,
+    super.element,
+    super.options,
+    super.annotation,
+  );
 
-  static Future<TargetRecordMapperElement> from(MapperElementGroup parent,
-      TypeAliasElement2 element, MappableOptions options) async {
+  static Future<TargetRecordMapperElement> from(
+    MapperElementGroup parent,
+    TypeAliasElement2 element,
+    MappableOptions options,
+  ) async {
     var annotation = await RecordMapperAnnotation.from(element);
     return TargetRecordMapperElement(parent, element, options, annotation);
   }

@@ -13,16 +13,29 @@ import 'mixins/linked_elements_mixin.dart';
 /// Element interface for an annotated class in the target library of [parent].
 class TargetClassMapperElement extends ClassMapperElement
     with LinkedElementsMixin {
-  TargetClassMapperElement(super.parent, super.element, super.options,
-      super.annotation, super.constructor);
+  TargetClassMapperElement(
+    super.parent,
+    super.element,
+    super.options,
+    super.annotation,
+    super.constructor,
+  );
 
-  static Future<TargetClassMapperElement> from(MapperElementGroup parent,
-      ClassElement2 element, MappableOptions options) async {
+  static Future<TargetClassMapperElement> from(
+    MapperElementGroup parent,
+    ClassElement2 element,
+    MappableOptions options,
+  ) async {
     var constructor = await ConstructorMapperElement.fromClass(element);
     var annotation = await MapperAnnotation.from<MappableClass>(element);
 
     return TargetClassMapperElement(
-        parent, element, options, annotation, constructor);
+      parent,
+      element,
+      options,
+      annotation,
+      constructor,
+    );
   }
 
   late final String prefixedDecodingClassName = prefixedClassName;
@@ -40,7 +53,7 @@ class TargetClassMapperElement extends ClassMapperElement
         if (m == null) {
           types.add((
             e.name3 ?? '',
-            e.typeParameters2.map((p) => p.name3 ?? '').toList()
+            e.typeParameters2.map((p) => p.name3 ?? '').toList(),
           ));
         }
 

@@ -17,7 +17,8 @@ extension InitializerExtension<T extends TargetClassMapperElement>
         var typeParams = t.$2;
         if (typeParams.isNotEmpty) {
           output.write(
-              '      MapperBase.addType<$typeName>(<${typeParams.join(', ')}>(f) => f<$typeName<${typeParams.join(', ')}>>());\n');
+            '      MapperBase.addType<$typeName>(<${typeParams.join(', ')}>(f) => f<$typeName<${typeParams.join(', ')}>>());\n',
+          );
         } else {
           output.write('      MapperBase.addType<$typeName>();\n');
         }
@@ -25,13 +26,15 @@ extension InitializerExtension<T extends TargetClassMapperElement>
     }
 
     output.write(
-        '      MapperContainer.globals.use(_instance = ${element.mapperName}._());\n');
+      '      MapperContainer.globals.use(_instance = ${element.mapperName}._());\n',
+    );
 
     if (element.isDiscriminatingSubclass) {
       var s = element.superElement!;
       var prefix = element.parent.prefixOfElement(s.annotation.element);
       output.write(
-          '      $prefix${s.mapperName}.ensureInitialized().addSubMapper(_instance!);\n');
+        '      $prefix${s.mapperName}.ensureInitialized().addSubMapper(_instance!);\n',
+      );
     } else if (element.isSubclass) {
       var s = element.superElement!;
       var prefix = element.parent.prefixOfElement(s.annotation.element);
@@ -50,8 +53,10 @@ extension InitializerExtension<T extends TargetClassMapperElement>
       }
     }
 
-    output.write('    }\n'
-        '    return _instance!;\n'
-        '  }');
+    output.write(
+      '    }\n'
+      '    return _instance!;\n'
+      '  }',
+    );
   }
 }

@@ -24,8 +24,13 @@ import 'mixins/type_params_mixin.dart';
 ///
 abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement2>
     with InheritedElementsMixin, ParamElementsMixin, TypeParamsMixin {
-  ClassMapperElement(super.parent, super.element, super.options,
-      super.annotation, this.constructor);
+  ClassMapperElement(
+    super.parent,
+    super.element,
+    super.options,
+    super.annotation,
+    this.constructor,
+  );
 
   @override
   final ConstructorMapperElement constructor;
@@ -49,7 +54,8 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement2>
   late final bool generateAsMixin =
       generateMixin && subElements.every((c) => c.generateAsMixin);
 
-  late final bool hasCallableConstructor = constructor.element != null &&
+  late final bool hasCallableConstructor =
+      constructor.element != null &&
       !(isAbstract && constructor.element!.redirectedConstructor2 == null);
 
   late final bool isAbstract = element.isAbstract;
@@ -61,14 +67,14 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement2>
 
   late final bool ignoreNull =
       annotation.value?.read('ignoreNull')?.toBoolValue() ??
-          options.ignoreNull ??
-          superElement?.ignoreNull ??
-          false;
+      options.ignoreNull ??
+      superElement?.ignoreNull ??
+      false;
 
   late final int generateMethods =
       annotation.value?.read('generateMethods')?.toIntValue() ??
-          options.generateMethods ??
-          GenerateMethods.all;
+      options.generateMethods ??
+      GenerateMethods.all;
 
   late final String? hookForClass = () {
     var hook = annotation.value?.read('hook');
@@ -92,14 +98,18 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement2>
     var fields = <Element2, ClassMapperFieldElement>{};
 
     for (var p in params) {
-      fields[p.accessor ?? p.parameter] =
-          ClassMapperFieldElement(p, p.accessor, this);
+      fields[p.accessor ?? p.parameter] = ClassMapperFieldElement(
+        p,
+        p.accessor,
+        this,
+      );
     }
 
     for (var f in _allFields) {
       if (!fields.containsKey(f) &&
           !fields.keys.any(
-              (e) => e is PropertyInducingElement2 && e.name3 == f.name3)) {
+            (e) => e is PropertyInducingElement2 && e.name3 == f.name3,
+          )) {
         fields[f] = ClassMapperFieldElement(null, f, this);
       }
     }
@@ -107,36 +117,39 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement2>
     return fields.values.toList();
   }();
 
-  late final List<ClassMapperParamElement> copySafeParams = (() {
-    if (subElements.isEmpty) return params;
+  late final List<ClassMapperParamElement> copySafeParams =
+      (() {
+        if (subElements.isEmpty) return params;
 
-    var safeParams = <ClassMapperParamElement>[];
+        var safeParams = <ClassMapperParamElement>[];
 
-    bool isCopySafe(ClassMapperParamElement param) {
-      return subElements.every((e) => e.copySafeParams.any((subParam) {
-            if (subParam is SuperParamElement &&
-                (subParam.superParameter.parameter.baseElement ==
-                        param.parameter.baseElement ||
-                    subParam.superParameter.accessor?.baseElement ==
-                        param.accessor?.baseElement)) {
-              return true;
-            }
-            if (subParam is FieldParamElement &&
-                subParam.superField == param.accessor) {
-              return true;
-            }
-            return false;
-          }));
-    }
+        bool isCopySafe(ClassMapperParamElement param) {
+          return subElements.every(
+            (e) => e.copySafeParams.any((subParam) {
+              if (subParam is SuperParamElement &&
+                  (subParam.superParameter.parameter.baseElement ==
+                          param.parameter.baseElement ||
+                      subParam.superParameter.accessor?.baseElement ==
+                          param.accessor?.baseElement)) {
+                return true;
+              }
+              if (subParam is FieldParamElement &&
+                  subParam.superField == param.accessor) {
+                return true;
+              }
+              return false;
+            }),
+          );
+        }
 
-    for (var param in params) {
-      if (isCopySafe(param)) {
-        safeParams.add(param);
-      }
-    }
+        for (var param in params) {
+          if (isCopySafe(param)) {
+            safeParams.add(param);
+          }
+        }
 
-    return safeParams;
-  })();
+        return safeParams;
+      })();
 
   late final Iterable<PropertyInducingElement2> _allFields = () sync* {
     yield* extendsElement?._allFields ?? [];

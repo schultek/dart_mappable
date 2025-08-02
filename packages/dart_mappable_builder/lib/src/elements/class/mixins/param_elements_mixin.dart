@@ -26,16 +26,18 @@ mixin ParamElementsMixin on MapperElement<ClassElement2> {
 
     var unresolved = params.whereType<UnresolvedParamElement>();
     if (unresolved.isNotEmpty) {
-      print('\nClass $className defines constructor parameters that could not '
-          'be resolved against any field or getter in the class.\nThis won\'t '
-          'break your code, but may lead to unexpected behaviour when '
-          'serializing this class. Also \'.copyWith()\' won\'t work on these '
-          'parameters.\n\nThe following problematic parameters were detected:\n'
-          '${unresolved.map((p) => '- ${p.parameter.name3}: ${p.message}').join('\n')}\n\n'
-          'Please make sure every constructor parameter can be resolved to a '
-          'field or getter.\nIf you think this is a bug with dart_mappable '
-          'and the listed parameters should be resolved correctly, please file '
-          'an issue here: https://github.com/schultek/dart_mappable/issues\n');
+      print(
+        '\nClass $className defines constructor parameters that could not '
+        'be resolved against any field or getter in the class.\nThis won\'t '
+        'break your code, but may lead to unexpected behaviour when '
+        'serializing this class. Also \'.copyWith()\' won\'t work on these '
+        'parameters.\n\nThe following problematic parameters were detected:\n'
+        '${unresolved.map((p) => '- ${p.parameter.name3}: ${p.message}').join('\n')}\n\n'
+        'Please make sure every constructor parameter can be resolved to a '
+        'field or getter.\nIf you think this is a bug with dart_mappable '
+        'and the listed parameters should be resolved correctly, please file '
+        'an issue here: https://github.com/schultek/dart_mappable/issues\n',
+      );
     }
 
     return params;
@@ -55,8 +57,9 @@ mixin ParamElementsMixin on MapperElement<ClassElement2> {
           'Cannot resolve formal super parameter',
         );
       }
-      var superConfig =
-          superElement!.getParameterConfig(dec.superConstructorParameter2!);
+      var superConfig = superElement!.getParameterConfig(
+        dec.superConstructorParameter2!,
+      );
       if (superConfig is UnresolvedParamElement) {
         return UnresolvedParamElement(
           param,
@@ -85,15 +88,20 @@ mixin ParamElementsMixin on MapperElement<ClassElement2> {
       return init;
     }
 
-    var getter =
-        element.thisType.lookUpGetter3(param.name3 ?? '', parent.library);
+    var getter = element.thisType.lookUpGetter3(
+      param.name3 ?? '',
+      parent.library,
+    );
     if (getter != null) {
       var getterType = getter.type.returnType;
 
       var s = parent.library.typeSystem;
       if (s.isAssignableTo(getterType, dec.type)) {
         return FieldParamElement(
-            param, getter.variable3!, getSuperField(getter.variable3!));
+          param,
+          getter.variable3!,
+          getSuperField(getter.variable3!),
+        );
       }
 
       return UnresolvedParamElement(
@@ -138,8 +146,9 @@ mixin ParamElementsMixin on MapperElement<ClassElement2> {
       var last = node.initializers.last;
       if (last is SuperConstructorInvocation) {
         var superConstructorName = last.constructorName?.name ?? 'new';
-        var superConstructor = superElement!.element.constructors2
-            .firstWhere((c) => c.name3 == superConstructorName);
+        var superConstructor = superElement!.element.constructors2.firstWhere(
+          (c) => c.name3 == superConstructorName,
+        );
 
         var args = last.argumentList.arguments;
         var i = 0;
@@ -153,8 +162,9 @@ mixin ParamElementsMixin on MapperElement<ClassElement2> {
             if (exp is SimpleIdentifier) {
               if (exp.name == param.name3) {
                 var superName = arg.name.label.name;
-                return superConstructor.formalParameters
-                    .firstWhere((p) => p.isNamed && p.name3 == superName);
+                return superConstructor.formalParameters.firstWhere(
+                  (p) => p.isNamed && p.name3 == superName,
+                );
               }
             }
           }

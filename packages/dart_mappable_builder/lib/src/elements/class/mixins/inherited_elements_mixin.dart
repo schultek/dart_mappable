@@ -28,8 +28,8 @@ mixin InheritedElementsMixin on MapperElement<ClassElement2> {
 
   late String? discriminatorKey =
       annotation.value?.read('discriminatorKey')?.toStringValue() ??
-          options.discriminatorKey ??
-          superElement?.discriminatorKey;
+      options.discriminatorKey ??
+      superElement?.discriminatorKey;
 
   late String? discriminatorValueCode =
       annotation.getPropertyNode('discriminatorValue')?.toSource();

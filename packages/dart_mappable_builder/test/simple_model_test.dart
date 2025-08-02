@@ -24,7 +24,8 @@ void main() {
           ''',
         },
         outputs: {
-          'model': '// coverage:ignore-file\n'
+          'model':
+              '// coverage:ignore-file\n'
               '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
               '// ignore_for_file: type=lint\n'
               '// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member\n'
@@ -142,7 +143,7 @@ void main() {
               '  ModelCopyWith<\$R2, Model, \$Out2> \$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t) =>\n'
               '      _ModelCopyWithImpl<\$R2, \$Out2>(\$value, \$cast, t);\n'
               '}\n'
-              ''
+              '',
         },
       );
     });
@@ -171,7 +172,8 @@ void main() {
           ''',
         },
         outputs: {
-          'model': '// coverage:ignore-file\n'
+          'model':
+              '// coverage:ignore-file\n'
               '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
               '// ignore_for_file: type=lint\n'
               '// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member\n'
@@ -375,7 +377,7 @@ void main() {
               '  FullNameCopyWith<\$R2> \$chain<\$R2>(Then<FullName, \$R2> t) =>\n'
               '      _FullNameCopyWithImpl(\$value, \$cast, t);\n'
               '}\n'
-              ''
+              '',
         },
       );
     });

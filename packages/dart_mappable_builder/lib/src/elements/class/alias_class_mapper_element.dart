@@ -11,19 +11,34 @@ import 'target_class_mapper_element.dart';
 
 /// Element interface for all annotated type aliases.
 class AliasClassMapperElement extends TargetClassMapperElement {
-  AliasClassMapperElement._(super.parent, this.alias, super.element,
-      super.options, super.annotation, super.constructor);
+  AliasClassMapperElement._(
+    super.parent,
+    this.alias,
+    super.element,
+    super.options,
+    super.annotation,
+    super.constructor,
+  );
 
   final TypeAliasElement2 alias;
 
-  static Future<AliasClassMapperElement> from(MapperElementGroup parent,
-      TypeAliasElement2 alias, MappableOptions options) async {
+  static Future<AliasClassMapperElement> from(
+    MapperElementGroup parent,
+    TypeAliasElement2 alias,
+    MappableOptions options,
+  ) async {
     var element = alias.aliasedType.element3 as ClassElement2;
     var constructor = await ConstructorMapperElement.fromClass(element);
     var annotation = await MapperAnnotation.from<MappableClass>(alias);
 
     return AliasClassMapperElement._(
-        parent, alias, element, options, annotation, constructor);
+      parent,
+      alias,
+      element,
+      options,
+      annotation,
+      constructor,
+    );
   }
 
   @override

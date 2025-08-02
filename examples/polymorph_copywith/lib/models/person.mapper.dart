@@ -24,9 +24,7 @@ class PersonMapper extends ClassMapperBase<Person> {
   static const Field<Person, String> _f$name = Field('name', _$name);
 
   @override
-  final MappableFields<Person> fields = const {
-    #name: _f$name,
-  };
+  final MappableFields<Person> fields = const {#name: _f$name};
 
   static Person _instantiate(DecodingData data) {
     return Person(data.dec(_f$name));

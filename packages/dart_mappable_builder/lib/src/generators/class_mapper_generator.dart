@@ -34,9 +34,11 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
 
     generateInitializer(output);
 
-    output.write('\n'
-        '  @override\n'
-        "  final String id = '${element.uniqueId}';\n");
+    output.write(
+      '\n'
+      '  @override\n'
+      "  final String id = '${element.uniqueId}';\n",
+    );
 
     if (element.typeParamsList.isNotEmpty) {
       generateTypeFactory(output);
@@ -54,7 +56,8 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
     }
     if (element.includeTypeId != null) {
       output.write(
-          '  @override\n  bool includeTypeId<T>(_) => ${element.includeTypeId};\n');
+        '  @override\n  bool includeTypeId<T>(_) => ${element.includeTypeId};\n',
+      );
     }
 
     if (element.isDiscriminatingSubclass) {
@@ -73,9 +76,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
       _generateExtension(output);
     }
 
-    output.writeAll([
-      generateCopyWithClasses(),
-    ]);
+    output.writeAll([generateCopyWithClasses()]);
 
     return output.toString();
   }
@@ -84,7 +85,8 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
     await _checkMixinUsed();
 
     output.write(
-        'mixin ${element.uniqueClassName}Mappable${element.typeParamsDeclaration} {\n');
+      'mixin ${element.uniqueClassName}Mappable${element.typeParamsDeclaration} {\n',
+    );
 
     generateEncoderMixin(output);
     output.writeAll([
@@ -97,11 +99,10 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
 
   void _generateExtension(StringBuffer output) {
     output.write(
-        'extension ${element.mapperName}Extension${element.typeParamsDeclaration} on ${element.prefixedClassName}${element.typeParams} {\n');
+      'extension ${element.mapperName}Extension${element.typeParamsDeclaration} on ${element.prefixedClassName}${element.typeParams} {\n',
+    );
     generateEncoderExtensions(output);
-    output.writeAll([
-      generateCopyWithExtension(),
-    ]);
+    output.writeAll([generateCopyWithExtension()]);
     output.write('}');
   }
 
@@ -112,10 +113,14 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
     void warnUnusedMixin(String classCode) {
       var pen = AnsiPen()..xterm(3);
       var pen2 = AnsiPen()..xterm(2);
-      print(pen('\nClass \'$className\' is configured to generate a mixin '
+      print(
+        pen(
+          '\nClass \'$className\' is configured to generate a mixin '
           '\'$mixinName\'.\nIt is required that you use this mixin on this class.\n'
           'Otherwise your code might behave faulty or won\'t compile.\n\n'
-          'To solve this, change your class signature to:\n'));
+          'To solve this, change your class signature to:\n',
+        ),
+      );
       print('${pen2(classCode)}\n');
     }
 
@@ -123,7 +128,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
     if (node is ClassDeclaration) {
       var hasCopyWithMixin =
           node.withClause?.mixinTypes.any((t) => t.name2.lexeme == mixinName) ??
-              false;
+          false;
 
       if (!hasCopyWithMixin) {
         var classDeclarationSource = 'class $className';
@@ -145,8 +150,9 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
         warnUnusedMixin(classDeclarationSource);
       }
     } else if (node is ClassTypeAlias) {
-      var hasCopyWithMixin =
-          node.withClause.mixinTypes.any((t) => t.name2.lexeme == mixinName);
+      var hasCopyWithMixin = node.withClause.mixinTypes.any(
+        (t) => t.name2.lexeme == mixinName,
+      );
 
       if (!hasCopyWithMixin) {
         var classDeclarationSource = 'class $className';

@@ -13,9 +13,9 @@ import 'field/mapper_field_element.dart';
 
 class MapperAnnotation {
   const MapperAnnotation.empty(this.element)
-      : node = null,
-        arguments = null,
-        value = null;
+    : node = null,
+      arguments = null,
+      value = null;
   const MapperAnnotation(this.element, this.node, this.arguments, this.value);
 
   final Element2 element;
@@ -54,11 +54,15 @@ abstract class MapperElement<T extends Element2> {
 abstract class InterfaceMapperElement<T extends Element2>
     extends MapperElement<T> {
   InterfaceMapperElement(
-      super.parent, super.element, super.options, super.annotation);
+    super.parent,
+    super.element,
+    super.options,
+    super.annotation,
+  );
 
   late final CaseStyle? caseStyle =
       caseStyleFromAnnotation(annotation.value?.read('caseStyle')) ??
-          options.caseStyle;
+      options.caseStyle;
 
   String get typeParamsDeclaration;
 

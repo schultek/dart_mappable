@@ -12,24 +12,36 @@ import 'target_class_mapper_element.dart';
 class FactoryConstructorMapperElement extends TargetClassMapperElement {
   ConstructorElement2 factoryConstructor;
 
-  FactoryConstructorMapperElement._(super.parent, super.element, super.options,
-      super.annotation, super.constructor, this.factoryConstructor);
+  FactoryConstructorMapperElement._(
+    super.parent,
+    super.element,
+    super.options,
+    super.annotation,
+    super.constructor,
+    this.factoryConstructor,
+  );
 
-  static Future<FactoryConstructorMapperElement> from(MapperElementGroup parent,
-      ConstructorElement2 factoryConstructor, MappableOptions options) async {
+  static Future<FactoryConstructorMapperElement> from(
+    MapperElementGroup parent,
+    ConstructorElement2 factoryConstructor,
+    MappableOptions options,
+  ) async {
     var constructor = await ConstructorMapperElement.from(
-        factoryConstructor.redirectedConstructor2!);
-    var annotation =
-        await MapperAnnotation.from<MappableClass>(factoryConstructor);
+      factoryConstructor.redirectedConstructor2!,
+    );
+    var annotation = await MapperAnnotation.from<MappableClass>(
+      factoryConstructor,
+    );
 
     return FactoryConstructorMapperElement._(
-        parent,
-        factoryConstructor.redirectedConstructor2!.returnType.element3
-            as ClassElement2,
-        options,
-        annotation,
-        constructor,
-        factoryConstructor);
+      parent,
+      factoryConstructor.redirectedConstructor2!.returnType.element3
+          as ClassElement2,
+      options,
+      annotation,
+      constructor,
+      factoryConstructor,
+    );
   }
 
   @override

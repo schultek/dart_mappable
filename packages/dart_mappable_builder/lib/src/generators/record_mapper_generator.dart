@@ -110,12 +110,14 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
     var fromJsonName = element.options.renameMethods['fromJson'] ?? 'fromJson';
     var fromMapName = element.options.renameMethods['fromMap'] ?? 'fromMap';
 
-    output.write('\n'
-        '  static ${element.className}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
-        '    return ensureInitialized().decodeMap<${element.className}${element.typeParams}>(map);\n'
-        '  }\n'
-        '  static ${element.className}${element.typeParams} $fromJsonName${element.typeParamsDeclaration}(String json) {\n'
-        '    return ensureInitialized().decodeJson<${element.className}${element.typeParams}>(json);\n'
-        '  }\n');
+    output.write(
+      '\n'
+      '  static ${element.className}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
+      '    return ensureInitialized().decodeMap<${element.className}${element.typeParams}>(map);\n'
+      '  }\n'
+      '  static ${element.className}${element.typeParams} $fromJsonName${element.typeParamsDeclaration}(String json) {\n'
+      '    return ensureInitialized().decodeJson<${element.className}${element.typeParams}>(json);\n'
+      '  }\n',
+    );
   }
 }

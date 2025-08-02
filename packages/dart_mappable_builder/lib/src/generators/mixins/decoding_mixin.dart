@@ -19,9 +19,10 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
 
     var superHooks = _getSuperHooks(element);
     if (superHooks.isNotEmpty) {
-      final hook = superHooks.length == 1
-          ? superHooks.first
-          : 'ChainedHook([${superHooks.map((h) => h.startsWith('const ') ? h.substring(6) : h).join(', ')}])';
+      final hook =
+          superHooks.length == 1
+              ? superHooks.first
+              : 'ChainedHook([${superHooks.map((h) => h.startsWith('const ') ? h.substring(6) : h).join(', ')}])';
       output.write('''
         @override
         final MappingHook superHook = $hook;
@@ -47,19 +48,25 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
       Function get typeFactory => $impl
     ''');
     } else {
-      final deepBounds = element.element.typeParameters2
-          .map((p) =>
-              p.bound != null ? element.parent.prefixedType(p.bound!) : null)
-          .toList();
-      final flatBounds = element.element.typeParameters2.map((p) {
-        if (p.bound case InterfaceType bound) {
-          return '${p.name3} extends ${element.parent.prefixOfElement(bound.element3)}${bound.element3.name3!}';
-        } else if (p.bound != null) {
-          return '${p.name3} extends ${element.parent.prefixedType(p.bound!)}';
-        } else {
-          return '${p.name3}';
-        }
-      }).toList();
+      final deepBounds =
+          element.element.typeParameters2
+              .map(
+                (p) =>
+                    p.bound != null
+                        ? element.parent.prefixedType(p.bound!)
+                        : null,
+              )
+              .toList();
+      final flatBounds =
+          element.element.typeParameters2.map((p) {
+            if (p.bound case InterfaceType bound) {
+              return '${p.name3} extends ${element.parent.prefixOfElement(bound.element3)}${bound.element3.name3!}';
+            } else if (p.bound != null) {
+              return '${p.name3} extends ${element.parent.prefixedType(p.bound!)}';
+            } else {
+              return '${p.name3}';
+            }
+          }).toList();
 
       final flatDeclaration =
           flatBounds.isNotEmpty ? '<${flatBounds.join(', ')}>' : '';
@@ -67,7 +74,7 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
       final condition = [
         for (final (i, bound) in deepBounds.indexed)
           if (bound != null)
-            '<${element.element.typeParameters2[i].name3}>[] is List<$bound>'
+            '<${element.element.typeParameters2[i].name3}>[] is List<$bound>',
       ].join(' && ');
 
       output.write('''
@@ -88,8 +95,9 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
   }
 
   Future<void> generateDiscriminatorFields(StringBuffer output) async {
-    var prefix = element.parent
-        .prefixOfElement(element.superElement!.annotation.element);
+    var prefix = element.parent.prefixOfElement(
+      element.superElement!.annotation.element,
+    );
 
     output.write('''
     
@@ -151,12 +159,14 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
     var fromJsonName = element.options.renameMethods['fromJson'] ?? 'fromJson';
     var fromMapName = element.options.renameMethods['fromMap'] ?? 'fromMap';
 
-    output.write('\n'
-        '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
-        '    return ensureInitialized().decodeMap<${element.prefixedDecodingClassName}${element.typeParams}>(map);\n'
-        '  }\n'
-        '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromJsonName${element.typeParamsDeclaration}(String json) {\n'
-        '    return ensureInitialized().decodeJson<${element.prefixedDecodingClassName}${element.typeParams}>(json);\n'
-        '  }\n');
+    output.write(
+      '\n'
+      '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
+      '    return ensureInitialized().decodeMap<${element.prefixedDecodingClassName}${element.typeParams}>(map);\n'
+      '  }\n'
+      '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromJsonName${element.typeParamsDeclaration}(String json) {\n'
+      '    return ensureInitialized().decodeJson<${element.prefixedDecodingClassName}${element.typeParams}>(json);\n'
+      '  }\n',
+    );
   }
 }

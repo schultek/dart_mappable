@@ -28,7 +28,10 @@ class UnionMapper extends ClassMapperBase<Union> {
 
   static Union _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
-        'Union', 'type', '${data.value['type']}');
+      'Union',
+      'type',
+      '${data.value['type']}',
+    );
   }
 
   @override
@@ -75,13 +78,14 @@ class DataMapper extends SubClassMapperBase<Data> {
   final String id = 'Data';
 
   static int _$value(Data v) => v.value;
-  static const Field<Data, int> _f$value =
-      Field('value', _$value, key: r'mykey');
+  static const Field<Data, int> _f$value = Field(
+    'value',
+    _$value,
+    key: r'mykey',
+  );
 
   @override
-  final MappableFields<Data> fields = const {
-    #value: _f$value,
-  };
+  final MappableFields<Data> fields = const {#value: _f$value};
 
   @override
   final String discriminatorKey = 'type';
@@ -135,9 +139,7 @@ class LoadingMapper extends SubClassMapperBase<Loading> {
   static const Field<Loading, int> _f$value = Field('value', _$value);
 
   @override
-  final MappableFields<Loading> fields = const {
-    #value: _f$value,
-  };
+  final MappableFields<Loading> fields = const {#value: _f$value};
 
   @override
   final String discriminatorKey = 'type';
@@ -190,8 +192,11 @@ class ErrorDetailsMapper extends SubClassMapperBase<ErrorDetails> {
   static int _$value(ErrorDetails v) => v.value;
   static const Field<ErrorDetails, int> _f$value = Field('value', _$value);
   static String? _$message(ErrorDetails v) => v.message;
-  static const Field<ErrorDetails, String> _f$message =
-      Field('message', _$message, opt: true);
+  static const Field<ErrorDetails, String> _f$message = Field(
+    'message',
+    _$message,
+    opt: true,
+  );
 
   @override
   final MappableFields<ErrorDetails> fields = const {
@@ -224,8 +229,9 @@ class ErrorDetailsMapper extends SubClassMapperBase<ErrorDetails> {
 
 extension ErrorDetailsMapperExtension on ErrorDetails {
   String toJson() {
-    return ErrorDetailsMapper.ensureInitialized()
-        .encodeJson<ErrorDetails>(this);
+    return ErrorDetailsMapper.ensureInitialized().encodeJson<ErrorDetails>(
+      this,
+    );
   }
 
   Map<String, dynamic> toMap() {

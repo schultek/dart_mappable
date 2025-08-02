@@ -25,9 +25,7 @@ class AMapper extends ClassMapperBase<A> {
   static const Field<A, IList<B>> _f$list = Field('list', _$list);
 
   @override
-  final MappableFields<A> fields = const {
-    #list: _f$list,
-  };
+  final MappableFields<A> fields = const {#list: _f$list};
 
   static A _instantiate(DecodingData data) {
     return A(data.dec(_f$list));
@@ -118,9 +116,7 @@ class BMapper extends ClassMapperBase<B> {
   static const Field<B, String> _f$str = Field('str', _$str);
 
   @override
-  final MappableFields<B> fields = const {
-    #str: _f$str,
-  };
+  final MappableFields<B> fields = const {#str: _f$str};
 
   static B _instantiate(DecodingData data) {
     return B(data.dec(_f$str));

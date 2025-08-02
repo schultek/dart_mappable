@@ -5,8 +5,12 @@ import 'models/person.dart';
 import 'models/zoo.dart';
 
 void main() {
-  Animal animal = AnimalMapper.fromMap(
-      {'type': 'Cat', 'name': 'Coco', 'color': 'white', 'breed': 'black'});
+  Animal animal = AnimalMapper.fromMap({
+    'type': 'Cat',
+    'name': 'Coco',
+    'color': 'white',
+    'breed': 'black',
+  });
 
   assert(animal.runtimeType == Cat);
 

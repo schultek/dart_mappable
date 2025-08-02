@@ -10,13 +10,15 @@ class ConstructorMapperElement {
   final AstNode? node;
 
   static Future<ConstructorMapperElement> fromClass(
-      ClassElement2 element) async {
+    ClassElement2 element,
+  ) async {
     var constructor = getConstructorFor(element);
     return ConstructorMapperElement.from(constructor);
   }
 
   static Future<ConstructorMapperElement> from(
-      ConstructorElement2? constructor) async {
+    ConstructorElement2? constructor,
+  ) async {
     var node = await constructor?.getResolvedNode();
     return ConstructorMapperElement(constructor, node);
   }

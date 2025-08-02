@@ -11,10 +11,13 @@ mixin TypeParamsMixin on MapperElement<ClassElement2> {
 
   late String selfTypeParam = '$prefixedClassName$typeParams';
 
-  late List<String> typeParamsList = element.typeParameters2
-      .map((p) =>
-          '${p.name3}${p.bound != null ? ' extends ${parent.prefixedType(p.bound!)}' : ''}')
-      .toList();
+  late List<String> typeParamsList =
+      element.typeParameters2
+          .map(
+            (p) =>
+                '${p.name3}${p.bound != null ? ' extends ${parent.prefixedType(p.bound!)}' : ''}',
+          )
+          .toList();
 
   late List<String> superTypeArgs = () {
     if (extendsElement == null) return <String>[];
@@ -126,13 +129,15 @@ mixin TypeParamsMixin on MapperElement<ClassElement2> {
     return 'dynamic';
   }
 
-  late String typeParams = element.typeParameters2.isNotEmpty
-      ? '<${element.typeParameters2.map((p) => p.name3 ?? '').join(', ')}>'
-      : '';
+  late String typeParams =
+      element.typeParameters2.isNotEmpty
+          ? '<${element.typeParameters2.map((p) => p.name3 ?? '').join(', ')}>'
+          : '';
 
-  late String superTypeParams = element.typeParameters2.isNotEmpty
-      ? '<${element.typeParameters2.map((p) => element.supertype!.typeArguments.any((t) => t is TypeParameterType && t.element3 == p) ? p.name3 ?? '' : 'dynamic').join(', ')}>'
-      : '';
+  late String superTypeParams =
+      element.typeParameters2.isNotEmpty
+          ? '<${element.typeParameters2.map((p) => element.supertype!.typeArguments.any((t) => t is TypeParameterType && t.element3 == p) ? p.name3 ?? '' : 'dynamic').join(', ')}>'
+          : '';
 
   late String typeParamsDeclaration =
       typeParamsList.isNotEmpty ? '<${typeParamsList.join(', ')}>' : '';
