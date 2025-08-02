@@ -10,8 +10,8 @@ extension FieldsExtension<T extends InterfaceMapperElement>
       if (f.needsGetter) {
         output.write(
             '  static ${f.staticGetterType} _\$${f.name}(${element.prefixedClassName} v) => ');
-        if (f.staticGetterType == 'Function') {
-          output.write('(v as dynamic).${f.name} as Function;\n');
+        if (f.staticGetterType == 'Function' || f.staticGetterType == 'Function?') {
+          output.write('(v as dynamic).${f.name} as ${f.staticGetterType};\n');
         } else {
           output.write('v.${f.name};\n');
         }
