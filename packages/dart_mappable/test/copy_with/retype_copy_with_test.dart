@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-part 'retype_copy_with.mapper.dart';
+part 'retype_copy_with_test.mapper.dart';
 
 @MappableClass()
 class A with AMappable {
@@ -35,8 +35,8 @@ void main() {
       expect(
         map,
         equals({
-          'v': {'v': 1},
-          'v2': {'v': 2}
+          'v': {'v': 1, '__type': 'W'},
+          'v2': {'v': 2, '__type': 'W'}
         }),
       );
     });
@@ -54,7 +54,7 @@ void main() {
       expect(
         map,
         equals({
-          'v': {'v': 1},
+          'v': {'v': 1, '__type': 'W'},
           'v2': {'v': 3}
         }),
       );

@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-part 'interface_copy_with.mapper.dart';
+part 'interface_copy_with_test.mapper.dart';
 
 @MappableClass()
 class A with AMappable {

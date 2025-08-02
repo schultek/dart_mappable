@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-import 'class_equality.dart';
+import 'class_equality_test.dart';
 
 typedef G = Generic<String>;
 typedef GN = Generic<String?>;

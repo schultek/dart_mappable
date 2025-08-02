@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
-part 'class_equality.mapper.dart';
+part 'class_equality_test.mapper.dart';
 
 @MappableClass()
 class A with AMappable {
