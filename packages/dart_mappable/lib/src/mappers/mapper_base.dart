@@ -62,7 +62,7 @@ abstract class MapperBase<T extends Object> {
       var includeTypeId = options?.includeTypeId;
       includeTypeId ??= this.includeTypeId<V>(value);
 
-      var result = this.encoder(
+      var result = encoder(
         value as T,
         EncodingContext(
           container: container,

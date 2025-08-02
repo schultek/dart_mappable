@@ -887,7 +887,7 @@ class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
   static ComparableItemListMapper? _instance;
   static ComparableItemListMapper ensureInitialized() {
     if (_instance == null) {
-      MapperBase.addType<Comparable>();
+      MapperBase.addType<Comparable>(<T>(f) => f<Comparable<T>>());
       MapperContainer.globals.use(_instance = ComparableItemListMapper._());
       ItemListMapper.ensureInitialized().addSubMapper(_instance!);
     }

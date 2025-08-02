@@ -208,7 +208,7 @@ abstract class ClassMapperBase<T extends Object>
       _params,
       ignoreNull,
       context,
-      context.options?.shallow ?? this.shallowEncoding,
+      context.options?.shallow ?? shallowEncoding,
     );
     if (_encodedStaticParams != null) {
       return {...result, ..._encodedStaticParams};

@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../elements/class/class_mapper_element.dart';
@@ -38,10 +39,44 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
   }
 
   void generateTypeFactory(StringBuffer output) {
-    output.write('''
+    final impl = '${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();';
+    if (!element.hasRecursiveTypeParams) {
+      output.write('''
       @override
-      Function get typeFactory => ${element.typeParamsDeclaration}(f) => f<${element.prefixedClassName}${element.typeParams}>();
+      Function get typeFactory => $impl
     ''');
+    } else {
+
+      final deepBounds = element.element.typeParameters2
+          .map((p) => p.bound != null ? element.parent.prefixedType(p.bound!) : null)
+          .toList();
+      final flatBounds = element.element.typeParameters2.map((p) {
+        if (p.bound case InterfaceType bound) {
+          return '${p.name3} extends ${element.parent.prefixOfElement(bound.element3)}${bound.element3.name3!}';
+        } else if (p.bound != null) {
+          return '${p.name3} extends ${element.parent.prefixedType(p.bound!)}';
+        } else {
+          return '${p.name3}';
+        }
+      }).toList();
+      
+
+      final flatDeclaration = flatBounds.isNotEmpty
+          ? '<${flatBounds.join(', ')}>'
+          : '';
+
+      final condition = [
+        for (final (i, bound) in deepBounds.indexed)
+        if (bound != null)
+         '<${element.element.typeParameters2[i].name3}>[] is List<$bound>'
+      ].join(' && ');
+
+      output.write('''
+      @override
+      Function get typeFactory => $flatDeclaration(f) => $condition ? _typeFactory${element.typeParams}(f) : f<${element.prefixedClassName}>();
+      final Function _typeFactory = $impl
+    ''');
+    }
   }
 
   List<String> _getSuperHooks(ClassMapperElement element) {

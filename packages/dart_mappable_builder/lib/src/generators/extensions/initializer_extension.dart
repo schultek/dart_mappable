@@ -13,7 +13,14 @@ extension InitializerExtension<T extends TargetClassMapperElement>
     var typesConfigs = element.customTypes;
     if (typesConfigs.isNotEmpty) {
       for (var t in typesConfigs) {
-        output.write('      MapperBase.addType<$t>();\n');
+        var typeName = t.$1;
+        var typeParams = t.$2;
+        if (typeParams.isNotEmpty) {
+          output.write(
+              '      MapperBase.addType<$typeName>(<${typeParams.join(', ')}>(f) => f<$typeName<${typeParams.join(', ')}>>());\n');
+        } else {
+          output.write('      MapperBase.addType<$typeName>();\n');
+        }
       }
     }
 
