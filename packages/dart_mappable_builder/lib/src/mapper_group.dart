@@ -1,8 +1,7 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
-import 'package:dart_mappable/dart_mappable.dart'
-    show GenerateMethods, InitializerScope;
+import 'package:dart_mappable/dart_mappable.dart' show GenerateMethods, InitializerScope;
 import 'package:glob/glob.dart';
 import 'package:path/path.dart';
 
@@ -22,26 +21,20 @@ import 'utils.dart';
 
 class MapperElementGroup {
   MapperElementGroup(this.library, this.options) {
-    var names = <String, Element>{};
-    for (var i in library.definingCompilationUnit.libraryImports) {
-      names.addAll(i.namespace.definedNames);
-    }
-    names.addAll(library.publicNamespace.definedNames);
-
-    for (var name in names.entries) {
-      if (name.key.contains('.')) {
-        prefixes[name.value] = name.key.substring(0, name.key.indexOf('.') + 1);
-      } else {
-        prefixes[name.value] = '';
+    for (var i in library.firstFragment.libraryImports2) {
+      if (i.prefix2?.name2 case String prefix) {
+        for (final e in i.namespace.definedNames2.entries) {
+          prefixes[e.value] = '$prefix.';
+        }
       }
     }
   }
 
-  final LibraryElement library;
+  final LibraryElement2 library;
   final MappableOptions options;
 
-  Map<Element, String> prefixes = {};
-  Map<Element, MapperElement> targets = {};
+  Map<Element2, String> prefixes = {};
+  Map<Element2, MapperElement> targets = {};
   late RecordsGroup records = RecordsGroup(this);
 
   Future<void> analyze() async {
@@ -52,12 +45,11 @@ class MapperElementGroup {
     }
   }
 
-  MapperElement? getMapperForElement(Element? e) {
+  MapperElement? getMapperForElement(Element2? e) {
     return targets[e];
   }
 
-  Future<MapperElement?> getOrAddMapperForElement(Element? e,
-      {bool orNone = false}) async {
+  Future<MapperElement?> getOrAddMapperForElement(Element2? e, {bool orNone = false}) async {
     if (e == null || e.isPrivate) {
       return null;
     }
@@ -65,58 +57,44 @@ class MapperElementGroup {
     if (m != null) {
       return m;
     }
-    if (e is ClassElement) {
+    if (e is ClassElement2) {
       if (classChecker.hasAnnotationOf(e)) {
-        if (e.library == library) {
-          var m = await _addMapper(
-              await TargetClassMapperElement.from(this, e, options));
+        if (e.library2 == library) {
+          var m = await _addMapper(await TargetClassMapperElement.from(this, e, options));
 
-          for (var c in e.constructors) {
-            if (c.isFactory &&
-                c.redirectedConstructor != null &&
-                classChecker.hasAnnotationOf(c)) {
+          for (var c in e.constructors2) {
+            if (c.isFactory && c.redirectedConstructor2 != null && classChecker.hasAnnotationOf(c)) {
               // Disable copy methods for factory elements.
               var subOptions = options.apply(MappableOptions(
-                  generateMethods:
-                      ~(~(options.generateMethods ?? GenerateMethods.all) |
-                          GenerateMethods.copy)));
+                  generateMethods: ~(~(options.generateMethods ?? GenerateMethods.all) | GenerateMethods.copy)));
 
-              await _addMapper(await FactoryConstructorMapperElement.from(
-                  this, c, subOptions));
+              await _addMapper(await FactoryConstructorMapperElement.from(this, c, subOptions));
             }
           }
 
           return m;
         } else {
-          return await _addMapper(
-              await DependentClassMapperElement.from(this, e, options));
+          return await _addMapper(await DependentClassMapperElement.from(this, e, options));
         }
       }
-    } else if (e is EnumElement) {
+    } else if (e is EnumElement2) {
       if (enumChecker.hasAnnotationOf(e)) {
-        if (e.library == library) {
-          return await _addMapper(
-              await TargetEnumMapperElement.from(this, e, options));
+        if (e.library2 == library) {
+          return await _addMapper(await TargetEnumMapperElement.from(this, e, options));
         } else {
-          return await _addMapper(
-              await DependentEnumMapperElement.from(this, e, options));
+          return await _addMapper(await DependentEnumMapperElement.from(this, e, options));
         }
       }
-    } else if (e is TypeAliasElement) {
-      if (classChecker.hasAnnotationOf(e) &&
-          e.aliasedType.element is ClassElement) {
-        if (e.library == library) {
-          return await _addMapper(
-              await AliasClassMapperElement.from(this, e, options));
+    } else if (e is TypeAliasElement2) {
+      if (classChecker.hasAnnotationOf(e) && e.aliasedType.element3 is ClassElement2) {
+        if (e.library2 == library) {
+          return await _addMapper(await AliasClassMapperElement.from(this, e, options));
         }
-      } else if (recordChecker.hasAnnotationOf(e) &&
-          e.aliasedType is RecordType) {
-        if (e.library == library) {
-          return await _addMapper(
-              await TargetRecordMapperElement.from(this, e, options));
+      } else if (recordChecker.hasAnnotationOf(e) && e.aliasedType is RecordType) {
+        if (e.library2 == library) {
+          return await _addMapper(await TargetRecordMapperElement.from(this, e, options));
         } else {
-          return await _addMapper(
-              await DependentRecordMapperElement.from(this, e, options));
+          return await _addMapper(await DependentRecordMapperElement.from(this, e, options));
         }
       }
     }
@@ -129,9 +107,9 @@ class MapperElementGroup {
     if (mapper is ClassMapperElement) {
       var element = mapper;
 
-      ClassElement? getElementFor(InterfaceType? t) {
-        if (t != null && !t.isDartCoreObject && t.element is ClassElement) {
-          return t.element as ClassElement;
+      ClassElement2? getElementFor(InterfaceType? t) {
+        if (t != null && !t.isDartCoreObject && t.element3 is ClassElement2) {
+          return t.element3 as ClassElement2;
         }
         return null;
       }
@@ -139,8 +117,7 @@ class MapperElementGroup {
       if (element.extendsElement == null) {
         var superElement = getElementFor(element.element.supertype);
         if (superElement != null) {
-          var superTarget = await getOrAddMapperForElement(superElement)
-              as ClassMapperElement?;
+          var superTarget = await getOrAddMapperForElement(superElement) as ClassMapperElement?;
 
           if (superTarget != null) {
             element.extendsElement = superTarget;
@@ -154,9 +131,7 @@ class MapperElementGroup {
         for (var interface in element.element.interfaces) {
           var interfaceElement = getElementFor(interface);
           if (interfaceElement != null) {
-            var interfaceTarget =
-                await getOrAddMapperForElement(interfaceElement)
-                    as ClassMapperElement?;
+            var interfaceTarget = await getOrAddMapperForElement(interfaceElement) as ClassMapperElement?;
             if (interfaceTarget != null) {
               element.interfaceElements.add(interfaceTarget);
               if (!interfaceTarget.subElements.contains(element)) {
@@ -168,19 +143,16 @@ class MapperElementGroup {
       }
 
       for (var elem in element.getSubClasses()) {
-        ClassMapperElement? subMapper =
-            await getOrAddMapperForElement(elem) as ClassMapperElement?;
+        ClassMapperElement? subMapper = await getOrAddMapperForElement(elem) as ClassMapperElement?;
 
         if (subMapper == null) {
-          throw 'Cannot include subclass ${elem.getDisplayString()}, '
+          throw 'Cannot include subclass ${elem.displayName} '
               'since it has no generated mapper.';
         }
 
-        if (subMapper.element.supertype?.element == element.element) {
+        if (subMapper.element.supertype?.element3 == element.element) {
           subMapper.extendsElement = element;
-        } else if (subMapper.element.interfaces
-            .map((i) => i.element)
-            .contains(element.element)) {
+        } else if (subMapper.element.interfaces.map((i) => i.element3).contains(element.element)) {
           if (!subMapper.interfaceElements.contains(element)) {
             subMapper.interfaceElements.add(element);
           }
@@ -193,7 +165,7 @@ class MapperElementGroup {
       }
 
       Future<void> checkType(DartType t) async {
-        var e = t.element;
+        var e = t.element3;
         await getOrAddMapperForElement(e);
         if (t is ParameterizedType) {
           for (var arg in t.typeArguments) {
@@ -202,7 +174,7 @@ class MapperElementGroup {
         }
         if (t is RecordType) {
           if (t.alias case var alias?) {
-            var m = await getOrAddMapperForElement(alias.element);
+            var m = await getOrAddMapperForElement(alias.element2);
             if (m != null) {
               for (var arg in alias.typeArguments) {
                 await checkType(arg);
@@ -221,9 +193,9 @@ class MapperElementGroup {
         await checkType(param.parameter.type);
       }
 
-      for (var param in element.element.typeParameters) {
+      for (var param in element.element.typeParameters2) {
         if (param.bound != null) {
-          await getOrAddMapperForElement(param.bound!.element);
+          await getOrAddMapperForElement(param.bound!.element3);
         }
       }
     }
@@ -231,26 +203,30 @@ class MapperElementGroup {
     return mapper;
   }
 
-  String prefixOfElement(Element elem) {
+  String prefixOfElement(Element2 elem) {
     return prefixes[elem] ?? '';
   }
 
   String prefixedType(DartType t,
       {bool withNullability = true,
       bool resolveBounds = false,
-      bool resolveBoundsDeep = true}) {
+      bool resolveBoundsDeep = true,
+      Set<TypeParameterType> visited = const {}}) {
     if (t is TypeParameterType) {
-      var type = t.element.name;
-      if (resolveBounds) {
-        type = prefixedType(t.bound,
-            withNullability: withNullability,
-            resolveBounds: resolveBounds,
-            resolveBoundsDeep: resolveBoundsDeep);
+      if (visited.contains(t)) {
+        return 'Object?';
       }
-      if (withNullability &&
-          t.isNullable &&
-          !type.endsWith('?') &&
-          type != 'dynamic') {
+      var type = t.element3.name3 ?? '';
+      if (resolveBounds) {
+        type = prefixedType(
+          t.bound,
+          withNullability: withNullability,
+          resolveBounds: resolveBounds,
+          resolveBoundsDeep: resolveBoundsDeep,
+          visited: {...visited, t},
+        );
+      }
+      if (withNullability && t.isNullable && !type.endsWith('?') && type != 'dynamic') {
         type += '?';
       }
       return type;
@@ -262,32 +238,32 @@ class MapperElementGroup {
       var typeArgs = '';
       if (t.typeArguments.isNotEmpty) {
         typeArgs =
-            '<${t.typeArguments.map((t) => prefixedType(t, resolveBounds: resolveBounds)).join(', ')}>';
+            '<${t.typeArguments.map((t) => prefixedType(t, resolveBounds: resolveBounds, visited: visited)).join(', ')}>';
       }
 
-      var type = '${t.element.name}$typeArgs';
+      var type = '${t.element3.name3 ?? ''}$typeArgs';
 
       if (withNullability && t.isNullable) {
         type += '?';
       }
 
-      return '${prefixOfElement(t.element)}$type';
+      return '${prefixOfElement(t.element3)}$type';
     }
 
     if (t is RecordType) {
       if (t.alias case var alias?) {
-        var type = alias.element.name;
+        var type = alias.element2.name3 ?? '';
 
         if (alias.typeArguments.isNotEmpty) {
           type +=
-              '<${alias.typeArguments.map((t) => prefixedType(t, resolveBounds: resolveBounds)).join(', ')}>';
+              '<${alias.typeArguments.map((t) => prefixedType(t, resolveBounds: resolveBounds, visited: visited)).join(', ')}>';
         }
 
         if (withNullability && t.isNullable) {
           type += '?';
         }
 
-        return '${prefixOfElement(alias.element)}$type';
+        return '${prefixOfElement(alias.element2)}$type';
       }
       var type = '';
       var r = records.get(t);
@@ -295,12 +271,12 @@ class MapperElementGroup {
       if (r != null) {
         type = '${r.className}<';
         type += [...t.positionalFields, ...t.namedFields]
-            .map((f) => prefixedType(f.type, resolveBounds: resolveBounds))
+            .map((f) => prefixedType(f.type, resolveBounds: resolveBounds, visited: visited))
             .join(', ');
         type += '>';
       } else {
         type = t.positionalFields
-            .map((f) => prefixedType(f.type, resolveBounds: resolveBounds))
+            .map((f) => prefixedType(f.type, resolveBounds: resolveBounds, visited: visited))
             .join(', ');
 
         if (t.namedFields.isNotEmpty) {
@@ -308,7 +284,7 @@ class MapperElementGroup {
             type += ', ';
           }
           type +=
-              '{${t.namedFields.map((f) => '${prefixedType(f.type, resolveBounds: resolveBounds)} ${f.name}').join(', ')}}';
+              '{${t.namedFields.map((f) => '${prefixedType(f.type, resolveBounds: resolveBounds, visited: visited)} ${f.name}').join(', ')}}';
         }
 
         type = '($type)';
@@ -322,26 +298,25 @@ class MapperElementGroup {
     }
 
     if (t is FunctionType) {
-      var returnType = prefixedType(t.returnType, resolveBounds: resolveBounds);
+      var returnType = prefixedType(t.returnType, resolveBounds: resolveBounds, visited: visited);
 
       var typeArgs = '';
-      if (t.typeFormals.isNotEmpty) {
+      if (t.typeParameters.isNotEmpty) {
         typeArgs =
-            '<${t.typeFormals.map((t) => t.name + (t.bound != null ? ' extends ${prefixedType(t.bound!, resolveBounds: resolveBounds)}' : '')).join(', ')}>';
+            '<${t.typeParameters.map((t) => (t.name3 ?? '') + (t.bound != null ? ' extends ${prefixedType(t.bound!, resolveBounds: resolveBounds, visited: visited)}' : '')).join(', ')}>';
       }
 
-      var args = t.normalParameterTypes
-          .map((t) => prefixedType(t, resolveBounds: resolveBounds))
-          .join(', ');
+      var args =
+          t.normalParameterTypes.map((t) => prefixedType(t, resolveBounds: resolveBounds, visited: visited)).join(', ');
       if (t.optionalParameterTypes.isNotEmpty) {
         if (args.isNotEmpty) args += ', ';
         args +=
-            '[${t.optionalParameterTypes.map((t) => prefixedType(t, resolveBounds: resolveBounds)).join(', ')}]';
+            '[${t.optionalParameterTypes.map((t) => prefixedType(t, resolveBounds: resolveBounds, visited: visited)).join(', ')}]';
       }
       if (t.namedParameterTypes.isNotEmpty) {
         if (args.isNotEmpty) args += ', ';
         args +=
-            '{${t.namedParameterTypes.entries.map((e) => '${e.key}: ${prefixedType(e.value, resolveBounds: resolveBounds)}').join(', ')}}';
+            '{${t.namedParameterTypes.entries.map((e) => '${e.key}: ${prefixedType(e.value, resolveBounds: resolveBounds, visited: visited)}').join(', ')}}';
       }
 
       var type = '$returnType Function$typeArgs($args)';
@@ -356,28 +331,23 @@ class MapperElementGroup {
   }
 
   /// All of the declared classes and enums in this library.
-  Iterable<Element> elementsOf(LibraryElement element) sync* {
-    for (var cu in element.units) {
-      yield* cu.enums;
-      yield* cu.classes;
-      yield* cu.typeAliases;
-    }
+  Iterable<Element2> elementsOf(LibraryElement2 element) sync* {
+    yield* element.enums;
+    yield* element.classes;
+    yield* element.typeAliases;
   }
 
-  Future<List<MapEntry<LibraryElement, Iterable<Element>>>> discover(
-      BuildStep buildStep) async {
+  Future<List<MapEntry<LibraryElement2, Iterable<Element2>>>> discover(BuildStep buildStep) async {
     var scope = options.initializerScope;
 
-    bool isMapper(Element e) {
-      return (e is ClassElement && classChecker.hasAnnotationOf(e)) ||
-          (e is EnumElement && enumChecker.hasAnnotationOf(e));
+    bool isMapper(Element2 e) {
+      return (e is ClassElement2 && classChecker.hasAnnotationOf(e)) ||
+          (e is EnumElement2 && enumChecker.hasAnnotationOf(e));
     }
 
-    if (scope == InitializerScope.package ||
-        scope == InitializerScope.directory) {
-      var glob = scope == InitializerScope.package
-          ? Glob('**.dart')
-          : Glob('${dirname(buildStep.inputId.path)}/**.dart');
+    if (scope == InitializerScope.package || scope == InitializerScope.directory) {
+      var glob =
+          scope == InitializerScope.package ? Glob('**.dart') : Glob('${dirname(buildStep.inputId.path)}/**.dart');
       return await buildStep
           .findAssets(glob)
           .asyncMap((id) async {
@@ -387,13 +357,15 @@ class MapperElementGroup {
             return null;
           })
           .where((l) => l != null)
-          .map((lib) => MapEntry(lib!, lib.topLevelElements.where(isMapper)))
+          .map((lib) => MapEntry(lib!, [...lib.classes, ...lib.enums].where(isMapper)))
           .where((e) => e.value.isNotEmpty)
           .toList();
     } else if (scope == InitializerScope.library) {
       var lib = await buildStep.inputLibrary;
 
-      return [MapEntry(lib, lib.topLevelElements.where(isMapper))];
+      return [
+        MapEntry(lib, [...lib.classes, ...lib.enums].where(isMapper))
+      ];
     }
 
     return [];

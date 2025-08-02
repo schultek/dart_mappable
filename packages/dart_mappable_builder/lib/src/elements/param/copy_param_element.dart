@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
@@ -19,9 +19,9 @@ class CopyParamElement {
         continue;
       }
 
-      ClassMapperElement? resolveElement(Element? e) {
-        if (e is TypeParameterElement && e.bound != null) {
-          return resolveElement(e.bound!.element);
+      ClassMapperElement? resolveElement(Element2? e) {
+        if (e is TypeParameterElement2 && e.bound != null) {
+          return resolveElement(e.bound!.element3);
         }
 
         var classTarget = element.parent.getMapperForElement(e);
@@ -41,10 +41,10 @@ class CopyParamElement {
       CopyParamElement makeCollectionConfig(int valueIndex, String name) {
         var it = param.parameter.type as InterfaceType;
         var itemType = it.typeArguments[valueIndex];
-        var itemElement = itemType.element;
+        var itemElement = itemType.element3;
 
-        if (itemElement is TypeParameterElement) {
-          itemElement = itemElement.bound?.element;
+        if (itemElement is TypeParameterElement2) {
+          itemElement = itemElement.bound?.element3;
         }
 
         var itemConfig = resolveElement(itemElement);
@@ -70,7 +70,7 @@ class CopyParamElement {
       } else if (param.parameter.type.isDartCoreMap) {
         yield makeCollectionConfig(1, 'Map');
       } else {
-        var classElement = param.parameter.type.element;
+        var classElement = param.parameter.type.element3;
         var classConfig = resolveElement(classElement);
 
         if (classConfig != null) {
@@ -103,8 +103,8 @@ class CopyParamElement {
   final bool hasSubConfigs;
   final bool hasSuperElement;
 
-  late ParameterElement p = param.parameter;
-  late PropertyInducingElement a = param.accessor!;
+  late FormalParameterElement p = param.parameter;
+  late PropertyInducingElement2 a = param.accessor!;
 
   String fieldTypeParamsFor(DartType t) {
     if (t case InterfaceType t) {
@@ -130,7 +130,7 @@ class CopyParamElement {
       : '';
 
   String get invocation {
-    var inv = '\$value.${a.name}';
+    var inv = '\$value.${a.name3 ?? ''}';
     var nullMod = a.type.isNullable ? '?' : '';
     if (p.type != a.type) {
       inv =
@@ -195,9 +195,9 @@ class CollectionCopyParamElement extends CopyParamElement {
     }
 
     var result =
-        '${name}CopyWith(\$value.${a.name}${a.type.isNullable ? '!' : ''}, $itemInvocation, $invocationThen)';
+        '${name}CopyWith(\$value.${a.name3 ?? ''}${a.type.isNullable ? '!' : ''}, $itemInvocation, $invocationThen)';
     if (a.type.isNullable) {
-      result = '\$value.${a.name} != null ? $result : null';
+      result = '\$value.${a.name3 ?? ''} != null ? $result : null';
     }
     return result;
   }

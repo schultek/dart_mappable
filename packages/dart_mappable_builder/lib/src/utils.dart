@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
@@ -21,14 +21,13 @@ const recordChecker = TypeChecker.fromRuntime(MappableRecord);
 
 late Resolver nodeResolver;
 
-extension GetNode on Element {
+extension GetNode on Element2 {
   Future<AstNode?> getNode() {
-    return nodeResolver.astNodeFor(this, resolve: false);
-    //.catchError((_) => null);
+    return nodeResolver.astNodeFor(firstFragment, resolve: false);
   }
 
   Future<AstNode?> getResolvedNode() async {
-    return nodeResolver.astNodeFor(this, resolve: true).catchError((_) => null);
+    return nodeResolver.astNodeFor(firstFragment, resolve: true).catchError((_) => null);
   }
 }
 
@@ -67,19 +66,19 @@ Future<ArgumentList?> getAnnotationArguments(
   if (arguments != null) {
     return arguments;
   } else {
-    return getArgumentsFromElement(annotation?.element);
+    return getArgumentsFromElement(annotation?.element2);
   }
 }
 
-Future<ArgumentList?> getArgumentsFromElement(Element? element) async {
-  if (element case PropertyAccessorElement elem) {
-    var node = await elem.variable2!.getResolvedNode();
+Future<ArgumentList?> getArgumentsFromElement(Element2? element) async {
+  if (element case PropertyAccessorElement2 elem) {
+    var node = await elem.variable3!.getResolvedNode();
     if (node is VariableDeclaration) {
       var exp = node.initializer;
       if (exp is InstanceCreationExpression) {
         return exp.argumentList;
       } else if (exp is SimpleIdentifier) {
-        return getArgumentsFromElement(exp.staticElement);
+        return getArgumentsFromElement(exp.element);
       }
     }
   }
@@ -109,13 +108,13 @@ Future<AstNode?> getAnnotationProperty(
 }
 
 Future<AstNode?> getAnnotationNode(
-    Element annotatedElement, Type annotationType, dynamic property) async {
+    Element2 annotatedElement, Type annotationType, dynamic property) async {
   var node = await annotatedElement.getNode();
   return getAnnotationProperty(node, annotationType, property);
 }
 
 Future<AstNode?> getResolvedAnnotationNode(
-    Element annotatedElement, Type annotationType, dynamic property) async {
+    Element2 annotatedElement, Type annotationType, dynamic property) async {
   var node = await annotatedElement.getResolvedNode();
   return getAnnotationProperty(node, annotationType, property);
 }
@@ -151,10 +150,10 @@ List<T>? toList<T>(dynamic value) {
   }
 }
 
-DartObject? fieldAnnotation(ParameterElement param) {
+DartObject? fieldAnnotation(FormalParameterElement param) {
   return fieldChecker.firstAnnotationOf(param) ??
-      (param is FieldFormalParameterElement && param.field != null
-          ? fieldChecker.firstAnnotationOf(param.field!)
+      (param is FieldFormalParameterElement2 && param.field2 != null
+          ? fieldChecker.firstAnnotationOf(param.field2!)
           : null);
 }
 

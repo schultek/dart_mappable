@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -18,12 +18,12 @@ class MapperAnnotation {
         value = null;
   const MapperAnnotation(this.element, this.node, this.arguments, this.value);
 
-  final Element element;
+  final Element2 element;
   final AstNode? node;
   final ArgumentList? arguments;
   final DartObject? value;
 
-  static Future<MapperAnnotation> from<T>(Element element) async {
+  static Future<MapperAnnotation> from<T>(Element2 element) async {
     var node = await element.getResolvedNode();
     var arguments = await getAnnotationArguments(node, T);
     var value = TypeChecker.fromRuntime(T).firstAnnotationOf(element);
@@ -35,7 +35,7 @@ class MapperAnnotation {
   }
 }
 
-abstract class MapperElement<T extends Element> {
+abstract class MapperElement<T extends Element2> {
   MapperElementGroup parent;
   T element;
   MappableOptions options;
@@ -51,7 +51,7 @@ abstract class MapperElement<T extends Element> {
   late String mapperName = '${uniqueClassName}Mapper';
 }
 
-abstract class InterfaceMapperElement<T extends Element>
+abstract class InterfaceMapperElement<T extends Element2>
     extends MapperElement<T> {
   InterfaceMapperElement(
       super.parent, super.element, super.options, super.annotation);

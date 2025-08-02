@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
@@ -14,7 +14,7 @@ class TargetEnumMapperElement extends EnumMapperElement {
       super.annotation, this.valueNodes);
 
   static Future<TargetEnumMapperElement> from(MapperElementGroup parent,
-      EnumElement element, MappableOptions options) async {
+      EnumElement2 element, MappableOptions options) async {
     var annotation = await MapperAnnotation.from<MappableEnum>(element);
     var valueNodes = await _getValues(element);
 
@@ -22,7 +22,7 @@ class TargetEnumMapperElement extends EnumMapperElement {
         parent, element, options, annotation, valueNodes);
   }
 
-  final List<(FieldElement, AstNode?)> valueNodes;
+  final List<(FieldElement2, AstNode?)> valueNodes;
 
   late final String paramName = className[0].toLowerCase();
 
@@ -38,15 +38,15 @@ class TargetEnumMapperElement extends EnumMapperElement {
   late final int? defaultValue =
       annotation.value?.read('defaultValue')!.read('index')?.toIntValue();
 
-  late final List<FieldElement> fields =
-      element.fields.where((f) => f.isEnumConstant).toList();
+  late final List<FieldElement2> fields =
+      element.fields2.where((f) => f.isEnumConstant).toList();
 
   late final bool hasAllStringValues = mode == ValuesMode.named &&
       fields.every((f) => !enumValueChecker.hasAnnotationOf(f));
 
   late final List<({String name, dynamic value})> values =
       valueNodes.mapIndexed((i, v) {
-    var name = v.$1.name;
+    var name = v.$1.name3 ?? '';
     if (v.$2 != null) {
       return (name: name, value: v.$2!.toSource());
     } else if (mode == ValuesMode.named) {
@@ -56,9 +56,9 @@ class TargetEnumMapperElement extends EnumMapperElement {
     }
   }).toList();
 
-  static Future<List<(FieldElement, AstNode?)>> _getValues(
-      EnumElement element) async {
-    var fields = element.fields.where((f) => f.isEnumConstant).toList();
+  static Future<List<(FieldElement2, AstNode?)>> _getValues(
+      EnumElement2 element) async {
+    var fields = element.fields2.where((f) => f.isEnumConstant).toList();
     return Future.wait(fields.mapIndexed((i, f) async {
       if (enumValueChecker.hasAnnotationOf(f)) {
         var node = await getResolvedAnnotationNode(f, MappableValue, 0);

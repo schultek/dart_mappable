@@ -10,7 +10,7 @@ extension RecordCopyWithMixin on MapperGenerator<RecordMapperElement> {
   String get classTypeParamsDef =>
       element.typeParamsList.map((p) => ', $p').join();
   String get classTypeParams =>
-      element.element.typeParameters.map((p) => ', ${p.name}').join();
+      element.element.typeParameters2.map((p) => ', ${p.name3 ?? ''}').join();
 
   String get selfTypeParam => element.selfTypeParam;
 

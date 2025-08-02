@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../../utils.dart';
@@ -8,12 +8,12 @@ import 'mapper_param_element.dart';
 
 abstract class ClassMapperParamElement extends MapperParamElement {
   @override
-  final ParameterElement parameter;
+  final FormalParameterElement parameter;
 
   ClassMapperParamElement(this.parameter);
 
   @override
-  String get name => parameter.name;
+  String get name => parameter.name3 ?? '';
 
   @override
   DartType get type => parameter.type;
@@ -31,15 +31,15 @@ abstract class ClassMapperParamElement extends MapperParamElement {
 }
 
 class FieldParamElement extends ClassMapperParamElement {
-  final PropertyInducingElement field;
-  final PropertyInducingElement? superField;
+  final PropertyInducingElement2 field;
+  final PropertyInducingElement2? superField;
 
   FieldParamElement(super.parameter, this.field, [this.superField]);
 
   @override
   bool get isCovariant =>
       superField != null &&
-      !parameter.library!.typeSystem
+      !parameter.library2!.typeSystem
           .isAssignableTo(superField!.type, field.type);
 
   @override
@@ -48,7 +48,7 @@ class FieldParamElement extends ClassMapperParamElement {
   }
 
   @override
-  PropertyInducingElement get accessor => field;
+  PropertyInducingElement2 get accessor => field;
 
   @override
   DartObject? get annotation =>
@@ -65,13 +65,13 @@ class SuperParamElement extends ClassMapperParamElement {
 
   @override
   bool get isCovariant {
-    var isCov = !parameter.library!.typeSystem
+    var isCov = !parameter.library2!.typeSystem
         .isAssignableTo(superParameter.parameter.type, parameter.type);
     return isCov || superParameter.isCovariant;
   }
 
   @override
-  PropertyInducingElement? get accessor => superParameter.accessor;
+  PropertyInducingElement2? get accessor => superParameter.accessor;
 
   @override
   String? get key => super.key ?? superParameter.key;
@@ -112,5 +112,5 @@ class UnresolvedParamElement extends ClassMapperParamElement {
   UnresolvedParamElement(super.parameter, this.message);
 
   @override
-  PropertyInducingElement? get accessor => null;
+  PropertyInducingElement2? get accessor => null;
 }

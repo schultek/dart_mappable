@@ -54,8 +54,7 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
   }
 
   Future<void> generateDiscriminatorFields(StringBuffer output) async {
-    var prefix = element.parent
-        .prefixOfElement(element.superElement!.annotation.element);
+    var prefix = element.parent.prefixOfElement(element.superElement!.annotation.element);
 
     output.write('''
     
@@ -90,7 +89,7 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
         return "throw MapperException.missingConstructor('${element.className}');";
       }
     } else {
-      return 'return ${element.prefixedDecodingClassName}${element.constructor.element!.name != '' ? '.${element.constructor.element!.name}' : ''}(${await _generateConstructorParams()});';
+      return 'return ${element.prefixedDecodingClassName}${element.constructor.element!.name3 != 'new' ? '.${element.constructor.element!.name3}' : ''}(${await _generateConstructorParams()});';
     }
   }
 
@@ -100,9 +99,9 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
       var str = '';
 
       if (param.parameter.isNamed) {
-        str = '${param.parameter.name}: ';
+        str = '${param.parameter.name3 ?? ''}: ';
       }
-      str += 'data.dec(_f\$${param.accessor?.name ?? param.parameter.name})';
+      str += 'data.dec(_f\$${param.accessor?.name3 ?? param.parameter.name3})';
 
       params.add(str);
     }

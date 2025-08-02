@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:source_gen/source_gen.dart';
@@ -17,12 +17,12 @@ class RecordMapperAnnotation extends MapperAnnotation {
   @override
   RecordTypeAnnotation get node => super.node as RecordTypeAnnotation;
 
-  static Future<RecordMapperAnnotation> from(TypeAliasElement element) async {
-    var n = await element.enclosingElement3.getResolvedNode();
+  static Future<RecordMapperAnnotation> from(TypeAliasElement2 element) async {
+    var n = await element.enclosingElement2.getResolvedNode();
     var node = (n as CompilationUnit)
         .declarations
         .whereType<GenericTypeAlias>()
-        .where((d) => d.name.lexeme == element.name)
+        .where((d) => d.name.lexeme == element.name3)
         .first;
 
     var arguments = await getAnnotationArguments(node, MappableRecord);
@@ -34,12 +34,12 @@ class RecordMapperAnnotation extends MapperAnnotation {
 }
 
 abstract class AliasRecordMapperElement
-    extends RecordMapperElement<TypeAliasElement> {
+    extends RecordMapperElement<TypeAliasElement2> {
   AliasRecordMapperElement(super.parent, super.element, super.options,
       RecordMapperAnnotation super.annotation);
 
   @override
-  late final String className = element.name;
+  late final String className = element.name3 ?? '';
 
   @override
   RecordMapperAnnotation get annotation =>
@@ -68,14 +68,14 @@ abstract class AliasRecordMapperElement
     return fields;
   }();
 
-  late List<String> typeParamsList = element.typeParameters
+  late List<String> typeParamsList = element.typeParameters2
       .map((p) =>
           '${p.displayName}${p.bound != null ? ' extends ${parent.prefixedType(p.bound!)}' : ''}')
       .toList();
 
   @override
-  late String typeParams = element.typeParameters.isNotEmpty
-      ? '<${element.typeParameters.map((p) => p.name).join(', ')}>'
+  late String typeParams = element.typeParameters2.isNotEmpty
+      ? '<${element.typeParameters2.map((p) => p.name3 ?? '').join(', ')}>'
       : '';
 
   @override

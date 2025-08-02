@@ -127,13 +127,13 @@ class MappableBuilder implements Builder {
       return;
     }
 
-    discovered.sortBy((e) => e.key.source.uri.toString());
+    discovered.sortBy((e) => e.key.firstFragment.source.uri.toString());
 
     final outputId = buildStep.allowedOutputs.last;
 
     output.write(writeImports(
       buildStep.inputId,
-      discovered.map((e) => e.key.source.uri).toList(),
+      discovered.map((e) => e.key.firstFragment.source.uri).toList(),
       p.dirname(outputId.uri.path),
     ));
 
@@ -141,7 +141,7 @@ class MappableBuilder implements Builder {
 
     for (var i = 0; i < discovered.length; i++) {
       for (var e in discovered[i].value) {
-        output.write('  p$i.${e.name}Mapper.ensureInitialized();\n');
+        output.write('  p$i.${e.name3}Mapper.ensureInitialized();\n');
       }
     }
 

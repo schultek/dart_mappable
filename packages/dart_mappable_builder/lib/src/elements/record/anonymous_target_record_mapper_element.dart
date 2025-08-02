@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_provider.dart';
@@ -9,7 +9,7 @@ import '../mapper_element.dart';
 import '../param/record_mapper_param_element.dart';
 import 'record_mapper_element.dart';
 
-class AnonymousRecordMapperElement extends RecordMapperElement<Element> {
+class AnonymousRecordMapperElement extends RecordMapperElement<Element2> {
   final String id;
   @override
   final RecordType type;

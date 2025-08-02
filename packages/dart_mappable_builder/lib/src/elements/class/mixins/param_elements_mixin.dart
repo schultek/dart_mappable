@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:collection/collection.dart';
 
 import '../../constructor/constructor_mapper_element.dart';
@@ -8,7 +8,7 @@ import '../../mapper_element.dart';
 import '../../param/class_mapper_param_element.dart';
 import '../class_mapper_element.dart';
 
-mixin ParamElementsMixin on MapperElement<ClassElement> {
+mixin ParamElementsMixin on MapperElement<ClassElement2> {
   ConstructorMapperElement get constructor;
   ClassMapperElement? get extendsElement;
   List<ClassMapperElement> get interfaceElements;
@@ -20,7 +20,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
       return params;
     }
 
-    for (var param in constructor.element!.parameters) {
+    for (var param in constructor.element!.formalParameters) {
       params.add(getParameterConfig(param));
     }
 
@@ -31,7 +31,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
           'break your code, but may lead to unexpected behaviour when '
           'serializing this class. Also \'.copyWith()\' won\'t work on these '
           'parameters.\n\nThe following problematic parameters were detected:\n'
-          '${unresolved.map((p) => '- ${p.parameter.name}: ${p.message}').join('\n')}\n\n'
+          '${unresolved.map((p) => '- ${p.parameter.name3}: ${p.message}').join('\n')}\n\n'
           'Please make sure every constructor parameter can be resolved to a '
           'field or getter.\nIf you think this is a bug with dart_mappable '
           'and the listed parameters should be resolved correctly, please file '
@@ -41,22 +41,22 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
     return params;
   }();
 
-  ClassMapperParamElement getParameterConfig(ParameterElement param) {
-    var dec = param.declaration;
+  ClassMapperParamElement getParameterConfig(FormalParameterElement param) {
+    var dec = param.baseElement;
 
-    if (dec is FieldFormalParameterElement) {
-      return FieldParamElement(param, dec.field!, getSuperField(dec.field!));
+    if (dec is FieldFormalParameterElement2) {
+      return FieldParamElement(param, dec.field2!, getSuperField(dec.field2!));
     }
 
-    if (dec is SuperFormalParameterElement && superElement != null) {
-      if (dec.superConstructorParameter == null) {
+    if (dec is SuperFormalParameterElement2 && superElement != null) {
+      if (dec.superConstructorParameter2 == null) {
         return UnresolvedParamElement(
           param,
           'Cannot resolve formal super parameter',
         );
       }
       var superConfig =
-          superElement!.getParameterConfig(dec.superConstructorParameter!);
+          superElement!.getParameterConfig(dec.superConstructorParameter2!);
       if (superConfig is UnresolvedParamElement) {
         return UnresolvedParamElement(
           param,
@@ -67,7 +67,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
       }
     }
 
-    ParameterElement? superParameter = _findSuperParameter(param);
+    FormalParameterElement? superParameter = _findSuperParameter(param);
     if (superParameter != null) {
       var superConfig = superElement!.getParameterConfig(superParameter);
       if (superConfig is UnresolvedParamElement) {
@@ -85,14 +85,14 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
       return init;
     }
 
-    var getter = element.thisType.lookUpGetter2(param.name, parent.library);
+    var getter = element.thisType.lookUpGetter3(param.name3 ?? '', parent.library);
     if (getter != null) {
       var getterType = getter.type.returnType;
 
       var s = parent.library.typeSystem;
       if (s.isAssignableTo(getterType, dec.type)) {
         return FieldParamElement(
-            param, getter.variable2!, getSuperField(getter.variable2!));
+            param, getter.variable3!, getSuperField(getter.variable3!));
       }
 
       return UnresolvedParamElement(
@@ -108,7 +108,7 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
     );
   }
 
-  ClassMapperParamElement? _analyzeInitializers(ParameterElement param) {
+  ClassMapperParamElement? _analyzeInitializers(FormalParameterElement param) {
     var node = constructor.node;
     if (node is! ConstructorDeclaration || node.initializers.isEmpty) {
       return null;
@@ -118,8 +118,8 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
       if (initializer is ConstructorFieldInitializer) {
         var p = initializer.expression.accept(InitializerExpressionVisitor());
         if (p == param) {
-          var f = initializer.fieldName.staticElement;
-          if (f is PropertyInducingElement) {
+          var f = initializer.fieldName.element;
+          if (f is PropertyInducingElement2) {
             return FieldParamElement(param, f, getSuperField(f));
           }
         }
@@ -129,31 +129,31 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
     return null;
   }
 
-  ParameterElement? _findSuperParameter(ParameterElement param) {
+  FormalParameterElement? _findSuperParameter(FormalParameterElement param) {
     if (superElement == null) return null;
 
     var node = constructor.node;
     if (node is ConstructorDeclaration && node.initializers.isNotEmpty) {
       var last = node.initializers.last;
       if (last is SuperConstructorInvocation) {
-        var superConstructorName = last.constructorName?.name ?? '';
-        var superConstructor = superElement!.element.constructors
-            .firstWhere((c) => c.name == superConstructorName);
+        var superConstructorName = last.constructorName?.name ?? 'new';
+        var superConstructor = superElement!.element.constructors2
+            .firstWhere((c) => c.name3 == superConstructorName);
 
         var args = last.argumentList.arguments;
         var i = 0;
         for (var arg in args) {
           if (arg is SimpleIdentifier) {
-            if (arg.name == param.name) {
-              return superConstructor.parameters[i];
+            if (arg.name == param.name3) {
+              return superConstructor.formalParameters[i];
             }
           } else if (arg is NamedExpression) {
             var exp = arg.expression;
             if (exp is SimpleIdentifier) {
-              if (exp.name == param.name) {
+              if (exp.name == param.name3) {
                 var superName = arg.name.label.name;
-                return superConstructor.parameters
-                    .firstWhere((p) => p.isNamed && p.name == superName);
+                return superConstructor.formalParameters
+                    .firstWhere((p) => p.isNamed && p.name3 == superName);
               }
             }
           }
@@ -164,43 +164,43 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
     return null;
   }
 
-  PropertyInducingElement? getSuperField(PropertyInducingElement field) {
+  PropertyInducingElement2? getSuperField(PropertyInducingElement2 field) {
     return [if (extendsElement != null) extendsElement!, ...interfaceElements]
         .expand((e) => e.fields)
-        .where((f) => f.field?.name == field.name)
+        .where((f) => f.field?.name3 == field.name3)
         .map((f) => f.field)
         .firstOrNull;
   }
 }
 
-class InitializerExpressionVisitor extends SimpleAstVisitor<Element> {
+class InitializerExpressionVisitor extends SimpleAstVisitor<Element2> {
   @override
-  Element? visitSimpleIdentifier(SimpleIdentifier node) {
-    return node.staticElement;
-  }
-
-  @override
-  Element? visitAssignedVariablePattern(AssignedVariablePattern node) {
+  Element2? visitSimpleIdentifier(SimpleIdentifier node) {
     return node.element;
   }
 
   @override
-  Element? visitParenthesizedExpression(ParenthesizedExpression node) {
+  Element2? visitAssignedVariablePattern(AssignedVariablePattern node) {
+    return node.element2;
+  }
+
+  @override
+  Element2? visitParenthesizedExpression(ParenthesizedExpression node) {
     return node.expression.accept(this);
   }
 
   @override
-  Element? visitNullAssertPattern(NullAssertPattern node) {
+  Element2? visitNullAssertPattern(NullAssertPattern node) {
     return node.pattern.accept(this);
   }
 
   @override
-  Element? visitNullCheckPattern(NullCheckPattern node) {
+  Element2? visitNullCheckPattern(NullCheckPattern node) {
     return node.pattern.accept(this);
   }
 
   @override
-  Element? visitBinaryExpression(BinaryExpression node) {
+  Element2? visitBinaryExpression(BinaryExpression node) {
     if (node.operator.lexeme == '??') {
       var left = node.leftOperand.accept(this);
       var right = node.rightOperand.accept(this);

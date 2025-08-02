@@ -11,7 +11,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
   late String classTypeParamsDef =
       element.typeParamsList.map((p) => ', $p').join();
   late String classTypeParams =
-      element.element.typeParameters.map((p) => ', ${p.name}').join();
+      element.element.typeParameters2.map((p) => ', ${p.name3}').join();
 
   late bool hasExtendsTarget = element.extendsElement != null &&
       element.extendsElement!.shouldGenerate(GenerateMethods.copy);
@@ -81,7 +81,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
     for (var interface in element.interfaceElements) {
       if (interface.shouldGenerate(GenerateMethods.copy)) {
         var interfaceTypeParams = element.element.interfaces
-            .firstWhere((t) => t.element == interface.element)
+            .firstWhere((t) => t.element3 == interface.element)
             .typeArguments
             .map((a) => ', ${element.parent.prefixedType(a)}')
             .join();
@@ -105,7 +105,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
     for (var param in copyParams) {
       var isOverridden = hasSuperTarget && param.param is SuperParamElement;
       output.write(
-          '  ${isOverridden ? '@override ' : ''}${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name};\n');
+          '  ${isOverridden ? '@override ' : ''}${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name3 ?? ''};\n');
     }
 
     output.write(
@@ -129,7 +129,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
 
       for (var param in copyParams) {
         output.write(
-            '  @override ${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name} => ');
+            '  @override ${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name3 ?? ''} => ');
         output.write('${param.invocation};\n');
       }
 
@@ -137,7 +137,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
           '  @override \$R call(${_generateCopyWithParams(implVersion: true)}) => \$apply(FieldCopyWithData({${_generateCopyWithFields()}}));\n');
 
       output.write(
-          '  @override $selfTypeParam \$make(CopyWithData data) => ${element.prefixedDecodingClassName}${element.constructor.element!.name != '' ? '.${element.constructor.element!.name}' : ''}(${_generateCopyWithConstructorParams()});\n');
+          '  @override $selfTypeParam \$make(CopyWithData data) => ${element.prefixedDecodingClassName}${element.constructor.element!.name3 != 'new' ? '.${element.constructor.element!.name3}' : ''}(${_generateCopyWithConstructorParams()});\n');
 
       output.write('\n'
           '  @override ${element.uniqueClassName}CopyWith<\$R2, $selfTypeParam, \$Out2$classTypeParams> '
@@ -162,9 +162,9 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
       if (param is UnresolvedParamElement) {
         if (p.type.isNullableOrDynamic) {
           var isDynamic = p.type is DynamicType;
-          params.add('$type${isDynamic ? '' : '?'} ${p.name}');
+          params.add('$type${isDynamic ? '' : '?'} ${p.name3 ?? ''}');
         } else {
-          params.add('required $type ${p.name}');
+          params.add('required $type ${p.name3 ?? ''}');
         }
       } else {
         var name = param.superName;
@@ -207,15 +207,15 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
       var str = '';
 
       if (p.isNamed) {
-        str = '${p.name}: ';
+        str = '${p.name3 ?? ''}: ';
       }
 
       if (param is UnresolvedParamElement) {
-        str += 'data.get(#${p.name})';
+        str += 'data.get(#${p.name3 ?? ''})';
       } else {
         var name = param.superName;
         var a = param.accessor!;
-        str += 'data.get(#$name, or: \$value.${a.name})';
+        str += 'data.get(#$name, or: \$value.${a.name3 ?? ''})';
       }
 
       params.add(str);

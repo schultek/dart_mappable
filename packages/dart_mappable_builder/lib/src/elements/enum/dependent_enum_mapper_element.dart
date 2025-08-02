@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../builder_options.dart';
@@ -11,7 +11,7 @@ class DependentEnumMapperElement extends EnumMapperElement {
       super.parent, super.element, super.options, super.annotation);
 
   static Future<DependentEnumMapperElement> from(MapperElementGroup parent,
-      EnumElement element, MappableOptions options) async {
+      EnumElement2 element, MappableOptions options) async {
     var annotation = await MapperAnnotation.from<MappableEnum>(element);
 
     return DependentEnumMapperElement._(parent, element, options, annotation);

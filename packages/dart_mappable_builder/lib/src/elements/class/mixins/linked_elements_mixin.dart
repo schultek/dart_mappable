@@ -13,7 +13,7 @@ mixin LinkedElementsMixin on ClassMapperElement {
     }
 
     void checkType(DartType t) {
-      var e = t.element;
+      var e = t.element3;
       var m = parent.getMapperForElement(e);
       if (m != null) {
         linked.add(
@@ -29,7 +29,7 @@ mixin LinkedElementsMixin on ClassMapperElement {
       r:
       if (t is RecordType) {
         if (t.alias != null) {
-          var m = parent.getMapperForElement(t.alias!.element);
+          var m = parent.getMapperForElement(t.alias!.element2);
           if (m != null && m is TargetRecordMapperElement) {
             linked.add(
                 '${parent.prefixOfElement(m.annotation.element)}${m.mapperName}');
@@ -50,9 +50,9 @@ mixin LinkedElementsMixin on ClassMapperElement {
       checkType(param.parameter.type);
     }
 
-    for (var param in element.typeParameters) {
+    for (var param in element.typeParameters2) {
       if (param.bound != null) {
-        var m = parent.getMapperForElement(param.bound!.element);
+        var m = parent.getMapperForElement(param.bound!.element3);
         if (m is ClassMapperElement) {
           linked.add(
               '${parent.prefixOfElement(m.annotation.element)}${m.mapperName}');

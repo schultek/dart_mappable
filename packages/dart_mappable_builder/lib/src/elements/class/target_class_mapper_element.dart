@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
@@ -17,7 +17,7 @@ class TargetClassMapperElement extends ClassMapperElement
       super.annotation, super.constructor);
 
   static Future<TargetClassMapperElement> from(MapperElementGroup parent,
-      ClassElement element, MappableOptions options) async {
+      ClassElement2 element, MappableOptions options) async {
     var constructor = await ConstructorMapperElement.fromClass(element);
     var annotation = await MapperAnnotation.from<MappableClass>(element);
 
@@ -30,15 +30,15 @@ class TargetClassMapperElement extends ClassMapperElement
   late final String? customMappers =
       annotation.getPropertyNode('includeCustomMappers')?.toSource();
 
-  late final List<String> customTypes = () {
-    var types = <String>[];
+  late final List<(String, List<String>)> customTypes = () {
+    var types = <(String, List<String>)>[];
 
     void addMissingType(DartType type) {
       if (type is InterfaceType) {
-        var e = type.element;
+        var e = type.element3;
         var m = parent.getMapperForElement(e);
         if (m == null) {
-          types.add(e.name);
+          types.add((e.name3 ?? '', e.typeParameters2.map((p) => p.name3 ?? '').toList()));
         }
 
         for (var arg in type.typeArguments) {
@@ -47,7 +47,7 @@ class TargetClassMapperElement extends ClassMapperElement
       }
     }
 
-    for (var param in element.typeParameters) {
+    for (var param in element.typeParameters2) {
       if (param.bound != null) {
         addMissingType(param.bound!);
       }
