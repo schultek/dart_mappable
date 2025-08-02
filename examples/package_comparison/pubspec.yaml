@@ -1,7 +1,7 @@
 name: package_comparison
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.7.0 <4.0.0"
 
 dependencies:
   dart_json_mapper: ^2.2.7+5

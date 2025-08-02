@@ -1,3 +1,10 @@
+# 4.6.0
+
+- Add support for self-referencing generics (e.g. `T extends Comparable<T>`)
+- Fix handling of nullable function fields.
+- Disable formatting of generated files through `// dart format off`.
+- Require `sdk: >=3.7.0`.
+
 # 4.5.0
 
 - Added `shallowEncoding` option to `@MappableClass()`.
