@@ -18,6 +18,11 @@ class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
             }
             return _instance!;
           }
+
+          @override
+          Map<String, ${element.prefixedClassName}> get enums => {
+            ${element.values.map((v) => "r'${v.name}': ${element.prefixedClassName}.${v.name},").join("\n      ")}
+          };
           
           static ${element.prefixedClassName} fromValue(dynamic value) {
             ensureInitialized();

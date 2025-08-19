@@ -141,16 +141,18 @@ class _BuilderContext {
         }
         // Add / merge discriminator property
         final existing = properties[discKey];
-        final mergedValues = <Object?>{
-          if (existing?.enumValues != null) ...existing!.enumValues!,
-          ...discValues,
-        }.toList();
+        final mergedValues =
+            <Object?>{
+              if (existing?.enumValues != null) ...existing!.enumValues!,
+              ...discValues,
+            }.toList();
         properties[discKey] = JsonSchema.enumeration(mergedValues);
         if (!required.contains(discKey)) required.add(discKey);
 
-        final oneOfSchemas = subclasses
-            .map((s) => JsonSchema.refSchema('#/definitions/${s.id}'))
-            .toList();
+        final oneOfSchemas =
+            subclasses
+                .map((s) => JsonSchema.refSchema('#/definitions/${s.id}'))
+                .toList();
 
         final polyObject = objectSchema.copyWith(
           oneOf: oneOfSchemas,
@@ -218,10 +220,12 @@ class _BuilderContext {
 
     // nested mappable
     try {
-      final mapper = container.getAll().whereType<ClassMapperBase>().firstWhere(
-        (m) => m.type == t,
-      );
-      return _schemaForMapper<Object>(mapper);
+      final anyMapper = container.getAll().firstWhere((m) => m.type == t);
+      if (anyMapper is ClassMapperBase) {
+        return _schemaForMapper<Object>(anyMapper);
+      } else if (anyMapper is EnumMapper) {
+        return JsonSchema.string(enumValues: anyMapper.enums.keys.toList());
+      }
     } catch (_) {}
 
     // fallback any

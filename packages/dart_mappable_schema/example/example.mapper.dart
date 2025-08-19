@@ -7,6 +7,58 @@
 
 part of 'example.dart';
 
+class UserTypeMapper extends EnumMapper<UserType> {
+  UserTypeMapper._();
+
+  static UserTypeMapper? _instance;
+  static UserTypeMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = UserTypeMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  Map<String, UserType> get enums => {
+    r'user': UserType.user,
+    r'admin': UserType.admin,
+  };
+
+  static UserType fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  UserType decode(dynamic value) {
+    switch (value) {
+      case r'user':
+        return UserType.user;
+      case r'admin':
+        return UserType.admin;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(UserType self) {
+    switch (self) {
+      case UserType.user:
+        return r'user';
+      case UserType.admin:
+        return r'admin';
+    }
+  }
+}
+
+extension UserTypeMapperExtension on UserType {
+  String toValue() {
+    UserTypeMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<UserType>(this) as String;
+  }
+}
+
 class UserMapper extends ClassMapperBase<User> {
   UserMapper._();
 
@@ -14,6 +66,7 @@ class UserMapper extends ClassMapperBase<User> {
   static UserMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = UserMapper._());
+      UserTypeMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -32,12 +85,15 @@ class UserMapper extends ClassMapperBase<User> {
   );
   static List<String> _$tags(User v) => v.tags;
   static const Field<User, List<String>> _f$tags = Field('tags', _$tags);
+  static UserType _$type(User v) => v.type;
+  static const Field<User, UserType> _f$type = Field('type', _$type);
 
   @override
   final MappableFields<User> fields = const {
     #name: _f$name,
     #age: _f$age,
     #tags: _f$tags,
+    #type: _f$type,
   };
 
   static User _instantiate(DecodingData data) {
@@ -45,6 +101,7 @@ class UserMapper extends ClassMapperBase<User> {
       name: data.dec(_f$name),
       age: data.dec(_f$age),
       tags: data.dec(_f$tags),
+      type: data.dec(_f$type),
     );
   }
 
@@ -95,7 +152,7 @@ extension UserValueCopy<$R, $Out> on ObjectCopyWith<$R, User, $Out> {
 abstract class UserCopyWith<$R, $In extends User, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get tags;
-  $R call({String? name, int? age, List<String>? tags});
+  $R call({String? name, int? age, List<String>? tags, UserType? type});
   UserCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -113,18 +170,21 @@ class _UserCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, User, $Out>
         (v) => call(tags: v),
       );
   @override
-  $R call({String? name, int? age, List<String>? tags}) => $apply(
-    FieldCopyWithData({
-      if (name != null) #name: name,
-      if (age != null) #age: age,
-      if (tags != null) #tags: tags,
-    }),
-  );
+  $R call({String? name, int? age, List<String>? tags, UserType? type}) =>
+      $apply(
+        FieldCopyWithData({
+          if (name != null) #name: name,
+          if (age != null) #age: age,
+          if (tags != null) #tags: tags,
+          if (type != null) #type: type,
+        }),
+      );
   @override
   User $make(CopyWithData data) => User(
     name: data.get(#name, or: $value.name),
     age: data.get(#age, or: $value.age),
     tags: data.get(#tags, or: $value.tags),
+    type: data.get(#type, or: $value.type),
   );
 
   @override
