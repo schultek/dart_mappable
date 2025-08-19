@@ -86,7 +86,12 @@ class UserMapper extends ClassMapperBase<User> {
   static List<String> _$tags(User v) => v.tags;
   static const Field<User, List<String>> _f$tags = Field('tags', _$tags);
   static UserType _$type(User v) => v.type;
-  static const Field<User, UserType> _f$type = Field('type', _$type);
+  static const Field<User, UserType> _f$type = Field(
+    'type',
+    _$type,
+    opt: true,
+    def: UserType.admin,
+  );
 
   @override
   final MappableFields<User> fields = const {

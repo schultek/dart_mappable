@@ -82,7 +82,7 @@ class _BuilderContext {
       var fieldSchema = _schemaForType(valueType, defValue: defVal);
 
       // optional -> allow null
-      if (includeNullForOptional && field.opt) {
+      if (includeNullForOptional && field.opt && defVal == null) {
         fieldSchema = JsonSchema.oneOf([fieldSchema, JsonSchema.nullType()]);
       }
 
@@ -224,7 +224,11 @@ class _BuilderContext {
       if (anyMapper is ClassMapperBase) {
         return _schemaForMapper<Object>(anyMapper);
       } else if (anyMapper is EnumMapper) {
-        return JsonSchema.string(enumValues: anyMapper.enums.keys.toList());
+        return JsonSchema.string(
+          enumValues: anyMapper.enums.keys.toList(),
+          defaultValue:
+              defValue != null ? anyMapper.encode(defValue as Enum) : null,
+        );
       }
     } catch (_) {}
 

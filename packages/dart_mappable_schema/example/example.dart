@@ -16,7 +16,7 @@ class User with UserMappable {
     required this.name,
     this.age = 10,
     required this.tags,
-    required this.type,
+    this.type = UserType.admin,
   });
 }
 
