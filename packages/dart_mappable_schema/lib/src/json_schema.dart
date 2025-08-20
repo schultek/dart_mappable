@@ -23,6 +23,9 @@ final class JsonSchema with JsonSchemaMappable {
   @MappableField(key: 'enum')
   final List<Object?>? enumValues;
 
+  @MappableField(key: 'const')
+  final Object? constValue;
+
   final JsonSchemaItems? items;
   final Map<String, JsonSchema>? properties;
   final List<String>? required;
@@ -79,6 +82,7 @@ final class JsonSchema with JsonSchemaMappable {
     this.description,
     this.type,
     this.enumValues,
+    this.constValue,
     this.items,
     this.properties,
     this.required,
@@ -143,7 +147,7 @@ final class JsonSchema with JsonSchemaMappable {
   factory JsonSchema.boolean({
     String? description,
     String? title,
-    Object? defaultValue,
+    bool? defaultValue,
   }) => JsonSchema(
     title: title,
     description: description,
@@ -185,7 +189,7 @@ final class JsonSchema with JsonSchemaMappable {
     bool? exclusiveMinimum,
     bool? exclusiveMaximum,
     num? multipleOf,
-    Object? defaultValue,
+    int? defaultValue,
   }) => JsonSchema(
     title: title,
     description: description,
@@ -223,7 +227,8 @@ final class JsonSchema with JsonSchemaMappable {
     bool? exclusiveMinimum,
     bool? exclusiveMaximum,
     num? multipleOf,
-    Object? defaultValue,
+    num? defaultValue,
+    num? constValue,
   }) => JsonSchema(
     title: title,
     description: description,
@@ -234,6 +239,7 @@ final class JsonSchema with JsonSchemaMappable {
     exclusiveMaximum: exclusiveMaximum,
     multipleOf: multipleOf,
     defaultValue: defaultValue,
+    constValue: constValue,
   );
 
   factory JsonSchema.object(
@@ -282,8 +288,9 @@ final class JsonSchema with JsonSchemaMappable {
     int? maxLength,
     String? pattern,
     String? format,
-    Object? defaultValue,
-    List<Object?>? enumValues,
+    String? defaultValue,
+    List<String>? enumValues,
+    String? constValue,
   }) => JsonSchema(
     title: title,
     description: description,
@@ -294,6 +301,7 @@ final class JsonSchema with JsonSchemaMappable {
     format: format,
     defaultValue: defaultValue,
     enumValues: enumValues,
+    constValue: constValue,
   );
 
   factory JsonSchema.tuple(

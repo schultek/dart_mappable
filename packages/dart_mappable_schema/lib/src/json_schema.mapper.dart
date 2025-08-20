@@ -71,6 +71,13 @@ class JsonSchemaMapper extends ClassMapperBase<JsonSchema> {
     key: r'enum',
     opt: true,
   );
+  static Object? _$constValue(JsonSchema v) => v.constValue;
+  static const Field<JsonSchema, Object> _f$constValue = Field(
+    'constValue',
+    _$constValue,
+    key: r'const',
+    opt: true,
+  );
   static JsonSchemaItems? _$items(JsonSchema v) => v.items;
   static const Field<JsonSchema, JsonSchemaItems> _f$items = Field(
     'items',
@@ -259,6 +266,7 @@ class JsonSchemaMapper extends ClassMapperBase<JsonSchema> {
     #description: _f$description,
     #type: _f$type,
     #enumValues: _f$enumValues,
+    #constValue: _f$constValue,
     #items: _f$items,
     #properties: _f$properties,
     #required: _f$required,
@@ -302,6 +310,7 @@ class JsonSchemaMapper extends ClassMapperBase<JsonSchema> {
       description: data.dec(_f$description),
       type: data.dec(_f$type),
       enumValues: data.dec(_f$enumValues),
+      constValue: data.dec(_f$constValue),
       items: data.dec(_f$items),
       properties: data.dec(_f$properties),
       required: data.dec(_f$required),
@@ -449,6 +458,7 @@ abstract class JsonSchemaCopyWith<$R, $In extends JsonSchema, $Out>
     String? description,
     JsonSchemaType? type,
     List<Object?>? enumValues,
+    Object? constValue,
     JsonSchemaItems? items,
     Map<String, JsonSchema>? properties,
     List<String>? required,
@@ -632,6 +642,7 @@ class _JsonSchemaCopyWithImpl<$R, $Out>
     Object? description = $none,
     Object? type = $none,
     Object? enumValues = $none,
+    Object? constValue = $none,
     Object? items = $none,
     Object? properties = $none,
     Object? required = $none,
@@ -671,6 +682,7 @@ class _JsonSchemaCopyWithImpl<$R, $Out>
       if (description != $none) #description: description,
       if (type != $none) #type: type,
       if (enumValues != $none) #enumValues: enumValues,
+      if (constValue != $none) #constValue: constValue,
       if (items != $none) #items: items,
       if (properties != $none) #properties: properties,
       if (required != $none) #required: required,
@@ -713,6 +725,7 @@ class _JsonSchemaCopyWithImpl<$R, $Out>
     description: data.get(#description, or: $value.description),
     type: data.get(#type, or: $value.type),
     enumValues: data.get(#enumValues, or: $value.enumValues),
+    constValue: data.get(#constValue, or: $value.constValue),
     items: data.get(#items, or: $value.items),
     properties: data.get(#properties, or: $value.properties),
     required: data.get(#required, or: $value.required),

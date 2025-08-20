@@ -108,11 +108,11 @@ class _BuilderContext {
           } else if (existing.enumValues == null ||
               !existing.enumValues!.contains(discValue)) {
             properties[discKey] = JsonSchema.string(
-              enumValues:
-                  {
-                    if (existing.enumValues != null) ...existing.enumValues!,
-                    discValue,
-                  }.toList(),
+              enumValues: [
+                if (existing.enumValues != null)
+                  ...(existing.enumValues!.cast<String>()),
+                discValue,
+              ],
             );
           }
         }
@@ -185,12 +185,14 @@ class _BuilderContext {
     }
 
     // Primitive
-    if (t == String) return JsonSchema.string(defaultValue: defValue);
-    if (t == int) return JsonSchema.integer(defaultValue: defValue);
-    if (t == double || t == num) {
-      return JsonSchema.number(defaultValue: defValue);
+    if (t == String) {
+      return JsonSchema.string(defaultValue: defValue as String?);
     }
-    if (t == bool) return JsonSchema.boolean(defaultValue: defValue);
+    if (t == int) return JsonSchema.integer(defaultValue: defValue as int?);
+    if (t == double || t == num) {
+      return JsonSchema.number(defaultValue: defValue as num?);
+    }
+    if (t == bool) return JsonSchema.boolean(defaultValue: defValue as bool?);
     if (t == DateTime) return JsonSchema.string(format: 'date-time');
 
     // collections
