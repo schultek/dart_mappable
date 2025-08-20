@@ -69,7 +69,7 @@ final class JsonSchema with JsonSchemaMappable {
   @MappableField(key: 'default')
   final Object? defaultValue;
 
-  JsonSchema({
+  const JsonSchema({
     this.id,
     this.schema,
     this.ref,
@@ -380,13 +380,15 @@ final class JsonSchemaItemsSingle extends JsonSchemaItems
 
 // type: string | [string]
 @MappableClass(hook: JsonSchemaTypeHook())
-sealed class JsonSchemaType with JsonSchemaTypeMappable {}
+sealed class JsonSchemaType with JsonSchemaTypeMappable {
+  const JsonSchemaType();
+}
 
 @MappableClass(discriminatorValue: JsonSchemaTypeArray.checkType)
 final class JsonSchemaTypeArray extends JsonSchemaType
     with JsonSchemaTypeArrayMappable {
   final List<String> values;
-  JsonSchemaTypeArray(this.values);
+  const JsonSchemaTypeArray(this.values);
 
   static bool checkType(dynamic value) {
     // list of primitive strings: ["string", "null", ...]
@@ -398,7 +400,7 @@ final class JsonSchemaTypeArray extends JsonSchemaType
 final class JsonSchemaTypeSingle extends JsonSchemaType
     with JsonSchemaTypeSingleMappable {
   final String value;
-  JsonSchemaTypeSingle(this.value);
+  const JsonSchemaTypeSingle(this.value);
 
   static bool checkType(dynamic value) {
     // primitive string form: "string" | "number" | ...

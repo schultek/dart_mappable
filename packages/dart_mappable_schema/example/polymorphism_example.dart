@@ -1,6 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
-
-import 'package:json_schema_builder/json_schema.dart';
+import 'package:dart_mappable_schema/json_schema.dart';
 
 part 'polymorphism_example.mapper.dart';
 
@@ -24,6 +23,6 @@ final class Dog extends Animal with DogMappable {
 void main() {
   AnimalMapper.ensureInitialized();
 
-  final schema = buildJsonSchemaFor<Animal>();
+  final schema = AnimalMapper.ensureInitialized().toJsonSchema();
   print(schema.toJson());
 }

@@ -103,15 +103,16 @@ class _BuilderContext {
         if (discValue is String && discKey is String) {
           final existing = properties[discKey];
           if (existing == null) {
-            properties[discKey] = JsonSchema.enumeration([discValue]);
+            properties[discKey] = JsonSchema.string(enumValues: [discValue]);
             if (!required.contains(discKey)) required.add(discKey);
           } else if (existing.enumValues == null ||
               !existing.enumValues!.contains(discValue)) {
-            properties[discKey] = JsonSchema.enumeration(
-              {
-                if (existing.enumValues != null) ...existing.enumValues!,
-                discValue,
-              }.toList(),
+            properties[discKey] = JsonSchema.string(
+              enumValues:
+                  {
+                    if (existing.enumValues != null) ...existing.enumValues!,
+                    discValue,
+                  }.toList(),
             );
           }
         }
@@ -146,7 +147,7 @@ class _BuilderContext {
               if (existing?.enumValues != null) ...existing!.enumValues!,
               ...discValues,
             }.toList();
-        properties[discKey] = JsonSchema.enumeration(mergedValues);
+        properties[discKey] = JsonSchema.string(enumValues: mergedValues);
         if (!required.contains(discKey)) required.add(discKey);
 
         final oneOfSchemas =
