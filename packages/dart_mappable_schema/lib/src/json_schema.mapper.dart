@@ -68,6 +68,7 @@ class JsonSchemaMapper extends ClassMapperBase<JsonSchema> {
   static const Field<JsonSchema, List<Object?>> _f$enumValues = Field(
     'enumValues',
     _$enumValues,
+    key: r'enum',
     opt: true,
   );
   static JsonSchemaItems? _$items(JsonSchema v) => v.items;

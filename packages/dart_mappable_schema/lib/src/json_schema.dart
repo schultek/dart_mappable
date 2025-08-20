@@ -19,6 +19,8 @@ final class JsonSchema with JsonSchemaMappable {
   final String? description;
 
   final JsonSchemaType? type;
+
+  @MappableField(key: 'enum')
   final List<Object?>? enumValues;
 
   final JsonSchemaItems? items;
