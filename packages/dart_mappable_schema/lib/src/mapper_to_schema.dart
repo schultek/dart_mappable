@@ -294,21 +294,5 @@ JsonSchema _schemaForType(
   } catch (_) {}
 
   // fallback any
-  return JsonSchema.anyOf([
-    JsonSchema.string(),
-    JsonSchema.number(),
-    JsonSchema.boolean(),
-    JsonSchema.object(
-      const {},
-      additionalProperties: JsonSchemaAdditionalProperties.bool(true),
-    ),
-    JsonSchema.array(
-      JsonSchema.anyOf([
-        JsonSchema.string(),
-        JsonSchema.number(),
-        JsonSchema.boolean(),
-      ]),
-    ),
-    JsonSchema.nullType(),
-  ]);
+  return JsonSchema();
 }
