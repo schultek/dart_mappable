@@ -330,7 +330,15 @@ final class JsonSchema with JsonSchemaMappable {
 // additionalProperties: bool | schema
 @MappableClass(hook: JsonSchemaAdditionalPropertiesHook())
 sealed class JsonSchemaAdditionalProperties
-    with JsonSchemaAdditionalPropertiesMappable {}
+    with JsonSchemaAdditionalPropertiesMappable {
+  const JsonSchemaAdditionalProperties();
+
+  const factory JsonSchemaAdditionalProperties.bool(bool value) =
+      JsonSchemaAdditionalPropertiesForBool;
+
+  const factory JsonSchemaAdditionalProperties.schema(JsonSchema value) =
+      JsonSchemaAdditionalPropertiesForSchema;
+}
 
 @MappableClass(
   discriminatorValue: JsonSchemaAdditionalPropertiesForBool.checkType,
@@ -339,7 +347,7 @@ final class JsonSchemaAdditionalPropertiesForBool
     extends JsonSchemaAdditionalProperties
     with JsonSchemaAdditionalPropertiesForBoolMappable {
   final bool value;
-  JsonSchemaAdditionalPropertiesForBool(this.value);
+  const JsonSchemaAdditionalPropertiesForBool(this.value);
 
   static bool checkType(dynamic value) {
     return value is bool;
@@ -353,7 +361,7 @@ final class JsonSchemaAdditionalPropertiesForSchema
     extends JsonSchemaAdditionalProperties
     with JsonSchemaAdditionalPropertiesForSchemaMappable {
   final JsonSchema schema;
-  JsonSchemaAdditionalPropertiesForSchema(this.schema);
+  const JsonSchemaAdditionalPropertiesForSchema(this.schema);
 
   static bool checkType(dynamic value) {
     return value is Map<String, dynamic>;
@@ -362,13 +370,19 @@ final class JsonSchemaAdditionalPropertiesForSchema
 
 // items: schema | [schema]
 @MappableClass(hook: JsonSchemaItemsHook())
-sealed class JsonSchemaItems with JsonSchemaItemsMappable {}
+sealed class JsonSchemaItems with JsonSchemaItemsMappable {
+  const JsonSchemaItems();
+
+  const factory JsonSchemaItems.array(List<JsonSchema> value) =
+      JsonSchemaItemsArray;
+  const factory JsonSchemaItems.sign(JsonSchema value) = JsonSchemaItemsSingle;
+}
 
 @MappableClass(discriminatorValue: JsonSchemaItemsArray.checkType)
 final class JsonSchemaItemsArray extends JsonSchemaItems
     with JsonSchemaItemsArrayMappable {
   final List<JsonSchema> schemas;
-  JsonSchemaItemsArray(this.schemas);
+  const JsonSchemaItemsArray(this.schemas);
 
   static bool checkType(dynamic value) {
     // tuple form encoded as an array of schemas
@@ -380,7 +394,7 @@ final class JsonSchemaItemsArray extends JsonSchemaItems
 final class JsonSchemaItemsSingle extends JsonSchemaItems
     with JsonSchemaItemsSingleMappable {
   final JsonSchema schema;
-  JsonSchemaItemsSingle(this.schema);
+  const JsonSchemaItemsSingle(this.schema);
 
   static bool checkType(dynamic value) {
     // single item schema encoded as an object
@@ -392,6 +406,9 @@ final class JsonSchemaItemsSingle extends JsonSchemaItems
 @MappableClass(hook: JsonSchemaTypeHook())
 sealed class JsonSchemaType with JsonSchemaTypeMappable {
   const JsonSchemaType();
+
+  const factory JsonSchemaType.array(List<String> values) = JsonSchemaTypeArray;
+  const factory JsonSchemaType.single(String value) = JsonSchemaTypeSingle;
 }
 
 @MappableClass(discriminatorValue: JsonSchemaTypeArray.checkType)
