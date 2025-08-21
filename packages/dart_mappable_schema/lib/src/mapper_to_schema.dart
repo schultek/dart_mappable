@@ -179,7 +179,9 @@ JsonSchema _buildClassSchema(
     properties: props,
     required: required.isEmpty ? null : required,
     oneOf: oneOf,
-    additionalProperties: JsonSchemaAdditionalPropertiesForBool(false),
+    additionalProperties: JsonSchemaAdditionalProperties.bool(
+      subs == null ? false : true,
+    ),
   );
 }
 
@@ -219,10 +221,7 @@ JsonSchema _schemaForType(
   dynamic defValue,
 }) {
   if (t == null) {
-    return JsonSchema.object(
-      const {},
-      additionalProperties: JsonSchemaAdditionalPropertiesForBool(true),
-    );
+    return JsonSchema.nullType();
   }
   if (t == String) return JsonSchema.string(defaultValue: defValue as String?);
   if (t == int) return JsonSchema.integer(defaultValue: defValue as int?);
