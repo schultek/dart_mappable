@@ -118,6 +118,7 @@ JsonSchema _buildClassSchema(
 
   // field properties
   for (final f in mapper.fields.values) {
+    if (f.mode == FieldMode.member) continue; // filter out member-only fields
     final overrideKey = '${mapper.id}.${f.key}';
     Type? valueType = fieldTypeOverrides[overrideKey];
     valueType ??= _resolveFieldValueType(f);
