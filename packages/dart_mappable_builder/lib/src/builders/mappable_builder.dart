@@ -151,7 +151,7 @@ class MappableBuilder implements Builder {
 
     for (var i = 0; i < discovered.length; i++) {
       for (var e in discovered[i].value) {
-        output.write('  p$i.${e.name3}Mapper.ensureInitialized();\n');
+        output.write('  p$i.${e.name}Mapper.ensureInitialized();\n');
       }
     }
 

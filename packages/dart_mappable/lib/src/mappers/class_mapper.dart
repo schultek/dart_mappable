@@ -14,12 +14,12 @@ abstract class SubClassMapperBase<T extends Object> extends ClassMapperBase<T> {
   dynamic get discriminatorValue;
   ClassMapperBase get superMapper;
 
-  bool canDecode(Map<String, dynamic> value) {
+  bool canDecode(Map<dynamic, dynamic> value) {
     var discriminator = discriminatorValue;
     if (identical(discriminator, MappingFlags.useAsDefault)) {
       return true;
     } else if (discriminator is Function) {
-      if (discriminator is bool Function(Map<String, dynamic>)) {
+      if (discriminator is bool Function(Map<dynamic, dynamic>)) {
         return discriminator(value);
       } else {
         throw AssertionError(
@@ -171,7 +171,7 @@ abstract class ClassMapperBase<T extends Object>
 
   @override
   T decode(Object? value, DecodingContext context) {
-    var map = value.checked<Map<String, dynamic>>();
+    var map = value.checked<Map<dynamic, dynamic>>();
     if (_subMappers.isNotEmpty) {
       for (var m in _subMappers) {
         if (m.canDecode(map)) {
