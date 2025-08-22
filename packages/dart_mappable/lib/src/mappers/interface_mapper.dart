@@ -184,7 +184,7 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
 
   @protected
   @pragma('vm:prefer-inline')
-  static Map<String, dynamic> encodeFields<T extends Object>(
+  static Map<dynamic, dynamic> encodeFields<T extends Object>(
     T value,
     Iterable<Field<T, dynamic>> fields,
     bool ignoreNull,
@@ -206,11 +206,11 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
     return {for (var f in fields) f.key: f.encode(value, context)};
   }
 
-  V decodeMap<V>(Map<String, dynamic> map) => decodeValue<V>(map);
+  V decodeMap<V>(Map<dynamic, dynamic> map) => decodeValue<V>(map);
 
-  Map<String, dynamic> encodeMap<V>(V object, [EncodingOptions? options]) {
+  Map<dynamic, dynamic> encodeMap<V>(V object, [EncodingOptions? options]) {
     var value = encodeValue<V>(object, options);
-    if (value is Map<String, dynamic>) {
+    if (value is Map<dynamic, dynamic>) {
       return value;
     } else {
       throw MapperException.incorrectEncoding(

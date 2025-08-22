@@ -142,7 +142,7 @@ abstract class MapperContainer {
   /// Encodes a value to a map.
   ///
   /// This is a typed wrapper around the [toValue] method.
-  Map<String, dynamic> toMap<T>(T object);
+  Map<dynamic, dynamic> toMap<T>(T object);
 
   /// Decodes an iterable to a given type [T].
   ///
@@ -364,7 +364,7 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
     }
 
     var type = options?.type ?? T;
-    if (value is Map<String, dynamic> &&
+    if (value is Map<dynamic, dynamic> &&
         value[MapperContainer.typeIdKey] != null) {
       type = TypePlus.fromId(value[MapperContainer.typeIdKey] as String);
       if (type == UnresolvedType) {
@@ -405,12 +405,12 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
   }
 
   @override
-  T fromMap<T>(Map<String, dynamic> map) => fromValue<T>(map);
+  T fromMap<T>(Map<dynamic, dynamic> map) => fromValue<T>(map);
 
   @override
-  Map<String, dynamic> toMap<T>(T object) {
+  Map<dynamic, dynamic> toMap<T>(T object) {
     var value = toValue<T>(object);
-    if (value is Map<String, dynamic>) {
+    if (value is Map<dynamic, dynamic>) {
       return value;
     } else {
       throw MapperException.incorrectEncoding(
