@@ -47,6 +47,10 @@ class BrandMapper extends EnumMapper<Brand> {
         return 'BMW';
     }
   }
+
+  @override
+  Map<String, Brand> get enums =>
+      {"Toyota": Brand.Toyota, "Audi": Brand.Audi, "BMW": Brand.BMW};
 }
 
 extension BrandMapperExtension on Brand {

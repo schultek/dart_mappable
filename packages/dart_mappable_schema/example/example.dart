@@ -12,11 +12,13 @@ class User with UserMappable {
   final int age;
   final List<String> tags;
   final UserType type;
+  final (int, int, String) info;
   User({
     required this.name,
     this.age = 10,
     required this.tags,
     this.type = UserType.admin,
+    required this.info
   });
 }
 

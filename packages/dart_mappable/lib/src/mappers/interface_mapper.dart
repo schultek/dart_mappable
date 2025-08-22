@@ -15,6 +15,8 @@ enum FieldMode {
 
   /// A field that is both a constructor parameter and class member.
   field,
+
+  tuple,
 }
 
 /// A field defined in a class that is relevant for its mapping.
@@ -76,7 +78,7 @@ class Field<T extends Object, V> {
     }
   }
 
-  R decode<R>(Map<String, dynamic> value, DecodingContext context) {
+  R decode<R>(Map<dynamic, dynamic> value, DecodingContext context) {
     DecodingOptions? options;
     if (data != null) {
       options = DecodingOptions(data: data);
@@ -95,7 +97,7 @@ class Field<T extends Object, V> {
 class DecodingData<T extends Object> {
   DecodingData(this.value, this.context);
 
-  final Map<String, dynamic> value;
+  final Map<dynamic, dynamic> value;
   final DecodingContext context;
 
   V dec<V>(Field f) => f.decode(value, context);
@@ -147,7 +149,7 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
 
   @protected
   T decode(Object? value, DecodingContext context) {
-    var map = value.checked<Map<String, dynamic>>();
+    var map = value.checked<Map<dynamic, dynamic>>();
 
     var d = DecodingData<T>(map, context);
     if (context.args.isEmpty) {
