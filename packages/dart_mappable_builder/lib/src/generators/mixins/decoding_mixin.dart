@@ -161,7 +161,7 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
 
     output.write(
       '\n'
-      '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
+      '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<dynamic, dynamic> map) {\n'
       '    return ensureInitialized().decodeMap<${element.prefixedDecodingClassName}${element.typeParams}>(map);\n'
       '  }\n'
       '  static ${element.prefixedDecodingClassName}${element.typeParams} $fromJsonName${element.typeParamsDeclaration}(String json) {\n'

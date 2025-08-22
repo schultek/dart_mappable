@@ -14,7 +14,7 @@ mixin EncodingMixin on MapperGenerator<TargetClassMapperElement> {
     if (element.isAbstract) {
       output.write('''
         String $toJsonName();
-        Map<String, dynamic> $toMapName();
+        Map<dynamic, dynamic> $toMapName();
       ''');
       return;
     }
@@ -22,7 +22,7 @@ mixin EncodingMixin on MapperGenerator<TargetClassMapperElement> {
       String $toJsonName() {
         return ${element.mapperName}.ensureInitialized().encodeJson<${element.selfTypeParam}>(this as ${element.selfTypeParam});
       }
-      Map<String, dynamic> $toMapName() {
+      Map<dynamic, dynamic> $toMapName() {
         return ${element.mapperName}.ensureInitialized().encodeMap<${element.selfTypeParam}>(this as ${element.selfTypeParam});
       }
     ''');
@@ -36,7 +36,7 @@ mixin EncodingMixin on MapperGenerator<TargetClassMapperElement> {
       String $toJsonName() {
         return ${element.mapperName}.ensureInitialized().encodeJson<${element.selfTypeParam}>(this);
       }
-      Map<String, dynamic> $toMapName() {
+      Map<dynamic, dynamic> $toMapName() {
         return ${element.mapperName}.ensureInitialized().encodeMap<${element.selfTypeParam}>(this);
       }
     ''');
