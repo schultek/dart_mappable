@@ -61,7 +61,7 @@ class RecordMapperFieldElement extends MapperFieldElement {
   }();
 
   @override
-  final String mode = '';
+  String get mode => param.isNamed ? '' : ', mode: FieldMode.tuple';
 
   @override
   String get opt => '';

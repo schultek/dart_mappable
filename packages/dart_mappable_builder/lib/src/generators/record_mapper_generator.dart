@@ -41,7 +41,7 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
       output.write('''
       
       extension ${element.className}Mappable${element.typeParamsDeclaration} on ${element.className}${element.typeParams} {
-        Map<String, dynamic> toMap() {
+        Map<dynamic, dynamic> toMap() {
           return ${element.mapperName}.ensureInitialized().encodeMap(this);
         }
         
@@ -112,7 +112,7 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
 
     output.write(
       '\n'
-      '  static ${element.className}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<String, dynamic> map) {\n'
+      '  static ${element.className}${element.typeParams} $fromMapName${element.typeParamsDeclaration}(Map<dynamic, dynamic> map) {\n'
       '    return ensureInitialized().decodeMap<${element.className}${element.typeParams}>(map);\n'
       '  }\n'
       '  static ${element.className}${element.typeParams} $fromJsonName${element.typeParamsDeclaration}(String json) {\n'

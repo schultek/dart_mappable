@@ -39,6 +39,8 @@ class PrimitiveMapper<T extends Object> extends MapperBase<T>
 /// {@category Custom Mappers}
 abstract class EnumMapper<T extends Enum> extends SimpleMapper<T> {
   const EnumMapper();
+
+  Map<String, T> get enums;
 }
 
 /// A mapper that encodes a [DateTime] object into a serializable date format
