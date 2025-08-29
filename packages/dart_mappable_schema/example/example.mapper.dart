@@ -121,7 +121,7 @@ class UserMapper extends ClassMapperBase<User> {
   @override
   final Function instantiate = _instantiate;
 
-  static User fromMap(Map<String, dynamic> map) {
+  static User fromMap(Map<dynamic, dynamic> map) {
     return ensureInitialized().decodeMap<User>(map);
   }
 
@@ -135,7 +135,7 @@ mixin UserMappable {
     return UserMapper.ensureInitialized().encodeJson<User>(this as User);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<dynamic, dynamic> toMap() {
     return UserMapper.ensureInitialized().encodeMap<User>(this as User);
   }
 
@@ -275,7 +275,7 @@ class _t$_R0Mapper extends RecordMapperBase<_t$_R0> {
   @override
   final Function instantiate = _instantiate;
 
-  static _t$_R0<A, B, C> fromMap<A, B, C>(Map<String, dynamic> map) {
+  static _t$_R0<A, B, C> fromMap<A, B, C>(Map<dynamic, dynamic> map) {
     return ensureInitialized().decodeMap<_t$_R0<A, B, C>>(map);
   }
 

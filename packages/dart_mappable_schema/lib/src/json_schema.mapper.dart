@@ -347,7 +347,7 @@ class JsonSchemaMapper extends ClassMapperBase<JsonSchema> {
   @override
   final Function instantiate = _instantiate;
 
-  static JsonSchema fromMap(Map<String, dynamic> map) {
+  static JsonSchema fromMap(Map<dynamic, dynamic> map) {
     return ensureInitialized().decodeMap<JsonSchema>(map);
   }
 
@@ -363,7 +363,7 @@ mixin JsonSchemaMappable {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<dynamic, dynamic> toMap() {
     return JsonSchemaMapper.ensureInitialized().encodeMap<JsonSchema>(
       this as JsonSchema,
     );
@@ -798,7 +798,7 @@ class JsonSchemaTypeMapper extends ClassMapperBase<JsonSchemaType> {
   @override
   final Function instantiate = _instantiate;
 
-  static JsonSchemaType fromMap(Map<String, dynamic> map) {
+  static JsonSchemaType fromMap(Map<dynamic, dynamic> map) {
     return ensureInitialized().decodeMap<JsonSchemaType>(map);
   }
 
@@ -809,7 +809,7 @@ class JsonSchemaTypeMapper extends ClassMapperBase<JsonSchemaType> {
 
 mixin JsonSchemaTypeMappable {
   String toJson();
-  Map<String, dynamic> toMap();
+  Map<dynamic, dynamic> toMap();
   JsonSchemaTypeCopyWith<JsonSchemaType, JsonSchemaType, JsonSchemaType>
   get copyWith;
 }
@@ -850,7 +850,7 @@ class JsonSchemaItemsMapper extends ClassMapperBase<JsonSchemaItems> {
   @override
   final Function instantiate = _instantiate;
 
-  static JsonSchemaItems fromMap(Map<String, dynamic> map) {
+  static JsonSchemaItems fromMap(Map<dynamic, dynamic> map) {
     return ensureInitialized().decodeMap<JsonSchemaItems>(map);
   }
 
@@ -861,7 +861,7 @@ class JsonSchemaItemsMapper extends ClassMapperBase<JsonSchemaItems> {
 
 mixin JsonSchemaItemsMappable {
   String toJson();
-  Map<String, dynamic> toMap();
+  Map<dynamic, dynamic> toMap();
   JsonSchemaItemsCopyWith<JsonSchemaItems, JsonSchemaItems, JsonSchemaItems>
   get copyWith;
 }
@@ -905,7 +905,7 @@ class JsonSchemaAdditionalPropertiesMapper
   @override
   final Function instantiate = _instantiate;
 
-  static JsonSchemaAdditionalProperties fromMap(Map<String, dynamic> map) {
+  static JsonSchemaAdditionalProperties fromMap(Map<dynamic, dynamic> map) {
     return ensureInitialized().decodeMap<JsonSchemaAdditionalProperties>(map);
   }
 
@@ -916,7 +916,7 @@ class JsonSchemaAdditionalPropertiesMapper
 
 mixin JsonSchemaAdditionalPropertiesMappable {
   String toJson();
-  Map<String, dynamic> toMap();
+  Map<dynamic, dynamic> toMap();
   JsonSchemaAdditionalPropertiesCopyWith<
     JsonSchemaAdditionalProperties,
     JsonSchemaAdditionalProperties,
@@ -986,7 +986,7 @@ class JsonSchemaAdditionalPropertiesForBoolMapper
   final Function instantiate = _instantiate;
 
   static JsonSchemaAdditionalPropertiesForBool fromMap(
-    Map<String, dynamic> map,
+    Map<dynamic, dynamic> map,
   ) {
     return ensureInitialized().decodeMap<JsonSchemaAdditionalPropertiesForBool>(
       map,
@@ -1007,7 +1007,7 @@ mixin JsonSchemaAdditionalPropertiesForBoolMappable {
         );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<dynamic, dynamic> toMap() {
     return JsonSchemaAdditionalPropertiesForBoolMapper.ensureInitialized()
         .encodeMap<JsonSchemaAdditionalPropertiesForBool>(
           this as JsonSchemaAdditionalPropertiesForBool,
@@ -1159,7 +1159,7 @@ class JsonSchemaAdditionalPropertiesForSchemaMapper
   final Function instantiate = _instantiate;
 
   static JsonSchemaAdditionalPropertiesForSchema fromMap(
-    Map<String, dynamic> map,
+    Map<dynamic, dynamic> map,
   ) {
     return ensureInitialized()
         .decodeMap<JsonSchemaAdditionalPropertiesForSchema>(map);
@@ -1179,7 +1179,7 @@ mixin JsonSchemaAdditionalPropertiesForSchemaMappable {
         );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<dynamic, dynamic> toMap() {
     return JsonSchemaAdditionalPropertiesForSchemaMapper.ensureInitialized()
         .encodeMap<JsonSchemaAdditionalPropertiesForSchema>(
           this as JsonSchemaAdditionalPropertiesForSchema,
@@ -1334,7 +1334,7 @@ class JsonSchemaItemsArrayMapper
   @override
   final Function instantiate = _instantiate;
 
-  static JsonSchemaItemsArray fromMap(Map<String, dynamic> map) {
+  static JsonSchemaItemsArray fromMap(Map<dynamic, dynamic> map) {
     return ensureInitialized().decodeMap<JsonSchemaItemsArray>(map);
   }
 
@@ -1349,7 +1349,7 @@ mixin JsonSchemaItemsArrayMappable {
         .encodeJson<JsonSchemaItemsArray>(this as JsonSchemaItemsArray);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<dynamic, dynamic> toMap() {
     return JsonSchemaItemsArrayMapper.ensureInitialized()
         .encodeMap<JsonSchemaItemsArray>(this as JsonSchemaItemsArray);
   }
@@ -1484,7 +1484,7 @@ class JsonSchemaItemsSingleMapper
   @override
   final Function instantiate = _instantiate;
 
-  static JsonSchemaItemsSingle fromMap(Map<String, dynamic> map) {
+  static JsonSchemaItemsSingle fromMap(Map<dynamic, dynamic> map) {
     return ensureInitialized().decodeMap<JsonSchemaItemsSingle>(map);
   }
 
@@ -1499,7 +1499,7 @@ mixin JsonSchemaItemsSingleMappable {
         .encodeJson<JsonSchemaItemsSingle>(this as JsonSchemaItemsSingle);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<dynamic, dynamic> toMap() {
     return JsonSchemaItemsSingleMapper.ensureInitialized()
         .encodeMap<JsonSchemaItemsSingle>(this as JsonSchemaItemsSingle);
   }
@@ -1626,7 +1626,7 @@ class JsonSchemaTypeArrayMapper
   @override
   final Function instantiate = _instantiate;
 
-  static JsonSchemaTypeArray fromMap(Map<String, dynamic> map) {
+  static JsonSchemaTypeArray fromMap(Map<dynamic, dynamic> map) {
     return ensureInitialized().decodeMap<JsonSchemaTypeArray>(map);
   }
 
@@ -1641,7 +1641,7 @@ mixin JsonSchemaTypeArrayMappable {
         .encodeJson<JsonSchemaTypeArray>(this as JsonSchemaTypeArray);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<dynamic, dynamic> toMap() {
     return JsonSchemaTypeArrayMapper.ensureInitialized()
         .encodeMap<JsonSchemaTypeArray>(this as JsonSchemaTypeArray);
   }
@@ -1772,7 +1772,7 @@ class JsonSchemaTypeSingleMapper
   @override
   final Function instantiate = _instantiate;
 
-  static JsonSchemaTypeSingle fromMap(Map<String, dynamic> map) {
+  static JsonSchemaTypeSingle fromMap(Map<dynamic, dynamic> map) {
     return ensureInitialized().decodeMap<JsonSchemaTypeSingle>(map);
   }
 
@@ -1787,7 +1787,7 @@ mixin JsonSchemaTypeSingleMappable {
         .encodeJson<JsonSchemaTypeSingle>(this as JsonSchemaTypeSingle);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<dynamic, dynamic> toMap() {
     return JsonSchemaTypeSingleMapper.ensureInitialized()
         .encodeMap<JsonSchemaTypeSingle>(this as JsonSchemaTypeSingle);
   }

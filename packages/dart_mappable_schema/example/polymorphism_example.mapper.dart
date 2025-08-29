@@ -37,7 +37,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   @override
   final Function instantiate = _instantiate;
 
-  static Animal fromMap(Map<String, dynamic> map) {
+  static Animal fromMap(Map<dynamic, dynamic> map) {
     return ensureInitialized().decodeMap<Animal>(map);
   }
 
@@ -48,7 +48,7 @@ class AnimalMapper extends ClassMapperBase<Animal> {
 
 mixin AnimalMappable {
   String toJson();
-  Map<String, dynamic> toMap();
+  Map<dynamic, dynamic> toMap();
   AnimalCopyWith<Animal, Animal, Animal> get copyWith;
 }
 
@@ -95,7 +95,7 @@ class CatMapper extends SubClassMapperBase<Cat> {
   @override
   final Function instantiate = _instantiate;
 
-  static Cat fromMap(Map<String, dynamic> map) {
+  static Cat fromMap(Map<dynamic, dynamic> map) {
     return ensureInitialized().decodeMap<Cat>(map);
   }
 
@@ -109,7 +109,7 @@ mixin CatMappable {
     return CatMapper.ensureInitialized().encodeJson<Cat>(this as Cat);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<dynamic, dynamic> toMap() {
     return CatMapper.ensureInitialized().encodeMap<Cat>(this as Cat);
   }
 
@@ -208,7 +208,7 @@ class DogMapper extends SubClassMapperBase<Dog> {
   @override
   final Function instantiate = _instantiate;
 
-  static Dog fromMap(Map<String, dynamic> map) {
+  static Dog fromMap(Map<dynamic, dynamic> map) {
     return ensureInitialized().decodeMap<Dog>(map);
   }
 
@@ -222,7 +222,7 @@ mixin DogMappable {
     return DogMapper.ensureInitialized().encodeJson<Dog>(this as Dog);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<dynamic, dynamic> toMap() {
     return DogMapper.ensureInitialized().encodeMap<Dog>(this as Dog);
   }
 
