@@ -32,6 +32,7 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
 
     generateTypeFactory(output);
     generateApplyOverride(output);
+    generateHook(output);
     generateInstantiate(output);
     generateStaticDecoders(output);
 
@@ -119,5 +120,15 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
       '    return ensureInitialized().decodeJson<${element.className}${element.typeParams}>(json);\n'
       '  }\n',
     );
+  }
+
+  void generateHook(StringBuffer output) {
+    var hook = element.hookForRecord;
+    if (hook != null) {
+      output.write('''
+        @override
+        final MappingHook hook = $hook;
+      ''');
+    }
   }
 }

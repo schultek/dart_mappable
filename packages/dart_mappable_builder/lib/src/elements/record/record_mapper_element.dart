@@ -1,7 +1,9 @@
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 
+import '../../utils.dart';
 import '../mapper_element.dart';
 
 abstract class RecordMapperElement<T extends Element2>
@@ -48,4 +50,19 @@ abstract class RecordMapperElement<T extends Element2>
   String genericArgAt(int index) {
     return String.fromCharCode('A'.codeUnitAt(0) + index);
   }
+
+  late final String? hookForRecord = () {
+    var hook = annotation.value?.read('hook');
+    if (hook != null && !hook.isNull) {
+      var node = annotation.getPropertyNode('hook');
+      if (node != null) {
+        var hook = node.toSource();
+        if (node is InstanceCreationExpression) {
+          hook = 'const $hook';
+        }
+        return hook;
+      }
+    }
+    return null;
+  }();
 }

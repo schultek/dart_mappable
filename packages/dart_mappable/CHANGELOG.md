@@ -1,3 +1,7 @@
+# Unreleased
+
+- Record mappers now correctly generate hooks specified on the record annotation itself, not just those on individual fields.
+
 # 4.6.0
 
 - Add support for self-referencing generics (e.g. `T extends Comparable<T>`)
