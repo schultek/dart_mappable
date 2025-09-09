@@ -42,6 +42,7 @@ import '../serialization/desync_serialization_test.dart' as p36;
 import '../serialization/encoding_params_test.dart' as p37;
 import '../serialization/nested_serialization_test.dart' as p38;
 import '../serialization/param_rewrite_test.dart' as p39;
+import '../serialization/with_getters_test.dart' as p40;
 import 'init_lib_test.dart' as p25;
 import 'models/model.dart' as p26;
 
@@ -186,5 +187,6 @@ void initializeMappers() {
   p39.AMapper.ensureInitialized();
   p39.BMapper.ensureInitialized();
   p39.CMapper.ensureInitialized();
+  p40.ClassWithGettersMapper.ensureInitialized();
 }
 

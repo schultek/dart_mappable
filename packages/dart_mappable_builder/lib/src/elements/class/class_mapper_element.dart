@@ -155,19 +155,17 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement2>
     yield* extendsElement?._allFields ?? [];
 
     for (var getter in element.getters2) {
-      if (getter.isStatic) continue;
+      if (getter.isStatic || getter.isSynthetic) continue;
 
-      if (getter.isPublic || fieldChecker.hasAnnotationOf(getter)) {
+      if (fieldChecker.hasAnnotationOf(getter)) {
         yield getter.variable3!;
       }
     }
 
     for (var field in element.fields2) {
-      if (field.isStatic) continue;
+      if (field.isStatic || field.isSynthetic) continue;
 
-      if (field.isPublic && field.isSynthetic) {
-        yield field;
-      } else if (fieldChecker.hasAnnotationOf(field)) {
+      if (field.isPublic || fieldChecker.hasAnnotationOf(field)) {
         yield field;
       }
     }
