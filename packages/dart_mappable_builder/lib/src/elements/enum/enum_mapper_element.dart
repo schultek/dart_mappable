@@ -1,8 +1,8 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 
 import '../mapper_element.dart';
 
-abstract class EnumMapperElement extends MapperElement<EnumElement2> {
+abstract class EnumMapperElement extends MapperElement<EnumElement> {
   EnumMapperElement(
     super.parent,
     super.element,
@@ -11,5 +11,5 @@ abstract class EnumMapperElement extends MapperElement<EnumElement2> {
   );
 
   @override
-  late final String className = element.name3 ?? '';
+  late final String className = element.name ?? '';
 }

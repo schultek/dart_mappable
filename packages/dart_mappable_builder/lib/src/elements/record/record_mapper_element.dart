@@ -1,10 +1,10 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 
 import '../mapper_element.dart';
 
-abstract class RecordMapperElement<T extends Element2>
+abstract class RecordMapperElement<T extends Element>
     extends InterfaceMapperElement<T> {
   RecordMapperElement(
     super.parent,

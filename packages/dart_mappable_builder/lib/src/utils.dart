@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
@@ -10,18 +10,18 @@ import 'package:source_gen/source_gen.dart';
 
 export 'package:analyzer/src/dart/resolver/scope.dart' show Namespace;
 
-const enumChecker = TypeChecker.fromRuntime(MappableEnum);
-const enumValueChecker = TypeChecker.fromRuntime(MappableValue);
-const constructorChecker = TypeChecker.fromRuntime(MappableConstructor);
-const classChecker = TypeChecker.fromRuntime(MappableClass);
-const fieldChecker = TypeChecker.fromRuntime(MappableField);
-const libChecker = TypeChecker.fromRuntime(MappableLib);
-const mapperChecker = TypeChecker.fromRuntime(MapperBase);
-const recordChecker = TypeChecker.fromRuntime(MappableRecord);
+const enumChecker = TypeChecker.typeNamed(MappableEnum);
+const enumValueChecker = TypeChecker.typeNamed(MappableValue);
+const constructorChecker = TypeChecker.typeNamed(MappableConstructor);
+const classChecker = TypeChecker.typeNamed(MappableClass);
+const fieldChecker = TypeChecker.typeNamed(MappableField);
+const libChecker = TypeChecker.typeNamed(MappableLib);
+const mapperChecker = TypeChecker.typeNamed(MapperBase);
+const recordChecker = TypeChecker.typeNamed(MappableRecord);
 
 late Resolver nodeResolver;
 
-extension GetNode on Element2 {
+extension GetNode on Element {
   Future<AstNode?> getNode() {
     return nodeResolver.astNodeFor(firstFragment, resolve: false);
   }
@@ -61,7 +61,7 @@ Future<ArgumentList?> getAnnotationArguments(
     return null;
   }
 
-  var checker = TypeChecker.fromRuntime(annotationType);
+  var checker = TypeChecker.typeNamed(annotationType);
   var annotation =
       annotations.where((a) {
         var type = a.elementAnnotation?.computeConstantValue()?.type;
@@ -71,13 +71,13 @@ Future<ArgumentList?> getAnnotationArguments(
   if (arguments != null) {
     return arguments;
   } else {
-    return getArgumentsFromElement(annotation?.element2);
+    return getArgumentsFromElement(annotation?.element);
   }
 }
 
-Future<ArgumentList?> getArgumentsFromElement(Element2? element) async {
-  if (element case PropertyAccessorElement2 elem) {
-    var node = await elem.variable3!.getResolvedNode();
+Future<ArgumentList?> getArgumentsFromElement(Element? element) async {
+  if (element case PropertyAccessorElement elem) {
+    var node = await elem.variable.getResolvedNode();
     if (node is VariableDeclaration) {
       var exp = node.initializer;
       if (exp is InstanceCreationExpression) {
@@ -116,7 +116,7 @@ Future<AstNode?> getAnnotationProperty(
 }
 
 Future<AstNode?> getAnnotationNode(
-  Element2 annotatedElement,
+  Element annotatedElement,
   Type annotationType,
   dynamic property,
 ) async {
@@ -125,7 +125,7 @@ Future<AstNode?> getAnnotationNode(
 }
 
 Future<AstNode?> getResolvedAnnotationNode(
-  Element2 annotatedElement,
+  Element annotatedElement,
   Type annotationType,
   dynamic property,
 ) async {
@@ -166,8 +166,8 @@ List<T>? toList<T>(dynamic value) {
 
 DartObject? fieldAnnotation(FormalParameterElement param) {
   return fieldChecker.firstAnnotationOf(param) ??
-      (param is FieldFormalParameterElement2 && param.field2 != null
-          ? fieldChecker.firstAnnotationOf(param.field2!)
+      (param is FieldFormalParameterElement && param.field != null
+          ? fieldChecker.firstAnnotationOf(param.field!)
           : null);
 }
 
