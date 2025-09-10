@@ -405,7 +405,12 @@ class MapperElementGroup {
 
     bool isMapper(Element e) {
       return (e is ClassElement && classChecker.hasAnnotationOf(e)) ||
-          (e is EnumElement && enumChecker.hasAnnotationOf(e));
+          (e is EnumElement && enumChecker.hasAnnotationOf(e) ||
+              (e is TypeAliasElement &&
+                  ((e.aliasedType.element is ClassElement &&
+                          classChecker.hasAnnotationOf(e)) ||
+                      (e.aliasedType is RecordType &&
+                          recordChecker.hasAnnotationOf(e)))));
     }
 
     if (scope == InitializerScope.package ||
@@ -424,8 +429,14 @@ class MapperElementGroup {
           })
           .where((l) => l != null)
           .map(
-            (lib) =>
-                MapEntry(lib!, [...lib.classes, ...lib.enums].where(isMapper)),
+            (lib) => MapEntry(
+              lib!,
+              <Element>[
+                ...lib.classes,
+                ...lib.enums,
+                ...lib.typeAliases,
+              ].where(isMapper),
+            ),
           )
           .where((e) => e.value.isNotEmpty)
           .toList();
@@ -433,7 +444,14 @@ class MapperElementGroup {
       var lib = await buildStep.inputLibrary;
 
       return [
-        MapEntry(lib, [...lib.classes, ...lib.enums].where(isMapper)),
+        MapEntry(
+          lib,
+          <Element>[
+            ...lib.classes,
+            ...lib.enums,
+            ...lib.typeAliases,
+          ].where(isMapper),
+        ),
       ];
     }
 

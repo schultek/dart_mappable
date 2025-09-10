@@ -115,6 +115,10 @@ void initializeMappers() {
   p14.MapWrapperMapper.ensureInitialized();
   p15.ExampleMapper.ensureInitialized();
   p16.PersonMapper.ensureInitialized();
+  p16.CakeMapper.ensureInitialized();
+  p16.Person2Mapper.ensureInitialized();
+  p16.AnimalMapper.ensureInitialized();
+  p16.PetMapper.ensureInitialized();
   p17.DSOpacityDataMapper.ensureInitialized();
   p17.HOpacityMapper.ensureInitialized();
   p18.BoxMapper.ensureInitialized();
@@ -170,6 +174,9 @@ void initializeMappers() {
   p31.ItemsMapper.ensureInitialized();
   p31.ItemMapper.ensureInitialized();
   p32.LocationMapper.ensureInitialized();
+  p32.PointMapper.ensureInitialized();
+  p32.OffsetMapper.ensureInitialized();
+  p32.RectMapper.ensureInitialized();
   p33.AMapper.ensureInitialized();
   p33.CMapper.ensureInitialized();
   p34.AMapper.ensureInitialized();
