@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../utils.dart';
@@ -22,7 +22,7 @@ import 'mixins/type_params_mixin.dart';
 ///   - As factory: FactoryConstructorMapperElement
 ///
 ///
-abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement2>
+abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
     with InheritedElementsMixin, ParamElementsMixin, TypeParamsMixin {
   ClassMapperElement(
     super.parent,
@@ -40,7 +40,7 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement2>
   }
 
   @override
-  late final String className = element.name3 ?? '';
+  late final String className = element.name ?? '';
 
   late final String uniqueId =
       (annotation.value?.read('uniqueId')?.toStringValue() ?? className)
@@ -56,7 +56,7 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement2>
 
   late final bool hasCallableConstructor =
       constructor.element != null &&
-      !(isAbstract && constructor.element!.redirectedConstructor2 == null);
+      !(isAbstract && constructor.element!.redirectedConstructor == null);
 
   late final bool isAbstract = element.isAbstract;
 
@@ -95,7 +95,7 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement2>
 
   @override
   late final List<ClassMapperFieldElement> fields = () {
-    var fields = <Element2, ClassMapperFieldElement>{};
+    var fields = <Element, ClassMapperFieldElement>{};
 
     for (var p in params) {
       fields[p.accessor ?? p.parameter] = ClassMapperFieldElement(
@@ -108,7 +108,7 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement2>
     for (var f in _allFields) {
       if (!fields.containsKey(f) &&
           !fields.keys.any(
-            (e) => e is PropertyInducingElement2 && e.name3 == f.name3,
+            (e) => e is PropertyInducingElement && e.name == f.name,
           )) {
         fields[f] = ClassMapperFieldElement(null, f, this);
       }
@@ -151,23 +151,21 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement2>
         return safeParams;
       })();
 
-  late final Iterable<PropertyInducingElement2> _allFields = () sync* {
+  late final Iterable<PropertyInducingElement> _allFields = () sync* {
     yield* extendsElement?._allFields ?? [];
 
-    for (var getter in element.getters2) {
-      if (getter.isStatic) continue;
+    for (var getter in element.getters) {
+      if (getter.isStatic || getter.isSynthetic) continue;
 
-      if (getter.isPublic || fieldChecker.hasAnnotationOf(getter)) {
-        yield getter.variable3!;
+      if (fieldChecker.hasAnnotationOf(getter)) {
+        yield getter.variable;
       }
     }
 
-    for (var field in element.fields2) {
-      if (field.isStatic) continue;
+    for (var field in element.fields) {
+      if (field.isStatic || field.isSynthetic) continue;
 
-      if (field.isPublic && field.isSynthetic) {
-        yield field;
-      } else if (fieldChecker.hasAnnotationOf(field)) {
+      if (field.isPublic || fieldChecker.hasAnnotationOf(field)) {
         yield field;
       }
     }

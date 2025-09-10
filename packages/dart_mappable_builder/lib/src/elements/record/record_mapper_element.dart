@@ -1,12 +1,14 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 
 import '../../utils.dart';
+import '../class/mixins/linked_elements_mixin.dart';
+import '../field/record_mapper_field_element.dart';
 import '../mapper_element.dart';
 
-abstract class RecordMapperElement<T extends Element2>
+abstract class RecordMapperElement<T extends Element>
     extends InterfaceMapperElement<T> {
   RecordMapperElement(
     super.parent,
@@ -22,6 +24,19 @@ abstract class RecordMapperElement<T extends Element2>
   bool get needsTypeDef;
 
   List<String>? get inheritedTypeArgs => null;
+
+  @override
+  List<RecordMapperFieldElement> get fields;
+
+  late final List<String> linkedElements = () {
+    return findLinkedElements(
+      fields.map((f) => f.param.type),
+      element is TypeParameterizedElement
+          ? (element as TypeParameterizedElement).typeParameters
+          : [],
+      parent,
+    );
+  }();
 
   late String genericRecordDeclaration = () {
     var t = type.positionalFields

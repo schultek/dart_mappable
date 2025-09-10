@@ -12,6 +12,9 @@ typedef Point =
 @MappableRecord()
 typedef Offset<T> = ({double x, T y});
 
+@MappableRecord()
+typedef Rect = ({Point topLeft, Point bottomRight});
+
 class RoundingHook extends MappingHook {
   const RoundingHook();
 
@@ -96,6 +99,26 @@ void main() {
       expect(
         encode(h),
         equals({'x': 3, 'y': 4, 'hypotenuse': sqrt(3 * 3 + 4 * 4)}),
+      );
+    });
+
+    test('can decode and encode nested record', () {
+      var decode = MapperContainer.globals.fromMap;
+      var encode = MapperContainer.globals.toMap;
+
+      RectMapper.ensureInitialized();
+
+      var r = decode<Rect>({
+        'topLeft': {'a': 1.3, 'y': 2},
+        'bottomRight': {'a': 3.7, 'y': 4},
+      });
+      expect(r, equals((topLeft: (x: 1, y: 2), bottomRight: (x: 4, y: 4))));
+      expect(
+        encode(r),
+        equals({
+          'topLeft': {'a': 1, 'y': 2},
+          'bottomRight': {'a': 4, 'y': 4},
+        }),
       );
     });
   });

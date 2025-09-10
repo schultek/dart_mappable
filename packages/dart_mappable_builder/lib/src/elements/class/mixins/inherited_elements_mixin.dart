@@ -1,10 +1,10 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 
 import '../../../utils.dart';
 import '../../mapper_element.dart';
 import '../class_mapper_element.dart';
 
-mixin InheritedElementsMixin on MapperElement<ClassElement2> {
+mixin InheritedElementsMixin on MapperElement<ClassElement> {
   List<ClassMapperElement> subElements = [];
   ClassMapperElement? extendsElement;
   List<ClassMapperElement> interfaceElements = [];
@@ -34,12 +34,12 @@ mixin InheritedElementsMixin on MapperElement<ClassElement2> {
   late String? discriminatorValueCode =
       annotation.getPropertyNode('discriminatorValue')?.toSource();
 
-  List<ClassElement2> getSubClasses() {
+  List<ClassElement> getSubClasses() {
     return annotation.value
             ?.read('includeSubClasses')
             ?.toTypeList()
-            ?.map((t) => t.element3)
-            .whereType<ClassElement2>()
+            ?.map((t) => t.element)
+            .whereType<ClassElement>()
             .toList() ??
         [];
   }

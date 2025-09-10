@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../../builder_options.dart';
@@ -20,7 +20,7 @@ class DependentClassMapperElement extends ClassMapperElement {
 
   static Future<DependentClassMapperElement> from(
     MapperElementGroup parent,
-    ClassElement2 element,
+    ClassElement element,
     MappableOptions options,
   ) async {
     var constructor = await ConstructorMapperElement.fromClass(element);

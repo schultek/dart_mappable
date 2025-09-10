@@ -11,7 +11,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
   late String classTypeParamsDef =
       element.typeParamsList.map((p) => ', $p').join();
   late String classTypeParams =
-      element.element.typeParameters2.map((p) => ', ${p.name3}').join();
+      element.element.typeParameters.map((p) => ', ${p.name}').join();
 
   late bool hasExtendsTarget =
       element.extendsElement != null &&
@@ -86,7 +86,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
       if (interface.shouldGenerate(GenerateMethods.copy)) {
         var interfaceTypeParams =
             element.element.interfaces
-                .firstWhere((t) => t.element3 == interface.element)
+                .firstWhere((t) => t.element == interface.element)
                 .typeArguments
                 .map((a) => ', ${element.parent.prefixedType(a)}')
                 .join();
@@ -113,7 +113,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
     for (var param in copyParams) {
       var isOverridden = hasSuperTarget && param.param is SuperParamElement;
       output.write(
-        '  ${isOverridden ? '@override ' : ''}${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name3 ?? ''};\n',
+        '  ${isOverridden ? '@override ' : ''}${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name ?? ''};\n',
       );
     }
 
@@ -144,7 +144,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
 
       for (var param in copyParams) {
         output.write(
-          '  @override ${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name3 ?? ''} => ',
+          '  @override ${param.name}CopyWith<\$R${param.subTypeParam}${param.superTypeParam}${param.fieldTypeParams}>${param.a.type.isNullable ? '?' : ''} get ${param.a.name ?? ''} => ',
         );
         output.write('${param.invocation};\n');
       }
@@ -154,7 +154,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
       );
 
       output.write(
-        '  @override $selfTypeParam \$make(CopyWithData data) => ${element.prefixedDecodingClassName}${element.constructor.element!.name3 != 'new' ? '.${element.constructor.element!.name3}' : ''}(${_generateCopyWithConstructorParams()});\n',
+        '  @override $selfTypeParam \$make(CopyWithData data) => ${element.prefixedDecodingClassName}${element.constructor.element!.name != 'new' ? '.${element.constructor.element!.name}' : ''}(${_generateCopyWithConstructorParams()});\n',
       );
 
       output.write(
@@ -182,9 +182,9 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
       if (param is UnresolvedParamElement) {
         if (p.type.isNullableOrDynamic) {
           var isDynamic = p.type is DynamicType;
-          params.add('$type${isDynamic ? '' : '?'} ${p.name3 ?? ''}');
+          params.add('$type${isDynamic ? '' : '?'} ${p.name ?? ''}');
         } else {
-          params.add('required $type ${p.name3 ?? ''}');
+          params.add('required $type ${p.name ?? ''}');
         }
       } else {
         var name = param.superName;
@@ -228,15 +228,15 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
       var str = '';
 
       if (p.isNamed) {
-        str = '${p.name3 ?? ''}: ';
+        str = '${p.name ?? ''}: ';
       }
 
       if (param is UnresolvedParamElement) {
-        str += 'data.get(#${p.name3 ?? ''})';
+        str += 'data.get(#${p.name ?? ''})';
       } else {
         var name = param.superName;
         var a = param.accessor!;
-        str += 'data.get(#$name, or: \$value.${a.name3 ?? ''})';
+        str += 'data.get(#$name, or: \$value.${a.name ?? ''})';
       }
 
       params.add(str);

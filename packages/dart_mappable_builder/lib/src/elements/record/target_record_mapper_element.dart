@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 
@@ -17,7 +17,7 @@ class TargetRecordMapperElement extends AliasRecordMapperElement {
 
   static Future<TargetRecordMapperElement> from(
     MapperElementGroup parent,
-    TypeAliasElement2 element,
+    TypeAliasElement element,
     MappableOptions options,
   ) async {
     var annotation = await RecordMapperAnnotation.from(element);
@@ -29,13 +29,13 @@ class TargetRecordMapperElement extends AliasRecordMapperElement {
     bool hasModifiedArgs = false;
 
     var fields = type.positionalFields.length + type.namedFields.length;
-    if (element.typeParameters2.length != fields) {
+    if (element.typeParameters.length != fields) {
       hasModifiedArgs = true;
     }
 
     var args = <String?>[];
 
-    for (var p in element.typeParameters2) {
+    for (var p in element.typeParameters) {
       var arg = _findInheritedTypeArg(p);
       args.add(arg);
       if (arg != null) {
@@ -52,12 +52,12 @@ class TargetRecordMapperElement extends AliasRecordMapperElement {
     return null;
   }();
 
-  String? _findInheritedTypeArg(TypeParameterElement2 p) {
-    var params = element.typeParameters2;
+  String? _findInheritedTypeArg(TypeParameterElement p) {
+    var params = element.typeParameters;
     var types = [...type.positionalFields, ...type.namedFields];
 
     for (var (i, a) in types.indexed) {
-      if (a.type is TypeParameterType && a.type.element3 == p) {
+      if (a.type is TypeParameterType && a.type.element == p) {
         if (i == params.indexOf(p)) {
           return null;
         } else {

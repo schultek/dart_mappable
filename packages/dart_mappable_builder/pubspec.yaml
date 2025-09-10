@@ -10,15 +10,15 @@ environment:
   sdk: '>=3.7.0 <4.0.0'
 
 dependencies:
-  analyzer: '>=7.5.9 <=8.0.0'
+  analyzer: ^8.0.0
   ansicolor: ^2.0.1
-  build: ^3.0.0
+  build: ^4.0.0
   collection: ^1.15.0
   dart_mappable: ^4.6.0
   dart_style: ^3.0.1
   glob: ^2.1.0
   path: ^1.8.0
-  source_gen: ^3.0.0
+  source_gen: ^4.0.0
 
 dev_dependencies:
   build_runner: ^2.4.14

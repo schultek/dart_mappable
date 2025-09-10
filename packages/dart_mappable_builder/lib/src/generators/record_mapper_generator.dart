@@ -23,6 +23,16 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
           if (_instance == null) {
             MapperContainer.globals.use(_instance = ${element.mapperName}._());
             MapperBase.addType(${element.genericTypeParamsDeclaration}(f) => f<${element.genericRecordDeclaration}>());
+    ''');
+
+    var linked = element.linkedElements;
+    if (linked.isNotEmpty) {
+      for (var l in linked) {
+        output.write('      $l.ensureInitialized();\n');
+      }
+    }
+
+    output.write('''
           }
           return _instance!;
         }

@@ -127,7 +127,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
     var node = await element.element.getNode();
     if (node is ClassDeclaration) {
       var hasCopyWithMixin =
-          node.withClause?.mixinTypes.any((t) => t.name2.lexeme == mixinName) ??
+          node.withClause?.mixinTypes.any((t) => t.name.lexeme == mixinName) ??
           false;
 
       if (!hasCopyWithMixin) {
@@ -151,7 +151,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
       }
     } else if (node is ClassTypeAlias) {
       var hasCopyWithMixin = node.withClause.mixinTypes.any(
-        (t) => t.name2.lexeme == mixinName,
+        (t) => t.name.lexeme == mixinName,
       );
 
       if (!hasCopyWithMixin) {

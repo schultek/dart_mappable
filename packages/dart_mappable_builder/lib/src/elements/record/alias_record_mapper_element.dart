@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:source_gen/source_gen.dart';
@@ -21,16 +21,16 @@ class RecordMapperAnnotation extends MapperAnnotation {
   @override
   RecordTypeAnnotation get node => super.node as RecordTypeAnnotation;
 
-  static Future<RecordMapperAnnotation> from(TypeAliasElement2 element) async {
-    var n = await element.enclosingElement2.getResolvedNode();
+  static Future<RecordMapperAnnotation> from(TypeAliasElement element) async {
+    var n = await element.enclosingElement.getResolvedNode();
     var node =
         (n as CompilationUnit).declarations
             .whereType<GenericTypeAlias>()
-            .where((d) => d.name.lexeme == element.name3)
+            .where((d) => d.name.lexeme == element.name)
             .first;
 
     var arguments = await getAnnotationArguments(node, MappableRecord);
-    var value = TypeChecker.fromRuntime(
+    var value = TypeChecker.typeNamed(
       MappableRecord,
     ).firstAnnotationOf(element);
     return RecordMapperAnnotation(
@@ -43,7 +43,7 @@ class RecordMapperAnnotation extends MapperAnnotation {
 }
 
 abstract class AliasRecordMapperElement
-    extends RecordMapperElement<TypeAliasElement2> {
+    extends RecordMapperElement<TypeAliasElement> {
   AliasRecordMapperElement(
     super.parent,
     super.element,
@@ -52,7 +52,7 @@ abstract class AliasRecordMapperElement
   );
 
   @override
-  late final String className = element.name3 ?? '';
+  late final String className = element.name ?? '';
 
   @override
   RecordMapperAnnotation get annotation =>
@@ -86,7 +86,7 @@ abstract class AliasRecordMapperElement
   }();
 
   late List<String> typeParamsList =
-      element.typeParameters2
+      element.typeParameters
           .map(
             (p) =>
                 '${p.displayName}${p.bound != null ? ' extends ${parent.prefixedType(p.bound!)}' : ''}',
@@ -95,8 +95,8 @@ abstract class AliasRecordMapperElement
 
   @override
   late String typeParams =
-      element.typeParameters2.isNotEmpty
-          ? '<${element.typeParameters2.map((p) => p.name3 ?? '').join(', ')}>'
+      element.typeParameters.isNotEmpty
+          ? '<${element.typeParameters.map((p) => p.name ?? '').join(', ')}>'
           : '';
 
   @override

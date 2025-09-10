@@ -308,6 +308,108 @@ class _OffsetCopyWithImpl<$R, T> extends RecordCopyWithBase<$R, Offset<T>>
       _OffsetCopyWithImpl($value, $cast, t);
 }
 
+class RectMapper extends RecordMapperBase<Rect> {
+  static RectMapper? _instance;
+  RectMapper._();
+
+  static RectMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = RectMapper._());
+      MapperBase.addType(<A, B>(f) => f<({A bottomRight, B topLeft})>());
+      PointMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  static Point _$topLeft(Rect v) => v.topLeft;
+  static const Field<Rect, Point> _f$topLeft = Field('topLeft', _$topLeft);
+  static Point _$bottomRight(Rect v) => v.bottomRight;
+  static const Field<Rect, Point> _f$bottomRight = Field(
+    'bottomRight',
+    _$bottomRight,
+  );
+
+  @override
+  final MappableFields<Rect> fields = const {
+    #topLeft: _f$topLeft,
+    #bottomRight: _f$bottomRight,
+  };
+
+  @override
+  Function get typeFactory =>
+      (f) => f<Rect>();
+
+  @override
+  List<Type> apply(MappingContext context) {
+    return [];
+  }
+
+  static Rect _instantiate(DecodingData<Rect> data) {
+    return (
+      topLeft: data.dec(_f$topLeft),
+      bottomRight: data.dec(_f$bottomRight),
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static Rect fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<Rect>(map);
+  }
+
+  static Rect fromJson(String json) {
+    return ensureInitialized().decodeJson<Rect>(json);
+  }
+}
+
+extension RectMappable on Rect {
+  Map<String, dynamic> toMap() {
+    return RectMapper.ensureInitialized().encodeMap(this);
+  }
+
+  String toJson() {
+    return RectMapper.ensureInitialized().encodeJson(this);
+  }
+
+  RectCopyWith<Rect> get copyWith =>
+      _RectCopyWithImpl(this, $identity, $identity);
+}
+
+extension RectValueCopy<$R> on ObjectCopyWith<$R, Rect, Rect> {
+  RectCopyWith<$R> get $asRect =>
+      $base.as((v, t, t2) => _RectCopyWithImpl(v, t, t2));
+}
+
+abstract class RectCopyWith<$R> implements RecordCopyWith<$R, Rect> {
+  $R call({Point? topLeft, Point? bottomRight});
+  RectCopyWith<$R2> $chain<$R2>(Then<Rect, $R2> t);
+}
+
+class _RectCopyWithImpl<$R> extends RecordCopyWithBase<$R, Rect>
+    implements RectCopyWith<$R> {
+  _RectCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final RecordMapperBase<Rect> $mapper = RectMapper.ensureInitialized();
+  @override
+  $R call({Point? topLeft, Point? bottomRight}) => $apply(
+    FieldCopyWithData({
+      if (topLeft != null) #topLeft: topLeft,
+      if (bottomRight != null) #bottomRight: bottomRight,
+    }),
+  );
+  @override
+  Rect $make(CopyWithData data) => (
+    topLeft: data.get(#topLeft, or: $value.topLeft),
+    bottomRight: data.get(#bottomRight, or: $value.bottomRight),
+  );
+
+  @override
+  RectCopyWith<$R2> $chain<$R2>(Then<Rect, $R2> t) =>
+      _RectCopyWithImpl($value, $cast, t);
+}
+
 class HypotenuseMapper extends RecordMapperBase<Hypotenuse> {
   static HypotenuseMapper? _instance;
   HypotenuseMapper._();
