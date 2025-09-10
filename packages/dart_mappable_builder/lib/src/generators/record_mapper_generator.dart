@@ -133,7 +133,7 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
   }
 
   void generateHook(StringBuffer output) {
-    var hook = element.hookForRecord;
+    var hook = element.hookForElement;
     if (hook != null) {
       output.write('''
         @override

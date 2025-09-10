@@ -9,7 +9,7 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
   Future<void> generateInstantiateMethod(StringBuffer output) async {
     output.write('\n');
 
-    var hook = element.hookForClass;
+    var hook = element.hookForElement;
     if (hook != null) {
       output.write('''
         @override
@@ -89,7 +89,7 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
     if (element.superElement == null) {
       return [];
     } else {
-      var hook = element.superElement!.hookForClass;
+      var hook = element.superElement!.hookForElement;
       return [if (hook != null) hook, ..._getSuperHooks(element.superElement!)];
     }
   }
