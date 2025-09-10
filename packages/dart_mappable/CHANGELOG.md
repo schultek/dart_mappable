@@ -1,6 +1,8 @@
-# Unreleased
+# 4.6.1
 
-- Record mappers now correctly generate hooks specified on the record annotation itself, not just those on individual fields.
+- Record mappers now correctly uses hooks specified on the `@MappableRecord` annotation.
+- Nested records are now correctly initialized, and record mappers are included in the generated `initializeMappers()` method.
+- Getters are no longer falsely used in equality or stringify methods.
 
 # 4.6.0
 
