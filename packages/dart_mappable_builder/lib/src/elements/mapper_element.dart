@@ -67,4 +67,19 @@ abstract class InterfaceMapperElement<T extends Element>
   String get typeParamsDeclaration;
 
   List<MapperFieldElement> get fields;
+
+  late final String? hookForElement = () {
+    var hook = annotation.value?.read('hook');
+    if (hook != null && !hook.isNull) {
+      var node = annotation.getPropertyNode('hook');
+      if (node != null) {
+        var hook = node.toSource();
+        if (node is InstanceCreationExpression) {
+          hook = 'const $hook';
+        }
+        return hook;
+      }
+    }
+    return null;
+  }();
 }

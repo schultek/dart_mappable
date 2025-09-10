@@ -177,6 +177,7 @@ void initializeMappers() {
   p32.PointMapper.ensureInitialized();
   p32.OffsetMapper.ensureInitialized();
   p32.RectMapper.ensureInitialized();
+  p32.HypotenuseMapper.ensureInitialized();
   p33.AMapper.ensureInitialized();
   p33.CMapper.ensureInitialized();
   p34.AMapper.ensureInitialized();

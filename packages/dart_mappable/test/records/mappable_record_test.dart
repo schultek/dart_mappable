@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
@@ -21,6 +23,22 @@ class RoundingHook extends MappingHook {
     return (value as num).round();
   }
 }
+
+class HypotenuseHook extends MappingHook {
+  const HypotenuseHook();
+
+  @override
+  Object? beforeDecode(Object? value) {
+    final map = (value as Map).cast<String, dynamic>();
+    final leg1 = map['x'] as num;
+    final leg2 = map['y'] as num;
+    map['hypotenuse'] = sqrt(leg1 * leg1 + leg2 * leg2);
+    return map;
+  }
+}
+
+@MappableRecord(hook: HypotenuseHook())
+typedef Hypotenuse = ({double x, double y, double hypotenuse});
 
 @MappableClass()
 class Location with LocationMappable {
@@ -68,6 +86,20 @@ void main() {
       var p = decode<Point>({'a': 1, 'y': 2});
       expect(p, equals((x: 1, y: 2)));
       expect(encode(p), equals({'a': 1, 'y': 2}));
+    });
+
+    test('can decode and encode record hook on record', () {
+      var decode = MapperContainer.globals.fromMap;
+      var encode = MapperContainer.globals.toMap;
+
+      HypotenuseMapper.ensureInitialized();
+
+      var h = decode<Hypotenuse>({'x': 3, 'y': 4});
+      expect(h, equals((x: 3, y: 4, hypotenuse: sqrt(3 * 3 + 4 * 4))));
+      expect(
+        encode(h),
+        equals({'x': 3, 'y': 4, 'hypotenuse': sqrt(3 * 3 + 4 * 4)}),
+      );
     });
 
     test('can decode and encode nested record', () {
