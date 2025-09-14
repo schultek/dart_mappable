@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../../utils.dart';
@@ -13,7 +13,7 @@ abstract class ClassMapperParamElement extends MapperParamElement {
   ClassMapperParamElement(this.parameter);
 
   @override
-  String get name => parameter.name3 ?? '';
+  String get name => parameter.name ?? '';
 
   @override
   DartType get type => parameter.type;
@@ -31,15 +31,15 @@ abstract class ClassMapperParamElement extends MapperParamElement {
 }
 
 class FieldParamElement extends ClassMapperParamElement {
-  final PropertyInducingElement2 field;
-  final PropertyInducingElement2? superField;
+  final PropertyInducingElement field;
+  final PropertyInducingElement? superField;
 
   FieldParamElement(super.parameter, this.field, [this.superField]);
 
   @override
   bool get isCovariant =>
       superField != null &&
-      !parameter.library2!.typeSystem.isAssignableTo(
+      !parameter.library!.typeSystem.isAssignableTo(
         superField!.type,
         field.type,
       );
@@ -50,7 +50,7 @@ class FieldParamElement extends ClassMapperParamElement {
   }
 
   @override
-  PropertyInducingElement2 get accessor => field;
+  PropertyInducingElement get accessor => field;
 
   @override
   DartObject? get annotation =>
@@ -68,7 +68,7 @@ class SuperParamElement extends ClassMapperParamElement {
   @override
   bool get isCovariant {
     var isCov =
-        !parameter.library2!.typeSystem.isAssignableTo(
+        !parameter.library!.typeSystem.isAssignableTo(
           superParameter.parameter.type,
           parameter.type,
         );
@@ -76,7 +76,7 @@ class SuperParamElement extends ClassMapperParamElement {
   }
 
   @override
-  PropertyInducingElement2? get accessor => superParameter.accessor;
+  PropertyInducingElement? get accessor => superParameter.accessor;
 
   @override
   String? get key => super.key ?? superParameter.key;
@@ -117,5 +117,5 @@ class UnresolvedParamElement extends ClassMapperParamElement {
   UnresolvedParamElement(super.parameter, this.message);
 
   @override
-  PropertyInducingElement2? get accessor => null;
+  PropertyInducingElement? get accessor => null;
 }

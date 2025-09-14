@@ -308,3 +308,218 @@ class _OffsetCopyWithImpl<$R, T> extends RecordCopyWithBase<$R, Offset<T>>
       _OffsetCopyWithImpl($value, $cast, t);
 }
 
+class RectMapper extends RecordMapperBase<Rect> {
+  static RectMapper? _instance;
+  RectMapper._();
+
+  static RectMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = RectMapper._());
+      MapperBase.addType(<A, B>(f) => f<({A bottomRight, B topLeft})>());
+      PointMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  static Point _$topLeft(Rect v) => v.topLeft;
+  static const Field<Rect, Point> _f$topLeft = Field('topLeft', _$topLeft);
+  static Point _$bottomRight(Rect v) => v.bottomRight;
+  static const Field<Rect, Point> _f$bottomRight = Field(
+    'bottomRight',
+    _$bottomRight,
+  );
+
+  @override
+  final MappableFields<Rect> fields = const {
+    #topLeft: _f$topLeft,
+    #bottomRight: _f$bottomRight,
+  };
+
+  @override
+  Function get typeFactory =>
+      (f) => f<Rect>();
+
+  @override
+  List<Type> apply(MappingContext context) {
+    return [];
+  }
+
+  static Rect _instantiate(DecodingData<Rect> data) {
+    return (
+      topLeft: data.dec(_f$topLeft),
+      bottomRight: data.dec(_f$bottomRight),
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static Rect fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<Rect>(map);
+  }
+
+  static Rect fromJson(String json) {
+    return ensureInitialized().decodeJson<Rect>(json);
+  }
+}
+
+extension RectMappable on Rect {
+  Map<String, dynamic> toMap() {
+    return RectMapper.ensureInitialized().encodeMap(this);
+  }
+
+  String toJson() {
+    return RectMapper.ensureInitialized().encodeJson(this);
+  }
+
+  RectCopyWith<Rect> get copyWith =>
+      _RectCopyWithImpl(this, $identity, $identity);
+}
+
+extension RectValueCopy<$R> on ObjectCopyWith<$R, Rect, Rect> {
+  RectCopyWith<$R> get $asRect =>
+      $base.as((v, t, t2) => _RectCopyWithImpl(v, t, t2));
+}
+
+abstract class RectCopyWith<$R> implements RecordCopyWith<$R, Rect> {
+  $R call({Point? topLeft, Point? bottomRight});
+  RectCopyWith<$R2> $chain<$R2>(Then<Rect, $R2> t);
+}
+
+class _RectCopyWithImpl<$R> extends RecordCopyWithBase<$R, Rect>
+    implements RectCopyWith<$R> {
+  _RectCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final RecordMapperBase<Rect> $mapper = RectMapper.ensureInitialized();
+  @override
+  $R call({Point? topLeft, Point? bottomRight}) => $apply(
+    FieldCopyWithData({
+      if (topLeft != null) #topLeft: topLeft,
+      if (bottomRight != null) #bottomRight: bottomRight,
+    }),
+  );
+  @override
+  Rect $make(CopyWithData data) => (
+    topLeft: data.get(#topLeft, or: $value.topLeft),
+    bottomRight: data.get(#bottomRight, or: $value.bottomRight),
+  );
+
+  @override
+  RectCopyWith<$R2> $chain<$R2>(Then<Rect, $R2> t) =>
+      _RectCopyWithImpl($value, $cast, t);
+}
+
+class HypotenuseMapper extends RecordMapperBase<Hypotenuse> {
+  static HypotenuseMapper? _instance;
+  HypotenuseMapper._();
+
+  static HypotenuseMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = HypotenuseMapper._());
+      MapperBase.addType(<A, B, C>(f) => f<({A hypotenuse, B x, C y})>());
+    }
+    return _instance!;
+  }
+
+  static double _$x(Hypotenuse v) => v.x;
+  static const Field<Hypotenuse, double> _f$x = Field('x', _$x);
+  static double _$y(Hypotenuse v) => v.y;
+  static const Field<Hypotenuse, double> _f$y = Field('y', _$y);
+  static double _$hypotenuse(Hypotenuse v) => v.hypotenuse;
+  static const Field<Hypotenuse, double> _f$hypotenuse = Field(
+    'hypotenuse',
+    _$hypotenuse,
+  );
+
+  @override
+  final MappableFields<Hypotenuse> fields = const {
+    #x: _f$x,
+    #y: _f$y,
+    #hypotenuse: _f$hypotenuse,
+  };
+
+  @override
+  Function get typeFactory =>
+      (f) => f<Hypotenuse>();
+
+  @override
+  List<Type> apply(MappingContext context) {
+    return [];
+  }
+
+  @override
+  final MappingHook hook = const HypotenuseHook();
+
+  static Hypotenuse _instantiate(DecodingData<Hypotenuse> data) {
+    return (
+      x: data.dec(_f$x),
+      y: data.dec(_f$y),
+      hypotenuse: data.dec(_f$hypotenuse),
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static Hypotenuse fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<Hypotenuse>(map);
+  }
+
+  static Hypotenuse fromJson(String json) {
+    return ensureInitialized().decodeJson<Hypotenuse>(json);
+  }
+}
+
+extension HypotenuseMappable on Hypotenuse {
+  Map<String, dynamic> toMap() {
+    return HypotenuseMapper.ensureInitialized().encodeMap(this);
+  }
+
+  String toJson() {
+    return HypotenuseMapper.ensureInitialized().encodeJson(this);
+  }
+
+  HypotenuseCopyWith<Hypotenuse> get copyWith =>
+      _HypotenuseCopyWithImpl(this, $identity, $identity);
+}
+
+extension HypotenuseValueCopy<$R>
+    on ObjectCopyWith<$R, Hypotenuse, Hypotenuse> {
+  HypotenuseCopyWith<$R> get $asHypotenuse =>
+      $base.as((v, t, t2) => _HypotenuseCopyWithImpl(v, t, t2));
+}
+
+abstract class HypotenuseCopyWith<$R>
+    implements RecordCopyWith<$R, Hypotenuse> {
+  $R call({double? x, double? y, double? hypotenuse});
+  HypotenuseCopyWith<$R2> $chain<$R2>(Then<Hypotenuse, $R2> t);
+}
+
+class _HypotenuseCopyWithImpl<$R> extends RecordCopyWithBase<$R, Hypotenuse>
+    implements HypotenuseCopyWith<$R> {
+  _HypotenuseCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final RecordMapperBase<Hypotenuse> $mapper =
+      HypotenuseMapper.ensureInitialized();
+  @override
+  $R call({double? x, double? y, double? hypotenuse}) => $apply(
+    FieldCopyWithData({
+      if (x != null) #x: x,
+      if (y != null) #y: y,
+      if (hypotenuse != null) #hypotenuse: hypotenuse,
+    }),
+  );
+  @override
+  Hypotenuse $make(CopyWithData data) => (
+    x: data.get(#x, or: $value.x),
+    y: data.get(#y, or: $value.y),
+    hypotenuse: data.get(#hypotenuse, or: $value.hypotenuse),
+  );
+
+  @override
+  HypotenuseCopyWith<$R2> $chain<$R2>(Then<Hypotenuse, $R2> t) =>
+      _HypotenuseCopyWithImpl($value, $cast, t);
+}
+

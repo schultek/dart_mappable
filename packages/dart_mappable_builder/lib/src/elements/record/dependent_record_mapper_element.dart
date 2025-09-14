@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 
 import '../../builder_options.dart';
 import '../../mapper_group.dart';
@@ -14,7 +14,7 @@ class DependentRecordMapperElement extends AliasRecordMapperElement {
 
   static Future<DependentRecordMapperElement> from(
     MapperElementGroup parent,
-    TypeAliasElement2 element,
+    TypeAliasElement element,
     MappableOptions options,
   ) async {
     var annotation = await RecordMapperAnnotation.from(element);

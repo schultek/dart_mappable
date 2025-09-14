@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_visitor.dart';
 import 'package:dart_mappable/dart_mappable.dart';
@@ -33,7 +33,7 @@ abstract class MapperFieldElement {
   Future<String> get hook;
 }
 
-Future<String?> hookFor(Element2? element) async {
+Future<String?> hookFor(Element? element) async {
   if (element == null) {
     return null;
   }

@@ -1,3 +1,9 @@
+# 4.6.1
+
+- Record mappers now correctly uses hooks specified on the `@MappableRecord` annotation.
+- Nested records are now correctly initialized, and record mappers are included in the generated `initializeMappers()` method.
+- Getters are no longer falsely used in equality or stringify methods.
+
 # 4.6.0
 
 - Add support for self-referencing generics (e.g. `T extends Comparable<T>`)

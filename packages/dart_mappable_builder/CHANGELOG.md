@@ -1,3 +1,10 @@
+# 4.6.1
+
+- Record mappers now correctly uses hooks specified on the `@MappableRecord` annotation.
+- Nested records are now correctly initialized, and record mappers are included in the generated `initializeMappers()` method.
+- Getters are no longer falsely used in equality or stringify methods.
+- Bump `analyzer`to `^8.0.0`, and `build` and `source_gen` to `^4.0.0`.
+
 # 4.6.0
 
 - Migrate to new `element2` analyzer model.

@@ -42,6 +42,7 @@ import '../serialization/desync_serialization_test.dart' as p36;
 import '../serialization/encoding_params_test.dart' as p37;
 import '../serialization/nested_serialization_test.dart' as p38;
 import '../serialization/param_rewrite_test.dart' as p39;
+import '../serialization/with_getters_test.dart' as p40;
 import 'init_lib_test.dart' as p25;
 import 'models/model.dart' as p26;
 
@@ -114,6 +115,10 @@ void initializeMappers() {
   p14.MapWrapperMapper.ensureInitialized();
   p15.ExampleMapper.ensureInitialized();
   p16.PersonMapper.ensureInitialized();
+  p16.CakeMapper.ensureInitialized();
+  p16.Person2Mapper.ensureInitialized();
+  p16.AnimalMapper.ensureInitialized();
+  p16.PetMapper.ensureInitialized();
   p17.DSOpacityDataMapper.ensureInitialized();
   p17.HOpacityMapper.ensureInitialized();
   p18.BoxMapper.ensureInitialized();
@@ -169,6 +174,10 @@ void initializeMappers() {
   p31.ItemsMapper.ensureInitialized();
   p31.ItemMapper.ensureInitialized();
   p32.LocationMapper.ensureInitialized();
+  p32.PointMapper.ensureInitialized();
+  p32.OffsetMapper.ensureInitialized();
+  p32.RectMapper.ensureInitialized();
+  p32.HypotenuseMapper.ensureInitialized();
   p33.AMapper.ensureInitialized();
   p33.CMapper.ensureInitialized();
   p34.AMapper.ensureInitialized();
@@ -186,5 +195,6 @@ void initializeMappers() {
   p39.AMapper.ensureInitialized();
   p39.BMapper.ensureInitialized();
   p39.CMapper.ensureInitialized();
+  p40.ClassWithGettersMapper.ensureInitialized();
 }
 

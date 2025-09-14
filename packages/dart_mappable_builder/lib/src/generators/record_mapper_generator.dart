@@ -23,6 +23,16 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
           if (_instance == null) {
             MapperContainer.globals.use(_instance = ${element.mapperName}._());
             MapperBase.addType(${element.genericTypeParamsDeclaration}(f) => f<${element.genericRecordDeclaration}>());
+    ''');
+
+    var linked = element.linkedElements;
+    if (linked.isNotEmpty) {
+      for (var l in linked) {
+        output.write('      $l.ensureInitialized();\n');
+      }
+    }
+
+    output.write('''
           }
           return _instance!;
         }
@@ -32,6 +42,7 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
 
     generateTypeFactory(output);
     generateApplyOverride(output);
+    generateHook(output);
     generateInstantiate(output);
     generateStaticDecoders(output);
 
@@ -119,5 +130,15 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
       '    return ensureInitialized().decodeJson<${element.className}${element.typeParams}>(json);\n'
       '  }\n',
     );
+  }
+
+  void generateHook(StringBuffer output) {
+    var hook = element.hookForElement;
+    if (hook != null) {
+      output.write('''
+        @override
+        final MappingHook hook = $hook;
+      ''');
+    }
   }
 }

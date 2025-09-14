@@ -9,7 +9,7 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
   Future<void> generateInstantiateMethod(StringBuffer output) async {
     output.write('\n');
 
-    var hook = element.hookForClass;
+    var hook = element.hookForElement;
     if (hook != null) {
       output.write('''
         @override
@@ -49,7 +49,7 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
     ''');
     } else {
       final deepBounds =
-          element.element.typeParameters2
+          element.element.typeParameters
               .map(
                 (p) =>
                     p.bound != null
@@ -58,13 +58,13 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
               )
               .toList();
       final flatBounds =
-          element.element.typeParameters2.map((p) {
+          element.element.typeParameters.map((p) {
             if (p.bound case InterfaceType bound) {
-              return '${p.name3} extends ${element.parent.prefixOfElement(bound.element3)}${bound.element3.name3!}';
+              return '${p.name} extends ${element.parent.prefixOfElement(bound.element)}${bound.element.name!}';
             } else if (p.bound != null) {
-              return '${p.name3} extends ${element.parent.prefixedType(p.bound!)}';
+              return '${p.name} extends ${element.parent.prefixedType(p.bound!)}';
             } else {
-              return '${p.name3}';
+              return '${p.name}';
             }
           }).toList();
 
@@ -74,7 +74,7 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
       final condition = [
         for (final (i, bound) in deepBounds.indexed)
           if (bound != null)
-            '<${element.element.typeParameters2[i].name3}>[] is List<$bound>',
+            '<${element.element.typeParameters[i].name}>[] is List<$bound>',
       ].join(' && ');
 
       output.write('''
@@ -89,7 +89,7 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
     if (element.superElement == null) {
       return [];
     } else {
-      var hook = element.superElement!.hookForClass;
+      var hook = element.superElement!.hookForElement;
       return [if (hook != null) hook, ..._getSuperHooks(element.superElement!)];
     }
   }
@@ -132,7 +132,7 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
         return "throw MapperException.missingConstructor('${element.className}');";
       }
     } else {
-      return 'return ${element.prefixedDecodingClassName}${element.constructor.element!.name3 != 'new' ? '.${element.constructor.element!.name3}' : ''}(${await _generateConstructorParams()});';
+      return 'return ${element.prefixedDecodingClassName}${element.constructor.element!.name != 'new' ? '.${element.constructor.element!.name}' : ''}(${await _generateConstructorParams()});';
     }
   }
 
@@ -142,9 +142,9 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
       var str = '';
 
       if (param.parameter.isNamed) {
-        str = '${param.parameter.name3 ?? ''}: ';
+        str = '${param.parameter.name ?? ''}: ';
       }
-      str += 'data.dec(_f\$${param.accessor?.name3 ?? param.parameter.name3})';
+      str += 'data.dec(_f\$${param.accessor?.name ?? param.parameter.name})';
 
       params.add(str);
     }

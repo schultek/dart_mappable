@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
@@ -11,14 +11,14 @@ import '../param/record_mapper_param_element.dart';
 
 class ClassMapperFieldElement extends MapperFieldElement {
   final MapperParamElement? param;
-  final PropertyInducingElement2? field;
+  final PropertyInducingElement? field;
   final InterfaceMapperElement parent;
 
   ClassMapperFieldElement(this.param, this.field, this.parent)
     : assert(param != null || field != null);
 
   @override
-  late final String name = field?.name3 ?? param!.name;
+  late final String name = field?.name ?? param!.name;
 
   @override
   late final bool needsGetter =
@@ -38,10 +38,10 @@ class ClassMapperFieldElement extends MapperFieldElement {
   }();
 
   late final DartType resolvedType = () {
-    if (field?.enclosingElement2 is InterfaceElement2) {
-      var it = (parent.element as InterfaceElement2).thisType;
-      it = it.asInstanceOf2(field!.enclosingElement2 as InterfaceElement2)!;
-      var getter = it.getGetter2(field!.name3 ?? '');
+    if (field?.enclosingElement is InterfaceElement) {
+      var it = (parent.element as InterfaceElement).thisType;
+      it = it.asInstanceOf(field!.enclosingElement as InterfaceElement)!;
+      var getter = it.getGetter(field!.name ?? '');
       return getter!.type.returnType;
     }
     return field?.type ?? param!.type;
@@ -82,13 +82,13 @@ class ClassMapperFieldElement extends MapperFieldElement {
 
   late bool isAnnotated =
       (field != null && fieldChecker.hasAnnotationOf(field!)) ||
-      (field?.getter2 != null && fieldChecker.hasAnnotationOf(field!.getter2!));
+      (field?.getter != null && fieldChecker.hasAnnotationOf(field!.getter!));
 
   @override
   late String mode = () {
     if (param == null && field != null && !isAnnotated) {
       return ', mode: FieldMode.member';
-    } else if (param != null && param!.accessor is! FieldElement2) {
+    } else if (param != null && param!.accessor is! FieldElement) {
       return ', mode: FieldMode.param';
     } else {
       return '';
@@ -103,7 +103,7 @@ class ClassMapperFieldElement extends MapperFieldElement {
     }
     key ??=
         _keyFor(field) ??
-        _keyFor(field?.getter2) ??
+        _keyFor(field?.getter) ??
         parent.caseStyle.transform(name);
     if (key != name) {
       return ", key: r'$key'";
@@ -142,12 +142,12 @@ class ClassMapperFieldElement extends MapperFieldElement {
     var hook =
         (await param?.getHook()) ??
         (await hookFor(field)) ??
-        (await hookFor(field?.getter2));
+        (await hookFor(field?.getter));
     return hook != null ? ', hook: $hook' : '';
   }();
 }
 
-String? _keyFor(Element2? element) {
+String? _keyFor(Element? element) {
   if (element == null) {
     return null;
   }
