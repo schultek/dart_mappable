@@ -145,13 +145,38 @@ class MappableConstructor {
 /// {@category Configuration}
 /// {@category Mapping Hooks}
 class MappableField {
-  const MappableField({this.key, this.hook});
+  const MappableField({
+    this.key,
+    this.hook,
+    this.includeFromJson,
+    this.includeToJson,
+    this.includeIfNull,
+  });
 
   /// Use this key instead of the field name.
   final String? key;
 
   /// Define custom hooks used only for this field.
   final MappingHook? hook;
+
+  /// Whether to include this field during deserialization (fromJson/fromMap).
+  ///
+  /// If false, this field will be ignored when decoding from JSON/Map.
+  /// Defaults to true.
+  final bool? includeFromJson;
+
+  /// Whether to include this field during serialization (toJson/toMap).
+  ///
+  /// If false, this field will be ignored when encoding to JSON/Map.
+  /// Defaults to true.
+  final bool? includeToJson;
+
+  /// Whether to include this field even if its value is null.
+  ///
+  /// This overrides the class-level [ignoreNull] setting for this specific field.
+  /// If true, null values will be included in serialization.
+  /// Defaults to false (respects class-level ignoreNull setting).
+  final bool? includeIfNull;
 }
 
 /// Used to annotate a record in order to generate mapping code.

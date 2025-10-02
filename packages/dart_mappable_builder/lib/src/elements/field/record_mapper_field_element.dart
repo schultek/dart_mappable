@@ -85,4 +85,13 @@ class RecordMapperFieldElement extends MapperFieldElement {
     var hook = await param.getHook();
     return hook != null ? ', hook: $hook' : '';
   }();
+
+  @override
+  String get includeFromJson => '';
+
+  @override
+  String get includeToJson => '';
+
+  @override
+  String get includeIfNull => '';
 }

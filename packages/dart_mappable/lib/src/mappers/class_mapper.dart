@@ -147,7 +147,12 @@ abstract class ClassMapperBase<T extends Object>
   /// See [FieldMode] for more.
   late final List<Field<T, dynamic>> _params =
       fields.values
-          .where((f) => f.mode != FieldMode.member && f.getter != null)
+          .where(
+            (f) =>
+                f.mode != FieldMode.member &&
+                f.getter != null &&
+                f.includeFromJson,
+          )
           .toList();
 
   @override
