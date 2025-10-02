@@ -23,13 +23,28 @@ class BaseMapper extends ClassMapperBase<Base> {
   final String id = 'Base';
 
   static String _$id(Base v) => v.id;
-  static const Field<Base, String> _f$id = Field('id', _$id);
+  static const Field<Base, String> _f$id = Field(
+    'id',
+    _$id,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static String _$name(Base v) => v.name;
-  static const Field<Base, String> _f$name = Field('name', _$name);
+  static const Field<Base, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static Map<String, dynamic> _$objects(Base v) => v.objects;
   static const Field<Base, Map<String, dynamic>> _f$objects = Field(
     'objects',
     _$objects,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -85,13 +100,28 @@ class OneMapper extends ClassMapperBase<One> {
   final String id = 'One';
 
   static String _$id(One v) => v.id;
-  static const Field<One, String> _f$id = Field('id', _$id);
+  static const Field<One, String> _f$id = Field(
+    'id',
+    _$id,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static String _$name(One v) => v.name;
-  static const Field<One, String> _f$name = Field('name', _$name);
+  static const Field<One, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static Map<String, dynamic> _$objects(One v) => v.objects;
   static const Field<One, Map<String, dynamic>> _f$objects = Field(
     'objects',
     _$objects,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -211,7 +241,13 @@ class TwoMapper extends ClassMapperBase<Two> {
   final String id = 'Two';
 
   static String _$id(Two v) => v.id;
-  static const Field<Two, String> _f$id = Field('id', _$id);
+  static const Field<Two, String> _f$id = Field(
+    'id',
+    _$id,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Two> fields = const {#id: _f$id};

@@ -22,25 +22,43 @@ class UserMapper extends ClassMapperBase<User> {
   final String id = 'User';
 
   static String _$name(User v) => v.name;
-  static const Field<User, String> _f$name = Field('name', _$name);
+  static const Field<User, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static String _$email(User v) => v.email;
-  static const Field<User, String> _f$email = Field('email', _$email);
+  static const Field<User, String> _f$email = Field(
+    'email',
+    _$email,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static String? _$passwordValue(User v) => v.passwordValue;
   static const Field<User, String> _f$passwordValue = Field(
     'passwordValue',
     _$passwordValue,
+    includeFromJson: true,
     includeToJson: false,
+    includeIfNull: false,
   );
   static DateTime? _$lastLoginValue(User v) => v.lastLoginValue;
   static const Field<User, DateTime> _f$lastLoginValue = Field(
     'lastLoginValue',
     _$lastLoginValue,
     includeFromJson: false,
+    includeToJson: true,
+    includeIfNull: false,
   );
   static String? _$secretFieldValue(User v) => v.secretFieldValue;
   static const Field<User, String> _f$secretFieldValue = Field(
     'secretFieldValue',
     _$secretFieldValue,
+    includeFromJson: true,
+    includeToJson: true,
     includeIfNull: true,
   );
 
@@ -168,18 +186,25 @@ class UserWithIgnoreNullMapper extends ClassMapperBase<UserWithIgnoreNull> {
   static const Field<UserWithIgnoreNull, String> _f$name = Field(
     'name',
     _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
   static String? _$emailValue(UserWithIgnoreNull v) => v.emailValue;
   static const Field<UserWithIgnoreNull, String> _f$emailValue = Field(
     'emailValue',
     _$emailValue,
+    includeFromJson: true,
+    includeToJson: true,
     includeIfNull: true,
   );
   static String? _$passwordValue(UserWithIgnoreNull v) => v.passwordValue;
   static const Field<UserWithIgnoreNull, String> _f$passwordValue = Field(
     'passwordValue',
     _$passwordValue,
+    includeFromJson: true,
     includeToJson: false,
+    includeIfNull: false,
   );
 
   @override
@@ -324,12 +349,20 @@ class MixedFieldModesMapper extends ClassMapperBase<MixedFieldModes> {
   final String id = 'MixedFieldModes';
 
   static String _$name(MixedFieldModes v) => v.name;
-  static const Field<MixedFieldModes, String> _f$name = Field('name', _$name);
+  static const Field<MixedFieldModes, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static String? _$computedFieldValue(MixedFieldModes v) =>
       v.computedFieldValue;
   static const Field<MixedFieldModes, String> _f$computedFieldValue = Field(
     'computedFieldValue',
     _$computedFieldValue,
+    includeFromJson: true,
+    includeToJson: true,
     includeIfNull: true,
   );
   static String? _$ignoredFieldValue(MixedFieldModes v) => v.ignoredFieldValue;
@@ -338,6 +371,7 @@ class MixedFieldModesMapper extends ClassMapperBase<MixedFieldModes> {
     _$ignoredFieldValue,
     includeFromJson: false,
     includeToJson: false,
+    includeIfNull: false,
   );
 
   @override

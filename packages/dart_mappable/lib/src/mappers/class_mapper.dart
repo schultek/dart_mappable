@@ -155,6 +155,12 @@ abstract class ClassMapperBase<T extends Object>
           )
           .toList();
 
+  /// The set of fields to include during encoding.
+  late final List<Field<T, dynamic>> _encodingParams =
+      fields.values
+          .where((f) => f.mode != FieldMode.member && f.getter != null)
+          .toList();
+
   @override
   T decoder(Object? value, DecodingContext context) {
     if (superHook != null && !context.inherited) {
@@ -219,7 +225,7 @@ abstract class ClassMapperBase<T extends Object>
   Object? encode(T value, EncodingContext context) {
     var result = InterfaceMapperBase.encodeFields(
       value,
-      _params,
+      _encodingParams,
       ignoreNull,
       context,
       context.options?.shallow ?? shallowEncoding,

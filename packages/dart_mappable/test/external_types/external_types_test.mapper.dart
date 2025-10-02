@@ -26,6 +26,9 @@ class PersonMapper extends ClassMapperBase<Person> {
     'firstName',
     _$firstName,
     key: r'first_name',
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -118,7 +121,13 @@ class CakeMapper extends ClassMapperBase<f.Cake> {
   final String id = 'Cake';
 
   static String _$type(f.Cake v) => v.type;
-  static const Field<f.Cake, String> _f$type = Field('type', _$type);
+  static const Field<f.Cake, String> _f$type = Field(
+    'type',
+    _$type,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<f.Cake> fields = const {#type: _f$type};
@@ -199,6 +208,9 @@ class Person2Mapper extends ClassMapperBase<m.Person> {
     'firstName',
     _$firstName,
     key: r'first_name',
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -281,7 +293,13 @@ class AnimalMapper extends ClassMapperBase<o.Animal> {
   final String id = 'Animal';
 
   static String _$color(o.Animal v) => v.color;
-  static const Field<o.Animal, String> _f$color = Field('color', _$color);
+  static const Field<o.Animal, String> _f$color = Field(
+    'color',
+    _$color,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<o.Animal> fields = const {#color: _f$color};
@@ -339,9 +357,21 @@ class PetMapper extends SubClassMapperBase<o.Pet> {
   final String id = 'Pet';
 
   static m.Person _$owner(o.Pet v) => v.owner;
-  static const Field<o.Pet, m.Person> _f$owner = Field('owner', _$owner);
+  static const Field<o.Pet, m.Person> _f$owner = Field(
+    'owner',
+    _$owner,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static String _$color(o.Pet v) => v.color;
-  static const Field<o.Pet, String> _f$color = Field('color', _$color);
+  static const Field<o.Pet, String> _f$color = Field(
+    'color',
+    _$color,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<o.Pet> fields = const {

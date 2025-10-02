@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -21,7 +22,13 @@ class PersonMapper extends ClassMapperBase<Person> {
   final String id = 'Person';
 
   static String _$name(Person v) => v.name;
-  static const Field<Person, String> _f$name = Field('name', _$name);
+  static const Field<Person, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Person> fields = const {#name: _f$name};
@@ -52,7 +59,7 @@ mixin PersonMappable {
   }
 
   PersonCopyWith<Person, Person, Person> get copyWith =>
-      _PersonCopyWithImpl(this as Person, $identity, $identity);
+      _PersonCopyWithImpl<Person, Person>(this as Person, $identity, $identity);
   @override
   String toString() {
     return PersonMapper.ensureInitialized().stringifyValue(this as Person);
@@ -71,7 +78,7 @@ mixin PersonMappable {
 
 extension PersonValueCopy<$R, $Out> on ObjectCopyWith<$R, Person, $Out> {
   PersonCopyWith<$R, Person, $Out> get $asPerson =>
-      $base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _PersonCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class PersonCopyWith<$R, $In extends Person, $Out>
@@ -94,5 +101,6 @@ class _PersonCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Person, $Out>
 
   @override
   PersonCopyWith<$R2, Person, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _PersonCopyWithImpl($value, $cast, t);
+      _PersonCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

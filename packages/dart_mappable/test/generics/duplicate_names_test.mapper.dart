@@ -26,13 +26,22 @@ class BoxMapper extends ClassMapperBase<Box> {
       <T extends Content>(f) => f<Box<T>>();
 
   static int _$size(Box v) => v.size;
-  static const Field<Box, int> _f$size = Field('size', _$size);
+  static const Field<Box, int> _f$size = Field(
+    'size',
+    _$size,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static Content _$contents(Box v) => v.contents;
   static dynamic _arg$contents<T extends Content>(f) => f<T>();
   static const Field<Box, Content> _f$contents = Field(
     'contents',
     _$contents,
     arg: _arg$contents,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -140,7 +149,13 @@ class ContentMapper extends ClassMapperBase<Content> {
   final String id = 'Content';
 
   static String _$data(Content v) => v.data;
-  static const Field<Content, String> _f$data = Field('data', _$data);
+  static const Field<Content, String> _f$data = Field(
+    'data',
+    _$data,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Content> fields = const {#data: _f$data};

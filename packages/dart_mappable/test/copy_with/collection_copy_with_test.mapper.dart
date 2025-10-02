@@ -30,6 +30,9 @@ class AMapper extends ClassMapperBase<A> {
     'items',
     _$items,
     arg: _arg$items,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -136,6 +139,9 @@ class BMapper extends ClassMapperBase<B> {
     'items',
     _$items,
     arg: _arg$items,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

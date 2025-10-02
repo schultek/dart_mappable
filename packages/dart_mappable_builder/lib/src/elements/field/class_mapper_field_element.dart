@@ -153,7 +153,7 @@ class ClassMapperFieldElement extends MapperFieldElement {
         _getIncludeFromJson(field?.getter) ??
         _getIncludeFromJson(param?.parameter) ??
         true;
-    return includeFromJson ? '' : ', includeFromJson: false';
+    return ', includeFromJson: $includeFromJson';
   }();
 
   @override
@@ -163,7 +163,7 @@ class ClassMapperFieldElement extends MapperFieldElement {
         _getIncludeToJson(field?.getter) ??
         _getIncludeToJson(param?.parameter) ??
         true;
-    return includeToJson ? '' : ', includeToJson: false';
+    return ', includeToJson: $includeToJson';
   }();
 
   @override
@@ -173,7 +173,7 @@ class ClassMapperFieldElement extends MapperFieldElement {
         _getIncludeIfNull(field?.getter) ??
         _getIncludeIfNull(param?.parameter) ??
         false;
-    return includeIfNull ? ', includeIfNull: true' : '';
+    return ', includeIfNull: $includeIfNull';
   }();
 }
 

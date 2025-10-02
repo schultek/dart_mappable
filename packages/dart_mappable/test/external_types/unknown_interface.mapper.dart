@@ -69,6 +69,9 @@ class DSOpacityDataMapper extends ClassMapperBase<DSOpacityData> {
     _$data,
     opt: true,
     def: const {HOpacity.bzOpacityIntense: 0.4},
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
   static double _$fallback(DSOpacityData v) => v.fallback;
   static const Field<DSOpacityData, double> _f$fallback = Field(
@@ -76,6 +79,9 @@ class DSOpacityDataMapper extends ClassMapperBase<DSOpacityData> {
     _$fallback,
     opt: true,
     def: 0.0,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

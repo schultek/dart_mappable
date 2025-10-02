@@ -23,9 +23,21 @@ class PersonMapper extends ClassMapperBase<Person> {
   final String id = 'Person';
 
   static String _$name(Person v) => v.name;
-  static const Field<Person, String> _f$name = Field('name', _$name);
+  static const Field<Person, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static Car _$car(Person v) => v.car;
-  static const Field<Person, Car> _f$car = Field('car', _$car);
+  static const Field<Person, Car> _f$car = Field(
+    'car',
+    _$car,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Person> fields = const {#name: _f$name, #car: _f$car};
@@ -126,9 +138,21 @@ class CarMapper extends ClassMapperBase<Car> {
   final String id = 'Car';
 
   static Brand? _$brand(Car v) => v.brand;
-  static const Field<Car, Brand> _f$brand = Field('brand', _$brand);
+  static const Field<Car, Brand> _f$brand = Field(
+    'brand',
+    _$brand,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static String _$model(Car v) => v.model;
-  static const Field<Car, String> _f$model = Field('model', _$model);
+  static const Field<Car, String> _f$model = Field(
+    'model',
+    _$model,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Car> fields = const {#brand: _f$brand, #model: _f$model};
@@ -230,7 +254,13 @@ class BrandMapper extends ClassMapperBase<Brand> {
   final String id = 'Brand';
 
   static dynamic _$name(Brand v) => v.name;
-  static const Field<Brand, dynamic> _f$name = Field('name', _$name);
+  static const Field<Brand, dynamic> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Brand> fields = const {#name: _f$name};
@@ -324,11 +354,20 @@ class DealershipMapper extends ClassMapperBase<Dealership> {
   final String id = 'Dealership';
 
   static List<Car> _$cars(Dealership v) => v.cars;
-  static const Field<Dealership, List<Car>> _f$cars = Field('cars', _$cars);
+  static const Field<Dealership, List<Car>> _f$cars = Field(
+    'cars',
+    _$cars,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static Map<Brand, Person?> _$salesRep(Dealership v) => v.salesRep;
   static const Field<Dealership, Map<Brand, Person?>> _f$salesRep = Field(
     'salesRep',
     _$salesRep,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -475,6 +514,9 @@ class ItemListMapper extends ClassMapperBase<ItemList> {
     'items',
     _$items,
     arg: _arg$items,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -534,6 +576,9 @@ class BrandListMapper extends SubClassMapperBase<BrandList> {
     'items',
     _$items,
     key: r'brands',
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -668,13 +713,22 @@ class NamedItemListMapper extends SubClassMapperBase<NamedItemList> {
       <T>(f) => f<NamedItemList<T>>();
 
   static String _$name(NamedItemList v) => v.name;
-  static const Field<NamedItemList, String> _f$name = Field('name', _$name);
+  static const Field<NamedItemList, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static List<dynamic> _$items(NamedItemList v) => v.items;
   static dynamic _arg$items<T>(f) => f<List<T>>();
   static const Field<NamedItemList, List<dynamic>> _f$items = Field(
     'items',
     _$items,
     arg: _arg$items,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -823,6 +877,9 @@ class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
     'key',
     _$key,
     arg: _arg$key,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
   static List<dynamic> _$items(KeyedItemList v) => v.items;
   static dynamic _arg$items<K, T>(f) => f<List<T>>();
@@ -830,6 +887,9 @@ class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
     'items',
     _$items,
     arg: _arg$items,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -994,7 +1054,14 @@ class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
   static List<Comparable<dynamic>> _$items(ComparableItemList v) => v.items;
   static dynamic _arg$items<T extends Comparable<dynamic>>(f) => f<List<T>>();
   static const Field<ComparableItemList, List<Comparable<dynamic>>> _f$items =
-      Field('items', _$items, arg: _arg$items);
+      Field(
+        'items',
+        _$items,
+        arg: _arg$items,
+        includeFromJson: true,
+        includeToJson: true,
+        includeIfNull: false,
+      );
 
   @override
   final MappableFields<ComparableItemList> fields = const {#items: _f$items};

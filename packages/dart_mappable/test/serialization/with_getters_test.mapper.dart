@@ -22,9 +22,21 @@ class ClassWithGettersMapper extends ClassMapperBase<ClassWithGetters> {
   final String id = 'ClassWithGetters';
 
   static String _$name(ClassWithGetters v) => v.name;
-  static const Field<ClassWithGetters, String> _f$name = Field('name', _$name);
+  static const Field<ClassWithGetters, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static int _$count(ClassWithGetters v) => v.count;
-  static const Field<ClassWithGetters, int> _f$count = Field('count', _$count);
+  static const Field<ClassWithGetters, int> _f$count = Field(
+    'count',
+    _$count,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<ClassWithGetters> fields = const {

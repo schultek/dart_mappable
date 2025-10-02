@@ -25,9 +25,18 @@ class AMapper extends ClassMapperBase<A> {
   static const Field<A, Map<String, dynamic>> _f$unmappedProps = Field(
     'unmappedProps',
     _$unmappedProps,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
   static String? _$a(A v) => v.a;
-  static const Field<A, String> _f$a = Field('a', _$a);
+  static const Field<A, String> _f$a = Field(
+    'a',
+    _$a,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<A> fields = const {

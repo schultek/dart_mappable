@@ -35,6 +35,9 @@ class ComparableBoxMapper extends ClassMapperBase<ComparableBox> {
     'value',
     _$value,
     arg: _arg$value,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

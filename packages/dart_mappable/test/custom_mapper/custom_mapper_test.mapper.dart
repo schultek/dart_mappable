@@ -23,11 +23,20 @@ class TestObjMapper extends ClassMapperBase<TestObj> {
   final String id = 'TestObj';
 
   static BigInt? _$x(TestObj v) => v.x;
-  static const Field<TestObj, BigInt> _f$x = Field('x', _$x);
+  static const Field<TestObj, BigInt> _f$x = Field(
+    'x',
+    _$x,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static Map<String, dynamic> _$unmappedProps(TestObj v) => v.unmappedProps;
   static const Field<TestObj, Map<String, dynamic>> _f$unmappedProps = Field(
     'unmappedProps',
     _$unmappedProps,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

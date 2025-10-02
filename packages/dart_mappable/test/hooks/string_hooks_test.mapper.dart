@@ -26,14 +26,27 @@ class AMapper extends ClassMapperBase<A> {
     'a',
     _$a,
     hook: UnescapeNewlinesHook(),
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
   static String? _$b(A v) => v.b;
-  static const Field<A, String> _f$b = Field('b', _$b, hook: EmptyToNullHook());
+  static const Field<A, String> _f$b = Field(
+    'b',
+    _$b,
+    hook: EmptyToNullHook(),
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static Map<int, dynamic>? _$c(A v) => v.c;
   static const Field<A, Map<int, dynamic>> _f$c = Field(
     'c',
     _$c,
     hook: StringMapHook(),
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

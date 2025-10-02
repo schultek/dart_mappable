@@ -26,13 +26,22 @@ class BoxMapper extends ClassMapperBase<Box> {
       <T extends Content>(f) => f<Box<T>>();
 
   static int _$size(Box v) => v.size;
-  static const Field<Box, int> _f$size = Field('size', _$size);
+  static const Field<Box, int> _f$size = Field(
+    'size',
+    _$size,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static List<Content> _$contents(Box v) => v.contents;
   static dynamic _arg$contents<T extends Content>(f) => f<List<T>>();
   static const Field<Box, List<Content>> _f$contents = Field(
     'contents',
     _$contents,
     arg: _arg$contents,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -245,7 +254,13 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
   final String id = 'Confetti';
 
   static String _$color(Confetti v) => v.color;
-  static const Field<Confetti, String> _f$color = Field('color', _$color);
+  static const Field<Confetti, String> _f$color = Field(
+    'color',
+    _$color,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Confetti> fields = const {#color: _f$color};
@@ -352,7 +367,13 @@ class DataMapper extends ClassMapperBase<Data> {
   final String id = 'Data';
 
   static String _$data(Data v) => v.data;
-  static const Field<Data, String> _f$data = Field('data', _$data);
+  static const Field<Data, String> _f$data = Field(
+    'data',
+    _$data,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Data> fields = const {#data: _f$data};
@@ -452,6 +473,9 @@ class SingleSettingMapper extends ClassMapperBase<SingleSetting> {
     _$properties,
     opt: true,
     arg: _arg$properties,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -582,7 +606,14 @@ class SettingsMapper extends ClassMapperBase<Settings> {
   static Map<String, SingleSetting<dynamic>>? _$settings(Settings v) =>
       v.settings;
   static const Field<Settings, Map<String, SingleSetting<dynamic>>>
-  _f$settings = Field('settings', _$settings, opt: true);
+  _f$settings = Field(
+    'settings',
+    _$settings,
+    opt: true,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Settings> fields = const {#settings: _f$settings};
@@ -730,6 +761,9 @@ class AMapper extends ClassMapperBase<A> {
     'value',
     _$value,
     arg: _arg$value,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -822,7 +856,13 @@ class BMapper extends ClassMapperBase<B> {
   final String id = 'B';
 
   static List<String> _$value(B v) => v.value;
-  static const Field<B, List<String>> _f$value = Field('value', _$value);
+  static const Field<B, List<String>> _f$value = Field(
+    'value',
+    _$value,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<B> fields = const {#value: _f$value};
@@ -931,6 +971,9 @@ class AssetMapper extends ClassMapperBase<Asset> {
     'data',
     _$data,
     arg: _arg$data,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -1042,6 +1085,9 @@ class NullableGenericsMapper extends ClassMapperBase<NullableGenerics> {
     'value',
     _$value,
     arg: _arg$value,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -1177,6 +1223,9 @@ class FunctionContainerMapper extends ClassMapperBase<FunctionContainer> {
     'genericFunction',
     _$genericFunction,
     arg: _arg$genericFunction,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

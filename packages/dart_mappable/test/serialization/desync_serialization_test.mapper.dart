@@ -24,11 +24,29 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   static int _$a(A v) => v.a;
-  static const Field<A, int> _f$a = Field('a', _$a);
+  static const Field<A, int> _f$a = Field(
+    'a',
+    _$a,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static int _$b(A v) => v.b;
-  static const Field<A, int> _f$b = Field('b', _$b);
+  static const Field<A, int> _f$b = Field(
+    'b',
+    _$b,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static C _$c(A v) => v.c;
-  static const Field<A, C> _f$c = Field('c', _$c);
+  static const Field<A, C> _f$c = Field(
+    'c',
+    _$c,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<A> fields = const {#a: _f$a, #b: _f$b, #c: _f$c};
@@ -122,7 +140,13 @@ class CMapper extends ClassMapperBase<C> {
   final String id = 'C';
 
   static int _$x(C v) => v.x;
-  static const Field<C, int> _f$x = Field('x', _$x);
+  static const Field<C, int> _f$x = Field(
+    'x',
+    _$x,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<C> fields = const {#x: _f$x};
@@ -213,13 +237,37 @@ class BMapper extends ClassMapperBase<B> {
   final String id = 'B';
 
   static int _$a(B v) => v.a;
-  static const Field<B, int> _f$a = Field('a', _$a);
+  static const Field<B, int> _f$a = Field(
+    'a',
+    _$a,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static int _$d(B v) => v.d;
-  static const Field<B, int> _f$d = Field('d', _$d);
+  static const Field<B, int> _f$d = Field(
+    'd',
+    _$d,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static int _$b(B v) => v.b;
-  static const Field<B, int> _f$b = Field('b', _$b);
+  static const Field<B, int> _f$b = Field(
+    'b',
+    _$b,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static C _$c(B v) => v.c;
-  static const Field<B, C> _f$c = Field('c', _$c);
+  static const Field<B, C> _f$c = Field(
+    'c',
+    _$c,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<B> fields = const {

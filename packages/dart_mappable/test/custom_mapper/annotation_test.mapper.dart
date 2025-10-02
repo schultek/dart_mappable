@@ -26,6 +26,9 @@ class PrivateContainerMapper extends ClassMapperBase<PrivateContainer> {
   static const Field<PrivateContainer, MyPrivateClass> _f$value = Field(
     'value',
     _$value,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -145,6 +148,9 @@ class PrivateContainer2Mapper extends ClassMapperBase<PrivateContainer2> {
   static const Field<PrivateContainer2, MyPrivateClass> _f$value = Field(
     'value',
     _$value,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

@@ -28,11 +28,24 @@ class AMapper extends ClassMapperBase<A> {
       <T>(f) => f<A<T>>();
 
   static String _$a(A v) => v.a;
-  static const Field<A, String> _f$a = Field('a', _$a);
+  static const Field<A, String> _f$a = Field(
+    'a',
+    _$a,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static _t$_R0<int, dynamic, C, _t$_R1<double, double>> _$r(A v) => v.r;
   static dynamic _arg$r<T>(f) => f<_t$_R0<int, T, C, _t$_R1<double, double>>>();
   static const Field<A, _t$_R0<int, dynamic, C, _t$_R1<double, double>>> _f$r =
-      Field('r', _$r, arg: _arg$r);
+      Field(
+        'r',
+        _$r,
+        arg: _arg$r,
+        includeFromJson: true,
+        includeToJson: true,
+        includeIfNull: false,
+      );
 
   @override
   final MappableFields<A> fields = const {#a: _f$a, #r: _f$r};
@@ -125,9 +138,21 @@ class CMapper extends ClassMapperBase<C> {
   final String id = 'C';
 
   static String _$c(C v) => v.c;
-  static const Field<C, String> _f$c = Field('c', _$c);
+  static const Field<C, String> _f$c = Field(
+    'c',
+    _$c,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static _t$_R1<String, int> _$d(C v) => v.d;
-  static const Field<C, _t$_R1<String, int>> _f$d = Field('d', _$d);
+  static const Field<C, _t$_R1<String, int>> _f$d = Field(
+    'd',
+    _$d,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<C> fields = const {#c: _f$c, #d: _f$d};

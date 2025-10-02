@@ -76,6 +76,9 @@ class ClassAMapper extends ClassMapperBase<ClassA> {
   static const Field<ClassA, Map<EnumA, bool?>> _f$someVariable = Field(
     'someVariable',
     _$someVariable,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

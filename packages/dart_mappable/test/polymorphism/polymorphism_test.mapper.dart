@@ -26,7 +26,13 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   final String id = 'Animal';
 
   static String _$name(Animal v) => v.name;
-  static const Field<Animal, String> _f$name = Field('name', _$name);
+  static const Field<Animal, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Animal> fields = const {#name: _f$name};
@@ -79,9 +85,21 @@ class CatMapper extends SubClassMapperBase<Cat> {
   final String id = 'Cat';
 
   static String _$name(Cat v) => v.name;
-  static const Field<Cat, String> _f$name = Field('name', _$name);
+  static const Field<Cat, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static String _$color(Cat v) => v.color;
-  static const Field<Cat, String> _f$color = Field('color', _$color);
+  static const Field<Cat, String> _f$color = Field(
+    'color',
+    _$color,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Cat> fields = const {#name: _f$name, #color: _f$color};
@@ -186,12 +204,21 @@ class DogMapper extends SubClassMapperBase<Dog> {
   final String id = 'Dog';
 
   static int _$age(Dog v) => v.age;
-  static const Field<Dog, int> _f$age = Field('age', _$age);
+  static const Field<Dog, int> _f$age = Field(
+    'age',
+    _$age,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static String _$name(Dog v) => v.name;
   static const Field<Dog, String> _f$name = Field(
     'name',
     _$name,
     mode: FieldMode.member,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -292,7 +319,13 @@ class NullAnimalMapper extends SubClassMapperBase<NullAnimal> {
   final String id = 'NullAnimal';
 
   static String _$name(NullAnimal v) => v.name;
-  static const Field<NullAnimal, String> _f$name = Field('name', _$name);
+  static const Field<NullAnimal, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<NullAnimal> fields = const {#name: _f$name};
@@ -410,9 +443,21 @@ class DefaultAnimalMapper extends SubClassMapperBase<DefaultAnimal> {
   final String id = 'DefaultAnimal';
 
   static String _$name(DefaultAnimal v) => v.name;
-  static const Field<DefaultAnimal, String> _f$name = Field('name', _$name);
+  static const Field<DefaultAnimal, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static String _$type(DefaultAnimal v) => v.type;
-  static const Field<DefaultAnimal, String> _f$type = Field('type', _$type);
+  static const Field<DefaultAnimal, String> _f$type = Field(
+    'type',
+    _$type,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<DefaultAnimal> fields = const {
@@ -541,16 +586,28 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   final String id = 'Zoo';
 
   static Animal? _$animal(Zoo v) => v.animal;
-  static const Field<Zoo, Animal> _f$animal = Field('animal', _$animal);
+  static const Field<Zoo, Animal> _f$animal = Field(
+    'animal',
+    _$animal,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static List<Animal>? _$animals(Zoo v) => v.animals;
   static const Field<Zoo, List<Animal>> _f$animals = Field(
     'animals',
     _$animals,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
   static Map<String, Animal>? _$animalsMap(Zoo v) => v.animalsMap;
   static const Field<Zoo, Map<String, Animal>> _f$animalsMap = Field(
     'animalsMap',
     _$animalsMap,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

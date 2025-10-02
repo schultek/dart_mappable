@@ -23,11 +23,20 @@ class ItemsMapper extends ClassMapperBase<Items> {
   final String id = 'Items';
 
   static List<Item> _$items(Items v) => v.items;
-  static const Field<Items, List<Item>> _f$items = Field('items', _$items);
+  static const Field<Items, List<Item>> _f$items = Field(
+    'items',
+    _$items,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static Map<int, Item> _$items2(Items v) => v.items2;
   static const Field<Items, Map<int, Item>> _f$items2 = Field(
     'items2',
     _$items2,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -145,7 +154,13 @@ class ItemMapper extends ClassMapperBase<Item> {
   final String id = 'Item';
 
   static int _$index(Item v) => v.index;
-  static const Field<Item, int> _f$index = Field('index', _$index);
+  static const Field<Item, int> _f$index = Field(
+    'index',
+    _$index,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Item> fields = const {#index: _f$index};

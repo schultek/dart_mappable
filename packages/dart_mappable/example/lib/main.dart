@@ -7,8 +7,27 @@ class Person with PersonMappable {
   final String name;
   final int age;
   final Car? car;
+  @MappableField(includeFromJson: false)
+  final String? description;
+  @MappableField(includeToJson: false)
+  final String? secret;
+  @MappableField(includeIfNull: false)
+  final String? metadata;
+  @MappableField(includeIfNull: true)
+  final String? password;
+  @MappableField(includeFromJson: false, includeToJson: false)
+  final String? lastLogin;
 
-  Person(this.name, {this.age = 18, this.car});
+  Person(
+    this.name, {
+    this.age = 18,
+    this.car,
+    this.description,
+    this.secret,
+    this.metadata,
+    this.password,
+    this.lastLogin,
+  });
 }
 
 @MappableEnum()
@@ -39,7 +58,8 @@ class Confetti with ConfettiMappable {
 
 void main() {
   // decode from json string
-  String json = '{"name": "Max", "car": {"miles": 1000, "brand": "Audi"}}';
+  String json =
+      '{"name": "Max", "car": {"miles": 1000, "brand": "Audi"}, "description": "Max is a good boy", "secret": "secret123", "metadata": "metadata123", "password": "password123", "lastLogin": "2023-01-01T00:00:00.000Z"}';
   Person person = PersonMapper.fromJson(json);
 
   // use toString()
@@ -47,8 +67,37 @@ void main() {
   // Person(name: Max, age: 18, car: Car(miles: 1000.0, brand: Brand.Audi))
 
   // make a copy
-  Person person2 = person.copyWith(name: 'Anna', age: 20);
+  Person person2 = person.copyWith(
+      name: 'Anna',
+      age: 20,
+      description: 'Anna is a good girl',
+      secret: 'secret456',
+      metadata: 'metadata456',
+      password: 'password456',
+      lastLogin: '2023-01-02T00:00:00.000Z');
   print(person2); // Person(name: Anna, age: 20, car: ...
+
+  // check description for toMap when (includeFromJson: false)
+  final map2 = person2.toMap();
+  print(map2);
+
+  // check secret for toMap when (includeToJson: false)
+  final map3 = person2.toMap();
+  print(map3);
+
+  // check metadata for toMap when (includeIfNull: true)
+
+  // check password for toMap when (includeIfNull: false)
+  final map4 = person2.toMap();
+  print(map4);
+
+  // check lastLogin for toMap when (includeFromJson: false, includeToJson: false)
+  final map5 = person2.toMap();
+  print(map5);
+
+  // check all fields for toMap
+  final map6 = person2.toMap();
+  print(map6);
 
   // encode to map
   Map<String, dynamic> map = person.toMap();

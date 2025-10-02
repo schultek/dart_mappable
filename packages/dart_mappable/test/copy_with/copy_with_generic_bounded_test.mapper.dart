@@ -31,6 +31,9 @@ class ContainerMapper extends ClassMapperBase<Container> {
     'content',
     _$content,
     arg: _arg$content,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -154,7 +157,14 @@ class AMapper extends ClassMapperBase<A> {
 
   static B _$b(A v) => v.b;
   static dynamic _arg$b<T extends B>(f) => f<T>();
-  static const Field<A, B> _f$b = Field('b', _$b, arg: _arg$b);
+  static const Field<A, B> _f$b = Field(
+    'b',
+    _$b,
+    arg: _arg$b,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<A> fields = const {#b: _f$b};
@@ -249,7 +259,13 @@ class BMapper extends ClassMapperBase<B> {
   final String id = 'B';
 
   static String _$b(B v) => v.b;
-  static const Field<B, String> _f$b = Field('b', _$b);
+  static const Field<B, String> _f$b = Field(
+    'b',
+    _$b,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<B> fields = const {#b: _f$b};
@@ -348,6 +364,9 @@ class Container1Mapper extends ClassMapperBase<Container1> {
     'content',
     _$content,
     arg: _arg$content,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -478,6 +497,9 @@ class Container2Mapper extends ClassMapperBase<Container2> {
     'content',
     _$content,
     arg: _arg$content,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -615,6 +637,9 @@ class Container3Mapper extends ClassMapperBase<Container3> {
     'content',
     _$content,
     arg: _arg$content,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
   static List<A2<dynamic>> _$contents(Container3 v) => v.contents;
   static dynamic _arg$contents<T extends A2<dynamic>>(f) => f<List<T>>();
@@ -622,6 +647,9 @@ class Container3Mapper extends ClassMapperBase<Container3> {
     'contents',
     _$contents,
     arg: _arg$contents,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -765,7 +793,14 @@ class A2Mapper extends ClassMapperBase<A2> {
 
   static dynamic _$t(A2 v) => v.t;
   static dynamic _arg$t<T>(f) => f<T>();
-  static const Field<A2, dynamic> _f$t = Field('t', _$t, arg: _arg$t);
+  static const Field<A2, dynamic> _f$t = Field(
+    't',
+    _$t,
+    arg: _arg$t,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<A2> fields = const {#t: _f$t};
@@ -865,6 +900,9 @@ class Container4Mapper extends ClassMapperBase<Container4> {
     'content',
     _$content,
     arg: _arg$content,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
   static List<A2<B>> _$contents(Container4 v) => v.contents;
   static dynamic _arg$contents<T extends A2<B>>(f) => f<List<T>>();
@@ -872,6 +910,9 @@ class Container4Mapper extends ClassMapperBase<Container4> {
     'contents',
     _$contents,
     arg: _arg$contents,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -1017,6 +1058,9 @@ class Container5Mapper extends ClassMapperBase<Container5> {
     'content',
     _$content,
     arg: _arg$content,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -1138,7 +1182,13 @@ class B2Mapper extends ClassMapperBase<B2> {
   final String id = 'B2';
 
   static String _$b(B2 v) => v.b;
-  static const Field<B2, String> _f$b = Field('b', _$b);
+  static const Field<B2, String> _f$b = Field(
+    'b',
+    _$b,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<B2> fields = const {#b: _f$b};

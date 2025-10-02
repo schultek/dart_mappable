@@ -28,6 +28,9 @@ class ExampleMapper extends ClassMapperBase<Example> {
     'functionField',
     _$functionField,
     arg: _arg$functionField,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

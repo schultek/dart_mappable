@@ -28,6 +28,9 @@ class GameMapper extends ClassMapperBase<Game> {
     'player',
     _$player,
     hook: ChainedHook([PlayerHook(), UnmappedPropertiesHook('unmappedProps')]),
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -125,7 +128,13 @@ class PlayerMapper extends ClassMapperBase<Player> {
   final String id = 'Player';
 
   static String _$id(Player v) => v.id;
-  static const Field<Player, String> _f$id = Field('id', _$id);
+  static const Field<Player, String> _f$id = Field(
+    'id',
+    _$id,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Player> fields = const {#id: _f$id};
@@ -225,6 +234,9 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
       UnmappedPropertiesHook('unmappedProps'),
       game.CardPlayerHook(),
     ]),
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

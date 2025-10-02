@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -21,7 +22,8 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   @override
   final String id = 'Zoo';
   @override
-  Function get typeFactory => <T extends Animal>(f) => f<Zoo<T>>();
+  Function get typeFactory =>
+      <T extends Animal>(f) => f<Zoo<T>>();
 
   static List<Animal> _$animals(Zoo v) => v.animals;
   static dynamic _arg$animals<T extends Animal>(f) => f<List<T>>();
@@ -29,6 +31,9 @@ class ZooMapper extends ClassMapperBase<Zoo> {
     'animals',
     _$animals,
     arg: _arg$animals,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -60,7 +65,7 @@ mixin ZooMappable<T extends Animal> {
   }
 
   ZooCopyWith<Zoo<T>, Zoo<T>, Zoo<T>, T> get copyWith =>
-      _ZooCopyWithImpl(this as Zoo<T>, $identity, $identity);
+      _ZooCopyWithImpl<Zoo<T>, Zoo<T>, T>(this as Zoo<T>, $identity, $identity);
   @override
   String toString() {
     return ZooMapper.ensureInitialized().stringifyValue(this as Zoo<T>);
@@ -80,7 +85,7 @@ mixin ZooMappable<T extends Animal> {
 extension ZooValueCopy<$R, $Out, T extends Animal>
     on ObjectCopyWith<$R, Zoo<T>, $Out> {
   ZooCopyWith<$R, Zoo<T>, $Out, T> get $asZoo =>
-      $base.as((v, t, t2) => _ZooCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ZooCopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
 abstract class ZooCopyWith<$R, $In extends Zoo<T>, $Out, T extends Animal>
@@ -112,5 +117,6 @@ class _ZooCopyWithImpl<$R, $Out, T extends Animal>
 
   @override
   ZooCopyWith<$R2, Zoo<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ZooCopyWithImpl($value, $cast, t);
+      _ZooCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
+

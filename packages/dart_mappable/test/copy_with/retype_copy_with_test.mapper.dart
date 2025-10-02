@@ -24,9 +24,21 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   static V _$v(A v) => v.v;
-  static const Field<A, V> _f$v = Field('v', _$v);
+  static const Field<A, V> _f$v = Field(
+    'v',
+    _$v,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static V _$v2(A v) => v.v2;
-  static const Field<A, V> _f$v2 = Field('v2', _$v2);
+  static const Field<A, V> _f$v2 = Field(
+    'v2',
+    _$v2,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<A> fields = const {#v: _f$v, #v2: _f$v2};
@@ -128,7 +140,13 @@ class VMapper extends ClassMapperBase<V> {
   final String id = 'V';
 
   static int _$v(V v) => v.v;
-  static const Field<V, int> _f$v = Field('v', _$v);
+  static const Field<V, int> _f$v = Field(
+    'v',
+    _$v,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<V> fields = const {#v: _f$v};
@@ -221,10 +239,24 @@ class BMapper extends ClassMapperBase<B> {
 
   static V _$v(B v) => v.v;
   static dynamic _arg$v(f) => f<V>();
-  static const Field<B, W> _f$v = Field('v', _$v, arg: _arg$v);
+  static const Field<B, W> _f$v = Field(
+    'v',
+    _$v,
+    arg: _arg$v,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static V _$v2(B v) => v.v2;
   static dynamic _arg$v2(f) => f<V>();
-  static const Field<B, W> _f$v2 = Field('v2', _$v2, arg: _arg$v2);
+  static const Field<B, W> _f$v2 = Field(
+    'v2',
+    _$v2,
+    arg: _arg$v2,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<B> fields = const {#v: _f$v, #v2: _f$v2};
@@ -331,7 +363,13 @@ class WMapper extends ClassMapperBase<W> {
   final String id = 'W';
 
   static int _$v(W v) => v.v;
-  static const Field<W, int> _f$v = Field('v', _$v);
+  static const Field<W, int> _f$v = Field(
+    'v',
+    _$v,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<W> fields = const {#v: _f$v};
