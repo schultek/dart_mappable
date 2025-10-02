@@ -45,6 +45,25 @@ class Field<T extends Object, V> {
 
   final Object? data;
 
+  /// Whether to include this field during deserialization (fromJson/fromMap).
+  ///
+  /// If false, this field will be ignored when decoding from JSON/Map.
+  /// Defaults to true.
+  final bool includeFromJson;
+
+  /// Whether to include this field during serialization (toJson/toMap).
+  ///
+  /// If false, this field will be ignored when encoding to JSON/Map.
+  /// Defaults to true.
+  final bool includeToJson;
+
+  /// Whether to include this field even if its value is null.
+  ///
+  /// This overrides the class-level ignoreNull setting for this specific field.
+  /// If true, null values will be included in serialization.
+  /// Defaults to false (respects class-level ignoreNull setting).
+  final bool includeIfNull;
+
   const Field(
     this.name,
     this.getter, {
@@ -55,6 +74,9 @@ class Field<T extends Object, V> {
     this.def,
     this.hook,
     this.data,
+    this.includeFromJson = true,
+    this.includeToJson = true,
+    this.includeIfNull = false,
   }) : key = key ?? name;
 
   Object? get(T value) {
@@ -192,16 +214,22 @@ abstract class InterfaceMapperBase<T extends Object> extends MapperBase<T> {
     if (shallow) {
       return {
         for (var f in fields)
-          if (!ignoreNull || f.get(value) != null) f.key: f.get(value),
+          if (f.includeToJson &&
+              (!ignoreNull || f.get(value) != null || f.includeIfNull))
+            f.key: f.get(value),
       };
     }
     if (ignoreNull) {
       return {
         for (var f in fields)
-          if (f.get(value) != null) f.key: f.encode(value, context),
+          if (f.includeToJson && (f.get(value) != null || f.includeIfNull))
+            f.key: f.encode(value, context),
       };
     }
-    return {for (var f in fields) f.key: f.encode(value, context)};
+    return {
+      for (var f in fields)
+        if (f.includeToJson) f.key: f.encode(value, context),
+    };
   }
 
   V decodeMap<V>(Map<String, dynamic> map) => decodeValue<V>(map);

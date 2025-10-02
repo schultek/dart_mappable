@@ -24,11 +24,20 @@ class LocationMapper extends ClassMapperBase<Location> {
   final String id = 'Location';
 
   static Point _$point(Location v) => v.point;
-  static const Field<Location, Point> _f$point = Field('point', _$point);
+  static const Field<Location, Point> _f$point = Field(
+    'point',
+    _$point,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static Offset<dynamic> _$offset(Location v) => v.offset;
   static const Field<Location, Offset<dynamic>> _f$offset = Field(
     'offset',
     _$offset,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

@@ -73,9 +73,22 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   static String _$a(A v) => v.a;
-  static const Field<A, String> _f$a = Field('a', _$a);
+  static const Field<A, String> _f$a = Field(
+    'a',
+    _$a,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static B? _$b(A v) => v.b;
-  static const Field<A, B> _f$b = Field('b', _$b, opt: true);
+  static const Field<A, B> _f$b = Field(
+    'b',
+    _$b,
+    opt: true,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<A> fields = const {#a: _f$a, #b: _f$b};

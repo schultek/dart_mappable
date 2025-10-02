@@ -73,15 +73,49 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   static String _$a(A v) => v.a;
-  static const Field<A, String> _f$a = Field('a', _$a);
+  static const Field<A, String> _f$a = Field(
+    'a',
+    _$a,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static int _$b(A v) => v.b;
-  static const Field<A, int> _f$b = Field('b', _$b, opt: true, def: 0);
+  static const Field<A, int> _f$b = Field(
+    'b',
+    _$b,
+    opt: true,
+    def: 0,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static double? _$c(A v) => v.c;
-  static const Field<A, double> _f$c = Field('c', _$c, opt: true);
+  static const Field<A, double> _f$c = Field(
+    'c',
+    _$c,
+    opt: true,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static bool _$d(A v) => v.d;
-  static const Field<A, bool> _f$d = Field('d', _$d);
+  static const Field<A, bool> _f$d = Field(
+    'd',
+    _$d,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static B? _$e(A v) => v.e;
-  static const Field<A, B> _f$e = Field('e', _$e, opt: true);
+  static const Field<A, B> _f$e = Field(
+    'e',
+    _$e,
+    opt: true,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<A> fields = const {
@@ -199,7 +233,13 @@ class BaseMapper extends ClassMapperBase<Base> {
   final String id = 'Base';
 
   static String _$data(Base v) => v.data;
-  static const Field<Base, String> _f$data = Field('data', _$data);
+  static const Field<Base, String> _f$data = Field(
+    'data',
+    _$data,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Base> fields = const {#data: _f$data};
@@ -291,7 +331,13 @@ class SubMapper extends ClassMapperBase<Sub> {
   final String id = 'Sub';
 
   static String _$data(Sub v) => v.data;
-  static const Field<Sub, String> _f$data = Field('data', _$data);
+  static const Field<Sub, String> _f$data = Field(
+    'data',
+    _$data,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Sub> fields = const {#data: _f$data};
@@ -384,7 +430,13 @@ class BaseTypeMapper extends ClassMapperBase<BaseType> {
   final String id = 'BaseType';
 
   static String _$type(BaseType v) => v.type;
-  static const Field<BaseType, String> _f$type = Field('type', _$type);
+  static const Field<BaseType, String> _f$type = Field(
+    'type',
+    _$type,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<BaseType> fields = const {#type: _f$type};
@@ -491,7 +543,13 @@ class SubTypeMapper extends SubClassMapperBase<SubType> {
   final String id = 'SubType';
 
   static String _$type(SubType v) => v.type;
-  static const Field<SubType, String> _f$type = Field('type', _$type);
+  static const Field<SubType, String> _f$type = Field(
+    'type',
+    _$type,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<SubType> fields = const {#type: _f$type};
@@ -611,6 +669,9 @@ class GenericMapper extends ClassMapperBase<Generic> {
     'data',
     _$data,
     arg: _arg$data,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -727,6 +788,9 @@ class WrapperMapper extends ClassMapperBase<Wrapper> {
     'value',
     _$value,
     arg: _arg$value,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

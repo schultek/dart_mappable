@@ -31,6 +31,12 @@ abstract class MapperFieldElement {
   String get arg;
 
   Future<String> get hook;
+
+  String get includeFromJson;
+
+  String get includeToJson;
+
+  String get includeIfNull;
 }
 
 Future<String?> hookFor(Element? element) async {
@@ -41,6 +47,45 @@ Future<String?> hookFor(Element? element) async {
     var node = await getResolvedAnnotationNode(element, MappableField, 'hook');
     if (node != null) {
       return node.toSource();
+    }
+  }
+  return null;
+}
+
+Future<bool?> includeFromJsonFor(Element? element) async {
+  if (element == null) {
+    return null;
+  }
+  if (fieldChecker.hasAnnotationOf(element)) {
+    var annotation = fieldChecker.firstAnnotationOf(element);
+    if (annotation != null) {
+      return annotation.read('includeFromJson')?.toBoolValue();
+    }
+  }
+  return null;
+}
+
+Future<bool?> includeToJsonFor(Element? element) async {
+  if (element == null) {
+    return null;
+  }
+  if (fieldChecker.hasAnnotationOf(element)) {
+    var annotation = fieldChecker.firstAnnotationOf(element);
+    if (annotation != null) {
+      return annotation.read('includeToJson')?.toBoolValue();
+    }
+  }
+  return null;
+}
+
+Future<bool?> includeIfNullFor(Element? element) async {
+  if (element == null) {
+    return null;
+  }
+  if (fieldChecker.hasAnnotationOf(element)) {
+    var annotation = fieldChecker.firstAnnotationOf(element);
+    if (annotation != null) {
+      return annotation.read('includeIfNull')?.toBoolValue();
     }
   }
   return null;

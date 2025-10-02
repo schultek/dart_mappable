@@ -24,7 +24,7 @@ extension FieldsExtension<T extends InterfaceMapperElement>
         );
       }
       output.write(
-        "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.name} = Field('${f.name.replaceAll(r'$', r'\$')}', ${f.getter}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook});\n",
+        "  static const Field<${element.prefixedClassName}, ${f.staticArgType}> _f\$${f.name} = Field('${f.name.replaceAll(r'$', r'\$')}', ${f.getter}${f.key}${f.mode}${f.opt}${await f.def}${f.arg}${await f.hook}${f.includeFromJson}${f.includeToJson}${f.includeIfNull});\n",
       );
     }
 

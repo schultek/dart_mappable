@@ -9,10 +9,10 @@ part 'model.mapper.dart';
 
 @MappableClass()
 class Person with PersonMappable {
-  
+
   const Person({
-    required this.firstName, 
-    required this.lastName, 
+    required this.firstName,
+    required this.lastName,
     required this.age,
   });
 
@@ -29,23 +29,63 @@ class Person with PersonMappable {
 From this example we can notice a few things:
 
 - We can define the fields and constructor of our class as usual. `dart_mappable` does not
-  require any special syntax for defining our models, which makes it easier to plug into an existing class. 
+  require any special syntax for defining our models, which makes it easier to plug into an existing class.
 
-- It is required that we annotate our model with `@MappableClass`. This is what tells 
+- It is required that we annotate our model with `@MappableClass`. This is what tells
   `dart_mappable` to generate code for this class.
-  
-- We must apply a mixin with in the form `<ClassName>Mappable`. This mixin is what defines the 
+- We must apply a mixin with in the form `<ClassName>Mappable`. This mixin is what defines the
   various properties/methods of our model.
-  
 - We **can** add some optional `fromMap` and `fromJson` methods. This is just a style choice you can make,
   which enables you to call `Person.fromMap` (or `fromJson`) instead of the default `PersonMapper.fromMap` when
   deserializing your model (more about that later).
-  
+
+## Field Ignoring
+
+You can control which fields are included during serialization and deserialization using the `@MappableField` annotation with the following parameters:
+
+- `includeToJson`: Controls whether the field is included when encoding to JSON/Map. If `false`, the field will be excluded from serialization.
+- `includeFromJson`: Controls whether the field is set during deserialization from JSON/Map. If `false`, the field will receive `null` during decoding.
+- `includeIfNull`: Controls whether the field is included even if its value is null. This overrides the class-level `ignoreNull` setting for this specific field.
+
+Example:
+
+```dart
+@MappableClass()
+class User with UserMappable {
+  User(this.name, this.email, this.password, this.lastLogin);
+
+  String name;
+  String email;
+
+  // This field will be excluded from JSON output
+  @MappableField(includeToJson: false)
+  String? password;
+
+  // This field won't be set during deserialization
+  @MappableField(includeFromJson: false)
+  DateTime? lastLogin;
+
+  // This field will always be included even if null
+  @MappableField(includeIfNull: true)
+  String? metadata;
+}
+
+// Usage:
+var user = User('John', 'john@example.com', 'secret123', DateTime.now());
+var json = user.toJson();
+// Output: {"name":"John","email":"john@example.com","lastLogin":"2023-01-01T00:00:00.000Z"}
+// Note: 'password' is excluded
+
+var decoded = UserMapper.fromJson('{"name":"Jane","email":"jane@example.com","password":"hack","lastLogin":"2023-01-01T00:00:00.000Z"}');
+// decoded.lastLogin will be null (ignored during deserialization)
+// decoded.password will be "hack" (included during deserialization since it doesn't have includeFromJson: false)
+```
+
 ## Generated Code
 
 When running code-generation, the following two objects will be generated for each annotated class:
 
-1. A `<ClassName>Mapper` class (e.g. `PersonMapper`). 
+1. A `<ClassName>Mapper` class (e.g. `PersonMapper`).
 2. A `<ClassName>Mappable` mixin (e.g. `PersonMappable`).
 
 The `Mapper` class is what contains all the implementation logic. Having the implementation separate from
@@ -67,7 +107,7 @@ The following configuration options exist for the `@MappableClass()` annotation:
 - `ignoreNull`: Whether to ignore all json keys with null values.
 - `discriminatorKey` and `discriminatorValue`: See [Polymorphism](../topics/Polymorphism-topic.html).
 - `hooks`: See [Mapping Hooks](../topics/Mapping%20Hooks-topic.html).
-- `generateMethods`: Toggle generation of specific methods on or off (See [Generation Methods](../topics/Configuration-topic.html#generation-methods)). 
+- `generateMethods`: Toggle generation of specific methods on or off (See [Generation Methods](../topics/Configuration-topic.html#generation-methods)).
 - `includeSubClasses`: See [Polymorphism](../topics/Polymorphism-topic.html).
 - `includeCustomMappers`: See [Custom Mappers](../topics/Custom%20Mappers-topic.html).
 
@@ -80,7 +120,7 @@ can use a specific constructor using the `@MappableConstructor()` annotation.
 @MappableClass()
 class MyClass with MyClassMappable {
   MyClass(); // Don't use this
-  
+
   @MappableConstructor()
   MyClass.special(); // Use this
 }
@@ -101,9 +141,9 @@ class MyClass with MyClassMappable {
 }
 ```
 
-***Note**: This can only be used on a field if it is directly assigned as a constructor parameter (`MyClass(this.myField)`).
-Setting this annotation on any other field will have no effect. (Read [Utilizing Constructors](#utilizing-constructors) 
-for an explanation why this is.)*
+**\*Note**: This can only be used on a field if it is directly assigned as a constructor parameter (`MyClass(this.myField)`).
+Setting this annotation on any other field will have no effect. (Read [Utilizing Constructors](#utilizing-constructors)
+for an explanation why this is.)\*
 
 ## Utilizing Constructors
 
@@ -120,9 +160,9 @@ Instead of providing custom tailored serialization options for some selected use
 utilizes the power of constructor arguments to cover all of them. Thereby, you keep full control
 over your models, while writing pure and easy dart code.
 
-***How does that work exactly?** When analysing your code, `dart_mappable` never looks at the fields
+**\*How does that work exactly?** When analysing your code, `dart_mappable` never looks at the fields
 of your model, but rather only at the constructor arguments. What you do with them - writing to
-fields, renaming, etc. - is up to your model's implementation.*
+fields, renaming, etc. - is up to your model's implementation.\*
 
 To illustrate this, here are some examples for the above mentioned use cases:
 
@@ -131,19 +171,19 @@ To illustrate this, here are some examples for the above mentioned use cases:
 class Person with PersonMappable {
   String name;
   int age;
-    
+
   // basic example, nothing special going on
   Person.base(this.name, this.age);
-  
+
   // setting default values for some parameters
   Person.opt(this.name, [this.age = 18]);
 
   // renamed argument, will be {"years": ...} in json
   Person.renamed(this.name, int years) : age = years;
-  
+
   // ignores the age field completely
   Person.ignored(this.name);
- 
+
   // computed name value
   Person.computed(String firstName, String lastName, this.age) : name = '$firstName $lastName';
   // IMPORTANT: have matching getters for all unassigned arguments, reversing the computed value (*)
@@ -152,13 +192,13 @@ class Person with PersonMappable {
 }
 ```
 
-***(\*) Regarding the matching getters:** Not-having them won't break your code.
+**\*(\*) Regarding the matching getters:** Not-having them won't break your code.
 However this will lead to desynched serialization (keys missing in your json) and eventually to
 errors when trying to deserialize back. You will also get a warning in the builder output to know
-when this happens.*
+when this happens.\*
 
-***Remember**: dart_mappable will always use the first constructor it sees, but you can use a specific
-constructor using the `@MappableConstructor()` annotation.*
+**\*Remember**: dart_mappable will always use the first constructor it sees, but you can use a specific
+constructor using the `@MappableConstructor()` annotation.\*
 
 ## DateTime
 
@@ -173,8 +213,8 @@ To change the mode, set `DateTimeMapper.encodingMode` to any value of the `DateT
 
 ## List Equality
 
-`dart_mappable` automatically handles equality for `List`s (or any `Iterable`). You can change between an ordered and unordered 
-list equality by setting `IterableMapper.equalityMode` to either `IterableEqualityMode.ordered` (default) 
+`dart_mappable` automatically handles equality for `List`s (or any `Iterable`). You can change between an ordered and unordered
+list equality by setting `IterableMapper.equalityMode` to either `IterableEqualityMode.ordered` (default)
 or `IterableEqualityMode.unordered`.
 
 ---

@@ -28,7 +28,14 @@ class AMapper extends ClassMapperBase<A> {
 
   static C _$value(A v) => v.value;
   static dynamic _arg$value<T extends C>(f) => f<T>();
-  static const Field<A, C> _f$value = Field('value', _$value, arg: _arg$value);
+  static const Field<A, C> _f$value = Field(
+    'value',
+    _$value,
+    arg: _arg$value,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<A> fields = const {#value: _f$value};
@@ -125,7 +132,13 @@ class CMapper extends ClassMapperBase<C> {
   final String id = 'C';
 
   static String _$data(C v) => v.data;
-  static const Field<C, String> _f$data = Field('data', _$data);
+  static const Field<C, String> _f$data = Field(
+    'data',
+    _$data,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<C> fields = const {#data: _f$data};
@@ -175,7 +188,13 @@ class BMapper extends ClassMapperBase<B> {
   final String id = 'B';
 
   static D _$value(B v) => v.value;
-  static const Field<B, D> _f$value = Field('value', _$value);
+  static const Field<B, D> _f$value = Field(
+    'value',
+    _$value,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<B> fields = const {#value: _f$value};
@@ -273,7 +292,13 @@ class DMapper extends ClassMapperBase<D> {
   final String id = 'D';
 
   static String _$data(D v) => v.data;
-  static const Field<D, String> _f$data = Field('data', _$data);
+  static const Field<D, String> _f$data = Field(
+    'data',
+    _$data,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<D> fields = const {#data: _f$data};

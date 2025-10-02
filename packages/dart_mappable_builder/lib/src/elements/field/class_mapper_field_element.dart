@@ -145,6 +145,36 @@ class ClassMapperFieldElement extends MapperFieldElement {
         (await hookFor(field?.getter));
     return hook != null ? ', hook: $hook' : '';
   }();
+
+  @override
+  late final String includeFromJson = () {
+    var includeFromJson =
+        _getIncludeFromJson(field) ??
+        _getIncludeFromJson(field?.getter) ??
+        _getIncludeFromJson(param?.parameter) ??
+        true;
+    return ', includeFromJson: $includeFromJson';
+  }();
+
+  @override
+  late final String includeToJson = () {
+    var includeToJson =
+        _getIncludeToJson(field) ??
+        _getIncludeToJson(field?.getter) ??
+        _getIncludeToJson(param?.parameter) ??
+        true;
+    return ', includeToJson: $includeToJson';
+  }();
+
+  @override
+  late final String includeIfNull = () {
+    var includeIfNull =
+        _getIncludeIfNull(field) ??
+        _getIncludeIfNull(field?.getter) ??
+        _getIncludeIfNull(param?.parameter) ??
+        false;
+    return ', includeIfNull: $includeIfNull';
+  }();
 }
 
 String? _keyFor(Element? element) {
@@ -155,4 +185,34 @@ String? _keyFor(Element? element) {
       .firstAnnotationOf(element)
       ?.getField('key')!
       .toStringValue();
+}
+
+bool? _getIncludeFromJson(Element? element) {
+  if (element == null) {
+    return null;
+  }
+  return fieldChecker
+      .firstAnnotationOf(element)
+      ?.getField('includeFromJson')
+      ?.toBoolValue();
+}
+
+bool? _getIncludeToJson(Element? element) {
+  if (element == null) {
+    return null;
+  }
+  return fieldChecker
+      .firstAnnotationOf(element)
+      ?.getField('includeToJson')
+      ?.toBoolValue();
+}
+
+bool? _getIncludeIfNull(Element? element) {
+  if (element == null) {
+    return null;
+  }
+  return fieldChecker
+      .firstAnnotationOf(element)
+      ?.getField('includeIfNull')
+      ?.toBoolValue();
 }

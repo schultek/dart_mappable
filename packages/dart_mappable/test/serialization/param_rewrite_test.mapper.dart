@@ -22,11 +22,30 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   static int _$a(A v) => v.a;
-  static const Field<A, int> _f$a = Field('a', _$a);
+  static const Field<A, int> _f$a = Field(
+    'a',
+    _$a,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static int _$b(A v) => v.b;
-  static const Field<A, int> _f$b = Field('b', _$b);
+  static const Field<A, int> _f$b = Field(
+    'b',
+    _$b,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static int _$_c(A v) => v._c;
-  static const Field<A, int> _f$_c = Field('_c', _$_c, key: r'c');
+  static const Field<A, int> _f$_c = Field(
+    '_c',
+    _$_c,
+    key: r'c',
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<A> fields = const {#a: _f$a, #b: _f$b, #_c: _f$_c};
@@ -126,9 +145,23 @@ class BMapper extends ClassMapperBase<B> {
   final String id = 'B';
 
   static int _$b(B v) => v.b;
-  static const Field<B, int> _f$b = Field('b', _$b, key: r'a');
+  static const Field<B, int> _f$b = Field(
+    'b',
+    _$b,
+    key: r'a',
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static int _$a(B v) => v.a;
-  static const Field<B, int> _f$a = Field('a', _$a, key: r'b');
+  static const Field<B, int> _f$a = Field(
+    'a',
+    _$a,
+    key: r'b',
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<B> fields = const {#b: _f$b, #a: _f$a};
@@ -220,9 +253,22 @@ class CMapper extends ClassMapperBase<C> {
   final String id = 'C';
 
   static String _$name(C v) => v.name;
-  static const Field<C, String> _f$name = Field('name', _$name);
+  static const Field<C, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static String _$data(C v) => v.data;
-  static const Field<C, String> _f$data = Field('data', _$data, key: r'd');
+  static const Field<C, String> _f$data = Field(
+    'data',
+    _$data,
+    key: r'd',
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<C> fields = const {#name: _f$name, #data: _f$data};

@@ -147,6 +147,17 @@ abstract class ClassMapperBase<T extends Object>
   /// See [FieldMode] for more.
   late final List<Field<T, dynamic>> _params =
       fields.values
+          .where(
+            (f) =>
+                f.mode != FieldMode.member &&
+                f.getter != null &&
+                f.includeFromJson,
+          )
+          .toList();
+
+  /// The set of fields to include during encoding.
+  late final List<Field<T, dynamic>> _encodingParams =
+      fields.values
           .where((f) => f.mode != FieldMode.member && f.getter != null)
           .toList();
 
@@ -214,7 +225,7 @@ abstract class ClassMapperBase<T extends Object>
   Object? encode(T value, EncodingContext context) {
     var result = InterfaceMapperBase.encodeFields(
       value,
-      _params,
+      _encodingParams,
       ignoreNull,
       context,
       context.options?.shallow ?? shallowEncoding,

@@ -139,12 +139,25 @@ mixin DecodingMixin on MapperGenerator<TargetClassMapperElement> {
   Future<String> _generateConstructorParams() async {
     List<String> params = [];
     for (var param in element.params) {
+      // Get the corresponding field to check if it should be included in deserialization
+      var fieldName = param.accessor?.name ?? param.parameter.name;
+      var field = element.fields.firstWhere(
+        (f) => f.name == fieldName,
+        orElse: () => throw StateError('Field $fieldName not found'),
+      );
+
       var str = '';
 
       if (param.parameter.isNamed) {
         str = '${param.parameter.name ?? ''}: ';
       }
-      str += 'data.dec(_f\$${param.accessor?.name ?? param.parameter.name})';
+
+      // If includeFromJson is false, pass null instead of decoding the value
+      if (field.includeFromJson.contains('includeFromJson: false')) {
+        str += 'null';
+      } else {
+        str += 'data.dec(_f\$$fieldName)';
+      }
 
       params.add(str);
     }

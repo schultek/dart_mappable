@@ -73,15 +73,49 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   static String _$a(A v) => v.a;
-  static const Field<A, String> _f$a = Field('a', _$a);
+  static const Field<A, String> _f$a = Field(
+    'a',
+    _$a,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static int _$b(A v) => v.b;
-  static const Field<A, int> _f$b = Field('b', _$b, opt: true, def: 0);
+  static const Field<A, int> _f$b = Field(
+    'b',
+    _$b,
+    opt: true,
+    def: 0,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static double? _$c(A v) => v.c;
-  static const Field<A, double> _f$c = Field('c', _$c, opt: true);
+  static const Field<A, double> _f$c = Field(
+    'c',
+    _$c,
+    opt: true,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static bool _$d(A v) => v.d;
-  static const Field<A, bool> _f$d = Field('d', _$d);
+  static const Field<A, bool> _f$d = Field(
+    'd',
+    _$d,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static B? _$e(A v) => v.e;
-  static const Field<A, B> _f$e = Field('e', _$e, opt: true);
+  static const Field<A, B> _f$e = Field(
+    'e',
+    _$e,
+    opt: true,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<A> fields = const {

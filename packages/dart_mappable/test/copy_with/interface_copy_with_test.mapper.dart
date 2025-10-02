@@ -23,7 +23,13 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
 
   static num _$a(A v) => v.a;
-  static const Field<A, num> _f$a = Field('a', _$a);
+  static const Field<A, num> _f$a = Field(
+    'a',
+    _$a,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<A> fields = const {#a: _f$a};
@@ -114,7 +120,13 @@ class BMapper extends ClassMapperBase<B> {
   final String id = 'B';
 
   static String _$b(B v) => v.b;
-  static const Field<B, String> _f$b = Field('b', _$b);
+  static const Field<B, String> _f$b = Field(
+    'b',
+    _$b,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<B> fields = const {#b: _f$b};
@@ -205,9 +217,21 @@ class CMapper extends ClassMapperBase<C> {
   final String id = 'C';
 
   static int _$a(C v) => v.a;
-  static const Field<C, int> _f$a = Field('a', _$a);
+  static const Field<C, int> _f$a = Field(
+    'a',
+    _$a,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static String _$b(C v) => v.b;
-  static const Field<C, String> _f$b = Field('b', _$b);
+  static const Field<C, String> _f$b = Field(
+    'b',
+    _$b,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<C> fields = const {#a: _f$a, #b: _f$b};

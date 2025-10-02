@@ -23,7 +23,13 @@ class ShepherdMapper extends SubClassMapperBase<Shepherd> {
   final String id = 'Shepherd';
 
   static String? _$name(Shepherd v) => v.name;
-  static const Field<Shepherd, String> _f$name = Field('name', _$name);
+  static const Field<Shepherd, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Shepherd> fields = const {#name: _f$name};
@@ -141,7 +147,13 @@ class DogMapper extends SubClassMapperBase<Dog> {
   final String id = 'Dog';
 
   static String? _$name(Dog v) => v.name;
-  static const Field<Dog, String> _f$name = Field('name', _$name);
+  static const Field<Dog, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Dog> fields = const {#name: _f$name};
@@ -244,7 +256,13 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   final String id = 'Animal';
 
   static String? _$name(Animal v) => v.name;
-  static const Field<Animal, String> _f$name = Field('name', _$name);
+  static const Field<Animal, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Animal> fields = const {#name: _f$name};
@@ -300,7 +318,13 @@ class CatMapper extends SubClassMapperBase<Cat> {
   final String id = 'Cat';
 
   static String? _$name(Cat v) => v.name;
-  static const Field<Cat, String> _f$name = Field('name', _$name);
+  static const Field<Cat, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Cat> fields = const {#name: _f$name};
@@ -363,7 +387,13 @@ class SiameseMapper extends SubClassMapperBase<Siamese> {
   final String id = 'Siamese';
 
   static String? _$name(Siamese v) => v.name;
-  static const Field<Siamese, String> _f$name = Field('name', _$name);
+  static const Field<Siamese, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Siamese> fields = const {#name: _f$name};
@@ -478,7 +508,13 @@ class HumanMapper extends ClassMapperBase<Human> {
   final String id = 'Human';
 
   static Cat _$cat(Human v) => v.cat;
-  static const Field<Human, Cat> _f$cat = Field('cat', _$cat);
+  static const Field<Human, Cat> _f$cat = Field(
+    'cat',
+    _$cat,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Human> fields = const {#cat: _f$cat};

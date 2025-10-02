@@ -32,15 +32,15 @@
 
 ---
 
-`dart_mappable` covers all basic features *(from/to json, == override, hashCode, toString(), copyWith)*
-while adding new or improved support for advanced use-cases including **generics, inheritance and 
+`dart_mappable` covers all basic features _(from/to json, == override, hashCode, toString(), copyWith)_
+while adding new or improved support for advanced use-cases including **generics, inheritance and
 polymorphism, customization** and more.
 
 - 🎁 **Everything included**: Serialization, Equality, ToString, CopyWith and more.
 - 🚀 **Excels at complexity**: It handles generics, polymorphism and multi-inheritance with ease.
-- 🎛️ **Highly flexible**: Customize the serialization, add custom types or integrate with other packages.
+- 🎛️ **Highly flexible**: Customize the serialization, add custom types, control field inclusion, or integrate with other packages.
 - 🔥 **No compromises**: Its promise is that it just works, no matter what classes you throw at it.  
-  *(If you find an unsupported case, you get a cookie 🍪. And please add an issue on [github](https://github.com/schultek/dart_mappable).)*
+  _(If you find an unsupported case, you get a cookie 🍪. And please add an issue on [github](https://github.com/schultek/dart_mappable).)_
 
 ## Quick Start
 
@@ -77,11 +77,11 @@ To use a class you must:
 - annotate the class with `@MappableClass()` and
 - apply a mixin with the name of the class plus `Mappable`.
 
-***Tip**: Don't worry if the mixin don't exist at first, just run code-generation once and it will be created.
-The builder will also warn you if you define your class without the proper mixin.*
+**\*Tip**: Don't worry if the mixin don't exist at first, just run code-generation once and it will be created.
+The builder will also warn you if you define your class without the proper mixin.\*
 
-***Note**: For generic classes (e.g. `MyClass<T>`) make sure to also provide all type parameters
-to the mixin (`... with MyClassMappable<T>`).*
+**\*Note**: For generic classes (e.g. `MyClass<T>`) make sure to also provide all type parameters
+to the mixin (`... with MyClassMappable<T>`).\*
 
 ---
 
@@ -91,8 +91,8 @@ In order to generate the serialization code, run the following command:
 dart run build_runner build
 ```
 
-***Tip**: You'll need to re-run code generation each time you are making changes to your annotated classes.
-During development, you can use `watch` to automatically watch your changes: `dart run build_runner watch`.*
+**\*Tip**: You'll need to re-run code generation each time you are making changes to your annotated classes.
+During development, you can use `watch` to automatically watch your changes: `dart run build_runner watch`.\*
 
 This will generate a `<filename>.mapper.dart` file for each of your files containing annotated classes.
 
@@ -110,27 +110,27 @@ using this package:
 void main() {
   // Decode a [Map] using the [MyClassMapper] class:
   MyClass myClass = MyClassMapper.fromMap({'myValue': 123});
-  
+
   // Or decode directly from json:
   MyClass myClass2 = MyClassMapper.fromJson('{"myValue": 123}');
-  
+
   // Encode an instance of your class using the methods provided by the mixin:
   Map<String, dynamic> map = myClass.toMap();
   String json = myClass.toJson();
-  
+
   // There are also implementations generated for [operator ==], [hashCode] and [toString]:
   bool thisIsTrue = (myClass == myClass2);
   print(myClass);
-  
+
   // Last you can use [copyWith] to create a copy of an object:
   MyClass myClass3 = myClass.copyWith(myValue: 0);
 }
 ```
 
-***Beware**: The `.toJson()` method returns a `String`. If you are migrating from `json_serializable`, you might
-be used to this returning a `Map<String, dynamic>` instead. Make sure to properly adapt your code to this change, 
-as not doing so might lead to unexpected behavior. Find more about the recommended migration path 
-[here](https://pub.dev/documentation/dart_mappable/latest/topics/Migration%20and%20Compatibility-topic.html)*.
+**\*Beware**: The `.toJson()` method returns a `String`. If you are migrating from `json_serializable`, you might
+be used to this returning a `Map<String, dynamic>` instead. Make sure to properly adapt your code to this change,
+as not doing so might lead to unexpected behavior. Find more about the recommended migration path
+[here](https://pub.dev/documentation/dart_mappable/latest/topics/Migration%20and%20Compatibility-topic.html)\*.
 
 ## Overview
 
@@ -145,9 +145,9 @@ class MyClass with MyClassMappable { ... }
 enum MyEnum { ... }
 ```
 
-***Tip**: Check out the documentation about
+**\*Tip**: Check out the documentation about
 [Models](https://pub.dev/documentation/dart_mappable/latest/topics/Models-topic.html) and
-[Enums](https://pub.dev/documentation/dart_mappable/latest/topics/Enums-topic.html).*
+[Enums](https://pub.dev/documentation/dart_mappable/latest/topics/Enums-topic.html).\*
 
 For deserialization, `dart_mappable` will use the first available constructor of a class, but you
 can use a specific constructor using the `@MappableConstructor()` annotation.
@@ -163,24 +163,42 @@ class MyClass with MyClassMappable {
 ```
 
 You can also annotate a single field or constructor parameter of a class using `@MappableField()`
-to set a specific json key or add custom hooks.
+to set a specific json key, add custom hooks, or control field inclusion during serialization/deserialization.
 
 ```dart
 @MappableClass()
 class MyClass with MyClassMappable {
-  MyClass(this.value);
+  MyClass(this.value, this.password, this.lastLogin);
 
   @MappableField(key: 'my_key')
   String value;
+
+  // Exclude from JSON output
+  @MappableField(includeToJson: false)
+  String? password;
+
+  // Ignore during deserialization
+  @MappableField(includeFromJson: false)
+  DateTime? lastLogin;
+
+  // Always include even if null
+  @MappableField(includeIfNull: true)
+  String? metadata;
 }
 ```
 
-***Note**: This can only be used on a field if it is directly assigned as a constructor parameter (`MyClass(this.myField)`).
-Setting this annotation on any other field will have no effect.
-(Read [Utilizing Constructors](https://pub.dev/documentation/dart_mappable/latest/topics/Models-topic.html#utilizing-constructors) for an explanation why this is.)*
+**Field Ignoring Options:**
 
-***Tip**: Hooks are a way to customize the serialization of any field or class.
-Read more in the documentation about [Mapping Hooks](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html).*
+- `includeToJson`: Controls whether the field is included when encoding to JSON/Map
+- `includeFromJson`: Controls whether the field is set during deserialization from JSON/Map
+- `includeIfNull`: Controls whether null values are included, overriding class-level `ignoreNull`
+
+**\*Note**: This can only be used on a field if it is directly assigned as a constructor parameter (`MyClass(this.myField)`).
+Setting this annotation on any other field will have no effect.
+(Read [Utilizing Constructors](https://pub.dev/documentation/dart_mappable/latest/topics/Models-topic.html#utilizing-constructors) for an explanation why this is.)\*
+
+**\*Tip**: Hooks are a way to customize the serialization of any field or class.
+Read more in the documentation about [Mapping Hooks](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html).\*
 
 You can add the `@MappableLib()` annotation to your `library` statement to set a default configuration
 for all included classes and enums, e.g. the case style for json keys.
@@ -197,7 +215,7 @@ class MyClass with MyClassMappable {
 }
 ```
 
-***Tip**: Check out the documentation to see all available [Configuration](https://pub.dev/documentation/dart_mappable/latest/topics/Configuration-topic.html) options.*
+**\*Tip**: Check out the documentation to see all available [Configuration](https://pub.dev/documentation/dart_mappable/latest/topics/Configuration-topic.html) options.\*
 
 ---
 
@@ -205,7 +223,7 @@ Here are again all **six** annotations that you can use in your code:
 
 1. `@MappableClass()` can be used on a class to specify options like the `caseStyle` of the json keys, whether to ignore null values, or [hooks](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html).
 2. `@MappableConstructor()` can be used on a constructor to mark this to be used for decoding. It has no properties.
-3. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name, or [hooks](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html).
+3. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name, add [hooks](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html), or control field inclusion during serialization/deserialization (`includeToJson`, `includeFromJson`, `includeIfNull`).
 4. `@MappableEnum()` can be used on an enum to specify the `mode` or `caseStyle` of the encoded enum values, or the `defaultValue`.
 5. `@MappableValue()` can be used on an enum value to specify a custom encoded value to use.
 6. `@MappableLib()` can be used on a library statement or import / export statement to set a default configuration for the annotated library or include / exclude classes.
@@ -217,8 +235,8 @@ Here are again all **six** annotations that you can use in your code:
 - `<ClassName>Mapper.fromMap<T>(Map<String, dynamic> map)` will take an encoded map object and return a decoded object of type `ClassName`.
 - `<ClassName>Mapper.fromJson<T>(String json)` internally uses `fromMap` but works with json encoded `String`s.
 
-***Tip**: If you prefer to use `MyClass.fromJson` over `MyClassMapper.fromJson`, add the `fromJson` and
-`fromMap` methods directly to your class like this:*
+**\*Tip**: If you prefer to use `MyClass.fromJson` over `MyClassMapper.fromJson`, add the `fromJson` and
+`fromMap` methods directly to your class like this:\*
 
 ```
 class MyClass with MyClassMappable {
@@ -240,26 +258,26 @@ The generated `<ClassName>Mappable` mixin will come with the following methods:
 See the full documentation [here](https://pub.dev/documentation/dart_mappable/latest/topics/Introduction-topic.html)
 or jump directly to the topic you are looking for:
 
-- [**Models**](https://pub.dev/documentation/dart_mappable/latest/topics/Models-topic.html) 
+- [**Models**](https://pub.dev/documentation/dart_mappable/latest/topics/Models-topic.html)
   show you how to structure and annotate your data models.
-- [**Enums**](https://pub.dev/documentation/dart_mappable/latest/topics/Enums-topic.html) 
+- [**Enums**](https://pub.dev/documentation/dart_mappable/latest/topics/Enums-topic.html)
   show you how to structure and annotate your enums.
 - [**Records**](https://pub.dev/documentation/dart_mappable/latest/topics/Records-topic.html)
   show you how to use records as part of your models.
-- [**Configuration**](https://pub.dev/documentation/dart_mappable/latest/topics/Configuration-topic.html) 
+- [**Configuration**](https://pub.dev/documentation/dart_mappable/latest/topics/Configuration-topic.html)
   goes into the different configuration options you have.
-- [**Copy-With**](https://pub.dev/documentation/dart_mappable/latest/topics/Copy-With-topic.html) 
+- [**Copy-With**](https://pub.dev/documentation/dart_mappable/latest/topics/Copy-With-topic.html)
   describes the copy-with functionalities and how to use them.
-- [**Polymorphism**](https://pub.dev/documentation/dart_mappable/latest/topics/Polymorphism-topic.html) 
+- [**Polymorphism**](https://pub.dev/documentation/dart_mappable/latest/topics/Polymorphism-topic.html)
   shows how to do polymorphic classes and inheritance.
-- [**Generics**](https://pub.dev/documentation/dart_mappable/latest/topics/Generics-topic.html) 
+- [**Generics**](https://pub.dev/documentation/dart_mappable/latest/topics/Generics-topic.html)
   explain generic decoding and how to use it.
-- [**Mapping Hooks**](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html) 
-  shows how to use hooks to customize your de- and encoding process. 
-- [**Custom Mappers**](https://pub.dev/documentation/dart_mappable/latest/topics/Custom%20Mappers-topic.html) 
+- [**Mapping Hooks**](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html)
+  shows how to use hooks to customize your de- and encoding process.
+- [**Custom Mappers**](https://pub.dev/documentation/dart_mappable/latest/topics/Custom%20Mappers-topic.html)
   explains how to set up and use (non-generated) custom mappers.
-- [**Mapper Container**](https://pub.dev/documentation/dart_mappable/latest/topics/Mapper%20Container-topic.html) 
+- [**Mapper Container**](https://pub.dev/documentation/dart_mappable/latest/topics/Mapper%20Container-topic.html)
   describes the inner workings of mapper containers in more detail.
-- [**Migration and Compatibility**](https://pub.dev/documentation/dart_mappable/latest/topics/Migration%20and%20Compatibility-topic.html) 
-  shows you how you can incrementally migrate from other packages like freezed or json_serializable and use compatible 
+- [**Migration and Compatibility**](https://pub.dev/documentation/dart_mappable/latest/topics/Migration%20and%20Compatibility-topic.html)
+  shows you how you can incrementally migrate from other packages like freezed or json_serializable and use compatible
   packages like fast_immutable_collections.

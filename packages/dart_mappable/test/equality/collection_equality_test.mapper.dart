@@ -25,6 +25,9 @@ class SetWrapperMapper extends ClassMapperBase<SetWrapper> {
   static const Field<SetWrapper, Set<String>> _f$values = Field(
     'values',
     _$values,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -137,6 +140,9 @@ class ListWrapperMapper extends ClassMapperBase<ListWrapper> {
   static const Field<ListWrapper, List<String>> _f$values = Field(
     'values',
     _$values,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
@@ -257,6 +263,9 @@ class MapWrapperMapper extends ClassMapperBase<MapWrapper> {
   static const Field<MapWrapper, Map<String, dynamic>> _f$values = Field(
     'values',
     _$values,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override

@@ -73,16 +73,32 @@ class PersonMapper extends ClassMapperBase<Person> {
   final String id = 'Person';
 
   static String _$name(Person v) => v.name;
-  static const Field<Person, String> _f$name = Field('name', _$name);
+  static const Field<Person, String> _f$name = Field(
+    'name',
+    _$name,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static int _$age(Person v) => v.age;
   static const Field<Person, int> _f$age = Field(
     'age',
     _$age,
     opt: true,
     def: 18,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
   static Car? _$car(Person v) => v.car;
-  static const Field<Person, Car> _f$car = Field('car', _$car, opt: true);
+  static const Field<Person, Car> _f$car = Field(
+    'car',
+    _$car,
+    opt: true,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
 
   @override
   final MappableFields<Person> fields = const {
@@ -195,14 +211,29 @@ class CarMapper extends ClassMapperBase<Car> {
   final String id = 'Car';
 
   static int _$drivenKm(Car v) => v.drivenKm;
-  static const Field<Car, int> _f$drivenKm = Field('drivenKm', _$drivenKm);
+  static const Field<Car, int> _f$drivenKm = Field(
+    'drivenKm',
+    _$drivenKm,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static Brand _$brand(Car v) => v.brand;
-  static const Field<Car, Brand> _f$brand = Field('brand', _$brand);
+  static const Field<Car, Brand> _f$brand = Field(
+    'brand',
+    _$brand,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
+  );
   static double _$miles(Car v) => v.miles;
   static const Field<Car, double> _f$miles = Field(
     'miles',
     _$miles,
     mode: FieldMode.member,
+    includeFromJson: true,
+    includeToJson: true,
+    includeIfNull: false,
   );
 
   @override
