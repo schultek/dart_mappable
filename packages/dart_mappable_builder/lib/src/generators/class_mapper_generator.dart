@@ -85,7 +85,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
     await _checkMixinUsed();
 
     output.write(
-      'mixin ${element.uniqueClassName}Mappable${element.typeParamsDeclaration} implements MappableBase {\n',
+      'mixin ${element.uniqueClassName}Mappable${element.typeParamsDeclaration} implements MappableBase<${element.uniqueClassName}> {\n',
     );
 
     generateEncoderMixin(output);
