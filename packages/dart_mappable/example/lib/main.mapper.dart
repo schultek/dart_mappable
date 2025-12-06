@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -25,11 +26,11 @@ class BrandMapper extends EnumMapper<Brand> {
   @override
   Brand decode(dynamic value) {
     switch (value) {
-      case 'Toyota':
+      case r'Toyota':
         return Brand.Toyota;
-      case 'Audi':
+      case r'Audi':
         return Brand.Audi;
-      case 'BMW':
+      case r'BMW':
         return Brand.BMW;
       default:
         throw MapperException.unknownEnumValue(value);
@@ -40,11 +41,11 @@ class BrandMapper extends EnumMapper<Brand> {
   dynamic encode(Brand self) {
     switch (self) {
       case Brand.Toyota:
-        return 'Toyota';
+        return r'Toyota';
       case Brand.Audi:
-        return 'Audi';
+        return r'Audi';
       case Brand.BMW:
-        return 'BMW';
+        return r'BMW';
     }
   }
 }
@@ -74,8 +75,12 @@ class PersonMapper extends ClassMapperBase<Person> {
   static String _$name(Person v) => v.name;
   static const Field<Person, String> _f$name = Field('name', _$name);
   static int _$age(Person v) => v.age;
-  static const Field<Person, int> _f$age =
-      Field('age', _$age, opt: true, def: 18);
+  static const Field<Person, int> _f$age = Field(
+    'age',
+    _$age,
+    opt: true,
+    def: 18,
+  );
   static Car? _$car(Person v) => v.car;
   static const Field<Person, Car> _f$car = Field('car', _$car, opt: true);
 
@@ -87,8 +92,11 @@ class PersonMapper extends ClassMapperBase<Person> {
   };
 
   static Person _instantiate(DecodingData data) {
-    return Person(data.dec(_f$name),
-        age: data.dec(_f$age), car: data.dec(_f$car));
+    return Person(
+      data.dec(_f$name),
+      age: data.dec(_f$age),
+      car: data.dec(_f$car),
+    );
   }
 
   @override
@@ -113,7 +121,7 @@ mixin PersonMappable {
   }
 
   PersonCopyWith<Person, Person, Person> get copyWith =>
-      _PersonCopyWithImpl(this as Person, $identity, $identity);
+      _PersonCopyWithImpl<Person, Person>(this as Person, $identity, $identity);
   @override
   String toString() {
     return PersonMapper.ensureInitialized().stringifyValue(this as Person);
@@ -132,7 +140,7 @@ mixin PersonMappable {
 
 extension PersonValueCopy<$R, $Out> on ObjectCopyWith<$R, Person, $Out> {
   PersonCopyWith<$R, Person, $Out> get $asPerson =>
-      $base.as((v, t, t2) => _PersonCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _PersonCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class PersonCopyWith<$R, $In extends Person, $Out>
@@ -152,19 +160,23 @@ class _PersonCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Person, $Out>
   CarCopyWith<$R, Car, Car>? get car =>
       $value.car?.copyWith.$chain((v) => call(car: v));
   @override
-  $R call({String? name, int? age, Object? car = $none}) =>
-      $apply(FieldCopyWithData({
-        if (name != null) #name: name,
-        if (age != null) #age: age,
-        if (car != $none) #car: car
-      }));
+  $R call({String? name, int? age, Object? car = $none}) => $apply(
+        FieldCopyWithData({
+          if (name != null) #name: name,
+          if (age != null) #age: age,
+          if (car != $none) #car: car,
+        }),
+      );
   @override
-  Person $make(CopyWithData data) => Person(data.get(#name, or: $value.name),
-      age: data.get(#age, or: $value.age), car: data.get(#car, or: $value.car));
+  Person $make(CopyWithData data) => Person(
+        data.get(#name, or: $value.name),
+        age: data.get(#age, or: $value.age),
+        car: data.get(#car, or: $value.car),
+      );
 
   @override
   PersonCopyWith<$R2, Person, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _PersonCopyWithImpl($value, $cast, t);
+      _PersonCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class CarMapper extends ClassMapperBase<Car> {
@@ -188,10 +200,7 @@ class CarMapper extends ClassMapperBase<Car> {
   static const Field<Car, Brand> _f$brand = Field('brand', _$brand);
 
   @override
-  final MappableFields<Car> fields = const {
-    #miles: _f$miles,
-    #brand: _f$brand,
-  };
+  final MappableFields<Car> fields = const {#miles: _f$miles, #brand: _f$brand};
 
   static Car _instantiate(DecodingData data) {
     return Car(data.dec(_f$miles), data.dec(_f$brand));
@@ -219,7 +228,7 @@ mixin CarMappable {
   }
 
   CarCopyWith<Car, Car, Car> get copyWith =>
-      _CarCopyWithImpl(this as Car, $identity, $identity);
+      _CarCopyWithImpl<Car, Car>(this as Car, $identity, $identity);
   @override
   String toString() {
     return CarMapper.ensureInitialized().stringifyValue(this as Car);
@@ -238,7 +247,7 @@ mixin CarMappable {
 
 extension CarValueCopy<$R, $Out> on ObjectCopyWith<$R, Car, $Out> {
   CarCopyWith<$R, Car, $Out> get $asCar =>
-      $base.as((v, t, t2) => _CarCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _CarCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class CarCopyWith<$R, $In extends Car, $Out>
@@ -254,15 +263,21 @@ class _CarCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Car, $Out>
   @override
   late final ClassMapperBase<Car> $mapper = CarMapper.ensureInitialized();
   @override
-  $R call({double? miles, Brand? brand}) => $apply(FieldCopyWithData(
-      {if (miles != null) #miles: miles, if (brand != null) #brand: brand}));
+  $R call({double? miles, Brand? brand}) => $apply(
+        FieldCopyWithData({
+          if (miles != null) #miles: miles,
+          if (brand != null) #brand: brand,
+        }),
+      );
   @override
   Car $make(CopyWithData data) => Car(
-      data.get(#miles, or: $value.miles), data.get(#brand, or: $value.brand));
+        data.get(#miles, or: $value.miles),
+        data.get(#brand, or: $value.brand),
+      );
 
   @override
   CarCopyWith<$R2, Car, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _CarCopyWithImpl($value, $cast, t);
+      _CarCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class BoxMapper extends ClassMapperBase<Box> {
@@ -285,8 +300,11 @@ class BoxMapper extends ClassMapperBase<Box> {
   static const Field<Box, int> _f$size = Field('size', _$size);
   static dynamic _$content(Box v) => v.content;
   static dynamic _arg$content<T>(f) => f<T>();
-  static const Field<Box, dynamic> _f$content =
-      Field('content', _$content, arg: _arg$content);
+  static const Field<Box, dynamic> _f$content = Field(
+    'content',
+    _$content,
+    arg: _arg$content,
+  );
 
   @override
   final MappableFields<Box> fields = const {
@@ -320,7 +338,7 @@ mixin BoxMappable<T> {
   }
 
   BoxCopyWith<Box<T>, Box<T>, Box<T>, T> get copyWith =>
-      _BoxCopyWithImpl(this as Box<T>, $identity, $identity);
+      _BoxCopyWithImpl<Box<T>, Box<T>, T>(this as Box<T>, $identity, $identity);
   @override
   String toString() {
     return BoxMapper.ensureInitialized().stringifyValue(this as Box<T>);
@@ -339,7 +357,7 @@ mixin BoxMappable<T> {
 
 extension BoxValueCopy<$R, $Out, T> on ObjectCopyWith<$R, Box<T>, $Out> {
   BoxCopyWith<$R, Box<T>, $Out, T> get $asBox =>
-      $base.as((v, t, t2) => _BoxCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _BoxCopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
 abstract class BoxCopyWith<$R, $In extends Box<T>, $Out, T>
@@ -355,15 +373,21 @@ class _BoxCopyWithImpl<$R, $Out, T> extends ClassCopyWithBase<$R, Box<T>, $Out>
   @override
   late final ClassMapperBase<Box> $mapper = BoxMapper.ensureInitialized();
   @override
-  $R call({int? size, T? content}) => $apply(FieldCopyWithData(
-      {if (size != null) #size: size, if (content != null) #content: content}));
+  $R call({int? size, Object? content = $none}) => $apply(
+        FieldCopyWithData({
+          if (size != null) #size: size,
+          if (content != $none) #content: content,
+        }),
+      );
   @override
-  Box<T> $make(CopyWithData data) => Box(data.get(#size, or: $value.size),
-      content: data.get(#content, or: $value.content));
+  Box<T> $make(CopyWithData data) => Box(
+        data.get(#size, or: $value.size),
+        content: data.get(#content, or: $value.content),
+      );
 
   @override
   BoxCopyWith<$R2, Box<T>, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _BoxCopyWithImpl($value, $cast, t);
+      _BoxCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 
 class ConfettiMapper extends ClassMapperBase<Confetti> {
@@ -384,9 +408,7 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
   static const Field<Confetti, String> _f$color = Field('color', _$color);
 
   @override
-  final MappableFields<Confetti> fields = const {
-    #color: _f$color,
-  };
+  final MappableFields<Confetti> fields = const {#color: _f$color};
 
   static Confetti _instantiate(DecodingData data) {
     return Confetti(data.dec(_f$color));
@@ -406,17 +428,23 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
 
 mixin ConfettiMappable {
   String toJson() {
-    return ConfettiMapper.ensureInitialized()
-        .encodeJson<Confetti>(this as Confetti);
+    return ConfettiMapper.ensureInitialized().encodeJson<Confetti>(
+      this as Confetti,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return ConfettiMapper.ensureInitialized()
-        .encodeMap<Confetti>(this as Confetti);
+    return ConfettiMapper.ensureInitialized().encodeMap<Confetti>(
+      this as Confetti,
+    );
   }
 
   ConfettiCopyWith<Confetti, Confetti, Confetti> get copyWith =>
-      _ConfettiCopyWithImpl(this as Confetti, $identity, $identity);
+      _ConfettiCopyWithImpl<Confetti, Confetti>(
+        this as Confetti,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
     return ConfettiMapper.ensureInitialized().stringifyValue(this as Confetti);
@@ -424,8 +452,10 @@ mixin ConfettiMappable {
 
   @override
   bool operator ==(Object other) {
-    return ConfettiMapper.ensureInitialized()
-        .equalsValue(this as Confetti, other);
+    return ConfettiMapper.ensureInitialized().equalsValue(
+      this as Confetti,
+      other,
+    );
   }
 
   @override
@@ -436,7 +466,7 @@ mixin ConfettiMappable {
 
 extension ConfettiValueCopy<$R, $Out> on ObjectCopyWith<$R, Confetti, $Out> {
   ConfettiCopyWith<$R, Confetti, $Out> get $asConfetti =>
-      $base.as((v, t, t2) => _ConfettiCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ConfettiCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ConfettiCopyWith<$R, $In extends Confetti, $Out>
@@ -462,6 +492,7 @@ class _ConfettiCopyWithImpl<$R, $Out>
 
   @override
   ConfettiCopyWith<$R2, Confetti, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _ConfettiCopyWithImpl($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) =>
+      _ConfettiCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

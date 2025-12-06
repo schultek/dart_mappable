@@ -273,6 +273,7 @@ class AnimalMapper extends ClassMapperBase<o.Animal> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AnimalMapper._());
       PetMapper.ensureInitialized();
+      ColorMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -280,11 +281,16 @@ class AnimalMapper extends ClassMapperBase<o.Animal> {
   @override
   final String id = 'Animal';
 
-  static String _$color(o.Animal v) => v.color;
-  static const Field<o.Animal, String> _f$color = Field('color', _$color);
+  static String _$name(o.Animal v) => v.name;
+  static const Field<o.Animal, String> _f$name = Field('name', _$name);
+  static c.Color _$color(o.Animal v) => v.color;
+  static const Field<o.Animal, c.Color> _f$color = Field('color', _$color);
 
   @override
-  final MappableFields<o.Animal> fields = const {#color: _f$color};
+  final MappableFields<o.Animal> fields = const {
+    #name: _f$name,
+    #color: _f$color,
+  };
 
   static o.Animal _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
@@ -318,7 +324,7 @@ extension AnimalMapperExtension on o.Animal {
 
 abstract class AnimalCopyWith<$R, $In extends o.Animal, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? color});
+  $R call({String? name, c.Color? color});
   AnimalCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -331,6 +337,7 @@ class PetMapper extends SubClassMapperBase<o.Pet> {
       MapperContainer.globals.use(_instance = PetMapper._());
       AnimalMapper.ensureInitialized().addSubMapper(_instance!);
       Person2Mapper.ensureInitialized();
+      ColorMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -340,12 +347,15 @@ class PetMapper extends SubClassMapperBase<o.Pet> {
 
   static m.Person _$owner(o.Pet v) => v.owner;
   static const Field<o.Pet, m.Person> _f$owner = Field('owner', _$owner);
-  static String _$color(o.Pet v) => v.color;
-  static const Field<o.Pet, String> _f$color = Field('color', _$color);
+  static String _$name(o.Pet v) => v.name;
+  static const Field<o.Pet, String> _f$name = Field('name', _$name);
+  static c.Color _$color(o.Pet v) => v.color;
+  static const Field<o.Pet, c.Color> _f$color = Field('color', _$color);
 
   @override
   final MappableFields<o.Pet> fields = const {
     #owner: _f$owner,
+    #name: _f$name,
     #color: _f$color,
   };
 
@@ -357,7 +367,7 @@ class PetMapper extends SubClassMapperBase<o.Pet> {
   late final ClassMapperBase superMapper = AnimalMapper.ensureInitialized();
 
   static o.Pet _instantiate(DecodingData data) {
-    return o.Pet(data.dec(_f$owner), data.dec(_f$color));
+    return o.Pet(data.dec(_f$owner), data.dec(_f$name), data.dec(_f$color));
   }
 
   @override
@@ -394,7 +404,7 @@ abstract class PetCopyWith<$R, $In extends o.Pet, $Out>
     implements AnimalCopyWith<$R, $In, $Out> {
   Person2CopyWith<$R, m.Person, m.Person> get owner;
   @override
-  $R call({m.Person? owner, String? color});
+  $R call({m.Person? owner, String? name, c.Color? color});
   PetCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -408,20 +418,72 @@ class _PetCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, o.Pet, $Out>
   Person2CopyWith<$R, m.Person, m.Person> get owner =>
       $value.owner.copyWith.$chain((v) => call(owner: v));
   @override
-  $R call({m.Person? owner, String? color}) => $apply(
+  $R call({m.Person? owner, String? name, c.Color? color}) => $apply(
     FieldCopyWithData({
       if (owner != null) #owner: owner,
+      if (name != null) #name: name,
       if (color != null) #color: color,
     }),
   );
   @override
   o.Pet $make(CopyWithData data) => o.Pet(
     data.get(#owner, or: $value.owner),
+    data.get(#name, or: $value.name),
     data.get(#color, or: $value.color),
   );
 
   @override
   PetCopyWith<$R2, o.Pet, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _PetCopyWithImpl<$R2, $Out2>($value, $cast, t);
+}
+
+class ColorMapper extends EnumMapper<c.Color> {
+  ColorMapper._();
+
+  static ColorMapper? _instance;
+  static ColorMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ColorMapper._());
+    }
+    return _instance!;
+  }
+
+  static c.Color fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  c.Color decode(dynamic value) {
+    switch (value) {
+      case r'Black':
+        return c.Color.black;
+      case r'Red':
+        return c.Color.red;
+      case r'White':
+        return c.Color.white;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(c.Color self) {
+    switch (self) {
+      case c.Color.black:
+        return r'Black';
+      case c.Color.red:
+        return r'Red';
+      case c.Color.white:
+        return r'White';
+    }
+  }
+}
+
+extension ColorMapperExtension on c.Color {
+  String toValue() {
+    ColorMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<c.Color>(this) as String;
+  }
 }
 

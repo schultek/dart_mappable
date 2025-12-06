@@ -4,6 +4,7 @@ library;
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:test/test.dart';
 
+import 'other/color.dart' as c;
 import 'other/food.dart' as f;
 import 'other/models.dart' as m;
 import 'other/other.dart' as o;
@@ -22,6 +23,9 @@ typedef Animal = o.Animal;
 @MappableClass()
 typedef Pet = o.Pet;
 
+@MappableEnum(caseStyle: CaseStyle.pascalCase)
+typedef Color = c.Color;
+
 @MappableClass()
 class Person with PersonMappable {
   final String firstName;
@@ -36,10 +40,11 @@ void main() {
       expect(Cake('Lemon').toMap(), equals({'type': 'Lemon'}));
       expect(Person('Anna').toMap(), equals({'first_name': 'Anna'}));
       expect(
-        Pet(Person2('Clara'), 'Buddy').toMap(),
+        Pet(Person2('Clara'), 'Buddy', Color.black).toMap(),
         equals({
           'owner': {'first_name': 'Clara'},
-          'color': 'Buddy',
+          'name': 'Buddy',
+          'color': 'Black',
           'type': 'Pet',
         }),
       );
@@ -49,9 +54,10 @@ void main() {
           AnimalMapper.fromMap({
             'type': 'Pet',
             'owner': {'first_name': 'Clara'},
-            'color': 'Buddy',
+            'name': 'Buddy',
+            'color': 'White',
           }),
-          Pet(Person2('Clara'), 'Buddy'),
+          Pet(Person2('Clara'), 'Buddy', Color.white),
         ),
         isTrue,
       );

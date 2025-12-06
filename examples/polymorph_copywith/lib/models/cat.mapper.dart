@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -25,11 +26,11 @@ class CatTypeMapper extends EnumMapper<CatType> {
   @override
   CatType decode(dynamic value) {
     switch (value) {
-      case 'black':
+      case r'black':
         return CatType.black;
-      case 'siamese':
+      case r'siamese':
         return CatType.siamese;
-      case 'tiger':
+      case r'tiger':
         return CatType.tiger;
       default:
         throw MapperException.unknownEnumValue(value);
@@ -40,11 +41,11 @@ class CatTypeMapper extends EnumMapper<CatType> {
   dynamic encode(CatType self) {
     switch (self) {
       case CatType.black:
-        return 'black';
+        return r'black';
       case CatType.siamese:
-        return 'siamese';
+        return r'siamese';
       case CatType.tiger:
-        return 'tiger';
+        return r'tiger';
     }
   }
 }
@@ -119,7 +120,7 @@ mixin CatMappable {
   }
 
   CatCopyWith<Cat, Cat, Cat> get copyWith =>
-      _CatCopyWithImpl(this as Cat, $identity, $identity);
+      _CatCopyWithImpl<Cat, Cat>(this as Cat, $identity, $identity);
   @override
   String toString() {
     return CatMapper.ensureInitialized().stringifyValue(this as Cat);
@@ -138,7 +139,7 @@ mixin CatMappable {
 
 extension CatValueCopy<$R, $Out> on ObjectCopyWith<$R, Cat, $Out> {
   CatCopyWith<$R, Cat, $Out> get $asCat =>
-      $base.as((v, t, t2) => _CatCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _CatCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class CatCopyWith<$R, $In extends Cat, $Out>
@@ -171,5 +172,6 @@ class _CatCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Cat, $Out>
 
   @override
   CatCopyWith<$R2, Cat, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _CatCopyWithImpl($value, $cast, t);
+      _CatCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

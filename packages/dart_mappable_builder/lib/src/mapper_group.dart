@@ -12,6 +12,7 @@ import 'elements/class/class_mapper_element.dart';
 import 'elements/class/dependent_class_mapper_element.dart';
 import 'elements/class/factory_constructor_mapper_element.dart';
 import 'elements/class/target_class_mapper_element.dart';
+import 'elements/enum/alias_enum_mapper_element.dart';
 import 'elements/enum/dependent_enum_mapper_element.dart';
 import 'elements/enum/target_enum_mapper_element.dart';
 import 'elements/mapper_element.dart';
@@ -123,6 +124,13 @@ class MapperElementGroup {
         } else {
           return await _addMapper(
             await DependentRecordMapperElement.from(this, e, options),
+          );
+        }
+      } else if (enumChecker.hasAnnotationOf(e) &&
+          e.aliasedType.element is EnumElement) {
+        if (e.library == library) {
+          return await _addMapper(
+            await AliasEnumMapperElement.from(this, e, options),
           );
         }
       }
@@ -410,7 +418,9 @@ class MapperElementGroup {
                   ((e.aliasedType.element is ClassElement &&
                           classChecker.hasAnnotationOf(e)) ||
                       (e.aliasedType is RecordType &&
-                          recordChecker.hasAnnotationOf(e)))));
+                          recordChecker.hasAnnotationOf(e)) ||
+                      (e.aliasedType is EnumElement &&
+                          enumChecker.hasAnnotationOf(e)))));
     }
 
     if (scope == InitializerScope.package ||

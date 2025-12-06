@@ -84,25 +84,9 @@ class DataMapper extends SubClassMapperBase<Data> {
     _$value,
     key: r'mykey',
   );
-  static $DataCopyWith<Data> _$copyWith(Data v) => v.copyWith;
-  static const Field<Data, $DataCopyWith<Data>> _f$copyWith = Field(
-    'copyWith',
-    _$copyWith,
-    mode: FieldMode.member,
-  );
-  static int _$hashCode(Data v) => v.hashCode;
-  static const Field<Data, int> _f$hashCode = Field(
-    'hashCode',
-    _$hashCode,
-    mode: FieldMode.member,
-  );
 
   @override
-  final MappableFields<Data> fields = const {
-    #value: _f$value,
-    #copyWith: _f$copyWith,
-    #hashCode: _f$hashCode,
-  };
+  final MappableFields<Data> fields = const {#value: _f$value};
 
   @override
   final String discriminatorKey = 'type';
@@ -154,25 +138,9 @@ class LoadingMapper extends SubClassMapperBase<Loading> {
 
   static int _$value(Loading v) => v.value;
   static const Field<Loading, int> _f$value = Field('value', _$value);
-  static $LoadingCopyWith<Loading> _$copyWith(Loading v) => v.copyWith;
-  static const Field<Loading, $LoadingCopyWith<Loading>> _f$copyWith = Field(
-    'copyWith',
-    _$copyWith,
-    mode: FieldMode.member,
-  );
-  static int _$hashCode(Loading v) => v.hashCode;
-  static const Field<Loading, int> _f$hashCode = Field(
-    'hashCode',
-    _$hashCode,
-    mode: FieldMode.member,
-  );
 
   @override
-  final MappableFields<Loading> fields = const {
-    #value: _f$value,
-    #copyWith: _f$copyWith,
-    #hashCode: _f$hashCode,
-  };
+  final MappableFields<Loading> fields = const {#value: _f$value};
 
   @override
   final String discriminatorKey = 'type';
@@ -230,23 +198,11 @@ class ErrorDetailsMapper extends SubClassMapperBase<ErrorDetails> {
     _$message,
     opt: true,
   );
-  static $ErrorDetailsCopyWith<ErrorDetails> _$copyWith(ErrorDetails v) =>
-      v.copyWith;
-  static const Field<ErrorDetails, $ErrorDetailsCopyWith<ErrorDetails>>
-  _f$copyWith = Field('copyWith', _$copyWith, mode: FieldMode.member);
-  static int _$hashCode(ErrorDetails v) => v.hashCode;
-  static const Field<ErrorDetails, int> _f$hashCode = Field(
-    'hashCode',
-    _$hashCode,
-    mode: FieldMode.member,
-  );
 
   @override
   final MappableFields<ErrorDetails> fields = const {
     #value: _f$value,
     #message: _f$message,
-    #copyWith: _f$copyWith,
-    #hashCode: _f$hashCode,
   };
 
   @override

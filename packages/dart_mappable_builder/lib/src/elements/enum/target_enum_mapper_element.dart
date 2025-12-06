@@ -10,7 +10,7 @@ import '../mapper_element.dart';
 import 'enum_mapper_element.dart';
 
 class TargetEnumMapperElement extends EnumMapperElement {
-  TargetEnumMapperElement._(
+  TargetEnumMapperElement(
     super.parent,
     super.element,
     super.options,
@@ -24,9 +24,9 @@ class TargetEnumMapperElement extends EnumMapperElement {
     MappableOptions options,
   ) async {
     var annotation = await MapperAnnotation.from<MappableEnum>(element);
-    var valueNodes = await _getValues(element);
+    var valueNodes = await getValues(element);
 
-    return TargetEnumMapperElement._(
+    return TargetEnumMapperElement(
       parent,
       element,
       options,
@@ -73,7 +73,7 @@ class TargetEnumMapperElement extends EnumMapperElement {
         }
       }).toList();
 
-  static Future<List<(FieldElement, AstNode?)>> _getValues(
+  static Future<List<(FieldElement, AstNode?)>> getValues(
     EnumElement element,
   ) async {
     var fields = element.fields.where((f) => f.isEnumConstant).toList();

@@ -7,7 +7,7 @@ import '../constructor/constructor_mapper_element.dart';
 import '../mapper_element.dart';
 import 'target_class_mapper_element.dart';
 
-/// Element interface for all annotated type aliases.
+/// Element interface for all annotated class type aliases.
 class AliasClassMapperElement extends TargetClassMapperElement {
   AliasClassMapperElement._(
     super.parent,
