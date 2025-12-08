@@ -25,7 +25,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.4.14
-  dart_mappable_builder: ^4.6.1
+  dart_mappable_builder: ^4.6.3
   lints: ^5.0.0
   test: ^1.25.10
 

@@ -1,3 +1,7 @@
+# 4.6.3
+
+- Added support for annotated enum typedefs.
+
 # 4.6.2
 
 - Allow `analyzer` 9.0.0.
@@ -13,7 +17,7 @@
 
 - Migrate to new `element2` analyzer model.
   Bump `analyzer` to `>=7.5.9`, `build` to 3.0.0 and `source_gen` to 3.0.0.
-- Add support for self-referencing generics (e.g. `T extends Comparable<T>`)
+- Added support for self-referencing generics (e.g. `T extends Comparable<T>`)
 - Fix handling of nullable function fields.
 - Disable formatting of generated files through `// dart format off`.
 - Require `sdk: >=3.7.0`.
