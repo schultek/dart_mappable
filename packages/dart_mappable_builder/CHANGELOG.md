@@ -1,3 +1,7 @@
+# 4.6.2
+
+- Allow `analyzer` 9.0.0.
+
 # 4.6.1
 
 - Record mappers now correctly uses hooks specified on the `@MappableRecord` annotation.
