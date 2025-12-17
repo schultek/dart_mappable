@@ -23,3 +23,4 @@ export 'src/mappers/mapper_mixins.dart';
 export 'src/mappers/mapping_context.dart';
 export 'src/mappers/record_mapper.dart';
 export 'src/mappers/simple_mapper.dart';
+export 'src/mappers/mappable_base.dart';
