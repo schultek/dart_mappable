@@ -127,6 +127,25 @@ void main() {
 }
 ```
 
+## Multiple Constructors
+
+You can also use factory constructors on the base class to provide a more convenient API for creating instances.
+
+```dart
+// Set the discriminator key to "type".
+@MappableClass(discriminatorKey: 'type')
+abstract class Animal with AnimalMappable {
+  const Animal(this.name);
+
+  // Factory constructors pointing to subclasses
+  const factory Animal.nullAnimal(String name) = NullAnimal;
+
+  const factory Animal.defaultAnimal(String name, String type) = DefaultAnimal;
+
+  final String name;
+}
+```
+
 ## Custom Discriminator Logic
 
 For a more advanced use-case where the discriminator key/value system is not enough, you can also 
