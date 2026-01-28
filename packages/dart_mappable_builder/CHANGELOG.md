@@ -2,6 +2,7 @@
 
 - Fix nested `copyWith` on a inherited class with the superclass and field type in another library.
 - Fix default value of a field not being prefixed correctly when set to a static constant.
+- Add ignore for `invalid_use_of_protected_member` warning in generated code.
 
 # 4.6.3
 
