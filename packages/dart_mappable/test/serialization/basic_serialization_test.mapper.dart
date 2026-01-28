@@ -75,7 +75,7 @@ class AMapper extends ClassMapperBase<A> {
   static String _$a(A v) => v.a;
   static const Field<A, String> _f$a = Field('a', _$a);
   static int _$b(A v) => v.b;
-  static const Field<A, int> _f$b = Field('b', _$b, opt: true, def: 0);
+  static const Field<A, int> _f$b = Field('b', _$b, opt: true, def: A.defaultB);
   static double? _$c(A v) => v.c;
   static const Field<A, double> _f$c = Field('c', _$c, opt: true);
   static bool _$d(A v) => v.d;

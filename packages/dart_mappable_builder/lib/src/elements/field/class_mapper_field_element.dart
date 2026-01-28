@@ -124,14 +124,18 @@ class ClassMapperFieldElement extends MapperFieldElement {
       return '';
     }
 
-    if (p.hasDefaultValue && p.defaultValueCode != 'null') {
-      return ', def: ${p.defaultValueCode}';
-    } else {
-      var node = await p.getNode();
-      if (node is DefaultFormalParameter &&
-          node.defaultValue.toString() != 'null') {
-        return ', def: ${node.defaultValue}';
+    var node = await p.getResolvedNode();
+    if (node is DefaultFormalParameter &&
+        node.defaultValue.toString() != 'null') {
+      if (node.defaultValue case SimpleIdentifier(
+        element: PropertyAccessorElement(enclosingElement: ClassElement clazz),
+        name: String name,
+      )) {
+        return ', def: ${clazz.name}.$name';
       }
+      return ', def: ${node.defaultValue?.toSource()}';
+    } else if (p.hasDefaultValue && p.defaultValueCode != 'null') {
+      return ', def: ${p.defaultValueCode}';
     }
 
     return '';

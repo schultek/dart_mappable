@@ -1,6 +1,7 @@
 # 4.6.4
 
 - Fix nested `copyWith` on a inherited class with the superclass and field type in another library.
+- Fix default value of a field not being prefixed correctly when set to a static constant.
 
 # 4.6.3
 
