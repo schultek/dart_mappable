@@ -59,9 +59,15 @@ class KeyedItemList<K, T> extends ItemList<T> with KeyedItemListMappable<K, T> {
 }
 
 @MappableClass()
-class ComparableItemList<T extends Comparable> extends ItemList<T>
-    with ComparableItemListMappable<T> {
+class ComparableItemList<T extends Comparable> extends ItemList<T> with ComparableItemListMappable<T> {
   ComparableItemList(super.items);
+}
+
+@MappableClass()
+class ItemContainer<T> with ItemContainerMappable<T> {
+  final List<ItemList<T>> items;
+
+  ItemContainer(this.items);
 }
 
 void main() {
@@ -87,9 +93,7 @@ void main() {
       p2 = p2.copyWith.car(brand: null);
       expect(p2.car.brand, equals(null));
 
-      Person p3 = person.copyWith.car.$update(
-        (c) => Car(c.brand, '${c.model}_xx'),
-      );
+      Person p3 = person.copyWith.car.$update((c) => Car(c.brand, '${c.model}_xx'));
       expect(p3.car.brand, equals(person.car.brand));
       expect(p3.car.model, equals('A8_xx'));
     });
@@ -99,10 +103,7 @@ void main() {
       var bmw = Brand('BMW');
       var porsche = Brand('Porsche');
       var cars = [Car(audi, 'A9'), Car(bmw, 'M4')];
-      var salesRep = {
-        audi: Person('Max', Car(audi, 'A9')),
-        bmw: Person('Cathy', Car(bmw, 'M3')),
-      };
+      var salesRep = {audi: Person('Max', Car(audi, 'A9')), bmw: Person('Cathy', Car(bmw, 'M3'))};
 
       var dealership = Dealership([...cars], {...salesRep});
 
@@ -111,32 +112,16 @@ void main() {
         equals(Dealership([Car(audi, 'A8'), Car(bmw, 'M4')], salesRep)),
       );
 
-      expect(
-        dealership.copyWith.cars.add(Car(audi, 'A8')),
-        equals(Dealership([...cars, Car(audi, 'A8')], salesRep)),
-      );
+      expect(dealership.copyWith.cars.add(Car(audi, 'A8')), equals(Dealership([...cars, Car(audi, 'A8')], salesRep)));
 
       expect(
         dealership.copyWith.salesRep.get(audi)!(name: 'Tony'),
-        equals(
-          Dealership(cars, {
-            ...salesRep,
-            audi: Person('Tony', Car(audi, 'A9')),
-          }),
-        ),
+        equals(Dealership(cars, {...salesRep, audi: Person('Tony', Car(audi, 'A9'))})),
       );
 
       expect(
-        dealership.copyWith.salesRep.put(
-          porsche,
-          Person('Justus', Car(porsche, '911')),
-        ),
-        equals(
-          Dealership(cars, {
-            ...salesRep,
-            porsche: Person('Justus', Car(porsche, '911')),
-          }),
-        ),
+        dealership.copyWith.salesRep.put(porsche, Person('Justus', Car(porsche, '911'))),
+        equals(Dealership(cars, {...salesRep, porsche: Person('Justus', Car(porsche, '911'))})),
       );
     });
 

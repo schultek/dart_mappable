@@ -77,6 +77,7 @@ void initializeMappers() {
   p5.AMapper.ensureInitialized();
   p5.CMapper.ensureInitialized();
   p5.BMapper.ensureInitialized();
+  p5.ItemContainer2Mapper.ensureInitialized();
   p6.PersonMapper.ensureInitialized();
   p6.CarMapper.ensureInitialized();
   p6.BrandMapper.ensureInitialized();
@@ -86,6 +87,7 @@ void initializeMappers() {
   p6.NamedItemListMapper.ensureInitialized();
   p6.KeyedItemListMapper.ensureInitialized();
   p6.ComparableItemListMapper.ensureInitialized();
+  p6.ItemContainerMapper.ensureInitialized();
   p7.AMapper.ensureInitialized();
   p7.BMapper.ensureInitialized();
   p7.CMapper.ensureInitialized();

@@ -1,3 +1,7 @@
+# 4.6.4
+
+- Fix nested `copyWith` on a inherited class with the superclass and field type in another library.
+
 # 4.6.3
 
 - Added support for annotated enum typedefs.

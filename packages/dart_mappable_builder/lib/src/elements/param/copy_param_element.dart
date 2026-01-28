@@ -32,12 +32,7 @@ class CopyParamElement {
             !classTarget.shouldGenerate(GenerateMethods.copy)) {
           return null;
         }
-        if (classTarget.hasCallableConstructor ||
-            classTarget.superElement != null ||
-            classTarget.subElements.isNotEmpty) {
-          return classTarget;
-        }
-        return null;
+        return classTarget;
       }
 
       CopyParamElement makeCollectionConfig(int valueIndex, String name) {
