@@ -29,7 +29,7 @@ class C extends OtherBase with CMappable {
   @MappableField()
   final String valueC;
 
-  C({required this.valueC, super.id});
+  C({required this.valueC, super.id, super.unmappedProps});
 
   static final fromMap = CMapper.fromMap;
   static final fromJson = CMapper.fromJson;
@@ -40,7 +40,12 @@ class D extends C with DMappable {
   @MappableField()
   final int valueD;
 
-  D({required this.valueD, required super.valueC, super.id});
+  D({
+    required this.valueD,
+    required super.valueC,
+    super.id,
+    super.unmappedProps,
+  });
 
   static final fromMap = DMapper.fromMap;
   static final fromJson = DMapper.fromJson;
