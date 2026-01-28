@@ -21,14 +21,14 @@ abstract class MediaBase extends CouchDocumentBase with MediaBaseMappable {
     super.rev,
     super.revisions,
     super.revsInfo,
-    super.unmappedProps = const {},
+    super.unmappedProps,
   });
 
   static final fromMap = MediaBaseMapper.fromMap;
   static final fromJson = MediaBaseMapper.fromJson;
 }
 
-@MappableClass(discriminatorValue: "media_folder")
+@MappableClass(discriminatorValue: 'media_folder')
 class MediaFolder extends MediaBase with MediaFolderMappable {
   MediaFolder({
     super.parent,
@@ -64,7 +64,7 @@ class MediaFolder extends MediaBase with MediaFolderMappable {
 ///
 /// The media-List gives the order in which the attachments should be used.
 /// The Attachments have uuids as names.
-@MappableClass(discriminatorValue: "media_item")
+@MappableClass(discriminatorValue: 'media_item')
 class MediaItem extends MediaBase with MediaItemMappable {
   final List<String> media;
 
