@@ -108,22 +108,51 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
         var safeParams = <ClassMapperParamElement>[];
 
         bool isCopySafe(ClassMapperParamElement param) {
-          return subElements.every(
-            (e) => e.copySafeParams.any((subParam) {
-              if (subParam is SuperParamElement &&
-                  (subParam.superParameter.parameter.baseElement ==
-                          param.parameter.baseElement ||
-                      subParam.superParameter.accessor?.baseElement ==
-                          param.accessor?.baseElement)) {
-                return true;
+          for (var e in subElements) {
+            var subParams = e.copySafeParams;
+            bool paramMatches = subParams.any((subParam) {
+              if (subParam is SuperParamElement) {
+                var superParam = subParam.superParameter;
+                if (superParam.parameter.baseElement ==
+                    param.parameter.baseElement) {
+                  return true;
+                }
+                if (superParam.accessor?.baseElement ==
+                    param.accessor?.baseElement) {
+                  return true;
+                }
               }
               if (subParam is FieldParamElement &&
                   subParam.superField == param.accessor) {
                 return true;
               }
               return false;
-            }),
-          );
+            });
+            if (!paramMatches) {
+              if (param is SuperParamElement) {
+                var superParam = param.superParameter;
+                if (superParam.parameter.name != null &&
+                    e.params.any(
+                      (p) => p.parameter.name == superParam.parameter.name,
+                    )) {
+                  paramMatches = true;
+                } else if (superParam.accessor != null &&
+                    e.params.any(
+                      (p) => p.accessor?.name == superParam.accessor?.name,
+                    )) {
+                  paramMatches = true;
+                } else if (e.fields.any(
+                  (f) => f.name == param.accessor?.name,
+                )) {
+                  paramMatches = true;
+                }
+              }
+            }
+            if (paramMatches) {
+              return true;
+            }
+          }
+          return false;
         }
 
         for (var param in params) {
