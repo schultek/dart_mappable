@@ -2,6 +2,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 // ignore_for_file: type=lint
+// ignore_for_file: invalid_use_of_protected_member
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
@@ -566,5 +567,119 @@ class _BCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, B, $Out>
   @override
   BCopyWith<$R2, B, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _BCopyWithImpl<$R2, $Out2>($value, $cast, t);
+}
+
+class ItemContainer2Mapper extends ClassMapperBase<ItemContainer2> {
+  ItemContainer2Mapper._();
+
+  static ItemContainer2Mapper? _instance;
+  static ItemContainer2Mapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ItemContainer2Mapper._());
+      ItemContainerMapper.ensureInitialized();
+      ItemListMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'ItemContainer2';
+  @override
+  Function get typeFactory =>
+      <T>(f) => f<ItemContainer2<T>>();
+
+  static List<ItemList<dynamic>> _$items(ItemContainer2 v) => v.items;
+  static dynamic _arg$items<T>(f) => f<List<ItemList<T>>>();
+  static const Field<ItemContainer2, List<ItemList<dynamic>>> _f$items = Field(
+    'items',
+    _$items,
+    arg: _arg$items,
+  );
+
+  @override
+  final MappableFields<ItemContainer2> fields = const {#items: _f$items};
+
+  static ItemContainer2<T> _instantiate<T>(DecodingData data) {
+    return ItemContainer2(data.dec(_f$items));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+}
+
+mixin ItemContainer2Mappable<T> {
+  ItemContainer2CopyWith<
+    ItemContainer2<T>,
+    ItemContainer2<T>,
+    ItemContainer2<T>,
+    T
+  >
+  get copyWith =>
+      _ItemContainer2CopyWithImpl<ItemContainer2<T>, ItemContainer2<T>, T>(
+        this as ItemContainer2<T>,
+        $identity,
+        $identity,
+      );
+}
+
+extension ItemContainer2ValueCopy<$R, $Out, T>
+    on ObjectCopyWith<$R, ItemContainer2<T>, $Out> {
+  ItemContainer2CopyWith<$R, ItemContainer2<T>, $Out, T>
+  get $asItemContainer2 => $base.as(
+    (v, t, t2) => _ItemContainer2CopyWithImpl<$R, $Out, T>(v, t, t2),
+  );
+}
+
+abstract class ItemContainer2CopyWith<
+  $R,
+  $In extends ItemContainer2<T>,
+  $Out,
+  T
+>
+    implements ItemContainerCopyWith<$R, $In, $Out, T> {
+  @override
+  ListCopyWith<
+    $R,
+    ItemList<T>,
+    ItemListCopyWith<$R, ItemList<T>, ItemList<T>, T>
+  >
+  get items;
+  @override
+  $R call({List<ItemList<T>>? items});
+  ItemContainer2CopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  );
+}
+
+class _ItemContainer2CopyWithImpl<$R, $Out, T>
+    extends ClassCopyWithBase<$R, ItemContainer2<T>, $Out>
+    implements ItemContainer2CopyWith<$R, ItemContainer2<T>, $Out, T> {
+  _ItemContainer2CopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<ItemContainer2> $mapper =
+      ItemContainer2Mapper.ensureInitialized();
+  @override
+  ListCopyWith<
+    $R,
+    ItemList<T>,
+    ItemListCopyWith<$R, ItemList<T>, ItemList<T>, T>
+  >
+  get items => ListCopyWith(
+    $value.items,
+    (v, t) => v.copyWith.$chain(t),
+    (v) => call(items: v),
+  );
+  @override
+  $R call({List<ItemList<T>>? items}) =>
+      $apply(FieldCopyWithData({if (items != null) #items: items}));
+  @override
+  ItemContainer2<T> $make(CopyWithData data) =>
+      ItemContainer2(data.get(#items, or: $value.items));
+
+  @override
+  ItemContainer2CopyWith<$R2, ItemContainer2<T>, $Out2, T> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  ) => _ItemContainer2CopyWithImpl<$R2, $Out2, T>($value, $cast, t);
 }
 

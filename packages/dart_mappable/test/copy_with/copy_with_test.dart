@@ -64,6 +64,13 @@ class ComparableItemList<T extends Comparable> extends ItemList<T>
   ComparableItemList(super.items);
 }
 
+@MappableClass()
+class ItemContainer<T> with ItemContainerMappable<T> {
+  final List<ItemList<T>> items;
+
+  ItemContainer(this.items);
+}
+
 void main() {
   group('Copy with extensions', () {
     test('Should generate copyWith extensions', () {

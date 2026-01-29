@@ -13,7 +13,9 @@ class A with AMappable {
   final bool d;
   final B? e;
 
-  A(this.a, {this.b = 0, this.c, required this.d, this.e});
+  static const defaultB = 0;
+
+  A(this.a, {this.b = defaultB, this.c, required this.d, this.e});
 }
 
 @MappableEnum(defaultValue: B.a)
