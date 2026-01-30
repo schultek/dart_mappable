@@ -2,6 +2,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 // ignore_for_file: type=lint
+// ignore_for_file: invalid_use_of_protected_member
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
@@ -272,7 +273,7 @@ class MediaFolderMapper extends SubClassMapperBase<MediaFolder> {
   @override
   final String discriminatorKey = '!doc_type';
   @override
-  final dynamic discriminatorValue = "media_folder";
+  final dynamic discriminatorValue = 'media_folder';
   @override
   late final ClassMapperBase superMapper = MediaBaseMapper.ensureInitialized();
 
@@ -580,7 +581,7 @@ class MediaItemMapper extends SubClassMapperBase<MediaItem> {
   @override
   final String discriminatorKey = '!doc_type';
   @override
-  final dynamic discriminatorValue = "media_item";
+  final dynamic discriminatorValue = 'media_item';
   @override
   late final ClassMapperBase superMapper = MediaBaseMapper.ensureInitialized();
 

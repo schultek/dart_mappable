@@ -13,12 +13,12 @@ class OtherBase with OtherBaseMappable {
   final String? id;
 
   /// The document revision.
-  @MappableField(key: '_rev')
-  final String? rev;
+  //@MappableField(key: '_rev')
+  //final String? rev;
 
   Map<String, dynamic> unmappedProps;
 
-  OtherBase({this.id, this.rev, this.unmappedProps = const {}});
+  OtherBase({this.id, this.unmappedProps = const {}});
 
   static final fromMap = OtherBaseMapper.fromMap;
   static final fromJson = OtherBaseMapper.fromJson;

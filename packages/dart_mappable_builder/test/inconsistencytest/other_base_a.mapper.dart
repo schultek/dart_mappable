@@ -28,13 +28,6 @@ class OtherBaseMapper extends ClassMapperBase<OtherBase> {
     key: r'_id',
     opt: true,
   );
-  static String? _$rev(OtherBase v) => v.rev;
-  static const Field<OtherBase, String> _f$rev = Field(
-    'rev',
-    _$rev,
-    key: r'_rev',
-    opt: true,
-  );
   static Map<String, dynamic> _$unmappedProps(OtherBase v) => v.unmappedProps;
   static const Field<OtherBase, Map<String, dynamic>> _f$unmappedProps = Field(
     'unmappedProps',
@@ -46,7 +39,6 @@ class OtherBaseMapper extends ClassMapperBase<OtherBase> {
   @override
   final MappableFields<OtherBase> fields = const {
     #id: _f$id,
-    #rev: _f$rev,
     #unmappedProps: _f$unmappedProps,
   };
   @override
@@ -57,7 +49,6 @@ class OtherBaseMapper extends ClassMapperBase<OtherBase> {
   static OtherBase _instantiate(DecodingData data) {
     return OtherBase(
       id: data.dec(_f$id),
-      rev: data.dec(_f$rev),
       unmappedProps: data.dec(_f$unmappedProps),
     );
   }
@@ -157,7 +148,6 @@ class _OtherBaseCopyWithImpl<$R, $Out>
   @override
   OtherBase $make(CopyWithData data) => OtherBase(
     id: data.get(#id, or: $value.id),
-    rev: data.get(#rev, or: $value.rev),
     unmappedProps: data.get(#unmappedProps, or: $value.unmappedProps),
   );
 
