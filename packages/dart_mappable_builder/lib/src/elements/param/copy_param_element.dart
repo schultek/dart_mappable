@@ -169,7 +169,7 @@ class CollectionCopyParamElement extends CopyParamElement {
   String get fieldTypeParams {
     if (itemName == 'Object') {
       var objectTypeParam = ', ${parent.prefixedType(itemType)}';
-      return '${super.fieldTypeParams}, ObjectCopyWith<\$R$objectTypeParam$objectTypeParam>${itemTypeNullable || forceNullable ? '?' : ''}';
+      return '${super.fieldTypeParams}, ObjectCopyWith<\$R$objectTypeParam$objectTypeParam>${itemTypeNullable ? '?' : ''}';
     }
 
     return '${super.fieldTypeParams}, ${itemName}CopyWith<\$R$itemTypeParam$itemTypeParam$itemSelfTypeParams>${itemTypeNullable ? '?' : ''}';
