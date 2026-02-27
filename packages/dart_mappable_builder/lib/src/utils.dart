@@ -12,6 +12,7 @@ export 'package:analyzer/src/dart/resolver/scope.dart' show Namespace;
 
 const enumChecker = TypeChecker.typeNamed(MappableEnum);
 const enumValueChecker = TypeChecker.typeNamed(MappableValue);
+const enumNameChecker = TypeChecker.typeNamed(MappableName);
 const constructorChecker = TypeChecker.typeNamed(MappableConstructor);
 const classChecker = TypeChecker.typeNamed(MappableClass);
 const fieldChecker = TypeChecker.typeNamed(MappableField);

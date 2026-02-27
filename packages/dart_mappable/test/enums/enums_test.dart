@@ -24,6 +24,7 @@ enum Status {
   @MappableValue(State.off)
   warning,
   @MappableValue(r'error$val')
+  @MappableName('exception')
   error,
 }
 
@@ -52,6 +53,21 @@ void main() {
         expect(Status.zero.toValue(), equals(0));
         expect(Status.success.toValue(), equals(200));
         expect(Status.warning.toValue(), equals(State.off));
+        expect(Status.error.toValue(), equals('error\$val'));
+      });
+
+      test('enum names', () {
+        expect(State.On.toName(), equals('On'));
+        expect(Color.bloodRED.toName(), equals('bloodRED'));
+
+        expect(Status.zero.toName(), equals('zero'));
+        expect(Status.success.toName(), equals('success'));
+        expect(
+          Status.error.toName(),
+          equals('exception'),
+          reason: '"error" has custom name via @MappableName("exception")',
+        );
+
         expect(Status.error.toValue(), equals('error\$val'));
       });
     });
@@ -108,6 +124,21 @@ void main() {
               MapperMethod.decode,
               '(Items)',
               MapperException.unknownEnumValue(false),
+            ),
+          ),
+        );
+      });
+
+      test('enum with custom names still decodes by value', () {
+        expect(StatusMapper.fromValue('error\$val'), equals(Status.error));
+
+        expect(
+          () => StatusMapper.fromValue('exception'),
+          throwsMapperException(
+            MapperException.chain(
+              MapperMethod.decode,
+              '(Status)',
+              MapperException.unknownEnumValue('exception'),
             ),
           ),
         );

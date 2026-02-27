@@ -15,6 +15,7 @@ class AliasEnumMapperElement extends TargetEnumMapperElement {
     super.options,
     super.annotation,
     super.valueNodes,
+    super.nameNodes,
   );
 
   final TypeAliasElement alias;
@@ -28,6 +29,7 @@ class AliasEnumMapperElement extends TargetEnumMapperElement {
 
     var annotation = await MapperAnnotation.from<MappableEnum>(alias);
     var valueNodes = await TargetEnumMapperElement.getValues(element);
+    var nameNodes = await TargetEnumMapperElement.getNames(element);
 
     return AliasEnumMapperElement._(
       parent,
@@ -36,6 +38,7 @@ class AliasEnumMapperElement extends TargetEnumMapperElement {
       options,
       annotation,
       valueNodes,
+      nameNodes,
     );
   }
 

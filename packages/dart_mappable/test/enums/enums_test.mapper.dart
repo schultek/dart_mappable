@@ -25,30 +25,19 @@ class StateMapper extends EnumMapper<State> {
   }
 
   @override
-  State decode(dynamic value) {
-    switch (value) {
-      case r'On':
-        return State.On;
-      case r'off':
-        return State.off;
-      case r'itsCOMPLICATED':
-        return State.itsCOMPLICATED;
-      default:
-        return State.values[1];
-    }
-  }
+  State decode(dynamic value) => switch (value) {
+    r'On' => State.On,
+    r'off' => State.off,
+    r'itsCOMPLICATED' => State.itsCOMPLICATED,
+    _ => State.values[1],
+  };
 
   @override
-  dynamic encode(State self) {
-    switch (self) {
-      case State.On:
-        return r'On';
-      case State.off:
-        return r'off';
-      case State.itsCOMPLICATED:
-        return r'itsCOMPLICATED';
-    }
-  }
+  dynamic encode(State self) => switch (self) {
+    State.On => r'On',
+    State.off => r'off',
+    State.itsCOMPLICATED => r'itsCOMPLICATED',
+  };
 }
 
 extension StateMapperExtension on State {
@@ -56,6 +45,12 @@ extension StateMapperExtension on State {
     StateMapper.ensureInitialized();
     return MapperContainer.globals.toValue<State>(this) as String;
   }
+
+  String toName() => switch (this) {
+    State.On => r'On',
+    State.off => r'off',
+    State.itsCOMPLICATED => r'itsCOMPLICATED',
+  };
 }
 
 class ColorMapper extends EnumMapper<Color> {
@@ -75,30 +70,19 @@ class ColorMapper extends EnumMapper<Color> {
   }
 
   @override
-  Color decode(dynamic value) {
-    switch (value) {
-      case r'green':
-        return Color.Green;
-      case r'blue':
-        return Color.BLUE;
-      case r'blood-red':
-        return Color.bloodRED;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
+  Color decode(dynamic value) => switch (value) {
+    r'green' => Color.Green,
+    r'blue' => Color.BLUE,
+    r'blood-red' => Color.bloodRED,
+    _ => throw MapperException.unknownEnumValue(value),
+  };
 
   @override
-  dynamic encode(Color self) {
-    switch (self) {
-      case Color.Green:
-        return r'green';
-      case Color.BLUE:
-        return r'blue';
-      case Color.bloodRED:
-        return r'blood-red';
-    }
-  }
+  dynamic encode(Color self) => switch (self) {
+    Color.Green => r'green',
+    Color.BLUE => r'blue',
+    Color.bloodRED => r'blood-red',
+  };
 }
 
 extension ColorMapperExtension on Color {
@@ -106,6 +90,12 @@ extension ColorMapperExtension on Color {
     ColorMapper.ensureInitialized();
     return MapperContainer.globals.toValue<Color>(this) as String;
   }
+
+  String toName() => switch (this) {
+    Color.Green => r'Green',
+    Color.BLUE => r'BLUE',
+    Color.bloodRED => r'bloodRED',
+  };
 }
 
 class ItemsMapper extends EnumMapper<Items> {
@@ -125,30 +115,19 @@ class ItemsMapper extends EnumMapper<Items> {
   }
 
   @override
-  Items decode(dynamic value) {
-    switch (value) {
-      case 0:
-        return Items.first;
-      case 1:
-        return Items.second;
-      case 2:
-        return Items.third;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
+  Items decode(dynamic value) => switch (value) {
+    0 => Items.first,
+    1 => Items.second,
+    2 => Items.third,
+    _ => throw MapperException.unknownEnumValue(value),
+  };
 
   @override
-  dynamic encode(Items self) {
-    switch (self) {
-      case Items.first:
-        return 0;
-      case Items.second:
-        return 1;
-      case Items.third:
-        return 2;
-    }
-  }
+  dynamic encode(Items self) => switch (self) {
+    Items.first => 0,
+    Items.second => 1,
+    Items.third => 2,
+  };
 }
 
 extension ItemsMapperExtension on Items {
@@ -156,6 +135,12 @@ extension ItemsMapperExtension on Items {
     ItemsMapper.ensureInitialized();
     return MapperContainer.globals.toValue<Items>(this);
   }
+
+  String toName() => switch (this) {
+    Items.first => r'first',
+    Items.second => r'second',
+    Items.third => r'third',
+  };
 }
 
 class StatusMapper extends EnumMapper<Status> {
@@ -175,34 +160,21 @@ class StatusMapper extends EnumMapper<Status> {
   }
 
   @override
-  Status decode(dynamic value) {
-    switch (value) {
-      case 0:
-        return Status.zero;
-      case 200:
-        return Status.success;
-      case State.off:
-        return Status.warning;
-      case r'error$val':
-        return Status.error;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
+  Status decode(dynamic value) => switch (value) {
+    0 => Status.zero,
+    200 => Status.success,
+    State.off => Status.warning,
+    r'error$val' => Status.error,
+    _ => throw MapperException.unknownEnumValue(value),
+  };
 
   @override
-  dynamic encode(Status self) {
-    switch (self) {
-      case Status.zero:
-        return 0;
-      case Status.success:
-        return 200;
-      case Status.warning:
-        return State.off;
-      case Status.error:
-        return r'error$val';
-    }
-  }
+  dynamic encode(Status self) => switch (self) {
+    Status.zero => 0,
+    Status.success => 200,
+    Status.warning => State.off,
+    Status.error => r'error$val',
+  };
 }
 
 extension StatusMapperExtension on Status {
@@ -210,5 +182,12 @@ extension StatusMapperExtension on Status {
     StatusMapper.ensureInitialized();
     return MapperContainer.globals.toValue<Status>(this);
   }
+
+  String toName() => switch (this) {
+    Status.zero => r'zero',
+    Status.success => r'success',
+    Status.warning => r'warning',
+    Status.error => 'exception',
+  };
 }
 

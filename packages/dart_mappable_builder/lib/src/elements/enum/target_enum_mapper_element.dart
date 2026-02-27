@@ -16,6 +16,7 @@ class TargetEnumMapperElement extends EnumMapperElement {
     super.options,
     super.annotation,
     this.valueNodes,
+    this.nameNodes,
   );
 
   static Future<TargetEnumMapperElement> from(
@@ -25,25 +26,18 @@ class TargetEnumMapperElement extends EnumMapperElement {
   ) async {
     var annotation = await MapperAnnotation.from<MappableEnum>(element);
     var valueNodes = await getValues(element);
+    var nameNodes = await getNames(element);
 
-    return TargetEnumMapperElement(
-      parent,
-      element,
-      options,
-      annotation,
-      valueNodes,
-    );
+    return TargetEnumMapperElement(parent, element, options, annotation, valueNodes, nameNodes);
   }
 
   final List<(FieldElement, AstNode?)> valueNodes;
+  final List<(FieldElement, AstNode?)> nameNodes;
 
   late final String paramName = className[0].toLowerCase();
 
   late final ValuesMode mode =
-      ValuesMode.values[annotation.value
-              ?.read('mode')
-              ?.read('index')
-              ?.toIntValue() ??
+      ValuesMode.values[annotation.value?.read('mode')?.read('index')?.toIntValue() ??
           ValuesMode.named.index];
 
   late final CaseStyle? caseStyle =
@@ -54,12 +48,10 @@ class TargetEnumMapperElement extends EnumMapperElement {
   late final int? defaultValue =
       annotation.value?.read('defaultValue')!.read('index')?.toIntValue();
 
-  late final List<FieldElement> fields =
-      element.fields.where((f) => f.isEnumConstant).toList();
+  late final List<FieldElement> fields = element.fields.where((f) => f.isEnumConstant).toList();
 
   late final bool hasAllStringValues =
-      mode == ValuesMode.named &&
-      fields.every((f) => !enumValueChecker.hasAnnotationOf(f));
+      mode == ValuesMode.named && fields.every((f) => !enumValueChecker.hasAnnotationOf(f));
 
   late final List<({String name, dynamic value})> values =
       valueNodes.mapIndexed((i, v) {
@@ -73,14 +65,35 @@ class TargetEnumMapperElement extends EnumMapperElement {
         }
       }).toList();
 
-  static Future<List<(FieldElement, AstNode?)>> getValues(
-    EnumElement element,
-  ) async {
+  late final List<({String name, String value})> names =
+      nameNodes.map((v) {
+        var name = v.$1.name ?? '';
+        if (v.$2 != null) {
+          return (name: name, value: v.$2!.toSource());
+        }
+        return (name: name, value: "r'$name'");
+      }).toList();
+
+  static Future<List<(FieldElement, AstNode?)>> getValues(EnumElement element) async {
     var fields = element.fields.where((f) => f.isEnumConstant).toList();
     return Future.wait(
       fields.mapIndexed((i, f) async {
         if (enumValueChecker.hasAnnotationOf(f)) {
           var node = await getResolvedAnnotationNode(f, MappableValue, 0);
+          return (f, node);
+        } else {
+          return (f, null);
+        }
+      }),
+    );
+  }
+
+  static Future<List<(FieldElement, AstNode?)>> getNames(EnumElement element) async {
+    var fields = element.fields.where((f) => f.isEnumConstant).toList();
+    return Future.wait(
+      fields.mapIndexed((i, f) async {
+        if (enumNameChecker.hasAnnotationOf(f)) {
+          var node = await getResolvedAnnotationNode(f, MappableName, 0);
           return (f, node);
         } else {
           return (f, null);

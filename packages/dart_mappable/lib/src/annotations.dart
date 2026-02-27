@@ -130,6 +130,16 @@ class MappableValue {
   final dynamic value;
 }
 
+/// Used to annotate an enum value in order to define a custom enum name.
+///
+/// {@category Enums}
+class MappableName {
+  const MappableName(this.name);
+
+  /// The target name this enum value should be mapped to for [toName].
+  final String name;
+}
+
 /// Used to annotate a constructor to be chosen as the serialization function.
 ///
 /// {@category Models}

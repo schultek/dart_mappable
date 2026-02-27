@@ -25,19 +25,15 @@ class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
           }
           
           @override
-          ${element.prefixedClassName} decode(dynamic value) {
-            switch (value) {
-              ${element.values.map((v) => "case ${v.value}: return ${element.prefixedClassName}.${v.name};").join("\n      ")}
-              default: ${_generateDefaultCase()}
-            }
-          }
+          ${element.prefixedClassName} decode(dynamic value) => switch (value) {
+            ${element.values.map((v) => "${v.value} => ${element.prefixedClassName}.${v.name},").join("\n      ")}
+            _ => ${_generateDefaultCase()},
+          };
           
           @override
-          dynamic encode(${element.prefixedClassName} self) {
-            switch (self) {
-              ${element.values.map((v) => "case ${element.prefixedClassName}.${v.name}: return ${v.value};").join("\n      ")}
-            }
-          }
+          dynamic encode(${element.prefixedClassName} self) => switch (self) {
+            ${element.values.map((v) => "${element.prefixedClassName}.${v.name} => ${v.value},").join("\n      ")}
+          };
         }
         
         extension ${element.mapperName}Extension on ${element.prefixedClassName} {
@@ -45,14 +41,18 @@ class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
             ${element.mapperName}.ensureInitialized();
             return MapperContainer.globals.toValue<${element.prefixedClassName}>(this)${element.hasAllStringValues ? ' as String' : ''};
           }
+
+          String toName() => switch (this) {
+            ${element.names.map((v) => "${element.prefixedClassName}.${v.name} => ${v.value},").join("\n      ")}
+          };
         }
       ''';
   }
 
   String _generateDefaultCase() {
     if (element.defaultValue != null) {
-      return 'return ${element.prefixedClassName}.values[${element.defaultValue}];';
+      return '${element.prefixedClassName}.values[${element.defaultValue}]';
     }
-    return 'throw MapperException.unknownEnumValue(value);';
+    return 'throw MapperException.unknownEnumValue(value)';
   }
 }
