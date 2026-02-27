@@ -25,30 +25,19 @@ class BrandMapper extends EnumMapper<Brand> {
   }
 
   @override
-  Brand decode(dynamic value) {
-    switch (value) {
-      case r'Toyota':
-        return Brand.Toyota;
-      case r'Audi':
-        return Brand.Audi;
-      case r'BMW':
-        return Brand.BMW;
-      default:
-        return Brand.values[1];
-    }
-  }
+  Brand decode(dynamic value) => switch (value) {
+    r'Toyota' => Brand.Toyota,
+    r'Audi' => Brand.Audi,
+    r'BMW' => Brand.BMW,
+    _ => Brand.values[1],
+  };
 
   @override
-  dynamic encode(Brand self) {
-    switch (self) {
-      case Brand.Toyota:
-        return r'Toyota';
-      case Brand.Audi:
-        return r'Audi';
-      case Brand.BMW:
-        return r'BMW';
-    }
-  }
+  dynamic encode(Brand self) => switch (self) {
+    Brand.Toyota => r'Toyota',
+    Brand.Audi => r'Audi',
+    Brand.BMW => r'BMW',
+  };
 }
 
 extension BrandMapperExtension on Brand {
@@ -56,6 +45,12 @@ extension BrandMapperExtension on Brand {
     BrandMapper.ensureInitialized();
     return MapperContainer.globals.toValue<Brand>(this) as String;
   }
+
+  String toName() => switch (this) {
+    Brand.Toyota => r'Toyota',
+    Brand.Audi => r'Audi',
+    Brand.BMW => r'BMW',
+  };
 }
 
 class PersonMapper extends ClassMapperBase<Person> {

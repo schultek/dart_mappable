@@ -25,22 +25,15 @@ class HOpacityMapper extends EnumMapper<HOpacity> {
   }
 
   @override
-  HOpacity decode(dynamic value) {
-    switch (value) {
-      case r'bzOpacityIntense':
-        return HOpacity.bzOpacityIntense;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
+  HOpacity decode(dynamic value) => switch (value) {
+    r'bzOpacityIntense' => HOpacity.bzOpacityIntense,
+    _ => throw MapperException.unknownEnumValue(value),
+  };
 
   @override
-  dynamic encode(HOpacity self) {
-    switch (self) {
-      case HOpacity.bzOpacityIntense:
-        return r'bzOpacityIntense';
-    }
-  }
+  dynamic encode(HOpacity self) => switch (self) {
+    HOpacity.bzOpacityIntense => r'bzOpacityIntense',
+  };
 }
 
 extension HOpacityMapperExtension on HOpacity {
@@ -48,6 +41,10 @@ extension HOpacityMapperExtension on HOpacity {
     HOpacityMapper.ensureInitialized();
     return MapperContainer.globals.toValue<HOpacity>(this) as String;
   }
+
+  String toName() => switch (this) {
+    HOpacity.bzOpacityIntense => r'bzOpacityIntense',
+  };
 }
 
 class DSOpacityDataMapper extends ClassMapperBase<DSOpacityData> {

@@ -25,30 +25,19 @@ class BMapper extends EnumMapper<B> {
   }
 
   @override
-  B decode(dynamic value) {
-    switch (value) {
-      case r'a':
-        return B.a;
-      case r'bB':
-        return B.bB;
-      case r'ccCc':
-        return B.ccCc;
-      default:
-        return B.values[0];
-    }
-  }
+  B decode(dynamic value) => switch (value) {
+    r'a' => B.a,
+    r'bB' => B.bB,
+    r'ccCc' => B.ccCc,
+    _ => B.values[0],
+  };
 
   @override
-  dynamic encode(B self) {
-    switch (self) {
-      case B.a:
-        return r'a';
-      case B.bB:
-        return r'bB';
-      case B.ccCc:
-        return r'ccCc';
-    }
-  }
+  dynamic encode(B self) => switch (self) {
+    B.a => r'a',
+    B.bB => r'bB',
+    B.ccCc => r'ccCc',
+  };
 }
 
 extension BMapperExtension on B {
@@ -56,6 +45,12 @@ extension BMapperExtension on B {
     BMapper.ensureInitialized();
     return MapperContainer.globals.toValue<B>(this) as String;
   }
+
+  String toName() => switch (this) {
+    B.a => r'a',
+    B.bB => r'bB',
+    B.ccCc => r'ccCc',
+  };
 }
 
 class AMapper extends ClassMapperBase<A> {

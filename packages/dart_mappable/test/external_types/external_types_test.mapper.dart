@@ -455,30 +455,19 @@ class ColorMapper extends EnumMapper<c.Color> {
   }
 
   @override
-  c.Color decode(dynamic value) {
-    switch (value) {
-      case r'Black':
-        return c.Color.black;
-      case r'Red':
-        return c.Color.red;
-      case r'White':
-        return c.Color.white;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
+  c.Color decode(dynamic value) => switch (value) {
+    r'Black' => c.Color.black,
+    r'Red' => c.Color.red,
+    r'White' => c.Color.white,
+    _ => throw MapperException.unknownEnumValue(value),
+  };
 
   @override
-  dynamic encode(c.Color self) {
-    switch (self) {
-      case c.Color.black:
-        return r'Black';
-      case c.Color.red:
-        return r'Red';
-      case c.Color.white:
-        return r'White';
-    }
-  }
+  dynamic encode(c.Color self) => switch (self) {
+    c.Color.black => r'Black',
+    c.Color.red => r'Red',
+    c.Color.white => r'White',
+  };
 }
 
 extension ColorMapperExtension on c.Color {
@@ -486,5 +475,11 @@ extension ColorMapperExtension on c.Color {
     ColorMapper.ensureInitialized();
     return MapperContainer.globals.toValue<c.Color>(this) as String;
   }
+
+  String toName() => switch (this) {
+    c.Color.black => r'black',
+    c.Color.red => r'red',
+    c.Color.white => r'white',
+  };
 }
 

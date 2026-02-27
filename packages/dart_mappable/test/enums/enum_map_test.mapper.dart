@@ -25,30 +25,19 @@ class EnumAMapper extends EnumMapper<EnumA> {
   }
 
   @override
-  EnumA decode(dynamic value) {
-    switch (value) {
-      case r'a':
-        return EnumA.a;
-      case r'aa':
-        return EnumA.aa;
-      case r'unknown':
-        return EnumA.unknown;
-      default:
-        return EnumA.values[2];
-    }
-  }
+  EnumA decode(dynamic value) => switch (value) {
+    r'a' => EnumA.a,
+    r'aa' => EnumA.aa,
+    r'unknown' => EnumA.unknown,
+    _ => EnumA.values[2],
+  };
 
   @override
-  dynamic encode(EnumA self) {
-    switch (self) {
-      case EnumA.a:
-        return r'a';
-      case EnumA.aa:
-        return r'aa';
-      case EnumA.unknown:
-        return r'unknown';
-    }
-  }
+  dynamic encode(EnumA self) => switch (self) {
+    EnumA.a => r'a',
+    EnumA.aa => r'aa',
+    EnumA.unknown => r'unknown',
+  };
 }
 
 extension EnumAMapperExtension on EnumA {
@@ -56,6 +45,12 @@ extension EnumAMapperExtension on EnumA {
     EnumAMapper.ensureInitialized();
     return MapperContainer.globals.toValue<EnumA>(this) as String;
   }
+
+  String toName() => switch (this) {
+    EnumA.a => r'a',
+    EnumA.aa => r'aa',
+    EnumA.unknown => r'unknown',
+  };
 }
 
 class ClassAMapper extends ClassMapperBase<ClassA> {
