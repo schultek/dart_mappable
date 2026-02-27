@@ -46,11 +46,15 @@ extension EnumAMapperExtension on EnumA {
     return MapperContainer.globals.toValue<EnumA>(this) as String;
   }
 
+  String get value => toValue();
+
   String toName() => switch (this) {
     EnumA.a => r'a',
     EnumA.aa => r'aa',
     EnumA.unknown => r'unknown',
   };
+
+  String get name => toName();
 }
 
 class ClassAMapper extends ClassMapperBase<ClassA> {

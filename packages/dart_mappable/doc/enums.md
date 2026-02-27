@@ -27,6 +27,36 @@ enum Status {
 }
 ```
 
+## Custom Enum Names
+
+You can specify a custom enum name using `@MappableName("myCustomName")`.
+If omitted, `toName()` / `name` default to the original enum case name.
+
+```dart
+@MappableEnum(mode: ValuesMode.indexed)
+enum Status {
+  zero,                                // toName: 'zero'
+  
+  @MappableValue(200) 
+  success,                             // toName: 'success'
+  
+  @MappableValue(r'error$val')
+  @MappableName('exception')
+  error                                // toName: 'exception'
+}
+
+void main() {
+  
+  // toValue and value are interchangeable
+  print(Status.error.toValue()); // error$val
+  print(Status.error.value);     // error$val
+
+  // toName and name are interchangeable
+  print(Status.error.toName());  // exception
+  print(Status.error.name);      // exception
+}
+```
+
 ---
 
 <p align="right"><a href="../topics/Records-topic.html">Next: Records</a></p>

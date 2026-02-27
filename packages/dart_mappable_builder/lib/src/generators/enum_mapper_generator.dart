@@ -42,9 +42,13 @@ class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
             return MapperContainer.globals.toValue<${element.prefixedClassName}>(this)${element.hasAllStringValues ? ' as String' : ''};
           }
 
+          ${element.hasAllStringValues ? 'String' : 'dynamic'} get value => toValue();
+
           String toName() => switch (this) {
             ${element.names.map((v) => "${element.prefixedClassName}.${v.name} => ${v.value},").join("\n      ")}
           };
+
+          String get name => toName();
         }
       ''';
   }

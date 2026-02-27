@@ -46,11 +46,15 @@ extension StateMapperExtension on State {
     return MapperContainer.globals.toValue<State>(this) as String;
   }
 
+  String get value => toValue();
+
   String toName() => switch (this) {
     State.On => r'On',
     State.off => r'off',
     State.itsCOMPLICATED => r'itsCOMPLICATED',
   };
+
+  String get name => toName();
 }
 
 class ColorMapper extends EnumMapper<Color> {
@@ -91,11 +95,15 @@ extension ColorMapperExtension on Color {
     return MapperContainer.globals.toValue<Color>(this) as String;
   }
 
+  String get value => toValue();
+
   String toName() => switch (this) {
     Color.Green => r'Green',
     Color.BLUE => r'BLUE',
     Color.bloodRED => r'bloodRED',
   };
+
+  String get name => toName();
 }
 
 class ItemsMapper extends EnumMapper<Items> {
@@ -136,11 +144,15 @@ extension ItemsMapperExtension on Items {
     return MapperContainer.globals.toValue<Items>(this);
   }
 
+  dynamic get value => toValue();
+
   String toName() => switch (this) {
     Items.first => r'first',
     Items.second => r'second',
     Items.third => r'third',
   };
+
+  String get name => toName();
 }
 
 class StatusMapper extends EnumMapper<Status> {
@@ -183,11 +195,15 @@ extension StatusMapperExtension on Status {
     return MapperContainer.globals.toValue<Status>(this);
   }
 
+  dynamic get value => toValue();
+
   String toName() => switch (this) {
     Status.zero => r'zero',
     Status.success => r'success',
     Status.warning => r'warning',
     Status.error => 'exception',
   };
+
+  String get name => toName();
 }
 

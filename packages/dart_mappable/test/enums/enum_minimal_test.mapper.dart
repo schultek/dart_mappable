@@ -44,8 +44,13 @@ extension StateMapperExtension on State {
     return MapperContainer.globals.toValue<State>(this);
   }
 
+  dynamic get value => toValue();
+
   String toName() => switch (this) {
     State.pending => r'pending',
     State.success => 'ok',
   };
+
+  String get name => toName();
 }
+

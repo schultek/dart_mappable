@@ -476,10 +476,14 @@ extension ColorMapperExtension on c.Color {
     return MapperContainer.globals.toValue<c.Color>(this) as String;
   }
 
+  String get value => toValue();
+
   String toName() => switch (this) {
     c.Color.black => r'black',
     c.Color.red => r'red',
     c.Color.white => r'white',
   };
+
+  String get name => toName();
 }
 

@@ -1,3 +1,9 @@
+# 4.6.X
+
+- Added support for `@MappableName()` on enum values.
+- Enum mapper extensions now generate `toName()` with convenience `name` getter.
+- Enum mapper extensions now generate convenience `value` getter delegating to previously available `toValue()`.
+
 # 4.6.4
 
 - Fix nested `copyWith` on a inherited class with the superclass and field type in another library.

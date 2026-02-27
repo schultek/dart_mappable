@@ -7,15 +7,23 @@ import '../utils.dart';
 
 part 'enums_test.mapper.dart';
 
+///
+///
 @MappableEnum(defaultValue: State.off)
 enum State { On, off, itsCOMPLICATED }
 
+///
+///
 @MappableEnum(caseStyle: CaseStyle.paramCase)
 enum Color { Green, BLUE, bloodRED }
 
+///
+///
 @MappableEnum(mode: ValuesMode.indexed)
 enum Items { first, second, third }
 
+///
+///
 @MappableEnum(mode: ValuesMode.indexed)
 enum Status {
   zero,
@@ -28,47 +36,54 @@ enum Status {
   error,
 }
 
+///
+///
 void main() {
   group('enum mapping', () {
     group('encodes', () {
       test('enum', () {
-        expect(State.On.toValue(), equals('On'));
-        expect(State.off.toValue(), equals('off'));
-        expect(State.itsCOMPLICATED.toValue(), equals('itsCOMPLICATED'));
+        expect(State.On.value, equals('On'));
+        expect(State.off.value, equals('off'));
+        expect(State.itsCOMPLICATED.value, equals('itsCOMPLICATED'));
       });
 
       test('enum with case style', () {
-        expect(Color.Green.toValue(), equals('green'));
-        expect(Color.BLUE.toValue(), equals('blue'));
-        expect(Color.bloodRED.toValue(), equals('blood-red'));
+        expect(Color.Green.value, equals('green'));
+        expect(Color.BLUE.value, equals('blue'));
+        expect(Color.bloodRED.value, equals('blood-red'));
       });
 
       test('enum with index mode', () {
-        expect(Items.first.toValue(), equals(0));
-        expect(Items.second.toValue(), equals(1));
-        expect(Items.third.toValue(), equals(2));
+        expect(Items.first.value, equals(0));
+        expect(Items.second.value, equals(1));
+        expect(Items.third.value, equals(2));
       });
 
       test('enum with custom values', () {
-        expect(Status.zero.toValue(), equals(0));
+        expect(Status.zero.value, equals(0));
         expect(Status.success.toValue(), equals(200));
-        expect(Status.warning.toValue(), equals(State.off));
-        expect(Status.error.toValue(), equals('error\$val'));
+        expect(Status.warning.value, equals(State.off));
+        expect(Status.error.value, equals('error\$val'));
       });
 
       test('enum names', () {
-        expect(State.On.toName(), equals('On'));
-        expect(Color.bloodRED.toName(), equals('bloodRED'));
+        expect(State.On.name, equals('On'));
+        expect(Color.bloodRED.name, equals('bloodRED'));
 
-        expect(Status.zero.toName(), equals('zero'));
-        expect(Status.success.toName(), equals('success'));
+        expect(State.On.name, equals('On'));
+        expect(Color.bloodRED.name, equals('bloodRED'));
+
+        expect(Status.zero.name, equals('zero'));
+        expect(Status.success.name, equals('success'));
         expect(
-          Status.error.toName(),
+          Status.error.name,
           equals('exception'),
           reason: '"error" has custom name via @MappableName("exception")',
         );
 
-        expect(Status.error.toValue(), equals('error\$val'));
+        expect(Status.error.value, equals('error\$val'));
+        expect(Status.error.value, equals('error\$val'));
+        expect(Status.error.name, equals('exception'));
       });
     });
 

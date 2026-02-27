@@ -46,11 +46,15 @@ extension BrandMapperExtension on Brand {
     return MapperContainer.globals.toValue<Brand>(this) as String;
   }
 
+  String get value => toValue();
+
   String toName() => switch (this) {
     Brand.Toyota => r'Toyota',
     Brand.Audi => r'Audi',
     Brand.BMW => r'BMW',
   };
+
+  String get name => toName();
 }
 
 class PersonMapper extends ClassMapperBase<Person> {

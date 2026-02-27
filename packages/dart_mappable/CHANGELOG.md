@@ -1,3 +1,9 @@
+# 4.6.X
+
+- Added `@MappableName()` annotation for enum values to define custom enum names.
+- Added generated `toName()` method for enums with convenience `name` getter.
+- Added convenience `value` getter for enums, delegating to `toValue()`.
+
 # 4.6.1
 
 - Record mappers now correctly uses hooks specified on the `@MappableRecord` annotation.

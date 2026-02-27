@@ -42,9 +42,13 @@ extension HOpacityMapperExtension on HOpacity {
     return MapperContainer.globals.toValue<HOpacity>(this) as String;
   }
 
+  String get value => toValue();
+
   String toName() => switch (this) {
     HOpacity.bzOpacityIntense => r'bzOpacityIntense',
   };
+
+  String get name => toName();
 }
 
 class DSOpacityDataMapper extends ClassMapperBase<DSOpacityData> {

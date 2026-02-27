@@ -201,14 +201,41 @@ class MyClass with MyClassMappable {
 
 ---
 
-Here are again all **six** annotations that you can use in your code:
+Here are again all **seven** annotations that you can use in your code:
 
 1. `@MappableClass()` can be used on a class to specify options like the `caseStyle` of the json keys, whether to ignore null values, or [hooks](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html).
 2. `@MappableConstructor()` can be used on a constructor to mark this to be used for decoding. It has no properties.
 3. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name, or [hooks](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html).
 4. `@MappableEnum()` can be used on an enum to specify the `mode` or `caseStyle` of the encoded enum values, or the `defaultValue`.
 5. `@MappableValue()` can be used on an enum value to specify a custom encoded value to use.
-6. `@MappableLib()` can be used on a library statement or import / export statement to set a default configuration for the annotated library or include / exclude classes.
+6. `@MappableName()` can be used on an enum value to specify a custom enum name for the generated enum name helpers.
+7. `@MappableLib()` can be used on a library statement or import / export statement to set a default configuration for the annotated library or include / exclude classes.
+
+
+Example enum using both `@MappableValue` and `@MappableName`:
+
+
+```dart
+@MappableEnum(mode: ValuesMode.indexed)
+enum Status {
+  zero,
+  @MappableValue(200)
+  success,
+  
+  @MappableName('exception')
+  error,
+}
+
+void main() {
+  // toValue and value are interchangeable
+  print(Status.success.toValue());  //  => 200
+  print(Status.success.value);      //  => 200
+
+  // toName and name are interchangeable
+  print(Status.error.toName());     //  => exception
+  print(Status.error.name);         //  => exception
+}
+```
 
 ### Mapper Interface
 

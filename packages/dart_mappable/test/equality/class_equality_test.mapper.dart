@@ -46,11 +46,15 @@ extension BMapperExtension on B {
     return MapperContainer.globals.toValue<B>(this) as String;
   }
 
+  String get value => toValue();
+
   String toName() => switch (this) {
     B.a => r'a',
     B.bB => r'bB',
     B.ccCc => r'ccCc',
   };
+
+  String get name => toName();
 }
 
 class AMapper extends ClassMapperBase<A> {
