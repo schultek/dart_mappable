@@ -46,6 +46,14 @@ class PersonMapper extends ClassMapperBase<Person> {
   static Person fromJson(String json) {
     return ensureInitialized().decodeJson<Person>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'first_name': JsonSchema.string()},
+      required: ['first_name'],
+    );
+  }
 }
 
 mixin PersonMappable {
@@ -72,6 +80,10 @@ mixin PersonMappable {
   @override
   int get hashCode {
     return PersonMapper.ensureInitialized().hashValue(this as Person);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return PersonMapper.toJsonSchema();
   }
 }
 
@@ -138,6 +150,14 @@ class CakeMapper extends ClassMapperBase<f.Cake> {
   static f.Cake fromJson(String json) {
     return ensureInitialized().decodeJson<f.Cake>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'type': JsonSchema.string()},
+      required: ['type'],
+    );
+  }
 }
 
 extension CakeMapperExtension on f.Cake {
@@ -151,6 +171,9 @@ extension CakeMapperExtension on f.Cake {
 
   CakeCopyWith<f.Cake, f.Cake, f.Cake> get copyWith =>
       _CakeCopyWithImpl(this, $identity, $identity);
+  static Map<String, dynamic> toJsonSchema() {
+    return CakeMapper.toJsonSchema();
+  }
 }
 
 extension CakeValueCopy<$R, $Out> on ObjectCopyWith<$R, f.Cake, $Out> {
@@ -219,6 +242,14 @@ class Person2Mapper extends ClassMapperBase<m.Person> {
   static m.Person fromJson(String json) {
     return ensureInitialized().decodeJson<m.Person>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'first_name': JsonSchema.string()},
+      required: ['first_name'],
+    );
+  }
 }
 
 extension Person2MapperExtension on m.Person {
@@ -232,6 +263,9 @@ extension Person2MapperExtension on m.Person {
 
   Person2CopyWith<m.Person, m.Person, m.Person> get copyWith =>
       _Person2CopyWithImpl(this, $identity, $identity);
+  static Map<String, dynamic> toJsonSchema() {
+    return Person2Mapper.toJsonSchema();
+  }
 }
 
 extension Person2ValueCopy<$R, $Out> on ObjectCopyWith<$R, m.Person, $Out> {
@@ -311,6 +345,17 @@ class AnimalMapper extends ClassMapperBase<o.Animal> {
   static o.Animal fromJson(String json) {
     return ensureInitialized().decodeJson<o.Animal>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'name': JsonSchema.string(),
+        'color': JsonSchema.enumSchema(['black', 'red', 'white']),
+      },
+      required: ['name', 'color'],
+    );
+  }
 }
 
 extension AnimalMapperExtension on o.Animal {
@@ -320,6 +365,10 @@ extension AnimalMapperExtension on o.Animal {
 
   Map<String, dynamic> toMap() {
     return AnimalMapper.ensureInitialized().encodeMap<o.Animal>(this);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return AnimalMapper.toJsonSchema();
   }
 }
 
@@ -381,6 +430,18 @@ class PetMapper extends SubClassMapperBase<o.Pet> {
   static o.Pet fromJson(String json) {
     return ensureInitialized().decodeJson<o.Pet>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'owner': JsonSchema.object(Person2Mapper.toJsonSchema()),
+        'name': JsonSchema.string(),
+        'color': JsonSchema.enumSchema(['black', 'red', 'white']),
+      },
+      required: ['owner', 'name', 'color'],
+    );
+  }
 }
 
 extension PetMapperExtension on o.Pet {
@@ -394,6 +455,9 @@ extension PetMapperExtension on o.Pet {
 
   PetCopyWith<o.Pet, o.Pet, o.Pet> get copyWith =>
       _PetCopyWithImpl(this, $identity, $identity);
+  static Map<String, dynamic> toJsonSchema() {
+    return PetMapper.toJsonSchema();
+  }
 }
 
 extension PetValueCopy<$R, $Out> on ObjectCopyWith<$R, o.Pet, $Out> {

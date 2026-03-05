@@ -52,6 +52,14 @@ class ShepherdMapper extends SubClassMapperBase<Shepherd> {
   static Shepherd fromJson(String json) {
     return ensureInitialized().decodeJson<Shepherd>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'name': JsonSchema.string(nullable: true)},
+      required: ['name'],
+    );
+  }
 }
 
 mixin ShepherdMappable {
@@ -89,6 +97,10 @@ mixin ShepherdMappable {
   @override
   int get hashCode {
     return ShepherdMapper.ensureInitialized().hashValue(this as Shepherd);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return ShepherdMapper.toJsonSchema();
   }
 }
 
@@ -170,6 +182,14 @@ class DogMapper extends SubClassMapperBase<Dog> {
   static Dog fromJson(String json) {
     return ensureInitialized().decodeJson<Dog>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'name': JsonSchema.string(nullable: true)},
+      required: ['name'],
+    );
+  }
 }
 
 mixin DogMappable {
@@ -196,6 +216,10 @@ mixin DogMappable {
   @override
   int get hashCode {
     return DogMapper.ensureInitialized().hashValue(this as Dog);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return DogMapper.toJsonSchema();
   }
 }
 
@@ -270,6 +294,14 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   static Animal fromJson(String json) {
     return ensureInitialized().decodeJson<Animal>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'name': JsonSchema.string(nullable: true)},
+      required: ['name'],
+    );
+  }
 }
 
 mixin AnimalMappable {
@@ -333,6 +365,14 @@ class CatMapper extends SubClassMapperBase<Cat> {
   static Cat fromJson(String json) {
     return ensureInitialized().decodeJson<Cat>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'name': JsonSchema.string(nullable: true)},
+      required: ['name'],
+    );
+  }
 }
 
 mixin CatMappable {
@@ -392,6 +432,14 @@ class SiameseMapper extends SubClassMapperBase<Siamese> {
   static Siamese fromJson(String json) {
     return ensureInitialized().decodeJson<Siamese>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'name': JsonSchema.string(nullable: true)},
+      required: ['name'],
+    );
+  }
 }
 
 mixin SiameseMappable {
@@ -429,6 +477,10 @@ mixin SiameseMappable {
   @override
   int get hashCode {
     return SiameseMapper.ensureInitialized().hashValue(this as Siamese);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return SiameseMapper.toJsonSchema();
   }
 }
 
@@ -498,6 +550,14 @@ class HumanMapper extends ClassMapperBase<Human> {
   static Human fromJson(String json) {
     return ensureInitialized().decodeJson<Human>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'cat': JsonSchema.object(CatMapper.toJsonSchema())},
+      required: ['cat'],
+    );
+  }
 }
 
 mixin HumanMappable {
@@ -524,6 +584,10 @@ mixin HumanMappable {
   @override
   int get hashCode {
     return HumanMapper.ensureInitialized().hashValue(this as Human);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return HumanMapper.toJsonSchema();
   }
 }
 

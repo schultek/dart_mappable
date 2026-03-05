@@ -48,6 +48,16 @@ class AMapper extends ClassMapperBase<A> {
   static A<T> fromJson<T extends C>(String json) {
     return ensureInitialized().decodeJson<A<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'value': {'type': 'object'},
+      },
+      required: ['value'],
+    );
+  }
 }
 
 mixin AMappable<T extends C> {
@@ -74,6 +84,10 @@ mixin AMappable<T extends C> {
   @override
   int get hashCode {
     return AMapper.ensureInitialized().hashValue(this as A<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return AMapper.toJsonSchema();
   }
 }
 
@@ -145,6 +159,14 @@ class CMapper extends ClassMapperBase<C> {
   static C fromJson(String json) {
     return ensureInitialized().decodeJson<C>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'data': JsonSchema.string()},
+      required: ['data'],
+    );
+  }
 }
 
 mixin CMappable {
@@ -195,6 +217,14 @@ class BMapper extends ClassMapperBase<B> {
   static B fromJson(String json) {
     return ensureInitialized().decodeJson<B>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'value': JsonSchema.object(DMapper.toJsonSchema())},
+      required: ['value'],
+    );
+  }
 }
 
 mixin BMappable {
@@ -221,6 +251,10 @@ mixin BMappable {
   @override
   int get hashCode {
     return BMapper.ensureInitialized().hashValue(this as B);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return BMapper.toJsonSchema();
   }
 }
 
@@ -293,6 +327,14 @@ class DMapper extends ClassMapperBase<D> {
   static D fromJson(String json) {
     return ensureInitialized().decodeJson<D>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'data': JsonSchema.string()},
+      required: ['data'],
+    );
+  }
 }
 
 mixin DMappable {
@@ -319,6 +361,10 @@ mixin DMappable {
   @override
   int get hashCode {
     return DMapper.ensureInitialized().hashValue(this as D);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return DMapper.toJsonSchema();
   }
 }
 

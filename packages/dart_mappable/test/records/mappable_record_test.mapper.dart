@@ -52,6 +52,17 @@ class LocationMapper extends ClassMapperBase<Location> {
   static Location fromJson(String json) {
     return ensureInitialized().decodeJson<Location>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'point': {'type': 'object'},
+        'offset': {'type': 'object'},
+      },
+      required: ['point', 'offset'],
+    );
+  }
 }
 
 mixin LocationMappable {
@@ -89,6 +100,10 @@ mixin LocationMappable {
   @override
   int get hashCode {
     return LocationMapper.ensureInitialized().hashValue(this as Location);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return LocationMapper.toJsonSchema();
   }
 }
 

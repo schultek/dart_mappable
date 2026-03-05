@@ -56,6 +56,17 @@ class BoxMapper extends ClassMapperBase<Box> {
   static Box<T> fromJson<T extends Content>(String json) {
     return ensureInitialized().decodeJson<Box<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'size': JsonSchema.integer(),
+        'contents': {'type': 'object'},
+      },
+      required: ['size', 'contents'],
+    );
+  }
 }
 
 mixin BoxMappable<T extends Content> {
@@ -82,6 +93,10 @@ mixin BoxMappable<T extends Content> {
   @override
   int get hashCode {
     return BoxMapper.ensureInitialized().hashValue(this as Box<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return BoxMapper.toJsonSchema();
   }
 }
 
@@ -160,6 +175,14 @@ class ContentMapper extends ClassMapperBase<Content> {
   static Content fromJson(String json) {
     return ensureInitialized().decodeJson<Content>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'data': JsonSchema.string()},
+      required: ['data'],
+    );
+  }
 }
 
 mixin ContentMappable {
@@ -197,6 +220,10 @@ mixin ContentMappable {
   @override
   int get hashCode {
     return ContentMapper.ensureInitialized().hashValue(this as Content);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return ContentMapper.toJsonSchema();
   }
 }
 

@@ -45,6 +45,17 @@ class PersonMapper extends ClassMapperBase<Person> {
   static Person fromJson(String json) {
     return ensureInitialized().decodeJson<Person>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'name': JsonSchema.string(),
+        'car': JsonSchema.object(CarMapper.toJsonSchema()),
+      },
+      required: ['name', 'car'],
+    );
+  }
 }
 
 mixin PersonMappable {
@@ -71,6 +82,10 @@ mixin PersonMappable {
   @override
   int get hashCode {
     return PersonMapper.ensureInitialized().hashValue(this as Person);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return PersonMapper.toJsonSchema();
   }
 }
 
@@ -148,6 +163,17 @@ class CarMapper extends ClassMapperBase<Car> {
   static Car fromJson(String json) {
     return ensureInitialized().decodeJson<Car>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'brand': JsonSchema.object(BrandMapper.toJsonSchema(), nullable: true),
+        'model': JsonSchema.string(),
+      },
+      required: ['brand', 'model'],
+    );
+  }
 }
 
 mixin CarMappable {
@@ -174,6 +200,10 @@ mixin CarMappable {
   @override
   int get hashCode {
     return CarMapper.ensureInitialized().hashValue(this as Car);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return CarMapper.toJsonSchema();
   }
 }
 
@@ -250,6 +280,14 @@ class BrandMapper extends ClassMapperBase<Brand> {
   static Brand fromJson(String json) {
     return ensureInitialized().decodeJson<Brand>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'name': JsonSchema.dynamic_()},
+      required: ['name'],
+    );
+  }
 }
 
 mixin BrandMappable {
@@ -276,6 +314,10 @@ mixin BrandMappable {
   @override
   int get hashCode {
     return BrandMapper.ensureInitialized().hashValue(this as Brand);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return BrandMapper.toJsonSchema();
   }
 }
 
@@ -352,6 +394,19 @@ class DealershipMapper extends ClassMapperBase<Dealership> {
   static Dealership fromJson(String json) {
     return ensureInitialized().decodeJson<Dealership>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'cars': JsonSchema.array(JsonSchema.object(CarMapper.toJsonSchema())),
+        'salesRep': JsonSchema.map(
+          JsonSchema.object(PersonMapper.toJsonSchema(), nullable: true),
+        ),
+      },
+      required: ['cars', 'salesRep'],
+    );
+  }
 }
 
 mixin DealershipMappable {
@@ -391,6 +446,10 @@ mixin DealershipMappable {
   @override
   int get hashCode {
     return DealershipMapper.ensureInitialized().hashValue(this as Dealership);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return DealershipMapper.toJsonSchema();
   }
 }
 
@@ -499,6 +558,16 @@ class ItemListMapper extends ClassMapperBase<ItemList> {
   static ItemList<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<ItemList<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'items': JsonSchema.array({'type': 'object'}),
+      },
+      required: ['items'],
+    );
+  }
 }
 
 mixin ItemListMappable<T> {
@@ -566,6 +635,18 @@ class BrandListMapper extends SubClassMapperBase<BrandList> {
   static BrandList fromJson(String json) {
     return ensureInitialized().decodeJson<BrandList>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'brands': JsonSchema.array(
+          JsonSchema.object(BrandMapper.toJsonSchema(), nullable: true),
+        ),
+      },
+      required: ['brands'],
+    );
+  }
 }
 
 mixin BrandListMappable {
@@ -605,6 +686,10 @@ mixin BrandListMappable {
   @override
   int get hashCode {
     return BrandListMapper.ensureInitialized().hashValue(this as BrandList);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return BrandListMapper.toJsonSchema();
   }
 }
 
@@ -705,6 +790,17 @@ class NamedItemListMapper extends SubClassMapperBase<NamedItemList> {
   static NamedItemList<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<NamedItemList<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'name': JsonSchema.string(),
+        'items': JsonSchema.array({'type': 'object'}),
+      },
+      required: ['name', 'items'],
+    );
+  }
 }
 
 mixin NamedItemListMappable<T> {
@@ -747,6 +843,10 @@ mixin NamedItemListMappable<T> {
     return NamedItemListMapper.ensureInitialized().hashValue(
       this as NamedItemList<T>,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return NamedItemListMapper.toJsonSchema();
   }
 }
 
@@ -865,6 +965,17 @@ class KeyedItemListMapper extends SubClassMapperBase<KeyedItemList> {
   static KeyedItemList<K, T> fromJson<K, T>(String json) {
     return ensureInitialized().decodeJson<KeyedItemList<K, T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'key': {'type': 'object'},
+        'items': JsonSchema.array({'type': 'object'}),
+      },
+      required: ['key', 'items'],
+    );
+  }
 }
 
 mixin KeyedItemListMappable<K, T> {
@@ -912,6 +1023,10 @@ mixin KeyedItemListMappable<K, T> {
     return KeyedItemListMapper.ensureInitialized().hashValue(
       this as KeyedItemList<K, T>,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return KeyedItemListMapper.toJsonSchema();
   }
 }
 
@@ -1027,6 +1142,16 @@ class ComparableItemListMapper extends SubClassMapperBase<ComparableItemList> {
   ) {
     return ensureInitialized().decodeJson<ComparableItemList<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'items': JsonSchema.array({'type': 'object'}),
+      },
+      required: ['items'],
+    );
+  }
 }
 
 mixin ComparableItemListMappable<T extends Comparable<dynamic>> {
@@ -1072,6 +1197,10 @@ mixin ComparableItemListMappable<T extends Comparable<dynamic>> {
     return ComparableItemListMapper.ensureInitialized().hashValue(
       this as ComparableItemList<T>,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return ComparableItemListMapper.toJsonSchema();
   }
 }
 
@@ -1169,6 +1298,18 @@ class ItemContainerMapper extends ClassMapperBase<ItemContainer> {
   static ItemContainer<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<ItemContainer<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'items': JsonSchema.array(
+          JsonSchema.object(ItemListMapper.toJsonSchema()),
+        ),
+      },
+      required: ['items'],
+    );
+  }
 }
 
 mixin ItemContainerMappable<T> {
@@ -1211,6 +1352,10 @@ mixin ItemContainerMappable<T> {
     return ItemContainerMapper.ensureInitialized().hashValue(
       this as ItemContainer<T>,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return ItemContainerMapper.toJsonSchema();
   }
 }
 

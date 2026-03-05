@@ -84,8 +84,11 @@ class GenerateMethods {
   /// Indicates to generate the copyWith method.
   static const copy = 0x10;
 
+  /// Indicates to generate the toJsonSchema method.
+  static const schema = 0x20;
+
   /// Indicates to generate all available methods.
-  static const all = 0x1F;
+  static const all = 0x3F;
 }
 
 /// The mode used for encoding the enum values.

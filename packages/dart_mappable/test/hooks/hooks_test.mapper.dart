@@ -50,6 +50,14 @@ class GameMapper extends ClassMapperBase<Game> {
   static Game fromJson(String json) {
     return ensureInitialized().decodeJson<Game>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'player': JsonSchema.object(PlayerMapper.toJsonSchema())},
+      required: ['player'],
+    );
+  }
 }
 
 mixin GameMappable {
@@ -76,6 +84,10 @@ mixin GameMappable {
   @override
   int get hashCode {
     return GameMapper.ensureInitialized().hashValue(this as Game);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return GameMapper.toJsonSchema();
   }
 }
 
@@ -145,6 +157,14 @@ class PlayerMapper extends ClassMapperBase<Player> {
   static Player fromJson(String json) {
     return ensureInitialized().decodeJson<Player>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'id': JsonSchema.string()},
+      required: ['id'],
+    );
+  }
 }
 
 mixin PlayerMappable {
@@ -171,6 +191,10 @@ mixin PlayerMappable {
   @override
   int get hashCode {
     return PlayerMapper.ensureInitialized().hashValue(this as Player);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return PlayerMapper.toJsonSchema();
   }
 }
 
@@ -248,6 +272,14 @@ class CardGameMapper extends ClassMapperBase<CardGame> {
   static CardGame fromJson(String json) {
     return ensureInitialized().decodeJson<CardGame>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'player': JsonSchema.object(PlayerMapper.toJsonSchema())},
+      required: ['player'],
+    );
+  }
 }
 
 mixin CardGameMappable {
@@ -285,6 +317,10 @@ mixin CardGameMappable {
   @override
   int get hashCode {
     return CardGameMapper.ensureInitialized().hashValue(this as CardGame);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return CardGameMapper.toJsonSchema();
   }
 }
 

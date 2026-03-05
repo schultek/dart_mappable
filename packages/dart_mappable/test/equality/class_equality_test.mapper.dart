@@ -113,6 +113,20 @@ class AMapper extends ClassMapperBase<A> {
   static A fromJson(String json) {
     return ensureInitialized().decodeJson<A>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'a': JsonSchema.string(),
+        'b': JsonSchema.integer(),
+        'c': JsonSchema.number(nullable: true),
+        'd': JsonSchema.boolean(),
+        'e': JsonSchema.enumSchema(['a', 'bB', 'ccCc'], nullable: true),
+      },
+      required: ['a', 'd'],
+    );
+  }
 }
 
 mixin AMappable {
@@ -139,6 +153,10 @@ mixin AMappable {
   @override
   int get hashCode {
     return AMapper.ensureInitialized().hashValue(this as A);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return AMapper.toJsonSchema();
   }
 }
 
@@ -219,6 +237,14 @@ class BaseMapper extends ClassMapperBase<Base> {
   static Base fromJson(String json) {
     return ensureInitialized().decodeJson<Base>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'data': JsonSchema.string()},
+      required: ['data'],
+    );
+  }
 }
 
 mixin BaseMappable {
@@ -245,6 +271,10 @@ mixin BaseMappable {
   @override
   int get hashCode {
     return BaseMapper.ensureInitialized().hashValue(this as Base);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return BaseMapper.toJsonSchema();
   }
 }
 
@@ -311,6 +341,14 @@ class SubMapper extends ClassMapperBase<Sub> {
   static Sub fromJson(String json) {
     return ensureInitialized().decodeJson<Sub>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'data': JsonSchema.string()},
+      required: ['data'],
+    );
+  }
 }
 
 mixin SubMappable {
@@ -337,6 +375,10 @@ mixin SubMappable {
   @override
   int get hashCode {
     return SubMapper.ensureInitialized().hashValue(this as Sub);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return SubMapper.toJsonSchema();
   }
 }
 
@@ -404,6 +446,14 @@ class BaseTypeMapper extends ClassMapperBase<BaseType> {
   static BaseType fromJson(String json) {
     return ensureInitialized().decodeJson<BaseType>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'type': JsonSchema.string()},
+      required: ['type'],
+    );
+  }
 }
 
 mixin BaseTypeMappable {
@@ -441,6 +491,10 @@ mixin BaseTypeMappable {
   @override
   int get hashCode {
     return BaseTypeMapper.ensureInitialized().hashValue(this as BaseType);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return BaseTypeMapper.toJsonSchema();
   }
 }
 
@@ -518,6 +572,14 @@ class SubTypeMapper extends SubClassMapperBase<SubType> {
   static SubType fromJson(String json) {
     return ensureInitialized().decodeJson<SubType>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'type': JsonSchema.string()},
+      required: ['type'],
+    );
+  }
 }
 
 mixin SubTypeMappable {
@@ -555,6 +617,10 @@ mixin SubTypeMappable {
   @override
   int get hashCode {
     return SubTypeMapper.ensureInitialized().hashValue(this as SubType);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return SubTypeMapper.toJsonSchema();
   }
 }
 
@@ -631,6 +697,16 @@ class GenericMapper extends ClassMapperBase<Generic> {
   static Generic<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<Generic<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'data': {'type': 'object'},
+      },
+      required: ['data'],
+    );
+  }
 }
 
 mixin GenericMappable<T> {
@@ -668,6 +744,10 @@ mixin GenericMappable<T> {
   @override
   int get hashCode {
     return GenericMapper.ensureInitialized().hashValue(this as Generic<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return GenericMapper.toJsonSchema();
   }
 }
 
@@ -747,6 +827,14 @@ class WrapperMapper extends ClassMapperBase<Wrapper> {
   static Wrapper<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<Wrapper<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'value': JsonSchema.object(GenericMapper.toJsonSchema())},
+      required: ['value'],
+    );
+  }
 }
 
 mixin WrapperMappable<T> {
@@ -784,6 +872,10 @@ mixin WrapperMappable<T> {
   @override
   int get hashCode {
     return WrapperMapper.ensureInitialized().hashValue(this as Wrapper<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return WrapperMapper.toJsonSchema();
   }
 }
 

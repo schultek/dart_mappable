@@ -45,6 +45,14 @@ class SetWrapperMapper extends ClassMapperBase<SetWrapper> {
   static SetWrapper fromJson(String json) {
     return ensureInitialized().decodeJson<SetWrapper>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'values': JsonSchema.array(JsonSchema.string())},
+      required: ['values'],
+    );
+  }
 }
 
 mixin SetWrapperMappable {
@@ -84,6 +92,10 @@ mixin SetWrapperMappable {
   @override
   int get hashCode {
     return SetWrapperMapper.ensureInitialized().hashValue(this as SetWrapper);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return SetWrapperMapper.toJsonSchema();
   }
 }
 
@@ -157,6 +169,14 @@ class ListWrapperMapper extends ClassMapperBase<ListWrapper> {
   static ListWrapper fromJson(String json) {
     return ensureInitialized().decodeJson<ListWrapper>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'values': JsonSchema.array(JsonSchema.string())},
+      required: ['values'],
+    );
+  }
 }
 
 mixin ListWrapperMappable {
@@ -196,6 +216,10 @@ mixin ListWrapperMappable {
   @override
   int get hashCode {
     return ListWrapperMapper.ensureInitialized().hashValue(this as ListWrapper);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return ListWrapperMapper.toJsonSchema();
   }
 }
 
@@ -277,6 +301,14 @@ class MapWrapperMapper extends ClassMapperBase<MapWrapper> {
   static MapWrapper fromJson(String json) {
     return ensureInitialized().decodeJson<MapWrapper>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'values': JsonSchema.map(JsonSchema.dynamic_())},
+      required: ['values'],
+    );
+  }
 }
 
 mixin MapWrapperMappable {
@@ -316,6 +348,10 @@ mixin MapWrapperMappable {
   @override
   int get hashCode {
     return MapWrapperMapper.ensureInitialized().hashValue(this as MapWrapper);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return MapWrapperMapper.toJsonSchema();
   }
 }
 

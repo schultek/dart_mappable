@@ -102,6 +102,17 @@ class DSOpacityDataMapper extends ClassMapperBase<DSOpacityData> {
   static DSOpacityData fromJson(String json) {
     return ensureInitialized().decodeJson<DSOpacityData>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'data': JsonSchema.map(JsonSchema.number()),
+        'fallback': JsonSchema.number(),
+      },
+      required: [],
+    );
+  }
 }
 
 mixin DSOpacityDataMappable {
@@ -143,6 +154,10 @@ mixin DSOpacityDataMappable {
     return DSOpacityDataMapper.ensureInitialized().hashValue(
       this as DSOpacityData,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return DSOpacityDataMapper.toJsonSchema();
   }
 }
 

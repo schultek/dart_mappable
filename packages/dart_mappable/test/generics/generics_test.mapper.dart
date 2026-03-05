@@ -56,6 +56,17 @@ class BoxMapper extends ClassMapperBase<Box> {
   static Box<T> fromJson<T extends Content>(String json) {
     return ensureInitialized().decodeJson<Box<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'size': JsonSchema.integer(),
+        'contents': JsonSchema.array({'type': 'object'}),
+      },
+      required: ['size', 'contents'],
+    );
+  }
 }
 
 mixin BoxMappable<T extends Content> {
@@ -82,6 +93,10 @@ mixin BoxMappable<T extends Content> {
   @override
   int get hashCode {
     return BoxMapper.ensureInitialized().hashValue(this as Box<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return BoxMapper.toJsonSchema();
   }
 }
 
@@ -161,6 +176,11 @@ class ContentMapper extends ClassMapperBase<Content> {
   static Content fromJson(String json) {
     return ensureInitialized().decodeJson<Content>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(properties: {}, required: []);
+  }
 }
 
 mixin ContentMappable {
@@ -198,6 +218,10 @@ mixin ContentMappable {
   @override
   int get hashCode {
     return ContentMapper.ensureInitialized().hashValue(this as Content);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return ContentMapper.toJsonSchema();
   }
 }
 
@@ -265,6 +289,14 @@ class ConfettiMapper extends ClassMapperBase<Confetti> {
   static Confetti fromJson(String json) {
     return ensureInitialized().decodeJson<Confetti>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'color': JsonSchema.string()},
+      required: ['color'],
+    );
+  }
 }
 
 mixin ConfettiMappable {
@@ -302,6 +334,10 @@ mixin ConfettiMappable {
   @override
   int get hashCode {
     return ConfettiMapper.ensureInitialized().hashValue(this as Confetti);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return ConfettiMapper.toJsonSchema();
   }
 }
 
@@ -372,6 +408,14 @@ class DataMapper extends ClassMapperBase<Data> {
   static Data fromJson(String json) {
     return ensureInitialized().decodeJson<Data>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'data': JsonSchema.string()},
+      required: ['data'],
+    );
+  }
 }
 
 mixin DataMappable {
@@ -398,6 +442,10 @@ mixin DataMappable {
   @override
   int get hashCode {
     return DataMapper.ensureInitialized().hashValue(this as Data);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return DataMapper.toJsonSchema();
   }
 }
 
@@ -474,6 +522,16 @@ class SingleSettingMapper extends ClassMapperBase<SingleSetting> {
   static SingleSetting<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<SingleSetting<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'properties': JsonSchema.array({'type': 'object'}, nullable: true),
+      },
+      required: [],
+    );
+  }
 }
 
 mixin SingleSettingMappable<T> {
@@ -516,6 +574,10 @@ mixin SingleSettingMappable<T> {
     return SingleSettingMapper.ensureInitialized().hashValue(
       this as SingleSetting<T>,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return SingleSettingMapper.toJsonSchema();
   }
 }
 
@@ -604,6 +666,19 @@ class SettingsMapper extends ClassMapperBase<Settings> {
   static Settings fromJson(String json) {
     return ensureInitialized().decodeJson<Settings>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'settings': JsonSchema.map(
+          JsonSchema.object(SingleSettingMapper.toJsonSchema()),
+          nullable: true,
+        ),
+      },
+      required: [],
+    );
+  }
 }
 
 mixin SettingsMappable {
@@ -641,6 +716,10 @@ mixin SettingsMappable {
   @override
   int get hashCode {
     return SettingsMapper.ensureInitialized().hashValue(this as Settings);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return SettingsMapper.toJsonSchema();
   }
 }
 
@@ -750,6 +829,16 @@ class AMapper extends ClassMapperBase<A> {
   static A<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<A<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'value': {'type': 'object'},
+      },
+      required: ['value'],
+    );
+  }
 }
 
 mixin AMappable<T> {
@@ -776,6 +865,10 @@ mixin AMappable<T> {
   @override
   int get hashCode {
     return AMapper.ensureInitialized().hashValue(this as A<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return AMapper.toJsonSchema();
   }
 }
 
@@ -842,6 +935,14 @@ class BMapper extends ClassMapperBase<B> {
   static B fromJson(String json) {
     return ensureInitialized().decodeJson<B>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'value': JsonSchema.array(JsonSchema.string())},
+      required: ['value'],
+    );
+  }
 }
 
 mixin BMappable {
@@ -868,6 +969,10 @@ mixin BMappable {
   @override
   int get hashCode {
     return BMapper.ensureInitialized().hashValue(this as B);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return BMapper.toJsonSchema();
   }
 }
 
@@ -951,6 +1056,16 @@ class AssetMapper extends ClassMapperBase<Asset> {
   static Asset<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<Asset<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'data': {'type': 'object'},
+      },
+      required: ['data'],
+    );
+  }
 }
 
 mixin AssetMappable<T> {
@@ -985,6 +1100,10 @@ mixin AssetMappable<T> {
   @override
   int get hashCode {
     return AssetMapper.ensureInitialized().hashValue(this as Asset<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return AssetMapper.toJsonSchema();
   }
 }
 
@@ -1064,6 +1183,16 @@ class NullableGenericsMapper extends ClassMapperBase<NullableGenerics> {
   static NullableGenerics<T> fromJson<T extends Object>(String json) {
     return ensureInitialized().decodeJson<NullableGenerics<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'value': {'type': 'object'},
+      },
+      required: ['value'],
+    );
+  }
 }
 
 mixin NullableGenericsMappable<T extends Object> {
@@ -1109,6 +1238,10 @@ mixin NullableGenericsMappable<T extends Object> {
     return NullableGenericsMapper.ensureInitialized().hashValue(
       this as NullableGenerics<T>,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return NullableGenericsMapper.toJsonSchema();
   }
 }
 
@@ -1199,6 +1332,16 @@ class FunctionContainerMapper extends ClassMapperBase<FunctionContainer> {
   static FunctionContainer<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<FunctionContainer<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'genericFunction': {'type': 'object'},
+      },
+      required: ['genericFunction'],
+    );
+  }
 }
 
 mixin FunctionContainerMappable<T> {
@@ -1244,6 +1387,10 @@ mixin FunctionContainerMappable<T> {
     return FunctionContainerMapper.ensureInitialized().hashValue(
       this as FunctionContainer<T>,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return FunctionContainerMapper.toJsonSchema();
   }
 }
 

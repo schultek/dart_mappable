@@ -59,6 +59,16 @@ class ComparableBoxMapper extends ClassMapperBase<ComparableBox> {
   static ComparableBox<T> fromJson<T extends Comparable<T>>(String json) {
     return ensureInitialized().decodeJson<ComparableBox<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'value': {'type': 'object'},
+      },
+      required: ['value'],
+    );
+  }
 }
 
 mixin ComparableBoxMappable<T extends Comparable<T>> {
@@ -101,6 +111,10 @@ mixin ComparableBoxMappable<T extends Comparable<T>> {
     return ComparableBoxMapper.ensureInitialized().hashValue(
       this as ComparableBox<T>,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return ComparableBoxMapper.toJsonSchema();
   }
 }
 

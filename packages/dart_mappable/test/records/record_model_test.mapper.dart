@@ -52,6 +52,17 @@ class AMapper extends ClassMapperBase<A> {
   static A<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<A<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'a': JsonSchema.string(),
+        'r': {'type': 'object'},
+      },
+      required: ['a', 'r'],
+    );
+  }
 }
 
 mixin AMappable<T> {
@@ -78,6 +89,10 @@ mixin AMappable<T> {
   @override
   int get hashCode {
     return AMapper.ensureInitialized().hashValue(this as A<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return AMapper.toJsonSchema();
   }
 }
 
@@ -147,6 +162,17 @@ class CMapper extends ClassMapperBase<C> {
   static C fromJson(String json) {
     return ensureInitialized().decodeJson<C>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'c': JsonSchema.string(),
+        'd': {'type': 'object'},
+      },
+      required: ['c', 'd'],
+    );
+  }
 }
 
 mixin CMappable {
@@ -173,6 +199,10 @@ mixin CMappable {
   @override
   int get hashCode {
     return CMapper.ensureInitialized().hashValue(this as C);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return CMapper.toJsonSchema();
   }
 }
 

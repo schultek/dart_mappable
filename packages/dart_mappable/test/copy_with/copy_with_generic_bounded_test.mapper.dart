@@ -51,6 +51,16 @@ class ContainerMapper extends ClassMapperBase<Container> {
   static Container<T> fromJson<T extends A<B>>(String json) {
     return ensureInitialized().decodeJson<Container<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'content': {'type': 'object'},
+      },
+      required: ['content'],
+    );
+  }
 }
 
 mixin ContainerMappable<T extends A<B>> {
@@ -90,6 +100,10 @@ mixin ContainerMappable<T extends A<B>> {
   @override
   int get hashCode {
     return ContainerMapper.ensureInitialized().hashValue(this as Container<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return ContainerMapper.toJsonSchema();
   }
 }
 
@@ -174,6 +188,16 @@ class AMapper extends ClassMapperBase<A> {
   static A<T> fromJson<T extends B>(String json) {
     return ensureInitialized().decodeJson<A<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'b': {'type': 'object'},
+      },
+      required: ['b'],
+    );
+  }
 }
 
 mixin AMappable<T extends B> {
@@ -200,6 +224,10 @@ mixin AMappable<T extends B> {
   @override
   int get hashCode {
     return AMapper.ensureInitialized().hashValue(this as A<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return AMapper.toJsonSchema();
   }
 }
 
@@ -269,6 +297,14 @@ class BMapper extends ClassMapperBase<B> {
   static B fromJson(String json) {
     return ensureInitialized().decodeJson<B>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'b': JsonSchema.string()},
+      required: ['b'],
+    );
+  }
 }
 
 mixin BMappable {
@@ -295,6 +331,10 @@ mixin BMappable {
   @override
   int get hashCode {
     return BMapper.ensureInitialized().hashValue(this as B);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return BMapper.toJsonSchema();
   }
 }
 
@@ -368,6 +408,16 @@ class Container1Mapper extends ClassMapperBase<Container1> {
   static Container1<T> fromJson<T extends A<B>>(String json) {
     return ensureInitialized().decodeJson<Container1<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'content': {'type': 'object'},
+      },
+      required: ['content'],
+    );
+  }
 }
 
 mixin Container1Mappable<T extends A<B>> {
@@ -409,6 +459,10 @@ mixin Container1Mappable<T extends A<B>> {
     return Container1Mapper.ensureInitialized().hashValue(
       this as Container1<T>,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return Container1Mapper.toJsonSchema();
   }
 }
 
@@ -502,6 +556,16 @@ class Container2Mapper extends ClassMapperBase<Container2> {
   static Container2<T, V> fromJson<T extends A<V>, V extends B>(String json) {
     return ensureInitialized().decodeJson<Container2<T, V>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'content': {'type': 'object'},
+      },
+      required: ['content'],
+    );
+  }
 }
 
 mixin Container2Mappable<T extends A<V>, V extends B> {
@@ -544,6 +608,10 @@ mixin Container2Mappable<T extends A<V>, V extends B> {
     return Container2Mapper.ensureInitialized().hashValue(
       this as Container2<T, V>,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return Container2Mapper.toJsonSchema();
   }
 }
 
@@ -647,6 +715,17 @@ class Container3Mapper extends ClassMapperBase<Container3> {
   static Container3<T> fromJson<T extends A2<dynamic>>(String json) {
     return ensureInitialized().decodeJson<Container3<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'content': {'type': 'object'},
+        'contents': JsonSchema.array({'type': 'object'}),
+      },
+      required: ['content', 'contents'],
+    );
+  }
 }
 
 mixin Container3Mappable<T extends A2<dynamic>> {
@@ -688,6 +767,10 @@ mixin Container3Mappable<T extends A2<dynamic>> {
     return Container3Mapper.ensureInitialized().hashValue(
       this as Container3<T>,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return Container3Mapper.toJsonSchema();
   }
 }
 
@@ -785,6 +868,16 @@ class A2Mapper extends ClassMapperBase<A2> {
   static A2<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<A2<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        't': {'type': 'object'},
+      },
+      required: ['t'],
+    );
+  }
 }
 
 mixin A2Mappable<T> {
@@ -811,6 +904,10 @@ mixin A2Mappable<T> {
   @override
   int get hashCode {
     return A2Mapper.ensureInitialized().hashValue(this as A2<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return A2Mapper.toJsonSchema();
   }
 }
 
@@ -895,6 +992,17 @@ class Container4Mapper extends ClassMapperBase<Container4> {
   static Container4<T> fromJson<T extends A2<B>>(String json) {
     return ensureInitialized().decodeJson<Container4<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'content': {'type': 'object'},
+        'contents': JsonSchema.array({'type': 'object'}),
+      },
+      required: ['content', 'contents'],
+    );
+  }
 }
 
 mixin Container4Mappable<T extends A2<B>> {
@@ -936,6 +1044,10 @@ mixin Container4Mappable<T extends A2<B>> {
     return Container4Mapper.ensureInitialized().hashValue(
       this as Container4<T>,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return Container4Mapper.toJsonSchema();
   }
 }
 
@@ -1037,6 +1149,16 @@ class Container5Mapper extends ClassMapperBase<Container5> {
   static Container5<T> fromJson<T extends B?>(String json) {
     return ensureInitialized().decodeJson<Container5<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'content': {'type': 'object'},
+      },
+      required: ['content'],
+    );
+  }
 }
 
 mixin Container5Mappable<T extends B?> {
@@ -1078,6 +1200,10 @@ mixin Container5Mappable<T extends B?> {
     return Container5Mapper.ensureInitialized().hashValue(
       this as Container5<T>,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return Container5Mapper.toJsonSchema();
   }
 }
 
@@ -1158,6 +1284,14 @@ class B2Mapper extends ClassMapperBase<B2> {
   static B2 fromJson(String json) {
     return ensureInitialized().decodeJson<B2>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'b': JsonSchema.string()},
+      required: ['b'],
+    );
+  }
 }
 
 mixin B2Mappable {
@@ -1184,6 +1318,10 @@ mixin B2Mappable {
   @override
   int get hashCode {
     return B2Mapper.ensureInitialized().hashValue(this as B2);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return B2Mapper.toJsonSchema();
   }
 }
 

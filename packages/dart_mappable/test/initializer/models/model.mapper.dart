@@ -39,6 +39,11 @@ class AMapper extends ClassMapperBase<A> {
   static A fromJson(String json) {
     return ensureInitialized().decodeJson<A>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(properties: {}, required: []);
+  }
 }
 
 mixin AMappable {
@@ -65,6 +70,10 @@ mixin AMappable {
   @override
   int get hashCode {
     return AMapper.ensureInitialized().hashValue(this as A);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return AMapper.toJsonSchema();
   }
 }
 
