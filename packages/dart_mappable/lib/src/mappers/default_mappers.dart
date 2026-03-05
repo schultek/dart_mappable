@@ -21,7 +21,7 @@ class PrimitiveMapper<T extends Object> extends MapperBase<T>
     return exactType != null ? v.runtimeType == exactType : super.isFor(v);
   }
 
-  static T _cast<T>(v) => v as T;
+  static T _cast<T>(Object v) => v as T;
 
   @override
   T decoder(Object value, DecodingContext context) {

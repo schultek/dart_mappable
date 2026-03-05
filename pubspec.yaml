@@ -9,7 +9,7 @@ workspace:
   - packages/dart_mappable_builder
 
 dev_dependencies:
-  melos: ^7.0.0
+  melos: ^7.4.0
 
 melos:
   ide:

@@ -12,7 +12,7 @@ abstract class A with AMappable {
 class B extends A with BMappable {
   B();
 
-  static bool checkType(value) {
+  static bool checkType(Object value) {
     return value is Map && value['isB'] == true;
   }
 }
@@ -21,7 +21,7 @@ class B extends A with BMappable {
 class C extends A with CMappable {
   C();
 
-  static bool checkType(value) {
+  static bool checkType(Object value) {
     return value is Map && value['isWhat'] == 'C';
   }
 }

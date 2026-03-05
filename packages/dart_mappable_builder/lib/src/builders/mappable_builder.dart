@@ -198,8 +198,9 @@ String writeImports(AssetId input, List<Uri> imports, String outputDirectory) {
       package.add(import.toString());
       prefixes[import.toString()] = i;
     } else {
-      relative.add(import.toString()); // TODO: is this correct?
-      prefixes[import.toString()] = i;
+      var relativePath = path.relative(import.path, from: outputDirectory);
+      relative.add(relativePath);
+      prefixes[relativePath] = i;
     }
   }
 
