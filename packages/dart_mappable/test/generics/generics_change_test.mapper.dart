@@ -48,6 +48,11 @@ class AMapper extends ClassMapperBase<A> {
   static A<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<A<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(properties: {}, required: []);
+  }
 }
 
 mixin AMappable<T> {
@@ -74,6 +79,10 @@ mixin AMappable<T> {
   @override
   int get hashCode {
     return AMapper.ensureInitialized().hashValue(this as A<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return AMapper.toJsonSchema();
   }
 }
 
@@ -146,6 +155,11 @@ class BMapper extends SubClassMapperBase<B> {
   static B<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<B<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(properties: {}, required: []);
+  }
 }
 
 mixin BMappable<T> {
@@ -172,6 +186,10 @@ mixin BMappable<T> {
   @override
   int get hashCode {
     return BMapper.ensureInitialized().hashValue(this as B<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return BMapper.toJsonSchema();
   }
 }
 
@@ -246,6 +264,11 @@ class CMapper extends SubClassMapperBase<C> {
   static C<T> fromJson<T extends num>(String json) {
     return ensureInitialized().decodeJson<C<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(properties: {}, required: []);
+  }
 }
 
 mixin CMappable<T extends num> {
@@ -272,6 +295,10 @@ mixin CMappable<T extends num> {
   @override
   int get hashCode {
     return CMapper.ensureInitialized().hashValue(this as C<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return CMapper.toJsonSchema();
   }
 }
 
@@ -354,6 +381,11 @@ class DMapper extends SubClassMapperBase<D> {
   static D<T, V> fromJson<T, V>(String json) {
     return ensureInitialized().decodeJson<D<T, V>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(properties: {}, required: []);
+  }
 }
 
 mixin DMappable<T, V> {
@@ -384,6 +416,10 @@ mixin DMappable<T, V> {
   @override
   int get hashCode {
     return DMapper.ensureInitialized().hashValue(this as D<T, V>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return DMapper.toJsonSchema();
   }
 }
 
@@ -469,6 +505,11 @@ class EMapper extends SubClassMapperBase<E> {
   static E<T, V> fromJson<T, V>(String json) {
     return ensureInitialized().decodeJson<E<T, V>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(properties: {}, required: []);
+  }
 }
 
 mixin EMappable<T, V> {
@@ -499,6 +540,10 @@ mixin EMappable<T, V> {
   @override
   int get hashCode {
     return EMapper.ensureInitialized().hashValue(this as E<T, V>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return EMapper.toJsonSchema();
   }
 }
 
@@ -575,6 +620,11 @@ class FMapper extends SubClassMapperBase<F> {
   static F fromJson(String json) {
     return ensureInitialized().decodeJson<F>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(properties: {}, required: []);
+  }
 }
 
 mixin FMappable {
@@ -601,6 +651,10 @@ mixin FMappable {
   @override
   int get hashCode {
     return FMapper.ensureInitialized().hashValue(this as F);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return FMapper.toJsonSchema();
   }
 }
 
@@ -685,6 +739,11 @@ class GMapper extends SubClassMapperBase<G> {
   static G<T, V> fromJson<T, V extends A<T>>(String json) {
     return ensureInitialized().decodeJson<G<T, V>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(properties: {}, required: []);
+  }
 }
 
 mixin GMappable<T, V extends A<T>> {
@@ -715,6 +774,10 @@ mixin GMappable<T, V extends A<T>> {
   @override
   int get hashCode {
     return GMapper.ensureInitialized().hashValue(this as G<T, V>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return GMapper.toJsonSchema();
   }
 }
 
@@ -797,6 +860,11 @@ class HMapper extends SubClassMapperBase<H> {
   static H<T> fromJson<T extends C<num>>(String json) {
     return ensureInitialized().decodeJson<H<T>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(properties: {}, required: []);
+  }
 }
 
 mixin HMappable<T extends C<num>> {
@@ -823,6 +891,10 @@ mixin HMappable<T extends C<num>> {
   @override
   int get hashCode {
     return HMapper.ensureInitialized().hashValue(this as H<T>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return HMapper.toJsonSchema();
   }
 }
 
@@ -914,6 +986,11 @@ class IMapper extends SubClassMapperBase<I> {
   static I<T, V> fromJson<T extends C<V>, V extends num>(String json) {
     return ensureInitialized().decodeJson<I<T, V>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(properties: {}, required: []);
+  }
 }
 
 mixin IMappable<T extends C<V>, V extends num> {
@@ -944,6 +1021,10 @@ mixin IMappable<T extends C<V>, V extends num> {
   @override
   int get hashCode {
     return IMapper.ensureInitialized().hashValue(this as I<T, V>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return IMapper.toJsonSchema();
   }
 }
 
@@ -1047,6 +1128,11 @@ class JMapper extends SubClassMapperBase<J> {
   ) {
     return ensureInitialized().decodeJson<J<T, V, U>>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(properties: {}, required: []);
+  }
 }
 
 mixin JMappable<T extends C<V>, V extends U, U extends num> {
@@ -1081,6 +1167,10 @@ mixin JMappable<T extends C<V>, V extends U, U extends num> {
   @override
   int get hashCode {
     return JMapper.ensureInitialized().hashValue(this as J<T, V, U>);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return JMapper.toJsonSchema();
   }
 }
 

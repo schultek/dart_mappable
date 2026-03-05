@@ -110,6 +110,18 @@ class PersonMapper extends ClassMapperBase<Person> {
   static Person fromJson(String json) {
     return ensureInitialized().decodeJson<Person>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'name': JsonSchema.string(),
+        'age': JsonSchema.integer(),
+        'car': JsonSchema.object(CarMapper.toJsonSchema(), nullable: true),
+      },
+      required: ['name'],
+    );
+  }
 }
 
 mixin PersonMappable {
@@ -136,6 +148,10 @@ mixin PersonMappable {
   @override
   int get hashCode {
     return PersonMapper.ensureInitialized().hashValue(this as Person);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return PersonMapper.toJsonSchema();
   }
 }
 
@@ -227,6 +243,17 @@ class CarMapper extends ClassMapperBase<Car> {
   static Car fromJson(String json) {
     return ensureInitialized().decodeJson<Car>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'drivenKm': JsonSchema.integer(),
+        'brand': JsonSchema.enumSchema(['Toyota', 'Audi', 'BMW']),
+      },
+      required: ['drivenKm', 'brand'],
+    );
+  }
 }
 
 mixin CarMappable {
@@ -253,6 +280,10 @@ mixin CarMappable {
   @override
   int get hashCode {
     return CarMapper.ensureInitialized().hashValue(this as Car);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return CarMapper.toJsonSchema();
   }
 }
 

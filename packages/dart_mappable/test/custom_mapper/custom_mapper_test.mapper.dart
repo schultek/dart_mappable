@@ -53,6 +53,17 @@ class TestObjMapper extends ClassMapperBase<TestObj> {
   static TestObj fromJson(String json) {
     return ensureInitialized().decodeJson<TestObj>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'x': {'type': 'object'},
+        'unmappedProps': JsonSchema.map(JsonSchema.dynamic_()),
+      },
+      required: ['x', 'unmappedProps'],
+    );
+  }
 }
 
 mixin TestObjMappable {
@@ -90,6 +101,10 @@ mixin TestObjMappable {
   @override
   int get hashCode {
     return TestObjMapper.ensureInitialized().hashValue(this as TestObj);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return TestObjMapper.toJsonSchema();
   }
 }
 

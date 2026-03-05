@@ -50,6 +50,14 @@ class AnimalMapper extends ClassMapperBase<Animal> {
   static Animal fromJson(String json) {
     return ensureInitialized().decodeJson<Animal>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'name': JsonSchema.string()},
+      required: ['name'],
+    );
+  }
 }
 
 mixin AnimalMappable {
@@ -108,6 +116,14 @@ class CatMapper extends SubClassMapperBase<Cat> {
   static Cat fromJson(String json) {
     return ensureInitialized().decodeJson<Cat>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'name': JsonSchema.string(), 'color': JsonSchema.string()},
+      required: ['name', 'color'],
+    );
+  }
 }
 
 mixin CatMappable {
@@ -134,6 +150,10 @@ mixin CatMappable {
   @override
   int get hashCode {
     return CatMapper.ensureInitialized().hashValue(this as Cat);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return CatMapper.toJsonSchema();
   }
 }
 
@@ -219,6 +239,14 @@ class DogMapper extends SubClassMapperBase<Dog> {
   static Dog fromJson(String json) {
     return ensureInitialized().decodeJson<Dog>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'age': JsonSchema.integer()},
+      required: ['age'],
+    );
+  }
 }
 
 mixin DogMappable {
@@ -245,6 +273,10 @@ mixin DogMappable {
   @override
   int get hashCode {
     return DogMapper.ensureInitialized().hashValue(this as Dog);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return DogMapper.toJsonSchema();
   }
 }
 
@@ -319,6 +351,14 @@ class NullAnimalMapper extends SubClassMapperBase<NullAnimal> {
   static NullAnimal fromJson(String json) {
     return ensureInitialized().decodeJson<NullAnimal>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'name': JsonSchema.string()},
+      required: ['name'],
+    );
+  }
 }
 
 mixin NullAnimalMappable {
@@ -358,6 +398,10 @@ mixin NullAnimalMappable {
   @override
   int get hashCode {
     return NullAnimalMapper.ensureInitialized().hashValue(this as NullAnimal);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return NullAnimalMapper.toJsonSchema();
   }
 }
 
@@ -442,6 +486,14 @@ class DefaultAnimalMapper extends SubClassMapperBase<DefaultAnimal> {
   static DefaultAnimal fromJson(String json) {
     return ensureInitialized().decodeJson<DefaultAnimal>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'name': JsonSchema.string(), 'type': JsonSchema.string()},
+      required: ['name', 'type'],
+    );
+  }
 }
 
 mixin DefaultAnimalMappable {
@@ -483,6 +535,10 @@ mixin DefaultAnimalMappable {
     return DefaultAnimalMapper.ensureInitialized().hashValue(
       this as DefaultAnimal,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return DefaultAnimalMapper.toJsonSchema();
   }
 }
 
@@ -581,6 +637,27 @@ class ZooMapper extends ClassMapperBase<Zoo> {
   static Zoo fromJson(String json) {
     return ensureInitialized().decodeJson<Zoo>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'animal': JsonSchema.object(
+          AnimalMapper.toJsonSchema(),
+          nullable: true,
+        ),
+        'animals': JsonSchema.array(
+          JsonSchema.object(AnimalMapper.toJsonSchema()),
+          nullable: true,
+        ),
+        'animalsMap': JsonSchema.map(
+          JsonSchema.object(AnimalMapper.toJsonSchema()),
+          nullable: true,
+        ),
+      },
+      required: ['animal', 'animals', 'animalsMap'],
+    );
+  }
 }
 
 mixin ZooMappable {
@@ -607,6 +684,10 @@ mixin ZooMappable {
   @override
   int get hashCode {
     return ZooMapper.ensureInitialized().hashValue(this as Zoo);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return ZooMapper.toJsonSchema();
   }
 }
 

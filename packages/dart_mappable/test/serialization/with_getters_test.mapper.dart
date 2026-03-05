@@ -47,6 +47,14 @@ class ClassWithGettersMapper extends ClassMapperBase<ClassWithGetters> {
   static ClassWithGetters fromJson(String json) {
     return ensureInitialized().decodeJson<ClassWithGetters>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'name': JsonSchema.string(), 'count': JsonSchema.integer()},
+      required: ['name', 'count'],
+    );
+  }
 }
 
 mixin ClassWithGettersMappable {
@@ -87,6 +95,10 @@ mixin ClassWithGettersMappable {
     return ClassWithGettersMapper.ensureInitialized().hashValue(
       this as ClassWithGetters,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return ClassWithGettersMapper.toJsonSchema();
   }
 }
 

@@ -84,8 +84,11 @@ class GenerateMethods {
   /// Indicates to generate the copyWith method.
   static const copy = 0x10;
 
+  /// Indicates to generate the toJsonSchema method.
+  static const schema = 0x20;
+
   /// Indicates to generate all available methods.
-  static const all = 0x1F;
+  static const all = 0x3F;
 }
 
 /// The mode used for encoding the enum values.
@@ -145,13 +148,16 @@ class MappableConstructor {
 /// {@category Configuration}
 /// {@category Mapping Hooks}
 class MappableField {
-  const MappableField({this.key, this.hook});
+  const MappableField({this.key, this.hook, this.description});
 
   /// Use this key instead of the field name.
   final String? key;
 
   /// Define custom hooks used only for this field.
   final MappingHook? hook;
+
+  /// Optional description for this field, included in the JSON Schema output.
+  final String? description;
 }
 
 /// Used to annotate a record in order to generate mapping code.

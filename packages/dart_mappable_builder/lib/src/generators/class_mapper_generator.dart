@@ -10,6 +10,7 @@ import 'mixins/copywith_mixin.dart';
 import 'mixins/decoding_mixin.dart';
 import 'mixins/encoding_mixin.dart';
 import 'mixins/equals_mixin.dart';
+import 'mixins/schema_mixin.dart';
 import 'mixins/tostring_mixin.dart';
 
 /// Generates code for a specific class
@@ -19,7 +20,8 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
         EncodingMixin,
         CopyWithMixin,
         EqualsMixin,
-        ToStringMixin {
+        ToStringMixin,
+        SchemaMixin {
   ClassMapperGenerator(super.element);
 
   @override
@@ -68,6 +70,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
     await generateInstantiateMethod(output);
 
     generateStaticDecoders(output);
+    generateSchemaStaticMethod(output);
     output.write('}\n\n');
 
     if (element.generateAsMixin) {
@@ -93,6 +96,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
       generateCopyWithMixin(),
       generateToStringMixin(),
       generateEqualsMixin(),
+      generateSchemaMixin(),
     ]);
     output.write('}');
   }
@@ -102,7 +106,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
       'extension ${element.mapperName}Extension${element.typeParamsDeclaration} on ${element.prefixedClassName}${element.typeParams} {\n',
     );
     generateEncoderExtensions(output);
-    output.writeAll([generateCopyWithExtension()]);
+    output.writeAll([generateCopyWithExtension(), generateSchemaExtension()]);
     output.write('}');
   }
 

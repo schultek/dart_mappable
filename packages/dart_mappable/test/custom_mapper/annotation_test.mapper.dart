@@ -48,6 +48,16 @@ class PrivateContainerMapper extends ClassMapperBase<PrivateContainer> {
   static PrivateContainer fromJson(String json) {
     return ensureInitialized().decodeJson<PrivateContainer>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'value': {'type': 'object'},
+      },
+      required: ['value'],
+    );
+  }
 }
 
 mixin PrivateContainerMappable {
@@ -88,6 +98,10 @@ mixin PrivateContainerMappable {
     return PrivateContainerMapper.ensureInitialized().hashValue(
       this as PrivateContainer,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return PrivateContainerMapper.toJsonSchema();
   }
 }
 
@@ -167,6 +181,16 @@ class PrivateContainer2Mapper extends ClassMapperBase<PrivateContainer2> {
   static PrivateContainer2 fromJson(String json) {
     return ensureInitialized().decodeJson<PrivateContainer2>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'value': {'type': 'object'},
+      },
+      required: ['value'],
+    );
+  }
 }
 
 mixin PrivateContainer2Mappable {
@@ -211,6 +235,10 @@ mixin PrivateContainer2Mappable {
     return PrivateContainer2Mapper.ensureInitialized().hashValue(
       this as PrivateContainer2,
     );
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return PrivateContainer2Mapper.toJsonSchema();
   }
 }
 

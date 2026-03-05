@@ -149,6 +149,28 @@ class ClassMapperFieldElement extends MapperFieldElement {
         (await hookFor(field?.getter));
     return hook != null ? ', hook: $hook' : '';
   }();
+
+  /// Reads the `description` from the `@MappableField()` annotation.
+  String? get description {
+    var desc = param?.annotation?.read('description')?.toStringValue();
+    if (desc != null) return desc;
+    if (field != null) {
+      desc =
+          fieldChecker
+              .firstAnnotationOf(field!)
+              ?.getField('description')
+              ?.toStringValue();
+      if (desc != null) return desc;
+      if (field!.getter != null) {
+        desc =
+            fieldChecker
+                .firstAnnotationOf(field!.getter!)
+                ?.getField('description')
+                ?.toStringValue();
+      }
+    }
+    return desc;
+  }
 }
 
 String? _keyFor(Element? element) {

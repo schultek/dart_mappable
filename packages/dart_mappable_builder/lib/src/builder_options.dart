@@ -95,6 +95,9 @@ int? parseGenerateMethods(List<String>? flags) {
       case 'copy':
         joinedFlag |= GenerateMethods.copy;
         break;
+      case 'schema':
+        joinedFlag |= GenerateMethods.schema;
+        break;
       case 'all':
         joinedFlag |= GenerateMethods.all;
         break;

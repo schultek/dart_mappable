@@ -51,6 +51,17 @@ class ItemsMapper extends ClassMapperBase<Items> {
   static Items fromJson(String json) {
     return ensureInitialized().decodeJson<Items>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'items': JsonSchema.array(JsonSchema.object(ItemMapper.toJsonSchema())),
+        'items2': JsonSchema.map(JsonSchema.object(ItemMapper.toJsonSchema())),
+      },
+      required: ['items', 'items2'],
+    );
+  }
 }
 
 mixin ItemsMappable {
@@ -77,6 +88,10 @@ mixin ItemsMappable {
   @override
   int get hashCode {
     return ItemsMapper.ensureInitialized().hashValue(this as Items);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return ItemsMapper.toJsonSchema();
   }
 }
 
@@ -165,6 +180,14 @@ class ItemMapper extends ClassMapperBase<Item> {
   static Item fromJson(String json) {
     return ensureInitialized().decodeJson<Item>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'index': JsonSchema.integer()},
+      required: ['index'],
+    );
+  }
 }
 
 mixin ItemMappable {
@@ -191,6 +214,10 @@ mixin ItemMappable {
   @override
   int get hashCode {
     return ItemMapper.ensureInitialized().hashValue(this as Item);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return ItemMapper.toJsonSchema();
   }
 }
 

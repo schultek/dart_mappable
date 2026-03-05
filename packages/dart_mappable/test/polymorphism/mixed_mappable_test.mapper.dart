@@ -54,6 +54,18 @@ class BaseMapper extends ClassMapperBase<Base> {
   static Base fromJson(String json) {
     return ensureInitialized().decodeJson<Base>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'id': JsonSchema.string(),
+        'name': JsonSchema.string(),
+        'objects': JsonSchema.map(JsonSchema.dynamic_()),
+      },
+      required: ['id', 'name', 'objects'],
+    );
+  }
 }
 
 mixin BaseMappable {
@@ -120,6 +132,18 @@ class OneMapper extends ClassMapperBase<One> {
   static One fromJson(String json) {
     return ensureInitialized().decodeJson<One>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {
+        'id': JsonSchema.string(),
+        'name': JsonSchema.string(),
+        'objects': JsonSchema.map(JsonSchema.dynamic_()),
+      },
+      required: ['id', 'name', 'objects'],
+    );
+  }
 }
 
 mixin OneMappable {
@@ -146,6 +170,10 @@ mixin OneMappable {
   @override
   int get hashCode {
     return OneMapper.ensureInitialized().hashValue(this as One);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return OneMapper.toJsonSchema();
   }
 }
 
@@ -231,6 +259,14 @@ class TwoMapper extends ClassMapperBase<Two> {
   static Two fromJson(String json) {
     return ensureInitialized().decodeJson<Two>(json);
   }
+
+  static Map<String, dynamic> toJsonSchema() {
+    ensureInitialized();
+    return JsonSchema.objectSchema(
+      properties: {'id': JsonSchema.string()},
+      required: ['id'],
+    );
+  }
 }
 
 mixin TwoMappable {
@@ -257,6 +293,10 @@ mixin TwoMappable {
   @override
   int get hashCode {
     return TwoMapper.ensureInitialized().hashValue(this as Two);
+  }
+
+  static Map<String, dynamic> toJsonSchema() {
+    return TwoMapper.toJsonSchema();
   }
 }
 
