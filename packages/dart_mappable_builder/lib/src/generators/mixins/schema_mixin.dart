@@ -93,18 +93,28 @@ mixin SchemaMixin on MapperGenerator<TargetClassMapperElement> {
   String _schemaExpression(ClassMapperFieldElement f) {
     var resolvedType = f.resolvedType;
     var isNullable = resolvedType.isNullable;
+    var desc = f.description;
 
-    return _typeToSchemaExpression(resolvedType, isNullable);
+    return _typeToSchemaExpression(resolvedType, isNullable, desc);
   }
 
-  String _typeToSchemaExpression(DartType type, bool isNullable) {
-    var nullableArg = isNullable ? 'nullable: true' : '';
-    var nullableArgExtra = isNullable ? ', nullable: true' : '';
+  String _typeToSchemaExpression(
+    DartType type,
+    bool isNullable, [
+    String? description,
+  ]) {
+    var args = <String>[];
+    if (isNullable) args.add('nullable: true');
+    if (description != null) args.add("description: '$description'");
+    var argsStr = args.isNotEmpty ? args.join(', ') : '';
+
+    // For extra args after a positional parameter (e.g. array, map, object).
+    var extraArgsStr = argsStr.isNotEmpty ? ', $argsStr' : '';
 
     // Strip nullability for matching.
     var baseType = type;
     if (type is InterfaceType && type.isDartCoreNull) {
-      return 'JsonSchema.dynamic_(nullable: true)';
+      return 'JsonSchema.dynamic_(nullable: true${description != null ? ", description: \'$description\'" : ""})';
     }
 
     if (baseType is InterfaceType) {
@@ -113,19 +123,19 @@ mixin SchemaMixin on MapperGenerator<TargetClassMapperElement> {
       // Check for primitive types.
       switch (className) {
         case 'String':
-          return 'JsonSchema.string($nullableArg)';
+          return 'JsonSchema.string($argsStr)';
         case 'int':
-          return 'JsonSchema.integer($nullableArg)';
+          return 'JsonSchema.integer($argsStr)';
         case 'double':
         case 'num':
-          return 'JsonSchema.number($nullableArg)';
+          return 'JsonSchema.number($argsStr)';
         case 'bool':
-          return 'JsonSchema.boolean($nullableArg)';
+          return 'JsonSchema.boolean($argsStr)';
         case 'DateTime':
-          return 'JsonSchema.dateTime($nullableArg)';
+          return 'JsonSchema.dateTime($argsStr)';
         case 'dynamic':
         case 'Object':
-          return 'JsonSchema.dynamic_($nullableArg)';
+          return 'JsonSchema.dynamic_($argsStr)';
       }
 
       // Check for collection types.
@@ -140,7 +150,7 @@ mixin SchemaMixin on MapperGenerator<TargetClassMapperElement> {
             itemType != null
                 ? _typeToSchemaExpression(itemType, itemType.isNullable)
                 : 'JsonSchema.dynamic_()';
-        return 'JsonSchema.array($itemSchema$nullableArgExtra)';
+        return 'JsonSchema.array($itemSchema$extraArgsStr)';
       }
 
       if (_isMapType(baseType)) {
@@ -152,7 +162,7 @@ mixin SchemaMixin on MapperGenerator<TargetClassMapperElement> {
             valueType != null
                 ? _typeToSchemaExpression(valueType, valueType.isNullable)
                 : 'JsonSchema.dynamic_()';
-        return 'JsonSchema.map($valueSchema$nullableArgExtra)';
+        return 'JsonSchema.map($valueSchema$extraArgsStr)';
       }
 
       // Check if it's an enum.
@@ -163,13 +173,13 @@ mixin SchemaMixin on MapperGenerator<TargetClassMapperElement> {
                 .where((f) => f.isEnumConstant)
                 .map((f) => "'${f.name}'")
                 .toList();
-        return 'JsonSchema.enumSchema([${values.join(', ')}]$nullableArgExtra)';
+        return 'JsonSchema.enumSchema([${values.join(', ')}]$extraArgsStr)';
       }
 
       // Check if it's a MappableClass (has a mapper).
       var mapperElement = element.parent.getMapperForElement(baseType.element);
       if (mapperElement != null) {
-        return 'JsonSchema.object(${mapperElement.mapperName}.toJsonSchema()$nullableArgExtra)';
+        return 'JsonSchema.object(${mapperElement.mapperName}.toJsonSchema()$extraArgsStr)';
       }
     }
 

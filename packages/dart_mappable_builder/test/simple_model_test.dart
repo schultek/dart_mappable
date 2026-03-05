@@ -433,5 +433,24 @@ void main() {
         },
       );
     });
+
+    test('field description annotation in schema', () async {
+      await testMappable({
+        'model': '''
+            import 'package:dart_mappable/dart_mappable.dart';
+            
+            part 'model.mapper.dart';
+            
+            @MappableClass()
+            class DescModel with DescModelMappable {
+              @MappableField(description: 'The user name')
+              final String name;
+              final int age;
+            
+              DescModel(this.name, this.age);
+            }
+          ''',
+      });
+    });
   });
 }
