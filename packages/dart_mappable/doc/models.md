@@ -55,6 +55,7 @@ in most cases, we don't need to worry about this class at all, since it is abstr
 The generated `Mappable` mixin will have the following methods:
 
 - `toMap()` and `toJson()` to serialize your model,
+- `toJsonSchema()` to generate a JSON Schema of your model,
 - `copyWith()` to create copies of your model with different properties (see [Copy With](../topics/Copy-With-topic.html)),
 - `toString()` override to print all properties of your model,
 - `operator ==` and `hashCode` overrides.
@@ -89,14 +90,14 @@ class MyClass with MyClassMappable {
 ### Annotating Fields
 
 You can also annotate a single field or constructor parameter of a class using `@MappableField()`
-to set a specific json key or add custom [Mapping Hooks](../topics/Mapping%20Hooks-topic.html).
+to set a specific json key, provide a schema description, or add custom [Mapping Hooks](../topics/Mapping%20Hooks-topic.html).
 
 ```dart
 @MappableClass()
 class MyClass with MyClassMappable {
   MyClass(this.value);
 
-  @MappableField(key: 'my_key')
+  @MappableField(key: 'my_key', description: 'A custom value')
   String value;
 }
 ```

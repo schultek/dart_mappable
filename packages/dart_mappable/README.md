@@ -36,7 +36,7 @@
 while adding new or improved support for advanced use-cases including **generics, inheritance and 
 polymorphism, customization** and more.
 
-- 🎁 **Everything included**: Serialization, Equality, ToString, CopyWith and more.
+- 🎁 **Everything included**: Serialization, JSON Schema, Equality, ToString, CopyWith and more.
 - 🚀 **Excels at complexity**: It handles generics, polymorphism and multi-inheritance with ease.
 - 🎛️ **Highly flexible**: Customize the serialization, add custom types or integrate with other packages.
 - 🔥 **No compromises**: Its promise is that it just works, no matter what classes you throw at it.  
@@ -118,6 +118,9 @@ void main() {
   Map<String, dynamic> map = myClass.toMap();
   String json = myClass.toJson();
   
+  // You can also generate a JSON Schema from your class:
+  Map<String, dynamic> schema = MyClassMapper.toJsonSchema();
+  
   // There are also implementations generated for [operator ==], [hashCode] and [toString]:
   bool thisIsTrue = (myClass == myClass2);
   print(myClass);
@@ -163,14 +166,14 @@ class MyClass with MyClassMappable {
 ```
 
 You can also annotate a single field or constructor parameter of a class using `@MappableField()`
-to set a specific json key or add custom hooks.
+to set a specific json key, add custom hooks, or provide a description for the JSON Schema.
 
 ```dart
 @MappableClass()
 class MyClass with MyClassMappable {
   MyClass(this.value);
 
-  @MappableField(key: 'my_key')
+  @MappableField(key: 'my_key', description: 'A custom value')
   String value;
 }
 ```
@@ -205,7 +208,7 @@ Here are again all **six** annotations that you can use in your code:
 
 1. `@MappableClass()` can be used on a class to specify options like the `caseStyle` of the json keys, whether to ignore null values, or [hooks](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html).
 2. `@MappableConstructor()` can be used on a constructor to mark this to be used for decoding. It has no properties.
-3. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name, or [hooks](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html).
+3. `@MappableField()` can be used on a constructor parameter or a field to specify a json key to be used instead of the field name, provide a `description` for JSON Schema, or use [hooks](https://pub.dev/documentation/dart_mappable/latest/topics/Mapping%20Hooks-topic.html).
 4. `@MappableEnum()` can be used on an enum to specify the `mode` or `caseStyle` of the encoded enum values, or the `defaultValue`.
 5. `@MappableValue()` can be used on an enum value to specify a custom encoded value to use.
 6. `@MappableLib()` can be used on a library statement or import / export statement to set a default configuration for the annotated library or include / exclude classes.
@@ -216,6 +219,7 @@ Here are again all **six** annotations that you can use in your code:
 
 - `<ClassName>Mapper.fromMap<T>(Map<String, dynamic> map)` will take an encoded map object and return a decoded object of type `ClassName`.
 - `<ClassName>Mapper.fromJson<T>(String json)` internally uses `fromMap` but works with json encoded `String`s.
+- `<ClassName>Mapper.toJsonSchema()` returns a `Map<String, dynamic>` containing the OpenAPI 3.0.3 compliant JSON Schema for `ClassName`.
 
 ***Tip**: If you prefer to use `MyClass.fromJson` over `MyClassMapper.fromJson`, add the `fromJson` and
 `fromMap` methods directly to your class like this:*
@@ -232,6 +236,7 @@ class MyClass with MyClassMappable {
 The generated `<ClassName>Mappable` mixin will come with the following methods:
 
 - `toMap()` and `toJson()`.
+- `toJsonSchema()` to get the JSON Schema of your model.
 - `copyWith()` to create copies of your class instance (see [Copy With](https://pub.dev/documentation/dart_mappable/latest/topics/Copy-With-topic.html)).
 - overrides for `operator ==`, `hashCode` and `toString()`.
 
