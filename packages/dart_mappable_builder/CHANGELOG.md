@@ -1,4 +1,4 @@
-## 4.6.5
+## 4.7.0
 
 - Allow `analyzer` 10.0.0.
 - Add `useNodoc` option for excluding generated classes from dartdoc output.

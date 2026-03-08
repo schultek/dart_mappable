@@ -1,4 +1,4 @@
-# 4.6.5
+# 4.7.0
 
 - Added `firstWhere` to `ListCopyWith` for chaining copyWith calls on a list element based on a predicate function.
 - Add `useNodoc` option for excluding generated classes from dartdoc output.
