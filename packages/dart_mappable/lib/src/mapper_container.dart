@@ -103,8 +103,12 @@ abstract class MapperContainer {
     PrimitiveMapper<Object>((v) => v, dynamic),
     PrimitiveMapper<Object>((v) => v, Object),
     PrimitiveMapper<String>((v) => v.toString()),
-    PrimitiveMapper<int>((v) => v is num ? v.round() : num.parse(v.toString()).round()),
-    PrimitiveMapper<double>((v) => v is num ? v.toDouble() : double.parse(v.toString())),
+    PrimitiveMapper<int>(
+      (v) => v is num ? v.round() : num.parse(v.toString()).round(),
+    ),
+    PrimitiveMapper<double>(
+      (v) => v is num ? v.toDouble() : double.parse(v.toString()),
+    ),
     PrimitiveMapper<num>((v) => v is num ? v : num.parse(v.toString()), num),
     PrimitiveMapper<bool>((v) => v is num ? v != 0 : v.toString() == 'true'),
     DateTimeMapper(),
