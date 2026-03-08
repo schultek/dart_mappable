@@ -66,7 +66,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
 
     if (element.hasCallableConstructor) {
       output.write(
-        'extension ${element.uniqueClassName}ValueCopy<\$R, \$Out$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam, \$Out> {\n'
+        '${nodocTag}extension ${element.uniqueClassName}ValueCopy<\$R, \$Out$classTypeParamsDef> on ObjectCopyWith<\$R, $selfTypeParam, \$Out> {\n'
         '  ${element.uniqueClassName}CopyWith<\$R, $selfTypeParam, \$Out$classTypeParams> get \$as${element.className} => \$base.as((v, t, t2) => _${element.uniqueClassName}CopyWithImpl<\$R, \$Out$classTypeParams>(v, t, t2));\n'
         '}\n\n',
       );
@@ -104,8 +104,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
         implements.isEmpty ? '' : ' implements ${implements.join(', ')}';
 
     output.write(
-      ''
-      'abstract class ${element.uniqueClassName}CopyWith<\$R, \$In extends $selfTypeParam, \$Out$classTypeParamsDef>$implementsStmt {\n',
+      '${nodocTag}abstract class ${element.uniqueClassName}CopyWith<\$R, \$In extends $selfTypeParam, \$Out$classTypeParamsDef>$implementsStmt {\n',
     );
 
     var copyParams = CopyParamElement.collectFrom(element.params, element);
@@ -130,7 +129,7 @@ mixin CopyWithMixin on MapperGenerator<TargetClassMapperElement> {
     if (element.hasCallableConstructor) {
       output.write(
         '\n'
-        'class _${element.uniqueClassName}CopyWithImpl<\$R, \$Out$classTypeParamsDef> '
+        '${nodocTag}class _${element.uniqueClassName}CopyWithImpl<\$R, \$Out$classTypeParamsDef> '
         'extends ClassCopyWithBase<\$R, $selfTypeParam, \$Out> implements ${element.uniqueClassName}CopyWith'
         '<\$R, $selfTypeParam, \$Out$classTypeParams> {\n'
         '  _${element.uniqueClassName}CopyWithImpl(super.value, super.then, super.then2);\n'

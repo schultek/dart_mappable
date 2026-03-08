@@ -13,8 +13,8 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
     var output = StringBuffer();
 
     output.write('''
-      ${element.needsTypeDef ? 'typedef ${element.className}${element.typeParamsDeclaration} = ${element.genericRecordDeclaration};' : ''}
-      class ${element.mapperName} extends RecordMapperBase<${element.className}> {
+      ${element.needsTypeDef ? '${nodocTag}typedef ${element.className}${element.typeParamsDeclaration} = ${element.genericRecordDeclaration};' : ''}
+      ${nodocTag}class ${element.mapperName} extends RecordMapperBase<${element.className}> {
       
         static ${element.mapperName}? _instance;
         ${element.mapperName}._();
@@ -51,6 +51,7 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
     if (element is AliasRecordMapperElement) {
       output.write('''
       
+      $nodocTag
       extension ${element.className}Mappable${element.typeParamsDeclaration} on ${element.className}${element.typeParams} {
         Map<String, dynamic> toMap() {
           return ${element.mapperName}.ensureInitialized().encodeMap(this);

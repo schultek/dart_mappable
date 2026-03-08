@@ -26,11 +26,10 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
   Future<String> generate() async {
     var output = StringBuffer();
 
-    output.write('''
-      class ${element.mapperName} extends ${element.isDiscriminatingSubclass ? 'Sub' : ''}ClassMapperBase<${element.prefixedClassName}> {
-        ${element.mapperName}._();
-        
-    ''');
+    output.write(
+      '${nodocTag}class ${element.mapperName} extends ${element.isDiscriminatingSubclass ? 'Sub' : ''}ClassMapperBase<${element.prefixedClassName}> {\n'
+      '  ${element.mapperName}._();\n\n',
+    );
 
     generateInitializer(output);
 
@@ -85,7 +84,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
     await _checkMixinUsed();
 
     output.write(
-      'mixin ${element.uniqueClassName}Mappable${element.typeParamsDeclaration} {\n',
+      '${nodocTag}mixin ${element.uniqueClassName}Mappable${element.typeParamsDeclaration} {\n',
     );
 
     generateEncoderMixin(output);
@@ -99,7 +98,7 @@ class ClassMapperGenerator extends MapperGenerator<TargetClassMapperElement>
 
   void _generateExtension(StringBuffer output) {
     output.write(
-      'extension ${element.mapperName}Extension${element.typeParamsDeclaration} on ${element.prefixedClassName}${element.typeParams} {\n',
+      '${nodocTag}extension ${element.mapperName}Extension${element.typeParamsDeclaration} on ${element.prefixedClassName}${element.typeParams} {\n',
     );
     generateEncoderExtensions(output);
     output.writeAll([generateCopyWithExtension()]);
