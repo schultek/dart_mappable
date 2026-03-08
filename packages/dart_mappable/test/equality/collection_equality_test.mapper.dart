@@ -327,7 +327,7 @@ extension MapWrapperValueCopy<$R, $Out>
 
 abstract class MapWrapperCopyWith<$R, $In extends MapWrapper, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>?>
   get values;
   $R call({Map<String, dynamic>? values});
   MapWrapperCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -342,7 +342,7 @@ class _MapWrapperCopyWithImpl<$R, $Out>
   late final ClassMapperBase<MapWrapper> $mapper =
       MapWrapperMapper.ensureInitialized();
   @override
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>?>
   get values => MapCopyWith(
     $value.values,
     (v, t) => ObjectCopyWith(v, $identity, t),

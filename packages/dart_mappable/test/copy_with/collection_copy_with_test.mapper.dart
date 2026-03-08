@@ -14,6 +14,7 @@ class AMapper extends ClassMapperBase<A> {
   static AMapper? _instance;
   static AMapper ensureInitialized() {
     if (_instance == null) {
+      MapperBase.addType<Object>();
       MapperContainer.globals.use(_instance = AMapper._());
     }
     return _instance!;
@@ -23,11 +24,11 @@ class AMapper extends ClassMapperBase<A> {
   final String id = 'A';
   @override
   Function get typeFactory =>
-      <T>(f) => f<A<T>>();
+      <T extends Object>(f) => f<A<T>>();
 
-  static List<dynamic> _$items(A v) => v.items;
-  static dynamic _arg$items<T>(f) => f<List<T>>();
-  static const Field<A, List<dynamic>> _f$items = Field(
+  static List<Object> _$items(A v) => v.items;
+  static dynamic _arg$items<T extends Object>(f) => f<List<T>>();
+  static const Field<A, List<Object>> _f$items = Field(
     'items',
     _$items,
     arg: _arg$items,
@@ -36,23 +37,23 @@ class AMapper extends ClassMapperBase<A> {
   @override
   final MappableFields<A> fields = const {#items: _f$items};
 
-  static A<T> _instantiate<T>(DecodingData data) {
+  static A<T> _instantiate<T extends Object>(DecodingData data) {
     return A(data.dec(_f$items));
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static A<T> fromMap<T>(Map<String, dynamic> map) {
+  static A<T> fromMap<T extends Object>(Map<String, dynamic> map) {
     return ensureInitialized().decodeMap<A<T>>(map);
   }
 
-  static A<T> fromJson<T>(String json) {
+  static A<T> fromJson<T extends Object>(String json) {
     return ensureInitialized().decodeJson<A<T>>(json);
   }
 }
 
-mixin AMappable<T> {
+mixin AMappable<T extends Object> {
   String toJson() {
     return AMapper.ensureInitialized().encodeJson<A<T>>(this as A<T>);
   }
@@ -79,19 +80,21 @@ mixin AMappable<T> {
   }
 }
 
-extension AValueCopy<$R, $Out, T> on ObjectCopyWith<$R, A<T>, $Out> {
+extension AValueCopy<$R, $Out, T extends Object>
+    on ObjectCopyWith<$R, A<T>, $Out> {
   ACopyWith<$R, A<T>, $Out, T> get $asA =>
       $base.as((v, t, t2) => _ACopyWithImpl<$R, $Out, T>(v, t, t2));
 }
 
-abstract class ACopyWith<$R, $In extends A<T>, $Out, T>
+abstract class ACopyWith<$R, $In extends A<T>, $Out, T extends Object>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get items;
   $R call({List<T>? items});
   ACopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _ACopyWithImpl<$R, $Out, T> extends ClassCopyWithBase<$R, A<T>, $Out>
+class _ACopyWithImpl<$R, $Out, T extends Object>
+    extends ClassCopyWithBase<$R, A<T>, $Out>
     implements ACopyWith<$R, A<T>, $Out, T> {
   _ACopyWithImpl(super.value, super.then, super.then2);
 
@@ -192,7 +195,7 @@ extension BValueCopy<$R, $Out, T> on ObjectCopyWith<$R, B<T>, $Out> {
 
 abstract class BCopyWith<$R, $In extends B<T>, $Out, T>
     implements ClassCopyWith<$R, $In, $Out> {
-  MapCopyWith<$R, String, T, ObjectCopyWith<$R, T, T>> get items;
+  MapCopyWith<$R, String, T, ObjectCopyWith<$R, T, T>?> get items;
   $R call({Map<String, T>? items});
   BCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -204,11 +207,12 @@ class _BCopyWithImpl<$R, $Out, T> extends ClassCopyWithBase<$R, B<T>, $Out>
   @override
   late final ClassMapperBase<B> $mapper = BMapper.ensureInitialized();
   @override
-  MapCopyWith<$R, String, T, ObjectCopyWith<$R, T, T>> get items => MapCopyWith(
-    $value.items,
-    (v, t) => ObjectCopyWith(v, $identity, t),
-    (v) => call(items: v),
-  );
+  MapCopyWith<$R, String, T, ObjectCopyWith<$R, T, T>?> get items =>
+      MapCopyWith(
+        $value.items,
+        (v, t) => ObjectCopyWith(v, $identity, t),
+        (v) => call(items: v),
+      );
   @override
   $R call({Map<String, T>? items}) =>
       $apply(FieldCopyWithData({if (items != null) #items: items}));

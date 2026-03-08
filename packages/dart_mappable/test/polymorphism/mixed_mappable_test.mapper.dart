@@ -157,7 +157,7 @@ extension OneValueCopy<$R, $Out> on ObjectCopyWith<$R, One, $Out> {
 abstract class OneCopyWith<$R, $In extends One, $Out>
     implements BaseCopyWith<$R, $In, $Out> {
   @override
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>?>
   get objects;
   @override
   $R call({String? id, String? name, Map<String, dynamic>? objects});
@@ -171,7 +171,7 @@ class _OneCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, One, $Out>
   @override
   late final ClassMapperBase<One> $mapper = OneMapper.ensureInitialized();
   @override
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>?>
   get objects => MapCopyWith(
     $value.objects,
     (v, t) => ObjectCopyWith(v, $identity, t),

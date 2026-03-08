@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 part 'collection_copy_with_test.mapper.dart';
 
 @MappableClass()
-class A<T> with AMappable<T> {
+class A<T extends Object> with AMappable<T> {
   final List<T> items;
 
   A(this.items);
@@ -27,6 +27,9 @@ void main() {
 
       var a3 = a.copyWith.items.at(2).$update((i) => -i);
       expect(a3.items, equals([1, 2, -3, 4, 5]));
+
+      var a4 = a.copyWith.items.firstWhere((i) => i > 2).$update((i) => i * 2);
+      expect(a4.items, equals([1, 2, 6, 4, 5]));
     });
 
     test('add / insert', () {

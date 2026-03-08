@@ -759,7 +759,7 @@ extension NamedItemListValueCopy<$R, $Out, T>
 abstract class NamedItemListCopyWith<$R, $In extends NamedItemList<T>, $Out, T>
     implements ItemListCopyWith<$R, $In, $Out, T> {
   @override
-  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get items;
+  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>?> get items;
   @override
   $R call({String? name, covariant List<T>? items});
   NamedItemListCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
@@ -776,7 +776,7 @@ class _NamedItemListCopyWithImpl<$R, $Out, T>
   late final ClassMapperBase<NamedItemList> $mapper =
       NamedItemListMapper.ensureInitialized();
   @override
-  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get items => ListCopyWith(
+  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>?> get items => ListCopyWith(
     $value.items,
     (v, t) => ObjectCopyWith(v, $identity, t),
     (v) => call(items: v),
@@ -932,7 +932,7 @@ abstract class KeyedItemListCopyWith<
 >
     implements ItemListCopyWith<$R, $In, $Out, T> {
   @override
-  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get items;
+  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>?> get items;
   @override
   $R call({K? key, covariant List<T>? items});
   KeyedItemListCopyWith<$R2, $In, $Out2, K, T> $chain<$R2, $Out2>(
@@ -949,7 +949,7 @@ class _KeyedItemListCopyWithImpl<$R, $Out, K, T>
   late final ClassMapperBase<KeyedItemList> $mapper =
       KeyedItemListMapper.ensureInitialized();
   @override
-  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>> get items => ListCopyWith(
+  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>?> get items => ListCopyWith(
     $value.items,
     (v, t) => ObjectCopyWith(v, $identity, t),
     (v) => call(items: v),
