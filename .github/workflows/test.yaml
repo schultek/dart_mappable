@@ -34,10 +34,10 @@ jobs:
         run: melos run analyze
 
       - name: Run Unit tests
-        run: melos run coverage
+        run: melos run coverage --no-select
 
       - name: Upload Coverage
         uses: codecov/codecov-action@v3
         with:
-          files: coverage/lcov.info
+          files: coverage/*_lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}

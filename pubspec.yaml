@@ -22,22 +22,29 @@ melos:
 
   scripts:
     test:
-      run: melos exec -- 'dart test'
+      run: dart test
+      exec:
+        concurrency: 1
       packageFilters:
         scope:
           - dart_mappable
+          - dart_mappable_builder
           - package_comparison
     coverage:
       run: |
-        melos exec -- 'dart test --coverage=coverage'
-        melos exec -- 'dart pub global run coverage:format_coverage --check-ignore --report-on=lib --lcov -o "$MELOS_ROOT_PATH/coverage/lcov.info" -i ./coverage'
+        dart test --coverage=coverage &&
+        dart pub global run coverage:format_coverage --check-ignore --report-on=lib --lcov -o "$MELOS_ROOT_PATH/coverage/\$MELOS_PACKAGE_NAME_lcov.info" -i ./coverage
+      exec:
+        concurrency: 1
       packageFilters:
-        scope: dart_mappable
+        scope: 
+          - dart_mappable
+          - dart_mappable_builder
     build:
-      run: melos exec -- 'dart run build_runner build -d'
+      exec: dart run build_runner build -d
       packageFilters:
         scope:
     format:
-      run: melos exec -- 'dart format . --set-exit-if-changed'
+      exec: dart format . --set-exit-if-changed
     analyze:
-      run: melos exec -- 'dart analyze . --fatal-infos'
+      exec: dart analyze . --fatal-infos
