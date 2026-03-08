@@ -1,3 +1,7 @@
+# 4.6.5
+
+- Added `firstWhere` to `ListCopyWith` for chaining copyWith calls on a list element based on a predicate function.
+
 # 4.6.1
 
 - Record mappers now correctly uses hooks specified on the `@MappableRecord` annotation.
