@@ -58,7 +58,6 @@ class CopyParamElement {
           name: name,
           itemName: itemPrefixedName,
           itemHasSuperElement: itemConfig?.superElement != null,
-          forceNullable: element.subElements.isNotEmpty,
           valueIndex: valueIndex,
         );
       }
@@ -147,18 +146,23 @@ class CollectionCopyParamElement extends CopyParamElement {
     required super.name,
     required this.itemName,
     required this.itemHasSuperElement,
-    required this.forceNullable,
     required this.valueIndex,
   }) : super(hasSubConfigs: false);
 
   final String itemName;
   final bool itemHasSuperElement;
-  final bool forceNullable;
   final int valueIndex;
 
   late DartType itemType = (p.type as InterfaceType).typeArguments[valueIndex];
-  late bool itemTypeNullable =
-      itemType.nullabilitySuffix == NullabilitySuffix.question;
+  late bool itemTypeNullable = _isPossiblyNullable(itemType);
+
+  static bool _isPossiblyNullable(DartType t) {
+    return switch (t) {
+      DynamicType _ => true,
+      TypeParameterType t => _isPossiblyNullable(t.bound),
+      _ => t.nullabilitySuffix == NullabilitySuffix.question,
+    };
+  }
 
   late String itemTypeParam =
       ', ${parent.prefixedType(itemType, withNullability: false)}';
@@ -169,7 +173,7 @@ class CollectionCopyParamElement extends CopyParamElement {
   String get fieldTypeParams {
     if (itemName == 'Object') {
       var objectTypeParam = ', ${parent.prefixedType(itemType)}';
-      return '${super.fieldTypeParams}, ObjectCopyWith<\$R$objectTypeParam$objectTypeParam>${itemTypeNullable || forceNullable ? '?' : ''}';
+      return '${super.fieldTypeParams}, ObjectCopyWith<\$R$objectTypeParam$objectTypeParam>${itemTypeNullable ? '?' : ''}';
     }
 
     return '${super.fieldTypeParams}, ${itemName}CopyWith<\$R$itemTypeParam$itemTypeParam$itemSelfTypeParams>${itemTypeNullable ? '?' : ''}';

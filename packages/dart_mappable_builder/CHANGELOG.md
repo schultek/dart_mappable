@@ -1,8 +1,8 @@
-# 4.6.X
+## 4.7.0
 
-- Added support for `@MappableName()` on enum values.
-- Enum mapper extensions now generate `toName()` with convenience `name` getter.
-- Enum mapper extensions now generate convenience `value` getter delegating to previously available `toValue()`.
+- Allow `analyzer` 10.0.0.
+- Add `useNodoc` option for excluding generated classes from dartdoc output.
+- Fix type signature of nested `copyWith` parameters in some cases.
 
 # 4.6.4
 

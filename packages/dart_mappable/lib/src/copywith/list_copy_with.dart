@@ -20,6 +20,9 @@ abstract class ListCopyWith<Result, Elem, Copy> {
   /// Access the copyWith interface for the item at [index]
   Copy at(int index);
 
+  /// Access the copyWith interface for the first item that passes [test]
+  Copy firstWhere(bool Function(Elem) test);
+
   /// Returns a new list with the item added to the end of the list
   Result add(Elem v);
 
@@ -69,6 +72,15 @@ class _ListCopyWith<Result, Elem, Copy>
 
   @override
   Copy at(int index) => _item($value[index], (v) => replace(index, v));
+
+  @override
+  Copy firstWhere(bool Function(Elem) test) {
+    final index = $value.indexWhere(test);
+    if (index == -1) {
+      throw StateError('No element found matching the predicate');
+    }
+    return at(index);
+  }
 
   @override
   Result add(Elem v) => addAll([v]);

@@ -16,6 +16,7 @@ class MappableOptions {
   final int? generateMethods;
   final InitializerScope? initializerScope;
   final Map<String, String> renameMethods;
+  final bool? useNodoc;
   final Map<String, List<String>> buildExtensions;
 
   MappableOptions({
@@ -26,6 +27,7 @@ class MappableOptions {
     this.generateMethods,
     this.initializerScope,
     this.renameMethods = const {},
+    this.useNodoc,
     this.buildExtensions = _defaultExtensions,
   });
 
@@ -39,6 +41,7 @@ class MappableOptions {
       ),
       initializerScope = null,
       renameMethods = toMap(options['renameMethods'] ?? {}),
+      useNodoc = options['useNodoc'] as bool?,
       buildExtensions = validatedBuildExtensionsFrom(
         options,
         _defaultExtensions,
@@ -54,6 +57,7 @@ class MappableOptions {
       discriminatorKey: options.discriminatorKey ?? discriminatorKey,
       generateMethods: options.generateMethods ?? generateMethods,
       initializerScope: options.initializerScope ?? initializerScope,
+      useNodoc: options.useNodoc ?? useNodoc,
       renameMethods: {...renameMethods, ...options.renameMethods},
     );
   }
@@ -66,6 +70,7 @@ class MappableOptions {
       ignoreNull: object.read('ignoreNull')?.toBoolValue(),
       discriminatorKey: object.read('discriminatorKey')?.toStringValue(),
       generateMethods: object.read('generateMethods')?.toIntValue(),
+      useNodoc: object.read('useNodoc')?.toBoolValue(),
       initializerScope:
           initScope?.isNull ?? true
               ? null
@@ -73,6 +78,8 @@ class MappableOptions {
                   .values[initScope?.read('index')?.toIntValue() ?? 0],
     );
   }
+
+  String get nodocTag => useNodoc ?? false ? '/// @nodoc\n' : '';
 }
 
 int? parseGenerateMethods(List<String>? flags) {

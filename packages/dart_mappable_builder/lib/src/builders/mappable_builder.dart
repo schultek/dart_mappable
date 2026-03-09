@@ -148,7 +148,7 @@ class MappableBuilder implements Builder {
       ),
     );
 
-    output.write('void initializeMappers() {\n');
+    output.write('${options.nodocTag}void initializeMappers() {\n');
 
     for (var i = 0; i < discovered.length; i++) {
       for (var e in discovered[i].value) {

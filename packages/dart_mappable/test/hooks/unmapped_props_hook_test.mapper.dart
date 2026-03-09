@@ -88,7 +88,7 @@ extension AValueCopy<$R, $Out> on ObjectCopyWith<$R, A, $Out> {
 
 abstract class ACopyWith<$R, $In extends A, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>?>
   get unmappedProps;
   $R call({Map<String, dynamic>? unmappedProps, String? a});
   ACopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -101,7 +101,7 @@ class _ACopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, A, $Out>
   @override
   late final ClassMapperBase<A> $mapper = AMapper.ensureInitialized();
   @override
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>?>
   get unmappedProps => MapCopyWith(
     $value.unmappedProps,
     (v, t) => ObjectCopyWith(v, $identity, t),

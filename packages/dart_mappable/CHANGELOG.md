@@ -1,8 +1,7 @@
-# 4.6.X
+# 4.7.0
 
-- Added `@MappableName()` annotation for enum values to define custom enum names.
-- Added generated `toName()` method for enums with convenience `name` getter.
-- Added convenience `value` getter for enums, delegating to `toValue()`.
+- Added `firstWhere` to `ListCopyWith` for chaining copyWith calls on a list element based on a predicate function.
+- Add `useNodoc` option for excluding generated classes from dartdoc output.
 
 # 4.6.1
 

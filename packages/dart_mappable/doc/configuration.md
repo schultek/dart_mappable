@@ -69,16 +69,18 @@ you can also define a subset of their properties as global options in the `build
 global_options:
   dart_mappable_builder:
     options:
-      # the case style for the map keys, defaults to 'none'
+      # The case style for the map keys, defaults to 'none'
       caseStyle: none # or 'camelCase', 'snakeCase', etc.
-      # the case style for stringified enum values, defaults to 'none'
+      # The case style for stringified enum values, defaults to 'none'
       enumCaseStyle: none # or 'camelCase', 'snakeCase', etc.
-      # if true removes all map keys with null values
+      # If 'true', removes all map keys with null values
       ignoreNull: false # or true
-      # used as property name for type discriminators
+      # Used as property name for type discriminators
       discriminatorKey: type
-      # used to specify which methods to generate (all by default)
+      # Used to specify which methods to generate (all by default)
       generateMethods: [decode, encode, copy, stringify, equals]
+      # If 'true', adds '/// @nodoc' to all generated classes
+      useNodoc: false # or true
 ```
 
 ### `build_extensions`

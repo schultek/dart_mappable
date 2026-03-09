@@ -527,7 +527,7 @@ extension SingleSettingValueCopy<$R, $Out, T>
 
 abstract class SingleSettingCopyWith<$R, $In extends SingleSetting<T>, $Out, T>
     implements ClassCopyWith<$R, $In, $Out> {
-  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>>? get properties;
+  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>?>? get properties;
   $R call({List<T>? properties});
   SingleSettingCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
@@ -543,7 +543,7 @@ class _SingleSettingCopyWithImpl<$R, $Out, T>
   late final ClassMapperBase<SingleSetting> $mapper =
       SingleSettingMapper.ensureInitialized();
   @override
-  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>>? get properties =>
+  ListCopyWith<$R, T, ObjectCopyWith<$R, T, T>?>? get properties =>
       $value.properties != null
       ? ListCopyWith(
           $value.properties!,

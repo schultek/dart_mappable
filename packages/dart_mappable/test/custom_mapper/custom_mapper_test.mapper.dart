@@ -100,7 +100,7 @@ extension TestObjValueCopy<$R, $Out> on ObjectCopyWith<$R, TestObj, $Out> {
 
 abstract class TestObjCopyWith<$R, $In extends TestObj, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>?>
   get unmappedProps;
   $R call({BigInt? x, Map<String, dynamic>? unmappedProps});
   TestObjCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -115,7 +115,7 @@ class _TestObjCopyWithImpl<$R, $Out>
   late final ClassMapperBase<TestObj> $mapper =
       TestObjMapper.ensureInitialized();
   @override
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>?>
   get unmappedProps => MapCopyWith(
     $value.unmappedProps,
     (v, t) => ObjectCopyWith(v, $identity, t),

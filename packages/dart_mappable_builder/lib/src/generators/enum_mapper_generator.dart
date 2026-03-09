@@ -8,6 +8,7 @@ class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
   @override
   Future<String> generate() async {
     return '''
+        $nodocTag
         class ${element.mapperName} extends EnumMapper<${element.prefixedClassName}> {
           ${element.mapperName}._();
           
@@ -36,6 +37,7 @@ class EnumMapperGenerator extends MapperGenerator<TargetEnumMapperElement> {
           };
         }
         
+        $nodocTag
         extension ${element.mapperName}Extension on ${element.prefixedClassName} {
           ${element.hasAllStringValues ? 'String' : 'dynamic'} toValue() {
             ${element.mapperName}.ensureInitialized();
