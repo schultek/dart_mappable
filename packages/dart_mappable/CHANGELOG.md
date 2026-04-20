@@ -1,3 +1,7 @@
+# 4.8.0
+
+- Bump `analyzer` to `>=10.0.0 <12.0.0`.
+
 # 4.7.0
 
 - Added `firstWhere` to `ListCopyWith` for chaining copyWith calls on a list element based on a predicate function.
