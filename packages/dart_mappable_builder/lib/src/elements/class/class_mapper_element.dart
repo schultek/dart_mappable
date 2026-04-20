@@ -139,8 +139,7 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
     yield* extendsElement?._allFields ?? [];
 
     for (var getter in element.getters) {
-      // ignore: deprecated_member_use
-      if (getter.isStatic || getter.isSynthetic) continue;
+      if (getter.isStatic || !getter.isOriginDeclaration) continue;
 
       if (fieldChecker.hasAnnotationOf(getter)) {
         yield getter.variable;
@@ -148,8 +147,7 @@ abstract class ClassMapperElement extends InterfaceMapperElement<ClassElement>
     }
 
     for (var field in element.fields) {
-      // ignore: deprecated_member_use
-      if (field.isStatic || field.isSynthetic) continue;
+      if (field.isStatic || !field.isOriginDeclaration) continue;
 
       if (field.isPublic || fieldChecker.hasAnnotationOf(field)) {
         yield field;
