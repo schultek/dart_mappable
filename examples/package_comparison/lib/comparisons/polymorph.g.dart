@@ -7,25 +7,21 @@ part of 'polymorph.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$AnimalAToJson(AnimalA instance) => <String, dynamic>{
-      'name': instance.name,
-    };
+  'name': instance.name,
+};
 
-CatA _$CatAFromJson(Map<String, dynamic> json) => CatA(
-      json['name'] as String,
-      json['color'] as String,
-    );
+CatA _$CatAFromJson(Map<String, dynamic> json) =>
+    CatA(json['name'] as String, json['color'] as String);
 
 Map<String, dynamic> _$CatAToJson(CatA instance) => <String, dynamic>{
-      'name': instance.name,
-      'color': instance.color,
-    };
+  'name': instance.name,
+  'color': instance.color,
+};
 
-DogA _$DogAFromJson(Map<String, dynamic> json) => DogA(
-      json['name'] as String,
-      (json['age'] as num).toInt(),
-    );
+DogA _$DogAFromJson(Map<String, dynamic> json) =>
+    DogA(json['name'] as String, (json['age'] as num).toInt());
 
 Map<String, dynamic> _$DogAToJson(DogA instance) => <String, dynamic>{
-      'name': instance.name,
-      'age': instance.age,
-    };
+  'name': instance.name,
+  'age': instance.age,
+};

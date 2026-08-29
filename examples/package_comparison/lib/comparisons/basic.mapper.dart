@@ -24,9 +24,7 @@ class PersonCMapper extends ClassMapperBase<PersonC> {
   static const Field<PersonC, String> _f$name = Field('name', _$name);
 
   @override
-  final MappableFields<PersonC> fields = const {
-    #name: _f$name,
-  };
+  final MappableFields<PersonC> fields = const {#name: _f$name};
 
   static PersonC _instantiate(DecodingData data) {
     return PersonC(name: data.dec(_f$name));
@@ -46,13 +44,15 @@ class PersonCMapper extends ClassMapperBase<PersonC> {
 
 mixin PersonCMappable {
   String toJson() {
-    return PersonCMapper.ensureInitialized()
-        .encodeJson<PersonC>(this as PersonC);
+    return PersonCMapper.ensureInitialized().encodeJson<PersonC>(
+      this as PersonC,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return PersonCMapper.ensureInitialized()
-        .encodeMap<PersonC>(this as PersonC);
+    return PersonCMapper.ensureInitialized().encodeMap<PersonC>(
+      this as PersonC,
+    );
   }
 
   PersonCCopyWith<PersonC, PersonC, PersonC> get copyWith =>
@@ -64,8 +64,10 @@ mixin PersonCMappable {
 
   @override
   bool operator ==(Object other) {
-    return PersonCMapper.ensureInitialized()
-        .equalsValue(this as PersonC, other);
+    return PersonCMapper.ensureInitialized().equalsValue(
+      this as PersonC,
+      other,
+    );
   }
 
   @override

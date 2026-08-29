@@ -21,11 +21,17 @@ class PersonBMapper extends ClassMapperBase<PersonB> {
   final String id = 'PersonB';
 
   static String _$firstName(PersonB v) => v.firstName;
-  static const Field<PersonB, String> _f$firstName =
-      Field('firstName', _$firstName, key: 'first_name');
+  static const Field<PersonB, String> _f$firstName = Field(
+    'firstName',
+    _$firstName,
+    key: 'first_name',
+  );
   static String _$lastName(PersonB v) => v.lastName;
-  static const Field<PersonB, String> _f$lastName =
-      Field('lastName', _$lastName, key: 'surName');
+  static const Field<PersonB, String> _f$lastName = Field(
+    'lastName',
+    _$lastName,
+    key: 'surName',
+  );
 
   @override
   final MappableFields<PersonB> fields = const {
@@ -35,7 +41,9 @@ class PersonBMapper extends ClassMapperBase<PersonB> {
 
   static PersonB _instantiate(DecodingData data) {
     return PersonB(
-        firstName: data.dec(_f$firstName), lastName: data.dec(_f$lastName));
+      firstName: data.dec(_f$firstName),
+      lastName: data.dec(_f$lastName),
+    );
   }
 
   @override
@@ -52,13 +60,15 @@ class PersonBMapper extends ClassMapperBase<PersonB> {
 
 mixin PersonBMappable {
   String toJson() {
-    return PersonBMapper.ensureInitialized()
-        .encodeJson<PersonB>(this as PersonB);
+    return PersonBMapper.ensureInitialized().encodeJson<PersonB>(
+      this as PersonB,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return PersonBMapper.ensureInitialized()
-        .encodeMap<PersonB>(this as PersonB);
+    return PersonBMapper.ensureInitialized().encodeMap<PersonB>(
+      this as PersonB,
+    );
   }
 
   PersonBCopyWith<PersonB, PersonB, PersonB> get copyWith =>
@@ -70,8 +80,10 @@ mixin PersonBMappable {
 
   @override
   bool operator ==(Object other) {
-    return PersonBMapper.ensureInitialized()
-        .equalsValue(this as PersonB, other);
+    return PersonBMapper.ensureInitialized().equalsValue(
+      this as PersonB,
+      other,
+    );
   }
 
   @override
@@ -100,14 +112,17 @@ class _PersonBCopyWithImpl<$R, $Out>
   late final ClassMapperBase<PersonB> $mapper =
       PersonBMapper.ensureInitialized();
   @override
-  $R call({String? firstName, String? lastName}) => $apply(FieldCopyWithData({
-        if (firstName != null) #firstName: firstName,
-        if (lastName != null) #lastName: lastName
-      }));
+  $R call({String? firstName, String? lastName}) => $apply(
+    FieldCopyWithData({
+      if (firstName != null) #firstName: firstName,
+      if (lastName != null) #lastName: lastName,
+    }),
+  );
   @override
   PersonB $make(CopyWithData data) => PersonB(
-      firstName: data.get(#firstName, or: $value.firstName),
-      lastName: data.get(#lastName, or: $value.lastName));
+    firstName: data.get(#firstName, or: $value.firstName),
+    lastName: data.get(#lastName, or: $value.lastName),
+  );
 
   @override
   PersonBCopyWith<$R2, PersonB, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>

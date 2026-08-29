@@ -100,8 +100,11 @@ void comparePolymorph() {
       test('3️⃣ dart_mappable', () {
         // 🟢 built in
         expect(
-          AnimalBMapper.fromMap(
-              {'type': 'CatB', 'name': 'Kitty', 'color': 'brown'}),
+          AnimalBMapper.fromMap({
+            'type': 'CatB',
+            'name': 'Kitty',
+            'color': 'brown',
+          }),
           equals(CatB('Kitty', 'brown')),
         );
         expect(

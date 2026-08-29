@@ -116,39 +116,29 @@ void compareBasic() {
       test('2️⃣ dart_json_mapper', () {
         expect(
           JsonMapper.toJson(
-              PersonB(name: 'Bob'), d.SerializationOptions(indent: '')),
+            PersonB(name: 'Bob'),
+            d.SerializationOptions(indent: ''),
+          ),
           equals('{"name":"Bob"}'),
         );
       });
 
       test('3️⃣ dart_mappable', () {
-        expect(
-          PersonC(name: 'Clara').toJson(),
-          equals('{"name":"Clara"}'),
-        );
+        expect(PersonC(name: 'Clara').toJson(), equals('{"name":"Clara"}'));
       });
     });
 
     group('🆚 encode to map', () {
       test('1️⃣ json_serializable', () {
-        expect(
-          PersonA(name: 'Alice').toJson(),
-          equals({'name': 'Alice'}),
-        );
+        expect(PersonA(name: 'Alice').toJson(), equals({'name': 'Alice'}));
       });
 
       test('2️⃣ dart_json_mapper', () {
-        expect(
-          JsonMapper.toMap(PersonB(name: 'Bob')),
-          equals({'name': 'Bob'}),
-        );
+        expect(JsonMapper.toMap(PersonB(name: 'Bob')), equals({'name': 'Bob'}));
       });
 
       test('3️⃣ dart_mappable', () {
-        expect(
-          PersonC(name: 'Clara').toMap(),
-          equals({'name': 'Clara'}),
-        );
+        expect(PersonC(name: 'Clara').toMap(), equals({'name': 'Clara'}));
       });
     });
   });
