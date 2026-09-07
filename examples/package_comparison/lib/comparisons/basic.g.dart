@@ -6,10 +6,9 @@ part of 'basic.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PersonA _$PersonAFromJson(Map<String, dynamic> json) => PersonA(
-      name: json['name'] as String,
-    );
+PersonA _$PersonAFromJson(Map<String, dynamic> json) =>
+    PersonA(name: json['name'] as String);
 
 Map<String, dynamic> _$PersonAToJson(PersonA instance) => <String, dynamic>{
-      'name': instance.name,
-    };
+  'name': instance.name,
+};

@@ -12,7 +12,7 @@ environment:
 resolution: workspace
 
 dependencies:
-  analyzer: '>=13.0.0 <14.0.0'
+  analyzer: '>=13.0.0 <15.0.0'
   ansicolor: ^2.0.1
   build: ^4.0.0
   collection: ^1.15.0

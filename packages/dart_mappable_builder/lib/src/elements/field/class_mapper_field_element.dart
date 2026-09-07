@@ -125,7 +125,8 @@ class ClassMapperFieldElement extends MapperFieldElement {
     }
 
     var node = await p.getResolvedNode();
-    if (node is FormalParameter && node.defaultClause != null &&
+    if (node is FormalParameter &&
+        node.defaultClause != null &&
         node.defaultClause!.value.toSource() != 'null') {
       if (node.defaultClause!.value case SimpleIdentifier(
         element: PropertyAccessorElement(enclosingElement: ClassElement clazz),

@@ -24,13 +24,14 @@ class BoxCMapper extends ClassMapperBase<BoxC> {
 
   static dynamic _$content(BoxC v) => v.content;
   static dynamic _arg$content<T>(f) => f<T>();
-  static const Field<BoxC, dynamic> _f$content =
-      Field('content', _$content, arg: _arg$content);
+  static const Field<BoxC, dynamic> _f$content = Field(
+    'content',
+    _$content,
+    arg: _arg$content,
+  );
 
   @override
-  final MappableFields<BoxC> fields = const {
-    #content: _f$content,
-  };
+  final MappableFields<BoxC> fields = const {#content: _f$content};
 
   static BoxC<T> _instantiate<T>(DecodingData data) {
     return BoxC(content: data.dec(_f$content));
@@ -123,9 +124,7 @@ class ContentCMapper extends ClassMapperBase<ContentC> {
   static const Field<ContentC, String> _f$data = Field('data', _$data);
 
   @override
-  final MappableFields<ContentC> fields = const {
-    #data: _f$data,
-  };
+  final MappableFields<ContentC> fields = const {#data: _f$data};
 
   static ContentC _instantiate(DecodingData data) {
     return ContentC(data.dec(_f$data));
@@ -145,13 +144,15 @@ class ContentCMapper extends ClassMapperBase<ContentC> {
 
 mixin ContentCMappable {
   String toJson() {
-    return ContentCMapper.ensureInitialized()
-        .encodeJson<ContentC>(this as ContentC);
+    return ContentCMapper.ensureInitialized().encodeJson<ContentC>(
+      this as ContentC,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return ContentCMapper.ensureInitialized()
-        .encodeMap<ContentC>(this as ContentC);
+    return ContentCMapper.ensureInitialized().encodeMap<ContentC>(
+      this as ContentC,
+    );
   }
 
   ContentCCopyWith<ContentC, ContentC, ContentC> get copyWith =>
@@ -163,8 +164,10 @@ mixin ContentCMappable {
 
   @override
   bool operator ==(Object other) {
-    return ContentCMapper.ensureInitialized()
-        .equalsValue(this as ContentC, other);
+    return ContentCMapper.ensureInitialized().equalsValue(
+      this as ContentC,
+      other,
+    );
   }
 
   @override
@@ -201,6 +204,6 @@ class _ContentCCopyWithImpl<$R, $Out>
 
   @override
   ContentCCopyWith<$R2, ContentC, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _ContentCCopyWithImpl($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _ContentCCopyWithImpl($value, $cast, t);
 }

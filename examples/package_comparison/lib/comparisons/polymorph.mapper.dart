@@ -26,13 +26,14 @@ class AnimalBMapper extends ClassMapperBase<AnimalB> {
   static const Field<AnimalB, String> _f$name = Field('name', _$name);
 
   @override
-  final MappableFields<AnimalB> fields = const {
-    #name: _f$name,
-  };
+  final MappableFields<AnimalB> fields = const {#name: _f$name};
 
   static AnimalB _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
-        'AnimalB', 'type', '${data.value['type']}');
+      'AnimalB',
+      'type',
+      '${data.value['type']}',
+    );
   }
 
   @override
@@ -80,10 +81,7 @@ class CatBMapper extends SubClassMapperBase<CatB> {
   static const Field<CatB, String> _f$color = Field('color', _$color);
 
   @override
-  final MappableFields<CatB> fields = const {
-    #name: _f$name,
-    #color: _f$color,
-  };
+  final MappableFields<CatB> fields = const {#name: _f$name, #color: _f$color};
 
   @override
   final String discriminatorKey = 'type';
@@ -154,11 +152,17 @@ class _CatBCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, CatB, $Out>
   @override
   late final ClassMapperBase<CatB> $mapper = CatBMapper.ensureInitialized();
   @override
-  $R call({String? name, String? color}) => $apply(FieldCopyWithData(
-      {if (name != null) #name: name, if (color != null) #color: color}));
+  $R call({String? name, String? color}) => $apply(
+    FieldCopyWithData({
+      if (name != null) #name: name,
+      if (color != null) #color: color,
+    }),
+  );
   @override
   CatB $make(CopyWithData data) => CatB(
-      data.get(#name, or: $value.name), data.get(#color, or: $value.color));
+    data.get(#name, or: $value.name),
+    data.get(#color, or: $value.color),
+  );
 
   @override
   CatBCopyWith<$R2, CatB, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
@@ -186,10 +190,7 @@ class DogBMapper extends SubClassMapperBase<DogB> {
   static const Field<DogB, int> _f$age = Field('age', _$age);
 
   @override
-  final MappableFields<DogB> fields = const {
-    #name: _f$name,
-    #age: _f$age,
-  };
+  final MappableFields<DogB> fields = const {#name: _f$name, #age: _f$age};
 
   @override
   final String discriminatorKey = 'type';
@@ -260,8 +261,12 @@ class _DogBCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, DogB, $Out>
   @override
   late final ClassMapperBase<DogB> $mapper = DogBMapper.ensureInitialized();
   @override
-  $R call({String? name, int? age}) => $apply(FieldCopyWithData(
-      {if (name != null) #name: name, if (age != null) #age: age}));
+  $R call({String? name, int? age}) => $apply(
+    FieldCopyWithData({
+      if (name != null) #name: name,
+      if (age != null) #age: age,
+    }),
+  );
   @override
   DogB $make(CopyWithData data) =>
       DogB(data.get(#name, or: $value.name), data.get(#age, or: $value.age));

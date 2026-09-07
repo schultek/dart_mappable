@@ -19,8 +19,9 @@ class BoxA<T> {
 
   // Required Boilerplate
   factory BoxA.fromJson(
-          Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
-      _$BoxAFromJson(json, fromJsonT);
+    Map<String, dynamic> json,
+    T Function(Object? json) fromJsonT,
+  ) => _$BoxAFromJson(json, fromJsonT);
 
   // Required Boilerplate
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
@@ -92,7 +93,7 @@ void compareGeneric() {
         // 🟠 requires manual handling of objects (here: cast to map without type checking)
         expect(
           BoxA.fromJson({
-            'content': {'data': 'abcd'}
+            'content': {'data': 'abcd'},
           }, (o) => ContentA.fromJson(o as Map<String, dynamic>)),
           predicate<BoxA<ContentA>>((b) => b.content.data == 'abcd'),
         );
@@ -102,7 +103,7 @@ void compareGeneric() {
         // 🔴 unsupported, only can decode to BoxB<dynamic>
         expect(
           () => d.JsonMapper.fromMap<BoxB<ContentB>>({
-            'content': {'data': 'abcd'}
+            'content': {'data': 'abcd'},
           }),
           throwsA(isA<TypeError>()),
         );
@@ -110,10 +111,11 @@ void compareGeneric() {
         // 🔴 incorrect, doesn't decode ContentB
         expect(
           d.JsonMapper.fromMap<BoxB<dynamic>>({
-            'content': {'data': 'abcd'}
+            'content': {'data': 'abcd'},
           }),
           predicate<BoxB<dynamic>>(
-              (b) => equals({'data': 'abcd'}).matches(b.content, {})),
+            (b) => equals({'data': 'abcd'}).matches(b.content, {}),
+          ),
         );
       });
 
@@ -121,7 +123,7 @@ void compareGeneric() {
         // 🟢 allows to use [equals] because of [operator ==] override
         expect(
           BoxCMapper.fromMap<ContentC>({
-            'content': {'data': 'abcd'}
+            'content': {'data': 'abcd'},
           }),
           equals(BoxC(content: ContentC('abcd'))),
         );
@@ -134,7 +136,7 @@ void compareGeneric() {
         expect(
           BoxA(content: ContentA('abcd')).toJson((c) => c.toJson()),
           equals({
-            'content': {'data': 'abcd'}
+            'content': {'data': 'abcd'},
           }),
         );
       });
@@ -143,7 +145,7 @@ void compareGeneric() {
         expect(
           d.JsonMapper.toMap(BoxB(content: ContentB('abcd'))),
           equals({
-            'content': {'data': 'abcd'}
+            'content': {'data': 'abcd'},
           }),
         );
 
@@ -157,7 +159,7 @@ void compareGeneric() {
         expect(
           BoxC(content: ContentC('abcd')).toMap(),
           equals({
-            'content': {'data': 'abcd'}
+            'content': {'data': 'abcd'},
           }),
         );
       });
@@ -187,8 +189,9 @@ void compareGeneric() {
         expect(
           () => BoxCMapper.fromMap<ContentC>({'content': '123'}),
           throwsMapperException(
-              'Failed to decode (BoxC<ContentC>).content(ContentC): '
-              'Expected a value of type Map<String, dynamic>, but got type String.'),
+            'Failed to decode (BoxC<ContentC>).content(ContentC): '
+            'Expected a value of type Map<String, dynamic>, but got type String.',
+          ),
         );
       });
     });
@@ -227,7 +230,7 @@ void compareGeneric() {
 
         expect(
           decode<BoxC<ContentC>>({
-            'content': {'data': 'abcd'}
+            'content': {'data': 'abcd'},
           }),
           equals(BoxC<ContentC>(content: ContentC('abcd'))),
         );

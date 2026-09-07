@@ -44,7 +44,8 @@ void compareRenaming() {
         expect(
           PersonA.fromJson({'first_name': 'Alice', 'surName': 'A'}),
           predicate<PersonA>(
-              (p) => p.firstName == 'Alice' && p.lastName == 'A'),
+            (p) => p.firstName == 'Alice' && p.lastName == 'A',
+          ),
         );
       });
 
