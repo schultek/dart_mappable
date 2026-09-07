@@ -179,6 +179,107 @@ class C extends A with CMappable {
 }
 ```
 
+## Implements
+
+`implements` works the same way as `extends` for polymorphism. Put `@MappableClass` and the
+generated mixin on the interface **and** on each implementing class, and set `discriminatorKey`
+on the interface.
+
+You cannot pass fields with `super.` when using `implements`, so redeclare them on the subclass.
+
+```dart
+@MappableClass(discriminatorKey: 'type')
+abstract class Animal with AnimalMappable {
+  Animal(this.name);
+  final String name;
+}
+
+@MappableClass()
+class Cat with CatMappable implements Animal {
+  Cat(this.name, this.color);
+
+  @override
+  final String name;
+  final String color;
+}
+
+@MappableClass(discriminatorValue: 'puppy')
+class Dog with DogMappable implements Animal {
+  Dog(this.name, this.age);
+
+  @override
+  final String name;
+  final int age;
+}
+
+void main() {
+  String catJson = Cat('Judy', 'black').toJson();
+  print(catJson); // {"name":"Judy","color":"black","type":"Cat"}
+
+  Animal myPet = AnimalMapper.fromJson(catJson);
+  print(myPet.runtimeType); // Cat
+}
+```
+
+`includeSubClasses`, custom `discriminatorValue`s, and factory constructors on the interface all
+apply the same as with `extends`. A class can implement more than one mappable interface.
+
+## Mixins (`with`)
+
+Every mappable class already uses `with ClassMappable`. That generated mixin is only there for
+`toJson`, `copyWith`, equality, and so on. It is **not** a polymorphic parent.
+
+A **user-defined** mixin is also not a polymorphic parent. The builder only follows `extends` and
+`implements`, so a mixin cannot be a discriminator base. Use the mixin for shared fields or
+behavior, and put those fields on the class constructor so they are serialized.
+
+Apply your mixins first and keep the generated `*Mappable` mixin last:
+
+```dart
+mixin Named {
+  String get name;
+}
+
+@MappableClass()
+class Person with Named, PersonMappable {
+  Person(this.name, this.age);
+
+  @override
+  final String name;
+  final int age;
+}
+```
+
+Do not put `@MappableField` on the mixin (or on an interface constructor). Annotate the
+constructor parameter or field on the mappable class itself.
+
+## Mixins and Implements together
+
+To share a mixin **and** decode through an interface, combine both:
+
+```dart
+mixin Named {
+  String get name;
+}
+
+@MappableClass(discriminatorKey: 'type')
+abstract class Animal with AnimalMappable {
+  String get name;
+}
+
+@MappableClass()
+class Cat with Named, CatMappable implements Animal {
+  Cat(this.name, this.color);
+
+  @override
+  final String name;
+  final String color;
+}
+```
+
+If you need a polymorphic hierarchy, prefer `extends` or `implements`. Use `with` for extra
+behavior on top of that.
+
 ---
 
 <p align="right"><a href="../topics/Generics-topic.html">Next: Generics</a></p>
