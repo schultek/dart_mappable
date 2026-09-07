@@ -107,8 +107,15 @@ class MappableBuilder implements Builder {
       languageVersion: DartFormatter.latestLanguageVersion,
     ).format(output.join('\n\n'));
 
+    var langOverride = group.library.languageVersion.override;
+    var langComment =
+        langOverride != null
+            ? '// @dart = ${langOverride.major}.${langOverride.minor}\n'
+            : '';
+
     await buildStep.writeAsString(
       outputId,
+      '$langComment'
       '// coverage:ignore-file\n'
       '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
       '// dart format off\n'

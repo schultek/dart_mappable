@@ -27,5 +27,6 @@ class ConstructorMapperElement {
 ConstructorElement? getConstructorFor(ClassElement element) {
   var constructors = element.constructors.where((c) => !c.isPrivate);
   return constructors.where(constructorChecker.hasAnnotationOf).firstOrNull ??
+      constructors.where((c) => c.isPrimary).firstOrNull ??
       constructors.where((c) => !classChecker.hasAnnotationOf(c)).firstOrNull;
 }

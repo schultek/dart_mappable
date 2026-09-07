@@ -119,17 +119,36 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
 
   ClassMapperParamElement? _analyzeInitializers(FormalParameterElement param) {
     var node = constructor.node;
-    if (node is! ConstructorDeclaration || node.initializers.isEmpty) {
-      return null;
-    }
+    var initializers = _getInitializers(node);
 
-    for (var initializer in node.initializers) {
+    for (var initializer in initializers) {
       if (initializer is ConstructorFieldInitializer) {
         var p = initializer.expression.accept(InitializerExpressionVisitor());
         if (p == param) {
           var f = initializer.fieldName.element;
           if (f is PropertyInducingElement) {
             return FieldParamElement(param, f, getSuperField(f));
+          }
+        }
+      }
+    }
+
+    if (node is PrimaryConstructorDeclaration &&
+        node.parent is ClassDeclaration) {
+      var classDecl = node.parent as ClassDeclaration;
+      for (var member in classDecl.body.members) {
+        if (member is FieldDeclaration) {
+          for (var v in member.fields.variables) {
+            var init = v.initializer;
+            if (init != null) {
+              var p = init.accept(InitializerExpressionVisitor());
+              if (p == param) {
+                var f = v.declaredFragment?.element;
+                if (f is PropertyInducingElement) {
+                  return FieldParamElement(param, f, getSuperField(f));
+                }
+              }
+            }
           }
         }
       }
@@ -142,8 +161,9 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
     if (superElement == null) return null;
 
     var node = constructor.node;
-    if (node is ConstructorDeclaration && node.initializers.isNotEmpty) {
-      var last = node.initializers.last;
+    var initializers = _getInitializers(node);
+    if (initializers.isNotEmpty) {
+      var last = initializers.last;
       if (last is SuperConstructorInvocation) {
         var superConstructorName = last.constructorName?.name ?? 'new';
         var superConstructor = superElement!.element.constructors.firstWhere(
@@ -173,6 +193,17 @@ mixin ParamElementsMixin on MapperElement<ClassElement> {
       }
     }
     return null;
+  }
+
+  List<ConstructorInitializer> _getInitializers(AstNode? node) {
+    if (node is ConstructorDeclaration) {
+      return node.initializers;
+    } else if (node is PrimaryConstructorDeclaration) {
+      return node.body?.initializers ?? const [];
+    } else if (node is PrimaryConstructorBody) {
+      return node.initializers;
+    }
+    return const [];
   }
 
   PropertyInducingElement? getSuperField(PropertyInducingElement field) {

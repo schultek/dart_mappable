@@ -73,7 +73,7 @@ The following configuration options exist for the `@MappableClass()` annotation:
 
 ### Changing Constructors
 
-For deserialization, `dart_mappable` will use the first available constructor of a class, but you
+For deserialization, `dart_mappable` will use the first available constructor of a class (or the primary constructor if present), but you
 can use a specific constructor using the `@MappableConstructor()` annotation.
 
 ```dart
@@ -85,6 +85,33 @@ class MyClass with MyClassMappable {
   MyClass.special(); // Use this
 }
 ```
+
+### Primary Constructors
+
+`dart_mappable` fully supports Dart's **primary constructors**:
+
+```dart
+@MappableClass()
+class Person(
+  final String firstName,
+  final String lastName, {
+  final int age = 18,
+}) with PersonMappable;
+```
+
+You can define fields directly in the class parameter list using `final` or `var`. Parameters without `final` or `var` can also be assigned to body fields or passed to a super constructor:
+
+```dart
+@MappableClass()
+class Point(final int x, int delta) with PointMappable {
+  final int y = delta;
+}
+
+@MappableClass()
+class Dog(super.name, final int barkVolume) extends Animal with DogMappable;
+```
+
+If a class defines both a primary constructor and secondary constructors, `dart_mappable` defaults to using the primary constructor unless another constructor is explicitly annotated with `@MappableConstructor()`.
 
 ### Annotating Fields
 

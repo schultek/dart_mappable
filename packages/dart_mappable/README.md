@@ -149,7 +149,7 @@ enum MyEnum { ... }
 [Models](https://pub.dev/documentation/dart_mappable/latest/topics/Models-topic.html) and
 [Enums](https://pub.dev/documentation/dart_mappable/latest/topics/Enums-topic.html).*
 
-For deserialization, `dart_mappable` will use the first available constructor of a class, but you
+For deserialization, `dart_mappable` will use the first available constructor of a class (or the primary constructor if present), but you
 can use a specific constructor using the `@MappableConstructor()` annotation.
 
 ```dart
@@ -160,6 +160,13 @@ class MyClass with MyClassMappable {
   @MappableConstructor()
   MyClass.special(); // Use this
 }
+```
+
+Dart's **primary constructors** are also fully supported:
+
+```dart
+@MappableClass()
+class MyClass(final String name, {final int age = 20}) with MyClassMappable;
 ```
 
 You can also annotate a single field or constructor parameter of a class using `@MappableField()`

@@ -1,6 +1,8 @@
 include: package:lints/recommended.yaml
 
 analyzer:
+  enable-experiment:
+    - primary-constructors
   language:
     strict-casts: true
 

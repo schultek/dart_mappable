@@ -1,3 +1,7 @@
+# 4.10.0
+
+- Add support for **Primary Constructors**.
+
 # 4.8.0
 
 - Bump `analyzer` to `>=10.0.0 <12.0.0`.
