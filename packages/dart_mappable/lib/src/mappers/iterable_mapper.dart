@@ -103,6 +103,10 @@ class _IterableEncoder<I extends Iterable> {
   }
 
   Iterable<dynamic> _encode<T>() {
+    if (context.options == null && context.container.isIdentityEncoder<T>()) {
+      return value.toList();
+    }
+
     return value
         .map((v) => context.$enc<T>(v as T, 'item', context.options))
         .toList();
