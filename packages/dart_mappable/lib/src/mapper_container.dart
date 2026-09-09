@@ -266,15 +266,15 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
 
   MapperBase? _mapperFor(dynamic value) {
     var type = value.runtimeType;
-    if (_cachedMappers[type] != null) {
-      return _cachedMappers[type];
+    if (_cachedMappers[type] case var m?) {
+      return m;
     }
     var baseType = type.base;
     if (baseType == UnresolvedType) {
       baseType = type;
     }
-    if (_cachedMappers[baseType] != null) {
-      return _cachedMappers[baseType];
+    if (_cachedMappers[baseType] case var m?) {
+      return m;
     }
 
     var mapper = //
