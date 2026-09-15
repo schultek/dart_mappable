@@ -14,7 +14,7 @@ Map<String, String> singleModel(String modelClass) => {
 
 Future<void> testMappable(
   Map<String, String> inputs, {
-  Map<String, String>? outputs,
+  Map<String, Object>? outputs,
 }) async {
   final reader = TestReaderWriter(rootPackage: 'models');
   await reader.testing.loadIsolateSources();
