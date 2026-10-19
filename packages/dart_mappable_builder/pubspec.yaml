@@ -14,7 +14,7 @@ resolution: workspace
 dependencies:
   analyzer: '>=13.0.0 <15.0.0'
   ansicolor: ^2.0.1
-  build: ^4.0.0
+  build: '>=4.0.0 <6.0.0'
   collection: ^1.15.0
   dart_mappable: ^4.10.0
   dart_style: ^3.0.1
