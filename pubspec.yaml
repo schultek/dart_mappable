@@ -9,7 +9,7 @@ workspace:
   - packages/dart_mappable_builder
 
 dev_dependencies:
-  melos: ^7.0.0
+  melos: ^8.9.0
 
 melos:
   ide:
@@ -22,8 +22,8 @@ melos:
 
   scripts:
     test:
-      run: dart test
       exec:
+        command: dart test
         concurrency: 1
       packageFilters:
         scope:
@@ -31,20 +31,23 @@ melos:
           - dart_mappable_builder
           - package_comparison
     coverage:
-      run: |
-        dart test --coverage=coverage &&
-        dart pub global run coverage:format_coverage --check-ignore --report-on=lib --lcov -o "$MELOS_ROOT_PATH/coverage/\$MELOS_PACKAGE_NAME_lcov.info" -i ./coverage
       exec:
+        command: >-
+          dart test --coverage=coverage &&
+          dart pub global run coverage:format_coverage --check-ignore --report-on=lib --lcov -o "$MELOS_ROOT_PATH/coverage/${MELOS_PACKAGE_NAME}_lcov.info" -i ./coverage
         concurrency: 1
       packageFilters:
         scope: 
           - dart_mappable
           - dart_mappable_builder
     build:
-      exec: dart run build_runner build -d
+      exec:
+        command: dart run build_runner build
       packageFilters:
         scope:
     format:
-      exec: dart format . --set-exit-if-changed
+      exec:
+        command: dart format . --set-exit-if-changed
     analyze:
-      exec: dart analyze . --fatal-infos
+      exec:
+        command: dart analyze . --fatal-infos

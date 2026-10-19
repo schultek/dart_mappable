@@ -1,7 +1,7 @@
 // ignore_for_file: unused_import
 
-/// This file is needed for dart_json_mapper to generate the target file.
-/// It must import all other files containing annotated models.
+// This file is needed for dart_json_mapper to generate the target file.
+// It must import all other files containing annotated models.
 
 import 'package:package_comparison/main.mapper.g.dart';
 

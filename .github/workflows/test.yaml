@@ -13,10 +13,10 @@ jobs:
     name: Analyze and Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: dart-lang/setup-dart@v1.3
+      - uses: actions/checkout@v7.0.1
+      - uses: dart-lang/setup-dart@v1.8.1
         with:
-          sdk: 3.11.0
+          sdk: 3.13.5
 
       - name: Bootstrap
         run: |
@@ -37,7 +37,7 @@ jobs:
         run: melos run coverage --no-select
 
       - name: Upload Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v7.1.1
         with:
-          files: coverage/*_lcov.info
+          files: coverage/dart_mappable_lcov.info,coverage/dart_mappable_builder_lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
