@@ -1,3 +1,7 @@
+# Unreleased
+
+- Allow `build` versions `>=4.0.0 <6.0.0`.
+
 # 4.10.0
 
 - Add support for **Primary Constructors**.

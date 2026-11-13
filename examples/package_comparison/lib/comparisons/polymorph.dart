@@ -22,7 +22,7 @@ abstract class AnimalA {
 class CatA extends AnimalA {
   String color;
 
-  CatA(String name, this.color) : super(name);
+  CatA(super.name, this.color);
 
   // Required Boilerplate
   factory CatA.fromJson(Map<String, dynamic> json) => _$CatAFromJson(json);
@@ -36,7 +36,7 @@ class CatA extends AnimalA {
 class DogA extends AnimalA {
   int age;
 
-  DogA(String name, this.age) : super(name);
+  DogA(super.name, this.age);
 
   // Required Boilerplate
   factory DogA.fromJson(Map<String, dynamic> json) => _$DogAFromJson(json);
@@ -61,7 +61,7 @@ abstract class AnimalB with AnimalBMappable {
 class CatB extends AnimalB with CatBMappable {
   String color;
 
-  CatB(String name, this.color) : super(name);
+  CatB(super.name, this.color);
 }
 
 @MappableClass(discriminatorValue: 'dog')
@@ -69,7 +69,7 @@ class CatB extends AnimalB with CatBMappable {
 class DogB extends AnimalB with DogBMappable {
   int age;
 
-  DogB(String name, this.age) : super(name);
+  DogB(super.name, this.age);
 }
 
 // 🆚 === Comparison ===
