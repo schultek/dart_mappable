@@ -1,9 +1,66 @@
+import 'package:build_test/build_test.dart';
 import 'package:test/test.dart';
 
 import 'utils/test_mappable.dart';
 
 void main() {
   group('simple model', () {
+    test(
+      'finds linked mappers through extension type representations',
+      () async {
+        await testMappable(
+          {
+            'model': '''
+            import 'package:dart_mappable/dart_mappable.dart';
+
+            part 'model.mapper.dart';
+
+            @MappableClass(discriminatorKey: 'type')
+            abstract class NestedModel with NestedModelMappable {
+              const NestedModel();
+            }
+
+            extension type const ModelList(List<NestedModel> value)
+                implements List<NestedModel> {}
+
+            @MappableClass()
+            class ParentModel with ParentModelMappable {
+              const ParentModel(this.models);
+
+              final ModelList models;
+            }
+          ''',
+          },
+          outputs: {
+            'model': decodedMatches(
+              predicate<String>((output) {
+                final mapperStart = output.indexOf(
+                  'static ParentModelMapper ensureInitialized()',
+                );
+                final mapperEnd = output.indexOf(
+                  '  @override\n  final String id = \'ParentModel\';',
+                  mapperStart,
+                );
+                if (mapperStart == -1 || mapperEnd == -1) return false;
+
+                final initializer = output.substring(mapperStart, mapperEnd);
+                return RegExp(
+                          r'NestedModelMapper\.ensureInitialized\(\);',
+                        ).allMatches(initializer).length ==
+                        1 &&
+                    output.contains(
+                      r'static ModelList _$models(ParentModel v)',
+                    ) &&
+                    output.contains(
+                      r'const Field<ParentModel, ModelList> _f$models = Field(',
+                    );
+              }),
+            ),
+          },
+        );
+      },
+    );
+
     test('generates correct mapper code', () async {
       await testMappable(
         {

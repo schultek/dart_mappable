@@ -35,6 +35,12 @@ List<String> findLinkedElements(
 
   void checkType(DartType t) {
     var e = t.element;
+    
+    if (e is ExtensionTypeElement) {
+      checkType(t.extensionTypeErasure);
+      return;
+    }
+
     var m = parent.getMapperForElement(e);
     if (m != null) {
       linked.add(
