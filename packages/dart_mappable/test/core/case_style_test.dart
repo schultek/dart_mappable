@@ -38,5 +38,18 @@ void main() {
       expect(CaseStyle.camelCase.transform('AaBb'), equals('aaBb'));
       expect(CaseStyle.snakeCase.transform('AaBb'), equals('aa_bb'));
     });
+
+    test('transform names with leading or repeated separators', () {
+      expect(CaseStyle.camelCase.transform('_field'), equals('field'));
+      expect(CaseStyle.pascalCase.transform('_field'), equals('Field'));
+      expect(CaseStyle.snakeCase.transform('_field'), equals('field'));
+      expect(CaseStyle.paramCase.transform('_field'), equals('field'));
+      expect(CaseStyle.upperSnakeCase.transform('_field'), equals('FIELD'));
+
+      expect(CaseStyle.camelCase.transform('field_'), equals('field'));
+      expect(CaseStyle.camelCase.transform('field__name'), equals('fieldName'));
+      expect(CaseStyle.pascalCase.transform('_'), equals(''));
+      expect(TextTransform.capitalCase.transform(''), equals(''));
+    });
   });
 }

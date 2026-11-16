@@ -111,7 +111,12 @@ extension CaseStyleTransform on CaseStyle? {
     if (style == null) {
       return text;
     } else {
-      var words = text.split(_splitter);
+      // Leading, trailing and repeated separators produce empty words.
+      // Dropping them avoids empty keys and stray separators.
+      var words = text.split(_splitter).where((w) => w.isNotEmpty).toList();
+      if (words.isEmpty) {
+        return '';
+      }
       if (style.head != null) {
         words = [
           style.head.transform(words[0]),
@@ -163,7 +168,9 @@ extension TextTransformer on TextTransform? {
     } else if (this == TextTransform.lowerCase) {
       return text.toLowerCase();
     } else if (this == TextTransform.capitalCase) {
-      return text[0].toUpperCase() + text.substring(1).toLowerCase();
+      return text.isEmpty
+          ? text
+          : text[0].toUpperCase() + text.substring(1).toLowerCase();
     } else {
       return text;
     }
