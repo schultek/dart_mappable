@@ -40,6 +40,10 @@ class RecordMapperGenerator extends MapperGenerator<RecordMapperElement> {
 
     await generateFields(output);
 
+    if (element.ignoreNull) {
+      output.write('  @override\n  final bool ignoreNull = true;\n');
+    }
+
     generateTypeFactory(output);
     generateApplyOverride(output);
     generateHook(output);

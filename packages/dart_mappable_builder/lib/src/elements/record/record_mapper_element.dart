@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import '../class/mixins/linked_elements_mixin.dart';
 import '../field/record_mapper_field_element.dart';
 import '../mapper_element.dart';
+import '../../utils.dart';
 
 abstract class RecordMapperElement<T extends Element>
     extends InterfaceMapperElement<T> {
@@ -25,6 +26,11 @@ abstract class RecordMapperElement<T extends Element>
 
   @override
   List<RecordMapperFieldElement> get fields;
+
+  late final bool ignoreNull =
+      annotation.value?.read('ignoreNull')?.toBoolValue() ??
+      options.ignoreNull ??
+      false;
 
   late final List<String> linkedElements = () {
     return findLinkedElements(
