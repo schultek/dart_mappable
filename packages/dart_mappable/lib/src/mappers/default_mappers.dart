@@ -15,6 +15,9 @@ class PrimitiveMapper<T extends Object> extends MapperBase<T>
   final Type? exactType;
 
   @override
+  bool get isIdentityEncoder => exactType == null;
+
+  @override
   Type get type => exactType ?? super.type;
   @override
   bool isFor(dynamic v) {

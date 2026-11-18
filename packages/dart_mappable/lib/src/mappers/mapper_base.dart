@@ -28,6 +28,13 @@ abstract class MapperBase<T extends Object> {
   bool isForType(Type type) => type.base == T;
   bool includeTypeId<V>(dynamic v) => false;
 
+  /// Whether encoding leaves a value unchanged.
+  ///
+  /// For example, the `int` mapper encodes `42` as `42`, so it returns `true`.
+  /// A `DateTime` mapper encodes a `DateTime` as a string, so it returns
+  /// `false`.
+  bool get isIdentityEncoder => false;
+
   /// The mapping method to decode [value] to an instance of this mappers type.
   T decoder(Object value, DecodingContext context) {
     throw MapperException.unsupportedMethod(MapperMethod.decode, type);

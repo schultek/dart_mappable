@@ -189,6 +189,12 @@ abstract class MapperContainer {
   /// Returns the current mapper for type [T] of this container.
   MapperBase<T>? get<T extends Object>([Type? type]);
 
+  /// Whether the mapper for [T] leaves values unchanged when encoding.
+  ///
+  /// For example, this returns `true` for `int` (`42` becomes `42`) and
+  /// `false` for `DateTime` (it becomes a string).
+  bool isIdentityEncoder<T>();
+
   /// Returns all mapper this container currently holds.
   List<MapperBase> getAll();
 
@@ -539,6 +545,11 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
   @override
   MapperBase<T>? get<T extends Object>([Type? type]) {
     return _mappers[(type ?? T).base] as MapperBase<T>?;
+  }
+
+  @override
+  bool isIdentityEncoder<T>() {
+    return _mapperForType(T)?.isIdentityEncoder ?? false;
   }
 
   @override
