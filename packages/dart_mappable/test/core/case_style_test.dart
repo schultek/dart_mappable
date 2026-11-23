@@ -38,5 +38,24 @@ void main() {
       expect(CaseStyle.camelCase.transform('AaBb'), equals('aaBb'));
       expect(CaseStyle.snakeCase.transform('AaBb'), equals('aa_bb'));
     });
+
+    test('transform with digits', () {
+      expect(
+        CaseStyle.snakeCase.transform('immediateSpo2Threshold'),
+        equals('immediate_spo2_threshold'),
+      );
+      expect(
+        CaseStyle.camelCase.transform('immediateSpo2Threshold'),
+        equals('immediateSpo2Threshold'),
+      );
+      expect(
+        CaseStyle.paramCase.transform('value2Count'),
+        equals('value2-count'),
+      );
+
+      // Digits that are not followed by an uppercase letter stay within a word.
+      expect(CaseStyle.snakeCase.transform('spo2'), equals('spo2'));
+      expect(CaseStyle.snakeCase.transform('myValue2'), equals('my_value2'));
+    });
   });
 }

@@ -1,4 +1,4 @@
-final _splitter = RegExp(r'[ ./_\-\\]+|(?<=[a-z])(?=[A-Z])');
+final _splitter = RegExp(r'[ ./_\-\\]+|(?<=[a-z0-9])(?=[A-Z])');
 final _customCase = RegExp(r'^custom\(([luc][luc]?)?,(.?)\)$');
 
 /// Used to transform fields to a specific case style.
