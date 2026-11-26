@@ -1,3 +1,12 @@
+# 4.11.0
+
+- Added a fast-path optimization when encoding iterables of primitive types (`int`, `double`, `String`, `bool`, `num`), skipping per-element encoding when no options are specified.
+- Optimized equality comparison on `ClassMapperBase` by avoiding unnecessary base type lookups on identical runtime types and removing closure allocations.
+- Fixed `SimpleMapper.container` being cleared to `null` prematurely during nested custom mapper invocations.
+- Fixed `CaseStyle` transformations producing empty words or errors on leading, trailing, or repeated separators (e.g. for private fields like `_name`).
+- Fixed record mappers not honoring `@MappableRecord(ignoreNull: ...)` or the global `ignoreNull` builder option.
+- Added documentation and examples for polymorphism using interfaces and mixins.
+
 # 4.10.0
 
 - Add support for **Primary Constructors**.

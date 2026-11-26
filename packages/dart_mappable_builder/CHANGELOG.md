@@ -1,3 +1,7 @@
+# 4.11.0
+
+- Fixed record mappers not honoring `@MappableRecord(ignoreNull: ...)` or the global `ignoreNull` builder option.
+
 # 4.10.1
 
 - Allow `build` versions `>=4.0.0 <6.0.0`.
