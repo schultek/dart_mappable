@@ -134,21 +134,23 @@ abstract class _SimpleMapperBase<T extends Object> extends MapperBase<T> {
 
   @override
   T decoder(Object value, DecodingContext context) {
+    var previous = _container;
     _container = context.container;
     try {
       return _decode(value, context);
     } finally {
-      _container = null;
+      _container = previous;
     }
   }
 
   @override
   Object? encoder(T value, EncodingContext context) {
+    var previous = _container;
     _container = context.container;
     try {
       return _encode(value, context);
     } finally {
-      _container = null;
+      _container = previous;
     }
   }
 
