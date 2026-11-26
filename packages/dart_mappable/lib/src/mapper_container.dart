@@ -549,7 +549,10 @@ class _MapperContainerBase implements MapperContainer, TypeProvider {
 
   @override
   bool isIdentityEncoder<T>() {
-    return _mapperForType(T)?.isIdentityEncoder ?? false;
+    var mapper = _mapperForType(T);
+    return mapper is PrimitiveMapper &&
+        mapper.type != dynamic &&
+        mapper.type != Object;
   }
 
   @override

@@ -33,6 +33,12 @@ void main() {
       expect(m.toValue<List<double>>([1.0, 2.5, 3.0]), equals([1.0, 2.5, 3.0]));
     });
 
+    test('encodes nullable primitives', () {
+      expect(m.toValue<List<int?>>([1, null, 3]), equals([1, null, 3]));
+      expect(m.toValue<List<String?>>(['one', null]), equals(['one', null]));
+      expect(m.toValue<List<num?>>([1, 2.5, null]), equals([1, 2.5, null]));
+    });
+
     test('encodes dynamic and object values', () {
       final date = DateTime.utc(2000);
       final foobar = Foobar(4, 'four');
