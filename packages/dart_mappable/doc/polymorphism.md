@@ -181,9 +181,9 @@ class C extends A with CMappable {
 
 ## Implements
 
-`implements` works the same way as `extends` for polymorphism. Put `@MappableClass` and the
-generated mixin on the interface **and** on each implementing class, and set `discriminatorKey`
-on the interface.
+You can use `implements` for polymorphism through a single mappable interface. Put
+`@MappableClass` and the generated mixin on the interface **and** on each implementing class,
+and set `discriminatorKey` on the interface.
 
 You cannot pass fields with `super.` when using `implements`, so redeclare them on the subclass.
 
@@ -222,7 +222,9 @@ void main() {
 ```
 
 `includeSubClasses`, custom `discriminatorValue`s, and factory constructors on the interface all
-apply the same as with `extends`. A class can implement more than one mappable interface.
+apply the same as with `extends`. The generator automatically registers a discriminating subclass
+with one base: its mappable superclass, or the first mappable interface if it has no mappable
+superclass.
 
 ## Mixins (`with`)
 
