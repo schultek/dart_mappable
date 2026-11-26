@@ -189,15 +189,13 @@ void initializeMappers() {
   p33.OffsetMapper.ensureInitialized();
   p33.RectMapper.ensureInitialized();
   p33.HypotenuseMapper.ensureInitialized();
-  p34.AMapper.ensureInitialized();
-  p34.CMapper.ensureInitialized();
+  p34.PartialPointMapper.ensureInitialized();
   p35.AMapper.ensureInitialized();
-  p35.BMapper.ensureInitialized();
+  p35.CMapper.ensureInitialized();
   p36.AMapper.ensureInitialized();
   p36.BMapper.ensureInitialized();
   p37.AMapper.ensureInitialized();
   p37.BMapper.ensureInitialized();
-  p37.CMapper.ensureInitialized();
   p38.AMapper.ensureInitialized();
   p38.BMapper.ensureInitialized();
   p39.PersonMapper.ensureInitialized();
